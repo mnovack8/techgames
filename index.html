@@ -3,1114 +3,388 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FuzzNet Labs - Animal Classifier</title>
+<title>Tech Board Games — Learn by Playing</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif; background: #f4f1ec; color: #3a3a3a; min-height: 100vh; overflow-x: hidden; }
-
-/* ===== SCREENS ===== */
-.screen { display: none; }
-.screen.active { display: flex; }
-
-/* ===== LOBBY ===== */
-#lobby { flex-direction: row; align-items: center; justify-content: center; min-height: 100vh; gap: 0; background: linear-gradient(160deg, #f7f5f0 0%, #eae6dd 100%); }
-.lobby-hero { flex: 1; display: flex; align-items: center; justify-content: center; min-height: 100vh; background: #fff; padding: 40px; }
-.lobby-hero img { max-width: 480px; width: 100%; height: auto; filter: drop-shadow(0 8px 24px rgba(0,0,0,0.1)); }
-.lobby-forms { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; gap: 20px; padding: 30px; }
-#lobby h1 { font-size: 44px; color: #2d6a4f; letter-spacing: 2px; font-weight: 800; margin: 0; }
-#lobby .subtitle { font-size: 15px; color: #888; margin-top: -6px; }
-@media (max-width: 860px) {
-  #lobby { flex-direction: column; }
-  .lobby-hero { min-height: auto; padding: 30px 20px 10px; }
-  .lobby-hero img { max-width: 300px; }
-  .lobby-forms { min-height: auto; padding: 10px 20px 30px; }
+body {
+  font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif;
+  background: #f4f1ec;
+  color: #3a3a3a;
+  min-height: 100vh;
 }
 
-.lobby-card { background: #ffffff; border: 1px solid #ddd; border-radius: 14px; padding: 24px; width: 360px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
-.lobby-card h3 { font-size: 15px; color: #777; margin-bottom: 14px; text-transform: uppercase; letter-spacing: 1px; }
+/* ===== HEADER ===== */
+header {
+  background: #fff;
+  border-bottom: 1px solid #e8e4dc;
+  padding: 0 40px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: 0 1px 8px rgba(0,0,0,0.04);
+}
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+.header-logo .logo-mark {
+  width: 36px;
+  height: 36px;
+  background: #2d6a4f;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: -1px;
+}
+.header-logo .logo-text {
+  font-size: 17px;
+  font-weight: 800;
+  color: #2d6a4f;
+  letter-spacing: 0.5px;
+}
+.header-logo .logo-sub {
+  font-size: 11px;
+  color: #999;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: block;
+  line-height: 1;
+}
 
-.color-options { display: flex; gap: 10px; justify-content: center; margin: 12px 0; }
-.color-btn { width: 56px; height: 56px; border-radius: 12px; border: 3px solid transparent; cursor: pointer; font-size: 11px; font-weight: bold; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.3); transition: all 0.15s; display: flex; align-items: center; justify-content: center; }
-.color-btn:hover { transform: scale(1.08); }
-.color-btn.selected { border-color: #333; box-shadow: 0 0 0 3px rgba(0,0,0,0.15); }
-.color-btn:disabled { opacity: 0.2; cursor: not-allowed; transform: none; }
+/* ===== HERO ===== */
+.hero {
+  text-align: center;
+  padding: 72px 24px 48px;
+  background: linear-gradient(160deg, #f7f5f0 0%, #eae6dd 100%);
+  border-bottom: 1px solid #e2ddd6;
+}
+.hero-eyebrow {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #2d6a4f;
+  margin-bottom: 16px;
+}
+.hero h1 {
+  font-size: 48px;
+  font-weight: 900;
+  color: #2a2a2a;
+  line-height: 1.1;
+  margin-bottom: 16px;
+  max-width: 680px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.hero h1 em {
+  font-style: normal;
+  color: #2d6a4f;
+}
+.hero p {
+  font-size: 18px;
+  color: #666;
+  max-width: 500px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+@media (max-width: 600px) {
+  .hero h1 { font-size: 32px; }
+  .hero p { font-size: 16px; }
+}
 
-.lobby-btn { width: 100%; padding: 12px; font-size: 16px; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; transition: all 0.15s; margin-top: 8px; }
-.lobby-btn:hover:not(:disabled) { transform: scale(1.01); filter: brightness(1.05); }
-.lobby-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-.btn-create { background: #2d6a4f; color: white; }
-.btn-join { background: #52796f; color: white; }
+/* ===== GAMES GRID ===== */
+.games-section {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 56px 24px 80px;
+}
+.games-section h2 {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #999;
+  margin-bottom: 28px;
+}
+.games-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 28px;
+}
 
-.lobby-input { width: 100%; padding: 12px 16px; font-size: 20px; text-align: center; letter-spacing: 8px; text-transform: uppercase; background: #f8f7f4; border: 2px solid #ccc; border-radius: 8px; color: #333; font-weight: bold; margin: 8px 0; }
-.lobby-input::placeholder { letter-spacing: 2px; font-size: 14px; color: #aaa; }
-.lobby-input:focus { outline: none; border-color: #2d6a4f; }
+/* ===== GAME CARD ===== */
+.game-card {
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid #e4e0d8;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.05);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.game-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+}
+.game-card-image {
+  width: 100%;
+  aspect-ratio: 4/3;
+  background: #f0ede6;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.game-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+.game-card-body {
+  padding: 24px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.game-card-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: #1f1f1f;
+  line-height: 1.2;
+}
+.game-card-theme {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.5;
+  font-style: italic;
+}
+.game-card-learning {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background: #eef5ee;
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-top: 2px;
+}
+.game-card-learning .learn-icon {
+  font-size: 15px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.game-card-learning p {
+  font-size: 13px;
+  color: #2d6a4f;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.game-card-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: auto;
+  padding-top: 14px;
+}
+.btn-play {
+  flex: 1;
+  padding: 12px 20px;
+  background: #2d6a4f;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  text-decoration: none;
+  text-align: center;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.btn-play:hover {
+  background: #245c43;
+  transform: scale(1.02);
+}
+.btn-buy {
+  padding: 12px 16px;
+  background: transparent;
+  color: #2d6a4f;
+  font-size: 14px;
+  font-weight: 700;
+  border: 2px solid #c5d5c0;
+  border-radius: 10px;
+  cursor: pointer;
+  text-decoration: none;
+  text-align: center;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+}
+.btn-buy:hover {
+  border-color: #2d6a4f;
+  background: #eef5ee;
+}
 
-.rules-banner { font-size: 13px; color: #666; background: #eef5ee; border-radius: 8px; padding: 8px 14px; text-align: center; max-width: 360px; line-height: 1.5; }
-.rules-banner a { color: #2d6a4f; font-weight: 600; }
-.rules-banner a:hover { text-decoration: none; }
-.error-msg { color: #d44; font-size: 13px; text-align: center; margin-top: 6px; min-height: 20px; }
+/* ===== COMING SOON CARD ===== */
+.game-card.coming-soon {
+  opacity: 0.6;
+  pointer-events: none;
+}
+.game-card.coming-soon .game-card-image {
+  background: #e8e4dc;
+}
+.coming-soon-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+  color: #ccc;
+}
+.coming-soon-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  background: #f0ede6;
+  color: #999;
+  border-radius: 6px;
+  padding: 3px 8px;
+  margin-bottom: 4px;
+}
 
-/* ===== WAITING ROOM ===== */
-#waiting { flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; gap: 20px; background: linear-gradient(160deg, #f7f5f0 0%, #eae6dd 100%); }
-.room-code-display { font-size: 52px; font-weight: 800; letter-spacing: 12px; color: #2d6a4f; background: #fff; padding: 16px 36px; border-radius: 14px; border: 2px solid #c5d5c0; user-select: all; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
-.room-share { display: flex; gap: 8px; align-items: center; margin-top: 4px; }
-.copy-btn { padding: 8px 16px; font-size: 13px; font-weight: 700; border: 1px solid #c5d5c0; border-radius: 8px; background: #fff; color: #2d6a4f; cursor: pointer; transition: all 0.15s; }
-.copy-btn:hover { background: #eef5ee; border-color: #2d6a4f; }
-.copy-btn.copied { background: #2d6a4f; color: #fff; }
-.room-hint { font-size: 14px; color: #888; }
-.player-list { display: flex; flex-direction: column; gap: 8px; min-width: 240px; margin: 8px 0; }
-.player-slot { display: flex; align-items: center; gap: 10px; padding: 10px 16px; background: #fff; border-radius: 8px; border: 1px solid #ddd; font-size: 15px; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
-.player-slot .dot { width: 14px; height: 14px; border-radius: 50%; }
-.player-slot .host-badge { font-size: 11px; color: #c90; margin-left: auto; font-weight: 700; }
-.player-slot .bot-badge { font-size: 10px; background: #555; color: #fff; font-weight: 700; padding: 1px 5px; border-radius: 4px; margin-left: 4px; }
-.bot-toggle { padding: 10px 20px; font-size: 14px; font-weight: 600; border: 2px dashed #aaa; border-radius: 8px; background: transparent; color: #666; cursor: pointer; transition: all 0.15s; min-width: 240px; }
-.bot-toggle:hover { border-color: #2d6a4f; color: #2d6a4f; background: #eef5ee; }
-.bot-toggle.active { border-color: #2d6a4f; border-style: solid; color: #2d6a4f; background: #eef5ee; }
-.waiting-actions { display: flex; gap: 10px; }
-.waiting-actions button { padding: 12px 28px; border-radius: 8px; border: none; cursor: pointer; font-size: 15px; font-weight: 700; }
-#btn-start-game { background: #2d6a4f; color: white; }
-#btn-start-game:disabled { opacity: 0.4; cursor: not-allowed; }
-#btn-leave { background: #e0ddd6; color: #777; }
-#btn-leave:hover { background: #d0cdc6; color: #555; }
-
-/* ===== GAME SCREEN ===== */
-#game { flex-direction: column; height: 100vh; background: #f4f1ec; }
-#top-bar { display: flex; align-items: center; justify-content: space-between; padding: 8px 16px; background: #fff; border-bottom: 2px solid #e0ddd6; gap: 12px; flex-wrap: wrap; box-shadow: 0 1px 4px rgba(0,0,0,0.05); }
-#top-bar .player-info { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 600; color: #444; }
-.player-dot { width: 14px; height: 14px; border-radius: 50%; display: inline-block; }
-#top-bar .round-info { font-size: 13px; color: #888; font-weight: 600; }
-.room-badge { font-size: 12px; color: #999; background: #f0ede6; padding: 3px 10px; border-radius: 6px; font-weight: 700; }
-.view-toggle { display: flex; gap: 4px; }
-.view-btn { padding: 5px 12px; font-size: 12px; border-radius: 6px; border: 2px solid #ddd; background: #fff; color: #888; cursor: pointer; position: relative; transition: all 0.15s; font-weight: 600; }
-.view-btn:hover { background: #f5f3ee; color: #555; }
-.view-btn.active { border-color: #2d6a4f; color: #2d6a4f; background: #eef5ee; }
-.view-btn .vb-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 4px; vertical-align: middle; }
-.view-btn.is-turn { box-shadow: 0 0 8px rgba(45,106,79,0.3); }
-.node-circle.backprop-src { stroke: #f5a623; stroke-width: 3; stroke-dasharray: 6,3; cursor: pointer; }
-.node-circle.backprop-dst { stroke: #2d6a4f; stroke-width: 3; stroke-dasharray: 6,3; cursor: pointer; }
-.first-badge { font-size: 10px; background: #f5a623; color: #fff; font-weight: 700; padding: 1px 5px; border-radius: 4px; margin-left: 4px; vertical-align: middle; letter-spacing: 0.3px; }
-.tie-mark { font-size: 9px; background: #f5a623; color: #fff; font-weight: 700; padding: 0 3px; border-radius: 3px; margin-left: 2px; vertical-align: middle; }
-.view-btn.is-turn::after { content: '◀'; font-size: 8px; margin-left: 4px; vertical-align: middle; }
-.actions-info { font-size: 14px; color: #777; }
-.actions-count { color: #2d6a4f; font-weight: 800; font-size: 16px; }
-
-#main-area { display: flex; flex: 1; overflow: hidden; }
-#board-container { flex: 1; display: flex; align-items: center; justify-content: center; padding: 10px; background: #f4f1ec; }
-#board-svg { width: 100%; max-width: 860px; height: auto; }
-
-#side-panel { width: 310px; min-width: 280px; display: flex; flex-direction: column; gap: 6px; padding: 10px; background: #fff; border-left: 2px solid #e0ddd6; overflow-y: auto; }
-.section-title { font-size: 11px; color: #999; text-transform: uppercase; letter-spacing: 1px; padding: 2px 0; font-weight: 700; }
-
-/* ===== ACTION BUTTONS ===== */
-.action-btns { display: flex; flex-direction: column; gap: 6px; }
-.action-btn { padding: 8px 14px; font-size: 14px; border: 2px solid #ddd; border-radius: 8px; background: #faf9f6; color: #555; cursor: pointer; text-align: left; transition: all 0.15s; font-weight: 600; }
-.action-btn:hover:not(:disabled) { border-color: #2d6a4f; color: #2d6a4f; background: #eef5ee; }
-.action-btn:disabled { opacity: 0.35; cursor: not-allowed; }
-.end-turn-btn { padding: 8px 14px; font-size: 13px; border: 2px solid #ddd; border-radius: 8px; background: #faf9f6; color: #888; cursor: pointer; text-align: center; margin-top: 4px; font-weight: 600; }
-.end-turn-btn:hover { border-color: #c90; color: #a80; }
-
-/* ===== STATUS BAR ===== */
-#status { padding: 8px 16px; min-height: 40px; background: #fff; border-top: 2px solid #e0ddd6; font-size: 13px; color: #666; display: flex; align-items: center; gap: 10px; }
-#status .msg { flex: 1; }
-#status button { padding: 5px 16px; border-radius: 6px; border: 1px solid #ccc; background: #f5f3ee; color: #555; cursor: pointer; font-size: 12px; white-space: nowrap; font-weight: 600; }
-#status button:hover { border-color: #2d6a4f; color: #2d6a4f; }
-#status button.primary { background: #2d6a4f; border-color: #2d6a4f; color: white; }
-#status button.danger { background: #d44; border-color: #d44; color: white; }
-
-/* ===== DICE ===== */
-.dice-area { display: flex; gap: 8px; justify-content: center; padding: 6px 0; }
-.die { width: 44px; height: 44px; background: #fff; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; color: #333; cursor: default; transition: all 0.15s; border: 3px solid #ddd; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
-.die.clickable { cursor: pointer; border-color: #2d6a4f; }
-.die.clickable:hover { transform: scale(1.1); }
-.die.selected { border-color: #d44; background: #fef0f0; }
-
-/* ===== CLEAN DATA TRACKER ===== */
-.clean-tracker { display: flex; gap: 4px; align-items: center; justify-content: center; padding: 4px 0; }
-.clean-step { width: 34px; height: 26px; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; background: #faf9f6; border: 1px solid #ddd; color: #aaa; }
-.clean-step.active { background: #fce4d6; border-color: #e8a87c; color: #c07040; }
-.clean-step.used { background: #f0e0e0; border-color: #d4a0a0; color: #a06060; }
-
-/* ===== SCOREBOARD ===== */
-.scoreboard { background: #faf9f6; border-radius: 10px; padding: 8px; flex-shrink: 0; border: 1px solid #e8e4dc; }
-.score-table { width: 100%; border-collapse: collapse; font-size: 12px; }
-.score-table th { text-align: left; padding: 3px 5px; color: #999; font-weight: 600; border-bottom: 1px solid #e8e4dc; }
-.score-table td { padding: 3px 5px; border-bottom: 1px solid #f0ede6; }
-.score-table .score-val { text-align: center; font-weight: bold; }
-.score-animal { font-size: 16px; }
-
-/* ===== SVG STYLES ===== */
-.edge-line { stroke: #c8c4ba; stroke-width: 2; transition: all 0.2s; }
-.edge-line.blocked { stroke: #222; stroke-width: 3; stroke-dasharray: 8,4; }
-.edge-line.path-highlight { stroke: #2d6a4f; stroke-width: 4; opacity: 0.9; }
-.edge-line.selectable { stroke: #e8a030; stroke-width: 3; opacity: 0.8; cursor: pointer; }
-
-.node-circle { fill: #e8e4dc; stroke: #bbb; stroke-width: 2; transition: all 0.2s; cursor: default; }
-.node-circle.placed { fill: #d0d8cf; stroke: #7a9a78; }
-.node-circle.maxed { fill: #fce4b8; stroke: #d4a030; stroke-width: 3; }
-.node-circle.clickable { cursor: pointer; stroke: #2d6a4f; stroke-width: 3; stroke-dasharray: 6,3; }
-.node-circle.clickable:hover { fill: #d5e5d0; }
-.node-circle.path-selected { fill: #c8e6c0; stroke: #2d6a4f; stroke-width: 3; }
-
-.node-data { font-size: 16px; font-weight: bold; fill: #2d8a4f; pointer-events: none; }
-.node-label { font-size: 11px; fill: #999; pointer-events: none; }
-.input-label, .output-label { font-size: 14px; fill: #666; cursor: default; }
-.input-emoji, .output-emoji { font-size: 24px; cursor: default; }
-.input-label.clickable, .input-emoji.clickable { cursor: pointer; }
-.input-label.clickable:hover, .input-emoji.clickable:hover { fill: #2d6a4f; }
-.input-label.highlight, .input-emoji.highlight { fill: #2d6a4f; }
-.overfit-x { stroke: #333; stroke-width: 3; pointer-events: none; }
-
-/* ===== GAME OVER ===== */
-#gameover { position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 100; flex-direction: column; align-items: center; justify-content: center; gap: 20px; }
-#gameover h2 { font-size: 36px; color: #2d6a4f; font-weight: 800; }
-.final-scores { background: #fff; border-radius: 12px; padding: 20px; min-width: 340px; box-shadow: 0 4px 24px rgba(0,0,0,0.15); }
-.final-scores table { width: 100%; border-collapse: collapse; }
-.final-scores th, .final-scores td { padding: 8px 12px; text-align: left; border-bottom: 1px solid #e8e4dc; color: #444; }
-.final-scores .winner { color: #c90; font-weight: bold; }
-.breakdown-toggle { font-size: 11px; padding: 3px 8px; border: 1px solid #ccc; border-radius: 6px; background: #f7f5f0; cursor: pointer; color: #555; white-space: nowrap; }
-.breakdown-toggle:hover { background: #eae6dd; }
-.score-breakdown { background: #f7f5f0; border-radius: 8px; padding: 10px 12px; font-size: 13px; color: #555; }
-.breakdown-item { display: flex; justify-content: space-between; padding: 3px 0; border-bottom: 1px dashed #e0dbd3; }
-.breakdown-item:last-child { border-bottom: none; }
-.breakdown-item.penalty { color: #c44; }
-.breakdown-item.bonus { color: #2d6a4f; }
-.breakdown-total { display: flex; justify-content: space-between; padding: 6px 0 2px; font-weight: 700; color: #333; margin-top: 4px; border-top: 1px solid #ccc; }
-#play-again-btn { padding: 12px 36px; font-size: 16px; border: none; border-radius: 8px; background: #2d6a4f; color: white; cursor: pointer; font-weight: 700; }
-
-/* ===== INFO SYSTEM ===== */
-.info-btn { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid #bbb; background: transparent; color: #999; font-size: 11px; font-weight: 700; cursor: pointer; margin-left: 5px; vertical-align: middle; transition: all 0.15s; font-family: serif; line-height: 1; padding: 0; }
-.info-btn:hover { border-color: #2d6a4f; color: #2d6a4f; background: #eef5ee; }
-#info-overlay { display: none; position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.3); backdrop-filter: blur(2px); }
-#info-overlay.visible { display: flex; align-items: center; justify-content: center; }
-#info-card { background: #fff; border-radius: 14px; padding: 20px 24px; max-width: 400px; width: 90%; box-shadow: 0 8px 32px rgba(0,0,0,0.18); position: relative; max-height: 80vh; overflow-y: auto; }
-#info-card h3 { font-size: 16px; color: #2d6a4f; margin-bottom: 10px; padding-right: 28px; }
-#info-card p { font-size: 13px; color: #555; line-height: 1.6; margin-bottom: 8px; }
-#info-card ul { font-size: 13px; color: #555; line-height: 1.6; padding-left: 18px; margin-bottom: 8px; }
-#info-card li { margin-bottom: 4px; }
-#info-card .info-close { position: absolute; top: 12px; right: 14px; width: 26px; height: 26px; border-radius: 50%; border: none; background: #f0ede6; color: #888; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-#info-card .info-close:hover { background: #e0ddd6; color: #555; }
-#info-card .info-highlight { background: #eef5ee; border-radius: 6px; padding: 8px 12px; margin: 8px 0; font-size: 12px; color: #2d6a4f; border-left: 3px solid #2d6a4f; }
-.section-title .info-btn { margin-left: 4px; }
+/* ===== FOOTER ===== */
+footer {
+  background: #2a2a2a;
+  color: #888;
+  text-align: center;
+  padding: 28px 24px;
+  font-size: 13px;
+  line-height: 1.8;
+}
+footer a { color: #aaa; text-decoration: none; }
+footer a:hover { color: #fff; }
 </style>
 </head>
 <body>
 
-<!-- ===== LOBBY ===== -->
-<div id="lobby" class="screen active">
-  <div class="lobby-hero">
-    <img src="images/cover.png" alt="FuzzNet Labs — A dog scientist building a machine learning model">
-  </div>
-  <div class="lobby-forms">
-    <div class="subtitle">Animal Photo Classifier — The Board Game <button class="info-btn" onclick="showInfo('overview')" style="width:22px;height:22px;font-size:12px" title="How to Play">i</button></div>
-
-    <div class="rules-banner">
-      <span>New here? In-game help is built in via <b>i</b> buttons, or <a href="/rulebook.pdf" target="_blank" rel="noopener">read the full rulebook (PDF)</a></span>
+<header>
+  <a class="header-logo" href="/">
+    <div class="logo-mark">T</div>
+    <div>
+      <span class="logo-text">Tech Board Games</span>
+      <span class="logo-sub">Learn by Playing</span>
     </div>
+  </a>
+</header>
 
-    <div class="lobby-card">
-      <h3>Create a New Game</h3>
-      <div style="font-size:13px; color:#888; margin-bottom:8px;">Pick your color:</div>
-      <div class="color-options" id="create-colors">
-        <button class="color-btn selected" data-color="blue" style="background:#4a9eff" onclick="selectCreateColor('blue')">Blue</button>
-        <button class="color-btn" data-color="red" style="background:#ff4a4a" onclick="selectCreateColor('red')">Red</button>
-        <button class="color-btn" data-color="green" style="background:#3aaa6a" onclick="selectCreateColor('green')">Green</button>
-        <button class="color-btn" data-color="purple" style="background:#a060dd" onclick="selectCreateColor('purple')">Purple</button>
+<section class="hero">
+  <p class="hero-eyebrow">Browser-playable · No download needed</p>
+  <h1>Technology is for <em>everyone</em></h1>
+  <p>Board games that make complex technology topics — from AI and machine learning to cybersecurity and quantum computing — approachable, engaging, and genuinely fun to explore together.</p>
+</section>
+
+<section class="games-section">
+  <h2>Games Available Now</h2>
+  <div class="games-grid">
+
+    <!-- FuzzNet Labs -->
+    <div class="game-card">
+      <div class="game-card-image">
+        <img src="/images/cover.png" alt="FuzzNet Labs cover art">
       </div>
-      <button class="lobby-btn btn-create" onclick="createRoom()">Create Game</button>
-    </div>
-
-    <div class="lobby-card">
-      <h3>Join a Game</h3>
-      <input class="lobby-input" id="join-code" maxlength="4" placeholder="CODE" oninput="checkRoom()">
-      <div class="color-options" id="join-colors" style="opacity:0.3; pointer-events:none;">
-        <button class="color-btn" data-color="blue" style="background:#4a9eff" onclick="selectJoinColor('blue')">Blue</button>
-        <button class="color-btn" data-color="red" style="background:#ff4a4a" onclick="selectJoinColor('red')">Red</button>
-        <button class="color-btn" data-color="green" style="background:#3aaa6a" onclick="selectJoinColor('green')">Green</button>
-        <button class="color-btn" data-color="purple" style="background:#a060dd" onclick="selectJoinColor('purple')">Purple</button>
+      <div class="game-card-body">
+        <div class="game-card-title">FuzzNet Labs</div>
+        <p class="game-card-theme">Build a machine learning model out of cardboard — train it, test it, and race to classify animals before your opponents do.</p>
+        <div class="game-card-learning">
+          <span class="learn-icon">🧠</span>
+          <p>Understand how data impacts machine learning and AI systems</p>
+        </div>
+        <div class="game-card-actions">
+          <a class="btn-play" href="/fuzznet">
+            ▶ Play Now
+          </a>
+          <a class="btn-buy" href="https://cybersecgames.com/products/fuzznet-labs?_pos=1&_psq=FuzzNet&_ss=e&_v=1.0" target="_blank" rel="noopener">
+            🛒 Get Physical Copy
+          </a>
+        </div>
       </div>
-      <button class="lobby-btn btn-join" id="btn-join" disabled onclick="joinRoom()">Join Game</button>
-      <div class="error-msg" id="lobby-error"></div>
     </div>
-    <a href="https://cybersecgames.com/products/fuzznet-labs?_pos=1&_psq=FuzzNet&_ss=e&_v=1.0" target="_blank" rel="noopener" style="font-size:13px;color:#888;text-decoration:none;margin-top:4px;transition:color 0.15s">Want the board game? <span style="color:#2d6a4f;font-weight:600">Grab the tabletop version</span></a>
-  </div>
-</div>
 
-<!-- ===== WAITING ROOM ===== -->
-<div id="waiting" class="screen">
-  <div style="font-size:14px; color:#888;">Room Code</div>
-  <div class="room-code-display" id="room-code-display">----</div>
-  <div class="room-share">
-    <button class="copy-btn" id="btn-copy-code" onclick="copyCode()">Copy Code</button>
-    <button class="copy-btn" id="btn-copy-link" onclick="copyLink()">Copy Link</button>
-  </div>
-  <div class="room-hint">Share the code or link with other players to join</div>
-  <div class="rules-banner">
-    <span>While you wait: <a href="/rulebook.pdf" target="_blank" rel="noopener">read the rulebook (PDF)</a> — or just jump in, every action has a help <b>i</b> button in-game</span>
-  </div>
-  <div class="player-list" id="player-list"></div>
-  <button class="bot-toggle" id="btn-bot-toggle" onclick="toggleBot()" style="display:none">Play Solo vs Bot</button>
-  <div class="waiting-actions">
-    <button id="btn-start-game" onclick="startGame()" disabled>Start Game</button>
-    <button id="btn-leave" onclick="leaveRoom()">Leave</button>
-  </div>
-  <div class="error-msg" id="waiting-error"></div>
-</div>
-
-<!-- ===== GAME ===== -->
-<div id="game" class="screen">
-  <div id="top-bar">
-    <div class="player-info">
-      <span class="player-dot" id="turn-dot"></span>
-      <span id="turn-name">Blue's Turn</span>
-    </div>
-    <div style="display:flex;align-items:center;gap:4px"><div class="view-toggle" id="view-toggle"></div><button class="info-btn" onclick="showInfo('firstplayer')" title="First Player">i</button></div>
-    <span class="room-badge" id="room-badge">ABCD</span>
-    <div class="round-info" id="round-info">Round 1</div>
-    <div class="actions-info">Actions: <span class="actions-count" id="actions-count">3</span></div>
-    <button class="info-btn" onclick="showInfo('overview')" style="width:24px;height:24px;font-size:13px" title="How to Play">i</button>
-  </div>
-
-  <div id="main-area">
-    <div id="board-container">
-      <svg id="board-svg" viewBox="0 0 870 490"></svg>
-    </div>
-    <div id="side-panel">
-      <div class="section-title">Actions <button class="info-btn" onclick="showInfo('actions')">i</button></div>
-      <div class="action-btns">
-        <div style="display:flex;align-items:center;gap:4px"><button class="action-btn" id="btn-design" onclick="doAction('start_design')" style="flex:1">🧠 Design Model</button><button class="info-btn" onclick="showInfo('design')">i</button></div>
-        <div style="display:flex;align-items:center;gap:4px"><button class="action-btn" id="btn-train" onclick="doAction('start_train')" style="flex:1">📊 Train Model</button><button class="info-btn" onclick="showInfo('train')">i</button></div>
-        <div style="display:flex;align-items:center;gap:4px"><button class="action-btn" id="btn-test" onclick="doAction('start_test')" style="flex:1">🧪 Test Model</button><button class="info-btn" onclick="showInfo('test')">i</button></div>
+    <!-- Byte Club -->
+    <div class="game-card coming-soon">
+      <div class="game-card-image">
+        <img src="/images/byteclub.png" alt="Byte Club — cybersecurity card game">
       </div>
-      <button class="end-turn-btn" id="btn-end-turn" onclick="doAction('end_turn')" style="display:none">Skip Remaining Actions</button>
-
-      <div class="section-title" style="margin-top:6px">Clean Data Track <button class="info-btn" onclick="showInfo('cleandata')">i</button></div>
-      <div class="clean-tracker" id="clean-tracker"></div>
-
-      <div class="section-title">Dice <button class="info-btn" onclick="showInfo('dice')">i</button></div>
-      <div class="dice-area" id="dice-area">
-        <div class="die" id="die-0">-</div>
-        <div class="die" id="die-1">-</div>
-        <div class="die" id="die-2">-</div>
+      <div class="game-card-body">
+        <div class="coming-soon-badge">Coming Soon — Digital Edition</div>
+        <div class="game-card-title">Byte Club</div>
+        <p class="game-card-theme">To hack or not to hack — a capture-the-flag card game that transforms cybersecurity into a fun and accessible experience for everyone.</p>
+        <div class="game-card-learning">
+          <span class="learn-icon">🛡️</span>
+          <p>Understand the Cyber Kill Chain and NIST Cybersecurity Framework through strategic play</p>
+        </div>
+        <div class="game-card-actions">
+          <a class="btn-buy" href="https://cybersecgames.com/pages/byte-club-game" target="_blank" rel="noopener" style="flex:1; justify-content:center;">
+            🛒 Get Physical Copy
+          </a>
+        </div>
       </div>
-      <div id="test-info" style="text-align:center;font-size:13px;color:#888;padding:2px 0"></div>
-
-      <div class="section-title">Scoreboard <button class="info-btn" onclick="showInfo('scoreboard')">i</button></div>
-      <div class="scoreboard" id="scoreboard"></div>
     </div>
+
+    <!-- Qubit -->
+    <div class="game-card coming-soon">
+      <div class="game-card-image">
+        <div class="coming-soon-placeholder">⚛️</div>
+      </div>
+      <div class="game-card-body">
+        <div class="coming-soon-badge">Coming Soon</div>
+        <div class="game-card-title">Qubit</div>
+        <p class="game-card-theme">A quantum computing board game that makes the strange and fascinating world of qubits, superposition, and entanglement tangible through play.</p>
+        <div class="game-card-learning">
+          <span class="learn-icon">🔬</span>
+          <p>Build an intuition for quantum computing concepts before the textbooks arrive</p>
+        </div>
+      </div>
+    </div>
+
   </div>
+</section>
 
-  <div id="status"><span class="msg" id="status-msg">Choose an action.</span></div>
-</div>
+<footer>
+  <p>Making technology approachable for everyone, one game at a time.</p>
+  <p style="margin-top:10px;">
+    <a href="https://cybersecgames.com" target="_blank" rel="noopener">CyberSec Games</a>
+    &nbsp;·&nbsp;
+    <a href="/fuzznet">Play FuzzNet Labs</a>
+    &nbsp;·&nbsp;
+    <a href="https://cybersecgames.com/products/fuzznet-labs?_pos=1&_psq=FuzzNet&_ss=e&_v=1.0" target="_blank" rel="noopener">Buy FuzzNet Labs</a>
+    &nbsp;·&nbsp;
+    <a href="https://cybersecgames.com/pages/byte-club-game" target="_blank" rel="noopener">Buy Byte Club</a>
+  </p>
+  <p style="margin-top:8px;">© 2025 CyberSec Games. All rights reserved.</p>
+</footer>
 
-<!-- ===== INFO OVERLAY ===== -->
-<div id="info-overlay" onclick="closeInfo(event)">
-  <div id="info-card">
-    <button class="info-close" onclick="closeInfo()">&times;</button>
-    <h3 id="info-title"></h3>
-    <div id="info-body"></div>
-  </div>
-</div>
-
-<!-- ===== GAME OVER ===== -->
-<div id="gameover" class="screen">
-  <h2>Game Over!</h2>
-  <div class="final-scores" id="final-scores"></div>
-  <button id="play-again-btn" onclick="leaveRoom(); showScreen('lobby');">Play Again</button>
-</div>
-
-<script>
-// ==================== CONSTANTS ====================
-const ANIMALS = ['Dog', 'Bunny', 'Frog', 'Squirrel', 'Fish'];
-const ANIMAL_IMGS = ['dog', 'bunny', 'frog', 'squirrel', 'fish'];
-const TEST_THRESHOLD = 18;
-const CLEAN_PENALTIES = [0, -1, -2, -4, -6];
-const SCORE_VALUES = { 2: [5, 3], 3: [5, 3, 2], 4: [5, 4, 3, 2] };
-
-const NP = [
-  {x:230,y:80},{x:230,y:180},{x:230,y:280},{x:230,y:380},
-  {x:400,y:130},{x:400,y:230},{x:400,y:330},
-  {x:570,y:80},{x:570,y:180},{x:570,y:280},{x:570,y:380},
-];
-const INP = [{x:60,y:60},{x:60,y:160},{x:60,y:260},{x:60,y:360},{x:60,y:460}];
-const OUTP = [{x:770,y:60},{x:770,y:160},{x:770,y:260},{x:770,y:360},{x:770,y:460}];
-
-const INPUT_TO_L1 = {0:[0],1:[0,1],2:[1,2],3:[2,3],4:[3]};
-const L1_TO_L2 = {0:[4,6],1:[4,5],2:[5,6],3:[4,6]};
-const L2_TO_L3 = {4:[7,8],5:[8,9],6:[9,10]};
-const L3_TO_OUT = {7:[0,1],8:[1,2],9:[2,3],10:[3,4]};
-
-function getAllEdges() {
-  const edges = [];
-  for (const [i, nodes] of Object.entries(INPUT_TO_L1))
-    for (const n of nodes) edges.push({from:'in'+i, to:'n'+n, key:'in'+i+'-'+n});
-  for (const [a, nodes] of Object.entries(L1_TO_L2))
-    for (const b of nodes) edges.push({from:'n'+a, to:'n'+b, key:a+'-'+b});
-  for (const [a, nodes] of Object.entries(L2_TO_L3))
-    for (const b of nodes) edges.push({from:'n'+a, to:'n'+b, key:a+'-'+b});
-  for (const [a, outs] of Object.entries(L3_TO_OUT))
-    for (const o of outs) edges.push({from:'n'+a, to:'out'+o, key:a+'-out'+o});
-  return edges;
-}
-
-function edgePos(e) {
-  let x1,y1,x2,y2;
-  if (e.from.startsWith('in')) { const i=parseInt(e.from.slice(2)); x1=INP[i].x+30; y1=INP[i].y; }
-  else { const i=parseInt(e.from.slice(1)); x1=NP[i].x; y1=NP[i].y; }
-  if (e.to.startsWith('out')) { const i=parseInt(e.to.slice(3)); x2=OUTP[i].x-30; y2=OUTP[i].y; }
-  else { const i=parseInt(e.to.slice(1)); x2=NP[i].x; y2=NP[i].y; }
-  return {x1,y1,x2,y2};
-}
-
-const ALL_EDGES = getAllEdges();
-
-// ==================== CLIENT STATE ====================
-let ws = null;
-let myId = -1;
-let roomCode = '';
-let isHost = false;
-let viewingPlayer = -1; // -1 = my board
-let G = null;
-let selectedDice = new Set();
-let createColor = 'blue';
-let joinColor = '';
-let joinAvailable = [];
-let prevCurrentPlayer = -1;
-
-// ==================== WEBSOCKET ====================
-function connect() {
-  const proto = location.protocol === 'https:' ? 'wss' : 'ws';
-  ws = new WebSocket(`${proto}://${location.host}`);
-  ws.onclose = () => setTimeout(connect, 2000);
-  ws.onmessage = (e) => handleServerMsg(JSON.parse(e.data));
-}
-
-function sendMsg(msg) {
-  if (ws && ws.readyState === 1) ws.send(JSON.stringify(msg));
-}
-
-function handleServerMsg(msg) {
-  switch (msg.type) {
-    case 'room_created':
-      roomCode = msg.code; myId = msg.yourId; isHost = true;
-      showScreen('waiting');
-      document.getElementById('room-code-display').textContent = roomCode;
-      break;
-    case 'room_info':
-      handleRoomInfo(msg);
-      break;
-    case 'room_joined':
-      roomCode = msg.code; myId = msg.yourId; isHost = false;
-      showScreen('waiting');
-      document.getElementById('room-code-display').textContent = roomCode;
-      break;
-    case 'lobby_update':
-      renderLobbyPlayers(msg.players);
-      break;
-    case 'game_started':
-      viewingPlayer = -1;
-      showScreen('game');
-      break;
-    case 'state_update':
-      myId = msg.yourId;
-      G = msg.state;
-      // Auto-switch to own board when your turn starts
-      if (G.currentPlayer === myId && prevCurrentPlayer !== myId) {
-        viewingPlayer = -1;
-        selectedDice = new Set();
-      }
-      prevCurrentPlayer = G.currentPlayer;
-      renderGame();
-      if (G.gameOver) showGameOver();
-      break;
-    case 'left_room':
-      roomCode = ''; myId = -1; G = null;
-      showScreen('lobby');
-      break;
-    case 'error': {
-      const lobbyActive = document.getElementById('lobby').classList.contains('active');
-      const waitActive = document.getElementById('waiting').classList.contains('active');
-      if (lobbyActive) document.getElementById('lobby-error').textContent = msg.msg;
-      else if (waitActive) document.getElementById('waiting-error').textContent = msg.msg;
-      if (msg.availableColors) { joinAvailable = msg.availableColors; renderJoinColors(); }
-      break;
-    }
-  }
-}
-
-// ==================== SCREENS ====================
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  // Update URL with room code
-  if ((id === 'waiting' || id === 'game') && roomCode) {
-    history.replaceState(null, '', `?room=${roomCode}`);
-  } else if (id === 'lobby') {
-    history.replaceState(null, '', location.pathname);
-  }
-}
-
-// ==================== LOBBY ====================
-function selectCreateColor(color) {
-  createColor = color;
-  document.querySelectorAll('#create-colors .color-btn').forEach(b =>
-    b.classList.toggle('selected', b.dataset.color === color));
-}
-function selectJoinColor(color) {
-  joinColor = color;
-  document.querySelectorAll('#join-colors .color-btn').forEach(b =>
-    b.classList.toggle('selected', b.dataset.color === color));
-  document.getElementById('btn-join').disabled = !joinColor;
-}
-function renderJoinColors() {
-  const c = document.getElementById('join-colors');
-  c.style.opacity = '1'; c.style.pointerEvents = 'auto';
-  c.querySelectorAll('.color-btn').forEach(b => {
-    b.disabled = !joinAvailable.includes(b.dataset.color);
-    b.classList.remove('selected');
-  });
-  joinColor = '';
-  document.getElementById('btn-join').disabled = true;
-}
-function checkRoom() {
-  const code = document.getElementById('join-code').value.trim().toUpperCase();
-  document.getElementById('lobby-error').textContent = '';
-  if (code.length === 4) sendMsg({ type: 'check_room', code });
-  else {
-    document.getElementById('join-colors').style.opacity = '0.3';
-    document.getElementById('join-colors').style.pointerEvents = 'none';
-    document.getElementById('btn-join').disabled = true;
-  }
-}
-function handleRoomInfo(msg) {
-  const el = document.getElementById('lobby-error');
-  if (!msg.exists) { el.textContent = 'Room not found'; return; }
-  if (msg.started) { el.textContent = 'Game already started'; return; }
-  if (msg.full) { el.textContent = 'Room is full'; return; }
-  el.textContent = '';
-  joinAvailable = msg.availableColors || [];
-  renderJoinColors();
-}
-function createRoom() { sendMsg({ type: 'create_room', color: createColor }); }
-function joinRoom() {
-  const code = document.getElementById('join-code').value.trim().toUpperCase();
-  if (!code || !joinColor) return;
-  sendMsg({ type: 'join_room', code, color: joinColor });
-}
-function leaveRoom() {
-  sendMsg({ type: 'leave_room' });
-  roomCode = ''; myId = -1; G = null; isHost = false;
-}
-function copyCode() {
-  navigator.clipboard.writeText(roomCode).then(() => flashCopied('btn-copy-code')).catch(()=>{});
-}
-function copyLink() {
-  const url = `${location.origin}?room=${roomCode}`;
-  navigator.clipboard.writeText(url).then(() => flashCopied('btn-copy-link')).catch(()=>{});
-}
-function flashCopied(btnId) {
-  const btn = document.getElementById(btnId);
-  const orig = btn.textContent;
-  btn.textContent = 'Copied!';
-  btn.classList.add('copied');
-  setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 1500);
-}
-
-// ==================== WAITING ROOM ====================
-function getHex(color) {
-  return {blue:'#4a9eff',red:'#ff4a4a',green:'#4aff8a',purple:'#c880ff'}[color]||'#888';
-}
-function renderLobbyPlayers(players) {
-  const hasBot = players.some(p => p.isBot);
-  const humans = players.filter(p => !p.isBot).length;
-  const list = document.getElementById('player-list');
-  list.innerHTML = players.map((p, i) =>
-    `<div class="player-slot"><span class="dot" style="background:${getHex(p.color)}"></span><span>${p.name}</span>${p.isBot?'<span class="bot-badge">BOT</span>':''}${p.isHost?'<span class="host-badge">HOST</span>':''}${i===0?'<span class="first-badge">1ST</span>':''}</div>`
-  ).join('');
-  const btn = document.getElementById('btn-start-game');
-  btn.style.display = isHost ? 'inline-block' : 'none';
-  btn.disabled = players.length < 2;
-  // Bot toggle: only show for host when alone or with bot
-  const botBtn = document.getElementById('btn-bot-toggle');
-  if (isHost && humans === 1) {
-    botBtn.style.display = 'block';
-    botBtn.textContent = hasBot ? 'Remove Bot' : 'Play Solo vs Bot';
-    botBtn.classList.toggle('active', hasBot);
-  } else {
-    botBtn.style.display = 'none';
-  }
-  const errMsg = isHost
-    ? (players.length < 2 ? 'Add a bot or invite players to start' : '')
-    : (players.length < 2 ? 'Waiting for more players...' : 'Waiting for host to start...');
-  document.getElementById('waiting-error').textContent = errMsg;
-}
-function toggleBot() { sendMsg({ type: 'toggle_bot' }); }
-function startGame() { sendMsg({ type: 'start_game' }); }
-
-// ==================== GAME RENDERING ====================
-function isMyTurn() { return G && G.currentPlayer === myId && !G.gameOver; }
-function viewedIdx() { return (viewingPlayer === -1) ? myId : viewingPlayer; }
-function vp() { return G ? G.players[viewedIdx()] : null; }
-function cp() { return G ? G.players[G.currentPlayer] : null; }
-
-function renderGame() {
-  if (!G) return;
-  renderTopBar(); renderBoard(); renderSidePanel(); renderStatus();
-}
-
-function renderTopBar() {
-  const c = cp();
-  document.getElementById('turn-dot').style.background = c.hex;
-  document.getElementById('turn-name').textContent = (G.currentPlayer === myId ? 'Your' : c.name + "'s") + ' Turn';
-  document.getElementById('round-info').textContent = 'Round ' + G.round + (G.gameEnding ? ' (Final)' : '');
-  document.getElementById('room-badge').textContent = roomCode;
-  document.getElementById('actions-count').textContent = G.actionsLeft;
-
-  // Build player board tabs: your board first, then others in player order
-  const order = [myId];
-  for (let i = 0; i < G.players.length; i++) { if (i !== myId) order.push(i); }
-  let vhtml = '';
-  for (const idx of order) {
-    const p = G.players[idx];
-    const isViewed = viewedIdx() === idx;
-    const isTurn = G.currentPlayer === idx;
-    const label = idx === myId ? 'You' : p.name;
-    let cls = 'view-btn';
-    if (isViewed) cls += ' active';
-    if (isTurn) cls += ' is-turn';
-    const viewArg = idx === myId ? -1 : idx;
-    const firstMark = idx === 0 ? '<span class="first-badge">1ST</span>' : '';
-    vhtml += `<button class="${cls}" onclick="setView(${viewArg})"><span class="vb-dot" style="background:${p.hex}"></span>${label}${firstMark}</button>`;
-  }
-  document.getElementById('view-toggle').innerHTML = vhtml;
-}
-
-function setView(id) { viewingPlayer = id; renderGame(); }
-
-function colorizeFilter(hex) {
-  const map = {
-    '#4a9eff': 'grayscale(1) sepia(1) hue-rotate(180deg) saturate(3) brightness(0.95)',
-    '#ff4a4a': 'grayscale(1) sepia(1) hue-rotate(330deg) saturate(4) brightness(0.9)',
-    '#4aff8a': 'grayscale(1) sepia(1) hue-rotate(115deg) saturate(3) brightness(0.9)',
-    '#c880ff': 'grayscale(1) sepia(1) hue-rotate(250deg) saturate(3) brightness(0.9)',
-  };
-  return map[hex] || 'grayscale(1)';
-}
-
-function renderBoard() {
-  const svg = document.getElementById('board-svg');
-  const p = vp(); if (!p) return;
-  const canAct = isMyTurn() && viewedIdx() === myId;
-  let html = '';
-
-  // Edges
-  for (const e of ALL_EDGES) {
-    const {x1,y1,x2,y2} = edgePos(e);
-    let cls = 'edge-line';
-    if (p.blocked.includes(e.key)) cls += ' blocked';
-    else if (canAct && (G.phase==='train_overfit'||G.phase==='backprop_overfit') && G.overfitEdges && G.overfitEdges.some(oe=>oe.key===e.key)) cls += ' selectable';
-    else if (G.testPath.length>0 && viewedIdx()===G.currentPlayer && isEdgeInPath(e.key)) cls += ' path-highlight';
-    const oc = canAct ? ` onclick="clickEdge('${e.key}')"` : '';
-    html += `<line class="${cls}" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"${oc}/>`;
-    if (p.blocked.includes(e.key)) {
-      const mx=(x1+x2)/2, my=(y1+y2)/2;
-      html += `<line class="overfit-x" x1="${mx-8}" y1="${my-8}" x2="${mx+8}" y2="${my+8}"/>`;
-      html += `<line class="overfit-x" x1="${mx+8}" y1="${my-8}" x2="${mx-8}" y2="${my+8}"/>`;
-    }
-  }
-
-  // Input labels — solid player-color box, grayscale animal inside (photo frame style)
-  const playerHex = vp().hex;
-  for (let i=0;i<5;i++) {
-    const {x,y}=INP[i];
-    const test = canAct && G.phase==='test_animal' && !p.tested[i];
-    const sz=38, fw=5, cx=x, cy=y-6;
-    const bx=cx-sz/2-fw, by=cy-sz/2-fw, bw=sz+fw*2, bh=sz+fw*2;
-    const oc = test?` onclick="clickAnimal(${i})" style="cursor:pointer"`:'';
-    // Colored box background
-    html += `<rect x="${bx}" y="${by}" width="${bw}" height="${bh}" rx="4" fill="${playerHex}" opacity="${test?1:0.85}"${oc}/>`;
-    // Bright border when clickable (test phase)
-    if (test) html += `<rect x="${bx}" y="${by}" width="${bw}" height="${bh}" rx="4" fill="none" stroke="white" stroke-width="2.5" stroke-dasharray="6,3" opacity="0.9"/>`;
-    // Grayscale animal image
-    html += `<image href="images/${ANIMAL_IMGS[i]}.png" x="${cx-sz/2}" y="${cy-sz/2}" width="${sz}" height="${sz}" style="filter:grayscale(1)"${oc}/>`;
-    html += `<text class="input-label" x="${x}" y="${y+26}" text-anchor="middle" font-size="10" fill="${playerHex}">${ANIMALS[i]}</text>`;
-  }
-
-  // Output labels — player-color tinted animal; dimmed until tested
-  for (let i=0;i<5;i++) {
-    const {x,y}=OUTP[i];
-    const ai=G.animalOrder[i];
-    const t=p.tested[ai];
-    const sz=34, cx=x, cy=y-6;
-    const filt=colorizeFilter(playerHex);
-    const opacity=t?1:0.4;
-    html += `<image href="images/${ANIMAL_IMGS[ai]}.png" x="${cx-sz/2}" y="${cy-sz/2}" width="${sz}" height="${sz}" style="filter:${filt};opacity:${opacity}"/>`;
-    html += `<text class="output-label" x="${x}" y="${y+24}" text-anchor="middle" font-size="10" fill="${t?playerHex:'#bbb'}">${ANIMALS[ai]}${t?' ✓':''}</text>`;
-  }
-
-  // Nodes
-  for (let i=0;i<11;i++) {
-    const {x,y}=NP[i];
-    let cls='node-circle';
-    if (p.nodes[i]&&p.data[i]>=3) cls+=' maxed'; else if (p.nodes[i]) cls+=' placed';
-    const dClick = canAct&&G.phase==='design'&&!p.nodes[i];
-    const tClick = canAct&&(G.phase==='train1'||G.phase==='train2')&&p.nodes[i]&&p.data[i]<3;
-    const pClick = canAct&&['test_path_l1','test_path_l2','test_path_l3'].includes(G.phase)&&G.pathClickable&&G.pathClickable.includes(i);
-    const bpSrcClick = canAct&&G.phase==='backprop_source'&&isValidBpSrc(p,i);
-    const bpDstClick = canAct&&G.phase==='backprop_dest'&&isValidBpDst(p,i);
-    const isPN = viewedIdx()===G.currentPlayer&&(G.testPath.includes(i));
-    if (dClick||tClick||pClick) cls+=' clickable';
-    if (bpSrcClick) cls+=' backprop-src';
-    if (bpDstClick) cls+=' backprop-dst';
-    if (isPN) cls+=' path-selected';
-    if (canAct&&G.phase==='backprop_dest'&&i===G.backpropSource) cls+=' backprop-src';
-    const anyClick = dClick||tClick||pClick||bpSrcClick||bpDstClick;
-    const oc=anyClick?` onclick="clickNode(${i})"`:'';
-    html += `<circle class="${cls}" cx="${x}" cy="${y}" r="26"${oc}/>`;
-    const layer=i<=3?1:(i<=6?2:3);
-    if (!p.nodes[i]) {
-      html += `<text class="node-label" x="${x}" y="${y+4}" text-anchor="middle">L${layer}</text>`;
-    } else {
-      if (p.data[i]>0) html += `<text class="node-data" x="${x}" y="${y-4}" text-anchor="middle" fill="${p.data[i]>=3?'#fc0':'#7b9fff'}">${'●'.repeat(p.data[i])}</text>`;
-      html += `<text class="node-label" x="${x}" y="${y+(p.data[i]>0?14:4)}" text-anchor="middle" fill="#8b8bbb">N${i}</text>`;
-      if (p.data[i]>=3) html += `<text x="${x}" y="${y+28}" text-anchor="middle" font-size="9" fill="#fc0">MAX</text>`;
-    }
-  }
-
-  // Layer headers with info icon
-  html += `<text x="60" y="22" fill="#444" font-size="11" text-anchor="middle">INPUT</text>`;
-  html += `<text x="230" y="22" fill="#444" font-size="11" text-anchor="middle">LAYER 1</text>`;
-  html += `<text x="400" y="22" fill="#444" font-size="11" text-anchor="middle">LAYER 2</text>`;
-  html += `<text x="570" y="22" fill="#444" font-size="11" text-anchor="middle">LAYER 3</text>`;
-  html += `<text x="770" y="22" fill="#444" font-size="11" text-anchor="middle">OUTPUT</text>`;
-  html += `<circle cx="840" cy="18" r="9" fill="none" stroke="#bbb" stroke-width="1.5" style="cursor:pointer" onclick="showInfo('network')"/>`;
-  html += `<text x="840" y="22" fill="#999" font-size="11" font-weight="bold" text-anchor="middle" style="cursor:pointer;font-family:serif" onclick="showInfo('network')">i</text>`;
-
-  if (viewedIdx() !== myId) {
-    html += `<rect x="0" y="0" width="870" height="490" fill="none" stroke="${vp().hex}" stroke-width="4" stroke-dasharray="12,4" rx="8"/>`;
-    html += `<text x="435" y="480" text-anchor="middle" fill="${vp().hex}" font-size="13">Viewing ${vp().name}'s Board</text>`;
-  }
-
-  svg.innerHTML = html;
-}
-
-function isEdgeInPath(key) {
-  if (!G||G.testPath.length===0) return false;
-  const ai=G.testAnimal, to=G.animalOrder.indexOf(ai), p=G.testPath;
-  return (p.length>=1&&key==='in'+ai+'-'+p[0])||(p.length>=2&&key===p[0]+'-'+p[1])||(p.length>=3&&key===p[1]+'-'+p[2])||(p.length>=3&&key===p[2]+'-out'+to);
-}
-
-function hasNodeSlots(p) { return p.nodes.some(n => !n); }
-function hasEnoughDataSlots(p) {
-  let s = 0;
-  for (let i = 0; i < 11; i++) if (p.nodes[i] && p.data[i] < 3) s += (3 - p.data[i]);
-  return s >= 2;
-}
-function hasTestablePath(p) {
-  for (let a = 0; a < 5; a++) {
-    if (p.tested[a]) continue;
-    const to = G.animalOrder.indexOf(a);
-    for (const l1 of (INPUT_TO_L1[a]||[])) {
-      if (!p.nodes[l1]) continue;
-      for (const l2 of (L1_TO_L2[l1]||[])) {
-        if (!p.nodes[l2] || p.blocked.includes(l1+'-'+l2)) continue;
-        for (const l3 of (L2_TO_L3[l2]||[])) {
-          if (!p.nodes[l3] || p.blocked.includes(l2+'-'+l3)) continue;
-          if ((L3_TO_OUT[l3]||[]).includes(to) && !p.blocked.includes(l3+'-out'+to)) return true;
-        }
-      }
-    }
-  }
-  return false;
-}
-
-function renderSidePanel() {
-  const canAct = isMyTurn() && viewedIdx() === myId;
-  const p = vp();
-  const base = !canAct || G.phase!=='idle' || G.actionsLeft<=0;
-  document.getElementById('btn-design').disabled = base || !hasNodeSlots(p);
-  document.getElementById('btn-train').disabled = base || !hasEnoughDataSlots(p);
-  document.getElementById('btn-test').disabled = base || !hasTestablePath(p);
-  document.getElementById('btn-end-turn').style.display = (canAct && G.phase==='idle' && G.actionsLeft>0 && G.actionsLeft<3) ? 'block' : 'none';
-
-  // Clean tracker for viewed player
-  let ct='';
-  for (let i=0;i<5;i++) {
-    let cls='clean-step';
-    if (i<p.cleanUses) cls+=' used'; else if (i===p.cleanUses) cls+=' active';
-    ct += `<div class="${cls}">${CLEAN_PENALTIES[i]}</div>`;
-  }
-  document.getElementById('clean-tracker').innerHTML = ct;
-
-  // Dice
-  for (let i=0;i<3;i++) {
-    const die=document.getElementById('die-'+i);
-    die.textContent = G.dice[i]||'-';
-    die.className = 'die';
-    if (canAct && G.phase==='test_clean_reroll') {
-      die.className += ' clickable'+(selectedDice.has(i)?' selected':'');
-      die.onclick = ()=>toggleDie(i);
-    } else if (canAct && G.phase==='test_clean_flip') {
-      die.className += ' clickable';
-      die.onclick = ()=>flipDie(i);
-    } else { die.onclick=null; }
-  }
-
-  // Test info
-  let ti='';
-  if (G.phase==='test_eval' && viewedIdx()===G.currentPlayer) {
-    const ds=G.dice[0]+G.dice[1]+G.dice[2];
-    const dp=G.testPath.reduce((s,n)=>s+cp().data[n],0);
-    const t=ds+dp;
-    ti = `Dice: ${ds} + Data: ${dp} = <b style="color:${t>=TEST_THRESHOLD?'#4aff4a':'#ff4a4a'}">${t}</b> (need ${TEST_THRESHOLD})`;
-  }
-  document.getElementById('test-info').innerHTML = ti;
-  renderScoreboard();
-}
-
-function renderScoreboard() {
-  const numP=G.players.length, vals=SCORE_VALUES[numP];
-  let h='<table class="score-table"><tr><th></th>';
-  for (let i=0;i<vals.length;i++) h+=`<th class="score-val">${vals[i]}pt</th>`;
-  h+='</tr>';
-  for (let a=0;a<5;a++) {
-    h+=`<tr><td class="score-animal"><img src="images/${ANIMAL_IMGS[a]}.png" style="width:22px;height:22px;object-fit:contain;vertical-align:middle;filter:grayscale(1) brightness(0.35)"></td>`;
-    const roundCounts={};
-    for (const e of G.scoreboard[a]) if (e) roundCounts[e.round]=(roundCounts[e.round]||0)+1;
-    for (let i=0;i<vals.length;i++) {
-      const e=G.scoreboard[a][i];
-      if (e) {
-        const tied=roundCounts[e.round]>1;
-        const tieTag=tied?'<span class="tie-mark">=</span>':'';
-        h+=`<td class="score-val"${tied?' title="Tied — scored same round, equal points"':''}><span style="color:${G.players[e.player].hex}">●</span>${tieTag}</td>`;
-      }
-      else h+=`<td class="score-val" style="color:#333">○</td>`;
-    }
-    h+='</tr>';
-  }
-  h+='</table><div style="margin-top:6px;font-size:11px;color:#666">';
-  for (let i=0;i<numP;i++) h+=`<span style="color:${G.players[i].hex};margin-right:10px">${G.players[i].name}: ${G.scores[i]}pts</span>`;
-  h+='</div>';
-  document.getElementById('scoreboard').innerHTML = h;
-}
-
-function renderStatus() {
-  const el=document.getElementById('status');
-  const canAct = isMyTurn() && viewedIdx()===myId;
-  if (!canAct) {
-    let m = G.gameOver ? 'Game over!' : (viewedIdx()!==myId ? `Viewing ${vp().name}'s board.` : `Waiting for ${cp().name}'s turn...`);
-    el.innerHTML = `<span class="msg">${m}</span>`;
-    return;
-  }
-  const p=vp();
-  let msg='', btn='';
-  switch (G.phase) {
-    case 'idle': msg = G.actionsLeft>0 ? 'Choose an action.' : 'Turn complete.'; break;
-    case 'design': msg='Click an empty node to place a Node Token.'; break;
-    case 'train1': msg='Click a node to place Data Token 1 of 2.'; break;
-    case 'train2': msg='Click a node to place Data Token 2 of 2.'; break;
-    case 'train_overfit': msg='⚠️ Node maxed! Click a yellow edge to block.'; break;
-    case 'test_animal': msg='Click a highlighted animal (left) to test.'; break;
-    case 'test_path_l1': msg=`Testing ${EMOJI[G.testAnimal]} — Click a Layer 1 node.`; break;
-    case 'test_path_l2': msg=`Testing ${EMOJI[G.testAnimal]} — Click a Layer 2 node.`; break;
-    case 'test_path_l3': msg=`Testing ${EMOJI[G.testAnimal]} — Click a Layer 3 node.`; break;
-    case 'test_roll':
-      msg='Path selected! ';
-      btn='<button class="primary" onclick="doAction(\'roll_dice\')">Roll Dice</button>';
-      break;
-    case 'test_eval': {
-      const ds=G.dice.reduce((a,b)=>a+b,0), dp=G.testPath.reduce((s,n)=>s+p.data[n],0), t=ds+dp;
-      if (t>=TEST_THRESHOLD) { msg=`✅ Passed! (${t} ≥ ${TEST_THRESHOLD}) `; btn='<button class="primary" onclick="doAction(\'resolve_success\')">Score!</button>'; }
-      else {
-        msg=`❌ Value: ${t} (need ${TEST_THRESHOLD}). `;
-        if (p.cleanUses<4) {
-          btn='<button onclick="startCleanReroll()">Reroll Dice</button>';
-          btn+=' <button onclick="startCleanFlip()">Flip a Die</button>';
-          btn+=' <button class="danger" onclick="doAction(\'resolve_fail\')">Accept Fail</button>';
-        } else btn='<button class="danger" onclick="doAction(\'resolve_fail\')">Accept Fail</button>';
-      }
-      break;
-    }
-    case 'test_clean_reroll':
-      msg='Click dice to select for reroll, then confirm.';
-      btn='<button class="primary" onclick="confirmReroll()">Reroll Selected</button> <button onclick="cancelClean()">Cancel</button>';
-      break;
-    case 'test_clean_flip':
-      msg='Click a die to flip it (1↔6, 2↔5, 3↔4).';
-      btn='<button onclick="cancelClean()">Cancel</button>';
-      break;
-    case 'backprop_source':
-      msg='Backpropagation: select a node to move a Data Token FROM.';
-      btn='<button class="info-btn" onclick="showInfo(\'backprop\')" style="width:20px;height:20px;font-size:11px;display:inline-flex;vertical-align:middle;margin-left:6px">i</button>';
-      break;
-    case 'backprop_dest':
-      msg=`Backpropagation: now select a node to move the Data Token TO.`;
-      btn='<button class="info-btn" onclick="showInfo(\'backprop\')" style="width:20px;height:20px;font-size:11px;display:inline-flex;vertical-align:middle;margin-left:6px">i</button>';
-      break;
-    case 'backprop_overfit':
-      msg='⚠️ Node maxed from backprop! Click a yellow edge to block.';
-      break;
-  }
-  el.innerHTML = `<span class="msg">${msg}</span>${btn}`;
-}
-
-// ==================== ACTIONS ====================
-function doAction(action, extra) { sendMsg({ type:'game_action', action, ...(extra||{}) }); }
-function isValidBpSrc(p, i) {
-  if (!p.nodes[i] || p.data[i] <= 0) return false;
-  const onPath = G.testPath.includes(i);
-  for (let j = 0; j < 11; j++) {
-    if (j === i || !p.nodes[j] || p.data[j] >= 3) continue;
-    if (onPath || G.testPath.includes(j)) return true;
-  }
-  return false;
-}
-function isValidBpDst(p, i) {
-  if (!p.nodes[i] || p.data[i] >= 3 || i === G.backpropSource) return false;
-  return G.testPath.includes(G.backpropSource) || G.testPath.includes(i);
-}
-function clickNode(id) {
-  if (G.phase==='design') doAction('place_node',{nodeId:id});
-  else if (G.phase==='train1'||G.phase==='train2') doAction('place_data',{nodeId:id});
-  else if (['test_path_l1','test_path_l2','test_path_l3'].includes(G.phase)) doAction('select_path_node',{nodeId:id});
-  else if (G.phase==='backprop_source') doAction('backprop_select_source',{nodeId:id});
-  else if (G.phase==='backprop_dest') doAction('backprop_select_dest',{nodeId:id});
-}
-function clickEdge(key) {
-  if (G.phase==='train_overfit') doAction('select_overfit_edge',{edgeKey:key});
-  else if (G.phase==='backprop_overfit') doAction('backprop_select_overfit',{edgeKey:key});
-}
-function clickAnimal(idx) { if (G.phase==='test_animal') doAction('select_animal',{animalIdx:idx}); }
-
-// Clean data UI (local phase override)
-function startCleanReroll() { selectedDice=new Set(); G.phase='test_clean_reroll'; renderGame(); }
-function startCleanFlip() { G.phase='test_clean_flip'; renderGame(); }
-function cancelClean() { G.phase='test_eval'; selectedDice=new Set(); renderGame(); }
-function toggleDie(i) { if(selectedDice.has(i)) selectedDice.delete(i); else selectedDice.add(i); renderGame(); }
-function confirmReroll() { if(!selectedDice.size) return; doAction('clean_reroll',{diceIndices:[...selectedDice]}); selectedDice=new Set(); }
-function flipDie(i) { doAction('clean_flip',{dieIdx:i}); }
-
-// ==================== GAME OVER ====================
-function showGameOver() {
-  const SCORE_VALS = { 2:[5,3], 3:[5,3,2], 4:[5,4,3,2] };
-  const PENALTIES = [0,-1,-2,-4,-6];
-  const SLOT_LABELS = ['1st','2nd','3rd','4th'];
-  const numPlayers = G.players.length;
-  const vals = SCORE_VALS[numPlayers];
-
-  const scores = G.players.map((p,i)=>({idx:i,score:G.scores[i],player:p})).sort((a,b)=>b.score-a.score);
-  let h='<table><tr><th>Player</th><th>Score</th><th></th></tr>';
-
-  for (const s of scores) {
-    const w = s.score===scores[0].score;
-    const c = w?' class="winner"':'';
-    const p = s.player;
-
-    // Build breakdown rows
-    let bdRows = '';
-
-    // Animal scoreboard points
-    for (let a=0; a<5; a++) {
-      for (let slot=0; slot<G.scoreboard[a].length; slot++) {
-        const entry = G.scoreboard[a][slot];
-        if (entry && entry.player===s.idx) {
-          const pts = vals[slot];
-          const bonus = entry.bonusTokens||0;
-          const total = pts + bonus;
-          const tied = G.scoreboard[a].some((e,j) => j!==slot && e && e.round===entry.round);
-          const tieNote = tied ? ' <span class="tie-mark">=</span>' : '';
-          const label = `${ANIMALS[a]} — ${SLOT_LABELS[slot]} place${tied?' (tied, same round)':''}`;
-          bdRows += `<div class="breakdown-item"><span>${label}${tieNote}</span><span>+${total}</span></div>`;
-        }
-      }
-    }
-
-    // All 5 tested bonus
-    if (p.tested && p.tested.every(t=>t))
-      bdRows += `<div class="breakdown-item bonus"><span>All 5 animals tested</span><span>+1</span></div>`;
-
-    // Fully-trained nodes
-    let trained = 0;
-    for (let i=0; i<11; i++) if (p.nodes[i] && p.data[i]>=3) trained++;
-    if (trained>0)
-      bdRows += `<div class="breakdown-item bonus"><span>Fully-trained nodes ×${trained}</span><span>+${trained}</span></div>`;
-
-    // Clean data penalty
-    const penalty = PENALTIES[p.cleanUses]||0;
-    if (penalty<0)
-      bdRows += `<div class="breakdown-item penalty"><span>Clean data penalty (${p.cleanUses} use${p.cleanUses!==1?'s':''})</span><span>${penalty}</span></div>`;
-
-    const breakdown = `<div class="score-breakdown">${bdRows}<div class="breakdown-total"><span>Total</span><span>${s.score}</span></div></div>`;
-
-    h+=`<tr${c}><td><span style="color:${s.player.hex}">● ${s.player.name}</span>${s.idx===myId?' (You)':''}${w?' 👑':''}</td><td${c}>${s.score}</td><td><button class="breakdown-toggle" onclick="toggleBreakdown(${s.idx})">▶ Details</button></td></tr>`;
-    h+=`<tr id="breakdown-${s.idx}" style="display:none"><td colspan="3">${breakdown}</td></tr>`;
-  }
-  h+='</table>';
-  document.getElementById('final-scores').innerHTML = h;
-  showScreen('gameover');
-}
-
-function toggleBreakdown(idx) {
-  const row = document.getElementById('breakdown-'+idx);
-  const btn = row.previousElementSibling.querySelector('.breakdown-toggle');
-  const open = row.style.display==='none';
-  row.style.display = open ? 'table-row' : 'none';
-  btn.textContent = open ? '▼ Details' : '▶ Details';
-}
-
-// ==================== INFO SYSTEM ====================
-const INFO = {
-  backprop: {
-    title: 'Backpropagation',
-    body: `<p>When you <b>fail</b> a test, your model learns from its mistakes. You must <b>move one Data Token</b> on your board. The failed test path must be involved.</p>
-<p>Choose one option:</p>
-<ul>
-<li><b>Within the path</b> — Move a token from one path node to another path node</li>
-<li><b>Receive onto path</b> — Move a token from any node to a path node</li>
-<li><b>Move off path</b> — Move a token from a path node to any node</li>
-</ul>
-<p>Normal placement rules apply (max 3 data per node). If you move a token away from a maxed node, its Overfitting Token (blocked edge) is removed. If you move a token onto a node and it becomes maxed, you must immediately add an Overfitting Token.</p>
-<div class="info-highlight">This step is skipped if no valid move exists (no data tokens on the board, or no legal destination).</div>`
-  },
-  firstplayer: {
-    title: 'First Player Marker',
-    body: `<p>The <b><span style="background:#f5a623;color:#fff;padding:1px 5px;border-radius:4px;font-size:12px">1ST</span></b> badge marks the player who goes first.</p>
-<p>This matters because <b>the game ends after everyone has had an equal number of turns.</b> When a player triggers the end condition (tests all 5 animals, or testing becomes impossible for everyone), the round completes so that every player has taken the same number of turns before final scores are tallied.</p>
-<div class="info-highlight">The first player's turn marks the start of each round. Once the end condition is triggered, play continues until the first player's next turn would begin — giving all other players one final turn.</div>`
-  },
-  overview: {
-    title: 'How to Play',
-    body: `<p>You are a data scientist at FuzzNet Labs building a neural network to identify animals in photos. Compete against other startups to build the best model!</p>
-<p><b>On your first turn</b> you take <b>3 actions</b>. All future turns you take <b>1 action</b>.</p>
-<p>Each turn, choose one action:</p>
-<ul>
-<li><b>Design</b> — Add a node to build paths through your network</li>
-<li><b>Train</b> — Add data tokens to nodes to boost test success</li>
-<li><b>Test</b> — Pick an animal, trace a path, and roll dice to score</li>
-</ul>
-<div class="info-highlight">The game ends when any player successfully tests all 5 animals, or testing becomes impossible. All players get equal turns, then highest score wins.</div>`
-  },
-  actions: {
-    title: 'Actions Overview',
-    body: `<p>Each turn you perform an action. On your <b>very first turn</b> you get <b>3 actions</b>; after that, <b>1 action per turn</b>.</p>
-<ul>
-<li><b>Design Model</b> — Place a node to enable test paths</li>
-<li><b>Train Model</b> — Add data to improve test odds</li>
-<li><b>Test Model</b> — Attempt to score points for an animal</li>
-</ul>
-<p>Actions that have no legal play are disabled. For example, you can't Test if there's no complete path from any untested animal input to its matching output.</p>`
-  },
-  design: {
-    title: 'Design Model',
-    body: `<p>Add <b>1 Node Token</b> on any empty node on your board. This creates paths that connect animal inputs on the left to animal outputs on the right.</p>
-<p>A node cannot be removed or moved once placed.</p>
-<div class="info-highlight">You need a complete 3-node path (Layer 1 → Layer 2 → Layer 3) connecting an input animal to its matching output animal before you can test that animal.</div>
-<p><b>Why it matters:</b> In real neural networks, designing the network structure (number of neurons and layers) determines how the model processes information. More nodes create more possible paths.</p>`
-  },
-  train: {
-    title: 'Train Model',
-    body: `<p>Add <b>2 Data Tokens</b> onto nodes that already have Node Tokens. You may place both on the same node or split across two nodes.</p>
-<p>Each Data Token on a node in your test path adds <b>+1</b> to your test score, increasing the chance of passing.</p>
-<p><b>Overfitting (Max 3 per node):</b> When a node reaches 3 data tokens, it becomes "maxed out." You must place an Overfitting Token on one of its connecting paths, <b>permanently blocking</b> that path.</p>
-<ul>
-<li>You earn <b>+1 point</b> at game end for each maxed node</li>
-<li>Be careful — blocked paths can cut off routes to untested animals!</li>
-</ul>
-<div class="info-highlight">In real ML, overfitting happens when a model is too heavily trained on specific data, making it biased and less accurate on new inputs.</div>`
-  },
-  test: {
-    title: 'Test Model',
-    body: `<p>Test if your neural network can correctly identify an animal photo.</p>
-<ol style="padding-left:18px;margin-bottom:8px">
-<li>Pick an <b>untested animal</b> (highlighted on the left)</li>
-<li>Trace a <b>complete path</b> through 3 nodes (L1 → L2 → L3) to the matching output</li>
-<li><b>Roll 3 dice</b></li>
-<li>Score = dice total + data tokens on the path</li>
-</ol>
-<div class="info-highlight">You need a total of <b>18 or more</b> to pass the test.</div>
-<p><b>If you fail:</b> You may use Clean Data to reroll or flip dice (at a cost), or accept the failure.</p>
-<p><b>If you pass:</b> Place your animal on the scoreboard in the highest available slot. Earlier testers get more points!</p>`
-  },
-  cleandata: {
-    title: 'Clean Data Track',
-    body: `<p>During a test, if your dice roll isn't enough, you can use the <b>Clean Data</b> action to modify your dice:</p>
-<ul>
-<li><b>Reroll</b> — Reroll any number of your dice, OR</li>
-<li><b>Flip</b> — Flip one die to its opposite face (1↔6, 2↔5, 3↔4)</li>
-</ul>
-<p>Each use slides the clean data tracker down one space, costing penalty points at game end:</p>
-<p style="text-align:center"><b>0 → -1 → -2 → -4 → -6</b></p>
-<p>You can use Clean Data up to <b>4 times</b> per game. The flip option is only available for the first 2 uses.</p>
-<div class="info-highlight">In real ML, "cleaning data" means improving data quality — removing errors, filling gaps, and standardizing formats. It's essential but time-consuming.</div>`
-  },
-  dice: {
-    title: 'Dice',
-    body: `<p>When testing, you roll <b>3 dice</b>. The sum of the dice plus any data tokens on your chosen path determines if your test passes.</p>
-<div class="info-highlight">Dice total + Data tokens on path ≥ <b>18</b> = Success!</div>
-<p>With 3 dice (range 3–18) and up to 9 data tokens on a 3-node path (3 per node), the maximum possible score is 27.</p>
-<p>With no training data, you'd need to roll all 6s (18) — unlikely! Training your model makes success much more probable.</p>`
-  },
-  scoreboard: {
-    title: 'Scoreboard & Scoring',
-    body: `<p>When you pass a test, place your animal on the <b>highest available point slot</b> for that animal on the scoreboard.</p>
-<p>Point values depend on player count. In a 4-player game: <b>5, 4, 3, 2</b> points per slot.</p>
-<p>Players who pass the same animal in the <b>same round</b> share the same point value (ties get bonus data tokens).</p>
-<p><b>End game scoring:</b></p>
-<ol style="padding-left:18px;margin-bottom:8px">
-<li>Points from animal placements on scoreboard</li>
-<li>+1 per bonus data token on the scoreboard</li>
-<li>+1 if all 5 animals tested</li>
-<li>+1 per maxed node on your board</li>
-<li>Subtract Clean Data penalty</li>
-</ol>
-<div class="info-highlight">Race to test early for higher point slots, but balance speed against preparation — a well-trained model is more reliable!</div>`
-  },
-  network: {
-    title: 'Neural Network Board',
-    body: `<p>Your board represents a neural network with:</p>
-<ul>
-<li><b>5 Inputs</b> (left) — Animal photos to classify</li>
-<li><b>3 Hidden Layers</b> (center) — Where your model processes data</li>
-<li><b>5 Outputs</b> (right) — Animal classifications</li>
-</ul>
-<p>Lines between nodes show possible connections. To test an animal, you need a complete path of 3 placed nodes from that animal's input to its matching output.</p>
-<div class="info-highlight">In real neural networks, inputs are pixels of an image, hidden layers learn patterns, and outputs are confidence scores for each possible classification.</div>`
-  }
-};
-
-function showInfo(key) {
-  const info = INFO[key];
-  if (!info) return;
-  document.getElementById('info-title').textContent = info.title;
-  document.getElementById('info-body').innerHTML = info.body;
-  document.getElementById('info-overlay').classList.add('visible');
-}
-
-function closeInfo(e) {
-  if (e && e.target !== document.getElementById('info-overlay')) return;
-  document.getElementById('info-overlay').classList.remove('visible');
-}
-
-// ==================== INIT ====================
-connect();
-
-// Check URL for room code (e.g. ?room=ABCD)
-(function checkUrlRoom() {
-  const params = new URLSearchParams(location.search);
-  const code = (params.get('room') || '').toUpperCase();
-  if (code && code.length === 4) {
-    const input = document.getElementById('join-code');
-    input.value = code;
-    // Wait for websocket to connect, then auto-check
-    const waitForWs = setInterval(() => {
-      if (ws && ws.readyState === 1) {
-        clearInterval(waitForWs);
-        checkRoom();
-      }
-    }, 100);
-    setTimeout(() => clearInterval(waitForWs), 5000);
-  }
-})();
-</script>
 </body>
 </html>

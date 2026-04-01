@@ -962,8 +962,11 @@ const MIME = { '.html': 'text/html; charset=utf-8', '.png': 'image/png', '.jpg':
 
 const server = http.createServer((req, res) => {
   const parsed = new URL(req.url, `http://${req.headers.host}`);
-  const url = parsed.pathname === '/' ? '/index.html' : parsed.pathname;
-  const filePath = path.join(__dirname, url);
+  let pathname = parsed.pathname;
+  // Route /fuzznet (with or without .html) to the game page
+  if (pathname === '/fuzznet' || pathname === '/fuzznet.html') pathname = '/fuzznet.html';
+  else if (pathname === '/') pathname = '/index.html';
+  const filePath = path.join(__dirname, pathname);
   // Only serve files under __dirname (prevent path traversal)
   if (!filePath.startsWith(__dirname)) { res.writeHead(403); res.end('Forbidden'); return; }
   const ext = path.extname(filePath);
