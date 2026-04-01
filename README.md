@@ -112,17 +112,10 @@ cd techgames
 npm install
 ```
 
-To pull the latest changes from master at any time:
-
-```bash
-git pull origin master
-pm2 restart fuzznet
-```
-
 ### 6. Start the Server with PM2
 
 ```bash
-pm2 start server.js --name fuzznet
+pm2 start npm --name "fuzznet" -- start
 pm2 save                        # persist across reboots
 pm2 startup                     # follow the printed command to enable autostart
 ```
@@ -134,6 +127,17 @@ pm2 status          # check if the server is running
 pm2 logs fuzznet    # view live logs
 pm2 restart fuzznet # restart the server
 pm2 stop fuzznet    # stop the server
+```
+
+### Deploying Updates
+
+Pull the latest code from master and restart:
+
+```bash
+cd ~/techgames
+git pull origin master
+npm install          # in case dependencies changed
+pm2 restart fuzznet
 ```
 
 ### 7. Open the Firewall Port
