@@ -146,6 +146,21 @@ body { font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif; background: #f4
 .final-scores th, .final-scores td { padding: 8px 12px; text-align: left; border-bottom: 1px solid #e8e4dc; color: #444; }
 .final-scores .winner { color: #c90; font-weight: bold; }
 #play-again-btn { padding: 12px 36px; font-size: 16px; border: none; border-radius: 8px; background: #2d6a4f; color: white; cursor: pointer; font-weight: 700; }
+
+/* ===== INFO SYSTEM ===== */
+.info-btn { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid #bbb; background: transparent; color: #999; font-size: 11px; font-weight: 700; cursor: pointer; margin-left: 5px; vertical-align: middle; transition: all 0.15s; font-family: serif; line-height: 1; padding: 0; }
+.info-btn:hover { border-color: #2d6a4f; color: #2d6a4f; background: #eef5ee; }
+#info-overlay { display: none; position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.3); backdrop-filter: blur(2px); }
+#info-overlay.visible { display: flex; align-items: center; justify-content: center; }
+#info-card { background: #fff; border-radius: 14px; padding: 20px 24px; max-width: 400px; width: 90%; box-shadow: 0 8px 32px rgba(0,0,0,0.18); position: relative; max-height: 80vh; overflow-y: auto; }
+#info-card h3 { font-size: 16px; color: #2d6a4f; margin-bottom: 10px; padding-right: 28px; }
+#info-card p { font-size: 13px; color: #555; line-height: 1.6; margin-bottom: 8px; }
+#info-card ul { font-size: 13px; color: #555; line-height: 1.6; padding-left: 18px; margin-bottom: 8px; }
+#info-card li { margin-bottom: 4px; }
+#info-card .info-close { position: absolute; top: 12px; right: 14px; width: 26px; height: 26px; border-radius: 50%; border: none; background: #f0ede6; color: #888; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+#info-card .info-close:hover { background: #e0ddd6; color: #555; }
+#info-card .info-highlight { background: #eef5ee; border-radius: 6px; padding: 8px 12px; margin: 8px 0; font-size: 12px; color: #2d6a4f; border-left: 3px solid #2d6a4f; }
+.section-title .info-btn { margin-left: 4px; }
 </style>
 </head>
 <body>
@@ -153,7 +168,7 @@ body { font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif; background: #f4
 <!-- ===== LOBBY ===== -->
 <div id="lobby" class="screen active">
   <h1>FuzzNet Labs</h1>
-  <div class="subtitle">Animal Photo Classifier — The Board Game</div>
+  <div class="subtitle">Animal Photo Classifier — The Board Game <button class="info-btn" onclick="showInfo('overview')" style="width:22px;height:22px;font-size:12px" title="How to Play">i</button></div>
 
   <div class="lobby-card">
     <h3>Create a New Game</h3>
@@ -205,6 +220,7 @@ body { font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif; background: #f4
     <span class="room-badge" id="room-badge">ABCD</span>
     <div class="round-info" id="round-info">Round 1</div>
     <div class="actions-info">Actions: <span class="actions-count" id="actions-count">3</span></div>
+    <button class="info-btn" onclick="showInfo('overview')" style="width:24px;height:24px;font-size:13px" title="How to Play">i</button>
   </div>
 
   <div id="main-area">
@@ -212,18 +228,18 @@ body { font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif; background: #f4
       <svg id="board-svg" viewBox="0 0 870 490"></svg>
     </div>
     <div id="side-panel">
-      <div class="section-title">Actions</div>
+      <div class="section-title">Actions <button class="info-btn" onclick="showInfo('actions')">i</button></div>
       <div class="action-btns">
-        <button class="action-btn" id="btn-design" onclick="doAction('start_design')">🧠 Design Model</button>
-        <button class="action-btn" id="btn-train" onclick="doAction('start_train')">📊 Train Model</button>
-        <button class="action-btn" id="btn-test" onclick="doAction('start_test')">🧪 Test Model</button>
+        <div style="display:flex;align-items:center;gap:4px"><button class="action-btn" id="btn-design" onclick="doAction('start_design')" style="flex:1">🧠 Design Model</button><button class="info-btn" onclick="showInfo('design')">i</button></div>
+        <div style="display:flex;align-items:center;gap:4px"><button class="action-btn" id="btn-train" onclick="doAction('start_train')" style="flex:1">📊 Train Model</button><button class="info-btn" onclick="showInfo('train')">i</button></div>
+        <div style="display:flex;align-items:center;gap:4px"><button class="action-btn" id="btn-test" onclick="doAction('start_test')" style="flex:1">🧪 Test Model</button><button class="info-btn" onclick="showInfo('test')">i</button></div>
       </div>
       <button class="end-turn-btn" id="btn-end-turn" onclick="doAction('end_turn')" style="display:none">Skip Remaining Actions</button>
 
-      <div class="section-title" style="margin-top:6px">Clean Data Track</div>
+      <div class="section-title" style="margin-top:6px">Clean Data Track <button class="info-btn" onclick="showInfo('cleandata')">i</button></div>
       <div class="clean-tracker" id="clean-tracker"></div>
 
-      <div class="section-title">Dice</div>
+      <div class="section-title">Dice <button class="info-btn" onclick="showInfo('dice')">i</button></div>
       <div class="dice-area" id="dice-area">
         <div class="die" id="die-0">-</div>
         <div class="die" id="die-1">-</div>
@@ -231,12 +247,21 @@ body { font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif; background: #f4
       </div>
       <div id="test-info" style="text-align:center;font-size:13px;color:#888;padding:2px 0"></div>
 
-      <div class="section-title">Scoreboard</div>
+      <div class="section-title">Scoreboard <button class="info-btn" onclick="showInfo('scoreboard')">i</button></div>
       <div class="scoreboard" id="scoreboard"></div>
     </div>
   </div>
 
   <div id="status"><span class="msg" id="status-msg">Choose an action.</span></div>
+</div>
+
+<!-- ===== INFO OVERLAY ===== -->
+<div id="info-overlay" onclick="closeInfo(event)">
+  <div id="info-card">
+    <button class="info-close" onclick="closeInfo()">&times;</button>
+    <h3 id="info-title"></h3>
+    <div id="info-body"></div>
+  </div>
 </div>
 
 <!-- ===== GAME OVER ===== -->
@@ -567,12 +592,14 @@ function renderBoard() {
     }
   }
 
-  // Layer headers
+  // Layer headers with info icon
   html += `<text x="60" y="22" fill="#444" font-size="11" text-anchor="middle">INPUT</text>`;
   html += `<text x="230" y="22" fill="#444" font-size="11" text-anchor="middle">LAYER 1</text>`;
   html += `<text x="400" y="22" fill="#444" font-size="11" text-anchor="middle">LAYER 2</text>`;
   html += `<text x="570" y="22" fill="#444" font-size="11" text-anchor="middle">LAYER 3</text>`;
   html += `<text x="770" y="22" fill="#444" font-size="11" text-anchor="middle">OUTPUT</text>`;
+  html += `<circle cx="840" cy="18" r="9" fill="none" stroke="#bbb" stroke-width="1.5" style="cursor:pointer" onclick="showInfo('network')"/>`;
+  html += `<text x="840" y="22" fill="#999" font-size="11" font-weight="bold" text-anchor="middle" style="cursor:pointer;font-family:serif" onclick="showInfo('network')">i</text>`;
 
   if (viewedIdx() !== myId) {
     html += `<rect x="0" y="0" width="870" height="490" fill="none" stroke="${vp().hex}" stroke-width="4" stroke-dasharray="12,4" rx="8"/>`;
@@ -755,6 +782,121 @@ function showGameOver() {
   h+='</table>';
   document.getElementById('final-scores').innerHTML = h;
   showScreen('gameover');
+}
+
+// ==================== INFO SYSTEM ====================
+const INFO = {
+  overview: {
+    title: 'How to Play',
+    body: `<p>You are a data scientist at FuzzNet Labs building a neural network to identify animals in photos. Compete against other startups to build the best model!</p>
+<p><b>On your first turn</b> you take <b>3 actions</b>. All future turns you take <b>1 action</b>.</p>
+<p>Each turn, choose one action:</p>
+<ul>
+<li><b>Design</b> — Add a node to build paths through your network</li>
+<li><b>Train</b> — Add data tokens to nodes to boost test success</li>
+<li><b>Test</b> — Pick an animal, trace a path, and roll dice to score</li>
+</ul>
+<div class="info-highlight">The game ends when any player successfully tests all 5 animals, or testing becomes impossible. All players get equal turns, then highest score wins.</div>`
+  },
+  actions: {
+    title: 'Actions Overview',
+    body: `<p>Each turn you perform an action. On your <b>very first turn</b> you get <b>3 actions</b>; after that, <b>1 action per turn</b>.</p>
+<ul>
+<li><b>Design Model</b> — Place a node to enable test paths</li>
+<li><b>Train Model</b> — Add data to improve test odds</li>
+<li><b>Test Model</b> — Attempt to score points for an animal</li>
+</ul>
+<p>Actions that have no legal play are disabled. For example, you can't Test if there's no complete path from any untested animal input to its matching output.</p>`
+  },
+  design: {
+    title: 'Design Model',
+    body: `<p>Add <b>1 Node Token</b> on any empty node on your board. This creates paths that connect animal inputs on the left to animal outputs on the right.</p>
+<p>A node cannot be removed or moved once placed.</p>
+<div class="info-highlight">You need a complete 3-node path (Layer 1 → Layer 2 → Layer 3) connecting an input animal to its matching output animal before you can test that animal.</div>
+<p><b>Why it matters:</b> In real neural networks, designing the network structure (number of neurons and layers) determines how the model processes information. More nodes create more possible paths.</p>`
+  },
+  train: {
+    title: 'Train Model',
+    body: `<p>Add <b>2 Data Tokens</b> onto nodes that already have Node Tokens. You may place both on the same node or split across two nodes.</p>
+<p>Each Data Token on a node in your test path adds <b>+1</b> to your test score, increasing the chance of passing.</p>
+<p><b>Overfitting (Max 3 per node):</b> When a node reaches 3 data tokens, it becomes "maxed out." You must place an Overfitting Token on one of its connecting paths, <b>permanently blocking</b> that path.</p>
+<ul>
+<li>You earn <b>+1 point</b> at game end for each maxed node</li>
+<li>Be careful — blocked paths can cut off routes to untested animals!</li>
+</ul>
+<div class="info-highlight">In real ML, overfitting happens when a model is too heavily trained on specific data, making it biased and less accurate on new inputs.</div>`
+  },
+  test: {
+    title: 'Test Model',
+    body: `<p>Test if your neural network can correctly identify an animal photo.</p>
+<ol style="padding-left:18px;margin-bottom:8px">
+<li>Pick an <b>untested animal</b> (highlighted on the left)</li>
+<li>Trace a <b>complete path</b> through 3 nodes (L1 → L2 → L3) to the matching output</li>
+<li><b>Roll 3 dice</b></li>
+<li>Score = dice total + data tokens on the path</li>
+</ol>
+<div class="info-highlight">You need a total of <b>18 or more</b> to pass the test.</div>
+<p><b>If you fail:</b> You may use Clean Data to reroll or flip dice (at a cost), or accept the failure.</p>
+<p><b>If you pass:</b> Place your animal on the scoreboard in the highest available slot. Earlier testers get more points!</p>`
+  },
+  cleandata: {
+    title: 'Clean Data Track',
+    body: `<p>During a test, if your dice roll isn't enough, you can use the <b>Clean Data</b> action to modify your dice:</p>
+<ul>
+<li><b>Reroll</b> — Reroll any number of your dice, OR</li>
+<li><b>Flip</b> — Flip one die to its opposite face (1↔6, 2↔5, 3↔4)</li>
+</ul>
+<p>Each use slides the clean data tracker down one space, costing penalty points at game end:</p>
+<p style="text-align:center"><b>0 → -1 → -2 → -4 → -6</b></p>
+<p>You can use Clean Data up to <b>4 times</b> per game. The flip option is only available for the first 2 uses.</p>
+<div class="info-highlight">In real ML, "cleaning data" means improving data quality — removing errors, filling gaps, and standardizing formats. It's essential but time-consuming.</div>`
+  },
+  dice: {
+    title: 'Dice',
+    body: `<p>When testing, you roll <b>3 dice</b>. The sum of the dice plus any data tokens on your chosen path determines if your test passes.</p>
+<div class="info-highlight">Dice total + Data tokens on path ≥ <b>18</b> = Success!</div>
+<p>With 3 dice (range 3–18) and up to 9 data tokens on a 3-node path (3 per node), the maximum possible score is 27.</p>
+<p>With no training data, you'd need to roll all 6s (18) — unlikely! Training your model makes success much more probable.</p>`
+  },
+  scoreboard: {
+    title: 'Scoreboard & Scoring',
+    body: `<p>When you pass a test, place your animal on the <b>highest available point slot</b> for that animal on the scoreboard.</p>
+<p>Point values depend on player count. In a 4-player game: <b>5, 4, 3, 2</b> points per slot.</p>
+<p>Players who pass the same animal in the <b>same round</b> share the same point value (ties get bonus data tokens).</p>
+<p><b>End game scoring:</b></p>
+<ol style="padding-left:18px;margin-bottom:8px">
+<li>Points from animal placements on scoreboard</li>
+<li>+1 per bonus data token on the scoreboard</li>
+<li>+1 if all 5 animals tested</li>
+<li>+1 per maxed node on your board</li>
+<li>Subtract Clean Data penalty</li>
+</ol>
+<div class="info-highlight">Race to test early for higher point slots, but balance speed against preparation — a well-trained model is more reliable!</div>`
+  },
+  network: {
+    title: 'Neural Network Board',
+    body: `<p>Your board represents a neural network with:</p>
+<ul>
+<li><b>5 Inputs</b> (left) — Animal photos to classify</li>
+<li><b>3 Hidden Layers</b> (center) — Where your model processes data</li>
+<li><b>5 Outputs</b> (right) — Animal classifications</li>
+</ul>
+<p>Lines between nodes show possible connections. To test an animal, you need a complete path of 3 placed nodes from that animal's input to its matching output.</p>
+<div class="info-highlight">In real neural networks, inputs are pixels of an image, hidden layers learn patterns, and outputs are confidence scores for each possible classification.</div>`
+  }
+};
+
+function showInfo(key) {
+  const info = INFO[key];
+  if (!info) return;
+  document.getElementById('info-title').textContent = info.title;
+  document.getElementById('info-body').innerHTML = info.body;
+  document.getElementById('info-overlay').classList.add('visible');
+}
+
+function closeInfo(e) {
+  if (e && e.target !== document.getElementById('info-overlay')) return;
+  document.getElementById('info-overlay').classList.remove('visible');
 }
 
 // ==================== INIT ====================
