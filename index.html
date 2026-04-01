@@ -77,6 +77,8 @@ body { font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif; background: #f4
 .view-btn.active { border-color: #2d6a4f; color: #2d6a4f; background: #eef5ee; }
 .view-btn .vb-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 4px; vertical-align: middle; }
 .view-btn.is-turn { box-shadow: 0 0 8px rgba(45,106,79,0.3); }
+.first-badge { font-size: 10px; background: #f5a623; color: #fff; font-weight: 700; padding: 1px 5px; border-radius: 4px; margin-left: 4px; vertical-align: middle; letter-spacing: 0.3px; }
+.tie-mark { font-size: 9px; background: #f5a623; color: #fff; font-weight: 700; padding: 0 3px; border-radius: 3px; margin-left: 2px; vertical-align: middle; }
 .view-btn.is-turn::after { content: '◀'; font-size: 8px; margin-left: 4px; vertical-align: middle; }
 .actions-info { font-size: 14px; color: #777; }
 .actions-count { color: #2d6a4f; font-weight: 800; font-size: 16px; }
@@ -150,10 +152,18 @@ body { font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif; background: #f4
 /* ===== GAME OVER ===== */
 #gameover { position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 100; flex-direction: column; align-items: center; justify-content: center; gap: 20px; }
 #gameover h2 { font-size: 36px; color: #2d6a4f; font-weight: 800; }
-.final-scores { background: #fff; border-radius: 12px; padding: 20px; min-width: 300px; box-shadow: 0 4px 24px rgba(0,0,0,0.15); }
+.final-scores { background: #fff; border-radius: 12px; padding: 20px; min-width: 340px; box-shadow: 0 4px 24px rgba(0,0,0,0.15); }
 .final-scores table { width: 100%; border-collapse: collapse; }
 .final-scores th, .final-scores td { padding: 8px 12px; text-align: left; border-bottom: 1px solid #e8e4dc; color: #444; }
 .final-scores .winner { color: #c90; font-weight: bold; }
+.breakdown-toggle { font-size: 11px; padding: 3px 8px; border: 1px solid #ccc; border-radius: 6px; background: #f7f5f0; cursor: pointer; color: #555; white-space: nowrap; }
+.breakdown-toggle:hover { background: #eae6dd; }
+.score-breakdown { background: #f7f5f0; border-radius: 8px; padding: 10px 12px; font-size: 13px; color: #555; }
+.breakdown-item { display: flex; justify-content: space-between; padding: 3px 0; border-bottom: 1px dashed #e0dbd3; }
+.breakdown-item:last-child { border-bottom: none; }
+.breakdown-item.penalty { color: #c44; }
+.breakdown-item.bonus { color: #2d6a4f; }
+.breakdown-total { display: flex; justify-content: space-between; padding: 6px 0 2px; font-weight: 700; color: #333; margin-top: 4px; border-top: 1px solid #ccc; }
 #play-again-btn { padding: 12px 36px; font-size: 16px; border: none; border-radius: 8px; background: #2d6a4f; color: white; cursor: pointer; font-weight: 700; }
 
 /* ===== INFO SYSTEM ===== */
@@ -229,7 +239,7 @@ body { font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif; background: #f4
       <span class="player-dot" id="turn-dot"></span>
       <span id="turn-name">Blue's Turn</span>
     </div>
-    <div class="view-toggle" id="view-toggle"></div>
+    <div style="display:flex;align-items:center;gap:4px"><div class="view-toggle" id="view-toggle"></div><button class="info-btn" onclick="showInfo('firstplayer')" title="First Player">i</button></div>
     <span class="room-badge" id="room-badge">ABCD</span>
     <div class="round-info" id="round-info">Round 1</div>
     <div class="actions-info">Actions: <span class="actions-count" id="actions-count">3</span></div>
@@ -470,8 +480,8 @@ function getHex(color) {
 }
 function renderLobbyPlayers(players) {
   const list = document.getElementById('player-list');
-  list.innerHTML = players.map(p =>
-    `<div class="player-slot"><span class="dot" style="background:${getHex(p.color)}"></span><span>${p.name}</span>${p.isHost?'<span class="host-badge">HOST</span>':''}</div>`
+  list.innerHTML = players.map((p, i) =>
+    `<div class="player-slot"><span class="dot" style="background:${getHex(p.color)}"></span><span>${p.name}</span>${p.isHost?'<span class="host-badge">HOST</span>':''}${i===0?'<span class="first-badge">1ST</span>':''}</div>`
   ).join('');
   const btn = document.getElementById('btn-start-game');
   btn.style.display = isHost ? 'inline-block' : 'none';
@@ -514,7 +524,8 @@ function renderTopBar() {
     if (isViewed) cls += ' active';
     if (isTurn) cls += ' is-turn';
     const viewArg = idx === myId ? -1 : idx;
-    vhtml += `<button class="${cls}" onclick="setView(${viewArg})"><span class="vb-dot" style="background:${p.hex}"></span>${label}</button>`;
+    const firstMark = idx === 0 ? '<span class="first-badge">1ST</span>' : '';
+    vhtml += `<button class="${cls}" onclick="setView(${viewArg})"><span class="vb-dot" style="background:${p.hex}"></span>${label}${firstMark}</button>`;
   }
   document.getElementById('view-toggle').innerHTML = vhtml;
 }
@@ -703,9 +714,15 @@ function renderScoreboard() {
   h+='</tr>';
   for (let a=0;a<5;a++) {
     h+=`<tr><td class="score-animal"><img src="images/${ANIMAL_IMGS[a]}.png" style="width:22px;height:22px;object-fit:contain;vertical-align:middle;filter:grayscale(1) brightness(0.35)"></td>`;
+    const roundCounts={};
+    for (const e of G.scoreboard[a]) if (e) roundCounts[e.round]=(roundCounts[e.round]||0)+1;
     for (let i=0;i<vals.length;i++) {
       const e=G.scoreboard[a][i];
-      if (e) { h+=`<td class="score-val"><span style="color:${G.players[e.player].hex}">●</span>${e.bonusTokens>0?`<span style="font-size:9px;color:#fc0">+${e.bonusTokens}</span>`:''}</td>`; }
+      if (e) {
+        const tied=roundCounts[e.round]>1;
+        const tieTag=tied?'<span class="tie-mark">=</span>':'';
+        h+=`<td class="score-val"${tied?' title="Tied — scored same round, equal points"':''}><span style="color:${G.players[e.player].hex}">●</span>${tieTag}</td>`;
+      }
       else h+=`<td class="score-val" style="color:#333">○</td>`;
     }
     h+='</tr>';
@@ -785,20 +802,80 @@ function flipDie(i) { doAction('clean_flip',{dieIdx:i}); }
 
 // ==================== GAME OVER ====================
 function showGameOver() {
+  const SCORE_VALS = { 2:[5,3], 3:[5,3,2], 4:[5,4,3,2] };
+  const PENALTIES = [0,-1,-2,-4,-6];
+  const SLOT_LABELS = ['1st','2nd','3rd','4th'];
+  const numPlayers = G.players.length;
+  const vals = SCORE_VALS[numPlayers];
+
   const scores = G.players.map((p,i)=>({idx:i,score:G.scores[i],player:p})).sort((a,b)=>b.score-a.score);
-  let h='<table><tr><th>Player</th><th>Score</th></tr>';
+  let h='<table><tr><th>Player</th><th>Score</th><th></th></tr>';
+
   for (const s of scores) {
-    const w=s.score===scores[0].score;
-    const c=w?' class="winner"':'';
-    h+=`<tr${c}><td><span style="color:${s.player.hex}">● ${s.player.name}</span>${s.idx===myId?' (You)':''}${w?' 👑':''}</td><td${c}>${s.score}</td></tr>`;
+    const w = s.score===scores[0].score;
+    const c = w?' class="winner"':'';
+    const p = s.player;
+
+    // Build breakdown rows
+    let bdRows = '';
+
+    // Animal scoreboard points
+    for (let a=0; a<5; a++) {
+      for (let slot=0; slot<G.scoreboard[a].length; slot++) {
+        const entry = G.scoreboard[a][slot];
+        if (entry && entry.player===s.idx) {
+          const pts = vals[slot];
+          const bonus = entry.bonusTokens||0;
+          const total = pts + bonus;
+          const tied = G.scoreboard[a].some((e,j) => j!==slot && e && e.round===entry.round);
+          const tieNote = tied ? ' <span class="tie-mark">=</span>' : '';
+          const label = `${ANIMALS[a]} — ${SLOT_LABELS[slot]} place${tied?' (tied, same round)':''}`;
+          bdRows += `<div class="breakdown-item"><span>${label}${tieNote}</span><span>+${total}</span></div>`;
+        }
+      }
+    }
+
+    // All 5 tested bonus
+    if (p.tested && p.tested.every(t=>t))
+      bdRows += `<div class="breakdown-item bonus"><span>All 5 animals tested</span><span>+1</span></div>`;
+
+    // Fully-trained nodes
+    let trained = 0;
+    for (let i=0; i<11; i++) if (p.nodes[i] && p.data[i]>=3) trained++;
+    if (trained>0)
+      bdRows += `<div class="breakdown-item bonus"><span>Fully-trained nodes ×${trained}</span><span>+${trained}</span></div>`;
+
+    // Clean data penalty
+    const penalty = PENALTIES[p.cleanUses]||0;
+    if (penalty<0)
+      bdRows += `<div class="breakdown-item penalty"><span>Clean data penalty (${p.cleanUses} use${p.cleanUses!==1?'s':''})</span><span>${penalty}</span></div>`;
+
+    const breakdown = `<div class="score-breakdown">${bdRows}<div class="breakdown-total"><span>Total</span><span>${s.score}</span></div></div>`;
+
+    h+=`<tr${c}><td><span style="color:${s.player.hex}">● ${s.player.name}</span>${s.idx===myId?' (You)':''}${w?' 👑':''}</td><td${c}>${s.score}</td><td><button class="breakdown-toggle" onclick="toggleBreakdown(${s.idx})">▶ Details</button></td></tr>`;
+    h+=`<tr id="breakdown-${s.idx}" style="display:none"><td colspan="3">${breakdown}</td></tr>`;
   }
   h+='</table>';
   document.getElementById('final-scores').innerHTML = h;
   showScreen('gameover');
 }
 
+function toggleBreakdown(idx) {
+  const row = document.getElementById('breakdown-'+idx);
+  const btn = row.previousElementSibling.querySelector('.breakdown-toggle');
+  const open = row.style.display==='none';
+  row.style.display = open ? 'table-row' : 'none';
+  btn.textContent = open ? '▼ Details' : '▶ Details';
+}
+
 // ==================== INFO SYSTEM ====================
 const INFO = {
+  firstplayer: {
+    title: 'First Player Marker',
+    body: `<p>The <b><span style="background:#f5a623;color:#fff;padding:1px 5px;border-radius:4px;font-size:12px">1ST</span></b> badge marks the player who goes first.</p>
+<p>This matters because <b>the game ends after everyone has had an equal number of turns.</b> When a player triggers the end condition (tests all 5 animals, or testing becomes impossible for everyone), the round completes so that every player has taken the same number of turns before final scores are tallied.</p>
+<div class="info-highlight">The first player's turn marks the start of each round. Once the end condition is triggered, play continues until the first player's next turn would begin — giving all other players one final turn.</div>`
+  },
   overview: {
     title: 'How to Play',
     body: `<p>You are a data scientist at FuzzNet Labs building a neural network to identify animals in photos. Compete against other startups to build the best model!</p>
