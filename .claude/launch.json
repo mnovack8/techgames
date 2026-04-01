@@ -5,7 +5,8 @@
       "name": "FuzzNet Labs Server",
       "runtimeExecutable": "npm",
       "runtimeArgs": ["start"],
-      "port": 8090
+      "port": 8090,
+      "autoPort": false
     }
   ]
 }

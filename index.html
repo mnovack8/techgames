@@ -14,9 +14,18 @@ body { font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif; background: #f4
 .screen.active { display: flex; }
 
 /* ===== LOBBY ===== */
-#lobby { flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; gap: 20px; background: linear-gradient(160deg, #f7f5f0 0%, #eae6dd 100%); }
-#lobby h1 { font-size: 44px; color: #2d6a4f; letter-spacing: 2px; font-weight: 800; }
-#lobby .subtitle { font-size: 16px; color: #888; margin-top: -10px; }
+#lobby { flex-direction: row; align-items: center; justify-content: center; min-height: 100vh; gap: 0; background: linear-gradient(160deg, #f7f5f0 0%, #eae6dd 100%); }
+.lobby-hero { flex: 1; display: flex; align-items: center; justify-content: center; min-height: 100vh; background: #fff; padding: 40px; }
+.lobby-hero img { max-width: 480px; width: 100%; height: auto; filter: drop-shadow(0 8px 24px rgba(0,0,0,0.1)); }
+.lobby-forms { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; gap: 20px; padding: 30px; }
+#lobby h1 { font-size: 44px; color: #2d6a4f; letter-spacing: 2px; font-weight: 800; margin: 0; }
+#lobby .subtitle { font-size: 15px; color: #888; margin-top: -6px; }
+@media (max-width: 860px) {
+  #lobby { flex-direction: column; }
+  .lobby-hero { min-height: auto; padding: 30px 20px 10px; }
+  .lobby-hero img { max-width: 300px; }
+  .lobby-forms { min-height: auto; padding: 10px 20px 30px; }
+}
 
 .lobby-card { background: #ffffff; border: 1px solid #ddd; border-radius: 14px; padding: 24px; width: 360px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
 .lobby-card h3 { font-size: 15px; color: #777; margin-bottom: 14px; text-transform: uppercase; letter-spacing: 1px; }
@@ -167,32 +176,36 @@ body { font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif; background: #f4
 
 <!-- ===== LOBBY ===== -->
 <div id="lobby" class="screen active">
-  <h1>FuzzNet Labs</h1>
-  <div class="subtitle">Animal Photo Classifier — The Board Game <button class="info-btn" onclick="showInfo('overview')" style="width:22px;height:22px;font-size:12px" title="How to Play">i</button></div>
-
-  <div class="lobby-card">
-    <h3>Create a New Game</h3>
-    <div style="font-size:13px; color:#888; margin-bottom:8px;">Pick your color:</div>
-    <div class="color-options" id="create-colors">
-      <button class="color-btn selected" data-color="blue" style="background:#4a9eff" onclick="selectCreateColor('blue')">Blue</button>
-      <button class="color-btn" data-color="red" style="background:#ff4a4a" onclick="selectCreateColor('red')">Red</button>
-      <button class="color-btn" data-color="green" style="background:#3aaa6a" onclick="selectCreateColor('green')">Green</button>
-      <button class="color-btn" data-color="purple" style="background:#a060dd" onclick="selectCreateColor('purple')">Purple</button>
-    </div>
-    <button class="lobby-btn btn-create" onclick="createRoom()">Create Game</button>
+  <div class="lobby-hero">
+    <img src="images/cover.png" alt="FuzzNet Labs — A dog scientist building a machine learning model">
   </div>
+  <div class="lobby-forms">
+    <div class="subtitle">Animal Photo Classifier — The Board Game <button class="info-btn" onclick="showInfo('overview')" style="width:22px;height:22px;font-size:12px" title="How to Play">i</button></div>
 
-  <div class="lobby-card">
-    <h3>Join a Game</h3>
-    <input class="lobby-input" id="join-code" maxlength="4" placeholder="CODE" oninput="checkRoom()">
-    <div class="color-options" id="join-colors" style="opacity:0.3; pointer-events:none;">
-      <button class="color-btn" data-color="blue" style="background:#4a9eff" onclick="selectJoinColor('blue')">Blue</button>
-      <button class="color-btn" data-color="red" style="background:#ff4a4a" onclick="selectJoinColor('red')">Red</button>
-      <button class="color-btn" data-color="green" style="background:#3aaa6a" onclick="selectJoinColor('green')">Green</button>
-      <button class="color-btn" data-color="purple" style="background:#a060dd" onclick="selectJoinColor('purple')">Purple</button>
+    <div class="lobby-card">
+      <h3>Create a New Game</h3>
+      <div style="font-size:13px; color:#888; margin-bottom:8px;">Pick your color:</div>
+      <div class="color-options" id="create-colors">
+        <button class="color-btn selected" data-color="blue" style="background:#4a9eff" onclick="selectCreateColor('blue')">Blue</button>
+        <button class="color-btn" data-color="red" style="background:#ff4a4a" onclick="selectCreateColor('red')">Red</button>
+        <button class="color-btn" data-color="green" style="background:#3aaa6a" onclick="selectCreateColor('green')">Green</button>
+        <button class="color-btn" data-color="purple" style="background:#a060dd" onclick="selectCreateColor('purple')">Purple</button>
+      </div>
+      <button class="lobby-btn btn-create" onclick="createRoom()">Create Game</button>
     </div>
-    <button class="lobby-btn btn-join" id="btn-join" disabled onclick="joinRoom()">Join Game</button>
-    <div class="error-msg" id="lobby-error"></div>
+
+    <div class="lobby-card">
+      <h3>Join a Game</h3>
+      <input class="lobby-input" id="join-code" maxlength="4" placeholder="CODE" oninput="checkRoom()">
+      <div class="color-options" id="join-colors" style="opacity:0.3; pointer-events:none;">
+        <button class="color-btn" data-color="blue" style="background:#4a9eff" onclick="selectJoinColor('blue')">Blue</button>
+        <button class="color-btn" data-color="red" style="background:#ff4a4a" onclick="selectJoinColor('red')">Red</button>
+        <button class="color-btn" data-color="green" style="background:#3aaa6a" onclick="selectJoinColor('green')">Green</button>
+        <button class="color-btn" data-color="purple" style="background:#a060dd" onclick="selectJoinColor('purple')">Purple</button>
+      </div>
+      <button class="lobby-btn btn-join" id="btn-join" disabled onclick="joinRoom()">Join Game</button>
+      <div class="error-msg" id="lobby-error"></div>
+    </div>
   </div>
 </div>
 
@@ -734,7 +747,7 @@ function renderStatus() {
         msg=`❌ Value: ${t} (need ${TEST_THRESHOLD}). `;
         if (p.cleanUses<4) {
           btn='<button onclick="startCleanReroll()">Reroll Dice</button>';
-          if (p.cleanUses<2) btn+=' <button onclick="startCleanFlip()">Flip a Die</button>';
+          btn+=' <button onclick="startCleanFlip()">Flip a Die</button>';
           btn+=' <button class="danger" onclick="doAction(\'resolve_fail\')">Accept Fail</button>';
         } else btn='<button class="danger" onclick="doAction(\'resolve_fail\')">Accept Fail</button>';
       }

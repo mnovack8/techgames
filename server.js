@@ -396,7 +396,6 @@ function processAction(room, playerIdx, msg) {
     case 'clean_flip': {
       if (s.phase !== 'test_eval') return 'Wrong phase';
       if (ps.cleanUses >= 4) return 'No clean uses left';
-      if (ps.cleanUses >= 2) return 'Flip not available at this penalty level';
       const i = msg.dieIdx;
       if (i < 0 || i > 2) return 'Invalid die';
       ps.cleanUses++;
