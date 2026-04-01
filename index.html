@@ -7,10 +7,15 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
 
+/* ===== BRAND COLOURS (from logo) =====
+   Green:  #62b517
+   Yellow: #d1db24
+   ===================================== */
+
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
   font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif;
-  background: #f4f1ec;
+  background: #e8edd8;
   color: #3a3a3a;
   min-height: 100vh;
 }
@@ -18,7 +23,7 @@ body {
 /* ===== HEADER ===== */
 header {
   background: #fff;
-  border-bottom: 1px solid #e8e4dc;
+  border-bottom: 3px solid #d1db24;
   padding: 0 40px;
   height: 64px;
   display: flex;
@@ -27,76 +32,86 @@ header {
   position: sticky;
   top: 0;
   z-index: 10;
-  box-shadow: 0 1px 8px rgba(0,0,0,0.04);
+  box-shadow: 0 2px 12px rgba(98,181,23,0.08);
 }
 .header-logo {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   text-decoration: none;
 }
 .header-logo .logo-mark {
-  width: 36px;
-  height: 36px;
-  background: #2d6a4f;
-  border-radius: 8px;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
-  font-weight: 900;
-  color: #fff;
-  letter-spacing: -1px;
+  flex-shrink: 0;
 }
+.header-logo .logo-mark img { width: 40px; height: 40px; object-fit: contain; }
 .header-logo .logo-text {
   font-size: 17px;
   font-weight: 800;
-  color: #2d6a4f;
+  color: #4a8c11;
   letter-spacing: 0.5px;
 }
 .header-logo .logo-sub {
   font-size: 11px;
-  color: #999;
-  font-weight: 600;
+  color: #888;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 1.5px;
   display: block;
   line-height: 1;
+  color: #b0b800;
 }
 
 /* ===== HERO ===== */
 .hero {
   text-align: center;
-  padding: 72px 24px 48px;
-  background: linear-gradient(160deg, #f7f5f0 0%, #eae6dd 100%);
-  border-bottom: 1px solid #e2ddd6;
+  padding: 72px 24px 56px;
+  background: linear-gradient(160deg, #f8faf2 0%, #edf2e0 100%);
+  border-bottom: 1px solid #dde8c8;
 }
 .hero-eyebrow {
-  font-size: 12px;
-  font-weight: 700;
+  display: inline-block;
+  background: #d1db24;
+  color: #3a4200;
+  border-radius: 20px;
+  padding: 5px 16px;
+  font-size: 11px;
+  font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 2px;
-  color: #2d6a4f;
-  margin-bottom: 16px;
+  margin-bottom: 22px;
 }
 .hero h1 {
   font-size: 48px;
   font-weight: 900;
   color: #2a2a2a;
   line-height: 1.1;
-  margin-bottom: 16px;
+  margin-bottom: 18px;
   max-width: 680px;
   margin-left: auto;
   margin-right: auto;
 }
 .hero h1 em {
   font-style: normal;
-  color: #2d6a4f;
+  color: #62b517;
+  position: relative;
+}
+.hero h1 em::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: -3px;
+  height: 5px;
+  background: #d1db24;
+  border-radius: 3px;
 }
 .hero p {
   font-size: 18px;
-  color: #666;
-  max-width: 500px;
+  color: #555;
+  max-width: 520px;
   margin: 0 auto;
   line-height: 1.6;
 }
@@ -112,12 +127,14 @@ header {
   padding: 56px 24px 80px;
 }
 .games-section h2 {
-  font-size: 13px;
-  font-weight: 700;
+  font-size: 11px;
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 2px;
-  color: #999;
+  letter-spacing: 2.5px;
+  color: #62b517;
   margin-bottom: 28px;
+  border-left: 4px solid #d1db24;
+  padding-left: 10px;
 }
 .games-grid {
   display: grid;
@@ -129,21 +146,25 @@ header {
 .game-card {
   background: #fff;
   border-radius: 16px;
-  border: 1px solid #e4e0d8;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.05);
+  border: 2px solid #a8c96a;
+  box-shadow: 0 4px 24px rgba(98,181,23,0.18);
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+.game-card:not(.coming-soon) {
+  border-top: 4px solid #d1db24;
 }
 .game-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(98,181,23,0.28);
+  border-color: #62b517;
 }
 .game-card-image {
   width: 100%;
   aspect-ratio: 4/3;
-  background: #f0ede6;
+  background: #f0f5e8;
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -165,7 +186,7 @@ header {
 .game-card-title {
   font-size: 22px;
   font-weight: 800;
-  color: #1f1f1f;
+  color: #1a1a1a;
   line-height: 1.2;
 }
 .game-card-theme {
@@ -178,8 +199,9 @@ header {
   display: flex;
   align-items: flex-start;
   gap: 8px;
-  background: #eef5ee;
-  border-radius: 8px;
+  background: #f4fae8;
+  border-left: 3px solid #d1db24;
+  border-radius: 0 8px 8px 0;
   padding: 10px 12px;
   margin-top: 2px;
 }
@@ -190,7 +212,7 @@ header {
 }
 .game-card-learning p {
   font-size: 13px;
-  color: #2d6a4f;
+  color: #4a8c11;
   font-weight: 600;
   line-height: 1.4;
 }
@@ -203,7 +225,7 @@ header {
 .btn-play {
   flex: 1;
   padding: 12px 20px;
-  background: #2d6a4f;
+  background: #62b517;
   color: #fff;
   font-size: 15px;
   font-weight: 700;
@@ -219,16 +241,16 @@ header {
   gap: 6px;
 }
 .btn-play:hover {
-  background: #245c43;
+  background: #4d8f12;
   transform: scale(1.02);
 }
 .btn-buy {
   padding: 12px 16px;
   background: transparent;
-  color: #2d6a4f;
+  color: #4a8c11;
   font-size: 14px;
   font-weight: 700;
-  border: 2px solid #c5d5c0;
+  border: 2px solid #d1db24;
   border-radius: 10px;
   cursor: pointer;
   text-decoration: none;
@@ -240,17 +262,17 @@ header {
   white-space: nowrap;
 }
 .btn-buy:hover {
-  border-color: #2d6a4f;
-  background: #eef5ee;
+  border-color: #62b517;
+  background: #f4fae8;
 }
 
 /* ===== COMING SOON CARD ===== */
 .game-card.coming-soon {
-  opacity: 0.6;
+  opacity: 0.72;
   pointer-events: none;
 }
 .game-card.coming-soon .game-card-image {
-  background: #e8e4dc;
+  background: #eef2e6;
 }
 .coming-soon-placeholder {
   width: 100%;
@@ -264,11 +286,11 @@ header {
 .coming-soon-badge {
   display: inline-block;
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 1px;
-  background: #f0ede6;
-  color: #999;
+  background: #d1db24;
+  color: #3a4200;
   border-radius: 6px;
   padding: 3px 8px;
   margin-bottom: 4px;
@@ -291,7 +313,9 @@ footer a:hover { color: #fff; }
 
 <header>
   <a class="header-logo" href="/">
-    <div class="logo-mark">T</div>
+    <div class="logo-mark">
+      <img src="/images/logo.png" alt="Tech Board Games logo">
+    </div>
     <div>
       <span class="logo-text">Tech Board Games</span>
       <span class="logo-sub">Learn by Playing</span>
