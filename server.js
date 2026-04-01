@@ -569,17 +569,20 @@ function leaveRoom(ws) {
 }
 
 // ==================== HTTP SERVER ====================
+const MIME = { '.html': 'text/html; charset=utf-8', '.png': 'image/png', '.jpg': 'image/jpeg', '.svg': 'image/svg+xml' };
+
 const server = http.createServer((req, res) => {
-  let filePath = path.join(__dirname, 'index.html');
-  if (req.url === '/' || req.url === '/index.html') {
-    fs.readFile(filePath, (err, data) => {
-      if (err) { res.writeHead(500); res.end('Server Error'); return; }
-      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-      res.end(data);
-    });
-  } else {
-    res.writeHead(404); res.end('Not Found');
-  }
+  const url = req.url === '/' ? '/index.html' : req.url;
+  const filePath = path.join(__dirname, url);
+  // Only serve files under __dirname (prevent path traversal)
+  if (!filePath.startsWith(__dirname)) { res.writeHead(403); res.end('Forbidden'); return; }
+  const ext = path.extname(filePath);
+  const contentType = MIME[ext] || 'application/octet-stream';
+  fs.readFile(filePath, (err, data) => {
+    if (err) { res.writeHead(err.code === 'ENOENT' ? 404 : 500); res.end('Not Found'); return; }
+    res.writeHead(200, { 'Content-Type': contentType });
+    res.end(data);
+  });
 });
 
 const wss = new WebSocketServer({ server });

@@ -248,8 +248,8 @@ body { font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif; background: #f4
 
 <script>
 // ==================== CONSTANTS ====================
-const ANIMALS = ['Dog', 'Cat', 'Frog', 'Bird', 'Fish'];
-const EMOJI = ['🐕', '🐱', '🐸', '🐦', '🐟'];
+const ANIMALS = ['Dog', 'Bunny', 'Frog', 'Squirrel', 'Fish'];
+const ANIMAL_IMGS = ['dog', 'bunny', 'frog', 'squirrel', 'fish'];
 const TEST_THRESHOLD = 18;
 const CLEAN_PENALTIES = [0, -1, -2, -4, -6];
 const SCORE_VALUES = { 2: [5, 3], 3: [5, 3, 2], 4: [5, 4, 3, 2] };
@@ -483,6 +483,16 @@ function renderTopBar() {
 
 function setView(id) { viewingPlayer = id; renderGame(); }
 
+function colorizeFilter(hex) {
+  const map = {
+    '#4a9eff': 'grayscale(1) sepia(1) hue-rotate(180deg) saturate(3) brightness(0.95)',
+    '#ff4a4a': 'grayscale(1) sepia(1) hue-rotate(330deg) saturate(4) brightness(0.9)',
+    '#4aff8a': 'grayscale(1) sepia(1) hue-rotate(115deg) saturate(3) brightness(0.9)',
+    '#c880ff': 'grayscale(1) sepia(1) hue-rotate(250deg) saturate(3) brightness(0.9)',
+  };
+  return map[hex] || 'grayscale(1)';
+}
+
 function renderBoard() {
   const svg = document.getElementById('board-svg');
   const p = vp(); if (!p) return;
@@ -505,23 +515,33 @@ function renderBoard() {
     }
   }
 
-  // Input labels
+  // Input labels — solid player-color box, grayscale animal inside (photo frame style)
+  const playerHex = vp().hex;
   for (let i=0;i<5;i++) {
     const {x,y}=INP[i];
     const test = canAct && G.phase==='test_animal' && !p.tested[i];
-    const c = test?' clickable highlight':'';
-    const oc = test?` onclick="clickAnimal(${i})"`:'';
-    html += `<text class="input-emoji${c}" x="${x}" y="${y+6}" text-anchor="middle"${oc}>${EMOJI[i]}</text>`;
-    html += `<text class="input-label${c}" x="${x}" y="${y+22}" text-anchor="middle" font-size="11"${oc}>${ANIMALS[i]}</text>`;
+    const sz=38, fw=5, cx=x, cy=y-6;
+    const bx=cx-sz/2-fw, by=cy-sz/2-fw, bw=sz+fw*2, bh=sz+fw*2;
+    const oc = test?` onclick="clickAnimal(${i})" style="cursor:pointer"`:'';
+    // Colored box background
+    html += `<rect x="${bx}" y="${by}" width="${bw}" height="${bh}" rx="4" fill="${playerHex}" opacity="${test?1:0.85}"${oc}/>`;
+    // Bright border when clickable (test phase)
+    if (test) html += `<rect x="${bx}" y="${by}" width="${bw}" height="${bh}" rx="4" fill="none" stroke="white" stroke-width="2.5" stroke-dasharray="6,3" opacity="0.9"/>`;
+    // Grayscale animal image
+    html += `<image href="images/${ANIMAL_IMGS[i]}.png" x="${cx-sz/2}" y="${cy-sz/2}" width="${sz}" height="${sz}" style="filter:grayscale(1)"${oc}/>`;
+    html += `<text class="input-label" x="${x}" y="${y+26}" text-anchor="middle" font-size="10" fill="${playerHex}">${ANIMALS[i]}</text>`;
   }
 
-  // Output labels
+  // Output labels — player-color tinted animal; dimmed until tested
   for (let i=0;i<5;i++) {
     const {x,y}=OUTP[i];
     const ai=G.animalOrder[i];
-    const t=p.tested[ai]; const fill=t?'#4a4':'#ccc';
-    html += `<text class="output-emoji" x="${x}" y="${y+6}" text-anchor="middle" fill="${fill}">${EMOJI[ai]}</text>`;
-    html += `<text class="output-label" x="${x}" y="${y+22}" text-anchor="middle" font-size="11" fill="${fill}">${ANIMALS[ai]}${t?' ✓':''}</text>`;
+    const t=p.tested[ai];
+    const sz=34, cx=x, cy=y-6;
+    const filt=colorizeFilter(playerHex);
+    const opacity=t?1:0.4;
+    html += `<image href="images/${ANIMAL_IMGS[ai]}.png" x="${cx-sz/2}" y="${cy-sz/2}" width="${sz}" height="${sz}" style="filter:${filt};opacity:${opacity}"/>`;
+    html += `<text class="output-label" x="${x}" y="${y+24}" text-anchor="middle" font-size="10" fill="${t?playerHex:'#bbb'}">${ANIMALS[ai]}${t?' ✓':''}</text>`;
   }
 
   // Nodes
@@ -568,12 +588,37 @@ function isEdgeInPath(key) {
   return (p.length>=1&&key==='in'+ai+'-'+p[0])||(p.length>=2&&key===p[0]+'-'+p[1])||(p.length>=3&&key===p[1]+'-'+p[2])||(p.length>=3&&key===p[2]+'-out'+to);
 }
 
+function hasNodeSlots(p) { return p.nodes.some(n => !n); }
+function hasEnoughDataSlots(p) {
+  let s = 0;
+  for (let i = 0; i < 11; i++) if (p.nodes[i] && p.data[i] < 3) s += (3 - p.data[i]);
+  return s >= 2;
+}
+function hasTestablePath(p) {
+  for (let a = 0; a < 5; a++) {
+    if (p.tested[a]) continue;
+    const to = G.animalOrder.indexOf(a);
+    for (const l1 of (INPUT_TO_L1[a]||[])) {
+      if (!p.nodes[l1]) continue;
+      for (const l2 of (L1_TO_L2[l1]||[])) {
+        if (!p.nodes[l2] || p.blocked.includes(l1+'-'+l2)) continue;
+        for (const l3 of (L2_TO_L3[l2]||[])) {
+          if (!p.nodes[l3] || p.blocked.includes(l2+'-'+l3)) continue;
+          if ((L3_TO_OUT[l3]||[]).includes(to) && !p.blocked.includes(l3+'-out'+to)) return true;
+        }
+      }
+    }
+  }
+  return false;
+}
+
 function renderSidePanel() {
   const canAct = isMyTurn() && viewedIdx() === myId;
   const p = vp();
-  document.getElementById('btn-design').disabled = !canAct || G.phase!=='idle' || G.actionsLeft<=0;
-  document.getElementById('btn-train').disabled = !canAct || G.phase!=='idle' || G.actionsLeft<=0;
-  document.getElementById('btn-test').disabled = !canAct || G.phase!=='idle' || G.actionsLeft<=0;
+  const base = !canAct || G.phase!=='idle' || G.actionsLeft<=0;
+  document.getElementById('btn-design').disabled = base || !hasNodeSlots(p);
+  document.getElementById('btn-train').disabled = base || !hasEnoughDataSlots(p);
+  document.getElementById('btn-test').disabled = base || !hasTestablePath(p);
   document.getElementById('btn-end-turn').style.display = (canAct && G.phase==='idle' && G.actionsLeft>0 && G.actionsLeft<3) ? 'block' : 'none';
 
   // Clean tracker for viewed player
@@ -617,7 +662,7 @@ function renderScoreboard() {
   for (let i=0;i<vals.length;i++) h+=`<th class="score-val">${vals[i]}pt</th>`;
   h+='</tr>';
   for (let a=0;a<5;a++) {
-    h+=`<tr><td class="score-animal">${EMOJI[a]}</td>`;
+    h+=`<tr><td class="score-animal"><img src="images/${ANIMAL_IMGS[a]}.png" style="width:22px;height:22px;object-fit:contain;vertical-align:middle;filter:grayscale(1) brightness(0.35)"></td>`;
     for (let i=0;i<vals.length;i++) {
       const e=G.scoreboard[a][i];
       if (e) { h+=`<td class="score-val"><span style="color:${G.players[e.player].hex}">●</span>${e.bonusTokens>0?`<span style="font-size:9px;color:#fc0">+${e.bonusTokens}</span>`:''}</td>`; }
