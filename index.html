@@ -50,8 +50,11 @@ body { font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif; background: #f4
 
 /* ===== WAITING ROOM ===== */
 #waiting { flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; gap: 20px; background: linear-gradient(160deg, #f7f5f0 0%, #eae6dd 100%); }
-.room-code-display { font-size: 52px; font-weight: 800; letter-spacing: 12px; color: #2d6a4f; background: #fff; padding: 16px 36px; border-radius: 14px; border: 2px solid #c5d5c0; cursor: pointer; user-select: all; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
-.room-code-display:hover { border-color: #2d6a4f; }
+.room-code-display { font-size: 52px; font-weight: 800; letter-spacing: 12px; color: #2d6a4f; background: #fff; padding: 16px 36px; border-radius: 14px; border: 2px solid #c5d5c0; user-select: all; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+.room-share { display: flex; gap: 8px; align-items: center; margin-top: 4px; }
+.copy-btn { padding: 8px 16px; font-size: 13px; font-weight: 700; border: 1px solid #c5d5c0; border-radius: 8px; background: #fff; color: #2d6a4f; cursor: pointer; transition: all 0.15s; }
+.copy-btn:hover { background: #eef5ee; border-color: #2d6a4f; }
+.copy-btn.copied { background: #2d6a4f; color: #fff; }
 .room-hint { font-size: 14px; color: #888; }
 .player-list { display: flex; flex-direction: column; gap: 8px; min-width: 240px; margin: 8px 0; }
 .player-slot { display: flex; align-items: center; gap: 10px; padding: 10px 16px; background: #fff; border-radius: 8px; border: 1px solid #ddd; font-size: 15px; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
@@ -77,6 +80,8 @@ body { font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif; background: #f4
 .view-btn.active { border-color: #2d6a4f; color: #2d6a4f; background: #eef5ee; }
 .view-btn .vb-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 4px; vertical-align: middle; }
 .view-btn.is-turn { box-shadow: 0 0 8px rgba(45,106,79,0.3); }
+.node-circle.backprop-src { stroke: #f5a623; stroke-width: 3; stroke-dasharray: 6,3; cursor: pointer; }
+.node-circle.backprop-dst { stroke: #2d6a4f; stroke-width: 3; stroke-dasharray: 6,3; cursor: pointer; }
 .first-badge { font-size: 10px; background: #f5a623; color: #fff; font-weight: 700; padding: 1px 5px; border-radius: 4px; margin-left: 4px; vertical-align: middle; letter-spacing: 0.3px; }
 .tie-mark { font-size: 9px; background: #f5a623; color: #fff; font-weight: 700; padding: 0 3px; border-radius: 3px; margin-left: 2px; vertical-align: middle; }
 .view-btn.is-turn::after { content: '◀'; font-size: 8px; margin-left: 4px; vertical-align: middle; }
@@ -222,8 +227,12 @@ body { font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif; background: #f4
 <!-- ===== WAITING ROOM ===== -->
 <div id="waiting" class="screen">
   <div style="font-size:14px; color:#888;">Room Code</div>
-  <div class="room-code-display" id="room-code-display" title="Click to copy" onclick="copyCode()">----</div>
-  <div class="room-hint">Share this code with other players to join</div>
+  <div class="room-code-display" id="room-code-display">----</div>
+  <div class="room-share">
+    <button class="copy-btn" id="btn-copy-code" onclick="copyCode()">Copy Code</button>
+    <button class="copy-btn" id="btn-copy-link" onclick="copyLink()">Copy Link</button>
+  </div>
+  <div class="room-hint">Share the code or link with other players to join</div>
   <div class="player-list" id="player-list"></div>
   <div class="waiting-actions">
     <button id="btn-start-game" onclick="startGame()" disabled>Start Game</button>
@@ -417,6 +426,12 @@ function handleServerMsg(msg) {
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
+  // Update URL with room code
+  if ((id === 'waiting' || id === 'game') && roomCode) {
+    history.replaceState(null, '', `?room=${roomCode}`);
+  } else if (id === 'lobby') {
+    history.replaceState(null, '', location.pathname);
+  }
 }
 
 // ==================== LOBBY ====================
@@ -471,7 +486,18 @@ function leaveRoom() {
   roomCode = ''; myId = -1; G = null; isHost = false;
 }
 function copyCode() {
-  navigator.clipboard.writeText(roomCode).catch(()=>{});
+  navigator.clipboard.writeText(roomCode).then(() => flashCopied('btn-copy-code')).catch(()=>{});
+}
+function copyLink() {
+  const url = `${location.origin}?room=${roomCode}`;
+  navigator.clipboard.writeText(url).then(() => flashCopied('btn-copy-link')).catch(()=>{});
+}
+function flashCopied(btnId) {
+  const btn = document.getElementById(btnId);
+  const orig = btn.textContent;
+  btn.textContent = 'Copied!';
+  btn.classList.add('copied');
+  setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 1500);
 }
 
 // ==================== WAITING ROOM ====================
@@ -553,7 +579,7 @@ function renderBoard() {
     const {x1,y1,x2,y2} = edgePos(e);
     let cls = 'edge-line';
     if (p.blocked.includes(e.key)) cls += ' blocked';
-    else if (canAct && G.phase==='train_overfit' && G.overfitEdges && G.overfitEdges.some(oe=>oe.key===e.key)) cls += ' selectable';
+    else if (canAct && (G.phase==='train_overfit'||G.phase==='backprop_overfit') && G.overfitEdges && G.overfitEdges.some(oe=>oe.key===e.key)) cls += ' selectable';
     else if (G.testPath.length>0 && viewedIdx()===G.currentPlayer && isEdgeInPath(e.key)) cls += ' path-highlight';
     const oc = canAct ? ` onclick="clickEdge('${e.key}')"` : '';
     html += `<line class="${cls}" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"${oc}/>`;
@@ -601,10 +627,16 @@ function renderBoard() {
     const dClick = canAct&&G.phase==='design'&&!p.nodes[i];
     const tClick = canAct&&(G.phase==='train1'||G.phase==='train2')&&p.nodes[i]&&p.data[i]<3;
     const pClick = canAct&&['test_path_l1','test_path_l2','test_path_l3'].includes(G.phase)&&G.pathClickable&&G.pathClickable.includes(i);
-    const isPN = viewedIdx()===G.currentPlayer&&G.testPath.includes(i);
+    const bpSrcClick = canAct&&G.phase==='backprop_source'&&isValidBpSrc(p,i);
+    const bpDstClick = canAct&&G.phase==='backprop_dest'&&isValidBpDst(p,i);
+    const isPN = viewedIdx()===G.currentPlayer&&(G.testPath.includes(i));
     if (dClick||tClick||pClick) cls+=' clickable';
+    if (bpSrcClick) cls+=' backprop-src';
+    if (bpDstClick) cls+=' backprop-dst';
     if (isPN) cls+=' path-selected';
-    const oc=(dClick||tClick||pClick)?` onclick="clickNode(${i})"`:'';
+    if (canAct&&G.phase==='backprop_dest'&&i===G.backpropSource) cls+=' backprop-src';
+    const anyClick = dClick||tClick||pClick||bpSrcClick||bpDstClick;
+    const oc=anyClick?` onclick="clickNode(${i})"`:'';
     html += `<circle class="${cls}" cx="${x}" cy="${y}" r="26"${oc}/>`;
     const layer=i<=3?1:(i<=6?2:3);
     if (!p.nodes[i]) {
@@ -778,18 +810,47 @@ function renderStatus() {
       msg='Click a die to flip it (1↔6, 2↔5, 3↔4).';
       btn='<button onclick="cancelClean()">Cancel</button>';
       break;
+    case 'backprop_source':
+      msg='Backpropagation: select a node to move a Data Token FROM.';
+      btn='<button class="info-btn" onclick="showInfo(\'backprop\')" style="width:20px;height:20px;font-size:11px;display:inline-flex;vertical-align:middle;margin-left:6px">i</button>';
+      break;
+    case 'backprop_dest':
+      msg=`Backpropagation: now select a node to move the Data Token TO.`;
+      btn='<button class="info-btn" onclick="showInfo(\'backprop\')" style="width:20px;height:20px;font-size:11px;display:inline-flex;vertical-align:middle;margin-left:6px">i</button>';
+      break;
+    case 'backprop_overfit':
+      msg='⚠️ Node maxed from backprop! Click a yellow edge to block.';
+      break;
   }
   el.innerHTML = `<span class="msg">${msg}</span>${btn}`;
 }
 
 // ==================== ACTIONS ====================
 function doAction(action, extra) { sendMsg({ type:'game_action', action, ...(extra||{}) }); }
+function isValidBpSrc(p, i) {
+  if (!p.nodes[i] || p.data[i] <= 0) return false;
+  const onPath = G.testPath.includes(i);
+  for (let j = 0; j < 11; j++) {
+    if (j === i || !p.nodes[j] || p.data[j] >= 3) continue;
+    if (onPath || G.testPath.includes(j)) return true;
+  }
+  return false;
+}
+function isValidBpDst(p, i) {
+  if (!p.nodes[i] || p.data[i] >= 3 || i === G.backpropSource) return false;
+  return G.testPath.includes(G.backpropSource) || G.testPath.includes(i);
+}
 function clickNode(id) {
   if (G.phase==='design') doAction('place_node',{nodeId:id});
   else if (G.phase==='train1'||G.phase==='train2') doAction('place_data',{nodeId:id});
   else if (['test_path_l1','test_path_l2','test_path_l3'].includes(G.phase)) doAction('select_path_node',{nodeId:id});
+  else if (G.phase==='backprop_source') doAction('backprop_select_source',{nodeId:id});
+  else if (G.phase==='backprop_dest') doAction('backprop_select_dest',{nodeId:id});
 }
-function clickEdge(key) { if (G.phase==='train_overfit') doAction('select_overfit_edge',{edgeKey:key}); }
+function clickEdge(key) {
+  if (G.phase==='train_overfit') doAction('select_overfit_edge',{edgeKey:key});
+  else if (G.phase==='backprop_overfit') doAction('backprop_select_overfit',{edgeKey:key});
+}
 function clickAnimal(idx) { if (G.phase==='test_animal') doAction('select_animal',{animalIdx:idx}); }
 
 // Clean data UI (local phase override)
@@ -870,6 +931,18 @@ function toggleBreakdown(idx) {
 
 // ==================== INFO SYSTEM ====================
 const INFO = {
+  backprop: {
+    title: 'Backpropagation',
+    body: `<p>When you <b>fail</b> a test, your model learns from its mistakes. You must <b>move one Data Token</b> on your board. The failed test path must be involved.</p>
+<p>Choose one option:</p>
+<ul>
+<li><b>Within the path</b> — Move a token from one path node to another path node</li>
+<li><b>Receive onto path</b> — Move a token from any node to a path node</li>
+<li><b>Move off path</b> — Move a token from a path node to any node</li>
+</ul>
+<p>Normal placement rules apply (max 3 data per node). If you move a token away from a maxed node, its Overfitting Token (blocked edge) is removed. If you move a token onto a node and it becomes maxed, you must immediately add an Overfitting Token.</p>
+<div class="info-highlight">This step is skipped if no valid move exists (no data tokens on the board, or no legal destination).</div>`
+  },
   firstplayer: {
     title: 'First Player Marker',
     body: `<p>The <b><span style="background:#f5a623;color:#fff;padding:1px 5px;border-radius:4px;font-size:12px">1ST</span></b> badge marks the player who goes first.</p>
@@ -991,6 +1064,24 @@ function closeInfo(e) {
 
 // ==================== INIT ====================
 connect();
+
+// Check URL for room code (e.g. ?room=ABCD)
+(function checkUrlRoom() {
+  const params = new URLSearchParams(location.search);
+  const code = (params.get('room') || '').toUpperCase();
+  if (code && code.length === 4) {
+    const input = document.getElementById('join-code');
+    input.value = code;
+    // Wait for websocket to connect, then auto-check
+    const waitForWs = setInterval(() => {
+      if (ws && ws.readyState === 1) {
+        clearInterval(waitForWs);
+        checkRoom();
+      }
+    }, 100);
+    setTimeout(() => clearInterval(waitForWs), 5000);
+  }
+})();
 </script>
 </body>
 </html>

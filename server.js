@@ -66,6 +66,19 @@ function hasNodeSlots(ps) {
 
 function rollDie() { return Math.floor(Math.random() * 6) + 1; }
 
+function canBackprop(ps, testPath) {
+  const pathSet = new Set(testPath);
+  for (let src = 0; src < 11; src++) {
+    if (!ps.nodes[src] || ps.data[src] <= 0) continue;
+    for (let dst = 0; dst < 11; dst++) {
+      if (src === dst) continue;
+      if (!ps.nodes[dst] || ps.data[dst] >= 3) continue;
+      if (pathSet.has(src) || pathSet.has(dst)) return true;
+    }
+  }
+  return false;
+}
+
 function calculateScore(ps, scoreboard, numPlayers) {
   const vals = SCORE_VALUES[numPlayers];
   let score = 0;
@@ -124,7 +137,7 @@ function broadcastState(room) {
       phase: s.phase, currentPlayer: s.currentPlayer, actionsLeft: s.actionsLeft,
       round: s.round, animalOrder: s.animalOrder, gameEnding: s.gameEnding, gameOver: s.gameOver,
       testAnimal: s.testAnimal, testPath: s.testPath, dice: s.dice,
-      overfitEdges: s.overfitEdges, pathClickable: s.pathClickable,
+      overfitEdges: s.overfitEdges, pathClickable: s.pathClickable, backpropSource: s.backpropSource,
       scoreboard: s.scoreboard, roundScores: s.roundScores,
       players: s.players.map((ps, i) => ({
         ...ps,
@@ -177,6 +190,7 @@ function createGameState(numPlayers) {
     pathClickable: [],
     pathOptions: [],
     _overfitFromTrain2: false,
+    backpropSource: -1,
   };
 }
 
@@ -188,7 +202,7 @@ function consumeAction(room) {
   s.actionsLeft--;
   s.phase = 'idle';
   s.testAnimal = -1; s.testPath = []; s.overfitEdges = [];
-  s.pathClickable = []; s.pathOptions = [];
+  s.pathClickable = []; s.pathOptions = []; s.backpropSource = -1;
   if (s.actionsLeft <= 0) {
     nextTurn(room);
   }
@@ -426,6 +440,70 @@ function processAction(room, playerIdx, msg) {
     }
     case 'resolve_fail': {
       if (s.phase !== 'test_eval') return 'Wrong phase';
+      if (canBackprop(ps, s.testPath)) {
+        s.phase = 'backprop_source';
+        s.backpropSource = -1;
+      } else {
+        consumeAction(room);
+      }
+      return null;
+    }
+    case 'backprop_select_source': {
+      if (s.phase !== 'backprop_source') return 'Wrong phase';
+      const src = msg.nodeId;
+      if (src < 0 || src > 10 || !ps.nodes[src] || ps.data[src] <= 0) return 'Invalid source';
+      const pathSet = new Set(s.testPath);
+      let hasValidDest = false;
+      for (let dst = 0; dst < 11; dst++) {
+        if (src === dst) continue;
+        if (!ps.nodes[dst] || ps.data[dst] >= 3) continue;
+        if (pathSet.has(src) || pathSet.has(dst)) { hasValidDest = true; break; }
+      }
+      if (!hasValidDest) return 'No valid destination for this source';
+      s.backpropSource = src;
+      s.phase = 'backprop_dest';
+      return null;
+    }
+    case 'backprop_select_dest': {
+      if (s.phase !== 'backprop_dest') return 'Wrong phase';
+      const dst = msg.nodeId;
+      const src = s.backpropSource;
+      if (dst < 0 || dst > 10 || !ps.nodes[dst] || ps.data[dst] >= 3) return 'Invalid destination';
+      if (dst === src) return 'Must be different from source';
+      const pathSet = new Set(s.testPath);
+      if (!pathSet.has(src) && !pathSet.has(dst)) return 'At least one node must be on the test path';
+      // Move: remove data from source
+      ps.data[src]--;
+      // If source was maxed (now 2), remove its overfit edge
+      if (ps.data[src] === 2) {
+        const edges = getForwardEdges(src);
+        for (const e of edges) {
+          const idx = ps.blocked.indexOf(e.key);
+          if (idx !== -1) { ps.blocked.splice(idx, 1); break; }
+        }
+      }
+      // Add data to destination
+      ps.data[dst]++;
+      // If destination becomes maxed (3), need overfit edge selection
+      if (ps.data[dst] >= 3) {
+        const fwd = getForwardEdges(dst).filter(e => !ps.blocked.includes(e.key));
+        if (fwd.length > 0) {
+          s.overfitEdges = fwd;
+          s.phase = 'backprop_overfit';
+          s.backpropSource = -1;
+          return null;
+        }
+      }
+      s.backpropSource = -1;
+      consumeAction(room);
+      return null;
+    }
+    case 'backprop_select_overfit': {
+      if (s.phase !== 'backprop_overfit') return 'Wrong phase';
+      const key = msg.edgeKey;
+      if (!s.overfitEdges.find(e => e.key === key)) return 'Invalid edge';
+      ps.blocked.push(key);
+      s.overfitEdges = [];
       consumeAction(room);
       return null;
     }
@@ -571,7 +649,8 @@ function leaveRoom(ws) {
 const MIME = { '.html': 'text/html; charset=utf-8', '.png': 'image/png', '.jpg': 'image/jpeg', '.svg': 'image/svg+xml' };
 
 const server = http.createServer((req, res) => {
-  const url = req.url === '/' ? '/index.html' : req.url;
+  const parsed = new URL(req.url, `http://${req.headers.host}`);
+  const url = parsed.pathname === '/' ? '/index.html' : parsed.pathname;
   const filePath = path.join(__dirname, url);
   // Only serve files under __dirname (prevent path traversal)
   if (!filePath.startsWith(__dirname)) { res.writeHead(403); res.end('Forbidden'); return; }
