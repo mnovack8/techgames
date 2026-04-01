@@ -114,11 +114,25 @@ npm install
 
 ### 6. Start the Server with PM2
 
+By default the server runs on port **8090**. To run on port 80 (so players don't need to type a port), set the `PORT` environment variable:
+
 ```bash
+# Run on port 80 (production)
+PORT=80 pm2 start npm --name "fuzznet" -- start
+
+# Or stick with the default port 8090
 pm2 start npm --name "fuzznet" -- start
+```
+
+```bash
 pm2 save                        # persist across reboots
 pm2 startup                     # follow the printed command to enable autostart
 ```
+
+> **Note:** Port 80 requires root privileges on Linux. Since you're logged in as root on a fresh droplet this works directly. If running as a non-root user, either use Nginx as a reverse proxy (see below) or grant Node permission with:
+> ```bash
+> sudo setcap 'cap_net_bind_service=+ep' $(which node)
+> ```
 
 Useful PM2 commands:
 
@@ -142,10 +156,16 @@ pm2 restart fuzznet
 
 ### 7. Open the Firewall Port
 
-Digital Ocean droplets use `ufw` by default. Allow port 8090:
+Digital Ocean droplets use `ufw` by default. Allow the port you chose:
 
 ```bash
+# If using PORT=80
+sudo ufw allow 80/tcp
+
+# If using the default port 8090
 sudo ufw allow 8090/tcp
+
+sudo ufw allow 22/tcp   # don't lock yourself out of SSH
 sudo ufw enable
 sudo ufw status
 ```
@@ -157,6 +177,10 @@ You can also add a firewall rule via the Digital Ocean dashboard under **Network
 Open your browser and navigate to:
 
 ```
+# If running on port 80
+http://<your-droplet-ip>
+
+# If running on port 8090
 http://<your-droplet-ip>:8090
 ```
 
