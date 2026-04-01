@@ -96,6 +96,281 @@ function calculateScore(ps, scoreboard, numPlayers) {
   return score;
 }
 
+// ==================== BOT AI ====================
+function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+function botPickNode(ps, animalOrder) {
+  // Score each empty node by how many new paths it completes for untested animals
+  let best = -1, bestScore = -1;
+  for (let n = 0; n < 11; n++) {
+    if (ps.nodes[n]) continue;
+    // Simulate placing
+    ps.nodes[n] = true;
+    let score = 0;
+    for (let a = 0; a < 5; a++) {
+      if (!ps.tested[a] && findPaths(ps, animalOrder, a).length > 0) score++;
+    }
+    ps.nodes[n] = false;
+    if (score > bestScore) { bestScore = score; best = n; }
+  }
+  // Fallback: first empty node
+  if (best === -1) { for (let n = 0; n < 11; n++) if (!ps.nodes[n]) { best = n; break; } }
+  return best;
+}
+
+function botPickDataNode(ps, animalOrder) {
+  // Place data on nodes that are on the best testable path
+  const pathData = [];
+  for (let a = 0; a < 5; a++) {
+    if (ps.tested[a]) continue;
+    const paths = findPaths(ps, animalOrder, a);
+    for (const p of paths) {
+      const sum = p.reduce((s, n) => s + ps.data[n], 0);
+      pathData.push({ path: p, sum, animal: a });
+    }
+  }
+  pathData.sort((a, b) => b.sum - a.sum); // best path first
+  // Find a node on the best path with room for data
+  for (const pd of pathData) {
+    // Prefer nodes with lowest data on this path (avoid maxing out)
+    const sorted = [...pd.path].sort((a, b) => ps.data[a] - ps.data[b]);
+    for (const n of sorted) {
+      if (ps.data[n] < 3) return n;
+    }
+  }
+  // Fallback: any node with room
+  for (let n = 0; n < 11; n++) if (ps.nodes[n] && ps.data[n] < 3) return n;
+  return -1;
+}
+
+function botPickTestAnimal(ps, animalOrder, scoreboard) {
+  // Prefer animals not yet on scoreboard (5pt first place), considering player awareness
+  let best = -1, bestScore = -1;
+  for (let a = 0; a < 5; a++) {
+    if (ps.tested[a]) continue;
+    const paths = findPaths(ps, animalOrder, a);
+    if (paths.length === 0) continue;
+    const bestPathData = Math.max(...paths.map(p => p.reduce((s, n) => s + ps.data[n], 0)));
+    // Bonus for animals not yet scored by anyone (first place available)
+    const slotBonus = scoreboard[a].length === 0 ? 10 : 0;
+    const score = bestPathData + slotBonus;
+    if (score > bestScore) { bestScore = score; best = a; }
+  }
+  return best;
+}
+
+function botPickBestPath(ps, animalOrder, animal) {
+  const paths = findPaths(ps, animalOrder, animal);
+  if (paths.length === 0) return null;
+  return paths.reduce((best, p) => {
+    const sum = p.reduce((s, n) => s + ps.data[n], 0);
+    const bestSum = best.reduce((s, n) => s + ps.data[n], 0);
+    return sum > bestSum ? p : best;
+  });
+}
+
+function botShouldUseClean(ps, diceSum, dataOnPath) {
+  const gap = TEST_THRESHOLD - (diceSum + dataOnPath);
+  // Only use clean if penalty is low and gap is small
+  return gap > 0 && gap <= 4 && ps.cleanUses < 2;
+}
+
+function botPickOverfitEdge(overfitEdges, ps) {
+  // Pick the edge whose destination node has the most alternative incoming edges (least damaging)
+  if (overfitEdges.length === 1) return overfitEdges[0].key;
+  // Simple: pick last edge in the list (tends to be less critical)
+  return overfitEdges[overfitEdges.length - 1].key;
+}
+
+function botPickBackprop(ps, testPath) {
+  const pathSet = new Set(testPath);
+  let bestMove = null, bestScore = -1;
+  for (let src = 0; src < 11; src++) {
+    if (!ps.nodes[src] || ps.data[src] <= 0) continue;
+    for (let dst = 0; dst < 11; dst++) {
+      if (src === dst || !ps.nodes[dst] || ps.data[dst] >= 3) continue;
+      if (!pathSet.has(src) && !pathSet.has(dst)) continue;
+      // Prefer moving data TO path nodes, and FROM non-path nodes
+      let score = 0;
+      if (pathSet.has(dst)) score += 2;
+      if (!pathSet.has(src)) score += 1;
+      if (score > bestScore) { bestScore = score; bestMove = { src, dst }; }
+    }
+  }
+  return bestMove;
+}
+
+async function executeBotTurn(room) {
+  const s = room.state;
+  const botIdx = s.currentPlayer;
+  if (!room.players[botIdx].isBot || s.gameOver) return;
+
+  while (s.actionsLeft > 0 && !s.gameOver && s.currentPlayer === botIdx) {
+    const ps = s.players[botIdx];
+    const action = decideBotAction(ps, s);
+
+    await delay(1200);
+    if (s.gameOver || s.currentPlayer !== botIdx) break;
+
+    switch (action) {
+      case 'design': {
+        processAction(room, botIdx, { action: 'start_design' });
+        broadcastState(room);
+        await delay(800);
+        const nodeId = botPickNode(ps, s.animalOrder);
+        if (nodeId >= 0) {
+          processAction(room, botIdx, { action: 'place_node', nodeId });
+          broadcastState(room);
+        }
+        break;
+      }
+      case 'train': {
+        processAction(room, botIdx, { action: 'start_train' });
+        broadcastState(room);
+        for (let t = 0; t < 2; t++) {
+          await delay(800);
+          if (s.phase === 'train_overfit') {
+            const key = botPickOverfitEdge(s.overfitEdges, ps);
+            processAction(room, botIdx, { action: 'select_overfit_edge', edgeKey: key });
+            broadcastState(room);
+            await delay(600);
+          }
+          if (s.phase !== 'train1' && s.phase !== 'train2') break;
+          const nodeId = botPickDataNode(ps, s.animalOrder);
+          if (nodeId < 0) break;
+          processAction(room, botIdx, { action: 'place_data', nodeId });
+          broadcastState(room);
+        }
+        // Handle trailing overfit
+        if (s.phase === 'train_overfit') {
+          await delay(800);
+          const key = botPickOverfitEdge(s.overfitEdges, ps);
+          processAction(room, botIdx, { action: 'select_overfit_edge', edgeKey: key });
+          broadcastState(room);
+        }
+        break;
+      }
+      case 'test': {
+        processAction(room, botIdx, { action: 'start_test' });
+        broadcastState(room);
+        await delay(800);
+        const animal = botPickTestAnimal(ps, s.animalOrder, s.scoreboard);
+        if (animal < 0) break;
+        processAction(room, botIdx, { action: 'select_animal', animalIdx: animal });
+        broadcastState(room);
+        // Handle path selection if needed
+        while (['test_path_l1', 'test_path_l2', 'test_path_l3'].includes(s.phase)) {
+          await delay(600);
+          const bestPath = botPickBestPath(ps, s.animalOrder, animal);
+          if (!bestPath || !s.pathClickable || s.pathClickable.length === 0) break;
+          // Pick the node from pathClickable that matches our best path
+          let pick = s.pathClickable[0];
+          for (const n of s.pathClickable) {
+            if (bestPath.includes(n)) { pick = n; break; }
+          }
+          processAction(room, botIdx, { action: 'select_path_node', nodeId: pick });
+          broadcastState(room);
+        }
+        if (s.phase === 'test_roll') {
+          await delay(1000);
+          processAction(room, botIdx, { action: 'roll_dice' });
+          broadcastState(room);
+          await delay(1200);
+          // Evaluate result
+          const diceSum = s.dice[0] + s.dice[1] + s.dice[2];
+          const dataOnPath = s.testPath.reduce((sum, n) => sum + ps.data[n], 0);
+          const total = diceSum + dataOnPath;
+          // Try clean data if close
+          if (total < TEST_THRESHOLD && botShouldUseClean(ps, diceSum, dataOnPath)) {
+            // Reroll the lowest die
+            const minVal = Math.min(...s.dice);
+            const minIdx = s.dice.indexOf(minVal);
+            processAction(room, botIdx, { action: 'clean_reroll', diceIndices: [minIdx] });
+            broadcastState(room);
+            await delay(1000);
+          }
+          // Check again after potential clean
+          const finalSum = s.dice[0] + s.dice[1] + s.dice[2] + dataOnPath;
+          if (finalSum >= TEST_THRESHOLD) {
+            processAction(room, botIdx, { action: 'resolve_success' });
+          } else {
+            processAction(room, botIdx, { action: 'resolve_fail' });
+          }
+          broadcastState(room);
+          // Handle backprop phases
+          if (s.phase === 'backprop_source') {
+            await delay(800);
+            const move = botPickBackprop(ps, s.testPath);
+            if (move) {
+              processAction(room, botIdx, { action: 'backprop_select_source', nodeId: move.src });
+              broadcastState(room);
+              await delay(600);
+              processAction(room, botIdx, { action: 'backprop_select_dest', nodeId: move.dst });
+              broadcastState(room);
+            }
+          }
+          if (s.phase === 'backprop_overfit') {
+            await delay(600);
+            const key = botPickOverfitEdge(s.overfitEdges, ps);
+            processAction(room, botIdx, { action: 'backprop_select_overfit', edgeKey: key });
+            broadcastState(room);
+          }
+        }
+        break;
+      }
+      default: {
+        processAction(room, botIdx, { action: 'end_turn' });
+        broadcastState(room);
+        break;
+      }
+    }
+  }
+}
+
+function decideBotAction(ps, s) {
+  // 1. Can test with good odds?
+  for (let a = 0; a < 5; a++) {
+    if (ps.tested[a]) continue;
+    const paths = findPaths(ps, s.animalOrder, a);
+    for (const p of paths) {
+      const dataSum = p.reduce((sum, n) => sum + ps.data[n], 0);
+      if (dataSum >= 7) return 'test'; // 10.5 avg dice + 7 data = 17.5, close enough
+    }
+  }
+  // 2. Can train and have paths that need data?
+  if (countDataSlots(ps) >= 2) {
+    // Check if we have any paths that could benefit from more data
+    for (let a = 0; a < 5; a++) {
+      if (ps.tested[a]) continue;
+      if (findPaths(ps, s.animalOrder, a).length > 0) return 'train';
+    }
+    // Also train if we have nodes but no complete paths yet (boost future paths)
+    let hasNodes = false;
+    for (let i = 0; i < 11; i++) if (ps.nodes[i]) { hasNodes = true; break; }
+    if (hasNodes) return 'train';
+  }
+  // 3. Design if we need more paths
+  if (hasNodeSlots(ps)) {
+    // Check if we're missing paths for untested animals
+    let needsPaths = false;
+    for (let a = 0; a < 5; a++) {
+      if (!ps.tested[a] && findPaths(ps, s.animalOrder, a).length === 0) { needsPaths = true; break; }
+    }
+    if (needsPaths) return 'design';
+    // Also design if we have few nodes placed
+    let nodeCount = 0;
+    for (let i = 0; i < 11; i++) if (ps.nodes[i]) nodeCount++;
+    if (nodeCount < 6) return 'design';
+  }
+  // 4. Train as fallback if possible
+  if (countDataSlots(ps) >= 2) return 'train';
+  // 5. Test even with lower odds
+  if (canTestAny(ps, s.animalOrder)) return 'test';
+  // 6. Design as last resort
+  if (hasNodeSlots(ps)) return 'design';
+  return 'end_turn';
+}
+
 // ==================== ROOM MANAGEMENT ====================
 const rooms = new Map();
 const wsData = new Map(); // ws -> { roomCode, playerIdx }
@@ -119,7 +394,7 @@ function broadcastLobby(room) {
     type: 'lobby_update',
     code: room.code,
     players: room.players.map((p, i) => ({
-      color: p.color, name: p.name, connected: p.connected, isHost: i === room.hostIdx,
+      color: p.color, name: p.name, connected: p.connected, isHost: i === room.hostIdx, isBot: !!p.isBot,
     })),
   };
   for (const p of room.players) {
@@ -145,6 +420,7 @@ function broadcastState(room) {
         name: room.players[i].name,
         hex: COLOR_INFO[room.players[i].color].hex,
         connected: room.players[i].connected,
+        isBot: !!room.players[i].isBot,
       })),
       scores: s.players.map((ps, i) => calculateScore(ps, s.scoreboard, numP)),
     },
@@ -244,6 +520,12 @@ function nextTurn(room) {
   s.actionsLeft = p.firstTurnDone ? 1 : 3;
   p.firstTurnDone = true;
   s.phase = 'idle';
+
+  // Trigger bot turn if next player is a bot
+  if (room.players[s.currentPlayer].isBot) {
+    broadcastState(room);
+    executeBotTurn(room);
+  }
 }
 
 function checkTestingImpossible(s) {
@@ -545,7 +827,7 @@ function handleMessage(ws, raw) {
       const room = rooms.get((msg.code||'').toUpperCase());
       if (!room) return send(ws, {type:'room_info', exists:false});
       if (room.started) return send(ws, {type:'room_info', exists:true, started:true});
-      if (room.players.length >= 4) return send(ws, {type:'room_info', exists:true, full:true});
+      if (room.players.length >= 4 || room.players.some(p => p.isBot)) return send(ws, {type:'room_info', exists:true, full:true});
       const taken = room.players.map(p => p.color);
       const available = Object.keys(COLOR_INFO).filter(c => !taken.includes(c));
       send(ws, { type:'room_info', exists:true, started:false, full:false, availableColors: available });
@@ -559,7 +841,7 @@ function handleMessage(ws, raw) {
       const room = rooms.get(code);
       if (!room) return send(ws, {type:'error',msg:'Room not found'});
       if (room.started) return send(ws, {type:'error',msg:'Game already started'});
-      if (room.players.length >= 4) return send(ws, {type:'error',msg:'Room is full'});
+      if (room.players.length >= 4 || room.players.some(p => p.isBot)) return send(ws, {type:'error',msg:'Room is full'});
       if (room.players.some(p => p.color === color)) {
         const available = Object.keys(COLOR_INFO).filter(c => !room.players.some(p2 => p2.color === c));
         return send(ws, {type:'error',msg:'Color already taken',availableColors:available});
@@ -569,6 +851,34 @@ function handleMessage(ws, raw) {
       room.players.push({ color, name: COLOR_INFO[color].name, ws, connected: true });
       wsData.set(ws, { roomCode: code, playerIdx: idx });
       send(ws, { type: 'room_joined', code, yourId: idx });
+      broadcastLobby(room);
+      break;
+    }
+
+    case 'toggle_bot': {
+      const info = wsData.get(ws);
+      if (!info) return send(ws, {type:'error',msg:'Not in a room'});
+      const room = rooms.get(info.roomCode);
+      if (!room || room.started) return;
+      if (info.playerIdx !== room.hostIdx) return send(ws, {type:'error',msg:'Only host can add bot'});
+      // Count humans
+      const humans = room.players.filter(p => !p.isBot).length;
+      if (humans > 1) return send(ws, {type:'error',msg:'Bot only available for single player'});
+      // Toggle: remove existing bot or add one
+      const botIdx = room.players.findIndex(p => p.isBot);
+      if (botIdx !== -1) {
+        room.players.splice(botIdx, 1);
+        // Fix wsData indices
+        for (const [w, d] of wsData.entries()) {
+          if (d.roomCode === room.code && d.playerIdx > botIdx) d.playerIdx--;
+        }
+      } else {
+        const taken = room.players.map(p => p.color);
+        const available = Object.keys(COLOR_INFO).filter(c => !taken.includes(c));
+        if (available.length === 0) return;
+        const botColor = available[Math.floor(Math.random() * available.length)];
+        room.players.push({ color: botColor, name: COLOR_INFO[botColor].name + ' (Bot)', ws: null, connected: true, isBot: true });
+      }
       broadcastLobby(room);
       break;
     }
@@ -585,8 +895,10 @@ function handleMessage(ws, raw) {
       room.state = createGameState(room.players.length);
       // Mark first player's firstTurnDone
       room.state.players[0].firstTurnDone = true;
-      for (const p of room.players) send(p.ws, { type: 'game_started' });
+      for (const p of room.players) if (p.ws) send(p.ws, { type: 'game_started' });
       broadcastState(room);
+      // If first player is a bot, start their turn
+      if (room.players[0].isBot) executeBotTurn(room);
       break;
     }
 
@@ -646,7 +958,7 @@ function leaveRoom(ws) {
 }
 
 // ==================== HTTP SERVER ====================
-const MIME = { '.html': 'text/html; charset=utf-8', '.png': 'image/png', '.jpg': 'image/jpeg', '.svg': 'image/svg+xml' };
+const MIME = { '.html': 'text/html; charset=utf-8', '.png': 'image/png', '.jpg': 'image/jpeg', '.svg': 'image/svg+xml', '.pdf': 'application/pdf' };
 
 const server = http.createServer((req, res) => {
   const parsed = new URL(req.url, `http://${req.headers.host}`);

@@ -46,6 +46,9 @@ body { font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif; background: #f4
 .lobby-input::placeholder { letter-spacing: 2px; font-size: 14px; color: #aaa; }
 .lobby-input:focus { outline: none; border-color: #2d6a4f; }
 
+.rules-banner { font-size: 13px; color: #666; background: #eef5ee; border-radius: 8px; padding: 8px 14px; text-align: center; max-width: 360px; line-height: 1.5; }
+.rules-banner a { color: #2d6a4f; font-weight: 600; }
+.rules-banner a:hover { text-decoration: none; }
 .error-msg { color: #d44; font-size: 13px; text-align: center; margin-top: 6px; min-height: 20px; }
 
 /* ===== WAITING ROOM ===== */
@@ -60,6 +63,10 @@ body { font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif; background: #f4
 .player-slot { display: flex; align-items: center; gap: 10px; padding: 10px 16px; background: #fff; border-radius: 8px; border: 1px solid #ddd; font-size: 15px; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
 .player-slot .dot { width: 14px; height: 14px; border-radius: 50%; }
 .player-slot .host-badge { font-size: 11px; color: #c90; margin-left: auto; font-weight: 700; }
+.player-slot .bot-badge { font-size: 10px; background: #555; color: #fff; font-weight: 700; padding: 1px 5px; border-radius: 4px; margin-left: 4px; }
+.bot-toggle { padding: 10px 20px; font-size: 14px; font-weight: 600; border: 2px dashed #aaa; border-radius: 8px; background: transparent; color: #666; cursor: pointer; transition: all 0.15s; min-width: 240px; }
+.bot-toggle:hover { border-color: #2d6a4f; color: #2d6a4f; background: #eef5ee; }
+.bot-toggle.active { border-color: #2d6a4f; border-style: solid; color: #2d6a4f; background: #eef5ee; }
 .waiting-actions { display: flex; gap: 10px; }
 .waiting-actions button { padding: 12px 28px; border-radius: 8px; border: none; cursor: pointer; font-size: 15px; font-weight: 700; }
 #btn-start-game { background: #2d6a4f; color: white; }
@@ -197,6 +204,10 @@ body { font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif; background: #f4
   <div class="lobby-forms">
     <div class="subtitle">Animal Photo Classifier — The Board Game <button class="info-btn" onclick="showInfo('overview')" style="width:22px;height:22px;font-size:12px" title="How to Play">i</button></div>
 
+    <div class="rules-banner">
+      <span>New here? In-game help is built in via <b>i</b> buttons, or <a href="/rulebook.pdf" target="_blank" rel="noopener">read the full rulebook (PDF)</a></span>
+    </div>
+
     <div class="lobby-card">
       <h3>Create a New Game</h3>
       <div style="font-size:13px; color:#888; margin-bottom:8px;">Pick your color:</div>
@@ -234,7 +245,11 @@ body { font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif; background: #f4
     <button class="copy-btn" id="btn-copy-link" onclick="copyLink()">Copy Link</button>
   </div>
   <div class="room-hint">Share the code or link with other players to join</div>
+  <div class="rules-banner">
+    <span>While you wait: <a href="/rulebook.pdf" target="_blank" rel="noopener">read the rulebook (PDF)</a> — or just jump in, every action has a help <b>i</b> button in-game</span>
+  </div>
   <div class="player-list" id="player-list"></div>
+  <button class="bot-toggle" id="btn-bot-toggle" onclick="toggleBot()" style="display:none">Play Solo vs Bot</button>
   <div class="waiting-actions">
     <button id="btn-start-game" onclick="startGame()" disabled>Start Game</button>
     <button id="btn-leave" onclick="leaveRoom()">Leave</button>
@@ -506,17 +521,30 @@ function getHex(color) {
   return {blue:'#4a9eff',red:'#ff4a4a',green:'#4aff8a',purple:'#c880ff'}[color]||'#888';
 }
 function renderLobbyPlayers(players) {
+  const hasBot = players.some(p => p.isBot);
+  const humans = players.filter(p => !p.isBot).length;
   const list = document.getElementById('player-list');
   list.innerHTML = players.map((p, i) =>
-    `<div class="player-slot"><span class="dot" style="background:${getHex(p.color)}"></span><span>${p.name}</span>${p.isHost?'<span class="host-badge">HOST</span>':''}${i===0?'<span class="first-badge">1ST</span>':''}</div>`
+    `<div class="player-slot"><span class="dot" style="background:${getHex(p.color)}"></span><span>${p.name}</span>${p.isBot?'<span class="bot-badge">BOT</span>':''}${p.isHost?'<span class="host-badge">HOST</span>':''}${i===0?'<span class="first-badge">1ST</span>':''}</div>`
   ).join('');
   const btn = document.getElementById('btn-start-game');
   btn.style.display = isHost ? 'inline-block' : 'none';
   btn.disabled = players.length < 2;
-  document.getElementById('waiting-error').textContent =
-    isHost ? (players.length < 2 ? 'Need at least 2 players' : '') :
-    (players.length < 2 ? 'Waiting for more players...' : 'Waiting for host to start...');
+  // Bot toggle: only show for host when alone or with bot
+  const botBtn = document.getElementById('btn-bot-toggle');
+  if (isHost && humans === 1) {
+    botBtn.style.display = 'block';
+    botBtn.textContent = hasBot ? 'Remove Bot' : 'Play Solo vs Bot';
+    botBtn.classList.toggle('active', hasBot);
+  } else {
+    botBtn.style.display = 'none';
+  }
+  const errMsg = isHost
+    ? (players.length < 2 ? 'Add a bot or invite players to start' : '')
+    : (players.length < 2 ? 'Waiting for more players...' : 'Waiting for host to start...');
+  document.getElementById('waiting-error').textContent = errMsg;
 }
+function toggleBot() { sendMsg({ type: 'toggle_bot' }); }
 function startGame() { sendMsg({ type: 'start_game' }); }
 
 // ==================== GAME RENDERING ====================
