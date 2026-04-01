@@ -114,25 +114,24 @@ npm install
 
 ### 6. Start the Server with PM2
 
-By default the server runs on port **8090**. To run on port 80 (so players don't need to type a port), set the `PORT` environment variable:
+The simplest approach is to run directly on **port 80** so players just visit `http://<your-ip>` with no port number. On a fresh Digital Ocean droplet you're already root, so this just works:
 
 ```bash
-# Run on port 80 (production)
 PORT=80 pm2 start npm --name "fuzznet" -- start
+```
 
-# Or stick with the default port 8090
+That's it. For local development or if you prefer a non-standard port, omit `PORT` and it defaults to 8090:
+
+```bash
 pm2 start npm --name "fuzznet" -- start
 ```
 
-```bash
-pm2 save                        # persist across reboots
-pm2 startup                     # follow the printed command to enable autostart
-```
+Make PM2 survive reboots:
 
-> **Note:** Port 80 requires root privileges on Linux. Since you're logged in as root on a fresh droplet this works directly. If running as a non-root user, either use Nginx as a reverse proxy (see below) or grant Node permission with:
-> ```bash
-> sudo setcap 'cap_net_bind_service=+ep' $(which node)
-> ```
+```bash
+pm2 save
+pm2 startup     # follow the printed command to enable autostart
+```
 
 Useful PM2 commands:
 
@@ -142,6 +141,65 @@ pm2 logs fuzznet    # view live logs
 pm2 restart fuzznet # restart the server
 pm2 stop fuzznet    # stop the server
 ```
+
+### 7. Open the Firewall
+
+```bash
+sudo ufw allow 80/tcp    # allow web traffic
+sudo ufw allow 22/tcp    # don't lock yourself out of SSH
+sudo ufw enable
+sudo ufw status
+```
+
+You can also add firewall rules via the Digital Ocean dashboard under **Networking > Firewalls**.
+
+### 8. Point a Custom Domain (optional)
+
+To use a domain like `http://www.techboardgames.com/` instead of a raw IP address:
+
+**1. Get your droplet's IP address:**
+
+```bash
+curl ifconfig.me
+```
+
+**2. Add DNS records at your domain registrar** (e.g. GoDaddy, Namecheap, Cloudflare):
+
+| Type | Name | Value | TTL |
+|------|------|-------|-----|
+| A | `@` | `<your-droplet-ip>` | 3600 |
+| A | `www` | `<your-droplet-ip>` | 3600 |
+
+The `@` record covers `techboardgames.com` and the `www` record covers `www.techboardgames.com`.
+
+**3. Wait for DNS propagation** (usually 5–30 minutes, can take up to 48 hours). Verify with:
+
+```bash
+dig www.techboardgames.com +short
+# should return your droplet IP
+```
+
+**4. That's it.** The server is already listening on port 80, so once DNS resolves to your droplet the domain just works:
+
+```
+http://www.techboardgames.com
+```
+
+> **Tip:** If you're using Digital Ocean's nameservers, you can manage DNS directly in the DO dashboard under **Networking > Domains** — add your domain and create the two A records there.
+
+### 9. Access the Game
+
+```
+http://www.techboardgames.com
+```
+
+Or by IP:
+
+```
+http://<your-droplet-ip>
+```
+
+Share either URL with players — anyone with internet access can join.
 
 ### Deploying Updates
 
@@ -154,51 +212,17 @@ npm install          # in case dependencies changed
 pm2 restart fuzznet
 ```
 
-### 7. Open the Firewall Port
-
-Digital Ocean droplets use `ufw` by default. Allow the port you chose:
-
-```bash
-# If using PORT=80
-sudo ufw allow 80/tcp
-
-# If using the default port 8090
-sudo ufw allow 8090/tcp
-
-sudo ufw allow 22/tcp   # don't lock yourself out of SSH
-sudo ufw enable
-sudo ufw status
-```
-
-You can also add a firewall rule via the Digital Ocean dashboard under **Networking > Firewalls** if you prefer managing it there.
-
-### 8. Access the Game
-
-Open your browser and navigate to:
-
-```
-# If running on port 80
-http://<your-droplet-ip>
-
-# If running on port 8090
-http://<your-droplet-ip>:8090
-```
-
-Share that URL with players — anyone with internet access can join.
-
 ---
 
-### Optional: Run on Port 80 with Nginx
+### Alternative: Nginx Reverse Proxy
 
-If you want players to access the game without specifying a port (i.e. just `http://<ip>`), set up Nginx as a reverse proxy.
-
-**Install Nginx:**
+If you're running as a non-root user (port 80 requires root), you can keep the server on port 8090 and put Nginx in front:
 
 ```bash
 sudo apt install -y nginx
 ```
 
-**Configure the proxy** — create `/etc/nginx/sites-available/fuzznet`:
+Create `/etc/nginx/sites-available/fuzznet`:
 
 ```nginx
 server {
@@ -214,19 +238,13 @@ server {
 }
 ```
 
-**Enable the config:**
+Enable and start:
 
 ```bash
 sudo ln -s /etc/nginx/sites-available/fuzznet /etc/nginx/sites-enabled/
+sudo rm /etc/nginx/sites-enabled/default
 sudo nginx -t
 sudo systemctl restart nginx
-sudo ufw allow 80/tcp
-```
-
-Players can now access the game at:
-
-```
-http://<your-droplet-ip>
 ```
 
 ---
