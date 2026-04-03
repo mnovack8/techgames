@@ -819,6 +819,20 @@ function handleMessage(ws, raw) {
       };
       rooms.set(code, room);
       wsData.set(ws, { roomCode: code, playerIdx: 0 });
+      // Byteclub: auto-fill remaining slots with bots so game is always ready to start
+      if (room.gameType === 'byteclub') {
+        const allColors = Object.keys(COLOR_INFO);
+        const botColors = allColors.filter(c => c !== color);
+        // Shuffle bot color pool
+        for (let i = botColors.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [botColors[i], botColors[j]] = [botColors[j], botColors[i]];
+        }
+        for (let b = 0; b < 3; b++) {
+          const bc = botColors[b];
+          room.players.push({ color: bc, name: COLOR_INFO[bc].name + ' (Bot)', ws: null, connected: true, isBot: true });
+        }
+      }
       send(ws, { type: 'room_created', code, yourId: 0 });
       broadcastLobby(room);
       break;
@@ -828,9 +842,13 @@ function handleMessage(ws, raw) {
       const room = rooms.get((msg.code||'').toUpperCase());
       if (!room) return send(ws, {type:'room_info', exists:false});
       if (room.started) return send(ws, {type:'room_info', exists:true, started:true});
-      if (room.players.length >= 4 || room.players.some(p => p.isBot)) return send(ws, {type:'room_info', exists:true, full:true});
-      const taken = room.players.map(p => p.color);
-      const available = Object.keys(COLOR_INFO).filter(c => !taken.includes(c));
+      const humanCount = room.players.filter(p => !p.isBot).length;
+      const botCount   = room.players.filter(p =>  p.isBot).length;
+      // Full when no free bot slots remain and humans fill all 4 seats
+      if (humanCount >= 4 || (botCount === 0 && humanCount >= 4)) return send(ws, {type:'room_info', exists:true, full:true});
+      // Available = all colors not held by human players (bots can be displaced)
+      const humanColors = room.players.filter(p => !p.isBot).map(p => p.color);
+      const available   = Object.keys(COLOR_INFO).filter(c => !humanColors.includes(c));
       send(ws, { type:'room_info', exists:true, started:false, full:false, availableColors: available });
       break;
     }
@@ -842,11 +860,30 @@ function handleMessage(ws, raw) {
       const room = rooms.get(code);
       if (!room) return send(ws, {type:'error',msg:'Room not found'});
       if (room.started) return send(ws, {type:'error',msg:'Game already started'});
-      if (room.players.length >= 4 || room.players.some(p => p.isBot)) return send(ws, {type:'error',msg:'Room is full'});
-      if (room.players.some(p => p.color === color)) {
-        const available = Object.keys(COLOR_INFO).filter(c => !room.players.some(p2 => p2.color === c));
+      // If a human already holds this color, reject
+      if (room.players.some(p => !p.isBot && p.color === color)) {
+        const humanColors = room.players.filter(p => !p.isBot).map(p => p.color);
+        const available = Object.keys(COLOR_INFO).filter(c => !humanColors.includes(c));
         return send(ws, {type:'error',msg:'Color already taken',availableColors:available});
       }
+      // Byteclub rooms: replace a bot with this human
+      const botIdx = room.players.findIndex(p => p.isBot);
+      if (botIdx !== -1) {
+        // If another bot holds the human's chosen color, swap that bot to the displaced bot's color
+        const colorConflict = room.players.findIndex((p, i) => p.isBot && i !== botIdx && p.color === color);
+        if (colorConflict !== -1) {
+          room.players[colorConflict].color = room.players[botIdx].color;
+          room.players[colorConflict].name = COLOR_INFO[room.players[botIdx].color].name + ' (Bot)';
+        }
+        leaveRoom(ws);
+        room.players[botIdx] = { color, name: COLOR_INFO[color].name, ws, connected: true };
+        wsData.set(ws, { roomCode: code, playerIdx: botIdx });
+        send(ws, { type: 'room_joined', code, yourId: botIdx });
+        broadcastLobby(room);
+        break;
+      }
+      // Non-byteclub or room without bots: standard join
+      if (room.players.length >= 4) return send(ws, {type:'error',msg:'Room is full'});
       leaveRoom(ws);
       const idx = room.players.length;
       room.players.push({ color, name: COLOR_INFO[color].name, ws, connected: true });
