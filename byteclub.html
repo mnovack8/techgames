@@ -519,18 +519,6 @@ function renderColorButtons(containerId, selectedColor, disabledColors, onPick) 
   });
 }
 
-let spColor = null;
-
-renderColorButtons('sp-colors', null, [], c => {
-  spColor = c;
-  renderColorButtons('sp-colors', c, [], cc => { spColor = cc; renderColorButtons('sp-colors', cc, [], arguments.callee); updateSpBtn(); });
-  updateSpBtn();
-});
-
-function updateSpBtn() {
-  document.getElementById('btn-sp').disabled = !spColor;
-}
-
 renderColorButtons('create-colors', null, [], c => {
   myColor = c;
   renderColorButtons('create-colors', c, [], cc => { myColor = cc; renderColorButtons('create-colors', cc, [], arguments.callee); updateCreateBtn(); });
