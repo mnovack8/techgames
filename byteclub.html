@@ -82,7 +82,7 @@ body{padding-top:44px;}
 .game-layout{display:flex;flex-direction:column;height:calc(100vh - 44px);overflow:hidden;}
 
 /* TURN ORDER STRIP */
-.turn-strip{display:flex;gap:6px;padding:7px 14px;background:#0d1117;border-bottom:2px solid #1e2d3d;overflow-x:auto;flex-shrink:0;align-items:center;}
+.turn-strip{display:flex;gap:6px;padding:4px 14px;background:#0d1117;border-bottom:2px solid #1e2d3d;overflow-x:auto;flex-shrink:0;align-items:center;}
 .turn-badge{display:flex;align-items:center;gap:7px;padding:5px 13px;border-radius:20px;border:2px solid #1e2d3d;font-size:13px;font-weight:700;color:#4b5563;background:#111827;white-space:nowrap;transition:all 0.2s;}
 .turn-badge.active{border-color:#d1db24;color:#e2e8f0;background:#1a2235;box-shadow:0 0 0 2px rgba(209,219,36,0.12);}
 .turn-badge .tb-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
@@ -90,11 +90,11 @@ body{padding-top:44px;}
 .turn-strip-arrow{color:#253347;font-size:14px;flex-shrink:0;}
 
 /* OPPONENTS BAR */
-.opponents-bar{display:flex;gap:12px;padding:8px 14px;background:#111827;border-bottom:1px solid #1e2d3d;overflow-x:auto;max-height:110px;align-items:flex-start;flex-shrink:0;}
-.opponent-panel{background:#1a2235;border:1px solid #253347;border-radius:10px;padding:10px 12px;min-width:220px;flex:1;max-width:320px;}
+.opponents-bar{display:flex;gap:10px;padding:5px 14px;background:#111827;border-bottom:1px solid #1e2d3d;overflow-x:auto;align-items:flex-start;flex-shrink:0;}
+.opponent-panel{background:#1a2235;border:1px solid #253347;border-radius:8px;padding:6px 10px;min-width:200px;flex:1;max-width:300px;}
 .opponent-panel.current-turn{border-color:#d1db24;box-shadow:0 0 0 2px rgba(209,219,36,0.2);}
 .opponent-panel.blocked{opacity:0.55;}
-.opp-header{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.opp-header{display:flex;align-items:center;gap:6px;margin-bottom:4px;}
 .opp-color-dot{width:12px;height:12px;border-radius:50%;}
 .opp-name{font-weight:700;font-size:13px;flex:1;}
 .opp-hand-count{font-size:12px;color:#6b7280;display:flex;align-items:center;gap:4px;}
@@ -116,22 +116,22 @@ body{padding-top:44px;}
 .center-area{display:flex;gap:0;flex:1;overflow:hidden;min-height:0;}
 
 /* GAME LOG */
-.game-log{width:220px;background:#0d1117;border-right:1px solid #1e2d3d;padding:10px;overflow-y:auto;flex-shrink:0;}
+.game-log{width:200px;background:#0d1117;border-right:1px solid #1e2d3d;padding:8px;overflow-y:auto;flex-shrink:0;}
 .game-log h4{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#4b5563;margin-bottom:8px;}
 .log-entry{font-size:12px;color:#9ca3af;margin-bottom:5px;line-height:1.4;padding-bottom:5px;border-bottom:1px solid #1a2235;}
 .log-entry:first-child{color:#d1db24;}
 
 /* MIDDLE - DECK + STATUS */
-.game-middle{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:16px;}
-.status-banner{background:#1a2235;border:1px solid #253347;border-radius:10px;padding:10px 20px;text-align:center;width:100%;max-width:400px;}
+.game-middle{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:10px 16px;}
+.status-banner{background:#1a2235;border:1px solid #253347;border-radius:10px;padding:8px 16px;text-align:center;width:100%;max-width:400px;}
 .status-banner .turn-label{font-size:12px;color:#6b7280;text-transform:uppercase;letter-spacing:1px;}
 .status-banner .turn-player{font-size:18px;font-weight:800;color:#62b517;}
 .status-banner .phase-label{font-size:13px;color:#9ca3af;margin-top:2px;}
-.special-cards-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:center;}
-.special-card{border-radius:10px;padding:10px 14px;text-align:center;min-width:100px;cursor:default;}
-.special-card .sc-icon{font-size:24px;}
-.special-card .sc-name{font-size:11px;font-weight:700;margin-top:4px;}
-.special-card .sc-status{font-size:10px;margin-top:2px;opacity:0.8;}
+.special-cards-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center;}
+.special-card{border-radius:8px;padding:6px 10px;text-align:center;min-width:90px;cursor:default;}
+.special-card .sc-icon{font-size:20px;}
+.special-card .sc-name{font-size:10px;font-weight:700;margin-top:2px;}
+.special-card .sc-status{font-size:9px;margin-top:1px;opacity:0.8;}
 .sc-deck{background:#1a2235;border:2px solid #374151;}
 .sc-dataflag{background:#1a2235;border:2px solid #374151;}
 .sc-dataflag.revealed{border-color:#62b517;}
@@ -143,48 +143,40 @@ body{padding-top:44px;}
 .sc-actionobj{background:#1a2235;border:2px solid #374151;}
 .sc-actionobj.active{border-color:#f59e0b;}
 
-/* PROGRESS TRACKER */
-.progress-tracker{width:100%;max-width:420px;}
-.tracker-row{display:flex;align-items:center;gap:6px;margin-bottom:6px;}
-.tracker-label{font-size:11px;color:#6b7280;width:52px;text-align:right;flex-shrink:0;}
-.tracker-types{display:flex;gap:4px;flex-wrap:wrap;}
-.tracker-type{font-size:12px;padding:2px 8px;border-radius:12px;font-weight:700;border:1px solid;transition:all 0.2s;}
-.tracker-type.attack{background:rgba(239,68,68,0.08);color:#6b7280;border-color:#2d2030;}
-.tracker-type.attack.done{background:rgba(239,68,68,0.2);color:#f87171;border-color:rgba(239,68,68,0.4);}
-.tracker-type.defend{background:rgba(59,130,246,0.08);color:#6b7280;border-color:#1e2d3d;}
-.tracker-type.defend.done{background:rgba(59,130,246,0.2);color:#93c5fd;border-color:rgba(59,130,246,0.4);}
-.tracker-type.special{background:rgba(209,219,36,0.08);color:#6b7280;border-color:#2a2b1a;}
-.tracker-type.special.done{background:rgba(209,219,36,0.2);color:#d1db24;border-color:rgba(209,219,36,0.4);}
 
-/* RIGHT SIDEBAR */
-.game-sidebar{width:180px;background:#0d1117;border-left:1px solid #1e2d3d;padding:10px;flex-shrink:0;overflow-y:auto;}
-.sidebar-title{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#4b5563;margin-bottom:8px;}
-.sidebar-ref{background:#111827;border:1px solid #1e2d3d;border-radius:8px;padding:8px;margin-bottom:8px;}
-.sidebar-ref h5{font-size:11px;color:#62b517;font-weight:700;margin-bottom:4px;}
-.sidebar-ref p{font-size:11px;color:#6b7280;line-height:1.4;}
+/* HOW TO PLAY BUTTON (replaces sidebar) */
+.how-to-play-btn{position:fixed;top:50px;right:14px;z-index:101;background:#1a2235;border:1px solid #374151;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;color:#62b517;cursor:pointer;display:flex;align-items:center;gap:5px;transition:background 0.15s;}
+.how-to-play-btn:hover{background:#253347;}
+.how-to-play-panel{display:none;position:fixed;top:82px;right:14px;z-index:500;width:320px;max-height:calc(100vh - 100px);overflow-y:auto;background:#1a2235;border:1px solid #374151;border-radius:12px;padding:16px;box-shadow:0 12px 48px rgba(0,0,0,0.6);}
+.how-to-play-panel.open{display:block;}
+.how-to-play-panel h4{font-size:13px;font-weight:800;color:#62b517;margin-bottom:8px;}
+.how-to-play-panel h5{font-size:11px;font-weight:700;color:#d1db24;margin:10px 0 4px;}
+.how-to-play-panel p{font-size:11px;color:#9ca3af;line-height:1.5;margin-bottom:4px;}
+.how-to-play-panel .htp-close{position:absolute;top:10px;right:12px;background:none;border:none;color:#6b7280;font-size:18px;cursor:pointer;}
+.how-to-play-panel .htp-close:hover{color:#e2e8f0;}
 
 /* MY AREA */
 .my-area{background:#0f1923;border-top:2px solid #1e2d3d;display:flex;flex-direction:column;gap:0;}
-.my-played-area{padding:10px 14px;border-bottom:1px solid #1e2d3d;}
-.my-played-title{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#4b5563;margin-bottom:8px;}
-.my-played-rows{display:flex;flex-direction:column;gap:8px;}
+.my-played-area{padding:6px 14px;border-bottom:1px solid #1e2d3d;}
+.my-played-title{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#4b5563;margin-bottom:4px;}
+.my-played-rows{display:flex;flex-direction:column;gap:4px;}
 /* My kill-chain slot grid */
 .kc-row{display:flex;align-items:center;gap:8px;}
 .kc-row-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#4b5563;width:64px;flex-shrink:0;text-align:right;}
 .kc-slots{display:flex;gap:5px;flex-wrap:nowrap;}
-.kc-slot{display:flex;flex-direction:column;align-items:center;justify-content:center;width:60px;min-height:50px;padding:5px 3px;border-radius:8px;border:2px dashed #3d5570;color:#6b8aaa;position:relative;cursor:default;transition:all 0.2s;}
+.kc-slot{display:flex;flex-direction:column;align-items:center;justify-content:center;width:56px;min-height:42px;padding:3px 2px;border-radius:7px;border:2px dashed #3d5570;color:#6b8aaa;position:relative;cursor:default;transition:all 0.2s;}
 .kc-slot.filled.attack{background:rgba(239,68,68,0.2);border:2px solid rgba(239,68,68,0.55);color:#fca5a5;}
 .kc-slot.filled.defend{background:rgba(59,130,246,0.2);border:2px solid rgba(59,130,246,0.55);color:#bfdbfe;}
 .kc-slot.filled.special{background:rgba(209,219,36,0.15);border:2px solid rgba(209,219,36,0.45);color:#d1db24;}
-.kc-slot-emoji{font-size:16px;line-height:1;}
+.kc-slot-emoji{font-size:14px;line-height:1;}
 .kc-slot-name{font-size:8px;font-weight:700;text-align:center;margin-top:3px;white-space:nowrap;overflow:hidden;max-width:56px;text-overflow:ellipsis;}
 .kc-slot-count{position:absolute;top:-6px;right:-6px;background:#f59e0b;color:#111;font-size:9px;font-weight:900;border-radius:8px;padding:0 5px;line-height:16px;}
-.hand-area{padding:6px 12px;flex-shrink:0;}
-.hand-title{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#4b5563;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;}
-.hand-cards{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;max-height:200px;}
+.hand-area{padding:4px 12px 6px;flex-shrink:0;}
+.hand-title{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#4b5563;margin-bottom:4px;display:flex;align-items:center;justify-content:space-between;}
+.hand-cards{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;max-height:160px;}
 
 /* CARDS */
-.card{border-radius:10px;padding:10px 10px 8px;cursor:pointer;transition:all 0.15s;border:2px solid transparent;min-width:110px;max-width:130px;flex-shrink:0;position:relative;}
+.card{border-radius:8px;padding:7px 8px 6px;cursor:pointer;transition:all 0.15s;border:2px solid transparent;min-width:100px;max-width:120px;flex-shrink:0;position:relative;}
 .card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,0.4);}
 .card.selected{transform:translateY(-8px);box-shadow:0 12px 32px rgba(0,0,0,0.5);}
 .card.attack{background:#1a1015;border-color:#7f1d1d;}
@@ -211,11 +203,11 @@ body{padding-top:44px;}
 .card.govern-card-type .card-name{color:#ddd6fe;}
 .card.action-obj-card-type .card-name{color:#fde68a;}
 .card-desc{font-size:10px;color:#4b5563;line-height:1.3;}
-.card-emoji{font-size:18px;margin-bottom:4px;}
+.card-emoji{font-size:16px;margin-bottom:2px;}
 
 /* ACTION BUTTONS */
-.action-bar{display:flex;gap:8px;padding:8px 12px;background:#0f1923;border-top:1px solid #1e2d3d;align-items:center;flex-wrap:wrap;}
-.action-btn{padding:8px 18px;border-radius:8px;border:none;font-size:13px;font-weight:700;cursor:pointer;transition:all 0.15s;}
+.action-bar{display:flex;gap:6px;padding:5px 12px;background:#0f1923;border-top:1px solid #1e2d3d;align-items:center;flex-wrap:wrap;}
+.action-btn{padding:6px 14px;border-radius:7px;border:none;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.15s;}
 .action-btn:hover:not(:disabled){filter:brightness(1.1);}
 .action-btn:disabled{opacity:0.35;cursor:not-allowed;}
 .btn-end-turn{background:#62b517;color:#fff;}
@@ -271,6 +263,20 @@ body{padding-top:44px;}
 .pending-status{margin-left:auto;font-size:11px;font-weight:700;}
 .pending-status.done{color:#62b517;}.pending-status.waiting{color:#f59e0b;}
 
+/* INFO ICON TOOLTIPS */
+.info-btn{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:rgba(75,85,99,0.35);color:#6b8aaa;font-size:10px;font-weight:800;cursor:pointer;border:1px solid rgba(75,85,99,0.5);flex-shrink:0;line-height:1;vertical-align:middle;position:relative;user-select:none;transition:background 0.15s,color 0.15s;}
+.info-btn:hover{background:rgba(98,181,23,0.2);color:#62b517;border-color:rgba(98,181,23,0.4);}
+.info-popup{display:none;position:absolute;z-index:500;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:#1a2235;border:1px solid #374151;border-radius:10px;padding:10px 14px;width:240px;box-shadow:0 8px 32px rgba(0,0,0,0.6);font-size:11px;font-weight:400;color:#c9d1d9;line-height:1.5;text-align:left;text-transform:none;letter-spacing:0;pointer-events:auto;}
+.info-popup::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:#374151;}
+/* Downward variant for elements near the top of the screen */
+.info-popup.below{bottom:auto;top:calc(100% + 8px);}
+.info-popup.below::after{top:auto;bottom:100%;border-top-color:transparent;border-bottom-color:#374151;}
+.info-btn.open .info-popup{display:block;}
+.info-popup strong{color:#62b517;font-weight:700;}
+.info-popup em{color:#d1db24;font-style:normal;font-weight:700;}
+/* Wider popup variant for complex tips */
+.info-popup.wide{width:300px;}
+
 /* WIN SCREEN */
 #win-screen{position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:300;display:none;align-items:center;justify-content:center;}
 #win-screen.show{display:flex;}
@@ -299,7 +305,7 @@ body{padding-top:44px;}
   </div>
   <div class="lobby-forms">
     <h1>BYTE CLUB</h1>
-    <p class="subtitle">Cybersecurity Card Game · 2–4 Players</p>
+    <p class="subtitle">Cybersecurity Card Game · 2–4 Players <span class="info-btn" style="font-size:11px;width:18px;height:18px;" onclick="">i<div class="info-popup wide"><strong>Byte Club</strong> is a card game where you build both an attack Kill Chain and a NIST defense framework.<br><br><strong>Win by:</strong><br>1. Hold the 🚩 Data Flag when ⏰ Times Up is drawn<br>2. Collect all attack + defend types in front of you<br><br>Play cards on your turn, respond to attacks out of turn, and race to complete your collection!</div></span></p>
 
     <!-- CREATE GAME -->
     <div class="lobby-card">
@@ -353,14 +359,14 @@ body{padding-top:44px;}
 
       <!-- LOG -->
       <div class="game-log">
-        <h4>Game Log</h4>
+        <h4>Game Log <span class="info-btn" onclick="">i<div class="info-popup below">Shows all game actions in real-time. Newest events appear at the top. Watch here to see what opponents are doing.</div></span></h4>
         <div id="log-entries"></div>
       </div>
 
       <!-- MIDDLE -->
       <div class="game-middle">
         <div class="status-banner">
-          <div class="turn-label">Current Turn</div>
+          <div class="turn-label">Current Turn <span class="info-btn" onclick="">i<div class="info-popup below"><strong>Turn flow:</strong><br>1. Play any number of cards<br>2. Click <em>End Turn</em><br>3. Auto-draw 1 card<br>4. Discard if over 6 cards<br><br>Some cards (Respond, Weaponize) can be played <strong>out of turn</strong> when prompted.</div></span></div>
           <div class="turn-player" id="status-player">—</div>
           <div class="phase-label" id="status-phase">—</div>
         </div>
@@ -368,67 +374,43 @@ body{padding-top:44px;}
         <div class="special-cards-row">
           <div class="special-card sc-deck">
             <div class="sc-icon">🃏</div>
-            <div class="sc-name">Draw Deck</div>
+            <div class="sc-name">Draw Deck <span class="info-btn" onclick="">i<div class="info-popup below">At the end of each turn you <strong>draw 1 card</strong>. If you have more than 6 cards you must discard down to 6. The deck contains attack and defend cards.</div></span></div>
             <div class="sc-status" id="deck-count">— cards</div>
           </div>
           <div class="special-card sc-dataflag" id="sc-dataflag">
             <div class="sc-icon">🚩</div>
-            <div class="sc-name">Data Flag</div>
+            <div class="sc-name">Data Flag <span class="info-btn" onclick="">i<div class="info-popup below"><strong>Win Condition 1:</strong> Hold the Data Flag in your hand when <em>Times Up</em> is revealed from the deck. You can steal it using <em>C2</em> or <em>Action Objectives</em>.</div></span></div>
             <div class="sc-status" id="dataflag-status">In deck</div>
           </div>
           <div class="special-card sc-timesup" id="sc-timesup">
             <div class="sc-icon">⏰</div>
-            <div class="sc-name">Times Up</div>
+            <div class="sc-name">Times Up <span class="info-btn" onclick="">i<div class="info-popup below">When drawn from the deck, the game <strong>immediately checks</strong> if any player holds the Data Flag. If so, that player wins! Times Up cannot be held in hand — it triggers instantly.</div></span></div>
             <div class="sc-status" id="timesup-status">In deck</div>
           </div>
           <div class="special-card sc-govern" id="sc-govern">
             <div class="sc-icon">🏛️</div>
-            <div class="sc-name">Govern</div>
+            <div class="sc-name">Govern <span class="info-btn" onclick="">i<div class="info-popup wide below"><strong>How to unlock:</strong> Be the first to play all 5 NIST defend types (Identify, Protect, Detect, Respond, Recover) in front of you.<br><br><strong>Effect:</strong> Look at each player's hand privately, take 1 card from each, then give 1 card back to each. <em>Weaponize cannot cancel this card.</em></div></span></div>
             <div class="sc-status" id="govern-status">Locked</div>
           </div>
           <div class="special-card sc-actionobj" id="sc-actionobj">
             <div class="sc-icon">🎯</div>
-            <div class="sc-name">Action Obj.</div>
+            <div class="sc-name">Action Obj. <span class="info-btn" onclick="">i<div class="info-popup wide below"><strong>How to unlock:</strong> Be the first to play all 6 Kill Chain attack types (Recon, Weaponize, Delivery, Exploit, Install, C2) in front of you.<br><br><strong>Effect:</strong> Play at any time — the player holding the Data Flag must give it to you. <em>Respond cannot cancel this card.</em></div></span></div>
             <div class="sc-status" id="actionobj-status">Locked</div>
           </div>
         </div>
 
-        <!-- MY PROGRESS TRACKER -->
-        <div class="progress-tracker" id="my-progress"></div>
-      </div>
-
-      <!-- SIDEBAR -->
-      <div class="game-sidebar">
-        <div class="sidebar-title">Reference</div>
-        <div class="sidebar-ref">
-          <h5>⚔️ Kill Chain</h5>
-          <p>🔍 Recon → ⚒️ Weaponize → 📨 Deliver → 💥 Exploit → ⚙️ Install → 📡 C2 → 🎯 Actions</p>
-        </div>
-        <div class="sidebar-ref">
-          <h5>🛡️ NIST CSF</h5>
-          <p>🔎 Identify → 🛡️ Protect → 👁️ Detect → 🚨 Respond → 🔄 Recover → 🏛️ Govern</p>
-        </div>
-        <div class="sidebar-ref">
-          <h5>Win Conditions</h5>
-          <p><strong>1.</strong> Hold Data Flag 🚩 when Times Up ⏰ is revealed.</p>
-          <p style="margin-top:5px"><strong>2.</strong> Have 1 of every Attack + Defend card in front of you.</p>
-        </div>
-        <div class="sidebar-ref">
-          <h5>Turn Order</h5>
-          <p>1. Play any cards<br>2. End play → auto draw 1<br>3. Discard if &gt;6 in hand</p>
-        </div>
       </div>
     </div>
 
     <!-- MY AREA -->
     <div class="my-area">
       <div class="my-played-area">
-        <div class="my-played-title">Cards in Front of You</div>
+        <div class="my-played-title">Cards in Front of You <span class="info-btn" onclick="">i<div class="info-popup wide">Cards you play go here face-up. <strong>Win Condition 2:</strong> Have 1 of every attack type (Kill Chain) AND 1 of every defend type (NIST) in front of you — including the earned Govern and Action Objectives cards.<br><br>Dotted outlines show which cards you still need. Fill them all to win!</div></span></div>
         <div class="my-played-rows" id="my-played-rows"></div>
       </div>
       <div class="hand-area">
         <div class="hand-title">
-          <span>Your Hand</span>
+          <span>Your Hand <span class="info-btn" onclick="">i<div class="info-popup wide"><strong>Double-click</strong> a card to play it on your turn. You can play multiple cards per turn.<br><br><strong>Attack cards</strong> target opponents. <strong>Defend cards</strong> protect you or give special abilities.<br><br><em>Respond</em> and <em>Weaponize</em> can be played out of turn when prompted. Click <strong>End Turn</strong> when done.</div></span></span>
           <span id="hand-count-label" style="color:#4b5563;font-size:11px;"></span>
         </div>
         <div class="hand-cards" id="hand-cards"></div>
@@ -438,6 +420,42 @@ body{padding-top:44px;}
       </div>
     </div>
   </div>
+</div>
+
+<!-- HOW TO PLAY -->
+<button class="how-to-play-btn" id="htp-btn" onclick="document.getElementById('htp-panel').classList.toggle('open')">📖 How to Play</button>
+<div class="how-to-play-panel" id="htp-panel">
+  <button class="htp-close" onclick="this.parentElement.classList.remove('open')">✕</button>
+  <h4>How to Play Byte Club</h4>
+  <h5>🎯 Goal</h5>
+  <p>Win by one of two conditions:</p>
+  <p><strong>1.</strong> Hold the 🚩 Data Flag when ⏰ Times Up is drawn from the deck.</p>
+  <p><strong>2.</strong> Play one of every attack type (Kill Chain) AND every defend type (NIST) in front of you, including the earned Govern and Action Objectives cards.</p>
+  <h5>🔄 Turn Flow</h5>
+  <p><strong>1. Play cards</strong> — double-click cards from your hand to play them. You can play multiple cards per turn.</p>
+  <p><strong>2. End turn</strong> — click End Turn when done.</p>
+  <p><strong>3. Draw</strong> — you automatically draw 1 card.</p>
+  <p><strong>4. Discard</strong> — if you have more than 6 cards, click one to discard.</p>
+  <h5>⚔️ Kill Chain (Attack Cards)</h5>
+  <p>🔍 <strong>Recon</strong> — peek at a hand or swap played attack cards</p>
+  <p>⚒️ <strong>Weaponize</strong> — cancel an opponent's defend card (played out of turn)</p>
+  <p>📨 <strong>Delivery</strong> — swap up to 2 played cards with opponents</p>
+  <p>💥 <strong>Exploit</strong> — blindly steal 1 card from a target</p>
+  <p>⚙️ <strong>Install</strong> — block a target from playing defend cards</p>
+  <p>📡 <strong>C2</strong> — steal the Data Flag, or target gives you a card</p>
+  <h5>🛡️ NIST Framework (Defend Cards)</h5>
+  <p>🔎 <strong>Identify</strong> — reveal who has the Data Flag or swap played defend cards</p>
+  <p>🛡️ <strong>Protect</strong> — block attacks until your next turn</p>
+  <p>👁️ <strong>Detect</strong> — view and reorder the top 5 deck cards</p>
+  <p>🚨 <strong>Respond</strong> — cancel an attack targeting you (played out of turn)</p>
+  <p>🔄 <strong>Recover</strong> — draw until you have 5 cards in hand</p>
+  <h5>⭐ Special Earned Cards</h5>
+  <p>🏛️ <strong>Govern</strong> — earned by playing all 5 NIST types. Look at all hands, take 1 card from each player, then give 1 back to each.</p>
+  <p>🎯 <strong>Action Obj.</strong> — earned by playing all 6 Kill Chain types. The Data Flag holder must give it to you. Cannot be cancelled.</p>
+  <h5>💡 Tips</h5>
+  <p>• Click the <strong>ⓘ</strong> icons throughout the game for quick help on any element.</p>
+  <p>• Dotted outlines in your played area show which cards you still need.</p>
+  <p>• Watch the game log for opponent actions.</p>
 </div>
 
 <!-- WIN SCREEN -->
@@ -476,6 +494,41 @@ function hideToast() {
   document.getElementById('toast-notification').style.display = 'none';
   clearTimeout(_toastTimer);
 }
+
+// ==================== INFO ICON TOOLTIPS ====================
+function positionInfoPopup(btn) {
+  const popup = btn.querySelector('.info-popup');
+  if (!popup) return;
+  // Reset any previous adjustments
+  popup.style.left = '';
+  popup.style.right = '';
+  popup.style.transform = '';
+  // Read where it landed in the viewport
+  const rect   = popup.getBoundingClientRect();
+  const btnRect = btn.getBoundingClientRect();
+  const vw     = window.innerWidth;
+  const margin = 10;
+  if (rect.left < margin) {
+    // Clamp left edge — position relative to btn's left edge
+    popup.style.transform = 'none';
+    popup.style.left = (margin - btnRect.left) + 'px';
+  } else if (rect.right > vw - margin) {
+    // Clamp right edge — anchor to right side of btn
+    popup.style.transform = 'none';
+    popup.style.left = 'auto';
+    popup.style.right = (btnRect.right - (vw - margin)) + 'px';
+  }
+}
+
+document.addEventListener('click', e => {
+  const btn = e.target.closest('.info-btn');
+  document.querySelectorAll('.info-btn.open').forEach(b => { if (b !== btn) b.classList.remove('open'); });
+  if (btn) {
+    btn.classList.toggle('open');
+    if (btn.classList.contains('open')) positionInfoPopup(btn);
+    e.stopPropagation();
+  }
+});
 
 // ==================== CONNECTION ====================
 const COLOR_INFO = {
@@ -771,8 +824,6 @@ function renderGame(gs) {
   aoEl.className = 'special-card sc-actionobj' + (aoInHand ? ' available' : '');
   document.getElementById('actionobj-status').textContent = aoInHand ? '🎯 In your hand' : aoPlayed ? '✓ Played' : 'Locked';
 
-  // My progress tracker
-  renderProgressTracker(me.played, gs.myIndex);
 
   // Opponents
   renderOpponents(gs);
@@ -819,31 +870,6 @@ function renderTurnStrip(gs) {
   });
 }
 
-function renderProgressTracker(played, playerIdx) {
-  const el = document.getElementById('my-progress');
-  const playedTypes = new Set(played.map(c => c.type));
-  let html = '';
-
-  // Attack row
-  html += '<div class="tracker-row">';
-  html += '<span class="tracker-label">⚔️ Attack</span><div class="tracker-types">';
-  ATTACK_TYPES.forEach(t => {
-    const done = playedTypes.has(t.id);
-    html += `<span class="tracker-type attack${done?' done':''}" title="${t.name}">${t.emoji}</span>`;
-  });
-  html += '</div></div>';
-
-  // Defend row
-  html += '<div class="tracker-row">';
-  html += '<span class="tracker-label">🛡️ Defend</span><div class="tracker-types">';
-  DEFEND_TYPES.forEach(t => {
-    const done = playedTypes.has(t.id);
-    html += `<span class="tracker-type defend${done?' done':''}" title="${t.name}">${t.emoji}</span>`;
-  });
-  html += '</div></div>';
-
-  el.innerHTML = html;
-}
 
 function renderOpponents(gs) {
   const bar = document.getElementById('opponents-bar');
@@ -912,11 +938,11 @@ function renderMyPlayed(played) {
 
   el.innerHTML = `
     <div class="kc-row">
-      <span class="kc-row-label">⚔️ Kill Chain</span>
+      <span class="kc-row-label">⚔️ Kill Chain <span class="info-btn" onclick="">i<div class="info-popup wide"><strong>Cyber Kill Chain</strong> — play one of each attack type to unlock <em>Action Objectives</em>.<br><br>🔍 <strong>Recon</strong> — look at a hand or swap played attack cards<br>⚒️ <strong>Weaponize</strong> — cancel an opponent's defend card (out of turn)<br>📨 <strong>Delivery</strong> — swap up to 2 played cards with opponents<br>💥 <strong>Exploit</strong> — blindly steal 1 card from a target<br>⚙️ <strong>Install</strong> — block a target from playing defend cards<br>📡 <strong>C2</strong> — steal the Data Flag, or target gives you a card</div></span></span>
       <div class="kc-slots">${attackSlots}</div>
     </div>
     <div class="kc-row">
-      <span class="kc-row-label">🛡️ NIST</span>
+      <span class="kc-row-label">🛡️ NIST <span class="info-btn" onclick="">i<div class="info-popup wide"><strong>NIST Cybersecurity Framework</strong> — play one of each defend type to unlock <em>Govern</em>.<br><br>🔎 <strong>Identify</strong> — reveal Data Flag holder or swap played defend cards<br>🛡️ <strong>Protect</strong> — block attacks until your next turn<br>👁️ <strong>Detect</strong> — view and reorder the top 5 deck cards<br>🚨 <strong>Respond</strong> — cancel an attack targeting you (out of turn)<br>🔄 <strong>Recover</strong> — draw until you have 5 cards</div></span></span>
       <div class="kc-slots">${defendSlots}</div>
     </div>`;
 }
