@@ -1238,8 +1238,8 @@ const BC_ACTION_CARDS = [
   { id:55, cat:'attack', type:'c2',       name:'C2',             desc:'Pick a target. If they hold the Data Flag, they must give it to you. Otherwise, pick any card from their revealed hand.' },
 ];
 
-const BC_GOVERN_CARD     = { id:'govern',    cat:'defend', type:'govern',     name:'Govern',              desc:'Look at all other players\' hands. (Earned by collecting all other NIST types)' };
-const BC_ACTION_OBJ_CARD = { id:'action_obj',cat:'attack', type:'action_obj', name:'Action Objectives',   desc:'Play anytime — the player with the most cards in front cannot win. (Earned by completing the Kill Chain)' };
+const BC_GOVERN_CARD     = { id:'govern',    cat:'defend', type:'govern',     name:'Govern',              desc:'Privately look at every player\'s hand and take one card from each. Then give one card back to each player (can be any card from your hand). Weaponize cannot cancel this. (Earned by collecting all NIST defend types)' };
+const BC_ACTION_OBJ_CARD = { id:'action_obj',cat:'attack', type:'action_obj', name:'Action Objectives',   desc:'Play at any time — the player holding the Data Flag must give it to you. Respond cannot cancel this card. (Earned by completing the Kill Chain)' };
 
 function bcShuffle(arr) {
   const a = arr.map(c => ({ ...c }));
@@ -1294,6 +1294,7 @@ function initBCGame(room) {
     attackState: null,         // active attack effect: { type, attacker, card, target, ... }
     weaponizeWindow: null,     // { defender, card, targetPhase } — Weaponize cancel window
     installBlocked: {},        // { playerIdx: true } — Installation block (cleared at start of their next turn)
+    pendingError: null,        // { playerIdx, message } — one-shot error toast sent to a specific player
     log: [],
     winner: -1,
     winCondition: 0,
@@ -1458,6 +1459,7 @@ function bcBroadcastState(room) {
             taken: gs.governState.taken,
           }
         : null,
+      pendingError: (gs.pendingError?.playerIdx === i) ? gs.pendingError.message : null,
       players: gs.players.map((gpl, pi) => ({
         name: room.players[pi].name,
         color: room.players[pi].color,
@@ -1468,6 +1470,8 @@ function bcBroadcastState(room) {
       })),
     });
   }
+  // Clear one-shot error after broadcasting
+  gs.pendingError = null;
 }
 
 function bcDrawOne(room, playerIdx) {
@@ -1516,11 +1520,11 @@ function bcOpenWeaponizeWindow(room, playerIdx, card, resolveCb) {
       gs.weaponizeWindow = null;
       gs.phase = 'play';  // reset before resolveCb so Protect/Recover land in 'play'; Detect/Identify override it
       resolveCb();
-      // If the defender is a bot, re-trigger their turn to handle the new phase
-      // (e.g. detect_view, identify_choosing, or back to play after protect/recover)
-      if (room.players[playerIdx]?.isBot && gs.currentPlayer === playerIdx) {
+      // Re-trigger bot only for sub-phases (detect_view, identify_choosing) that resolveCb opened.
+      // If phase stayed 'play', bcFinishPlay (called inside resolveCb) already scheduled the re-trigger.
+      if (room.players[playerIdx]?.isBot && gs.currentPlayer === playerIdx && gs.phase !== 'play') {
         room._bcBotRunning = false;
-        bcBotContinueTurn(room, playerIdx);
+        setTimeout(() => bcBotContinueTurn(room, playerIdx), 50);
       }
     }
   }, 8000);
@@ -1548,9 +1552,10 @@ function bcOpenWeaponizeWindow(room, playerIdx, card, resolveCb) {
         gs.weaponizeWindow = null;
         gs.phase = 'play';  // reset before resolveCb (same fix as 8s timer path)
         resolveCb();
-        if (room.players[playerIdx]?.isBot && gs.currentPlayer === playerIdx) {
+        // Same rule: only re-trigger bot for sub-phases; bcFinishPlay handles play-phase re-trigger
+        if (room.players[playerIdx]?.isBot && gs.currentPlayer === playerIdx && gs.phase !== 'play') {
           room._bcBotRunning = false;
-          bcBotContinueTurn(room, playerIdx);
+          setTimeout(() => bcBotContinueTurn(room, playerIdx), 50);
         }
       }
     }, 1500);
@@ -1765,13 +1770,16 @@ function bcFinishPlay(room, playerIdx) {
     bcLog(room, `🏆 ${room.players[playerIdx].name} wins!`);
   }
   bcBroadcastState(room);
-  // Re-trigger bot if it's their turn and phase returned to play.
-  // The _bcBotRunning lock prevents double execution — if executeBCBotTurn is still
-  // active, the new call returns immediately. Safe because weaponize window (8s) always
-  // fires AFTER executeBCBotTurn finishes (~2s).
+  // Re-trigger bot if it's still their turn in play phase.
+  // Deferred 50ms so any synchronous call stack (e.g. weaponize resolveCb) fully
+  // unwinds first — prevents bcBotContinueTurn from opening a new weaponize window
+  // before the timer callback's own post-resolveCb log line executes.
   if (!w && gs.phase === 'play' && gs.currentPlayer === playerIdx && room.players[playerIdx]?.isBot) {
     room._bcBotRunning = false;
-    bcBotContinueTurn(room, playerIdx);
+    setTimeout(() => {
+      if (gs.phase === 'play' && gs.currentPlayer === playerIdx)
+        bcBotContinueTurn(room, playerIdx);
+    }, 50);
   }
 }
 
@@ -1929,6 +1937,7 @@ function bcHandleAction(room, playerIdx, msg) {
       if (gs.installBlocked[playerIdx]) {
         // Put card back in hand
         pl.hand.push(card);
+        gs.pendingError = { playerIdx, message: `⚙️ You cannot play defend cards this turn — Installation is blocking you until the start of your next turn.` };
         bcLog(room, `❌ ${room.players[playerIdx].name} is blocked from playing defend cards this turn (Installation)!`);
         bcBroadcastState(room); return;
       }
@@ -2007,6 +2016,7 @@ function bcHandleAction(room, playerIdx, msg) {
       if (!Number.isFinite(tgt) || tgt < 0 || tgt >= gs.players.length || tgt === playerIdx) return;
       if (!room.players[tgt]?.connected) return;
       if (bcIsProtected(gs, tgt)) {
+        gs.pendingError = { playerIdx, message: `🛡️ ${room.players[tgt].name} is Protected — they cannot be targeted by attack cards right now.` };
         bcLog(room, `❌ ${room.players[tgt].name} is Protected — cannot be targeted!`);
         bcBroadcastState(room); return;
       }
