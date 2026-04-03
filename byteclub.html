@@ -227,6 +227,8 @@ body{padding-top:44px;}
 .govern-select-panel h3{font-size:16px;font-weight:800;color:#c4b5fd;margin-bottom:12px;}
 .govern-player-btn{display:flex;align-items:center;gap:10px;width:100%;padding:10px 14px;background:#111827;border:1px solid #374151;border-radius:8px;color:#e2e8f0;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:6px;transition:all 0.15s;}
 .govern-player-btn:hover{border-color:#7c3aed;background:#1a1030;}
+.govern-card-btn{padding:10px 14px;background:#111827;border:2px solid #374151;border-radius:10px;color:#e2e8f0;font-size:13px;cursor:pointer;text-align:center;min-width:100px;transition:all 0.15s;}
+.govern-card-btn:hover{border-color:#7c3aed;background:#1a1030;transform:translateY(-2px);}
 
 /* PROTECTED BADGE */
 .opp-protected-badge{font-size:10px;background:rgba(59,130,246,0.2);color:#93c5fd;padding:1px 6px;border-radius:4px;margin-left:4px;}
@@ -452,7 +454,27 @@ body{padding-top:44px;}
   <div id="govern-overlay-inner"></div>
 </div>
 
+<!-- TOAST NOTIFICATION -->
+<div id="toast-notification" style="position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1f2937;border:2px solid #f87171;color:#fca5a5;padding:12px 20px 12px 16px;border-radius:10px;display:none;z-index:9999;font-size:14px;font-weight:600;max-width:420px;width:90%;align-items:center;gap:12px;box-shadow:0 4px 24px rgba(0,0,0,0.6)">
+  <span id="toast-msg" style="flex:1"></span>
+  <button onclick="hideToast()" style="background:none;border:none;color:#f87171;cursor:pointer;font-size:18px;line-height:1;padding:0;flex-shrink:0">✕</button>
+</div>
+
 <script>
+// ==================== TOAST ====================
+let _toastTimer = null;
+function showToast(msg, duration = 4000) {
+  const el = document.getElementById('toast-notification');
+  document.getElementById('toast-msg').textContent = msg;
+  el.style.display = 'flex';
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(hideToast, duration);
+}
+function hideToast() {
+  document.getElementById('toast-notification').style.display = 'none';
+  clearTimeout(_toastTimer);
+}
+
 // ==================== CONNECTION ====================
 const COLOR_INFO = {
   blue:   { hex:'#4a9eff', name:'Blue' },
@@ -778,10 +800,9 @@ function renderGame(gs) {
 
   const aoEl = document.getElementById('sc-actionobj');
   const aoInHand = gs.myHand.some(c => c.type === 'action_obj');
-  aoEl.className = 'special-card sc-actionobj' + (gs.actionObjActive ? ' active' : '');
-  document.getElementById('actionobj-status').textContent = gs.actionObjActive
-    ? '🚫 ' + gs.players[gs.actionObjBlockedPlayer]?.name + ' blocked'
-    : aoInHand ? '🎯 In your hand' : me.played.some(c=>c.type==='action_obj') ? '✓ Played' : 'Locked';
+  const aoPlayed = me.played.some(c => c.type === 'action_obj');
+  aoEl.className = 'special-card sc-actionobj' + (aoInHand ? ' available' : '');
+  document.getElementById('actionobj-status').textContent = aoInHand ? '🎯 In your hand' : aoPlayed ? '✓ Played' : 'Locked';
 
   // My progress tracker
   renderProgressTracker(me.played, gs.myIndex);
@@ -964,7 +985,14 @@ function selectCard(cardId) {
 
   if (gs.phase === 'play') {
     if (selectedHandCard === cardId) {
-      // Second click = play
+      // Second click = play — check install block first
+      const cardObj = gs.myHand?.find(c => c.id === cardId || c.id === Number(cardId));
+      if (gs.iAmInstallBlocked && cardObj?.cat === 'defend') {
+        showToast('⚙️ You are blocked from playing defend cards this turn (Installation)!');
+        selectedHandCard = null;
+        renderHand(gs);
+        return;
+      }
       send({ type:'game_action', action:'play_card', cardId });
       selectedHandCard = null;
     } else {
@@ -1022,10 +1050,10 @@ function renderActionBar(gs, isMyTurn) {
     }
   } else if (gs.phase === 'discard') {
     hint.textContent = `${gs.myHand.length} cards in hand — click a card to discard it (down to 6).`;
-  } else if (gs.phase === 'govern_viewing' && gs.governView) {
-    bar.insertBefore(mkBtn('Done Viewing', 'action-btn btn-govern', () =>
-      send({ type:'game_action', action:'govern_done' })), hint);
-    hint.textContent = 'Viewing hand via Govern — click Done when finished.';
+  } else if ((gs.phase === 'govern_take' || gs.phase === 'govern_give') && gs.governInfo) {
+    hint.textContent = gs.governInfo.mode === 'take'
+      ? 'Govern — take one card from each player (shown in the panel above).'
+      : 'Govern — give one card to each player (shown in the panel above).';
   } else if (gs.phase === 'identify_dataflag' && gs.identifyInfo?.chooser === myIdx) {
     bar.insertBefore(mkBtn('Done', 'action-btn btn-govern', () =>
       send({ type:'game_action', action:'identify_dataflag_done' })), hint);
@@ -1050,41 +1078,56 @@ function renderEffectOverlay(gs) {
   const inner = document.getElementById('govern-overlay-inner');
   const myIdx = gs.myIndex;
 
-  // ── Govern select ──
-  if (gs.phase === 'govern_select' && gs.governViewer === myIdx) {
+  // ── Govern: take one card from each player ──
+  if (gs.phase === 'govern_take' && gs.governInfo) {
     overlay.style.display = 'flex';
-    let html = `<div class="govern-select-panel" style="background:#1a2235;border:2px solid #7c3aed;border-radius:16px;padding:20px;max-width:360px;width:90%">
-      <h3 style="font-size:16px;font-weight:800;color:#c4b5fd;margin-bottom:12px">🏛️ Choose a player to view</h3>`;
-    gs.players.forEach((pl, i) => {
-      if (i === myIdx) return;
-      html += `<button class="govern-player-btn" onclick="send({type:'game_action',action:'govern_select',targetIdx:${i}})">
-        <div style="width:10px;height:10px;border-radius:50%;background:${COLOR_INFO[pl.color]?.hex||'#888'}"></div>
-        ${pl.name} (${pl.handCount} cards)</button>`;
+    const gi = gs.governInfo;
+    const fromIdx = gi.currentTargetIdx;
+    const fromName = gs.players[fromIdx]?.name || '?';
+    const fromHand = gi.allHands.find(h => h.playerIdx === fromIdx)?.hand || [];
+    const fromColor = COLOR_INFO[gs.players[fromIdx]?.color]?.hex || '#888';
+    let html = `<div class="govern-panel" style="background:#1a2235;border:2px solid #7c3aed;border-radius:16px;padding:24px;max-width:600px;width:90%">
+      <h3 style="font-size:18px;font-weight:800;color:#c4b5fd;margin-bottom:4px">🏛️ Govern — Take a Card</h3>
+      <p style="font-size:13px;color:#9ca3af;margin-bottom:16px">Step ${gi.step + 1} of ${gi.totalTargets} — pick one card from <span style="color:${fromColor};font-weight:700">${fromName}</span>'s hand</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">`;
+    fromHand.forEach(c => {
+      html += `<button class="govern-card-btn" onclick="send({type:'game_action',action:'govern_take_card',cardId:'${c.id}'})">
+        <div style="font-size:10px;color:${c.cat==='attack'?'#f87171':'#93c5fd'};font-weight:700;margin-bottom:3px">${c.cat==='attack'?'⚔️':'🛡️'} ${c.cat}</div>
+        <div style="font-size:13px;font-weight:800;color:#e2e8f0">${c.name}</div>
+      </button>`;
     });
-    html += '</div>';
+    html += `</div></div>`;
     inner.innerHTML = html;
     return;
   }
 
-  // ── Govern viewing ──
-  if (gs.phase === 'govern_viewing' && gs.governView) {
+  // ── Govern: give one card to each player ──
+  if (gs.phase === 'govern_give' && gs.governInfo) {
     overlay.style.display = 'flex';
-    const tgtName = gs.players[gs.governView.targetIdx]?.name || '?';
-    const isViewer = gs.governViewer === myIdx;
+    const gi = gs.governInfo;
+    const toIdx = gi.currentTargetIdx;
+    const toName = gs.players[toIdx]?.name || '?';
+    const toColor = COLOR_INFO[gs.players[toIdx]?.color]?.hex || '#888';
     let html = `<div class="govern-panel" style="background:#1a2235;border:2px solid #7c3aed;border-radius:16px;padding:24px;max-width:600px;width:90%">
-      <h3 style="font-size:18px;font-weight:800;color:#c4b5fd;margin-bottom:16px">🏛️ ${tgtName}'s Hand</h3>
-      <div class="govern-hand" style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">`;
-    gs.governView.hand.forEach(c => {
-      html += `<div style="background:#111827;border:1px solid #374151;border-radius:8px;padding:8px;min-width:100px;max-width:120px">
+      <h3 style="font-size:18px;font-weight:800;color:#c4b5fd;margin-bottom:4px">🏛️ Govern — Give a Card</h3>
+      <p style="font-size:13px;color:#9ca3af;margin-bottom:16px">Step ${gi.step + 1} of ${gi.totalTargets} — give one card from your hand to <span style="color:${toColor};font-weight:700">${toName}</span></p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">`;
+    gs.myHand.forEach(c => {
+      html += `<button class="govern-card-btn" onclick="send({type:'game_action',action:'govern_give_card',cardId:'${c.id}'})">
         <div style="font-size:10px;color:${c.cat==='attack'?'#f87171':'#93c5fd'};font-weight:700;margin-bottom:3px">${c.cat==='attack'?'⚔️':'🛡️'} ${c.cat}</div>
-        <div style="font-size:12px;font-weight:800;color:#e2e8f0">${c.name}</div></div>`;
+        <div style="font-size:13px;font-weight:800;color:#e2e8f0">${c.name}</div>
+      </button>`;
     });
-    html += '</div>';
-    html += isViewer
-      ? `<button class="action-btn btn-govern" onclick="send({type:'game_action',action:'govern_done'})" style="margin-top:14px;width:100%">Done Viewing</button>`
-      : `<p style="font-size:13px;color:#6b7280;margin-top:12px;text-align:center">Waiting for ${gs.players[gs.governViewer]?.name||'?'} to finish…</p>`;
-    html += '</div>';
+    html += `</div></div>`;
     inner.innerHTML = html;
+    return;
+  }
+
+  // ── Govern: waiting (non-viewer) ──
+  if ((gs.phase === 'govern_take' || gs.phase === 'govern_give') && !gs.governInfo) {
+    overlay.style.display = 'flex';
+    inner.innerHTML = `<div class="effect-panel"><h3>🏛️ Govern in progress…</h3>
+      <p style="color:#6b7280;font-size:13px;text-align:center">Another player is exchanging cards with everyone. Please wait.</p></div>`;
     return;
   }
 
@@ -1099,7 +1142,7 @@ function renderEffectOverlay(gs) {
       </button>
       <button class="effect-choice-btn" onclick="send({type:'game_action',action:'identify_choice',choice:'swap'})">
         🔄 Swap Defend Cards
-        <div class="sub">Exchange one of your played defend cards for another player's played defend card. Cannot target a Protected player.</div>
+        <div class="sub">Exchange one of your played defend cards for another player's played defend card. You cannot swap a player's active Protect card, but other cards are fair game.</div>
       </button>
     </div>`;
     return;
@@ -1168,11 +1211,13 @@ function renderEffectOverlay(gs) {
       if (i === myIdx) return;
       const isProtected = gs.protectedPlayers?.includes(i);
       const theirDefend = pl.played.filter(c => c.cat === 'defend');
-      const canSwap = !isProtected && theirDefend.length > 0;
+      // Swappable: defend cards that aren't an active Protect card
+      const swappable = theirDefend.filter(c => !(c.type === 'protect' && isProtected));
+      const canSwap = swappable.length > 0;
       html += `<button class="govern-player-btn" ${canSwap?`onclick="send({type:'game_action',action:'identify_swap_target',targetIdx:${i}})"`:''} style="${canSwap?'':'opacity:0.4;cursor:not-allowed'}">
         <div style="width:10px;height:10px;border-radius:50%;background:${COLOR_INFO[pl.color]?.hex||'#888'}"></div>
-        ${pl.name} — ${theirDefend.length} defend card(s)
-        ${isProtected ? ' 🛡️ PROTECTED' : ''}
+        ${pl.name} — ${swappable.length} swappable card(s)
+        ${isProtected && theirDefend.some(c=>c.type==='protect') ? ' 🛡️ (Protect active — excluded)' : isProtected ? ' 🛡️ PROTECTED' : ''}
         ${theirDefend.length===0 ? ' (no defend cards)' : ''}
       </button>`;
     });
@@ -1186,11 +1231,15 @@ function renderEffectOverlay(gs) {
     overlay.style.display = 'flex';
     const tgt = gs.identifyInfo.swapTargetIdx;
     const tgtPlayer = gs.players[tgt];
+    const tgtProtected = gs.protectedPlayers?.includes(tgt);
     const theirDefend = tgtPlayer.played.filter(c => c.cat === 'defend');
     let html = `<div class="effect-panel"><h3>🔎 Swap — Select ${tgtPlayer.name}'s defend card to take</h3>
       <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px">`;
     theirDefend.forEach(c => {
-      html += `<span class="played-select-card defend" onclick="send({type:'game_action',action:'identify_swap_their',cardId:'${c.id}'})">${c.name}</span>`;
+      const ineligible = c.type === 'protect' && tgtProtected;
+      html += ineligible
+        ? `<span class="played-select-card defend" style="opacity:0.35;cursor:not-allowed" title="Protect is active — cannot swap">${c.name} 🛡️</span>`
+        : `<span class="played-select-card defend" onclick="send({type:'game_action',action:'identify_swap_their',cardId:'${c.id}'})">${c.name}</span>`;
     });
     html += '</div></div>';
     inner.innerHTML = html;
@@ -1244,7 +1293,7 @@ function renderEffectOverlay(gs) {
         ${isProtected ? '<span style="color:#62b517;font-size:11px">🛡️ PROTECTED</span>' : ''}
       </button>`;
     });
-    html += '</div>';
+    html += `<button class="action-btn btn-cancel" onclick="send({type:'game_action',action:'cancel_attack'})" style="margin-top:10px;width:100%">✕ Cancel Attack</button></div>`;
     inner.innerHTML = html;
     return;
   }
@@ -1374,7 +1423,7 @@ function renderEffectOverlay(gs) {
         ${pl.name} — 🃏 ${pl.handCount} cards ${isProtected ? '🛡️ PROTECTED' : ''}
       </button>`;
     });
-    html += '</div>';
+    html += `<button class="action-btn btn-cancel" onclick="send({type:'game_action',action:'cancel_attack'})" style="margin-top:10px;width:100%">✕ Cancel Attack</button></div>`;
     inner.innerHTML = html; return;
   }
 
@@ -1466,7 +1515,7 @@ function renderEffectOverlay(gs) {
         ${pl.name} — 🃏 ${pl.handCount} cards ${isProtected ? '🛡️ PROTECTED' : ''}
       </button>`;
     });
-    html += '</div>';
+    html += `<button class="action-btn btn-cancel" onclick="send({type:'game_action',action:'cancel_attack'})" style="margin-top:10px;width:100%">✕ Cancel Attack</button></div>`;
     inner.innerHTML = html; return;
   }
 

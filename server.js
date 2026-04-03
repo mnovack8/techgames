@@ -1285,8 +1285,7 @@ function initBCGame(room) {
     actionObjHolder: -1,
     actionObjActive: false,
     actionObjBlockedPlayer: -1,
-    governViewer: -1,
-    governViewTarget: -1,
+    governState: null,        // multi-step Govern resolution
     // Card effects
     protectedUntilTurn: {},   // { playerIdx: true } — Protect card
     detectView: null,          // { viewer, cards } — Detect card
@@ -1341,7 +1340,6 @@ function bcCheckSpecialAcquisition(room) {
 function bcCheckWin(room, idx) {
   const gs = room.bcState;
   const pl = gs.players[idx];
-  if (gs.actionObjActive && gs.actionObjBlockedPlayer === idx) return 0;
   // Win 1: hold Data Flag + Times Up revealed
   if (gs.timesUpRevealed && pl.hand.some(c => c.type === 'data_flag')) return 1;
   // Win 2: 1 of every attack type (inc. action_obj) AND every defend type (inc. govern) in front
@@ -1450,8 +1448,15 @@ function bcBroadcastState(room) {
       identifyInfo,
       attackInfo,
       weaponizeInfo,
-      governView: (gs.phase === 'govern_viewing' && gs.governViewer === i)
-        ? { targetIdx: gs.governViewTarget, hand: gs.players[gs.governViewTarget]?.hand || [] }
+      governInfo: (gs.governState?.viewer === i)
+        ? {
+            mode: gs.governState.mode,
+            step: gs.governState.step,
+            totalTargets: gs.governState.targets.length,
+            currentTargetIdx: gs.governState.targets[gs.governState.step] ?? -1,
+            allHands: gs.players.map((p, pi) => ({ playerIdx: pi, hand: p.hand })),
+            taken: gs.governState.taken,
+          }
         : null,
       players: gs.players.map((gpl, pi) => ({
         name: room.players[pi].name,
@@ -1509,6 +1514,7 @@ function bcOpenWeaponizeWindow(room, playerIdx, card, resolveCb) {
   const timer = setTimeout(() => {
     if (gs.weaponizeWindow === ww) {
       gs.weaponizeWindow = null;
+      gs.phase = 'play';  // reset before resolveCb so Protect/Recover land in 'play'; Detect/Identify override it
       resolveCb();
       // If the defender is a bot, re-trigger their turn to handle the new phase
       // (e.g. detect_view, identify_choosing, or back to play after protect/recover)
@@ -1540,6 +1546,7 @@ function bcOpenWeaponizeWindow(room, playerIdx, card, resolveCb) {
       if (gs.weaponizeWindow === ww) {
         clearTimeout(ww._timer);
         gs.weaponizeWindow = null;
+        gs.phase = 'play';  // reset before resolveCb (same fix as 8s timer path)
         resolveCb();
         if (room.players[playerIdx]?.isBot && gs.currentPlayer === playerIdx) {
           room._bcBotRunning = false;
@@ -1583,6 +1590,35 @@ function bcResolveExploit(room, st) {
   bcFinishPlay(room, attacker);
 }
 
+function bcBotGovern(room, playerIdx) {
+  const gs = room.bcState;
+  setTimeout(() => {
+    if (!gs.governState || gs.governState.viewer !== playerIdx) return;
+    if (gs.phase === 'govern_take') {
+      const fromIdx = gs.governState.targets[gs.governState.step];
+      const hand = gs.players[fromIdx].hand;
+      if (hand.length === 0) return;
+      // Prefer Data Flag, then card types not yet collected, else first card
+      const myPlayed = new Set(gs.players[playerIdx].played.map(c => c.type));
+      const take = hand.find(c => c.type === 'data_flag')
+                || hand.find(c => !myPlayed.has(c.type))
+                || hand[0];
+      bcHandleAction(room, playerIdx, { type: 'game_action', action: 'govern_take_card', cardId: take.id });
+      bcBotGovern(room, playerIdx);
+    } else if (gs.phase === 'govern_give') {
+      const myHand = gs.players[playerIdx].hand;
+      if (myHand.length === 0) return;
+      // Give duplicates or least-valuable cards first
+      const myTypes = myHand.map(c => c.type);
+      const give = myHand.find(c => myTypes.filter(t => t === c.type).length > 1 && c.type !== 'data_flag' && c.type !== 'action_obj')
+                || myHand.find(c => c.type !== 'data_flag' && c.type !== 'action_obj' && c.type !== 'govern')
+                || myHand[0];
+      bcHandleAction(room, playerIdx, { type: 'game_action', action: 'govern_give_card', cardId: give.id });
+      bcBotGovern(room, playerIdx);
+    }
+  }, 700);
+}
+
 function bcResolveInstall(room, st) {
   const gs = room.bcState;
   gs.installBlocked[st.target] = true;
@@ -1594,11 +1630,28 @@ function bcResolveInstall(room, st) {
 
 function bcResolveDelivery(room, st) {
   const gs = room.bcState;
+  // Check if any swaps are even possible
+  const myPlayed  = gs.players[st.attacker].played;
+  const hasOppPlayed = gs.players.some((p, i) => i !== st.attacker && p.played.length > 0);
+  if (myPlayed.length === 0 || !hasOppPlayed) {
+    bcLog(room, `📨 Delivery — no cards on the table to swap.`);
+    gs.attackState = null; gs.phase = 'play';
+    bcFinishPlay(room, st.attacker);
+    return;
+  }
   gs.phase = 'attack_delivery_pick';
   bcLog(room, `📨 Delivery resolved — ${room.players[st.attacker].name} picks up to 2 card swaps.`);
   gs.attackState.swaps = [];
   gs.attackState.pickStep = null;
   bcBroadcastState(room);
+  // 15-second auto-resolve for non-bots (safety net)
+  const snapAtk = gs.attackState;
+  setTimeout(() => {
+    if (gs.phase === 'attack_delivery_pick' && gs.attackState === snapAtk) {
+      bcLog(room, `📨 Delivery timed out — resolving with ${snapAtk.swaps.length} swap(s).`);
+      bcExecuteDelivery(room);
+    }
+  }, 15000);
   if (room.players[st.attacker]?.isBot) {
     setTimeout(() => {
       if (gs.phase !== 'attack_delivery_pick' || gs.attackState?.attacker !== st.attacker) return;
@@ -1727,8 +1780,12 @@ function bcHandleAction(room, playerIdx, msg) {
   if (gs.phase === 'game_over') return;
   const pl = gs.players[playerIdx];
 
-  // Coerce cardId to number (HTML onclick attributes send IDs as strings)
-  if (msg.cardId !== undefined) msg.cardId = Number(msg.cardId);
+  // Coerce cardId to number only when it's a numeric string (e.g. from HTML onclick).
+  // Special-card IDs are strings ('govern', 'action_obj', 'data_flag') — leave them as-is.
+  if (msg.cardId !== undefined) {
+    const n = Number(msg.cardId);
+    if (!isNaN(n)) msg.cardId = n;
+  }
 
   switch (msg.action) {
 
@@ -1743,20 +1800,37 @@ function bcHandleAction(room, playerIdx, msg) {
       // ── Govern (special) ──
       if (card.type === 'govern') {
         pl.played.push(card);
-        bcLog(room, `🏛️ ${room.players[playerIdx].name} plays Govern — select a player to view their hand.`);
-        gs.phase = 'govern_select'; gs.governViewer = playerIdx;
-        bcBroadcastState(room); return;
+        const govTargets = gs.players.map((p, i) => i).filter(i => i !== playerIdx && gs.players[i].hand.length > 0);
+        if (govTargets.length === 0) {
+          bcLog(room, `🏛️ ${room.players[playerIdx].name} plays Govern — no other players have cards.`);
+          bcFinishPlay(room, playerIdx);
+          return;
+        }
+        gs.governState = { viewer: playerIdx, targets: govTargets, step: 0, mode: 'take', taken: [] };
+        gs.phase = 'govern_take';
+        bcLog(room, `🏛️ ${room.players[playerIdx].name} plays Govern — privately viewing all hands and taking one card from each player.`);
+        bcBroadcastState(room);
+        if (room.players[playerIdx]?.isBot) bcBotGovern(room, playerIdx);
+        return;
       }
 
       // ── Action Objectives (special) ──
       if (card.type === 'action_obj') {
         pl.played.push(card);
-        let max = -1, maxP = 0;
+        let dfHolder = -1;
         for (let i = 0; i < gs.players.length; i++) {
-          if (gs.players[i].played.length > max) { max = gs.players[i].played.length; maxP = i; }
+          if (gs.players[i].hand.some(c => c.type === 'data_flag')) { dfHolder = i; break; }
         }
-        gs.actionObjActive = true; gs.actionObjBlockedPlayer = maxP;
-        bcLog(room, `🎯 ${room.players[playerIdx].name} plays Action Objectives — ${room.players[maxP].name} cannot win!`);
+        if (dfHolder >= 0 && dfHolder !== playerIdx) {
+          const dfCard = gs.players[dfHolder].hand.find(c => c.type === 'data_flag');
+          gs.players[dfHolder].hand = gs.players[dfHolder].hand.filter(c => c.id !== dfCard.id);
+          gs.players[playerIdx].hand.push(dfCard);
+          bcLog(room, `🎯 ${room.players[playerIdx].name} plays Action Objectives — ${room.players[dfHolder].name} must give up the Data Flag!`);
+        } else if (dfHolder === playerIdx) {
+          bcLog(room, `🎯 ${room.players[playerIdx].name} plays Action Objectives — they already hold the Data Flag!`);
+        } else {
+          bcLog(room, `🎯 ${room.players[playerIdx].name} plays Action Objectives — the Data Flag is not in anyone's hand (fizzles).`);
+        }
         bcFinishPlay(room, playerIdx); return;
       }
 
@@ -1832,6 +1906,13 @@ function bcHandleAction(room, playerIdx, msg) {
         };
         const targetPhase = attackPhaseMap[card.type];
         if (targetPhase) {
+          // Check if any valid (non-protected, connected) targets exist before entering target phase
+          const validTargets = gs.players.filter((_, i) => i !== playerIdx && !bcIsProtected(gs, i) && room.players[i]?.connected);
+          if (validTargets.length === 0) {
+            bcLog(room, `⚠️ ${room.players[playerIdx].name} plays ${card.name} — no valid targets (all opponents are Protected). Effect cancelled.`);
+            bcFinishPlay(room, playerIdx);
+            return;
+          }
           gs.attackState = { type: card.type, attacker: playerIdx, card, swaps: [], pickStep: null };
           gs.phase = targetPhase;
           bcLog(room, `${room.players[playerIdx].name} plays ${card.name} [⚔️ ${card.type}] — choose a target.`);
@@ -1860,16 +1941,33 @@ function bcHandleAction(room, playerIdx, msg) {
 
     // ===== ACTION OBJ — OUT OF TURN =====
     case 'play_action_obj_anytime': {
-      const idx = pl.hand.findIndex(c => c.type === 'action_obj');
-      if (idx === -1) return;
-      const card = pl.hand.splice(idx, 1)[0];
-      pl.played.push(card);
-      let max = -1, maxP = 0;
+      const aoIdx = pl.hand.findIndex(c => c.type === 'action_obj');
+      if (aoIdx === -1) return;
+      const aoCard = pl.hand.splice(aoIdx, 1)[0];
+      pl.played.push(aoCard);
+      let dfHolder = -1;
       for (let i = 0; i < gs.players.length; i++) {
-        if (gs.players[i].played.length > max) { max = gs.players[i].played.length; maxP = i; }
+        if (gs.players[i].hand.some(c => c.type === 'data_flag')) { dfHolder = i; break; }
       }
-      gs.actionObjActive = true; gs.actionObjBlockedPlayer = maxP;
-      bcLog(room, `🎯 ${room.players[playerIdx].name} plays Action Objectives — ${room.players[maxP].name} cannot win!`);
+      if (dfHolder >= 0 && dfHolder !== playerIdx) {
+        const dfCard = gs.players[dfHolder].hand.find(c => c.type === 'data_flag');
+        gs.players[dfHolder].hand = gs.players[dfHolder].hand.filter(c => c.id !== dfCard.id);
+        gs.players[playerIdx].hand.push(dfCard);
+        bcLog(room, `🎯 ${room.players[playerIdx].name} plays Action Objectives — ${room.players[dfHolder].name} must give up the Data Flag!`);
+      } else if (dfHolder === playerIdx) {
+        bcLog(room, `🎯 ${room.players[playerIdx].name} plays Action Objectives — they already hold the Data Flag!`);
+      } else {
+        bcLog(room, `🎯 ${room.players[playerIdx].name} plays Action Objectives — the Data Flag is not in anyone's hand (fizzles).`);
+      }
+      bcFinishPlay(room, playerIdx); break;
+    }
+
+    // ===== CANCEL ATTACK (human safety valve when no valid targets) =====
+    case 'cancel_attack': {
+      const cancelPhases = ['attack_c2_target','attack_recon_target','attack_exploit_target','attack_install_target','attack_delivery_target'];
+      if (!cancelPhases.includes(gs.phase) || gs.attackState?.attacker !== playerIdx) return;
+      bcLog(room, `❌ ${room.players[playerIdx].name} cancels their attack — no valid target.`);
+      gs.attackState = null; gs.phase = 'play';
       bcFinishPlay(room, playerIdx); break;
     }
 
@@ -1905,9 +2003,9 @@ function bcHandleAction(room, playerIdx, msg) {
     case 'attack_select_target': {
       const validTargetPhases = ['attack_c2_target','attack_recon_target','attack_exploit_target','attack_install_target','attack_delivery_target'];
       if (!validTargetPhases.includes(gs.phase) || gs.attackState?.attacker !== playerIdx) return;
-      const tgt = msg.targetIdx;
-      if (tgt < 0 || tgt >= gs.players.length || tgt === playerIdx) return;
-      if (!room.players[tgt].connected) return;
+      const tgt = Number(msg.targetIdx ?? msg.target);
+      if (!Number.isFinite(tgt) || tgt < 0 || tgt >= gs.players.length || tgt === playerIdx) return;
+      if (!room.players[tgt]?.connected) return;
       if (bcIsProtected(gs, tgt)) {
         bcLog(room, `❌ ${room.players[tgt].name} is Protected — cannot be targeted!`);
         bcBroadcastState(room); return;
@@ -2106,7 +2204,6 @@ function bcHandleAction(room, playerIdx, msg) {
 
     case 'delivery_done': {
       if (gs.phase !== 'attack_delivery_pick' || gs.attackState?.attacker !== playerIdx) return;
-      if (gs.attackState.swaps.length === 0) return; // must do at least 1
       bcExecuteDelivery(room); break;
     }
 
@@ -2157,25 +2254,44 @@ function bcHandleAction(room, playerIdx, msg) {
     }
 
     // ===== GOVERN =====
-    case 'govern_select': {
-      if (gs.phase !== 'govern_select' || gs.governViewer !== playerIdx) return;
-      const tgt = msg.targetIdx;
-      if (tgt < 0 || tgt >= gs.players.length || tgt === playerIdx) return;
-      gs.governViewTarget = tgt; gs.phase = 'govern_viewing';
-      bcLog(room, `🏛️ ${room.players[playerIdx].name} views ${room.players[tgt].name}'s hand.`);
-      bcBroadcastState(room);
-      setTimeout(() => {
-        if (gs.phase === 'govern_viewing' && gs.governViewer === playerIdx) {
-          gs.phase = 'play'; gs.governViewTarget = -1; gs.governViewer = -1;
-          bcBroadcastState(room);
-        }
-      }, 8000);
-      break;
+    case 'govern_take_card': {
+      if (gs.phase !== 'govern_take' || gs.governState?.viewer !== playerIdx) return;
+      const gst = gs.governState;
+      const fromIdx = gst.targets[gst.step];
+      const fromPl = gs.players[fromIdx];
+      const takenCard = fromPl.hand.find(c => c.id === msg.cardId);
+      if (!takenCard) return;
+      fromPl.hand = fromPl.hand.filter(c => c.id !== takenCard.id);
+      gs.players[playerIdx].hand.push(takenCard);
+      gst.taken.push({ fromIdx, card: takenCard });
+      bcLog(room, `🏛️ ${room.players[playerIdx].name} takes a card from ${room.players[fromIdx].name}.`);
+      gst.step++;
+      if (gst.step >= gst.targets.length) {
+        // All taken — switch to give mode
+        gst.mode = 'give';
+        gst.step = 0;
+        gs.phase = 'govern_give';
+      }
+      bcBroadcastState(room); break;
     }
 
-    case 'govern_done': {
-      if (gs.phase !== 'govern_viewing' || gs.governViewer !== playerIdx) return;
-      gs.phase = 'play'; gs.governViewTarget = -1; gs.governViewer = -1;
+    case 'govern_give_card': {
+      if (gs.phase !== 'govern_give' || gs.governState?.viewer !== playerIdx) return;
+      const gst = gs.governState;
+      const toIdx = gst.taken[gst.step].fromIdx;
+      const giveCard = gs.players[playerIdx].hand.find(c => c.id === msg.cardId);
+      if (!giveCard) return;
+      gs.players[playerIdx].hand = gs.players[playerIdx].hand.filter(c => c.id !== giveCard.id);
+      gs.players[toIdx].hand.push(giveCard);
+      bcLog(room, `🏛️ ${room.players[playerIdx].name} gives a card to ${room.players[toIdx].name}.`);
+      gst.step++;
+      if (gst.step >= gst.taken.length) {
+        // Done — all exchanges complete
+        gs.governState = null;
+        gs.phase = 'play';
+        bcFinishPlay(room, playerIdx);
+        return;
+      }
       bcBroadcastState(room); break;
     }
 
@@ -2238,13 +2354,11 @@ function bcHandleAction(room, playerIdx, msg) {
       if (gs.phase !== 'identify_swap_target' || gs.identifyState?.chooser !== playerIdx) return;
       const tgt = msg.targetIdx;
       if (tgt < 0 || tgt >= gs.players.length || tgt === playerIdx) return;
-      if (bcIsProtected(gs, tgt)) {
-        bcLog(room, `❌ ${room.players[tgt].name} is protected — cannot be swapped!`);
-        bcBroadcastState(room); return;
-      }
-      const theirDefendCards = gs.players[tgt].played.filter(c => c.cat === 'defend');
-      if (theirDefendCards.length === 0) {
-        bcLog(room, `❌ ${room.players[tgt].name} has no defend cards to swap.`);
+      // Protected players can be targeted — but their active Protect card is ineligible for the swap
+      const tgtProtected = bcIsProtected(gs, tgt);
+      const swappableCards = gs.players[tgt].played.filter(c => c.cat === 'defend' && !(c.type === 'protect' && tgtProtected));
+      if (swappableCards.length === 0) {
+        bcLog(room, `❌ ${room.players[tgt].name} has no swappable defend cards${tgtProtected ? ' (Protect is active)' : ''}.`);
         bcBroadcastState(room); return;
       }
       gs.identifyState.swapTargetIdx = tgt;
@@ -2258,6 +2372,11 @@ function bcHandleAction(room, playerIdx, msg) {
       const tgt = id.swapTargetIdx;
       const theirCard = gs.players[tgt].played.find(c => c.cat === 'defend' && c.id === msg.cardId);
       if (!theirCard) return;
+      // Cannot swap an active Protect card
+      if (theirCard.type === 'protect' && bcIsProtected(gs, tgt)) {
+        bcLog(room, `❌ ${room.players[tgt].name}'s Protect card is currently active — it cannot be swapped.`);
+        bcBroadcastState(room); return;
+      }
       // Execute swap: remove my card from my played, add their card; vice versa
       pl.played = pl.played.filter(c => c.id !== id.swapMyCard.id);
       gs.players[tgt].played = gs.players[tgt].played.filter(c => c.id !== theirCard.id);
