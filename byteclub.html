@@ -1,0 +1,1544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Byte Club — Cybersecurity Card Game</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Share+Tech+Mono&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Nunito','Segoe UI',system-ui,sans-serif;background:#111827;color:#e2e8f0;min-height:100vh;overflow-x:hidden;}
+
+/* ===== TOP NAV ===== */
+#top-nav{position:fixed;top:0;left:0;right:0;z-index:100;height:44px;background:rgba(17,24,39,0.95);backdrop-filter:blur(8px);border-bottom:2px solid #d1db24;display:flex;align-items:center;padding:0 20px;box-shadow:0 1px 8px rgba(0,0,0,0.4);}
+#top-nav a{font-size:13px;font-weight:700;color:#62b517;text-decoration:none;display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:7px;transition:background 0.15s;}
+#top-nav a:hover{background:rgba(98,181,23,0.12);}
+#top-nav .nav-divider{margin:0 8px;color:#4b5563;font-size:16px;}
+#top-nav .nav-current{font-size:13px;font-weight:600;color:#6b7280;}
+body{padding-top:44px;}
+
+/* ===== SCREENS ===== */
+.screen{display:none;}
+.screen.active{display:flex;}
+
+/* ===== LOBBY ===== */
+#lobby{flex-direction:row;align-items:center;justify-content:center;min-height:100vh;background:#111827;}
+.lobby-hero{flex:1;display:flex;align-items:center;justify-content:center;min-height:100vh;background:#0f172a;padding:40px;}
+.lobby-hero img{max-width:420px;width:100%;height:auto;border-radius:16px;box-shadow:0 16px 48px rgba(0,0,0,0.5);}
+.lobby-forms{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:20px;padding:30px;}
+#lobby h1{font-size:40px;color:#62b517;letter-spacing:2px;font-weight:800;}
+#lobby .subtitle{font-size:14px;color:#6b7280;margin-top:-6px;}
+@media(max-width:860px){
+  #lobby{flex-direction:column;}
+  .lobby-hero{min-height:auto;padding:30px 20px 10px;}
+  .lobby-hero img{max-width:280px;}
+  .lobby-forms{min-height:auto;padding:10px 20px 30px;}
+}
+
+.lobby-card{background:#1e2535;border:1px solid #374151;border-radius:14px;padding:24px;width:360px;box-shadow:0 2px 12px rgba(0,0,0,0.3);}
+.lobby-card h3{font-size:13px;color:#6b7280;margin-bottom:14px;text-transform:uppercase;letter-spacing:1px;}
+
+.color-options{display:flex;gap:10px;justify-content:center;margin:12px 0;}
+.color-btn{width:56px;height:56px;border-radius:12px;border:3px solid transparent;cursor:pointer;font-size:11px;font-weight:bold;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,0.5);transition:all 0.15s;display:flex;align-items:center;justify-content:center;}
+.color-btn:hover{transform:scale(1.08);}
+.color-btn.selected{border-color:#d1db24;box-shadow:0 0 0 3px rgba(209,219,36,0.3);}
+.color-btn:disabled{opacity:0.2;cursor:not-allowed;transform:none;}
+
+.lobby-btn{width:100%;padding:12px;font-size:16px;border:none;border-radius:8px;cursor:pointer;font-weight:700;transition:all 0.15s;margin-top:8px;}
+.lobby-btn:hover:not(:disabled){transform:scale(1.01);filter:brightness(1.08);}
+.lobby-btn:disabled{opacity:0.4;cursor:not-allowed;}
+.btn-create{background:#62b517;color:#fff;}
+.btn-join{background:#374151;color:#e2e8f0;border:1px solid #4b5563;}
+.btn-join:hover:not(:disabled){background:#4b5563;}
+
+.lobby-input{width:100%;padding:12px 16px;font-size:20px;text-align:center;letter-spacing:8px;text-transform:uppercase;background:#111827;border:2px solid #374151;border-radius:8px;color:#e2e8f0;font-weight:bold;margin:8px 0;font-family:'Share Tech Mono',monospace;}
+.lobby-input::placeholder{letter-spacing:2px;font-size:14px;color:#4b5563;}
+.lobby-input:focus{outline:none;border-color:#62b517;}
+.error-msg{color:#f87171;font-size:13px;text-align:center;margin-top:6px;min-height:20px;}
+.rules-banner{font-size:13px;color:#6b7280;background:#1e2535;border:1px solid #374151;border-radius:8px;padding:8px 14px;text-align:center;max-width:360px;line-height:1.5;}
+.rules-banner a{color:#62b517;font-weight:600;}
+
+/* ===== WAITING ROOM ===== */
+#waiting{flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:20px;background:#111827;}
+#waiting h2{font-size:24px;font-weight:800;color:#62b517;}
+.room-code-display{font-size:48px;font-weight:800;letter-spacing:12px;color:#d1db24;background:#1e2535;padding:14px 32px;border-radius:14px;border:2px solid #374151;user-select:all;font-family:'Share Tech Mono',monospace;}
+.room-share{display:flex;gap:8px;align-items:center;margin-top:4px;}
+.copy-btn{padding:8px 16px;font-size:13px;font-weight:700;border:1px solid #374151;border-radius:8px;background:#1e2535;color:#62b517;cursor:pointer;transition:all 0.15s;}
+.copy-btn:hover{background:#374151;}
+.copy-btn.copied{background:#62b517;color:#fff;border-color:#62b517;}
+.waiting-players{display:flex;flex-direction:column;gap:8px;min-width:280px;}
+.waiting-player{display:flex;align-items:center;gap:12px;padding:10px 16px;background:#1e2535;border-radius:10px;border:1px solid #374151;}
+.waiting-player-dot{width:14px;height:14px;border-radius:50%;}
+.waiting-player-name{font-weight:700;font-size:15px;}
+.host-badge{font-size:11px;background:#d1db24;color:#111;padding:2px 8px;border-radius:20px;font-weight:700;margin-left:auto;}
+.start-btn{background:#62b517;color:#fff;border:none;padding:14px 40px;border-radius:10px;font-size:18px;font-weight:800;cursor:pointer;transition:all 0.15s;}
+.start-btn:hover:not(:disabled){filter:brightness(1.1);transform:scale(1.02);}
+.start-btn:disabled{opacity:0.4;cursor:not-allowed;}
+.waiting-hint{font-size:13px;color:#4b5563;}
+
+/* ===== GAME SCREEN ===== */
+#game{flex-direction:column;min-height:100vh;background:#0d1117;}
+
+.game-layout{display:flex;flex-direction:column;height:calc(100vh - 44px);overflow:hidden;}
+
+/* TURN ORDER STRIP */
+.turn-strip{display:flex;gap:6px;padding:7px 14px;background:#0d1117;border-bottom:2px solid #1e2d3d;overflow-x:auto;flex-shrink:0;align-items:center;}
+.turn-badge{display:flex;align-items:center;gap:7px;padding:5px 13px;border-radius:20px;border:2px solid #1e2d3d;font-size:13px;font-weight:700;color:#4b5563;background:#111827;white-space:nowrap;transition:all 0.2s;}
+.turn-badge.active{border-color:#d1db24;color:#e2e8f0;background:#1a2235;box-shadow:0 0 0 2px rgba(209,219,36,0.12);}
+.turn-badge .tb-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.turn-badge .tb-active{font-size:10px;color:#d1db24;font-weight:800;letter-spacing:0.5px;}
+.turn-strip-arrow{color:#253347;font-size:14px;flex-shrink:0;}
+
+/* OPPONENTS BAR */
+.opponents-bar{display:flex;gap:12px;padding:8px 14px;background:#111827;border-bottom:1px solid #1e2d3d;overflow-x:auto;max-height:110px;align-items:flex-start;flex-shrink:0;}
+.opponent-panel{background:#1a2235;border:1px solid #253347;border-radius:10px;padding:10px 12px;min-width:220px;flex:1;max-width:320px;}
+.opponent-panel.current-turn{border-color:#d1db24;box-shadow:0 0 0 2px rgba(209,219,36,0.2);}
+.opponent-panel.blocked{opacity:0.55;}
+.opp-header{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.opp-color-dot{width:12px;height:12px;border-radius:50%;}
+.opp-name{font-weight:700;font-size:13px;flex:1;}
+.opp-hand-count{font-size:12px;color:#6b7280;display:flex;align-items:center;gap:4px;}
+.opp-played{display:flex;flex-direction:column;gap:4px;}
+.opp-cat-row{display:flex;align-items:center;gap:4px;flex-wrap:wrap;}
+.opp-cat-label{font-size:11px;color:#4b5563;flex-shrink:0;width:16px;}
+.opp-mini-card{font-size:10px;padding:2px 6px;border-radius:4px;font-weight:700;}
+.opp-mini-card.attack{background:rgba(239,68,68,0.15);color:#f87171;border:1px solid rgba(239,68,68,0.25);}
+.opp-mini-card.defend{background:rgba(59,130,246,0.15);color:#93c5fd;border:1px solid rgba(59,130,246,0.25);}
+.opp-mini-card.special{background:rgba(209,219,36,0.12);color:#d1db24;border:1px solid rgba(209,219,36,0.2);}
+.opp-blocked-badge{font-size:10px;background:rgba(239,68,68,0.2);color:#f87171;padding:1px 6px;border-radius:4px;margin-left:auto;}
+
+/* CENTER AREA */
+.center-area{display:flex;gap:0;flex:1;overflow:hidden;min-height:0;}
+
+/* GAME LOG */
+.game-log{width:220px;background:#0d1117;border-right:1px solid #1e2d3d;padding:10px;overflow-y:auto;flex-shrink:0;}
+.game-log h4{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#4b5563;margin-bottom:8px;}
+.log-entry{font-size:12px;color:#9ca3af;margin-bottom:5px;line-height:1.4;padding-bottom:5px;border-bottom:1px solid #1a2235;}
+.log-entry:first-child{color:#d1db24;}
+
+/* MIDDLE - DECK + STATUS */
+.game-middle{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:16px;}
+.status-banner{background:#1a2235;border:1px solid #253347;border-radius:10px;padding:10px 20px;text-align:center;width:100%;max-width:400px;}
+.status-banner .turn-label{font-size:12px;color:#6b7280;text-transform:uppercase;letter-spacing:1px;}
+.status-banner .turn-player{font-size:18px;font-weight:800;color:#62b517;}
+.status-banner .phase-label{font-size:13px;color:#9ca3af;margin-top:2px;}
+.special-cards-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;justify-content:center;}
+.special-card{border-radius:10px;padding:10px 14px;text-align:center;min-width:100px;cursor:default;}
+.special-card .sc-icon{font-size:24px;}
+.special-card .sc-name{font-size:11px;font-weight:700;margin-top:4px;}
+.special-card .sc-status{font-size:10px;margin-top:2px;opacity:0.8;}
+.sc-deck{background:#1a2235;border:2px solid #374151;}
+.sc-dataflag{background:#1a2235;border:2px solid #374151;}
+.sc-dataflag.revealed{border-color:#62b517;}
+.sc-timesup{background:#1a2235;border:2px solid #374151;}
+.sc-timesup.revealed{border-color:#ef4444;animation:pulse-red 2s infinite;}
+@keyframes pulse-red{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,0);}50%{box-shadow:0 0 0 6px rgba(239,68,68,0.15);}}
+.sc-govern{background:#1a2235;border:2px solid #374151;}
+.sc-govern.available{border-color:#8b5cf6;}
+.sc-actionobj{background:#1a2235;border:2px solid #374151;}
+.sc-actionobj.active{border-color:#f59e0b;}
+
+/* PROGRESS TRACKER */
+.progress-tracker{width:100%;max-width:420px;}
+.tracker-row{display:flex;align-items:center;gap:6px;margin-bottom:6px;}
+.tracker-label{font-size:11px;color:#6b7280;width:52px;text-align:right;flex-shrink:0;}
+.tracker-types{display:flex;gap:4px;flex-wrap:wrap;}
+.tracker-type{font-size:12px;padding:2px 8px;border-radius:12px;font-weight:700;border:1px solid;transition:all 0.2s;}
+.tracker-type.attack{background:rgba(239,68,68,0.08);color:#6b7280;border-color:#2d2030;}
+.tracker-type.attack.done{background:rgba(239,68,68,0.2);color:#f87171;border-color:rgba(239,68,68,0.4);}
+.tracker-type.defend{background:rgba(59,130,246,0.08);color:#6b7280;border-color:#1e2d3d;}
+.tracker-type.defend.done{background:rgba(59,130,246,0.2);color:#93c5fd;border-color:rgba(59,130,246,0.4);}
+.tracker-type.special{background:rgba(209,219,36,0.08);color:#6b7280;border-color:#2a2b1a;}
+.tracker-type.special.done{background:rgba(209,219,36,0.2);color:#d1db24;border-color:rgba(209,219,36,0.4);}
+
+/* RIGHT SIDEBAR */
+.game-sidebar{width:180px;background:#0d1117;border-left:1px solid #1e2d3d;padding:10px;flex-shrink:0;overflow-y:auto;}
+.sidebar-title{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#4b5563;margin-bottom:8px;}
+.sidebar-ref{background:#111827;border:1px solid #1e2d3d;border-radius:8px;padding:8px;margin-bottom:8px;}
+.sidebar-ref h5{font-size:11px;color:#62b517;font-weight:700;margin-bottom:4px;}
+.sidebar-ref p{font-size:11px;color:#6b7280;line-height:1.4;}
+
+/* MY AREA */
+.my-area{background:#0f1923;border-top:2px solid #1e2d3d;display:flex;flex-direction:column;gap:0;}
+.my-played-area{padding:8px 12px;border-bottom:1px solid #1e2d3d;min-height:70px;}
+.my-played-title{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#4b5563;margin-bottom:6px;}
+.my-played-rows{display:flex;gap:12px;flex-wrap:wrap;}
+.played-row{display:flex;gap:4px;align-items:center;flex-wrap:wrap;}
+.played-row-label{font-size:10px;color:#4b5563;min-width:40px;}
+.mini-played-card{font-size:10px;padding:2px 7px;border-radius:5px;font-weight:700;white-space:nowrap;}
+.mini-played-card.attack{background:rgba(239,68,68,0.18);color:#fca5a5;border:1px solid rgba(239,68,68,0.3);}
+.mini-played-card.defend{background:rgba(59,130,246,0.18);color:#bfdbfe;border:1px solid rgba(59,130,246,0.3);}
+.mini-played-card.special{background:rgba(209,219,36,0.18);color:#d1db24;border:1px solid rgba(209,219,36,0.3);}
+.hand-area{padding:6px 12px;flex-shrink:0;}
+.hand-title{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#4b5563;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between;}
+.hand-cards{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;max-height:200px;}
+
+/* CARDS */
+.card{border-radius:10px;padding:10px 10px 8px;cursor:pointer;transition:all 0.15s;border:2px solid transparent;min-width:110px;max-width:130px;flex-shrink:0;position:relative;}
+.card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,0.4);}
+.card.selected{transform:translateY(-8px);box-shadow:0 12px 32px rgba(0,0,0,0.5);}
+.card.attack{background:#1a1015;border-color:#7f1d1d;}
+.card.attack.selected{border-color:#ef4444;box-shadow:0 12px 32px rgba(239,68,68,0.3);}
+.card.defend{background:#0f1a2e;border-color:#1e3a5f;}
+.card.defend.selected{border-color:#3b82f6;box-shadow:0 12px 32px rgba(59,130,246,0.3);}
+.card.special-card-type{background:#1a1f10;border-color:#3a4a10;}
+.card.special-card-type.selected{border-color:#d1db24;box-shadow:0 12px 32px rgba(209,219,36,0.2);}
+.card.govern-card-type{background:#1a1030;border-color:#4a1d96;}
+.card.govern-card-type.selected{border-color:#8b5cf6;}
+.card.action-obj-card-type{background:#1a1500;border-color:#78350f;}
+.card.action-obj-card-type.selected{border-color:#f59e0b;}
+.card-cat{font-size:9px;text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:4px;}
+.card.attack .card-cat{color:#f87171;}
+.card.defend .card-cat{color:#93c5fd;}
+.card.special-card-type .card-cat{color:#d1db24;}
+.card.govern-card-type .card-cat{color:#c4b5fd;}
+.card.action-obj-card-type .card-cat{color:#fbbf24;}
+.card-type{font-size:9px;color:#4b5563;margin-bottom:6px;font-weight:600;}
+.card-name{font-size:12px;font-weight:800;line-height:1.2;margin-bottom:4px;}
+.card.attack .card-name{color:#fca5a5;}
+.card.defend .card-name{color:#bfdbfe;}
+.card.special-card-type .card-name{color:#d1db24;}
+.card.govern-card-type .card-name{color:#ddd6fe;}
+.card.action-obj-card-type .card-name{color:#fde68a;}
+.card-desc{font-size:10px;color:#4b5563;line-height:1.3;}
+.card-emoji{font-size:18px;margin-bottom:4px;}
+
+/* ACTION BUTTONS */
+.action-bar{display:flex;gap:8px;padding:8px 12px;background:#0f1923;border-top:1px solid #1e2d3d;align-items:center;flex-wrap:wrap;}
+.action-btn{padding:8px 18px;border-radius:8px;border:none;font-size:13px;font-weight:700;cursor:pointer;transition:all 0.15s;}
+.action-btn:hover:not(:disabled){filter:brightness(1.1);}
+.action-btn:disabled{opacity:0.35;cursor:not-allowed;}
+.btn-end-turn{background:#62b517;color:#fff;}
+.btn-discard{background:#ef4444;color:#fff;}
+.btn-cancel{background:#374151;color:#9ca3af;border:1px solid #4b5563;}
+.btn-govern{background:#7c3aed;color:#fff;}
+.btn-action-obj{background:#d97706;color:#fff;}
+.action-bar-hint{font-size:12px;color:#4b5563;margin-left:auto;}
+
+/* GOVERN VIEW OVERLAY */
+.govern-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:200;display:flex;align-items:center;justify-content:center;}
+.govern-panel{background:#1a2235;border:2px solid #7c3aed;border-radius:16px;padding:24px;max-width:600px;width:90%;}
+.govern-panel h3{font-size:18px;font-weight:800;color:#c4b5fd;margin-bottom:16px;}
+.govern-panel .govern-hand{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;}
+.govern-panel .btn-done{margin-top:16px;width:100%;}
+
+/* GOVERN SELECT */
+.govern-select-panel{background:#1a2235;border:2px solid #7c3aed;border-radius:16px;padding:20px;max-width:360px;width:90%;}
+.govern-select-panel h3{font-size:16px;font-weight:800;color:#c4b5fd;margin-bottom:12px;}
+.govern-player-btn{display:flex;align-items:center;gap:10px;width:100%;padding:10px 14px;background:#111827;border:1px solid #374151;border-radius:8px;color:#e2e8f0;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:6px;transition:all 0.15s;}
+.govern-player-btn:hover{border-color:#7c3aed;background:#1a1030;}
+
+/* PROTECTED BADGE */
+.opp-protected-badge{font-size:10px;background:rgba(59,130,246,0.2);color:#93c5fd;padding:1px 6px;border-radius:4px;margin-left:4px;}
+.opponent-panel.protected{border-color:#3b82f6;box-shadow:0 0 0 1px rgba(59,130,246,0.3);}
+
+/* EFFECT OVERLAY */
+.effect-panel{background:#1a2235;border:2px solid #62b517;border-radius:16px;padding:24px;max-width:560px;width:92%;max-height:80vh;overflow-y:auto;}
+.effect-panel h3{font-size:17px;font-weight:800;color:#62b517;margin-bottom:16px;}
+.effect-panel p{font-size:13px;color:#9ca3af;margin-bottom:12px;line-height:1.5;}
+.effect-choice-btn{display:block;width:100%;text-align:left;padding:14px 16px;margin-bottom:8px;background:#111827;border:1px solid #374151;border-radius:10px;color:#e2e8f0;font-size:14px;font-weight:700;cursor:pointer;transition:all 0.15s;}
+.effect-choice-btn:hover{border-color:#62b517;background:#0f1a10;}
+.effect-choice-btn .sub{font-size:11px;color:#6b7280;font-weight:400;margin-top:3px;}
+.effect-hand{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:12px 0;}
+.effect-hand .card{min-width:100px;max-width:120px;}
+.effect-hand .card.forced{border-color:#d1db24!important;box-shadow:0 0 0 2px rgba(209,219,36,0.3);}
+.detect-list{display:flex;flex-direction:column;gap:6px;margin:12px 0;}
+.detect-row{display:flex;align-items:center;gap:8px;background:#111827;border:1px solid #374151;border-radius:8px;padding:8px;}
+.detect-row .dc-info{flex:1;}
+.detect-row .dc-name{font-size:13px;font-weight:700;color:#e2e8f0;}
+.detect-row .dc-type{font-size:10px;color:#6b7280;}
+.detect-row .dc-btns{display:flex;gap:4px;}
+.detect-row .dc-btn{background:#374151;border:none;color:#9ca3af;width:26px;height:26px;border-radius:6px;cursor:pointer;font-size:14px;}
+.detect-row .dc-btn:hover{background:#4b5563;color:#fff;}
+.detect-row .dc-pos{font-size:12px;color:#4b5563;width:18px;text-align:center;}
+.played-select-card{display:inline-block;padding:4px 10px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;border:1px solid;margin:3px;transition:all 0.12s;}
+.played-select-card.defend{background:rgba(59,130,246,0.15);color:#93c5fd;border-color:rgba(59,130,246,0.3);}
+.played-select-card.defend:hover{background:rgba(59,130,246,0.3);border-color:#3b82f6;}
+.pending-player{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#111827;border:1px solid #374151;border-radius:8px;margin-bottom:6px;font-size:13px;}
+.pending-dot{width:8px;height:8px;border-radius:50%;}
+.pending-status{margin-left:auto;font-size:11px;font-weight:700;}
+.pending-status.done{color:#62b517;}.pending-status.waiting{color:#f59e0b;}
+
+/* WIN SCREEN */
+#win-screen{position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:300;display:none;align-items:center;justify-content:center;}
+#win-screen.show{display:flex;}
+.win-panel{background:#1a2235;border:2px solid #62b517;border-radius:20px;padding:40px;text-align:center;max-width:440px;width:90%;}
+.win-trophy{font-size:64px;margin-bottom:16px;}
+.win-title{font-size:28px;font-weight:800;color:#d1db24;margin-bottom:8px;}
+.win-name{font-size:22px;font-weight:700;color:#62b517;margin-bottom:8px;}
+.win-condition{font-size:15px;color:#9ca3af;margin-bottom:24px;}
+.win-btn{background:#62b517;color:#fff;border:none;padding:12px 32px;border-radius:10px;font-size:16px;font-weight:800;cursor:pointer;}
+.win-btn:hover{filter:brightness(1.1);}
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<div id="top-nav">
+  <a href="/"><img src="/images/logo.png" alt="TBG" style="height:22px;width:auto;"> Tech Board Games</a>
+  <span class="nav-divider">/</span>
+  <span class="nav-current">Byte Club</span>
+</div>
+
+<!-- SCREEN: LOBBY -->
+<div class="screen active" id="lobby">
+  <div class="lobby-hero">
+    <img src="/images/byteclub.png" alt="Byte Club">
+  </div>
+  <div class="lobby-forms">
+    <h1>BYTE CLUB</h1>
+    <p class="subtitle">Cybersecurity Card Game · 2–4 Players</p>
+
+    <!-- SINGLE PLAYER -->
+    <div class="lobby-card">
+      <h3>Single Player</h3>
+      <div class="color-options" id="sp-colors"></div>
+      <button class="lobby-btn btn-create" id="btn-sp" onclick="createRoomVsBot()" disabled>▶ Play vs Bot</button>
+      <div class="error-msg" id="sp-error"></div>
+    </div>
+
+    <!-- CREATE ROOM -->
+    <div class="lobby-card">
+      <h3>Multiplayer — Create</h3>
+      <div class="color-options" id="create-colors"></div>
+      <button class="lobby-btn btn-create" id="btn-create" onclick="createRoom()" disabled>Create Room</button>
+      <div class="error-msg" id="create-error"></div>
+    </div>
+
+    <!-- JOIN ROOM -->
+    <div class="lobby-card">
+      <h3>Join a Game</h3>
+      <input class="lobby-input" id="join-code" maxlength="4" placeholder="ROOM CODE" oninput="onCodeInput(this)">
+      <div class="color-options" id="join-colors"></div>
+      <button class="lobby-btn btn-join" id="btn-join" onclick="joinRoom()" disabled>Join Room</button>
+      <div class="error-msg" id="join-error"></div>
+    </div>
+
+    <div class="rules-banner">
+      Byte Club · Cybersecurity card game by <a href="https://cybersecgames.com" target="_blank">CybersecGames.com</a>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN: WAITING ROOM -->
+<div class="screen" id="waiting">
+  <h2>Byte Club</h2>
+  <div class="room-code-display" id="room-code-text">ABCD</div>
+  <div class="room-share">
+    <button class="copy-btn" onclick="copyCode()">Copy Code</button>
+    <button class="copy-btn" onclick="copyLink()">Copy Link</button>
+  </div>
+  <div class="waiting-players" id="waiting-players"></div>
+  <button class="copy-btn" id="btn-bot-toggle" onclick="toggleBot()" style="display:none;padding:10px 24px;font-size:14px;">Add Bot</button>
+  <button class="start-btn" id="btn-start" onclick="startGame()" disabled>Start Game</button>
+  <p class="waiting-hint" id="waiting-hint">Waiting for players…</p>
+</div>
+
+<!-- SCREEN: GAME -->
+<div class="screen" id="game">
+  <div class="game-layout">
+
+    <!-- TURN ORDER STRIP -->
+    <div class="turn-strip" id="turn-strip"></div>
+
+    <!-- OPPONENTS -->
+    <div class="opponents-bar" id="opponents-bar"></div>
+
+    <!-- CENTER -->
+    <div class="center-area">
+
+      <!-- LOG -->
+      <div class="game-log">
+        <h4>Game Log</h4>
+        <div id="log-entries"></div>
+      </div>
+
+      <!-- MIDDLE -->
+      <div class="game-middle">
+        <div class="status-banner">
+          <div class="turn-label">Current Turn</div>
+          <div class="turn-player" id="status-player">—</div>
+          <div class="phase-label" id="status-phase">—</div>
+        </div>
+
+        <div class="special-cards-row">
+          <div class="special-card sc-deck">
+            <div class="sc-icon">🃏</div>
+            <div class="sc-name">Draw Deck</div>
+            <div class="sc-status" id="deck-count">— cards</div>
+          </div>
+          <div class="special-card sc-dataflag" id="sc-dataflag">
+            <div class="sc-icon">🚩</div>
+            <div class="sc-name">Data Flag</div>
+            <div class="sc-status" id="dataflag-status">In deck</div>
+          </div>
+          <div class="special-card sc-timesup" id="sc-timesup">
+            <div class="sc-icon">⏰</div>
+            <div class="sc-name">Times Up</div>
+            <div class="sc-status" id="timesup-status">In deck</div>
+          </div>
+          <div class="special-card sc-govern" id="sc-govern">
+            <div class="sc-icon">🏛️</div>
+            <div class="sc-name">Govern</div>
+            <div class="sc-status" id="govern-status">Locked</div>
+          </div>
+          <div class="special-card sc-actionobj" id="sc-actionobj">
+            <div class="sc-icon">🎯</div>
+            <div class="sc-name">Action Obj.</div>
+            <div class="sc-status" id="actionobj-status">Locked</div>
+          </div>
+        </div>
+
+        <!-- MY PROGRESS TRACKER -->
+        <div class="progress-tracker" id="my-progress"></div>
+      </div>
+
+      <!-- SIDEBAR -->
+      <div class="game-sidebar">
+        <div class="sidebar-title">Reference</div>
+        <div class="sidebar-ref">
+          <h5>⚔️ Kill Chain</h5>
+          <p>🔍 Recon → ⚒️ Weaponize → 📨 Deliver → 💥 Exploit → ⚙️ Install → 📡 C2 → 🎯 Actions</p>
+        </div>
+        <div class="sidebar-ref">
+          <h5>🛡️ NIST CSF</h5>
+          <p>🔎 Identify → 🛡️ Protect → 👁️ Detect → 🚨 Respond → 🔄 Recover → 🏛️ Govern</p>
+        </div>
+        <div class="sidebar-ref">
+          <h5>Win Conditions</h5>
+          <p><strong>1.</strong> Hold Data Flag 🚩 when Times Up ⏰ is revealed.</p>
+          <p style="margin-top:5px"><strong>2.</strong> Have 1 of every Attack + Defend card in front of you.</p>
+        </div>
+        <div class="sidebar-ref">
+          <h5>Turn Order</h5>
+          <p>1. Play any cards<br>2. End play → auto draw 1<br>3. Discard if &gt;6 in hand</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- MY AREA -->
+    <div class="my-area">
+      <div class="my-played-area">
+        <div class="my-played-title">Cards in Front of You</div>
+        <div class="my-played-rows" id="my-played-rows"></div>
+      </div>
+      <div class="hand-area">
+        <div class="hand-title">
+          <span>Your Hand</span>
+          <span id="hand-count-label" style="color:#4b5563;font-size:11px;"></span>
+        </div>
+        <div class="hand-cards" id="hand-cards"></div>
+      </div>
+      <div class="action-bar" id="action-bar">
+        <span class="action-bar-hint" id="action-hint">Waiting…</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- WIN SCREEN -->
+<div id="win-screen">
+  <div class="win-panel">
+    <div class="win-trophy">🏆</div>
+    <div class="win-title">Byte Club Winner!</div>
+    <div class="win-name" id="win-name"></div>
+    <div class="win-condition" id="win-cond"></div>
+    <button class="win-btn" onclick="isSinglePlayer=false;location.reload()">Play Again</button>
+  </div>
+</div>
+
+<!-- GOVERN OVERLAY -->
+<div class="govern-overlay" id="govern-overlay" style="display:none">
+  <div id="govern-overlay-inner"></div>
+</div>
+
+<script>
+// ==================== CONNECTION ====================
+const COLOR_INFO = {
+  blue:   { hex:'#4a9eff', name:'Blue' },
+  red:    { hex:'#ff4a4a', name:'Red' },
+  green:  { hex:'#4aff8a', name:'Green' },
+  purple: { hex:'#c880ff', name:'Purple' },
+};
+const COLORS = Object.keys(COLOR_INFO);
+
+const WS_URL = location.protocol === 'https:' ? 'wss://' + location.host : 'ws://' + location.host;
+let ws;
+let myColor = null;
+let myId = null;
+let roomCode = null;
+let isHost = false;
+let gameState = null;
+let selectedHandCard = null;
+let isSinglePlayer = false;
+
+function connectWS(cb) {
+  ws = new WebSocket(WS_URL);
+  ws.onopen = cb;
+  ws.onmessage = e => handleMsg(JSON.parse(e.data));
+  ws.onclose = () => setTimeout(() => connectWS(() => {}), 2000);
+}
+
+function send(msg) { if (ws && ws.readyState === 1) ws.send(JSON.stringify(msg)); }
+
+// ==================== LOBBY ====================
+function renderColorButtons(containerId, selectedColor, disabledColors, onPick) {
+  const el = document.getElementById(containerId);
+  el.innerHTML = '';
+  COLORS.forEach(c => {
+    const btn = document.createElement('button');
+    btn.className = 'color-btn' + (selectedColor === c ? ' selected' : '');
+    btn.style.background = COLOR_INFO[c].hex;
+    btn.textContent = COLOR_INFO[c].name;
+    btn.disabled = disabledColors.includes(c);
+    btn.onclick = () => onPick(c);
+    el.appendChild(btn);
+  });
+}
+
+let spColor = null;
+
+renderColorButtons('sp-colors', null, [], c => {
+  spColor = c;
+  renderColorButtons('sp-colors', c, [], cc => { spColor = cc; renderColorButtons('sp-colors', cc, [], arguments.callee); updateSpBtn(); });
+  updateSpBtn();
+});
+
+function updateSpBtn() {
+  document.getElementById('btn-sp').disabled = !spColor;
+}
+
+renderColorButtons('create-colors', null, [], c => {
+  myColor = c;
+  renderColorButtons('create-colors', c, [], cc => { myColor = cc; renderColorButtons('create-colors', cc, [], arguments.callee); updateCreateBtn(); });
+  updateCreateBtn();
+});
+
+function updateCreateBtn() {
+  document.getElementById('btn-create').disabled = !myColor;
+}
+
+function createRoomVsBot() {
+  if (!spColor) return;
+  myColor = spColor;
+  isSinglePlayer = true;
+  connectWS(() => send({ type: 'create_room', color: myColor, gameType: 'byteclub' }));
+}
+
+function onCodeInput(el) {
+  el.value = el.value.toUpperCase().replace(/[^A-Z]/g,'');
+  const code = el.value;
+  if (code.length === 4) {
+    send({ type:'check_room', code });
+    renderColorButtons('join-colors', null, [], c => {
+      myColor = c;
+      renderColorButtons('join-colors', c, [], cc => { myColor = cc; updateJoinBtn(); });
+      updateJoinBtn();
+    });
+  } else {
+    document.getElementById('join-colors').innerHTML = '';
+    document.getElementById('btn-join').disabled = true;
+  }
+}
+
+function updateJoinBtn() {
+  document.getElementById('btn-join').disabled = !myColor || document.getElementById('join-code').value.length < 4;
+}
+
+function createRoom() {
+  if (!myColor) return;
+  connectWS(() => send({ type:'create_room', color:myColor, gameType:'byteclub' }));
+}
+
+function joinRoom() {
+  const code = document.getElementById('join-code').value.toUpperCase();
+  if (!code || !myColor) return;
+  connectWS(() => send({ type:'join_room', code, color:myColor }));
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ==================== WAITING ROOM ====================
+function copyCode() {
+  navigator.clipboard.writeText(roomCode).then(() => {
+    const btn = event.target; btn.textContent = 'Copied!'; btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy Code'; btn.classList.remove('copied'); }, 1500);
+  });
+}
+function copyLink() {
+  navigator.clipboard.writeText(location.origin + '/byteclub?room=' + roomCode).then(() => {
+    const btn = event.target; btn.textContent = 'Copied!'; btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy Link'; btn.classList.remove('copied'); }, 1500);
+  });
+}
+
+function startGame() { send({ type:'start_game' }); }
+
+function renderLobbyPlayers(players) {
+  const el = document.getElementById('waiting-players');
+  el.innerHTML = '';
+  players.forEach(p => {
+    const row = document.createElement('div');
+    row.className = 'waiting-player';
+    row.innerHTML = `<div class="waiting-player-dot" style="background:${COLOR_INFO[p.color]?.hex||'#888'}"></div>
+      <span class="waiting-player-name">${p.name}</span>
+      ${p.isHost ? '<span class="host-badge">HOST</span>' : ''}
+      ${p.isBot ? '<span class="host-badge" style="background:#374151;color:#9ca3af">BOT</span>' : ''}`;
+    el.appendChild(row);
+  });
+
+  const startBtn = document.getElementById('btn-start');
+  const botBtn = document.getElementById('btn-bot-toggle');
+  const hint = document.getElementById('waiting-hint');
+  const humans = players.filter(p => !p.isBot).length;
+  const hasBot = players.some(p => p.isBot);
+
+  if (isHost) {
+    startBtn.style.display = 'block';
+    startBtn.disabled = players.length < 2;
+    // Show bot toggle when host is alone (or with a bot already)
+    if (humans === 1) {
+      botBtn.style.display = 'inline-block';
+      botBtn.textContent = hasBot ? 'Remove Bot' : 'Add Bot';
+    } else {
+      botBtn.style.display = 'none';
+    }
+    hint.textContent = players.length < 2
+      ? 'Add a bot or share the room code to invite players.'
+      : `${players.length} player(s) ready — you can start!`;
+  } else {
+    startBtn.style.display = 'none';
+    botBtn.style.display = 'none';
+    hint.textContent = 'Waiting for the host to start the game…';
+  }
+}
+
+function toggleBot() { send({ type: 'toggle_bot' }); }
+
+// ==================== WS MESSAGES ====================
+function handleMsg(msg) {
+  switch (msg.type) {
+    case 'room_created':
+      roomCode = msg.code; myId = msg.yourId; isHost = true;
+      if (isSinglePlayer) {
+        // Add bot and start immediately — skip waiting room
+        send({ type: 'toggle_bot' });
+        send({ type: 'start_game' });
+      } else {
+        document.getElementById('room-code-text').textContent = roomCode;
+        showScreen('waiting');
+      }
+      break;
+    case 'room_joined':
+      roomCode = msg.code; myId = msg.yourId; isHost = false;
+      document.getElementById('room-code-text').textContent = roomCode;
+      showScreen('waiting');
+      break;
+    case 'room_info':
+      if (!msg.exists) { document.getElementById('join-error').textContent = 'Room not found.'; return; }
+      if (msg.started) { document.getElementById('join-error').textContent = 'Game already started.'; return; }
+      if (msg.full) { document.getElementById('join-error').textContent = 'Room is full.'; return; }
+      renderColorButtons('join-colors', null, COLORS.filter(c => !msg.availableColors.includes(c)), c => {
+        myColor = c;
+        renderColorButtons('join-colors', c, COLORS.filter(cc => !msg.availableColors.includes(cc)), cc => { myColor = cc; updateJoinBtn(); });
+        updateJoinBtn();
+      });
+      break;
+    case 'lobby_update':
+      renderLobbyPlayers(msg.players);
+      break;
+    case 'bc_game_started':
+      showScreen('game');
+      break;
+    case 'bc_state':
+      gameState = msg;
+      renderGame(msg);
+      break;
+    case 'error':
+      document.getElementById('create-error').textContent = msg.msg;
+      document.getElementById('join-error').textContent = msg.msg;
+      break;
+  }
+}
+
+// ==================== GAME RENDER ====================
+const ATTACK_TYPES = [
+  { id:'recon',     name:'Reconnaissance',   emoji:'🔍' },
+  { id:'weaponize', name:'Weaponization',     emoji:'⚒️' },
+  { id:'deliver',   name:'Delivery',          emoji:'📨' },
+  { id:'exploit',   name:'Exploitation',      emoji:'💥' },
+  { id:'install',   name:'Installation',      emoji:'⚙️' },
+  { id:'c2',        name:'Command & Control', emoji:'📡' },
+  { id:'action_obj',name:'Action Objectives', emoji:'🎯' },
+];
+const DEFEND_TYPES = [
+  { id:'identify', name:'Identify', emoji:'🔎' },
+  { id:'protect',  name:'Protect',  emoji:'🛡️' },
+  { id:'detect',   name:'Detect',   emoji:'👁️' },
+  { id:'respond',  name:'Respond',  emoji:'🚨' },
+  { id:'recover',  name:'Recover',  emoji:'🔄' },
+  { id:'govern',   name:'Govern',   emoji:'🏛️' },
+];
+
+function cardClass(card) {
+  if (card.type === 'govern') return 'govern-card-type';
+  if (card.type === 'action_obj') return 'action-obj-card-type';
+  if (card.cat === 'special') return 'special-card-type';
+  return card.cat; // 'attack' or 'defend'
+}
+
+function typeName(card) {
+  if (card.cat === 'attack') {
+    const t = ATTACK_TYPES.find(t => t.id === card.type);
+    return t ? t.emoji + ' ' + t.name : card.type;
+  }
+  if (card.cat === 'defend') {
+    const t = DEFEND_TYPES.find(t => t.id === card.type);
+    return t ? t.emoji + ' ' + t.name : card.type;
+  }
+  return card.name;
+}
+
+function buildHandCard(card, clickable, isSelected) {
+  const div = document.createElement('div');
+  div.className = 'card ' + cardClass(card) + (isSelected ? ' selected' : '');
+  if (!clickable) div.style.cursor = 'default';
+  div.innerHTML = `
+    <div class="card-cat">${card.cat === 'attack' ? '⚔️ Attack' : card.cat === 'defend' ? '🛡️ Defend' : '⭐ Special'}</div>
+    <div class="card-type">${typeName(card)}</div>
+    <div class="card-name">${card.name}</div>
+    <div class="card-desc">${card.desc || ''}</div>`;
+  if (clickable) div.onclick = () => selectCard(card.id);
+  return div;
+}
+
+function renderGame(gs) {
+  const me = gs.players[gs.myIndex];
+  const isMyTurn = gs.currentPlayer === gs.myIndex;
+
+  // Win
+  if (gs.phase === 'game_over' || gs.winner >= 0) {
+    const winName = gs.players[gs.winner]?.name || '?';
+    document.getElementById('win-name').textContent = winName + ' wins!';
+    document.getElementById('win-cond').textContent = gs.winCondition === 1
+      ? '🚩 Held the Data Flag when Times Up was revealed'
+      : '🎯 Collected all Attack and Defend card types';
+    document.getElementById('win-screen').classList.add('show');
+  }
+
+  // Status
+  const curName = gs.players[gs.currentPlayer]?.name || '?';
+  document.getElementById('status-player').textContent = isMyTurn ? 'Your Turn' : curName + "'s Turn";
+  const phaseLabels = {
+    play: isMyTurn ? (gs.recoverActive ? '🔄 Recover active — end your turn (no draw)' : 'Play cards from your hand, then end your turn') : 'Waiting for opponent to play…',
+    discard: isMyTurn ? '⚠️ Discard down to 6 cards' : 'Opponent is discarding…',
+    govern_select: isMyTurn ? '🏛️ Select a player to view their hand' : 'Opponent is using Govern…',
+    govern_viewing: 'Viewing a player\'s hand…',
+    identify_choosing: isMyTurn ? '🔎 Identify — choose Swap or reveal the Data Flag' : `${curName} is using Identify…`,
+    identify_dataflag: '🚩 Data Flag location revealed to all players!',
+    identify_swap_my: isMyTurn ? '🔎 Select one of your played defend cards to give away' : `${curName} is choosing a swap…`,
+    identify_swap_target: isMyTurn ? '🔎 Select a player to swap with' : `${curName} is choosing a swap target…`,
+    identify_swap_their: isMyTurn ? '🔎 Select their defend card to take' : `${curName} is completing the swap…`,
+    detect_view: isMyTurn ? '👁️ Reorder the top 5 deck cards' : `${curName} is using Detect…`,
+    weaponize_window: gs.weaponizeInfo?.iAmDefender ? '⚒️ Opponents can play Weaponize to cancel your defend card…' : `⚒️ ${gs.weaponizeInfo?.defenderName||'?'} played a defend card — play Weaponize to cancel?`,
+    attack_c2_target: isMyTurn ? '📡 C2 — Select a player to target' : `${curName} is targeting someone with C2…`,
+    attack_recon_target: isMyTurn ? '🔍 Recon — Select a player to target' : `${curName} is using Reconnaissance…`,
+    attack_exploit_target: isMyTurn ? '💥 Exploitation — Select a player to steal from (blind)' : `${curName} is using Exploitation…`,
+    attack_install_target: isMyTurn ? '⚙️ Installation — Select a player to block defend cards' : `${curName} is using Installation…`,
+    attack_delivery_target: isMyTurn ? '📨 Delivery — Select a player to swap cards with' : `${curName} is using Delivery…`,
+    attack_respond_window: gs.attackInfo?.iAmTarget ? '🚨 You are being targeted! Play Respond to cancel?' : gs.attackInfo?.iAmAttacker ? '⏳ Waiting for target to respond…' : '⚔️ Attack in progress…',
+    attack_c2_give: gs.attackInfo?.iAmTarget ? '📡 C2 — Choose a card to give to the attacker' : gs.attackInfo?.iAmAttacker ? '📡 C2 — Waiting for target to give a card…' : '📡 C2 resolving…',
+    attack_recon_choose: gs.attackInfo?.iAmAttacker ? '🔍 Recon — Look at hand or Swap attack cards?' : `${curName} is deciding…`,
+    attack_recon_look: gs.attackInfo?.iAmAttacker ? '🔍 Viewing target\'s hand…' : `${curName} is looking at your hand!`,
+    attack_recon_swap_my: gs.attackInfo?.iAmAttacker ? '🔍 Select your played attack card to swap away' : `${curName} is choosing an attack card to swap…`,
+    attack_recon_swap_their: gs.attackInfo?.iAmAttacker ? '🔍 Select their attack card to take' : `${curName} is picking your attack card…`,
+    attack_delivery_pick: gs.attackInfo?.iAmAttacker ? '📨 Delivery — Pick up to 2 card swaps (any played cards)' : `${curName} is swapping played cards…`,
+    game_over: '🏆 Game Over!',
+  };
+  document.getElementById('status-phase').textContent = phaseLabels[gs.phase] || gs.phase;
+
+  // Special card statuses
+  document.getElementById('deck-count').textContent = gs.deckCount + ' cards';
+  const dfEl = document.getElementById('sc-dataflag');
+  const hasDf = gs.myHand.some(c => c.type === 'data_flag');
+  dfEl.className = 'special-card sc-dataflag' + (hasDf ? ' revealed' : '');
+  document.getElementById('dataflag-status').textContent = hasDf ? '🚩 In your hand!' : 'In deck';
+
+  const tuEl = document.getElementById('sc-timesup');
+  tuEl.className = 'special-card sc-timesup' + (gs.timesUpRevealed ? ' revealed' : '');
+  document.getElementById('timesup-status').textContent = gs.timesUpRevealed ? '⏰ Revealed!' : 'In deck';
+
+  const gvEl = document.getElementById('sc-govern');
+  const govInHand = gs.myHand.some(c => c.type === 'govern');
+  gvEl.className = 'special-card sc-govern' + (govInHand ? ' available' : '');
+  document.getElementById('govern-status').textContent = govInHand ? '🏛️ In your hand' : me.played.some(c=>c.type==='govern') ? '✓ Played' : 'Locked';
+
+  const aoEl = document.getElementById('sc-actionobj');
+  const aoInHand = gs.myHand.some(c => c.type === 'action_obj');
+  aoEl.className = 'special-card sc-actionobj' + (gs.actionObjActive ? ' active' : '');
+  document.getElementById('actionobj-status').textContent = gs.actionObjActive
+    ? '🚫 ' + gs.players[gs.actionObjBlockedPlayer]?.name + ' blocked'
+    : aoInHand ? '🎯 In your hand' : me.played.some(c=>c.type==='action_obj') ? '✓ Played' : 'Locked';
+
+  // My progress tracker
+  renderProgressTracker(me.played, gs.myIndex);
+
+  // Opponents
+  renderOpponents(gs);
+
+  // Log
+  const logEl = document.getElementById('log-entries');
+  logEl.innerHTML = gs.log.map(l => `<div class="log-entry">${l}</div>`).join('');
+
+  // My played cards
+  renderMyPlayed(me.played);
+
+  // Turn strip
+  renderTurnStrip(gs);
+
+  // My hand
+  renderHand(gs);
+
+  // Action bar
+  renderActionBar(gs, isMyTurn);
+
+  // Effect overlay (govern, identify, detect)
+  renderEffectOverlay(gs);
+}
+
+function renderTurnStrip(gs) {
+  const strip = document.getElementById('turn-strip');
+  strip.innerHTML = '';
+  gs.players.forEach((pl, i) => {
+    if (i > 0) {
+      const arrow = document.createElement('span');
+      arrow.className = 'turn-strip-arrow';
+      arrow.textContent = '→';
+      strip.appendChild(arrow);
+    }
+    const isActive = i === gs.currentPlayer;
+    const isMe = i === gs.myIndex;
+    const badge = document.createElement('div');
+    badge.className = 'turn-badge' + (isActive ? ' active' : '');
+    badge.innerHTML =
+      `<div class="tb-dot" style="background:${COLOR_INFO[pl.color]?.hex||'#888'}"></div>` +
+      `<span>${pl.name}${isMe ? ' <span style="font-size:10px;color:#6b7280">(You)</span>' : ''}</span>` +
+      (isActive ? `<span class="tb-active">▶ TURN</span>` : '');
+    strip.appendChild(badge);
+  });
+}
+
+function renderProgressTracker(played, playerIdx) {
+  const el = document.getElementById('my-progress');
+  const playedTypes = new Set(played.map(c => c.type));
+  let html = '';
+
+  // Attack row
+  html += '<div class="tracker-row">';
+  html += '<span class="tracker-label">⚔️ Attack</span><div class="tracker-types">';
+  ATTACK_TYPES.forEach(t => {
+    const done = playedTypes.has(t.id);
+    html += `<span class="tracker-type attack${done?' done':''}" title="${t.name}">${t.emoji}</span>`;
+  });
+  html += '</div></div>';
+
+  // Defend row
+  html += '<div class="tracker-row">';
+  html += '<span class="tracker-label">🛡️ Defend</span><div class="tracker-types">';
+  DEFEND_TYPES.forEach(t => {
+    const done = playedTypes.has(t.id);
+    html += `<span class="tracker-type defend${done?' done':''}" title="${t.name}">${t.emoji}</span>`;
+  });
+  html += '</div></div>';
+
+  el.innerHTML = html;
+}
+
+function renderOpponents(gs) {
+  const bar = document.getElementById('opponents-bar');
+  bar.innerHTML = '';
+  gs.players.forEach((pl, i) => {
+    if (i === gs.myIndex) return;
+    const isProtected = gs.protectedPlayers && gs.protectedPlayers.includes(i);
+    const isInstallBlocked = gs.installBlockedPlayers && gs.installBlockedPlayers.includes(i);
+    const div = document.createElement('div');
+    div.className = 'opponent-panel'
+      + (i === gs.currentPlayer ? ' current-turn' : '')
+      + (pl.isBlocked ? ' blocked' : '')
+      + (isProtected ? ' protected' : '');
+
+    const attackPlayed = pl.played.filter(c => c.cat === 'attack');
+    const defendPlayed = pl.played.filter(c => c.cat === 'defend');
+    const specialPlayed = pl.played.filter(c => c.cat === 'special');
+
+    let playedHtml = '';
+    if (attackPlayed.length) {
+      playedHtml += `<div class="opp-cat-row"><span class="opp-cat-label">⚔️</span>`;
+      playedHtml += attackPlayed.map(c => `<span class="opp-mini-card attack" title="${c.desc||''}">${c.name}</span>`).join('');
+      playedHtml += '</div>';
+    }
+    if (defendPlayed.length) {
+      playedHtml += `<div class="opp-cat-row"><span class="opp-cat-label">🛡️</span>`;
+      playedHtml += defendPlayed.map(c => `<span class="opp-mini-card defend" title="${c.desc||''}">${c.name}</span>`).join('');
+      playedHtml += '</div>';
+    }
+    if (specialPlayed.length) {
+      playedHtml += `<div class="opp-cat-row"><span class="opp-cat-label">⭐</span>`;
+      playedHtml += specialPlayed.map(c => `<span class="opp-mini-card special" title="${c.desc||''}">${c.name}</span>`).join('');
+      playedHtml += '</div>';
+    }
+
+    div.innerHTML = `
+      <div class="opp-header">
+        <div class="opp-color-dot" style="background:${COLOR_INFO[pl.color]?.hex||'#888'}"></div>
+        <span class="opp-name">${pl.name}</span>
+        <span class="opp-hand-count">🃏 ${pl.handCount}</span>
+        ${isProtected ? '<span class="opp-protected-badge">🛡️ Protected</span>' : ''}
+        ${isInstallBlocked ? '<span class="opp-blocked-badge">⚙️ No Defend</span>' : ''}
+        ${pl.isBlocked ? '<span class="opp-blocked-badge">🎯 Blocked</span>' : ''}
+      </div>
+      <div class="opp-played">${playedHtml || '<span style="font-size:11px;color:#374151">No cards played yet</span>'}</div>`;
+    bar.appendChild(div);
+  });
+}
+
+function renderMyPlayed(played) {
+  const el = document.getElementById('my-played-rows');
+  if (played.length === 0) { el.innerHTML = '<span style="font-size:12px;color:#374151">No cards played yet</span>'; return; }
+
+  // Group by type category
+  const attackPlayed = played.filter(c => c.cat === 'attack');
+  const defendPlayed = played.filter(c => c.cat === 'defend');
+  const specialPlayed = played.filter(c => c.cat === 'special');
+
+  let html = '';
+  if (attackPlayed.length) {
+    html += '<div class="played-row"><span class="played-row-label">⚔️</span>';
+    html += attackPlayed.map(c => `<span class="mini-played-card attack" title="${c.desc}">${c.name}</span>`).join('');
+    html += '</div>';
+  }
+  if (defendPlayed.length) {
+    html += '<div class="played-row"><span class="played-row-label">🛡️</span>';
+    html += defendPlayed.map(c => `<span class="mini-played-card defend" title="${c.desc}">${c.name}</span>`).join('');
+    html += '</div>';
+  }
+  if (specialPlayed.length) {
+    html += '<div class="played-row"><span class="played-row-label">⭐</span>';
+    html += specialPlayed.map(c => `<span class="mini-played-card special" title="${c.desc}">${c.name}</span>`).join('');
+    html += '</div>';
+  }
+  el.innerHTML = html;
+}
+
+function renderHand(gs) {
+  const el = document.getElementById('hand-cards');
+  el.innerHTML = '';
+  const isMyTurn = gs.currentPlayer === gs.myIndex;
+  const myIdx = gs.myIndex;
+
+  const clickable = isMyTurn && (gs.phase === 'play' || gs.phase === 'discard') && !gs.recoverActive;
+
+  gs.myHand.forEach(card => {
+    const isSelected = selectedHandCard === card.id;
+    const div = buildHandCard(card, clickable, isSelected);
+    el.appendChild(div);
+  });
+  document.getElementById('hand-count-label').textContent = gs.myHand.length + ' card(s)'
+    + (gs.iAmInstallBlocked ? ' — ⚙️ Defend cards blocked this turn!' : '');
+}
+
+function selectCard(cardId) {
+  const gs = gameState;
+  if (!gs) return;
+  const isMyTurn = gs.currentPlayer === gs.myIndex;
+  if (!isMyTurn) return;
+
+  if (gs.phase === 'discard') {
+    // Discard immediately on click
+    send({ type:'game_action', action:'discard_card', cardId });
+    return;
+  }
+
+  if (gs.phase === 'play') {
+    if (selectedHandCard === cardId) {
+      // Second click = play
+      send({ type:'game_action', action:'play_card', cardId });
+      selectedHandCard = null;
+    } else {
+      selectedHandCard = cardId;
+      renderHand(gs);
+      renderActionBar(gs, true);
+    }
+  }
+}
+
+function renderActionBar(gs, isMyTurn) {
+  const bar = document.getElementById('action-bar');
+  const hint = document.getElementById('action-hint');
+  bar.innerHTML = '';
+  bar.appendChild(hint);
+  const myIdx = gs.myIndex;
+
+  // Out-of-turn buttons (always visible if applicable)
+  const hasAO = gs.myHand.some(c => c.type === 'action_obj');
+  const hasRespond = gs.myHand.some(c => c.type === 'respond');
+
+  if (!isMyTurn) {
+    hint.textContent = 'Waiting for your turn…';
+    if (hasAO && !gs.actionObjActive) {
+      bar.insertBefore(mkBtn('🎯 Play Action Obj.', 'action-btn btn-action-obj', () =>
+        send({ type:'game_action', action:'play_action_obj_anytime' })), hint);
+    }
+    return;
+  }
+
+  // My turn
+  if (gs.phase === 'play') {
+    if (gs.recoverActive) {
+      hint.textContent = '🔄 Recover: You drew cards. You cannot play more this turn.';
+      bar.insertBefore(mkBtn('End Turn (No Draw)', 'action-btn btn-end-turn', () => {
+        selectedHandCard = null;
+        send({ type:'game_action', action:'end_play_phase' });
+      }), hint);
+    } else {
+      if (selectedHandCard) {
+        const card = gs.myHand.find(c => c.id === selectedHandCard);
+        if (card) {
+          hint.textContent = `Selected: ${card.name} — click the card again to play, or cancel`;
+          bar.insertBefore(mkBtn('Cancel', 'action-btn btn-cancel', () => {
+            selectedHandCard = null; renderHand(gs); renderActionBar(gs, true);
+          }), hint);
+        }
+      } else {
+        hint.textContent = 'Click a card to select it, click again to play. Or end your turn.';
+      }
+      bar.insertBefore(mkBtn('End Turn (Draw 1)', 'action-btn btn-end-turn', () => {
+        selectedHandCard = null;
+        send({ type:'game_action', action:'end_play_phase' });
+      }), hint);
+    }
+  } else if (gs.phase === 'discard') {
+    hint.textContent = `${gs.myHand.length} cards in hand — click a card to discard it (down to 6).`;
+  } else if (gs.phase === 'govern_viewing' && gs.governView) {
+    bar.insertBefore(mkBtn('Done Viewing', 'action-btn btn-govern', () =>
+      send({ type:'game_action', action:'govern_done' })), hint);
+    hint.textContent = 'Viewing hand via Govern — click Done when finished.';
+  } else if (gs.phase === 'identify_dataflag' && gs.identifyInfo?.chooser === myIdx) {
+    bar.insertBefore(mkBtn('Done', 'action-btn btn-govern', () =>
+      send({ type:'game_action', action:'identify_dataflag_done' })), hint);
+    hint.textContent = 'All players can see the Data Flag location — click Done to continue.';
+  } else if (gs.phase.startsWith('identify') || gs.phase === 'detect_view') {
+    hint.textContent = 'Complete the action in the panel above.';
+  } else {
+    hint.textContent = '';
+  }
+}
+
+function mkBtn(label, cls, cb) {
+  const btn = document.createElement('button');
+  btn.className = cls; btn.textContent = label; btn.onclick = cb;
+  return btn;
+}
+
+let detectOrderState = []; // client-side card order for detect reorder
+
+function renderEffectOverlay(gs) {
+  const overlay = document.getElementById('govern-overlay');
+  const inner = document.getElementById('govern-overlay-inner');
+  const myIdx = gs.myIndex;
+
+  // ── Govern select ──
+  if (gs.phase === 'govern_select' && gs.governViewer === myIdx) {
+    overlay.style.display = 'flex';
+    let html = `<div class="govern-select-panel" style="background:#1a2235;border:2px solid #7c3aed;border-radius:16px;padding:20px;max-width:360px;width:90%">
+      <h3 style="font-size:16px;font-weight:800;color:#c4b5fd;margin-bottom:12px">🏛️ Choose a player to view</h3>`;
+    gs.players.forEach((pl, i) => {
+      if (i === myIdx) return;
+      html += `<button class="govern-player-btn" onclick="send({type:'game_action',action:'govern_select',targetIdx:${i}})">
+        <div style="width:10px;height:10px;border-radius:50%;background:${COLOR_INFO[pl.color]?.hex||'#888'}"></div>
+        ${pl.name} (${pl.handCount} cards)</button>`;
+    });
+    html += '</div>';
+    inner.innerHTML = html;
+    return;
+  }
+
+  // ── Govern viewing ──
+  if (gs.phase === 'govern_viewing' && gs.governView) {
+    overlay.style.display = 'flex';
+    const tgtName = gs.players[gs.governView.targetIdx]?.name || '?';
+    const isViewer = gs.governViewer === myIdx;
+    let html = `<div class="govern-panel" style="background:#1a2235;border:2px solid #7c3aed;border-radius:16px;padding:24px;max-width:600px;width:90%">
+      <h3 style="font-size:18px;font-weight:800;color:#c4b5fd;margin-bottom:16px">🏛️ ${tgtName}'s Hand</h3>
+      <div class="govern-hand" style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">`;
+    gs.governView.hand.forEach(c => {
+      html += `<div style="background:#111827;border:1px solid #374151;border-radius:8px;padding:8px;min-width:100px;max-width:120px">
+        <div style="font-size:10px;color:${c.cat==='attack'?'#f87171':'#93c5fd'};font-weight:700;margin-bottom:3px">${c.cat==='attack'?'⚔️':'🛡️'} ${c.cat}</div>
+        <div style="font-size:12px;font-weight:800;color:#e2e8f0">${c.name}</div></div>`;
+    });
+    html += '</div>';
+    html += isViewer
+      ? `<button class="action-btn btn-govern" onclick="send({type:'game_action',action:'govern_done'})" style="margin-top:14px;width:100%">Done Viewing</button>`
+      : `<p style="font-size:13px;color:#6b7280;margin-top:12px;text-align:center">Waiting for ${gs.players[gs.governViewer]?.name||'?'} to finish…</p>`;
+    html += '</div>';
+    inner.innerHTML = html;
+    return;
+  }
+
+  // ── Identify choosing ──
+  if (gs.phase === 'identify_choosing' && gs.identifyInfo?.chooser === myIdx) {
+    overlay.style.display = 'flex';
+    inner.innerHTML = `<div class="effect-panel">
+      <h3>🔎 Identify — Choose an action</h3>
+      <button class="effect-choice-btn" onclick="send({type:'game_action',action:'identify_choice',choice:'dataflag'})">
+        🚩 Reveal Data Flag
+        <div class="sub">Reveal to ALL players who is currently holding the Data Flag — or if it is still in the deck.</div>
+      </button>
+      <button class="effect-choice-btn" onclick="send({type:'game_action',action:'identify_choice',choice:'swap'})">
+        🔄 Swap Defend Cards
+        <div class="sub">Exchange one of your played defend cards for another player's played defend card. Cannot target a Protected player.</div>
+      </button>
+    </div>`;
+    return;
+  }
+
+  // ── Identify: Data Flag reveal (shown to ALL players) ──
+  if (gs.phase === 'identify_dataflag' && gs.identifyInfo) {
+    overlay.style.display = 'flex';
+    const holder = gs.identifyInfo.dataFlagHolder;
+    const inDeck = gs.identifyInfo.dataFlagInDeck;
+    let resultHtml = '';
+    if (holder >= 0) {
+      const hp = gs.players[holder];
+      const isMe = holder === myIdx;
+      resultHtml = `<div style="text-align:center;margin:16px 0">
+        <div style="font-size:48px;margin-bottom:8px">🚩</div>
+        <div style="font-size:18px;font-weight:800;color:#d1db24">${isMe ? 'YOU are' : `<span style="color:${COLOR_INFO[hp.color]?.hex||'#fff'}">${hp.name}</span> is`} holding the Data Flag!</div>
+        ${isMe ? '<div style="font-size:13px;color:#f87171;margin-top:6px">Everyone can see this — guard it carefully.</div>' : ''}
+      </div>`;
+    } else if (inDeck) {
+      resultHtml = `<div style="text-align:center;margin:16px 0">
+        <div style="font-size:48px;margin-bottom:8px">🃏</div>
+        <div style="font-size:18px;font-weight:800;color:#6b7280">The Data Flag is still in the deck.</div>
+      </div>`;
+    } else {
+      resultHtml = `<div style="text-align:center;margin:16px 0">
+        <div style="font-size:48px;margin-bottom:8px">❓</div>
+        <div style="font-size:18px;font-weight:800;color:#6b7280">The Data Flag has not been drawn yet.</div>
+      </div>`;
+    }
+    const isChooser = gs.identifyInfo.chooser === myIdx;
+    inner.innerHTML = `<div class="effect-panel">
+      <h3>🔎 Identify — Data Flag Location</h3>
+      ${resultHtml}
+      ${isChooser ? `<button class="action-btn btn-govern" onclick="send({type:'game_action',action:'identify_dataflag_done'})" style="margin-top:8px;width:100%">Continue</button>` : '<p style="color:#6b7280;font-size:13px;text-align:center">Waiting for the Identify player to continue…</p>'}
+    </div>`;
+    return;
+  }
+
+  // ── Identify swap: select my card ──
+  if (gs.phase === 'identify_swap_my' && gs.identifyInfo?.chooser === myIdx) {
+    overlay.style.display = 'flex';
+    const me = gs.players[myIdx];
+    const myDefendCards = me.played.filter(c => c.cat === 'defend');
+    let html = `<div class="effect-panel"><h3>🔎 Swap — Select your defend card to give away</h3>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px">`;
+    if (myDefendCards.length === 0) {
+      html += `<p style="color:#9ca3af">You have no played defend cards to swap.</p>
+        <button class="action-btn btn-cancel" onclick="send({type:'game_action',action:'identify_choice',choice:'dataflag'})" style="width:100%">Switch to Data Flag reveal instead</button>`;
+    } else {
+      myDefendCards.forEach(c => {
+        html += `<span class="played-select-card defend" onclick="send({type:'game_action',action:'identify_swap_my',cardId:'${c.id}'})">${c.name}</span>`;
+      });
+    }
+    html += `</div><button class="action-btn btn-cancel" onclick="send({type:'game_action',action:'identify_go_back'})" style="margin-top:8px;width:100%">← Back</button></div>`;
+    inner.innerHTML = html;
+    return;
+  }
+
+  // ── Identify swap: select target player ──
+  if (gs.phase === 'identify_swap_target' && gs.identifyInfo?.chooser === myIdx) {
+    overlay.style.display = 'flex';
+    let html = `<div class="effect-panel"><h3>🔎 Swap — Select a player to swap with</h3>
+      <p>Giving away: <strong style="color:#93c5fd">${gs.identifyInfo.swapMyCard?.name||'?'}</strong></p>`;
+    gs.players.forEach((pl, i) => {
+      if (i === myIdx) return;
+      const isProtected = gs.protectedPlayers?.includes(i);
+      const theirDefend = pl.played.filter(c => c.cat === 'defend');
+      const canSwap = !isProtected && theirDefend.length > 0;
+      html += `<button class="govern-player-btn" ${canSwap?`onclick="send({type:'game_action',action:'identify_swap_target',targetIdx:${i}})"`:''} style="${canSwap?'':'opacity:0.4;cursor:not-allowed'}">
+        <div style="width:10px;height:10px;border-radius:50%;background:${COLOR_INFO[pl.color]?.hex||'#888'}"></div>
+        ${pl.name} — ${theirDefend.length} defend card(s)
+        ${isProtected ? ' 🛡️ PROTECTED' : ''}
+        ${theirDefend.length===0 ? ' (no defend cards)' : ''}
+      </button>`;
+    });
+    html += `<button class="action-btn btn-cancel" onclick="send({type:'game_action',action:'identify_go_back'})" style="margin-top:8px;width:100%">← Back</button></div>`;
+    inner.innerHTML = html;
+    return;
+  }
+
+  // ── Identify swap: select their card ──
+  if (gs.phase === 'identify_swap_their' && gs.identifyInfo?.chooser === myIdx) {
+    overlay.style.display = 'flex';
+    const tgt = gs.identifyInfo.swapTargetIdx;
+    const tgtPlayer = gs.players[tgt];
+    const theirDefend = tgtPlayer.played.filter(c => c.cat === 'defend');
+    let html = `<div class="effect-panel"><h3>🔎 Swap — Select ${tgtPlayer.name}'s defend card to take</h3>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px">`;
+    theirDefend.forEach(c => {
+      html += `<span class="played-select-card defend" onclick="send({type:'game_action',action:'identify_swap_their',cardId:'${c.id}'})">${c.name}</span>`;
+    });
+    html += '</div></div>';
+    inner.innerHTML = html;
+    return;
+  }
+
+  // ── Detect: reorder top 5 ──
+  if (gs.phase === 'detect_view' && gs.detectViewCards && gs.detectViewCards.length > 0) {
+    overlay.style.display = 'flex';
+    // Initialise client order state if needed
+    if (detectOrderState.length !== gs.detectViewCards.length ||
+        !detectOrderState.every((c,i) => gs.detectViewCards.some(d => d.id === c.id))) {
+      detectOrderState = gs.detectViewCards.map(c => ({...c}));
+    }
+    let html = `<div class="effect-panel"><h3>👁️ Detect — Top 5 cards of the deck</h3>
+      <p>Reorder these cards. Position 1 will be drawn next. Click Confirm when done.</p>
+      <div class="detect-list" id="detect-list">`;
+    detectOrderState.forEach((c, i) => {
+      const typeColor = c.cat === 'attack' ? '#f87171' : c.cat === 'defend' ? '#93c5fd' : '#d1db24';
+      html += `<div class="detect-row" data-idx="${i}">
+        <span class="dc-pos">${i+1}</span>
+        <div class="dc-info">
+          <div class="dc-name" style="color:${typeColor}">${c.name}</div>
+          <div class="dc-type">${c.cat === 'attack' ? '⚔️' : c.cat === 'defend' ? '🛡️' : '⭐'} ${c.type}</div>
+        </div>
+        <div class="dc-btns">
+          <button class="dc-btn" onclick="detectMove(${i},-1)" ${i===0?'disabled':''}>↑</button>
+          <button class="dc-btn" onclick="detectMove(${i},1)" ${i===detectOrderState.length-1?'disabled':''}>↓</button>
+        </div>
+      </div>`;
+    });
+    html += `</div>
+      <button class="action-btn btn-end-turn" onclick="detectConfirm()" style="width:100%;margin-top:10px">Confirm Order</button>
+    </div>`;
+    inner.innerHTML = html;
+    return;
+  }
+
+  // ── C2 target selection (attacker picks who to hit) ──
+  if (gs.phase === 'attack_c2_target' && gs.attackInfo?.iAmAttacker) {
+    overlay.style.display = 'flex';
+    let html = `<div class="effect-panel"><h3>📡 Command & Control — Choose a target</h3>
+      <p style="color:#9ca3af;font-size:13px">If they hold the Data Flag 🚩 they must give it to you. Otherwise they choose which card from their hand to give you.</p>`;
+    gs.players.forEach((pl, i) => {
+      if (i === myIdx) return;
+      const isProtected = gs.protectedPlayers?.includes(i);
+      const canTarget = !isProtected;
+      html += `<button class="govern-player-btn" ${canTarget ? `onclick="send({type:'game_action',action:'attack_select_target',targetIdx:${i}})"` : ''} style="${canTarget ? '' : 'opacity:0.4;cursor:not-allowed'}">
+        <div style="width:10px;height:10px;border-radius:50%;background:${COLOR_INFO[pl.color]?.hex||'#888'}"></div>
+        ${pl.name} — 🃏 ${pl.handCount} cards
+        ${isProtected ? '<span style="color:#62b517;font-size:11px">🛡️ PROTECTED</span>' : ''}
+      </button>`;
+    });
+    html += '</div>';
+    inner.innerHTML = html;
+    return;
+  }
+
+  // ── Attack respond window (shown to the target) ──
+  if (gs.phase === 'attack_respond_window' && gs.attackInfo) {
+    overlay.style.display = 'flex';
+    const ai = gs.attackInfo;
+    const attackerName = gs.players[ai.attacker]?.name || '?';
+    const cardName = ai.cardName;
+    if (ai.iAmTarget) {
+      const respondCards = ai.myRespondCards || [];
+      let html = `<div class="effect-panel">
+        <h3 style="color:#f87171">⚠️ You're being attacked!</h3>
+        <p><strong style="color:${COLOR_INFO[gs.players[ai.attacker]?.color]?.hex||'#fff'}">${attackerName}</strong> played <strong>${cardName}</strong> targeting you.</p>
+        <p style="color:#9ca3af;font-size:13px">If you have the Data Flag 🚩 you must give it to them. Otherwise they take a card of their choice.</p>
+        <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">`;
+      if (respondCards.length > 0) {
+        respondCards.forEach(c => {
+          html += `<button class="action-btn btn-govern" onclick="send({type:'game_action',action:'play_respond',cardId:'${c.id}'})" style="flex:1">🚨 Play Respond (${c.name})</button>`;
+        });
+      }
+      html += `<button class="action-btn btn-cancel" onclick="send({type:'game_action',action:'respond_skip'})" style="flex:1">Allow Effect</button>
+        </div>
+        <p style="color:#4b5563;font-size:11px;margin-top:8px">Auto-allows in 12 seconds if no action taken.</p>
+      </div>`;
+      // Fix the C2 description based on what type of attack it is
+      if (ai.type === 'c2') {
+        html = html.replace('<p style="color:#9ca3af;font-size:13px">If you have the Data Flag 🚩 you must give it to them. Otherwise they take a card of their choice.</p>',
+          '<p style="color:#9ca3af;font-size:13px">If you hold the Data Flag 🚩 you must give it to them. Otherwise you choose which card from your hand to give.</p>');
+      }
+      inner.innerHTML = html;
+    } else if (ai.iAmAttacker) {
+      inner.innerHTML = `<div class="effect-panel">
+        <h3>📡 Waiting…</h3>
+        <p style="color:#9ca3af">${gs.players[ai.target]?.name || '?'} can play Respond to cancel your attack.</p>
+      </div>`;
+    } else {
+      inner.innerHTML = `<div class="effect-panel">
+        <h3>📡 Attack in progress</h3>
+        <p style="color:#9ca3af">${attackerName} used ${cardName} — waiting for response.</p>
+      </div>`;
+    }
+    return;
+  }
+
+  // ── C2 give (target picks which card to give to attacker) ──
+  if (gs.phase === 'attack_c2_give' && gs.attackInfo?.iAmTarget) {
+    overlay.style.display = 'flex';
+    const attackerName = gs.players[gs.attackInfo.attacker]?.name || '?';
+    const myHand = gs.attackInfo.targetHand || [];
+    let html = `<div class="effect-panel">
+      <h3>📡 C2 — Choose a card to give to ${attackerName}</h3>
+      <p style="color:#9ca3af;font-size:13px">Pick any card from your hand (except the Data Flag) to give away.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px">`;
+    myHand.filter(c => c.type !== 'data_flag').forEach(c => {
+      const col = c.cat === 'attack' ? '#f87171' : c.cat === 'defend' ? '#93c5fd' : '#d1db24';
+      html += `<button class="govern-player-btn" onclick="send({type:'game_action',action:'attack_c2_give_card',cardId:'${c.id}'})" style="border-color:${col}40">
+        <span style="color:${col};font-weight:800">${c.name}</span>
+        <span style="font-size:10px;color:#6b7280">${c.cat === 'attack' ? '⚔️' : '🛡️'} ${c.type}</span>
+      </button>`;
+    });
+    if (myHand.filter(c => c.type !== 'data_flag').length === 0) html += `<p style="color:#6b7280">No cards available to give.</p>`;
+    html += '</div></div>';
+    inner.innerHTML = html;
+    return;
+  }
+
+  // ── C2 give — attacker sees waiting screen ──
+  if (gs.phase === 'attack_c2_give' && gs.attackInfo?.iAmAttacker) {
+    overlay.style.display = 'flex';
+    const tgtName = gs.players[gs.attackInfo.target]?.name || '?';
+    inner.innerHTML = `<div class="effect-panel">
+      <h3>📡 Waiting…</h3>
+      <p style="color:#9ca3af">${tgtName} is choosing a card to give you.</p>
+    </div>`;
+    return;
+  }
+
+  // ── C2 give — spectators ──
+  if (gs.phase === 'attack_c2_give' && !gs.attackInfo?.iAmAttacker && !gs.attackInfo?.iAmTarget) {
+    overlay.style.display = 'flex';
+    const ai = gs.attackInfo;
+    inner.innerHTML = `<div class="effect-panel">
+      <h3>📡 C2 resolving…</h3>
+      <p style="color:#9ca3af">${gs.players[ai?.target]?.name||'?'} is choosing a card to give to ${gs.players[ai?.attacker]?.name||'?'}.</p>
+    </div>`;
+    return;
+  }
+
+  // ── Weaponize window ──
+  if (gs.phase === 'weaponize_window' && gs.weaponizeInfo) {
+    overlay.style.display = 'flex';
+    const wi = gs.weaponizeInfo;
+    if (wi.iAmDefender) {
+      inner.innerHTML = `<div class="effect-panel">
+        <h3>⚒️ Opponents can Weaponize</h3>
+        <p style="color:#9ca3af">You played <strong>${wi.cardName}</strong>. Opponents have 8 seconds to play a Weaponize card to cancel the effect.</p>
+        <p style="color:#4b5563;font-size:12px">Waiting…</p>
+      </div>`;
+    } else {
+      const wCards = wi.myWeaponizeCards || [];
+      inner.innerHTML = `<div class="effect-panel">
+        <h3>⚒️ Cancel Defend Card?</h3>
+        <p><strong style="color:${COLOR_INFO[gs.players[wi.defender]?.color]?.hex||'#fff'}">${wi.defenderName}</strong> played <strong>${wi.cardName}</strong>.</p>
+        <p style="color:#9ca3af;font-size:13px">Play a Weaponize card to cancel its effect before it resolves.</p>
+        <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
+          ${wCards.map(c => `<button class="action-btn btn-govern" onclick="send({type:'game_action',action:'play_weaponize',cardId:'${c.id}'})" style="flex:1">⚒️ Play Weaponize (${c.name})</button>`).join('')}
+          ${wCards.length === 0 ? '<p style="color:#4b5563;font-size:12px">No Weaponize cards in hand.</p>' : ''}
+        </div>
+        <p style="color:#4b5563;font-size:11px;margin-top:8px">Auto-resolves in 8 seconds.</p>
+      </div>`;
+    }
+    return;
+  }
+
+  // ── Recon target ──
+  if (gs.phase === 'attack_recon_target' && gs.attackInfo?.iAmAttacker) {
+    overlay.style.display = 'flex';
+    let html = `<div class="effect-panel"><h3>🔍 Reconnaissance — Choose a target</h3>
+      <p style="color:#9ca3af;font-size:13px">Look at their hand OR swap one of your played attack cards with one of theirs.</p>`;
+    gs.players.forEach((pl, i) => {
+      if (i === myIdx) return;
+      const isProtected = gs.protectedPlayers?.includes(i);
+      html += `<button class="govern-player-btn" ${!isProtected ? `onclick="send({type:'game_action',action:'attack_select_target',targetIdx:${i}})"` : ''} style="${isProtected?'opacity:0.4;cursor:not-allowed':''}">
+        <div style="width:10px;height:10px;border-radius:50%;background:${COLOR_INFO[pl.color]?.hex||'#888'}"></div>
+        ${pl.name} — 🃏 ${pl.handCount} cards ${isProtected ? '🛡️ PROTECTED' : ''}
+      </button>`;
+    });
+    html += '</div>';
+    inner.innerHTML = html; return;
+  }
+
+  // ── Recon choose ──
+  if (gs.phase === 'attack_recon_choose' && gs.attackInfo?.iAmAttacker) {
+    const tgtName = gs.players[gs.attackInfo.target]?.name || '?';
+    const myAttack = gs.players[myIdx].played.filter(c => c.cat === 'attack');
+    const theirAttack = gs.players[gs.attackInfo.target]?.played.filter(c => c.cat === 'attack') || [];
+    const canSwap = myAttack.length > 0 && theirAttack.length > 0;
+    overlay.style.display = 'flex';
+    inner.innerHTML = `<div class="effect-panel">
+      <h3>🔍 Reconnaissance — Choose action vs ${tgtName}</h3>
+      <button class="govern-player-btn" onclick="send({type:'game_action',action:'recon_choice',choice:'look'})">👁️ Look at ${tgtName}'s Hand<br><small style="color:#9ca3af">See all cards (read-only, no stealing)</small></button>
+      ${canSwap ? `<button class="govern-player-btn" onclick="send({type:'game_action',action:'recon_choice',choice:'swap'})">🔄 Swap Attack Cards<br><small style="color:#9ca3af">Exchange one of your played attack cards with one of ${tgtName}'s</small></button>` : `<button class="govern-player-btn" style="opacity:0.4;cursor:not-allowed">🔄 Swap Attack Cards — unavailable<br><small style="color:#9ca3af">Both players need played attack cards</small></button>`}
+      <button class="action-btn btn-end-turn" style="margin-top:8px;width:100%" onclick="send({type:'game_action',action:'recon_go_back'})">← Go Back</button>
+    </div>`; return;
+  }
+
+  // ── Recon look ──
+  if (gs.phase === 'attack_recon_look' && gs.attackInfo?.iAmAttacker) {
+    const tgtName = gs.players[gs.attackInfo.target]?.name || '?';
+    const tgtHand = gs.attackInfo.targetHand || [];
+    overlay.style.display = 'flex';
+    let html = `<div class="effect-panel"><h3>🔍 ${tgtName}'s Hand</h3><div style="display:flex;flex-wrap:wrap;gap:8px;margin:10px 0">`;
+    tgtHand.forEach(c => {
+      const col = c.cat === 'attack' ? '#f87171' : c.cat === 'defend' ? '#93c5fd' : '#d1db24';
+      html += `<div style="background:#111827;border:1px solid ${col}40;border-radius:8px;padding:6px 10px;font-size:12px">
+        <div style="color:${col};font-weight:700">${c.name}</div>
+        <div style="color:#6b7280;font-size:10px">${c.cat === 'attack'?'⚔️':'🛡️'} ${c.type}</div>
+      </div>`;
+    });
+    if (tgtHand.length === 0) html += `<p style="color:#6b7280">Empty hand.</p>`;
+    html += `</div><button class="action-btn btn-govern" onclick="send({type:'game_action',action:'recon_look_done'})" style="width:100%">Done</button></div>`;
+    inner.innerHTML = html; return;
+  }
+
+  // ── Recon look — non-attacker view ──
+  if (gs.phase === 'attack_recon_look' && !gs.attackInfo?.iAmAttacker) {
+    overlay.style.display = 'flex';
+    const ai = gs.attackInfo;
+    inner.innerHTML = `<div class="effect-panel"><h3>🔍 Recon in progress</h3>
+      <p style="color:#9ca3af">${gs.players[ai?.attacker]?.name||'?'} is looking at ${gs.players[ai?.target]?.name||'?'}'s hand.</p></div>`;
+    return;
+  }
+
+  // ── Recon swap: my card ──
+  if (gs.phase === 'attack_recon_swap_my' && gs.attackInfo?.iAmAttacker) {
+    overlay.style.display = 'flex';
+    const myAttack = gs.players[myIdx].played.filter(c => c.cat === 'attack');
+    let html = `<div class="effect-panel"><h3>🔍 Swap — Select your attack card to give away</h3>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px">`;
+    if (myAttack.length === 0) { html += `<p style="color:#9ca3af">No played attack cards to swap.</p>`; }
+    else { myAttack.forEach(c => { html += `<span class="played-select-card attack" onclick="send({type:'game_action',action:'recon_swap_my',cardId:'${c.id}'})">${c.name}</span>`; }); }
+    html += '</div></div>';
+    inner.innerHTML = html; return;
+  }
+
+  // ── Recon swap: their card ──
+  if (gs.phase === 'attack_recon_swap_their' && gs.attackInfo?.iAmAttacker) {
+    const tgt = gs.attackInfo.target;
+    const tgtName = gs.players[tgt]?.name || '?';
+    const theirAttack = gs.players[tgt]?.played.filter(c => c.cat === 'attack') || [];
+    overlay.style.display = 'flex';
+    let html = `<div class="effect-panel"><h3>🔍 Swap — Select ${tgtName}'s attack card to take</h3>
+      <p>Giving away: <strong style="color:#f87171">${gs.attackInfo.reconSwapMyCard?.name||'?'}</strong></p>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px">`;
+    if (theirAttack.length === 0) { html += `<p style="color:#9ca3af">${tgtName} has no played attack cards.</p>`; }
+    else { theirAttack.forEach(c => { html += `<span class="played-select-card attack" onclick="send({type:'game_action',action:'recon_swap_their',cardId:'${c.id}'})">${c.name}</span>`; }); }
+    html += '</div></div>';
+    inner.innerHTML = html; return;
+  }
+
+  // ── Generic attack target overlays (Exploit, Install, Delivery) ──
+  const genericTargetConfig = {
+    attack_exploit_target: { icon: '💥', title: 'Exploitation — Choose a target', desc: 'Take one random card from their hand (blind draw). Respond cancels.' },
+    attack_install_target: { icon: '⚙️', title: 'Installation — Choose a target', desc: 'They cannot play defend cards until the end of their next turn. Respond cancels.' },
+    attack_delivery_target: { icon: '📨', title: 'Delivery — Choose a target', desc: 'You may swap up to 2 of your played cards with theirs. Respond cancels.' },
+  };
+  if (genericTargetConfig[gs.phase] && gs.attackInfo?.iAmAttacker) {
+    const cfg = genericTargetConfig[gs.phase];
+    overlay.style.display = 'flex';
+    let html = `<div class="effect-panel"><h3>${cfg.icon} ${cfg.title}</h3>
+      <p style="color:#9ca3af;font-size:13px">${cfg.desc}</p>`;
+    gs.players.forEach((pl, i) => {
+      if (i === myIdx) return;
+      const isProtected = gs.protectedPlayers?.includes(i);
+      html += `<button class="govern-player-btn" ${!isProtected ? `onclick="send({type:'game_action',action:'attack_select_target',targetIdx:${i}})"` : ''} style="${isProtected?'opacity:0.4;cursor:not-allowed':''}">
+        <div style="width:10px;height:10px;border-radius:50%;background:${COLOR_INFO[pl.color]?.hex||'#888'}"></div>
+        ${pl.name} — 🃏 ${pl.handCount} cards ${isProtected ? '🛡️ PROTECTED' : ''}
+      </button>`;
+    });
+    html += '</div>';
+    inner.innerHTML = html; return;
+  }
+
+  // ── Delivery pick phase ──
+  if (gs.phase === 'attack_delivery_pick' && gs.attackInfo?.iAmAttacker) {
+    overlay.style.display = 'flex';
+    const swaps = gs.attackInfo.deliverySwaps || [];
+    const pickStep = gs.attackInfo.deliveryPickStep;
+    let html = `<div class="effect-panel"><h3>📨 Delivery — Swap played cards</h3>
+      <p style="color:#9ca3af;font-size:12px">Pick up to 2 swaps. Each swap: select one of your cards, then select an opponent's card.</p>
+      ${swaps.length > 0 ? `<p style="color:#62b517;font-size:12px">✓ ${swaps.length} swap(s) selected</p>` : ''}`;
+    if (!pickStep) {
+      // Step 1: pick my card
+      html += `<p style="font-size:12px;margin-top:8px;color:#e2e8f0">Step 1: Pick one of your played cards to swap away:</p>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px">`;
+      const myPlayed = gs.players[myIdx].played;
+      if (myPlayed.length === 0) { html += `<p style="color:#6b7280">No played cards.</p>`; }
+      else { myPlayed.forEach(c => { html += `<span class="played-select-card ${c.cat}" onclick="send({type:'game_action',action:'delivery_pick_mine',cardId:'${c.id}'})">${c.name}</span>`; }); }
+      html += `</div>`;
+    } else {
+      // Step 2: pick their card from any opponent
+      html += `<p style="font-size:12px;margin-top:8px;color:#e2e8f0">Step 2: Pick an opponent's card to take (giving: <strong style="color:#f87171">${pickStep.myCard?.name}</strong>):</p>`;
+      gs.players.forEach((pl, i) => {
+        if (i === myIdx || pl.played.length === 0) return;
+        html += `<p style="font-size:11px;color:#6b7280;margin:6px 0 3px">${pl.name}:</p><div style="display:flex;flex-wrap:wrap;gap:4px">`;
+        pl.played.forEach(c => { html += `<span class="played-select-card ${c.cat}" onclick="send({type:'game_action',action:'delivery_pick_theirs',targetIdx:${i},cardId:'${c.id}'})">${c.name}</span>`; });
+        html += '</div>';
+      });
+      html += `<button class="action-btn btn-cancel" onclick="send({type:'game_action',action:'delivery_go_back'})" style="margin-top:8px;width:100%">← Back</button>`;
+    }
+    if (swaps.length > 0) { html += `<button class="action-btn btn-end-turn" onclick="send({type:'game_action',action:'delivery_done'})" style="width:100%;margin-top:12px">Done (Execute ${swaps.length} Swap${swaps.length>1?'s':''})</button>`; }
+    html += '</div>';
+    inner.innerHTML = html; return;
+  }
+
+  // ── Delivery/other attack not my turn overlay ──
+  if (['attack_delivery_pick','attack_recon_swap_my','attack_recon_swap_their','attack_exploit_target','attack_install_target','attack_delivery_target','attack_recon_target'].includes(gs.phase) && !gs.attackInfo?.iAmAttacker) {
+    overlay.style.display = 'flex';
+    const ai = gs.attackInfo;
+    inner.innerHTML = `<div class="effect-panel"><h3>⚔️ Attack in progress</h3>
+      <p style="color:#9ca3af">${gs.players[ai?.attacker]?.name||'?'} is resolving their attack.</p></div>`;
+    return;
+  }
+
+  // Default: hide
+  overlay.style.display = 'none';
+  inner.innerHTML = '';
+}
+
+function detectMove(idx, dir) {
+  const newIdx = idx + dir;
+  if (newIdx < 0 || newIdx >= detectOrderState.length) return;
+  [detectOrderState[idx], detectOrderState[newIdx]] = [detectOrderState[newIdx], detectOrderState[idx]];
+  renderEffectOverlay(gameState);
+}
+
+function detectConfirm() {
+  send({ type:'game_action', action:'detect_reorder', order: detectOrderState.map(c => c.id) });
+  detectOrderState = [];
+}
+
+// ==================== INIT ====================
+// Check if joining via URL param
+const urlRoom = new URLSearchParams(location.search).get('room');
+if (urlRoom) {
+  document.getElementById('join-code').value = urlRoom.toUpperCase();
+  send({ type:'check_room', code: urlRoom.toUpperCase() });
+}
+
+connectWS(() => {
+  if (urlRoom) send({ type:'check_room', code: urlRoom.toUpperCase() });
+});
+</script>
+</body>
+</html>
