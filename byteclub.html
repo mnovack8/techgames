@@ -289,6 +289,105 @@ body{padding-top:44px;}
 .win-condition{font-size:15px;color:#9ca3af;margin-bottom:24px;}
 .win-btn{background:#62b517;color:#fff;border:none;padding:12px 32px;border-radius:10px;font-size:16px;font-weight:800;cursor:pointer;}
 .win-btn:hover{filter:brightness(1.1);}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:860px){
+  .lobby-card{width:calc(100vw - 40px);max-width:360px;}
+  .rules-banner{max-width:calc(100vw - 40px);}
+}
+
+@media(max-width:768px){
+  /* Lobby */
+  #lobby h1{font-size:34px;}
+
+  /* Waiting room */
+  .room-code-display{font-size:36px;letter-spacing:8px;padding:12px 24px;}
+  .waiting-players{min-width:unset;width:calc(100vw - 40px);max-width:400px;}
+
+  /* Game: hide log to free up space */
+  .game-log{display:none;}
+
+  /* Opponents: compact panels */
+  .opponents-bar{padding:4px 10px;gap:6px;}
+  .opponent-panel{min-width:140px;max-width:190px;padding:5px 8px;}
+  .opp-name{font-size:12px;}
+  .opp-kc-slot{width:20px;height:20px;font-size:10px;}
+
+  /* Turn strip */
+  .turn-badge{padding:4px 10px;font-size:12px;gap:5px;}
+
+  /* Special cards: hide status text */
+  .special-card{min-width:72px;padding:4px 7px;}
+  .special-card .sc-icon{font-size:17px;}
+  .special-card .sc-status{display:none;}
+
+  /* KC slots: slightly smaller */
+  .kc-slot{width:46px;min-height:36px;}
+  .kc-slot-name{font-size:7px;max-width:46px;}
+  .kc-row-label{font-size:8px;width:52px;}
+
+  /* Hand cards */
+  .card{min-width:86px;max-width:104px;}
+
+  /* How to play panel */
+  .how-to-play-btn{top:50px;right:8px;padding:4px 9px;font-size:11px;}
+  .how-to-play-panel{right:8px;width:280px;}
+}
+
+@media(max-width:480px){
+  /* Lobby */
+  #lobby h1{font-size:28px;}
+  .room-code-display{font-size:32px;letter-spacing:6px;padding:10px 18px;}
+  #waiting h2{font-size:20px;}
+
+  /* Turn strip: very compact */
+  .turn-strip{padding:3px 8px;}
+  .turn-badge{padding:3px 8px;font-size:11px;gap:4px;}
+  .turn-badge .tb-dot{width:8px;height:8px;}
+
+  /* Opponents: very compact */
+  .opponents-bar{padding:3px 8px;gap:5px;}
+  .opponent-panel{min-width:110px;max-width:150px;padding:4px 6px;}
+  .opp-name{font-size:11px;}
+  .opp-kc-slot{width:17px;height:17px;font-size:9px;}
+
+  /* KC slots: emoji only, no text */
+  .kc-slot{width:34px;min-height:28px;padding:2px;}
+  .kc-slot-name{display:none;}
+  .kc-slot-emoji{font-size:12px;}
+  .kc-row-label{font-size:7px;width:40px;}
+  .kc-slots{gap:3px;}
+
+  /* Special cards: icon only */
+  .special-cards-row{gap:4px;}
+  .special-card{min-width:46px;padding:3px 5px;}
+  .special-card .sc-icon{font-size:14px;}
+  .special-card .sc-name{display:none;}
+
+  /* Status banner */
+  .status-banner{padding:6px 12px;}
+  .status-banner .turn-player{font-size:15px;}
+  .status-banner .phase-label{font-size:11px;}
+
+  /* Hand cards: narrower */
+  .card{min-width:72px;max-width:88px;padding:5px 6px 5px;}
+  .card-emoji{font-size:13px;}
+  .card-name{font-size:11px;}
+  .card-desc{font-size:9px;}
+
+  /* Action buttons */
+  .action-bar{padding:4px 8px;gap:4px;}
+  .action-btn{padding:5px 10px;font-size:11px;}
+
+  /* How to play panel: full width */
+  .how-to-play-btn{top:50px;right:6px;}
+  .how-to-play-panel{left:6px;right:6px;width:auto;}
+
+  /* Win screen */
+  .win-title{font-size:22px;}
+  .win-condition{font-size:13px;}
+  .win-btn{padding:10px 24px;font-size:14px;}
+}
 </style>
 </head>
 <body>

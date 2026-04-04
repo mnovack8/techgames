@@ -260,6 +260,18 @@ footer {
   padding: 12px 24px;
   font-size: 12px;
 }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+  .games-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 600px) {
+  html, body { overflow: auto; height: auto; min-height: 100%; }
+  .games-grid { grid-template-columns: 1fr; }
+  .games-section { overflow: visible; flex: none; padding-bottom: 24px; }
+  .game-card-image { height: 220px; }
+}
 </style>
 </head>
 <body>

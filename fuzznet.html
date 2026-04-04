@@ -214,6 +214,73 @@ body { padding-top: 44px; }
 #info-card .info-close:hover { background: #e0ddd6; color: #555; }
 #info-card .info-highlight { background: #eef5ee; border-radius: 6px; padding: 8px 12px; margin: 8px 0; font-size: 12px; color: #2d6a4f; border-left: 3px solid #2d6a4f; }
 .section-title .info-btn { margin-left: 4px; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 860px) {
+  .lobby-card { width: calc(100vw - 40px); max-width: 360px; }
+  .rules-banner { max-width: calc(100vw - 40px); }
+}
+
+@media (max-width: 768px) {
+  /* Lobby */
+  #lobby h1 { font-size: 34px; }
+
+  /* Game — stack board above side panel, allow page scroll */
+  #game { height: auto; min-height: 100dvh; overflow: visible; }
+  #main-area { flex-direction: column; overflow: visible; height: auto; }
+  #board-container { flex: none; height: 44vw; min-height: 220px; max-height: 46vh; overflow: hidden; padding: 6px; }
+  #board-svg { width: 100%; height: 100%; }
+  #side-panel {
+    width: 100%; min-width: unset; border-left: none;
+    border-top: 2px solid #e0ddd6; overflow: visible;
+    flex-direction: row; flex-wrap: wrap; align-items: flex-start; gap: 8px; padding: 10px 12px;
+  }
+  #side-panel .section-title { width: 100%; margin-bottom: 0; }
+  .action-btns { flex-direction: row; flex-wrap: wrap; gap: 6px; flex: 1; min-width: 200px; }
+  .action-btn { flex: 1; min-width: 130px; text-align: center; font-size: 13px; }
+  .end-turn-btn { width: 100%; font-size: 12px; margin-top: 4px; }
+  .scoreboard { flex: 1; min-width: 180px; }
+  .dice-area { flex-wrap: nowrap; }
+
+  /* Top bar */
+  #top-bar { padding: 6px 12px; gap: 8px; }
+  #top-bar .player-info { font-size: 13px; }
+  .actions-info { font-size: 13px; }
+  .actions-count { font-size: 14px; }
+
+  /* Status bar */
+  #status { padding: 6px 12px; font-size: 12px; }
+}
+
+@media (max-width: 480px) {
+  /* Lobby */
+  #lobby h1 { font-size: 28px; }
+  .room-code-display { font-size: 38px; letter-spacing: 8px; padding: 12px 24px; }
+  #waiting h2 { font-size: 20px; }
+
+  /* Top bar */
+  #top-bar { padding: 5px 10px; gap: 6px; }
+  #top-bar .player-info { font-size: 12px; }
+  .view-btn { padding: 4px 8px; font-size: 11px; }
+  .room-badge { font-size: 11px; padding: 2px 7px; }
+
+  /* Die and clean tracker */
+  .die { width: 38px; height: 38px; font-size: 20px; }
+  .clean-step { width: 28px; height: 22px; font-size: 10px; }
+
+  /* Status */
+  #status { padding: 5px 10px; min-height: 34px; font-size: 12px; }
+  #status button { padding: 4px 10px; font-size: 11px; }
+
+  /* Board container — give a bit more height on phones in landscape */
+  #board-container { height: 52vw; max-height: 42vh; }
+
+  /* Info overlay */
+  #info-card { width: 94%; padding: 16px 18px; }
+
+  /* Game over */
+  .final-scores { min-width: unset; width: calc(100vw - 48px); padding: 16px; }
+}
 </style>
 </head>
 <body>
