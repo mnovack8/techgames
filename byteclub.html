@@ -54,6 +54,8 @@ body{padding-top:44px;}
 .lobby-input{width:100%;padding:12px 16px;font-size:20px;text-align:center;letter-spacing:8px;text-transform:uppercase;background:#111827;border:2px solid #374151;border-radius:8px;color:#e2e8f0;font-weight:bold;margin:8px 0;font-family:'Share Tech Mono',monospace;}
 .lobby-input::placeholder{letter-spacing:2px;font-size:14px;color:#4b5563;}
 .lobby-input:focus{outline:none;border-color:#62b517;}
+.name-input{letter-spacing:normal;text-transform:none;font-size:16px;font-family:'Nunito','Segoe UI',system-ui,sans-serif;}
+.name-input::placeholder{letter-spacing:normal;font-size:14px;}
 .error-msg{color:#f87171;font-size:13px;text-align:center;margin-top:6px;min-height:20px;}
 .rules-banner{font-size:13px;color:#6b7280;background:#1e2535;border:1px solid #374151;border-radius:8px;padding:8px 14px;text-align:center;max-width:360px;line-height:1.5;}
 .rules-banner a{color:#62b517;font-weight:600;}
@@ -311,6 +313,7 @@ body{padding-top:44px;}
     <div class="lobby-card">
       <h3>Create Game</h3>
       <p style="font-size:12px;color:#6b7280;margin:-4px 0 10px">Bots fill empty seats until players join.</p>
+      <input class="lobby-input name-input" id="create-name" maxlength="12" placeholder="Your name" oninput="updateCreateBtn()">
       <div class="color-options" id="create-colors"></div>
       <button class="lobby-btn btn-create" id="btn-create" onclick="createRoom()" disabled>▶ Create Game</button>
       <div class="error-msg" id="create-error"></div>
@@ -319,6 +322,7 @@ body{padding-top:44px;}
     <!-- JOIN ROOM -->
     <div class="lobby-card">
       <h3>Join a Game</h3>
+      <input class="lobby-input name-input" id="join-name" maxlength="12" placeholder="Your name" oninput="updateJoinBtn()">
       <input class="lobby-input" id="join-code" maxlength="4" placeholder="ROOM CODE" oninput="onCodeInput(this)">
       <div class="color-options" id="join-colors"></div>
       <button class="lobby-btn btn-join" id="btn-join" onclick="joinRoom()" disabled>Join Room</button>
@@ -579,7 +583,8 @@ renderColorButtons('create-colors', null, [], c => {
 });
 
 function updateCreateBtn() {
-  document.getElementById('btn-create').disabled = !myColor;
+  const name = document.getElementById('create-name')?.value.trim() || '';
+  document.getElementById('btn-create').disabled = !myColor || name.length < 1;
 }
 
 
@@ -600,18 +605,21 @@ function onCodeInput(el) {
 }
 
 function updateJoinBtn() {
-  document.getElementById('btn-join').disabled = !myColor || document.getElementById('join-code').value.length < 4;
+  const name = document.getElementById('join-name')?.value.trim() || '';
+  document.getElementById('btn-join').disabled = !myColor || document.getElementById('join-code').value.length < 4 || name.length < 1;
 }
 
 function createRoom() {
   if (!myColor) return;
-  connectWS(() => send({ type:'create_room', color:myColor, gameType:'byteclub' }));
+  const playerName = document.getElementById('create-name').value.trim();
+  connectWS(() => send({ type:'create_room', color:myColor, gameType:'byteclub', playerName }));
 }
 
 function joinRoom() {
   const code = document.getElementById('join-code').value.toUpperCase();
   if (!code || !myColor) return;
-  connectWS(() => send({ type:'join_room', code, color:myColor }));
+  const playerName = document.getElementById('join-name').value.trim();
+  connectWS(() => send({ type:'join_room', code, color:myColor, playerName }));
 }
 
 function showScreen(id) {

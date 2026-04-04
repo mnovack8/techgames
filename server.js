@@ -375,6 +375,12 @@ function decideBotAction(ps, s) {
 const rooms = new Map();
 const wsData = new Map(); // ws -> { roomCode, playerIdx }
 
+function sanitizeName(raw, fallback) {
+  if (!raw || typeof raw !== 'string') return fallback;
+  const name = raw.trim().replace(/[^\w\s'-]/g, '').slice(0, 12).trim();
+  return name.length >= 1 ? name : fallback;
+}
+
 function generateCode() {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   let code;
@@ -814,7 +820,7 @@ function handleMessage(ws, raw) {
       const room = {
         code, hostIdx: 0,
         gameType: msg.gameType === 'byteclub' ? 'byteclub' : 'fuzznet',
-        players: [{ color, name: COLOR_INFO[color].name, ws, connected: true }],
+        players: [{ color, name: sanitizeName(msg.playerName, COLOR_INFO[color].name), ws, connected: true }],
         started: false, state: null, bcState: null,
       };
       rooms.set(code, room);
@@ -870,7 +876,7 @@ function handleMessage(ws, raw) {
       if (room.players.length >= 4) return send(ws, {type:'error',msg:'Room is full'});
       leaveRoom(ws);
       const idx = room.players.length;
-      room.players.push({ color, name: COLOR_INFO[color].name, ws, connected: true });
+      room.players.push({ color, name: sanitizeName(msg.playerName, COLOR_INFO[color].name), ws, connected: true });
       wsData.set(ws, { roomCode: code, playerIdx: idx });
       send(ws, { type: 'room_joined', code, yourId: idx });
       broadcastLobby(room);
