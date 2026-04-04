@@ -825,12 +825,7 @@ function handleMessage(ws, raw) {
       };
       rooms.set(code, room);
       wsData.set(ws, { roomCode: code, playerIdx: 0 });
-      // Byteclub: add 1 bot so host can start immediately solo; removed when a 2nd human joins
-      if (room.gameType === 'byteclub') {
-        const botColors = Object.keys(COLOR_INFO).filter(c => c !== color);
-        const botColor  = botColors[Math.floor(Math.random() * botColors.length)];
-        room.players.push({ color: botColor, name: COLOR_INFO[botColor].name + ' (Bot)', ws: null, connected: true, isBot: true });
-      }
+      // Bots are added manually via toggle_bot in the waiting room
       send(ws, { type: 'room_created', code, yourId: 0 });
       broadcastLobby(room);
       break;
