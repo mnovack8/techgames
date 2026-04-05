@@ -146,9 +146,28 @@ body{padding-top:44px;}
 .sc-actionobj.active{border-color:#f59e0b;}
 
 
+/* Cancel Game */
+.cancel-game-btn{position:fixed;top:50px;right:14px;z-index:102;background:transparent;border:1.5px solid #ef4444;border-radius:8px;padding:5px 12px;font-size:12px;font-weight:700;color:#ef4444;cursor:pointer;display:none;align-items:center;gap:5px;transition:all 0.15s;white-space:nowrap;}
+.cancel-game-btn:hover{background:#ef4444;color:#fff;}
+
+/* Cancel confirmation modal */
+.cancel-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:1000;align-items:center;justify-content:center;}
+.cancel-modal-overlay.open{display:flex;}
+.cancel-modal{background:#1e2535;border:1px solid #374151;border-radius:14px;padding:28px 32px;max-width:380px;width:90%;box-shadow:0 16px 48px rgba(0,0,0,0.5);text-align:center;}
+.cancel-modal h3{font-size:18px;font-weight:800;color:#e2e8f0;margin-bottom:10px;}
+.cancel-modal p{font-size:14px;color:#9ca3af;line-height:1.5;margin-bottom:22px;}
+.cancel-modal-actions{display:flex;gap:10px;justify-content:center;}
+.cancel-modal-actions .btn-yes{padding:10px 28px;background:#ef4444;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;transition:background 0.15s;}
+.cancel-modal-actions .btn-yes:hover{background:#b91c1c;}
+.cancel-modal-actions .btn-no{padding:10px 28px;background:#374151;color:#e2e8f0;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;transition:background 0.15s;}
+.cancel-modal-actions .btn-no:hover{background:#4b5563;}
+
 /* HOW TO PLAY BUTTON (replaces sidebar) */
 .how-to-play-btn{position:fixed;top:50px;right:14px;z-index:101;background:#1a2235;border:1px solid #374151;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;color:#62b517;cursor:pointer;display:flex;align-items:center;gap:5px;transition:background 0.15s;}
 .how-to-play-btn:hover{background:#253347;}
+/* Shift How to Play down when Cancel Game is also showing */
+.host-cancel-visible .how-to-play-btn{top:82px;}
+.host-cancel-visible .how-to-play-panel{top:114px;}
 .how-to-play-panel{display:none;position:fixed;top:82px;right:14px;z-index:500;width:320px;max-height:calc(100vh - 100px);overflow-y:auto;background:#1a2235;border:1px solid #374151;border-radius:12px;padding:16px;box-shadow:0 12px 48px rgba(0,0,0,0.6);}
 .how-to-play-panel.open{display:block;}
 .how-to-play-panel h4{font-size:13px;font-weight:800;color:#62b517;margin-bottom:8px;}
@@ -526,6 +545,21 @@ body{padding-top:44px;}
   </div>
 </div>
 
+<!-- CANCEL GAME (host only, shown during game) -->
+<button class="cancel-game-btn" id="btn-cancel-game" onclick="showCancelModal()">✕ Cancel Game</button>
+
+<!-- Cancel confirmation modal -->
+<div class="cancel-modal-overlay" id="cancel-modal-overlay">
+  <div class="cancel-modal">
+    <h3>End the Game?</h3>
+    <p>This will end the game for all players. Are you sure?</p>
+    <div class="cancel-modal-actions">
+      <button class="btn-yes" onclick="confirmCancelGame()">Yes, End It</button>
+      <button class="btn-no" onclick="hideCancelModal()">No, Keep Playing</button>
+    </div>
+  </div>
+</div>
+
 <!-- HOW TO PLAY -->
 <button class="how-to-play-btn" id="htp-btn" onclick="document.getElementById('htp-panel').classList.toggle('open')">📖 How to Play</button>
 <div class="how-to-play-panel" id="htp-panel">
@@ -652,11 +686,17 @@ let isHost = false;
 let gameState = null;
 let selectedHandCard = null;
 
+const SESSION_KEY = 'techgames_byteclub_session';
+
 function connectWS(cb) {
   ws = new WebSocket(WS_URL);
-  ws.onopen = cb;
+  ws.onopen = () => {
+    const token = sessionStorage.getItem(SESSION_KEY);
+    if (token) { send({ type: 'rejoin_room', token }); }
+    else if (cb) cb();
+  };
   ws.onmessage = e => handleMsg(JSON.parse(e.data));
-  ws.onclose = () => setTimeout(() => connectWS(() => {}), 2000);
+  ws.onclose = () => setTimeout(() => connectWS(null), 2000);
 }
 
 function send(msg) { if (ws && ws.readyState === 1) ws.send(JSON.stringify(msg)); }
@@ -744,6 +784,14 @@ function copyLink() {
 function startGame() { send({ type:'start_game' }); }
 function toggleBot() { send({ type:'toggle_bot' }); }
 
+function showCancelModal() { document.getElementById('cancel-modal-overlay').classList.add('open'); }
+function hideCancelModal() { document.getElementById('cancel-modal-overlay').classList.remove('open'); }
+function confirmCancelGame() {
+  hideCancelModal();
+  sessionStorage.removeItem(SESSION_KEY);
+  send({ type: 'cancel_game' });
+}
+
 function renderLobbyPlayers(players) {
   const el = document.getElementById('waiting-players');
   el.innerHTML = '';
@@ -791,18 +839,52 @@ function handleMsg(msg) {
   switch (msg.type) {
     case 'room_created':
       roomCode = msg.code; myId = msg.yourId; isHost = true;
+      if (msg.token) sessionStorage.setItem(SESSION_KEY, msg.token);
       document.getElementById('room-code-text').textContent = roomCode;
       showScreen('waiting');
       break;
     case 'room_joined':
       roomCode = msg.code; myId = msg.yourId; isHost = false;
+      if (msg.token) sessionStorage.setItem(SESSION_KEY, msg.token);
       document.getElementById('room-code-text').textContent = roomCode;
       showScreen('waiting');
       break;
+    case 'room_rejoined':
+      roomCode = msg.code; myId = msg.yourId; isHost = msg.isHost;
+      if (msg.token) sessionStorage.setItem(SESSION_KEY, msg.token);
+      if (msg.started) {
+        showScreen('game');
+        if (isHost) {
+          document.getElementById('btn-cancel-game').style.display = 'flex';
+          document.body.classList.add('host-cancel-visible');
+        }
+      } else {
+        document.getElementById('room-code-text').textContent = roomCode;
+        showScreen('waiting');
+      }
+      break;
+    case 'rejoin_failed':
+      sessionStorage.removeItem(SESSION_KEY);
+      showScreen('lobby');
+      break;
     case 'room_info':
       if (!msg.exists) { document.getElementById('join-error').textContent = 'Room not found.'; return; }
-      if (msg.started) { document.getElementById('join-error').textContent = 'Game already started.'; return; }
+      if (msg.started) {
+        if (msg.rejoinColors && msg.rejoinColors.length > 0) {
+          document.getElementById('join-error').textContent = 'Game in progress — select your color to rejoin.';
+          renderColorButtons('join-colors', null, COLORS.filter(c => !msg.rejoinColors.includes(c)), c => {
+            myColor = c;
+            renderColorButtons('join-colors', c, COLORS.filter(cc => !msg.rejoinColors.includes(cc)), cc => { myColor = cc; updateJoinBtn(); });
+            updateJoinBtn();
+          });
+          document.getElementById('btn-join').textContent = 'Rejoin Game';
+        } else {
+          document.getElementById('join-error').textContent = 'Game in progress — no open slots to rejoin.';
+        }
+        return;
+      }
       if (msg.full) { document.getElementById('join-error').textContent = 'Room is full.'; return; }
+      document.getElementById('btn-join').textContent = 'Join Room';
       renderColorButtons('join-colors', null, COLORS.filter(c => !msg.availableColors.includes(c)), c => {
         myColor = c;
         renderColorButtons('join-colors', c, COLORS.filter(cc => !msg.availableColors.includes(cc)), cc => { myColor = cc; updateJoinBtn(); });
@@ -814,11 +896,31 @@ function handleMsg(msg) {
       break;
     case 'bc_game_started':
       showScreen('game');
+      if (isHost) {
+        document.getElementById('btn-cancel-game').style.display = 'flex';
+        document.body.classList.add('host-cancel-visible');
+      }
       break;
     case 'bc_state':
       gameState = msg;
       if (msg.pendingError) showToast(msg.pendingError, 4000);
       renderGame(msg);
+      break;
+    case 'left_room':
+      sessionStorage.removeItem(SESSION_KEY);
+      roomCode = null; myId = null; gameState = null;
+      document.getElementById('btn-cancel-game').style.display = 'none';
+      document.body.classList.remove('host-cancel-visible');
+      showScreen('lobby');
+      break;
+    case 'game_cancelled':
+      sessionStorage.removeItem(SESSION_KEY);
+      roomCode = null; myId = null; gameState = null; isHost = false;
+      document.getElementById('btn-cancel-game').style.display = 'none';
+      document.body.classList.remove('host-cancel-visible');
+      hideCancelModal();
+      showScreen('lobby');
+      document.getElementById('join-error').textContent = 'The host ended the game.';
       break;
     case 'error':
       document.getElementById('create-error').textContent = msg.msg;
@@ -1692,13 +1794,12 @@ function detectConfirm() {
 }
 
 // ==================== INIT ====================
-// Check if joining via URL param
 const urlRoom = new URLSearchParams(location.search).get('room');
 if (urlRoom) {
   document.getElementById('join-code').value = urlRoom.toUpperCase();
-  send({ type:'check_room', code: urlRoom.toUpperCase() });
 }
 
+// On connect: try session rejoin first, then URL room check, then nothing
 connectWS(() => {
   if (urlRoom) send({ type:'check_room', code: urlRoom.toUpperCase() });
 });

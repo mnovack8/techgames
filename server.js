@@ -373,7 +373,35 @@ function decideBotAction(ps, s) {
 
 // ==================== ROOM MANAGEMENT ====================
 const rooms = new Map();
-const wsData = new Map(); // ws -> { roomCode, playerIdx }
+const wsData = new Map();    // ws -> { roomCode, playerIdx }
+const sessions = new Map();  // token -> { roomCode, playerIdx }
+
+function generateToken() {
+  const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  let t = '';
+  for (let i = 0; i < 32; i++) t += chars[Math.floor(Math.random() * chars.length)];
+  return t;
+}
+
+// Clean up rooms older than 24 hours every hour
+const ROOM_MAX_AGE = 24 * 60 * 60 * 1000;
+setInterval(() => {
+  const now = Date.now();
+  for (const [code, room] of rooms.entries()) {
+    if (now - room.createdAt > ROOM_MAX_AGE) {
+      for (const [token, s] of sessions.entries()) {
+        if (s.roomCode === code) sessions.delete(token);
+      }
+      for (const p of room.players) {
+        if (p.connected && p.ws) {
+          try { send(p.ws, { type: 'error', msg: 'This game expired after 24 hours.' }); } catch {}
+          wsData.delete(p.ws);
+        }
+      }
+      rooms.delete(code);
+    }
+  }
+}, 60 * 60 * 1000);
 
 function sanitizeName(raw, fallback) {
   if (!raw || typeof raw !== 'string') return fallback;
@@ -815,18 +843,21 @@ function handleMessage(ws, raw) {
       const color = msg.color;
       if (!COLOR_INFO[color]) return send(ws, {type:'error',msg:'Invalid color'});
       // Leave existing room
-      leaveRoom(ws);
+      leaveRoom(ws, true);
       const code = generateCode();
       const room = {
         code, hostIdx: 0,
         gameType: msg.gameType === 'byteclub' ? 'byteclub' : 'fuzznet',
         players: [{ color, name: sanitizeName(msg.playerName, COLOR_INFO[color].name), ws, connected: true }],
         started: false, state: null, bcState: null,
+        createdAt: Date.now(),
       };
       rooms.set(code, room);
       wsData.set(ws, { roomCode: code, playerIdx: 0 });
+      const token = generateToken();
+      sessions.set(token, { roomCode: code, playerIdx: 0 });
       // Bots are added manually via toggle_bot in the waiting room
-      send(ws, { type: 'room_created', code, yourId: 0 });
+      send(ws, { type: 'room_created', code, yourId: 0, token });
       broadcastLobby(room);
       break;
     }
@@ -834,7 +865,12 @@ function handleMessage(ws, raw) {
     case 'check_room': {
       const room = rooms.get((msg.code||'').toUpperCase());
       if (!room) return send(ws, {type:'room_info', exists:false});
-      if (room.started) return send(ws, {type:'room_info', exists:true, started:true});
+      if (room.started) {
+        const rejoinColors = room.players
+          .filter(p => !p.isBot && !p.connected)
+          .map(p => p.color);
+        return send(ws, { type:'room_info', exists:true, started:true, rejoinColors });
+      }
       const humanCount = room.players.filter(p => !p.isBot).length;
       // Full when 4 humans are already present (bots are always displaceable)
       if (humanCount >= 4) return send(ws, {type:'room_info', exists:true, full:true});
@@ -851,7 +887,28 @@ function handleMessage(ws, raw) {
       if (!COLOR_INFO[color]) return send(ws, {type:'error',msg:'Invalid color'});
       const room = rooms.get(code);
       if (!room) return send(ws, {type:'error',msg:'Room not found'});
-      if (room.started) return send(ws, {type:'error',msg:'Game already started'});
+
+      // Rejoin a started game by matching color to a disconnected player
+      if (room.started) {
+        const rejoinIdx = room.players.findIndex(p => !p.isBot && p.color === color && !p.connected);
+        if (rejoinIdx === -1) return send(ws, {type:'error',msg:'Game in progress — no open slot for that color'});
+        leaveRoom(ws, true);
+        if (room.players[rejoinIdx].ws) wsData.delete(room.players[rejoinIdx].ws);
+        room.players[rejoinIdx].ws = ws;
+        room.players[rejoinIdx].connected = true;
+        wsData.set(ws, { roomCode: code, playerIdx: rejoinIdx });
+        // Issue a fresh session token
+        for (const [t, s] of sessions.entries()) {
+          if (s.roomCode === code && s.playerIdx === rejoinIdx) sessions.delete(t);
+        }
+        const token = generateToken();
+        sessions.set(token, { roomCode: code, playerIdx: rejoinIdx });
+        send(ws, { type: 'room_rejoined', code, yourId: rejoinIdx, token, started: true, isHost: rejoinIdx === room.hostIdx });
+        if (room.gameType === 'byteclub') bcBroadcastState(room);
+        else broadcastState(room);
+        break;
+      }
+
       // If a human already holds this color, reject
       if (room.players.some(p => !p.isBot && p.color === color)) {
         const humanColors = room.players.filter(p => !p.isBot).map(p => p.color);
@@ -861,20 +918,49 @@ function handleMessage(ws, raw) {
       // When a human joins, drop all bots — humans only from here on
       const hadBots = room.players.some(p => p.isBot);
       if (hadBots) {
-        // Remove all bots and reindex wsData for remaining humans
+        // Remove all bots and reindex wsData + sessions for remaining humans
         room.players = room.players.filter(p => !p.isBot);
         let idx = 0;
         for (const [w, d] of wsData.entries()) {
           if (d.roomCode === code) { d.playerIdx = idx++; }
         }
+        for (const [t, s] of sessions.entries()) {
+          if (s.roomCode === code) { /* bots have no sessions, nothing to reindex */ }
+        }
       }
       if (room.players.length >= 4) return send(ws, {type:'error',msg:'Room is full'});
-      leaveRoom(ws);
+      leaveRoom(ws, true);
       const idx = room.players.length;
       room.players.push({ color, name: sanitizeName(msg.playerName, COLOR_INFO[color].name), ws, connected: true });
       wsData.set(ws, { roomCode: code, playerIdx: idx });
-      send(ws, { type: 'room_joined', code, yourId: idx });
+      const token = generateToken();
+      sessions.set(token, { roomCode: code, playerIdx: idx });
+      send(ws, { type: 'room_joined', code, yourId: idx, token });
       broadcastLobby(room);
+      break;
+    }
+
+    case 'rejoin_room': {
+      const session = sessions.get(msg.token);
+      if (!session) return send(ws, { type: 'rejoin_failed' });
+      const room = rooms.get(session.roomCode);
+      if (!room) { sessions.delete(msg.token); return send(ws, { type: 'rejoin_failed' }); }
+      const playerIdx = session.playerIdx;
+      const player = room.players[playerIdx];
+      if (!player || player.isBot) { sessions.delete(msg.token); return send(ws, { type: 'rejoin_failed' }); }
+      // Detach old ws if any
+      if (player.ws && player.ws !== ws) wsData.delete(player.ws);
+      player.ws = ws;
+      player.connected = true;
+      wsData.set(ws, { roomCode: room.code, playerIdx });
+      if (!room.started) {
+        send(ws, { type: 'room_rejoined', code: room.code, yourId: playerIdx, token: msg.token, started: false, isHost: playerIdx === room.hostIdx });
+        broadcastLobby(room);
+      } else {
+        send(ws, { type: 'room_rejoined', code: room.code, yourId: playerIdx, token: msg.token, started: true, isHost: playerIdx === room.hostIdx });
+        if (room.gameType === 'byteclub') bcBroadcastState(room);
+        else broadcastState(room);
+      }
       break;
     }
 
@@ -944,15 +1030,36 @@ function handleMessage(ws, raw) {
       break;
     }
 
+    case 'cancel_game': {
+      const info = wsData.get(ws);
+      if (!info) break;
+      const room = rooms.get(info.roomCode);
+      if (!room || !room.started) break;
+      if (info.playerIdx !== room.hostIdx) break; // only host can cancel
+      // Notify all connected players
+      for (const p of room.players) {
+        if (p.connected && p.ws) send(p.ws, { type: 'game_cancelled' });
+      }
+      // Clean up sessions and wsData
+      for (const [t, s] of sessions.entries()) {
+        if (s.roomCode === room.code) sessions.delete(t);
+      }
+      for (const p of room.players) {
+        if (p.ws) wsData.delete(p.ws);
+      }
+      rooms.delete(room.code);
+      break;
+    }
+
     case 'leave_room': {
-      leaveRoom(ws);
+      leaveRoom(ws, true);
       send(ws, { type: 'left_room' });
       break;
     }
   }
 }
 
-function leaveRoom(ws) {
+function leaveRoom(ws, explicit = false) {
   const info = wsData.get(ws);
   if (!info) return;
   const room = rooms.get(info.roomCode);
@@ -960,11 +1067,17 @@ function leaveRoom(ws) {
   if (!room) return;
 
   if (!room.started) {
-    // Remove player from lobby
+    // Remove player from lobby (always — can't hold a slot while disconnected pre-game)
     room.players.splice(info.playerIdx, 1);
-    // Fix indices for remaining players
+    // Fix indices for remaining players and sessions
     for (const [w, d] of wsData.entries()) {
       if (d.roomCode === room.code && d.playerIdx > info.playerIdx) d.playerIdx--;
+    }
+    for (const [t, s] of sessions.entries()) {
+      if (s.roomCode === room.code) {
+        if (s.playerIdx === info.playerIdx) sessions.delete(t);
+        else if (s.playerIdx > info.playerIdx) s.playerIdx--;
+      }
     }
     if (room.hostIdx >= room.players.length) room.hostIdx = 0;
     if (room.players.length === 0) {
@@ -973,9 +1086,15 @@ function leaveRoom(ws) {
       broadcastLobby(room);
     }
   } else {
-    // Mark as disconnected in game
+    // Mark as disconnected in game — keep their slot for reconnection
     room.players[info.playerIdx].connected = false;
     room.players[info.playerIdx].ws = null;
+    // If they explicitly left, clear their session so they can't rejoin
+    if (explicit) {
+      for (const [t, s] of sessions.entries()) {
+        if (s.roomCode === room.code && s.playerIdx === info.playerIdx) sessions.delete(t);
+      }
+    }
     if (room.gameType === 'byteclub') {
       if (room.bcState && room.bcState.currentPlayer === info.playerIdx && room.bcState.phase !== 'game_over') {
         bcEndTurn(room);
@@ -990,7 +1109,10 @@ function leaveRoom(ws) {
         broadcastState(room);
       }
     }
-    if (room.players.every(p => !p.connected)) rooms.delete(room.code);
+    // Only delete room if all players explicitly left or all disconnected with no sessions
+    const hasRejoinable = room.players.some(p => !p.isBot && !p.connected &&
+      [...sessions.values()].some(s => s.roomCode === room.code && s.playerIdx === room.players.indexOf(p)));
+    if (room.players.every(p => !p.connected) && !hasRejoinable) rooms.delete(room.code);
   }
 }
 
@@ -2459,8 +2581,8 @@ const wss = new WebSocketServer({ server });
 
 wss.on('connection', (ws) => {
   ws.on('message', (raw) => handleMessage(ws, raw.toString()));
-  ws.on('close', () => leaveRoom(ws));
-  ws.on('error', () => leaveRoom(ws));
+  ws.on('close', () => leaveRoom(ws, false));   // disconnect — keep session
+  ws.on('error', () => leaveRoom(ws, false));   // disconnect — keep session
 });
 
 server.listen(PORT, () => {

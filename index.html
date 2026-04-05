@@ -85,7 +85,7 @@ header {
   font-size: 15px;
   color: #666;
   line-height: 1.6;
-  max-width: 600px;
+  max-width: 900px;
   margin: 0 auto;
 }
 
@@ -143,7 +143,7 @@ header {
 /* Card image — fixed height, no scrolling blowout */
 .game-card-image {
   width: 100%;
-  height: 300px;
+  height: 220px;
   flex-shrink: 0;
   background: #f0f5e8;
   overflow: hidden;
@@ -154,7 +154,7 @@ header {
 .game-card-image img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center;
 }
 .coming-soon-placeholder {
@@ -261,7 +261,7 @@ footer {
   font-size: 12px;
 }
 
-/* ===== RESPONSIVE ===== */
+/* ===== RESPONSIVE — WIDTH ===== */
 @media (max-width: 900px) {
   .games-grid { grid-template-columns: repeat(2, 1fr); }
 }
@@ -271,6 +271,35 @@ footer {
   .games-grid { grid-template-columns: 1fr; }
   .games-section { overflow: visible; flex: none; padding-bottom: 24px; }
   .game-card-image { height: 220px; }
+}
+
+/* ===== RESPONSIVE — HEIGHT ===== */
+/* Compact everything at short heights so cards fit without scrolling */
+@media (max-height: 820px) {
+  .hero { padding: 12px 24px 10px; }
+  .hero h1 { font-size: 26px; margin-bottom: 4px; }
+  .hero p { font-size: 13px; line-height: 1.4; }
+  .game-card-image { height: 180px; }
+  .game-card-body { padding: 10px 14px 12px; gap: 6px; }
+  .games-section h2 { margin-bottom: 10px; }
+}
+
+@media (max-height: 700px) {
+  .hero { padding: 8px 24px 6px; }
+  .hero h1 { font-size: 22px; margin-bottom: 2px; }
+  .hero p { display: none; }
+  .game-card-image { height: 150px; }
+  .game-card-body { padding: 8px 12px 10px; gap: 5px; }
+  .games-section { padding: 0 24px; }
+  .games-section h2 { margin-bottom: 8px; }
+  .game-card-actions { padding-top: 2px; }
+  .btn-play, .btn-buy { padding: 8px 12px; font-size: 13px; }
+}
+
+/* Last resort — allow scrolling when viewport is very short */
+@media (max-height: 560px) {
+  html, body { overflow: auto; height: auto; min-height: 100%; }
+  .games-section { overflow: visible; flex: none; padding-bottom: 20px; }
 }
 </style>
 </head>

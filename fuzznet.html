@@ -117,6 +117,22 @@ body { padding-top: 44px; }
 .actions-info { font-size: 14px; color: #777; }
 .actions-count { color: #2d6a4f; font-weight: 800; font-size: 16px; }
 
+/* Cancel Game */
+.cancel-game-btn { padding: 5px 12px; font-size: 12px; font-weight: 700; border: 1.5px solid #e57373; border-radius: 7px; background: transparent; color: #e57373; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+.cancel-game-btn:hover { background: #e57373; color: #fff; }
+
+/* Cancel confirmation modal */
+.cancel-modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 1000; align-items: center; justify-content: center; }
+.cancel-modal-overlay.open { display: flex; }
+.cancel-modal { background: #fff; border-radius: 14px; padding: 28px 32px; max-width: 380px; width: 90%; box-shadow: 0 16px 48px rgba(0,0,0,0.2); text-align: center; }
+.cancel-modal h3 { font-size: 18px; font-weight: 800; color: #2a2a2a; margin-bottom: 10px; }
+.cancel-modal p { font-size: 14px; color: #666; line-height: 1.5; margin-bottom: 22px; }
+.cancel-modal-actions { display: flex; gap: 10px; justify-content: center; }
+.cancel-modal-actions .btn-yes { padding: 10px 28px; background: #e57373; color: #fff; border: none; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; transition: background 0.15s; }
+.cancel-modal-actions .btn-yes:hover { background: #c62828; }
+.cancel-modal-actions .btn-no { padding: 10px 28px; background: #f0ede6; color: #555; border: none; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; transition: background 0.15s; }
+.cancel-modal-actions .btn-no:hover { background: #e0ddd6; }
+
 #main-area { display: flex; flex: 1; overflow: hidden; }
 #board-container { flex: 1; display: flex; align-items: center; justify-content: center; padding: 10px; background: #f4f1ec; }
 #board-svg { width: 100%; max-width: 860px; height: auto; }
@@ -367,6 +383,19 @@ body { padding-top: 44px; }
     <div class="round-info" id="round-info">Round 1</div>
     <div class="actions-info">Actions: <span class="actions-count" id="actions-count">3</span></div>
     <button class="info-btn" onclick="showInfo('overview')" style="width:24px;height:24px;font-size:13px" title="How to Play">i</button>
+    <button class="cancel-game-btn" id="btn-cancel-game" onclick="showCancelModal()" style="display:none">✕ Cancel Game</button>
+  </div>
+
+  <!-- Cancel Game Modal -->
+  <div class="cancel-modal-overlay" id="cancel-modal-overlay">
+    <div class="cancel-modal">
+      <h3>End the Game?</h3>
+      <p>This will end the game for all players. Are you sure?</p>
+      <div class="cancel-modal-actions">
+        <button class="btn-yes" onclick="confirmCancelGame()">Yes, End It</button>
+        <button class="btn-no" onclick="hideCancelModal()">No, Keep Playing</button>
+      </div>
+    </div>
   </div>
 
   <div id="main-area">
@@ -476,9 +505,15 @@ let joinAvailable = [];
 let prevCurrentPlayer = -1;
 
 // ==================== WEBSOCKET ====================
+const SESSION_KEY = 'techgames_fuzznet_session';
+
 function connect() {
   const proto = location.protocol === 'https:' ? 'wss' : 'ws';
   ws = new WebSocket(`${proto}://${location.host}`);
+  ws.onopen = () => {
+    const token = sessionStorage.getItem(SESSION_KEY);
+    if (token) sendMsg({ type: 'rejoin_room', token });
+  };
   ws.onclose = () => setTimeout(connect, 2000);
   ws.onmessage = (e) => handleServerMsg(JSON.parse(e.data));
 }
@@ -491,6 +526,7 @@ function handleServerMsg(msg) {
   switch (msg.type) {
     case 'room_created':
       roomCode = msg.code; myId = msg.yourId; isHost = true;
+      if (msg.token) sessionStorage.setItem(SESSION_KEY, msg.token);
       showScreen('waiting');
       document.getElementById('room-code-display').textContent = roomCode;
       break;
@@ -499,8 +535,25 @@ function handleServerMsg(msg) {
       break;
     case 'room_joined':
       roomCode = msg.code; myId = msg.yourId; isHost = false;
+      if (msg.token) sessionStorage.setItem(SESSION_KEY, msg.token);
       showScreen('waiting');
       document.getElementById('room-code-display').textContent = roomCode;
+      break;
+    case 'room_rejoined':
+      roomCode = msg.code; myId = msg.yourId; isHost = msg.isHost;
+      if (msg.token) sessionStorage.setItem(SESSION_KEY, msg.token);
+      if (msg.started) {
+        viewingPlayer = -1;
+        showScreen('game');
+        document.getElementById('btn-cancel-game').style.display = isHost ? 'inline-block' : 'none';
+      } else {
+        showScreen('waiting');
+        document.getElementById('room-code-display').textContent = roomCode;
+      }
+      break;
+    case 'rejoin_failed':
+      sessionStorage.removeItem(SESSION_KEY);
+      showScreen('lobby');
       break;
     case 'lobby_update':
       renderLobbyPlayers(msg.players);
@@ -508,6 +561,7 @@ function handleServerMsg(msg) {
     case 'game_started':
       viewingPlayer = -1;
       showScreen('game');
+      document.getElementById('btn-cancel-game').style.display = isHost ? 'inline-block' : 'none';
       break;
     case 'state_update':
       myId = msg.yourId;
@@ -522,8 +576,16 @@ function handleServerMsg(msg) {
       if (G.gameOver) showGameOver();
       break;
     case 'left_room':
+      sessionStorage.removeItem(SESSION_KEY);
       roomCode = ''; myId = -1; G = null;
       showScreen('lobby');
+      break;
+    case 'game_cancelled':
+      sessionStorage.removeItem(SESSION_KEY);
+      roomCode = ''; myId = -1; G = null; isHost = false;
+      hideCancelModal();
+      showScreen('lobby');
+      document.getElementById('lobby-error').textContent = 'The host ended the game.';
       break;
     case 'error': {
       const lobbyActive = document.getElementById('lobby').classList.contains('active');
@@ -592,10 +654,21 @@ function checkRoom() {
 function handleRoomInfo(msg) {
   const el = document.getElementById('lobby-error');
   if (!msg.exists) { el.textContent = 'Room not found'; return; }
-  if (msg.started) { el.textContent = 'Game already started'; return; }
+  if (msg.started) {
+    if (msg.rejoinColors && msg.rejoinColors.length > 0) {
+      el.textContent = 'Game in progress — select your color to rejoin.';
+      joinAvailable = msg.rejoinColors;
+      renderJoinColors();
+      document.getElementById('btn-join').textContent = 'Rejoin Game';
+    } else {
+      el.textContent = 'Game in progress — no open slots to rejoin.';
+    }
+    return;
+  }
   if (msg.full) { el.textContent = 'Room is full'; return; }
   el.textContent = '';
   joinAvailable = msg.availableColors || [];
+  document.getElementById('btn-join').textContent = 'Join Game';
   renderJoinColors();
 }
 function createRoom() {
@@ -610,8 +683,21 @@ function joinRoom() {
   sendMsg({ type: 'join_room', code, color: joinColor, playerName });
 }
 function leaveRoom() {
+  sessionStorage.removeItem(SESSION_KEY);
   sendMsg({ type: 'leave_room' });
   roomCode = ''; myId = -1; G = null; isHost = false;
+}
+
+function showCancelModal() {
+  document.getElementById('cancel-modal-overlay').classList.add('open');
+}
+function hideCancelModal() {
+  document.getElementById('cancel-modal-overlay').classList.remove('open');
+}
+function confirmCancelGame() {
+  hideCancelModal();
+  sessionStorage.removeItem(SESSION_KEY);
+  sendMsg({ type: 'cancel_game' });
 }
 function copyCode() {
   navigator.clipboard.writeText(roomCode).then(() => flashCopied('btn-copy-code')).catch(()=>{});
