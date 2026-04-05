@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const { WebSocketServer } = require('ws');
 
-const PORT = process.env.PORT || 8090;
+const PORT = process.env.PORT || 80;
 
 // ==================== CONSTANTS ====================
 const COLOR_INFO = {
