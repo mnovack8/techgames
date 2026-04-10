@@ -200,12 +200,23 @@ body { padding-top: 44px; }
 .overfit-x { stroke: #333; stroke-width: 3; pointer-events: none; }
 
 /* ===== GAME OVER ===== */
-#gameover { position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 100; flex-direction: column; align-items: center; justify-content: center; gap: 20px; }
-#gameover h2 { font-size: 36px; color: #2d6a4f; font-weight: 800; }
-.final-scores { background: #fff; border-radius: 12px; padding: 20px; min-width: 340px; box-shadow: 0 4px 24px rgba(0,0,0,0.15); }
-.final-scores table { width: 100%; border-collapse: collapse; }
-.final-scores th, .final-scores td { padding: 8px 12px; text-align: left; border-bottom: 1px solid #e8e4dc; color: #444; }
-.final-scores .winner { color: #c90; font-weight: bold; }
+#gameover { position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 100; flex-direction: column; align-items: center; justify-content: center; gap: 20px; overflow-y: auto; padding: 20px 0; }
+#gameover h2 { font-size: 36px; color: #2d6a4f; font-weight: 800; flex-shrink: 0; }
+.final-scores { background: #fff; border-radius: 12px; padding: 20px; min-width: 340px; max-width: 580px; width: 90vw; box-shadow: 0 4px 24px rgba(0,0,0,0.15); }
+/* Section titles inside final-scores */
+.go-section-title { font-size: 11px; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 6px; }
+/* Animal race scoreboard */
+.go-scoreboard { background: #f7f5f0; border-radius: 8px; padding: 8px 6px; margin-bottom: 4px; overflow-x: auto; }
+.go-sb-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.go-sb-table th { padding: 3px 8px; text-align: center; color: #888; font-weight: 600; border-bottom: 1px solid #e8e4dc; }
+.go-sb-table td { padding: 4px 8px; border-bottom: 1px solid #f0ede6; }
+.go-sb-animal { white-space: nowrap; font-weight: 600; color: #444; text-align: left !important; }
+.go-sb-entry { text-align: center; white-space: nowrap; }
+/* Player rankings table */
+.go-rank-table { width: 100%; border-collapse: collapse; margin-top: 4px; }
+.go-rank-table th, .go-rank-table td { padding: 8px 12px; text-align: left; border-bottom: 1px solid #e8e4dc; color: #444; }
+.go-rank-table .winner td { color: #b8860b; font-weight: bold; }
+/* Breakdown / details */
 .breakdown-toggle { font-size: 11px; padding: 3px 8px; border: 1px solid #ccc; border-radius: 6px; background: #f7f5f0; cursor: pointer; color: #555; white-space: nowrap; }
 .breakdown-toggle:hover { background: #eae6dd; }
 .score-breakdown { background: #f7f5f0; border-radius: 8px; padding: 10px 12px; font-size: 13px; color: #555; }
@@ -214,7 +225,11 @@ body { padding-top: 44px; }
 .breakdown-item.penalty { color: #c44; }
 .breakdown-item.bonus { color: #2d6a4f; }
 .breakdown-total { display: flex; justify-content: space-between; padding: 6px 0 2px; font-weight: 700; color: #333; margin-top: 4px; border-top: 1px solid #ccc; }
-#play-again-btn { padding: 12px 36px; font-size: 16px; border: none; border-radius: 8px; background: #2d6a4f; color: white; cursor: pointer; font-weight: 700; }
+/* Mini board inside details */
+.go-mini-board { margin-top: 10px; border-top: 1px dashed #e0dbd3; padding-top: 8px; }
+.go-mini-board-label { font-size: 11px; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px; }
+.go-mini-board-svg { width: 100%; height: auto; display: block; background: #f4f1ec; border-radius: 6px; border: 1px solid #e0dbd3; }
+#play-again-btn { padding: 12px 36px; font-size: 16px; border: none; border-radius: 8px; background: #2d6a4f; color: white; cursor: pointer; font-weight: 700; flex-shrink: 0; }
 
 /* ===== INFO SYSTEM ===== */
 .info-btn { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid #bbb; background: transparent; color: #999; font-size: 11px; font-weight: 700; cursor: pointer; margin-left: 5px; vertical-align: middle; transition: all 0.15s; font-family: serif; line-height: 1; padding: 0; }
@@ -1275,61 +1290,141 @@ function confirmReroll() { if(!selectedDice.size) return; doAction('clean_reroll
 function flipDie(i) { doAction('clean_flip',{dieIdx:i}); }
 
 // ==================== GAME OVER ====================
+
+// Generates static SVG content (no interactions) for a player's final board state.
+// Used in the game-over details panel.
+function playerBoardSVGContent(p, animalOrder) {
+  let h = '';
+  // Edges
+  for (const e of ALL_EDGES) {
+    const {x1,y1,x2,y2} = edgePos(e);
+    let cls = 'edge-line';
+    if (p.blocked.includes(e.key)) cls += ' blocked';
+    h += `<line class="${cls}" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`;
+    if (p.blocked.includes(e.key)) {
+      const mx=(x1+x2)/2, my=(y1+y2)/2;
+      h += `<line class="overfit-x" x1="${mx-8}" y1="${my-8}" x2="${mx+8}" y2="${my+8}"/>`;
+      h += `<line class="overfit-x" x1="${mx+8}" y1="${my-8}" x2="${mx-8}" y2="${my+8}"/>`;
+    }
+  }
+  // Input animals (colored frame + grayscale image)
+  for (let i=0;i<5;i++) {
+    const {x,y}=INP[i];
+    const sz=34, cx=x, cy=y-6;
+    h += `<rect x="${cx-sz/2-4}" y="${cy-sz/2-4}" width="${sz+8}" height="${sz+8}" rx="3" fill="${p.hex}" opacity="0.85"/>`;
+    h += `<image href="images/${ANIMAL_IMGS[i]}.png" x="${cx-sz/2}" y="${cy-sz/2}" width="${sz}" height="${sz}" style="filter:grayscale(1)"/>`;
+    h += `<text x="${x}" y="${y+24}" text-anchor="middle" font-size="9" fill="${p.hex}">${ANIMALS[i]}</text>`;
+  }
+  // Output animals (colorized; dimmed if untested)
+  const filt = colorizeFilter(p.hex);
+  for (let i=0;i<5;i++) {
+    const {x,y}=OUTP[i];
+    const ai=animalOrder[i];
+    const tested=p.tested&&p.tested[ai];
+    const sz=30, cx=x, cy=y-6;
+    h += `<image href="images/${ANIMAL_IMGS[ai]}.png" x="${cx-sz/2}" y="${cy-sz/2}" width="${sz}" height="${sz}" style="filter:${filt};opacity:${tested?1:0.3}"/>`;
+    h += `<text x="${x}" y="${y+22}" text-anchor="middle" font-size="9" fill="${tested?p.hex:'#bbb'}">${ANIMALS[ai]}${tested?' ✓':''}</text>`;
+  }
+  // Nodes
+  for (let i=0;i<11;i++) {
+    const {x,y}=NP[i];
+    let cls='node-circle';
+    if (p.nodes[i]&&p.data[i]>=3) cls+=' maxed'; else if (p.nodes[i]) cls+=' placed';
+    h += `<circle class="${cls}" cx="${x}" cy="${y}" r="24"/>`;
+    const layer=i<=3?1:(i<=6?2:3);
+    if (!p.nodes[i]) {
+      h += `<text class="node-label" x="${x}" y="${y+4}" text-anchor="middle" font-size="10">L${layer}</text>`;
+    } else {
+      if (p.data[i]>0) h += `<text class="node-data" x="${x}" y="${y-4}" text-anchor="middle" fill="${p.data[i]>=3?'#fc0':'#7b9fff'}">${'●'.repeat(p.data[i])}</text>`;
+      h += `<text class="node-label" x="${x}" y="${y+(p.data[i]>0?14:4)}" text-anchor="middle" fill="#8b8bbb" font-size="10">N${i}</text>`;
+      if (p.data[i]>=3) h += `<text x="${x}" y="${y+26}" text-anchor="middle" font-size="8" fill="#fc0">MAX</text>`;
+    }
+  }
+  // Layer headers
+  h += `<text x="60"  y="18" fill="#bbb" font-size="9" text-anchor="middle">INPUT</text>`;
+  h += `<text x="230" y="18" fill="#bbb" font-size="9" text-anchor="middle">L1</text>`;
+  h += `<text x="400" y="18" fill="#bbb" font-size="9" text-anchor="middle">L2</text>`;
+  h += `<text x="570" y="18" fill="#bbb" font-size="9" text-anchor="middle">L3</text>`;
+  h += `<text x="770" y="18" fill="#bbb" font-size="9" text-anchor="middle">OUTPUT</text>`;
+  return h;
+}
+
 function showGameOver() {
   const SCORE_VALS = { 2:[5,3], 3:[5,3,2], 4:[5,4,3,2] };
   const PENALTIES = [0,-1,-2,-4,-6];
   const SLOT_LABELS = ['1st','2nd','3rd','4th'];
   const numPlayers = G.players.length;
-  const vals = SCORE_VALS[numPlayers];
+  const vals = SCORE_VALS[numPlayers] || SCORE_VALS[2];
+  const ao = G.animalOrder || (typeof TUT_ANIMAL_ORDER !== 'undefined' ? TUT_ANIMAL_ORDER : [0,1,2,3,4]);
 
-  const scores = G.players.map((p,i)=>({idx:i,score:G.scores[i],player:p})).sort((a,b)=>b.score-a.score);
-  let h='<table><tr><th>Player</th><th>Score</th><th></th></tr>';
+  const scores = G.players.map((p,i)=>({idx:i,score:G.scores[i]||0,player:p})).sort((a,b)=>b.score-a.score);
+
+  // ── Animal Race scoreboard ──────────────────────────────────────────────────
+  let h = '<div class="go-section-title">Animal Race</div>';
+  h += '<div class="go-scoreboard"><table class="go-sb-table"><tr><th style="text-align:left">Animal</th>';
+  for (let i=0;i<vals.length;i++)
+    h += `<th class="go-sb-pts">${SLOT_LABELS[i]}<br><span style="font-size:10px;font-weight:400;color:#aaa">${vals[i]}pt</span></th>`;
+  h += '</tr>';
+  for (let a=0;a<5;a++) {
+    h += `<tr><td class="go-sb-animal"><img src="images/${ANIMAL_IMGS[a]}.png" style="width:18px;height:18px;object-fit:contain;vertical-align:middle;margin-right:4px">${ANIMALS[a]}</td>`;
+    const roundCounts={};
+    for (const e of G.scoreboard[a]) if (e) roundCounts[e.round]=(roundCounts[e.round]||0)+1;
+    for (let i=0;i<vals.length;i++) {
+      const e=G.scoreboard[a][i];
+      if (e) {
+        const pl=G.players[e.player];
+        const tied=roundCounts[e.round]>1;
+        h += `<td class="go-sb-entry"><span style="color:${pl.hex}">●&nbsp;${pl.name}</span>${tied?'<span class="tie-mark">=</span>':''}</td>`;
+      } else h += `<td class="go-sb-entry" style="color:#ddd">—</td>`;
+    }
+    h += '</tr>';
+  }
+  h += '</table></div>';
+
+  // ── Player rankings ─────────────────────────────────────────────────────────
+  h += '<div class="go-section-title" style="margin-top:16px">Final Scores</div>';
+  h += '<table class="go-rank-table"><tr><th>Player</th><th>Score</th><th></th></tr>';
 
   for (const s of scores) {
-    const w = s.score===scores[0].score;
-    const c = w?' class="winner"':'';
+    const w = s.score === scores[0].score;
     const p = s.player;
 
-    // Build breakdown rows
+    // Score breakdown items
     let bdRows = '';
-
-    // Animal scoreboard points
-    for (let a=0; a<5; a++) {
-      for (let slot=0; slot<G.scoreboard[a].length; slot++) {
-        const entry = G.scoreboard[a][slot];
-        if (entry && entry.player===s.idx) {
-          const pts = vals[slot];
-          const bonus = entry.bonusTokens||0;
-          const total = pts + bonus;
-          const tied = G.scoreboard[a].some((e,j) => j!==slot && e && e.round===entry.round);
-          const tieNote = tied ? ' <span class="tie-mark">=</span>' : '';
-          const label = `${ANIMALS[a]} — ${SLOT_LABELS[slot]} place${tied?' (tied, same round)':''}`;
-          bdRows += `<div class="breakdown-item"><span>${label}${tieNote}</span><span>+${total}</span></div>`;
+    for (let a=0;a<5;a++) {
+      for (let slot=0;slot<G.scoreboard[a].length;slot++) {
+        const entry=G.scoreboard[a][slot];
+        if (entry&&entry.player===s.idx) {
+          const pts=vals[slot], bonus=entry.bonusTokens||0, total=pts+bonus;
+          const tied=G.scoreboard[a].some((e,j)=>j!==slot&&e&&e.round===entry.round);
+          const tieNote=tied?'<span class="tie-mark">=</span>':'';
+          bdRows+=`<div class="breakdown-item"><span>${ANIMALS[a]} — ${SLOT_LABELS[slot]} place${tieNote}</span><span>+${total}</span></div>`;
         }
       }
     }
-
-    // All 5 tested bonus
-    if (p.tested && p.tested.every(t=>t))
-      bdRows += `<div class="breakdown-item bonus"><span>All 5 animals tested</span><span>+1</span></div>`;
-
-    // Fully-trained nodes
-    let trained = 0;
-    for (let i=0; i<11; i++) if (p.nodes[i] && p.data[i]>=3) trained++;
+    if (p.tested&&p.tested.every(t=>t))
+      bdRows+=`<div class="breakdown-item bonus"><span>All 5 animals tested</span><span>+1</span></div>`;
+    let trained=0; for (let i=0;i<11;i++) if (p.nodes[i]&&p.data[i]>=3) trained++;
     if (trained>0)
-      bdRows += `<div class="breakdown-item bonus"><span>Fully-trained nodes ×${trained}</span><span>+${trained}</span></div>`;
-
-    // Clean data penalty
-    const penalty = PENALTIES[p.cleanUses]||0;
+      bdRows+=`<div class="breakdown-item bonus"><span>Fully-trained nodes ×${trained}</span><span>+${trained}</span></div>`;
+    const penalty=PENALTIES[p.cleanUses]||0;
     if (penalty<0)
-      bdRows += `<div class="breakdown-item penalty"><span>Clean data penalty (${p.cleanUses} use${p.cleanUses!==1?'s':''})</span><span>${penalty}</span></div>`;
+      bdRows+=`<div class="breakdown-item penalty"><span>Clean data penalty (${p.cleanUses} use${p.cleanUses!==1?'s':''})</span><span>${penalty}</span></div>`;
 
-    const breakdown = `<div class="score-breakdown">${bdRows}<div class="breakdown-total"><span>Total</span><span>${s.score}</span></div></div>`;
+    // Mini board SVG for this player
+    const boardContent = playerBoardSVGContent(p, ao);
+    const miniBoard = `<div class="go-mini-board">
+      <div class="go-mini-board-label">Final Board State</div>
+      <svg viewBox="0 0 870 490" class="go-mini-board-svg">${boardContent}</svg>
+    </div>`;
 
-    h+=`<tr${c}><td><span style="color:${s.player.hex}">● ${s.player.name}</span>${s.idx===myId?' (You)':''}${w?' 👑':''}</td><td${c}>${s.score}</td><td><button class="breakdown-toggle" onclick="toggleBreakdown(${s.idx})">▶ Details</button></td></tr>`;
+    const breakdown = `<div class="score-breakdown">${bdRows}<div class="breakdown-total"><span>Total</span><span>${s.score}</span></div>${miniBoard}</div>`;
+
+    h+=`<tr${w?' class="winner"':''}><td><span style="color:${p.hex}">● ${p.name}</span>${s.idx===myId?' (You)':''}${w?' 👑':''}</td><td>${s.score}</td><td><button class="breakdown-toggle" onclick="toggleBreakdown(${s.idx})">▶ Details</button></td></tr>`;
     h+=`<tr id="breakdown-${s.idx}" style="display:none"><td colspan="3">${breakdown}</td></tr>`;
   }
-  h+='</table>';
+  h += '</table>';
+
   document.getElementById('final-scores').innerHTML = h;
   showScreen('gameover');
 }
@@ -1834,23 +1929,43 @@ const TSTEPS = [
 </ul>
 <p>Click <b>▶ Details</b> on any player to see their full score breakdown. You're ready to play — good luck!</p>`,
     makeG:()=>{
-      const n0=Array(11).fill(false); [0,1,4,5,7,8].forEach(i=>n0[i]=true);
-      const d0=Array(11).fill(0); d0[0]=3;d0[1]=2;d0[4]=3;d0[5]=1;d0[7]=2;
-      const n1=Array(11).fill(false); [1,5,8].forEach(i=>n1[i]=true);
-      const d1=Array(11).fill(0); d1[1]=3;d1[5]=2;d1[8]=1;
+      // Alex (you) — all 5 animals tested, 2 maxed nodes, 1 clean-data use
+      // Paths used: Dog   N0→N4→N8→out2
+      //             Bunny N1→N4→N7→out0
+      //             Frog  N1→N5→N8→out1
+      //             Squirrel N3→N6→N10→out4  (N3→N4 blocked because N4 maxed)
+      //             Fish     N3→N6→N9→out3
+      const n0=Array(11).fill(false);
+      [0,1,3,4,5,6,7,8,9,10].forEach(i=>n0[i]=true); // 10 nodes (N2 not needed)
+      const d0=Array(11).fill(0);
+      d0[0]=2; d0[1]=2; d0[3]=2; d0[4]=3; d0[5]=2; d0[6]=3; d0[7]=1; d0[8]=2; d0[9]=1; d0[10]=1;
+      // N4 maxed → blocked '3-4' (safe: Squirrel/Fish use N6 instead)
+      // N6 maxed → blocked '0-6' (safe: Dog/Bunny/Frog use N4 instead)
+
+      // Jordan — tested Dog, Bunny, Squirrel; couldn't test Frog (N8→out1 blocked) or Fish (N9 not placed)
+      // Paths: Dog N0→N4→N8→out2 | Bunny N1→N4→N7→out0 | Squirrel N3→N6→N10→out4
+      const n1=Array(11).fill(false);
+      [0,1,3,4,6,7,8,10].forEach(i=>n1[i]=true); // 8 nodes (N9 missing → Fish untestable)
+      const d1=Array(11).fill(0);
+      d1[0]=1; d1[1]=1; d1[3]=1; d1[4]=2; d1[6]=2; d1[7]=1; d1[8]=3; d1[10]=1;
+      // N8 maxed → blocked '8-out1' (N8→Frog output blocked → Frog untestable)
+      // Block is outgoing from L3 node N8 toward OUTPUT, correct direction
+
       return { players:[
-          tutMakePlayer({nodes:n0,data:d0,blocked:['0-6','1-5'],cleanUses:1,tested:Array(5).fill(true)}),
-          {_idx:1,name:'Jordan',hex:'#ff4a4a',color:'red',nodes:n1,data:d1,blocked:[],cleanUses:0,
+          tutMakePlayer({nodes:n0,data:d0,blocked:['3-4','0-6'],cleanUses:1,tested:Array(5).fill(true)}),
+          {_idx:1,name:'Jordan',hex:'#ff4a4a',color:'red',nodes:n1,data:d1,blocked:['8-out1'],cleanUses:0,
            tested:[true,true,false,true,false],firstTurnDone:true}],
         currentPlayer:1,phase:'idle',actionsLeft:0,round:5,gameEnding:false,gameOver:true,
         dice:[0,0,0],testPath:[],testAnimal:-1,animalOrder:TUT_ANIMAL_ORDER,
         scoreboard:[
-          [{player:0,round:2,bonusTokens:0},{player:1,round:3,bonusTokens:0}],
-          [{player:0,round:2,bonusTokens:0},{player:1,round:3,bonusTokens:0}],
-          [{player:0,round:3,bonusTokens:0}],
-          [{player:1,round:4,bonusTokens:0},{player:0,round:4,bonusTokens:0}],
-          [{player:0,round:5,bonusTokens:0}],
+          [{player:0,round:2,bonusTokens:0},{player:1,round:3,bonusTokens:0}], // Dog:   Alex 1st, Jordan 2nd
+          [{player:0,round:2,bonusTokens:0},{player:1,round:3,bonusTokens:0}], // Bunny: Alex 1st, Jordan 2nd
+          [{player:0,round:3,bonusTokens:0}],                                   // Frog:  Alex 1st only
+          [{player:1,round:4,bonusTokens:0},{player:0,round:4,bonusTokens:0}], // Squirrel: Jordan 1st (tied round)
+          [{player:0,round:5,bonusTokens:0}],                                   // Fish:  Alex 1st only
         ],
+        // Alex:   Dog(5)+Bunny(5)+Frog(5)+Squirrel(3)+Fish(5)+all5(+1)+maxedx2(+2)-clean1(-1) = 25
+        // Jordan: Dog(3)+Bunny(3)+Squirrel(5)+maxedx1(+1) = 12
         scores:[25,12],pathClickable:[],overfitEdges:[],backpropSource:-1 };
     },
     isGameOver:true,
