@@ -469,11 +469,15 @@ function broadcastState(room) {
 
 // ==================== GAME STATE INIT ====================
 function createGameState(numPlayers) {
-  const order = [0,1,2,3,4];
-  for (let i = order.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [order[i], order[j]] = [order[j], order[i]];
-  }
+  // Generate a derangement: no animal output aligned with same-position input
+  let order;
+  do {
+    order = [0,1,2,3,4];
+    for (let i = order.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [order[i], order[j]] = [order[j], order[i]];
+    }
+  } while (order.some((v, i) => v === i));
   return {
     phase: 'idle',
     currentPlayer: 0,
