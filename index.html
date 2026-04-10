@@ -123,7 +123,6 @@ header {
   background: #fff;
   border-radius: 14px;
   border: 2px solid #a8c96a;
-  border-top: 4px solid #d1db24;
   box-shadow: 0 4px 20px rgba(98,181,23,0.15);
   overflow: hidden;
   display: flex;
@@ -135,9 +134,17 @@ header {
   box-shadow: 0 10px 36px rgba(98,181,23,0.26);
 }
 .game-card.coming-soon {
-  border-top-color: #ccc;
   opacity: 0.7;
   pointer-events: none;
+}
+.game-card-tech-header {
+  background: #d1db24;
+  padding: 7px 18px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.4px;
+  color: #2a3a00;
 }
 
 /* Card image — fixed height, no scrolling blowout */
@@ -328,6 +335,7 @@ footer {
 
     <!-- FuzzNet Labs -->
     <div class="game-card">
+      <div class="game-card-tech-header">Artificial Intelligence</div>
       <div class="game-card-image">
         <img src="/images/cover.png" alt="FuzzNet Labs cover art">
       </div>
@@ -347,6 +355,7 @@ footer {
 
     <!-- Byte Club -->
     <div class="game-card">
+      <div class="game-card-tech-header">Cybersecurity</div>
       <div class="game-card-image">
         <img src="/images/byteclub.png" alt="Byte Club — cybersecurity card game">
       </div>
@@ -366,6 +375,7 @@ footer {
 
     <!-- Qubit -->
     <div class="game-card coming-soon">
+      <div class="game-card-tech-header">Quantum Computing</div>
       <div class="game-card-image">
         <div class="coming-soon-placeholder">⚛️</div>
       </div>
