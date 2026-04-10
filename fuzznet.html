@@ -376,6 +376,10 @@ body { padding-top: 44px; }
 }
 /* Tutorial action button highlight */
 .action-btn.tut-btn-hl { border-color: #4aff4a !important; color: #1a5e2f !important; background: #d4f5d4 !important; animation: tut-btn-pulse 1.1s ease-in-out infinite; cursor: pointer !important; }
+/* Tutorial status-bar button highlight */
+.tut-status-hl { border-color: #4aff4a !important; color: #1a5e2f !important; background: #d4f5d4 !important; animation: tut-btn-pulse 1.1s ease-in-out infinite; cursor: pointer !important; }
+/* Tutorial die highlight */
+.die.tut-die-hl { box-shadow: 0 0 0 3px #4aff4a, 0 0 10px 3px #4aff4a; animation: tut-btn-pulse 1.1s ease-in-out infinite; }
 @keyframes tut-btn-pulse {
   0%,100% { box-shadow: 0 0 0 2px #c8e84a; }
   50%      { box-shadow: 0 0 10px 4px #4aff4a; }
@@ -617,6 +621,7 @@ let tutorialStep = 0;
 let tutorialDataPlaced = 0;
 let tutHighlightNodes = [];
 let tutHighlightAction = ''; // 'design' | 'train' | 'test' | ''
+let tutHighlightStatus = ''; // 'reroll'|'flip'|'score'|'acceptfail'|'reroll_selected'|''
 
 // ==================== WEBSOCKET ====================
 const SESSION_KEY = 'techgames_fuzznet_session';
@@ -868,6 +873,56 @@ function cp() { return G ? G.players[G.currentPlayer] : null; }
 function renderGame() {
   if (!G) return;
   renderTopBar(); renderBoard(); renderSidePanel(); renderStatus();
+  if (tutorialMode) applyTutStatusHL();
+}
+
+function applyTutStatusHL() {
+  if (!tutHighlightStatus) return;
+  const statusEl = document.getElementById('status');
+  if (!statusEl) return;
+  const phase = tutorialG ? tutorialG.phase : '';
+
+  // Phase-aware auto-transitions
+  let target = tutHighlightStatus;
+  if (target === 'reroll' && phase === 'test_clean_reroll') target = 'reroll_selected';
+  if (target === 'flip'   && phase === 'test_clean_flip')  target = 'flip_die';
+
+  // Restrict status-bar buttons (everything except the target is disabled)
+  statusEl.querySelectorAll('button').forEach(btn => {
+    if (btn.classList.contains('info-btn')) return;
+    const text = btn.textContent.trim();
+    const isTarget =
+      (target === 'reroll'          && text === 'Reroll Dice')     ||
+      (target === 'flip'            && text === 'Flip a Die')       ||
+      (target === 'score'           && text === 'Score!')           ||
+      (target === 'acceptfail'      && text === 'Accept Fail')      ||
+      (target === 'reroll_selected' && text === 'Reroll Selected');
+    btn.classList.toggle('tut-status-hl', isTarget);
+    btn.disabled      = !isTarget && target !== 'flip_die';
+    btn.style.opacity = (!isTarget && target !== 'flip_die') ? '0.3' : '';
+  });
+
+  // In flip-die mode: highlight only the correct die; dim and block all others
+  if (target === 'flip_die') {
+    // Disable Cancel button
+    statusEl.querySelectorAll('button').forEach(btn => {
+      btn.disabled = true; btn.style.opacity = '0.3';
+    });
+    for (let i = 0; i < 3; i++) {
+      const die = document.getElementById('die-' + i);
+      if (!die) continue;
+      const isTarget = tutorialG && tutorialG.dice[i] === 3;
+      die.classList.toggle('tut-die-hl', isTarget);
+      die.style.opacity      = isTarget ? '' : '0.3';
+      die.style.pointerEvents = isTarget ? '' : 'none';
+    }
+  } else {
+    // Reset any die styling left from a previous flip-die pass
+    for (let i = 0; i < 3; i++) {
+      const die = document.getElementById('die-' + i);
+      if (die) { die.classList.remove('tut-die-hl'); die.style.opacity = ''; die.style.pointerEvents = ''; }
+    }
+  }
 }
 
 function renderTopBar() {
@@ -969,8 +1024,8 @@ function renderBoard() {
     const dClick = canAct&&G.phase==='design'&&!p.nodes[i]&&(!tutHL||tutHighlightNodes.includes(i));
     const tClick = canAct&&(G.phase==='train1'||G.phase==='train2')&&p.nodes[i]&&p.data[i]<3&&(!tutHL||tutHighlightNodes.includes(i));
     const pClick = canAct&&['test_path_l1','test_path_l2','test_path_l3'].includes(G.phase)&&G.pathClickable&&G.pathClickable.includes(i);
-    const bpSrcClick = canAct&&G.phase==='backprop_source'&&isValidBpSrc(p,i);
-    const bpDstClick = canAct&&G.phase==='backprop_dest'&&isValidBpDst(p,i);
+    const bpSrcClick = canAct&&G.phase==='backprop_source'&&isValidBpSrc(p,i)&&(!tutHL||tutHighlightNodes.includes(i));
+    const bpDstClick = canAct&&G.phase==='backprop_dest'&&isValidBpDst(p,i)&&(!tutHL||tutHighlightNodes.includes(i));
     const isPN = viewedIdx()===G.currentPlayer&&(G.testPath.includes(i));
     if (dClick||tClick||pClick) cls+=' clickable';
     if (tutorialMode && tutHighlightNodes.includes(i)) cls+=' tut-node-hl';
@@ -1683,33 +1738,35 @@ const TSTEPS = [
     }
   },
 
-  // 11 — FORCED: Clean Data — reroll then flip to save the test
-  { title:'🧹 Clean Data: Reroll & Flip',
-    body:`<p>Dice <b>5+1+1 = 7</b> + Data <b>5</b> = <b>12 &lt; 18</b> — FAIL. Flipping a 1 only reaches 16 — not enough. You have <b>2 Clean Data</b> uses left.</p>
-<p>Click <b>Reroll Dice</b> in the status bar, select the two <b>1</b>s, then click <b>Reroll Selected</b>.</p>`,
+  // 11 — FORCED: Clean Data (reroll → flip → score), THEN backprop fires after scoring
+  { title:'⚡ Clean Data + Backpropagation',
+    body:`<p>Roll result: <b>5+1+1 = 7</b> + Data <b>5</b> = <b>12 &lt; 18</b> — FAIL! You have <b>2 Clean Data</b> uses to try to recover.</p>
+<p>Click the glowing <b>Reroll Dice</b> button in the status bar below.</p>`,
     makeG:()=>{
       const n=Array(11).fill(false); n[0]=n[4]=n[8]=true;
       const d=Array(11).fill(0); d[0]=3; d[4]=1; d[8]=1;
       const g=tutMakeG({nodes:n,data:d,blocked:['0-6'],cleanUses:2},{phase:'test_eval',actionsLeft:1,
-        dice:[5,1,1],testPath:[0,4,8],testAnimal:0,scores:[0,0]});
+        dice:[5,1,1],testPath:[0,4,8],testAnimal:0,scores:[0,0],backpropSource:-1});
       g.players.push({_idx:1,name:'Jordan',hex:'#ff4a4a',color:'red',
         nodes:Array(11).fill(false),data:Array(11).fill(0),
         blocked:[],cleanUses:0,tested:[true,false,false,false,false],firstTurnDone:true});
       g.scoreboard[0]=[{player:1,round:1,bonusTokens:0},{player:0,round:2,bonusTokens:0}];
       return g;
     },
-    forced:true,
+    tutStatusHL:'reroll', forced:true,
     interact:(action,extra)=>{
+      // Phase 1 — Reroll (scripted result)
       if(action==='clean_reroll'){
-        // Scripted result regardless of which dice were selected
         tutorialG.dice=[5,4,3];
         tutorialG.players[0].cleanUses++;
         tutorialG.phase='test_eval';
+        tutHighlightStatus='flip';
         document.getElementById('tut-body').innerHTML=
-          `<p>Dice <b>5+4+3 = 12</b> + Data <b>5</b> = <b>17 &lt; 18</b> — still 1 short! But now a single flip can save it.</p>
-<p>You have <b>1 Clean Data use</b> left. Click <b>Flip a Die</b> in the status bar, then click the die showing <b>3</b> — it becomes <b>4</b>, making the total exactly 18!</p>`;
+          `<p>New dice: <b>5+4+3 = 12</b> + Data <b>5</b> = <b>17 &lt; 18</b> — still 1 short! You have <b>1 Clean Data use</b> left.</p>
+<p>Click the glowing <b>Flip a Die</b> button, then click the die showing <b>3</b>.</p>`;
         renderGame(); return true;
       }
+      // Phase 2 — Flip the 3 → 4
       if(action==='clean_flip'){
         const FLIP=[0,6,5,4,3,2,1];
         tutorialG.dice[extra.dieIdx]=FLIP[tutorialG.dice[extra.dieIdx]];
@@ -1718,17 +1775,50 @@ const TSTEPS = [
         const dsum=tutorialG.dice.reduce((a,b)=>a+b,0);
         const psum=tutorialG.testPath.reduce((s,ni)=>s+tutorialG.players[0].data[ni],0);
         if(dsum+psum>=18){
+          tutHighlightStatus='score';
           document.getElementById('tut-body').innerHTML=
-            `<p>Dice <b>${tutorialG.dice.join('+')} = ${dsum}</b> + Data <b>${psum}</b> = <b>${dsum+psum} ≥ 18</b> — PASS! 🎉 The flip saved the test!</p>
-<p>Click the green <b>Score!</b> button in the status bar.</p>`;
+            `<p>Dice <b>${tutorialG.dice.join('+')} = ${dsum}</b> + Data <b>${psum}</b> = <b>${dsum+psum} ≥ 18</b> — PASS! 🎉</p>
+<p>Click the glowing <b>Score!</b> button in the status bar.</p>`;
         } else {
+          tutHighlightStatus='acceptfail';
           document.getElementById('tut-body').innerHTML=
             `<p>Total ${dsum+psum} — no uses remain. Click <b>Accept Fail</b> to continue.</p>`;
         }
         renderGame(); return true;
       }
-      if(action==='resolve_success'){ tutAdvanceTo(12); return true; }
-      if(action==='resolve_fail'){ tutAdvanceTo(12); return true; }
+      // Phase 3 — Score / Accept Fail → NOW trigger backprop
+      if(action==='resolve_success'||action==='resolve_fail'){
+        tutorialG.phase='backprop_source';
+        tutHighlightStatus='';
+        tutHighlightNodes=[0];
+        document.getElementById('tut-body').innerHTML=
+          `<p>Done! But since the <b>first roll failed</b>, <b>Backpropagation</b> now triggers — it always fires after a failed initial roll, even when Clean Data saves you.</p>
+<p>N0 is <b>maxed</b> (3 tokens, yellow border, blocked edge ✕). Click <b>N0</b> to move a token FROM it. Watch the block disappear when it drops from 3 → 2!</p>`;
+        renderGame(); return true;
+      }
+      // Phase 4 — Backprop source: must pick N0 (the maxed node)
+      if(action==='backprop_select_source'&&extra.nodeId===0){
+        tutorialG.backpropSource=0;
+        tutorialG.phase='backprop_dest';
+        tutHighlightNodes=[4,8];
+        document.getElementById('tut-body').innerHTML=
+          `<p>N0 chosen as source. Now click <b>N4</b> or <b>N8</b> to move the token there.</p>
+<p>💡 The moment a node drops from 3 → 2 tokens, its <b>blocked edge is automatically removed</b> — a closed path reopens!</p>`;
+        renderGame(); return true;
+      }
+      // Phase 5 — Backprop dest: N4 or N8
+      if(action==='backprop_select_dest'&&(extra.nodeId===4||extra.nodeId===8)){
+        const dest=extra.nodeId;
+        tutorialG.players[0].data[0]--;
+        tutorialG.players[0].data[dest]++;
+        tutorialG.players[0].blocked=tutorialG.players[0].blocked.filter(b=>b!=='0-6');
+        tutorialG.backpropSource=-1;
+        tutorialG.phase='idle';
+        tutHighlightNodes=[];
+        document.getElementById('tut-body').innerHTML=
+          `<p>✅ N0 is at <b>2 tokens</b> — the blocked edge is <b>gone</b>! Backpropagation complete. Your model has adjusted.</p>`;
+        renderGame(); setTimeout(()=>tutAdvanceTo(12),1500); return true;
+      }
       return false;
     }
   },
@@ -1777,6 +1867,7 @@ function startTutorial() {
   tutorialStep = 0;
   tutorialDataPlaced = 0;
   tutHighlightAction = '';
+  tutHighlightStatus = '';
   myId = 0;
   document.getElementById('game').classList.add('tut-active');
   viewingPlayer = -1;
@@ -1794,6 +1885,7 @@ function applyTutStep(idx) {
   G = tutorialG = s.makeG();
   tutHighlightNodes = s.hl || [];
   tutHighlightAction = s.tutAction || '';
+  tutHighlightStatus = s.tutStatusHL || '';
   updateTutOverlay(idx);
   if (s.isGameOver) {
     showGameOver();
@@ -1838,6 +1930,7 @@ function endTutorial() {
   tutorialStep = 0;
   tutorialDataPlaced = 0;
   tutHighlightAction = '';
+  tutHighlightStatus = '';
   tutHighlightNodes = [];
   document.getElementById('game').classList.remove('tut-active');
   G = null; myId = -1; viewingPlayer = -1; roomCode = '';
