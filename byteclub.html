@@ -358,24 +358,27 @@ body.bc-tut-active .game-layout { height: calc(100vh - 44px); margin-right: 272p
   .bc-tut-footer { flex-direction: row; }
   #bc-tut-exit, #bc-tut-next { width: auto; }
 }
-/* Card glow highlight */
-.card.bc-tut-hl {
-  outline: 2px solid #d1db24 !important;
-  box-shadow: 0 0 0 2px #d1db24, 0 0 14px 4px rgba(209,219,36,0.4) !important;
-  animation: bc-tut-pulse 1.1s ease-in-out infinite;
-}
+/* Unified tutorial glow — pulsing flash highlight, same style as FuzzNet */
 @keyframes bc-tut-pulse {
-  0%,100% { box-shadow: 0 0 0 2px #d1db24, 0 0 8px rgba(209,219,36,0.3) !important; }
-  50%      { box-shadow: 0 0 0 3px #62b517, 0 0 18px rgba(98,181,23,0.5) !important; }
+  0%, 100% {
+    outline-color: #d1db24;
+    box-shadow: 0 0 0 2px #d1db24, 0 0 8px 3px rgba(209,219,36,0.6);
+    filter: drop-shadow(0 0 4px #d1db24) drop-shadow(0 0 8px rgba(209,219,36,0.5));
+  }
+  50% {
+    outline-color: #4aff4a;
+    box-shadow: 0 0 0 3px #4aff4a, 0 0 22px 8px rgba(74,255,74,0.55);
+    filter: drop-shadow(0 0 10px #4aff4a) drop-shadow(0 0 20px rgba(74,255,74,0.5));
+  }
 }
-/* Button glow highlight */
-.bc-tut-btn-hl {
-  background: #d1db24 !important; color: #111 !important; border-color: #d1db24 !important;
-  animation: bc-tut-pulse 1.1s ease-in-out infinite;
-}
-/* Player target highlight in overlays */
-.govern-player-btn.bc-tut-player-hl {
-  border-color: #62b517 !important; outline: 2px solid #62b517;
+.card.bc-tut-hl,
+.bc-tut-btn-hl,
+.govern-player-btn.bc-tut-player-hl,
+.bc-tut-glow {
+  outline: 2px solid #d1db24 !important;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px #d1db24, 0 0 8px 3px rgba(209,219,36,0.6) !important;
+  filter: drop-shadow(0 0 4px #d1db24);
   animation: bc-tut-pulse 1.1s ease-in-out infinite;
 }
 /* Tutorial lobby button */
@@ -2013,6 +2016,7 @@ Playing a card places it face-up in your row below, filling a slot.<br>
         };
         gameState = bcTutG;
         selectedHandCard = null;
+        BCTSTEPS[1].tutHL = 'recon_done';
         document.getElementById('bc-tut-body').innerHTML =
           `Recon reveals <strong>Mira's hand</strong>! You can see all her cards — useful for planning your next move.<br>Click <em>Done</em> to close the view.`;
         renderGame(bcTutG);
@@ -2041,7 +2045,8 @@ Playing a card places it face-up in your row below, filling a slot.<br>
   { title: '🚨 Out-of-Turn Defend — Play Respond',
     body: `Mira played <strong>Exploitation</strong> targeting you — she\'ll steal a random card from your hand!<br>
 You have <strong>Respond</strong> in your hand. You can cancel attacks played against you <em>out of turn</em>.<br>
-Click <em>🚨 Play Respond</em> in the panel above to block it.`,
+Click the glowing <em>🚨 Play Respond</em> button to block it.`,
+    tutHL: 'play_respond',
     makeG: () => makeBcTutG({
       alexPlayed: [{...BTC.recon}],
       alexHand:   [BTC.c2, BTC.respond, BTC.identify, BTC.recover],
@@ -2146,7 +2151,26 @@ Click to see that happen.`,
     }),
     forced: false, next: 'See Win →' },
 
-  // 6 — Win Condition 1 screen
+  // 6 — Times Up drawn — the reveal moment
+  { title: '⏰ Times Up is Drawn!',
+    body: `On your turn you drew ⏰ <strong>Times Up</strong> from the deck!<br>
+The game <em>instantly</em> checks every player: does anyone hold the 🚩 Data Flag?<br>
+<strong>You do!</strong> That means an instant win — no more turns needed.`,
+    makeG: () => makeBcTutG({
+      alexPlayed: [{...BTC.recon}, {...BTC.c2}],
+      alexHand:   [BTC.identify, BTC.recover],
+      alexHasFlag: true,
+      miraPlayed: [{...BTC.exploit}, {...BTC.deliver}],
+      miraHandCount: 3,
+      phase: 'play',
+      deckCount: 1,
+      timesUpRevealed: true,
+      log: ['⏰ Times Up drawn! Checking for Data Flag holder…', 'Alex holds the Data Flag!'],
+    }),
+    tutHL: 'times_up',
+    forced: false, next: 'See the Win! →' },
+
+  // 7 — Win Condition 1 screen
   { title: '🏆 Win Condition 1: Data Flag',
     body: `⏰ <em>Times Up</em> was drawn! The game instantly checked: you held the 🚩 Data Flag — <strong>you win!</strong><br>
 That\'s the first way to win Byte Club. Click <strong>Next</strong> to see the second.`,
@@ -2165,7 +2189,7 @@ That\'s the first way to win Byte Club. Click <strong>Next</strong> to see the s
     isWinScreen: true,
     next: 'Next: Win Condition 2 →' },
 
-  // 7 — Win Condition 2 setup: play 2 remaining cards
+  // 8 — Win Condition 2 setup: play 2 remaining cards
   { title: '🎯 Win Condition 2: Fill the Board',
     body: `The <strong>second way</strong> to win: have one of <em>every</em> card type in front of you —<br>
 all 6 ⚔️ Kill Chain types <strong>+</strong> all 5 🛡️ NIST types (including the earned 🎯 Action Obj. and 🏛️ Govern).<br>
@@ -2209,7 +2233,7 @@ You\'re one card away on each row. <em>Double-click both remaining cards</em> to
       return false;
     } },
 
-  // 8 — Win Condition 2 screen
+  // 9 — Win Condition 2 screen
   { title: '🏆 Win Condition 2: Full Collection',
     body: `All slots filled — Kill Chain ✓ and NIST Framework ✓ including the earned 🎯 Action Obj. and 🏛️ Govern.<br>
 <strong>Instant win!</strong> No need to wait for Times Up.<br>
@@ -2351,6 +2375,7 @@ function applyBcTutHL() {
     el.style.opacity = '';
   });
   document.querySelectorAll('.govern-player-btn').forEach(el => el.classList.remove('bc-tut-player-hl'));
+  document.querySelectorAll('.bc-tut-glow').forEach(el => el.classList.remove('bc-tut-glow'));
 
   const s  = BCTSTEPS[bcTutStep];
   const hl = s?.tutHL;
@@ -2368,6 +2393,25 @@ function applyBcTutHL() {
     document.querySelectorAll('.govern-player-btn').forEach(btn => {
       if (btn.textContent.includes('Mira')) btn.classList.add('bc-tut-player-hl');
     });
+    return;
+  }
+
+  if (hl === 'times_up') {
+    // Glow the Times Up special card to show it was just drawn
+    const el = document.getElementById('sc-timesup');
+    if (el) el.classList.add('bc-tut-glow');
+    return;
+  }
+
+  if (hl === 'play_respond') {
+    // Glow the Play Respond button inside the attack overlay
+    document.querySelectorAll('#govern-overlay-inner .btn-govern').forEach(b => b.classList.add('bc-tut-glow'));
+    return;
+  }
+
+  if (hl === 'recon_done') {
+    // Glow the Done button on the Recon hand-view overlay
+    document.querySelectorAll('#govern-overlay-inner .btn-govern').forEach(b => b.classList.add('bc-tut-glow'));
     return;
   }
 
