@@ -309,10 +309,84 @@ body{padding-top:44px;}
 .win-btn{background:#62b517;color:#fff;border:none;padding:12px 32px;border-radius:10px;font-size:16px;font-weight:800;cursor:pointer;}
 .win-btn:hover{filter:brightness(1.1);}
 
+/* ===== BC TUTORIAL PANEL — right sidebar ===== */
+#bc-tut-panel {
+  display: none;
+  position: fixed; top: 44px; right: 0; bottom: 0;
+  width: 272px; z-index: 310;
+  background: #111827; border-left: 2px solid #d1db24;
+  padding: 14px 16px 16px; gap: 12px; flex-direction: column;
+  box-shadow: -4px 0 28px rgba(0,0,0,0.7);
+  overflow-y: auto;
+}
+body.bc-tut-active #bc-tut-panel { display: flex; }
+/* Shrink game area to leave room for the sidebar */
+body.bc-tut-active .game-layout { height: calc(100vh - 44px); margin-right: 272px; }
+.bc-tut-header { display: flex; flex-direction: column; gap: 6px; }
+#bc-tut-step-label { font-size: 10px; font-weight: 700; color: #6b7280;
+  text-transform: uppercase; letter-spacing: 1px; }
+.bc-tut-progress { width: 100%; height: 4px; background: #1e2d3d; border-radius: 4px; overflow: hidden; }
+#bc-tut-prog-fill { height: 100%; background: #d1db24; border-radius: 4px; transition: width 0.3s; }
+#bc-tut-title { font-size: 14px; font-weight: 800; color: #62b517; line-height: 1.3; }
+#bc-tut-body { font-size: 12px; color: #9ca3af; line-height: 1.6; flex: 1; }
+#bc-tut-body strong { color: #e2e8f0; }
+#bc-tut-body em { color: #d1db24; font-style: normal; font-weight: 700; }
+.bc-tut-footer { display: flex; flex-direction: column; gap: 8px; margin-top: auto; }
+#bc-tut-hint { font-size: 11px; color: #6b7280; line-height: 1.4; }
+#bc-tut-hint span { color: #d1db24; }
+#bc-tut-exit { padding: 6px 12px; border: 1px solid #374151; border-radius: 7px;
+  background: transparent; color: #6b7280; font-size: 11px; cursor: pointer;
+  font-family: inherit; text-align: center; }
+#bc-tut-exit:hover { background: #1e2535; color: #9ca3af; }
+#bc-tut-next { padding: 9px 18px; background: #62b517; color: #fff; border: none;
+  border-radius: 7px; font-size: 13px; font-weight: 700; cursor: pointer;
+  font-family: inherit; width: 100%; text-align: center; }
+#bc-tut-next:hover { filter: brightness(1.1); }
+/* Mobile: fall back to a compact bottom bar */
+@media(max-width: 768px) {
+  #bc-tut-panel {
+    top: auto; bottom: 0; left: 0; right: 0;
+    width: auto; height: auto; max-height: 48vh;
+    border-left: none; border-top: 2px solid #d1db24;
+    box-shadow: 0 -4px 24px rgba(0,0,0,0.65);
+    overflow-y: auto;
+  }
+  body.bc-tut-active .game-layout {
+    margin-right: 0;
+    height: calc(100vh - 44px - 200px);
+  }
+  .bc-tut-footer { flex-direction: row; }
+  #bc-tut-exit, #bc-tut-next { width: auto; }
+}
+/* Card glow highlight */
+.card.bc-tut-hl {
+  outline: 2px solid #d1db24 !important;
+  box-shadow: 0 0 0 2px #d1db24, 0 0 14px 4px rgba(209,219,36,0.4) !important;
+  animation: bc-tut-pulse 1.1s ease-in-out infinite;
+}
+@keyframes bc-tut-pulse {
+  0%,100% { box-shadow: 0 0 0 2px #d1db24, 0 0 8px rgba(209,219,36,0.3) !important; }
+  50%      { box-shadow: 0 0 0 3px #62b517, 0 0 18px rgba(98,181,23,0.5) !important; }
+}
+/* Button glow highlight */
+.bc-tut-btn-hl {
+  background: #d1db24 !important; color: #111 !important; border-color: #d1db24 !important;
+  animation: bc-tut-pulse 1.1s ease-in-out infinite;
+}
+/* Player target highlight in overlays */
+.govern-player-btn.bc-tut-player-hl {
+  border-color: #62b517 !important; outline: 2px solid #62b517;
+  animation: bc-tut-pulse 1.1s ease-in-out infinite;
+}
+/* Tutorial lobby button */
+.btn-tutorial { background: transparent; color: #62b517; border: 1px solid #374151; margin-top: 4px; width: 360px; }
+.btn-tutorial:hover:not(:disabled) { background: #1a2235; border-color: #62b517; }
+
 /* ===== RESPONSIVE ===== */
 @media(max-width:860px){
   .lobby-card{width:calc(100vw - 40px);max-width:360px;}
   .rules-banner{max-width:calc(100vw - 40px);}
+  .btn-tutorial{width:calc(100vw - 40px);max-width:360px;}
 }
 
 @media(max-width:768px){
@@ -426,6 +500,8 @@ body{padding-top:44px;}
   <div class="lobby-forms">
     <h1>BYTE CLUB</h1>
     <p class="subtitle">Cybersecurity Card Game · 2–4 Players <span class="info-btn" style="font-size:11px;width:18px;height:18px;" onclick="">i<div class="info-popup wide"><strong>Byte Club</strong> is a card game where you build both an attack Kill Chain and a NIST defense framework.<br><br><strong>Win by:</strong><br>1. Hold the 🚩 Data Flag when ⏰ Times Up is drawn<br>2. Collect all attack + defend types in front of you<br><br>Play cards on your turn, respond to attacks out of turn, and race to complete your collection!</div></span></p>
+
+    <button class="lobby-btn btn-tutorial" onclick="startBcTutorial()">📖 Interactive Tutorial — Learn to Play</button>
 
     <!-- CREATE GAME -->
     <div class="lobby-card">
@@ -596,6 +672,21 @@ body{padding-top:44px;}
   <p>• Watch the game log for opponent actions.</p>
 </div>
 
+<!-- BC TUTORIAL PANEL -->
+<div id="bc-tut-panel">
+  <div class="bc-tut-header">
+    <span id="bc-tut-step-label">Step 1 of 9</span>
+    <div class="bc-tut-progress"><div id="bc-tut-prog-fill" style="width:11%"></div></div>
+  </div>
+  <div id="bc-tut-title"></div>
+  <div id="bc-tut-body"></div>
+  <div class="bc-tut-footer">
+    <span id="bc-tut-hint"></span>
+    <button id="bc-tut-exit" onclick="endBcTutorial()">Exit Tutorial</button>
+    <button id="bc-tut-next" style="display:none" onclick="bcTutNext()">Next →</button>
+  </div>
+</div>
+
 <!-- WIN SCREEN -->
 <div id="win-screen">
   <div class="win-panel">
@@ -699,7 +790,10 @@ function connectWS(cb) {
   ws.onclose = () => setTimeout(() => connectWS(null), 2000);
 }
 
-function send(msg) { if (ws && ws.readyState === 1) ws.send(JSON.stringify(msg)); }
+function send(msg) {
+  if (bcTutMode) { handleBcTutAction(msg); return; }
+  if (ws && ws.readyState === 1) ws.send(JSON.stringify(msg));
+}
 
 // ==================== LOBBY ====================
 function renderColorButtons(containerId, selectedColor, disabledColors, onPick) {
@@ -970,6 +1064,7 @@ function typeName(card) {
 function buildHandCard(card, clickable, isSelected) {
   const div = document.createElement('div');
   div.className = 'card ' + cardClass(card) + (isSelected ? ' selected' : '');
+  div.dataset.cardId = card.id;
   if (!clickable) div.style.cursor = 'default';
   div.innerHTML = `
     <div class="card-cat">${card.cat === 'attack' ? '⚔️ Attack' : card.cat === 'defend' ? '🛡️ Defend' : '⭐ Special'}</div>
@@ -992,6 +1087,17 @@ function renderGame(gs) {
       ? '🚩 Held the Data Flag when Times Up was revealed'
       : '🎯 Collected all Attack and Defend card types';
     document.getElementById('win-screen').classList.add('show');
+    if (bcTutMode) {
+      const btn = document.querySelector('#win-screen .win-btn');
+      const s = BCTSTEPS[bcTutStep];
+      btn.textContent = s?.next || 'Next →';
+      btn.onclick = () => {
+        document.getElementById('win-screen').classList.remove('show');
+        const nextIdx = bcTutStep + 1;
+        if (nextIdx >= BCTSTEPS.length) endBcTutorial();
+        else bcTutAdvanceTo(nextIdx);
+      };
+    }
   }
 
   // Status
@@ -1069,6 +1175,7 @@ function renderGame(gs) {
 
   // Effect overlay (govern, identify, detect)
   renderEffectOverlay(gs);
+  if (bcTutMode) applyBcTutHL();
 }
 
 function renderTurnStrip(gs) {
@@ -1791,6 +1898,501 @@ function detectMove(idx, dir) {
 function detectConfirm() {
   send({ type:'game_action', action:'detect_reorder', order: detectOrderState.map(c => c.id) });
   detectOrderState = [];
+}
+
+// ==================== BC TUTORIAL ====================
+
+let bcTutMode = false;
+let bcTutStep = 0;
+let bcTutG    = null;
+
+// ── Tutorial card constants ──────────────────────────────────────────────────
+// IDs are integers so they match the selectedHandCard comparison in selectCard()
+const BTC = {
+  // Alex's starting hand
+  recon:    { id:1001, cat:'attack', type:'recon',     name:'Reconnaissance', desc:'Look at target\'s hand, or swap your played attack cards.' },
+  c2:       { id:1002, cat:'attack', type:'c2',        name:'C2 Control',     desc:'Steal the Data Flag, or target must give you a card.' },
+  respond:  { id:1003, cat:'defend', type:'respond',   name:'Respond',        desc:'Cancel an attack targeting you — played out of turn.' },
+  identify: { id:1004, cat:'defend', type:'identify',  name:'Identify',       desc:'Reveal who holds the Data Flag, or swap defend cards.' },
+  recover:  { id:1005, cat:'defend', type:'recover',   name:'Recover',        desc:'Draw cards until you have 5 in hand.' },
+  // Mira's pre-played cards
+  exploit:  { id:2001, cat:'attack', type:'exploit',   name:'Exploitation',   desc:'Blindly steal 1 random card from target\'s hand.' },
+  deliver:  { id:2002, cat:'attack', type:'deliver',   name:'Delivery',       desc:'Swap up to 2 played cards with an opponent.' },
+  // Data Flag (moves to Alex's hand in step 4)
+  dataFlag: { id:3001, cat:'special', type:'data_flag', name:'🚩 Data Flag',  desc:'Hold this when Times Up is drawn to win instantly!' },
+  // Step 7: the two "completing" cards
+  c2b:      { id:1006, cat:'attack', type:'c2',        name:'C2 Control',     desc:'Steal the Data Flag, or target must give you a card.' },
+  recoverB: { id:1007, cat:'defend', type:'recover',   name:'Recover',        desc:'Draw cards until you have 5 in hand.' },
+};
+
+// Pre-built sets of pre-filled cards for the win-condition-2 step
+const BTC_PREFILLED_ATTACK = [
+  { id:4001, cat:'attack', type:'weaponize', name:'Weaponization', desc:'' },
+  { id:4002, cat:'attack', type:'deliver',   name:'Delivery',      desc:'' },
+  { id:4003, cat:'attack', type:'exploit',   name:'Exploitation',  desc:'' },
+  { id:4004, cat:'attack', type:'install',   name:'Installation',  desc:'' },
+  { id:4005, cat:'attack', type:'action_obj',name:'Action Obj.',   desc:'' },
+];
+const BTC_PREFILLED_DEFEND = [
+  { id:4006, cat:'defend', type:'protect',   name:'Protect',       desc:'' },
+  { id:4007, cat:'defend', type:'detect',    name:'Detect',        desc:'' },
+  { id:4008, cat:'defend', type:'respond',   name:'Respond',       desc:'' },
+  { id:4009, cat:'defend', type:'govern',    name:'Govern',        desc:'' },
+];
+
+// ── Base game-state factory ──────────────────────────────────────────────────
+function makeBcTutG(o) {
+  o = o || {};
+  const alexHand = (o.alexHand || []).slice();
+  if (o.alexHasFlag) alexHand.push(BTC.dataFlag);
+  return {
+    myIndex: 0,
+    currentPlayer: o.currentPlayer !== undefined ? o.currentPlayer : 0,
+    phase: o.phase || 'play',
+    winner: o.winner !== undefined ? o.winner : -1,
+    winCondition: o.winCondition || 0,
+    deckCount: o.deckCount !== undefined ? o.deckCount : 18,
+    timesUpRevealed: o.timesUpRevealed || false,
+    log: o.log || ['Tutorial mode'],
+    myHand: alexHand,
+    iAmInstallBlocked: false,
+    recoverActive: false,
+    protectedPlayers: [],
+    installBlockedPlayers: [],
+    attackInfo: o.attackInfo || null,
+    governInfo: null,
+    identifyInfo: null,
+    detectViewCards: null,
+    weaponizeInfo: null,
+    actionObjActive: false,
+    players: [
+      { name:'Alex', color:'blue', handCount: alexHand.length,
+        played: o.alexPlayed || [], isBlocked: false },
+      { name:'Mira',  color:'red',  handCount: o.miraHandCount !== undefined ? o.miraHandCount : 4,
+        played: o.miraPlayed || [], isBlocked: false },
+    ],
+  };
+}
+
+// ── Tutorial step definitions ────────────────────────────────────────────────
+const BCTSTEPS = [
+
+  // 0 — Welcome
+  { title: '👋 Welcome to Byte Club',
+    body: `<strong>Byte Club</strong> is a cybersecurity card game of attack and defence.<br>
+Race to complete your <em>Kill Chain</em> (attack row) and <em>NIST Framework</em> (defend row), while fighting over the 🚩 <strong>Data Flag</strong>.<br>
+There are <strong>two ways to win</strong> — this tutorial shows you both.`,
+    makeG: () => makeBcTutG({ alexHand:[BTC.recon,BTC.c2,BTC.respond,BTC.identify,BTC.recover] }),
+    forced: false, next: 'Start →' },
+
+  // 1 — Play Recon
+  { title: '⚔️ Your Turn — Play Recon',
+    body: `Your hand has 5 cards. <strong>Red/dark</strong> cards are ⚔️ <strong>Attack</strong>; <strong>blue/dark</strong> are 🛡️ <strong>Defend</strong>.<br>
+Playing a card places it face-up in your row below, filling a slot.<br>
+<em>Double-click Reconnaissance</em> in your hand to play it — it lets you peek at Mira's hand!`,
+    makeG: () => makeBcTutG({ alexHand:[BTC.recon,BTC.c2,BTC.respond,BTC.identify,BTC.recover] }),
+    forced: true,
+    tutHL: 1001, // BTC.recon.id
+    interact(msg) {
+      if (msg.type !== 'game_action') return false;
+      if (msg.action === 'play_card' && msg.cardId == BTC.recon.id) {
+        bcTutG.players[0].played = [BTC.recon];
+        bcTutG.myHand = bcTutG.myHand.filter(c => c.id != BTC.recon.id);
+        bcTutG.players[0].handCount = bcTutG.myHand.length;
+        // Show Recon look overlay — peek at Mira's fake hand
+        bcTutG.phase = 'attack_recon_look';
+        bcTutG.attackInfo = {
+          iAmAttacker: true, iAmTarget: false,
+          attacker: 0, target: 1,
+          targetHand: [
+            { id:5001, cat:'attack',  type:'weaponize', name:'Weaponize'    },
+            { id:5002, cat:'attack',  type:'install',   name:'Installation' },
+            { id:5003, cat:'defend',  type:'protect',   name:'Protect'      },
+            { id:5004, cat:'defend',  type:'detect',    name:'Detect'       },
+          ],
+        };
+        gameState = bcTutG;
+        selectedHandCard = null;
+        document.getElementById('bc-tut-body').innerHTML =
+          `Recon reveals <strong>Mira's hand</strong>! You can see all her cards — useful for planning your next move.<br>Click <em>Done</em> to close the view.`;
+        renderGame(bcTutG);
+        return true;
+      }
+      if (msg.action === 'recon_look_done') {
+        // Close overlay, shift to end-turn prompt
+        bcTutG.phase = 'play';
+        bcTutG.attackInfo = null;
+        gameState = bcTutG;
+        BCTSTEPS[1].tutHL = 'end_turn';
+        BCTSTEPS[1].nextAction = () => bcTutAdvanceTo(2);
+        document.getElementById('bc-tut-body').innerHTML =
+          `Recon is in your ⚔️ Kill Chain row! Mira\'s hand is back face-down.<br>Click <strong>End Turn (Draw 1)</strong> to pass the turn to Mira.`;
+        const nextBtn = document.getElementById('bc-tut-next');
+        nextBtn.textContent = 'End Turn →';
+        nextBtn.style.display = '';
+        renderGame(bcTutG);
+        return true;
+      }
+      if (msg.action === 'end_play_phase') { bcTutAdvanceTo(2); return true; }
+      return false;
+    } },
+
+  // 2 — Mira Attacks — Respond window
+  { title: '🚨 Out-of-Turn Defend — Play Respond',
+    body: `Mira played <strong>Exploitation</strong> targeting you — she\'ll steal a random card from your hand!<br>
+You have <strong>Respond</strong> in your hand. You can cancel attacks played against you <em>out of turn</em>.<br>
+Click <em>🚨 Play Respond</em> in the panel above to block it.`,
+    makeG: () => makeBcTutG({
+      alexPlayed: [{...BTC.recon}],
+      alexHand:   [BTC.c2, BTC.respond, BTC.identify, BTC.recover],
+      miraPlayed: [],
+      miraHandCount: 3,
+      currentPlayer: 1,
+      phase: 'attack_respond_window',
+      attackInfo: {
+        iAmTarget: true, iAmAttacker: false,
+        attacker: 1, target: 0, type: 'exploit',
+        cardName: 'Exploitation',
+        myRespondCards: [BTC.respond],
+      },
+      log: ['Mira played Exploitation targeting Alex!'],
+    }),
+    forced: true,
+    interact(msg) {
+      if (msg.type !== 'game_action') return false;
+      if (msg.action === 'play_respond' || msg.action === 'respond_skip') {
+        bcTutAdvanceTo(3); return true;
+      }
+      return false;
+    } },
+
+  // 3 — Play C2 to steal Data Flag
+  { title: '📡 Steal the Data Flag with C2',
+    body: `Respond cancelled the attack! Now it\'s your turn.<br>
+Mira is holding the 🚩 <strong>Data Flag</strong>. Whoever holds it when ⏰ <em>Times Up</em> is drawn wins instantly.<br>
+<em>Double-click C2 Control</em> to play it and steal the flag.`,
+    makeG: () => makeBcTutG({
+      alexPlayed: [{...BTC.recon}],
+      alexHand:   [BTC.c2, BTC.identify, BTC.recover],
+      miraPlayed: [{...BTC.exploit}],
+      miraHandCount: 4,
+      phase: 'play',
+      log: ["Alex's Respond cancelled Exploitation!", "Alex's turn"],
+    }),
+    forced: true,
+    tutHL: 1002, // BTC.c2.id
+    interact(msg) {
+      if (msg.type !== 'game_action') return false;
+      if (msg.action === 'play_card' && msg.cardId == BTC.c2.id) {
+        bcTutG.myHand = bcTutG.myHand.filter(c => c.id != BTC.c2.id);
+        bcTutG.players[0].handCount = bcTutG.myHand.length;
+        bcTutG.phase = 'attack_c2_target';
+        bcTutG.attackInfo = {
+          iAmAttacker: true, iAmTarget: false,
+          attacker: 0, type: 'c2', cardName: 'C2 Control',
+        };
+        gameState = bcTutG;
+        selectedHandCard = null;
+        BCTSTEPS[3].tutHL = 'mira_target';
+        document.getElementById('bc-tut-body').innerHTML =
+          `C2 is in play! Now <strong>click Mira</strong> in the target panel — she holds the Data Flag.`;
+        renderGame(bcTutG);
+        return true;
+      }
+      if (msg.action === 'attack_select_target' && msg.targetIdx === 1) {
+        bcTutAdvanceTo(4); return true;
+      }
+      if (msg.action === 'cancel_attack') return true; // block cancel
+      return false;
+    } },
+
+  // 4 — Data Flag in hand, end turn
+  { title: '🚩 Data Flag Stolen — End Your Turn',
+    body: `C2 hit! Mira held the 🚩 Data Flag so she <strong>must</strong> give it to you.<br>
+The status bar now shows <em>🚩 In your hand!</em> — that\'s Win Condition 1 ticking.<br>
+Click <strong>End Turn (Draw 1)</strong> to draw and pass to Mira.`,
+    makeG: () => makeBcTutG({
+      alexPlayed: [{...BTC.recon}, {...BTC.c2}],
+      alexHand:   [BTC.identify, BTC.recover],
+      alexHasFlag: true,
+      miraPlayed: [{...BTC.exploit}],
+      miraHandCount: 3,
+      phase: 'play',
+      log: ['Alex stole the Data Flag from Mira with C2!'],
+    }),
+    forced: true,
+    tutHL: 'end_turn',
+    interact(msg) {
+      if (msg.type !== 'game_action') return false;
+      if (msg.action === 'end_play_phase') { bcTutAdvanceTo(5); return true; }
+      return false;
+    } },
+
+  // 5 — Skip-ahead narration
+  { title: '⏩ Skip Ahead — Times Up is Near…',
+    body: `A few more turns pass. You\'ve held the 🚩 Data Flag and shielded it with Firewall.<br>
+<strong>Win Condition 1:</strong> If ⏰ <em>Times Up</em> is drawn from the deck while you hold the Data Flag — you <strong>win instantly</strong>.<br>
+Click to see that happen.`,
+    makeG: () => makeBcTutG({
+      alexPlayed: [{...BTC.recon}, {...BTC.c2}],
+      alexHand:   [BTC.identify, BTC.recover],
+      alexHasFlag: true,
+      miraPlayed: [{...BTC.exploit}, {...BTC.deliver}],
+      miraHandCount: 3,
+      phase: 'play',
+      deckCount: 4,
+      timesUpRevealed: false,
+      log: ['Round 5 — deck almost empty…'],
+    }),
+    forced: false, next: 'See Win →' },
+
+  // 6 — Win Condition 1 screen
+  { title: '🏆 Win Condition 1: Data Flag',
+    body: `⏰ <em>Times Up</em> was drawn! The game instantly checked: you held the 🚩 Data Flag — <strong>you win!</strong><br>
+That\'s the first way to win Byte Club. Click <strong>Next</strong> to see the second.`,
+    makeG: () => makeBcTutG({
+      alexPlayed: [{...BTC.recon}, {...BTC.c2}],
+      alexHand:   [BTC.dataFlag],
+      alexHasFlag: false, // already included above manually
+      miraPlayed: [{...BTC.exploit}, {...BTC.deliver}],
+      miraHandCount: 2,
+      phase: 'game_over',
+      winner: 0, winCondition: 1,
+      timesUpRevealed: true,
+      log: ['⏰ Times Up! Alex holds the Data Flag — Alex WINS!'],
+    }),
+    forced: false,
+    isWinScreen: true,
+    next: 'Next: Win Condition 2 →' },
+
+  // 7 — Win Condition 2 setup: play 2 remaining cards
+  { title: '🎯 Win Condition 2: Fill the Board',
+    body: `The <strong>second way</strong> to win: have one of <em>every</em> card type in front of you —<br>
+all 6 ⚔️ Kill Chain types <strong>+</strong> all 5 🛡️ NIST types (including the earned 🎯 Action Obj. and 🏛️ Govern).<br>
+You\'re one card away on each row. <em>Double-click both remaining cards</em> to complete the board.`,
+    makeG: () => makeBcTutG({
+      alexPlayed: [
+        {...BTC.recon}, ...BTC_PREFILLED_ATTACK,
+        {...BTC.identify}, ...BTC_PREFILLED_DEFEND,
+      ],
+      alexHand: [BTC.c2b, BTC.recoverB],
+      miraPlayed: [{...BTC.exploit}],
+      miraHandCount: 4,
+      phase: 'play',
+      log: ["Round 4 — Alex needs 2 more cards to complete the collection"],
+    }),
+    forced: true,
+    tutHL: 'any',
+    _played: 0,
+    interact(msg) {
+      if (msg.type !== 'game_action') return false;
+      if (msg.action === 'play_card') {
+        const card = bcTutG.myHand.find(c => c.id == msg.cardId);
+        if (!card) return true;
+        bcTutG.players[0].played.push({...card});
+        bcTutG.myHand = bcTutG.myHand.filter(c => c.id != msg.cardId);
+        bcTutG.players[0].handCount = bcTutG.myHand.length;
+        BCTSTEPS[7]._played++;
+        gameState = bcTutG;
+        selectedHandCard = null;
+        if (BCTSTEPS[7]._played >= 2) {
+          setTimeout(() => bcTutAdvanceTo(8), 400);
+        } else {
+          const rem = bcTutG.myHand[0];
+          document.getElementById('bc-tut-body').innerHTML =
+            `Good! Now play <strong>${rem.name}</strong> to finish the board.`;
+          renderGame(bcTutG);
+        }
+        return true;
+      }
+      if (msg.action === 'end_play_phase') return true; // block until both played
+      return false;
+    } },
+
+  // 8 — Win Condition 2 screen
+  { title: '🏆 Win Condition 2: Full Collection',
+    body: `All slots filled — Kill Chain ✓ and NIST Framework ✓ including the earned 🎯 Action Obj. and 🏛️ Govern.<br>
+<strong>Instant win!</strong> No need to wait for Times Up.<br>
+You\'re ready to play — click below to head back to the lobby!`,
+    makeG: () => {
+      const allPlayed = [
+        {...BTC.recon}, ...BTC_PREFILLED_ATTACK, {...BTC.c2b},
+        {...BTC.identify}, ...BTC_PREFILLED_DEFEND, {...BTC.recoverB},
+      ];
+      return makeBcTutG({
+        alexPlayed: allPlayed,
+        alexHand: [],
+        miraPlayed: [{...BTC.exploit}],
+        miraHandCount: 3,
+        phase: 'game_over',
+        winner: 0, winCondition: 2,
+        log: ['🎯 Alex completed the full collection — WINS!'],
+      });
+    },
+    forced: false,
+    isWinScreen: true,
+    next: '← Back to Lobby' },
+];
+
+// ── Tutorial engine ──────────────────────────────────────────────────────────
+
+function startBcTutorial() {
+  bcTutMode = true;
+  bcTutStep = 0;
+  bcTutG    = null;
+  selectedHandCard = null;
+  myId = 0;
+  document.body.classList.add('bc-tut-active');
+  showScreen('game');
+  document.getElementById('btn-cancel-game').style.display = 'none';
+  document.body.classList.remove('host-cancel-visible');
+  document.getElementById('win-screen').classList.remove('show');
+  applyBcTutStep(0);
+}
+
+function endBcTutorial() {
+  bcTutMode = false;
+  bcTutG    = null;
+  gameState = null;
+  selectedHandCard = null;
+  document.body.classList.remove('bc-tut-active');
+  document.getElementById('win-screen').classList.remove('show');
+  showScreen('lobby');
+}
+
+function bcTutAdvanceTo(idx) {
+  if (idx >= BCTSTEPS.length) { endBcTutorial(); return; }
+  applyBcTutStep(idx);
+}
+
+function applyBcTutStep(idx) {
+  bcTutStep = idx;
+  const s = BCTSTEPS[idx];
+  // Reset per-step mutable state
+  if (typeof s._played !== 'undefined') s._played = 0;
+  s.nextAction = null; // clear any mid-step Next override
+  // Always restore step's tutHL to its original definition value
+  if (s._origTutHL === undefined) s._origTutHL = s.tutHL;
+  else s.tutHL = s._origTutHL;
+
+  bcTutG    = s.makeG();
+  gameState = bcTutG;
+
+  document.getElementById('win-screen').classList.remove('show');
+  renderGame(bcTutG);
+
+  // Win-screen steps: renderGame already showed #win-screen. Override btn.
+  if (s.isWinScreen) {
+    const btn = document.querySelector('#win-screen .win-btn');
+    if (btn) {
+      btn.textContent = s.next || 'Next →';
+      btn.onclick = () => {
+        document.getElementById('win-screen').classList.remove('show');
+        const next = idx + 1;
+        if (next >= BCTSTEPS.length) endBcTutorial();
+        else bcTutAdvanceTo(next);
+      };
+    }
+  }
+
+  renderBcTutPanel(idx);
+}
+
+function bcTutNext() {
+  const s = BCTSTEPS[bcTutStep];
+  if (s.nextAction) { s.nextAction(); return; } // mid-step override (e.g. after Recon)
+  if (s.forced) return;
+  if (s.next === '← Back to Lobby') { endBcTutorial(); return; }
+  bcTutAdvanceTo(bcTutStep + 1);
+}
+
+function renderBcTutPanel(idx) {
+  const s     = BCTSTEPS[idx];
+  const total = BCTSTEPS.length;
+  const pct   = Math.round(((idx + 1) / total) * 100);
+  document.getElementById('bc-tut-step-label').textContent = `Step ${idx + 1} of ${total}`;
+  document.getElementById('bc-tut-prog-fill').style.width  = pct + '%';
+  document.getElementById('bc-tut-title').textContent      = s.title;
+  document.getElementById('bc-tut-body').innerHTML         = s.body;
+
+  const nextBtn = document.getElementById('bc-tut-next');
+  const hint    = document.getElementById('bc-tut-hint');
+
+  if (s.forced) {
+    nextBtn.style.display = 'none';
+    hint.innerHTML = '<span style="color:#d1db24;font-weight:700">👆 Perform the highlighted action to continue</span>';
+  } else {
+    nextBtn.style.display = 'inline-block';
+    nextBtn.textContent   = s.next || 'Next →';
+    hint.textContent      = '';
+  }
+  // Hide exit on final step
+  document.getElementById('bc-tut-exit').style.display = (idx < total - 1) ? '' : 'none';
+}
+
+// ── Action interceptor ───────────────────────────────────────────────────────
+function handleBcTutAction(msg) {
+  const s = BCTSTEPS[bcTutStep];
+  if (!s || !s.interact) return;
+  s.interact(msg);
+}
+
+// ── Highlight engine ─────────────────────────────────────────────────────────
+function applyBcTutHL() {
+  // Clear all previous highlights / pointer-event overrides
+  document.querySelectorAll('#hand-cards .card').forEach(el => {
+    el.classList.remove('bc-tut-hl');
+    el.style.opacity       = '';
+    el.style.pointerEvents = '';
+  });
+  document.querySelectorAll('.action-btn').forEach(el => {
+    el.classList.remove('bc-tut-btn-hl');
+    el.disabled      = false;
+    el.style.opacity = '';
+  });
+  document.querySelectorAll('.govern-player-btn').forEach(el => el.classList.remove('bc-tut-player-hl'));
+
+  const s  = BCTSTEPS[bcTutStep];
+  const hl = s?.tutHL;
+  if (!hl) return;
+
+  if (hl === 'end_turn') {
+    // Highlight End Turn button, block hand cards
+    document.querySelectorAll('.action-btn.btn-end-turn').forEach(b => b.classList.add('bc-tut-btn-hl'));
+    document.querySelectorAll('#hand-cards .card').forEach(el => { el.style.pointerEvents = 'none'; el.style.opacity = '0.35'; });
+    return;
+  }
+
+  if (hl === 'mira_target') {
+    // Highlight Mira's button in the C2 target overlay
+    document.querySelectorAll('.govern-player-btn').forEach(btn => {
+      if (btn.textContent.includes('Mira')) btn.classList.add('bc-tut-player-hl');
+    });
+    return;
+  }
+
+  if (hl === 'any') {
+    // All hand cards are valid — highlight them all, disable End Turn
+    document.querySelectorAll('#hand-cards .card').forEach(el => el.classList.add('bc-tut-hl'));
+    document.querySelectorAll('.action-btn.btn-end-turn').forEach(b => {
+      b.disabled = true; b.style.opacity = '0.35';
+    });
+    return;
+  }
+
+  if (typeof hl === 'number') {
+    // Specific card ID — highlight it, dim others, block End Turn
+    document.querySelectorAll('#hand-cards .card').forEach(el => {
+      if (Number(el.dataset.cardId) === hl) {
+        el.classList.add('bc-tut-hl');
+      } else {
+        el.style.opacity = '0.35'; el.style.pointerEvents = 'none';
+      }
+    });
+    document.querySelectorAll('.action-btn.btn-end-turn').forEach(b => {
+      b.disabled = true; b.style.opacity = '0.35';
+    });
+  }
 }
 
 // ==================== INIT ====================
