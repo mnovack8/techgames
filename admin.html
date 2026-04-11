@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — FuzzNet Labs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+<!-- Google Identity Services -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --yellow:  #d1db24;
+    --dark:    #0d1117;
+    --card-bg: #111827;
+    --border:  #1f2937;
+    --text:    #e5e7eb;
+    --muted:   #6b7280;
+    --green:   #62b517;
+    --red:     #ef4444;
+  }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--dark);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ── Lock screen ── */
+  #login-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+    animation: fadein 0.4s ease;
+  }
+
+  .lock-logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .lock-icon {
+    font-size: 48px;
+    line-height: 1;
+    filter: drop-shadow(0 0 16px rgba(209,219,36,0.4));
+  }
+  .lock-title {
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--yellow);
+    letter-spacing: -0.3px;
+  }
+  .lock-subtitle {
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 600;
+  }
+
+  .login-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px 36px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    min-width: 320px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+  }
+
+  .login-card p {
+    font-size: 13px;
+    color: var(--muted);
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  /* Google sign-in button container */
+  #g_id_signin { display: flex; justify-content: center; }
+
+  .divider {
+    width: 100%;
+    border: none;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ── Denied screen ── */
+  #denied-screen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    animation: fadein 0.4s ease;
+  }
+  #denied-screen .icon { font-size: 52px; }
+  #denied-screen h2 { font-size: 20px; font-weight: 800; color: var(--red); }
+  #denied-screen p { font-size: 13px; color: var(--muted); text-align: center; max-width: 280px; line-height: 1.6; }
+  #denied-screen button {
+    margin-top: 4px;
+    padding: 9px 22px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--muted);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  #denied-screen button:hover { border-color: var(--muted); color: var(--text); }
+
+  /* ── Admin screen ── */
+  #admin-screen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+    padding: 40px 20px;
+    width: 100%;
+    max-width: 900px;
+    animation: fadein 0.5s ease;
+  }
+
+  .admin-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    text-align: center;
+  }
+  .admin-header .badge {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--dark);
+    background: var(--yellow);
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+  .admin-header h1 {
+    font-size: 32px;
+    font-weight: 900;
+    color: var(--text);
+    letter-spacing: -0.5px;
+  }
+  .admin-header .welcome {
+    font-size: 14px;
+    color: var(--muted);
+    font-weight: 600;
+  }
+  #admin-email {
+    color: var(--yellow);
+  }
+
+  .admin-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    width: 100%;
+  }
+
+  .admin-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .admin-card .ac-icon { font-size: 28px; }
+  .admin-card h3 { font-size: 15px; font-weight: 800; color: var(--text); }
+  .admin-card p  { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+  .sign-out-btn {
+    padding: 9px 24px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--muted);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .sign-out-btn:hover { border-color: var(--red); color: var(--red); }
+
+  @keyframes fadein { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+</style>
+</head>
+<body>
+
+<!-- ── Login screen ── -->
+<div id="login-screen">
+  <div class="lock-logo">
+    <div class="lock-icon">🔐</div>
+    <div class="lock-title">FuzzNet Labs Admin</div>
+    <div class="lock-subtitle">Restricted access — authorised users only</div>
+  </div>
+
+  <div class="login-card">
+    <p>Sign in with your Google account to continue.<br>Only authorised accounts may proceed.</p>
+    <hr class="divider">
+
+    <!-- Google One Tap + Sign-In button -->
+    <div id="g_id_onload"
+         data-client_id="655697852569-e4uu415rmg73dlggn6ih4llh15lnneeo.apps.googleusercontent.com"
+         data-callback="handleCredential"
+         data-auto_prompt="false">
+    </div>
+    <div class="g_id_signin"
+         data-type="standard"
+         data-shape="pill"
+         data-theme="outline"
+         data-text="sign_in_with"
+         data-size="large"
+         data-logo_alignment="left">
+    </div>
+  </div>
+</div>
+
+<!-- ── Access denied screen ── -->
+<div id="denied-screen">
+  <div class="icon">🚫</div>
+  <h2>Access Denied</h2>
+  <p>This account is not authorised to access the admin area.</p>
+  <button onclick="resetToLogin()">Try a different account</button>
+</div>
+
+<!-- ── Admin screen ── -->
+<div id="admin-screen">
+  <div class="admin-header">
+    <span class="badge">Admin</span>
+    <h1>You got to the admin screen.</h1>
+    <p class="welcome">Signed in as <span id="admin-email"></span></p>
+  </div>
+
+  <div class="admin-grid">
+    <div class="admin-card">
+      <div class="ac-icon">🎮</div>
+      <h3>FuzzNet Labs</h3>
+      <p>Live game — active players, session logs, and game stats.</p>
+    </div>
+    <div class="admin-card">
+      <div class="ac-icon">🔐</div>
+      <h3>Byte Club</h3>
+      <p>Live game — active sessions, tutorial completions, and feedback.</p>
+    </div>
+    <div class="admin-card">
+      <div class="ac-icon">⚛️</div>
+      <h3>Qubit Waitlist</h3>
+      <p>Waitlist signups via Google Forms. View responses in Google Sheets.</p>
+    </div>
+  </div>
+
+  <button class="sign-out-btn" onclick="signOut()">Sign out</button>
+</div>
+
+<script>
+// Send the Google credential token to the SERVER for verification.
+// The server checks the token with Google's API and validates the email.
+// The client secret never appears here — it lives only in .env on the server.
+async function handleCredential(response) {
+  try {
+    const res = await fetch('/admin/verify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ credential: response.credential }),
+      credentials: 'same-origin'   // sends/receives the session cookie
+    });
+    const data = await res.json();
+    if (res.ok && data.ok) {
+      document.getElementById('admin-email').textContent = data.email;
+      show('admin-screen');
+    } else {
+      show('denied-screen');
+    }
+  } catch (e) {
+    show('denied-screen');
+  }
+}
+
+async function signOut() {
+  await fetch('/admin/signout', { method: 'POST', credentials: 'same-origin' });
+  google.accounts.id.disableAutoSelect();
+  show('login-screen');
+}
+
+function resetToLogin() {
+  google.accounts.id.disableAutoSelect();
+  show('login-screen');
+}
+
+function show(id) {
+  ['login-screen','denied-screen','admin-screen'].forEach(s => {
+    document.getElementById(s).style.display = (s === id) ? 'flex' : 'none';
+  });
+}
+
+// On load: check if a valid session cookie already exists
+(async () => {
+  const res = await fetch('/admin/session', { credentials: 'same-origin' });
+  if (res.ok) {
+    const data = await res.json();
+    if (data.ok) {
+      document.getElementById('admin-email').textContent = data.email;
+      show('admin-screen');
+    }
+  }
+})();
+</script>
+</body>
+</html>

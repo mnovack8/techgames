@@ -214,19 +214,22 @@ pm2 restart fuzznet
 
 ---
 
-### Alternative: Nginx Reverse Proxy
+### Alternative: Nginx Reverse Proxy + HTTPS (Recommended for Production)
 
-If you're running as a non-root user (port 80 requires root), you can keep the server on port 8090 and put Nginx in front:
+Run the Node app on port 8090 with PM2, put Nginx in front to handle port 443 (HTTPS) and TLS termination, and use Certbot to automatically provision and renew a free TLS certificate.
+
+**Install Nginx and Certbot:**
 
 ```bash
-sudo apt install -y nginx
+sudo apt install -y nginx certbot python3-certbot-nginx
 ```
 
-Create `/etc/nginx/sites-available/fuzznet`:
+Create `/etc/nginx/sites-available/techboardgames`:
 
 ```nginx
 server {
     listen 80;
+    server_name techboardgames.com www.techboardgames.com;
 
     location / {
         proxy_pass http://localhost:8090;
@@ -238,14 +241,110 @@ server {
 }
 ```
 
-Enable and start:
+Enable and start Nginx:
 
 ```bash
-sudo ln -s /etc/nginx/sites-available/fuzznet /etc/nginx/sites-enabled/
-sudo rm /etc/nginx/sites-enabled/default
+sudo ln -s /etc/nginx/sites-available/techboardgames /etc/nginx/sites-enabled/
+sudo rm -f /etc/nginx/sites-enabled/default
 sudo nginx -t
-sudo systemctl restart nginx
+sudo systemctl start nginx
 ```
+
+Issue a TLS certificate (Certbot will auto-update the Nginx config for HTTPS):
+
+```bash
+sudo certbot --nginx
+```
+
+Certbot renews automatically. Test renewal with:
+
+```bash
+sudo certbot renew --dry-run
+```
+
+**Open the firewall for HTTPS:**
+
+```bash
+sudo ufw allow 443/tcp
+sudo ufw allow 80/tcp     # needed for Certbot HTTP-01 challenge
+sudo ufw allow 22/tcp     # don't lock yourself out of SSH
+sudo ufw enable
+```
+
+---
+
+### PM2 Application Management
+
+The app runs under PM2 as **"techboardgames"**. Common commands:
+
+```bash
+# Start the application
+pm2 start npm --name "techboardgames" -- start
+
+# Stop and remove the process from PM2
+pm2 delete techboardgames
+
+# Check status
+pm2 status
+
+# View live logs
+pm2 logs techboardgames
+
+# Restart after a code change
+pm2 restart techboardgames
+```
+
+Persist PM2 across reboots (run once after first start):
+
+```bash
+pm2 save
+pm2 startup   # follow the printed command to enable autostart
+```
+
+**Deploying an update:**
+
+```bash
+cd ~/techgames
+git pull origin master
+npm install                    # in case dependencies changed
+pm2 delete techboardgames
+pm2 start npm --name "techboardgames" -- start
+pm2 save
+```
+
+---
+
+### Secrets & Environment Variables
+
+The app requires a `.env` file (never committed to Git — already in `.gitignore`).
+
+**On a fresh server, create the file manually over SSH:**
+
+```bash
+nano ~/techgames/.env
+```
+
+Add the following keys (fill in your actual values):
+
+```
+GOOGLE_CLIENT_ID=<your-google-oauth-client-id>
+GOOGLE_CLIENT_SECRET=<your-google-oauth-client-secret>
+ADMIN_EMAIL=<the-gmail-address-allowed-to-access-admin>
+SESSION_SECRET=<a-long-random-string-generate-with-openssl-rand-hex-48>
+```
+
+Generate a strong `SESSION_SECRET` with:
+
+```bash
+openssl rand -hex 48
+```
+
+**Never commit `.env` to GitHub.** If you're using a hosting platform (Railway, Render, Fly.io, etc.) use their **Environment Variables** settings panel instead of a `.env` file — the values are injected at runtime and never touch your repository.
+
+**How credentials are kept server-side:**
+- `GOOGLE_CLIENT_SECRET`, `SESSION_SECRET`, and `ADMIN_EMAIL` are loaded from `.env` into `process.env` at startup and never sent to any browser.
+- The admin login flow POSTs the Google token to `/admin/verify` on the server. The server calls Google's API to validate it, checks the email, and issues a signed **HttpOnly** session cookie — which JavaScript in the browser cannot read.
+- The only value the browser sees is `GOOGLE_CLIENT_ID`, which is intentionally public in Google's OAuth design and cannot be used to impersonate your app.
 
 ---
 

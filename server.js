@@ -1,9 +1,91 @@
+require('dotenv').config();
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 const { WebSocketServer } = require('ws');
 
 const PORT = process.env.PORT || 8090;
+
+// ==================== ADMIN AUTH ====================
+const ADMIN_EMAIL    = process.env.ADMIN_EMAIL;
+const SESSION_SECRET = process.env.SESSION_SECRET;
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
+
+// In-memory session store: token → { email, expires }
+const adminSessions = new Map();
+
+function makeSessionToken() {
+  return crypto.randomBytes(32).toString('hex');
+}
+
+function signToken(token) {
+  return crypto.createHmac('sha256', SESSION_SECRET).update(token).digest('hex') + '.' + token;
+}
+
+function verifyToken(signed) {
+  if (!signed) return null;
+  const [sig, token] = signed.split('.');
+  if (!token) return null;
+  const expected = crypto.createHmac('sha256', SESSION_SECRET).update(token).digest('hex');
+  if (!crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(expected))) return null;
+  const sess = adminSessions.get(token);
+  if (!sess || Date.now() > sess.expires) { adminSessions.delete(token); return null; }
+  return sess;
+}
+
+function getSessionCookie(req) {
+  const raw = req.headers.cookie || '';
+  const match = raw.match(/(?:^|;\s*)admin_session=([^;]+)/);
+  return match ? decodeURIComponent(match[1]) : null;
+}
+
+async function handleAdminVerify(req, res) {
+  let body = '';
+  req.on('data', d => { body += d; });
+  req.on('end', async () => {
+    try {
+      const { credential } = JSON.parse(body);
+      // Verify token with Google's tokeninfo endpoint — no secret needed for GIS tokens
+      const gRes = await fetch(`https://oauth2.googleapis.com/tokeninfo?id_token=${credential}`);
+      const gData = await gRes.json();
+      if (!gRes.ok || gData.aud !== GOOGLE_CLIENT_ID || gData.email !== ADMIN_EMAIL) {
+        res.writeHead(403, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ ok: false }));
+        return;
+      }
+      // Issue a signed session cookie (httpOnly, SameSite=Strict — never readable by JS)
+      const token  = makeSessionToken();
+      const signed = signToken(token);
+      adminSessions.set(token, { email: gData.email, expires: Date.now() + 8 * 60 * 60 * 1000 }); // 8h
+      const secure = req.headers.host && !req.headers.host.startsWith('localhost') ? '; Secure' : '';
+      res.writeHead(200, {
+        'Content-Type': 'application/json',
+        'Set-Cookie': `admin_session=${encodeURIComponent(signed)}; HttpOnly; SameSite=Strict; Path=/admin${secure}`
+      });
+      res.end(JSON.stringify({ ok: true, email: gData.email }));
+    } catch (e) {
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: false }));
+    }
+  });
+}
+
+function handleAdminSession(req, res) {
+  const sess = verifyToken(getSessionCookie(req));
+  res.writeHead(sess ? 200 : 401, { 'Content-Type': 'application/json' });
+  res.end(JSON.stringify(sess ? { ok: true, email: sess.email } : { ok: false }));
+}
+
+function handleAdminSignout(req, res) {
+  const raw = getSessionCookie(req);
+  if (raw) { const token = raw.split('.')[1]; adminSessions.delete(token); }
+  res.writeHead(200, {
+    'Content-Type': 'application/json',
+    'Set-Cookie': 'admin_session=; HttpOnly; SameSite=Strict; Path=/admin; Max-Age=0'
+  });
+  res.end(JSON.stringify({ ok: true }));
+}
 
 // ==================== CONSTANTS ====================
 const COLOR_INFO = {
@@ -2566,9 +2648,15 @@ const MIME = { '.html': 'text/html; charset=utf-8', '.png': 'image/png', '.jpg':
 const server = http.createServer((req, res) => {
   const parsed = new URL(req.url, `http://${req.headers.host}`);
   let pathname = parsed.pathname;
+
+  // ── Admin API endpoints ──
+  if (pathname === '/admin/verify'  && req.method === 'POST') return handleAdminVerify(req, res);
+  if (pathname === '/admin/session' && req.method === 'GET')  return handleAdminSession(req, res);
+  if (pathname === '/admin/signout' && req.method === 'POST') return handleAdminSignout(req, res);
   if (pathname === '/byteclub' || pathname === '/byteclub.html') pathname = '/byteclub.html';
   else if (pathname === '/fuzznet' || pathname === '/fuzznet.html') pathname = '/fuzznet.html';
   else if (pathname === '/qubit-waitlist' || pathname === '/qubit-waitlist.html') pathname = '/qubit-waitlist.html';
+  else if (pathname === '/admin' || pathname === '/admin.html') pathname = '/admin.html';
   else if (pathname === '/') pathname = '/index.html';
   const filePath = path.join(__dirname, pathname);
   // Only serve files under __dirname (prevent path traversal)
