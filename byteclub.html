@@ -102,8 +102,10 @@ body{padding-top:44px;}
 .opp-hand-count{font-size:12px;color:#6b7280;display:flex;align-items:center;gap:4px;}
 .opp-played{display:flex;flex-direction:column;gap:3px;margin-top:4px;}
 /* Opponent kill-chain slot grid */
-.opp-kc-grid{display:flex;flex-direction:column;gap:3px;}
-.opp-kc-row{display:flex;gap:3px;flex-wrap:nowrap;}
+.opp-kc-grid{display:flex;flex-direction:column;gap:4px;}
+.opp-kc-row{display:flex;gap:4px;flex-wrap:nowrap;}
+.opp-kc-slot-wrap{display:flex;flex-direction:column;align-items:center;gap:2px;}
+.opp-kc-label{font-size:7px;font-weight:800;color:#cbd5e1;text-align:center;max-width:28px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1;}
 .opp-kc-slot{width:24px;height:24px;border-radius:5px;border:1.5px dashed #3a5270;display:flex;align-items:center;justify-content:center;font-size:12px;position:relative;cursor:default;transition:background 0.15s,border-color 0.15s;color:#4e6e8e;}
 .opp-kc-slot.attack{}
 .opp-kc-slot.defend{}
@@ -343,6 +345,37 @@ body{padding-top:44px;}
 #card-zoom.action-obj-card-type .cz-name { color:#fde68a; }
 #card-zoom .cz-desc { font-size:13px; color:#9ca3af; line-height:1.5; }
 
+/* ===== SPECIAL CARD PANEL ICONS — card art thumbnails ===== */
+.special-card .sc-icon { font-size: 0; line-height: 0; width: 54px; height: 70px; margin: 0 auto 2px; overflow: hidden; border-radius: 6px; }
+.special-card .sc-icon img { width: 100%; height: 100%; object-fit: contain; display: block; border-radius: 6px; }
+@media(max-width:860px) { .special-card .sc-icon { width: 44px; height: 57px; } }
+@media(max-width:600px) { .special-card .sc-icon { width: 34px; height: 44px; } }
+
+/* ===== KILL-CHAIN SLOTS — ghost art for empty slots ===== */
+.kc-slot-img-ghost { opacity: 0.18; filter: grayscale(60%); }
+/* Name label pinned to bottom of slot */
+.kc-slot-name-label {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: rgba(0,0,0,0.68);
+  color: #fff;
+  font-size: 7px;
+  font-weight: 800;
+  text-align: center;
+  padding: 2px 2px 3px;
+  border-radius: 0 0 5px 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
+  letter-spacing: 0.2px;
+}
+
+/* ===== OPPONENT SLOTS — card art thumbnails ===== */
+.opp-kc-slot.opp-kc-slot-has-img { padding: 0; overflow: hidden; }
+.opp-kc-slot-img { width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 3px; }
+.opp-kc-slot-img-ghost { opacity: 0.15; filter: grayscale(70%); }
+
 /* ===== IMAGE CARDS IN HAND ===== */
 .card.card-has-img {
   padding: 0;
@@ -482,13 +515,14 @@ body.bc-tut-active .game-layout { height: calc(100vh - 44px); margin-right: 272p
   .opponent-panel{min-width:140px;max-width:190px;padding:5px 8px;}
   .opp-name{font-size:12px;}
   .opp-kc-slot{width:20px;height:20px;font-size:10px;}
+  .opp-kc-label{font-size:6.5px;max-width:22px;}
 
   /* Turn strip */
   .turn-badge{padding:4px 10px;font-size:12px;gap:5px;}
 
   /* Special cards: hide status text */
   .special-card{min-width:72px;padding:4px 7px;}
-  .special-card .sc-icon{font-size:17px;}
+  .special-card .sc-icon{font-size:0;}
   .special-card .sc-status{display:none;}
 
   /* KC slots: slightly smaller */
@@ -520,6 +554,7 @@ body.bc-tut-active .game-layout { height: calc(100vh - 44px); margin-right: 272p
   .opponent-panel{min-width:110px;max-width:150px;padding:4px 6px;}
   .opp-name{font-size:11px;}
   .opp-kc-slot{width:17px;height:17px;font-size:9px;}
+  .opp-kc-label{font-size:6px;max-width:19px;}
 
   /* KC slots: emoji only, no text */
   .kc-slot{width:34px;min-height:28px;padding:2px;}
@@ -531,7 +566,7 @@ body.bc-tut-active .game-layout { height: calc(100vh - 44px); margin-right: 272p
   /* Special cards: icon only */
   .special-cards-row{gap:4px;}
   .special-card{min-width:46px;padding:3px 5px;}
-  .special-card .sc-icon{font-size:14px;}
+  .special-card .sc-icon{font-size:0;}
   .special-card .sc-name{display:none;}
 
   /* Status banner */
@@ -654,22 +689,22 @@ body.bc-tut-active .game-layout { height: calc(100vh - 44px); margin-right: 272p
             <div class="sc-status" id="deck-count">— cards</div>
           </div>
           <div class="special-card sc-dataflag" id="sc-dataflag">
-            <div class="sc-icon">🚩</div>
+            <div class="sc-icon"><img src="images/special-data-flag.png" alt="Data Flag"></div>
             <div class="sc-name">Data Flag <span class="info-btn" onclick="">i<div class="info-popup below"><strong>Win Condition 1:</strong> Hold the Data Flag in your hand when <em>Times Up</em> is revealed from the deck. You can steal it using <em>C2</em> or <em>Action Objectives</em>.</div></span></div>
             <div class="sc-status" id="dataflag-status">In deck</div>
           </div>
           <div class="special-card sc-timesup" id="sc-timesup">
-            <div class="sc-icon">⏰</div>
+            <div class="sc-icon"><img src="images/special-times-up.png" alt="Times Up"></div>
             <div class="sc-name">Times Up <span class="info-btn" onclick="">i<div class="info-popup below">When drawn from the deck, the game <strong>immediately checks</strong> if any player holds the Data Flag. If so, that player wins! Times Up cannot be held in hand — it triggers instantly.</div></span></div>
             <div class="sc-status" id="timesup-status">In deck</div>
           </div>
           <div class="special-card sc-govern" id="sc-govern">
-            <div class="sc-icon">🏛️</div>
+            <div class="sc-icon"><img src="images/defend-govern.png" alt="Govern"></div>
             <div class="sc-name">Govern <span class="info-btn" onclick="">i<div class="info-popup wide below"><strong>How to unlock:</strong> Be the first to play all 5 NIST defend types (Identify, Protect, Detect, Respond, Recover) in front of you.<br><br><strong>Effect:</strong> Look at each player's hand privately, take 1 card from each, then give 1 card back to each. <em>Weaponize cannot cancel this card.</em></div></span></div>
             <div class="sc-status" id="govern-status">Locked</div>
           </div>
           <div class="special-card sc-actionobj" id="sc-actionobj">
-            <div class="sc-icon">🎯</div>
+            <div class="sc-icon"><img src="images/attack-action-obj.png" alt="Action Obj."></div>
             <div class="sc-name">Action Obj. <span class="info-btn" onclick="">i<div class="info-popup wide below"><strong>How to unlock:</strong> Be the first to play all 6 Kill Chain attack types (Recon, Weaponize, Delivery, Exploit, Install, C2) in front of you.<br><br><strong>Effect:</strong> Play at any time — the player holding the Data Flag must give it to you. <em>Respond cannot cancel this card.</em></div></span></div>
             <div class="sc-status" id="actionobj-status">Locked</div>
           </div>
@@ -1357,9 +1392,16 @@ function renderOpponents(gs) {
 
     function oppSlot(t, cat) {
       const n = oppCounts[t.id] || 0;
-      return `<div class="opp-kc-slot ${cat}${n > 0 ? ' filled' : ''}" title="${t.name}">
-        ${t.emoji}
-        ${n > 1 ? `<span class="opp-kc-count">×${n}</span>` : ''}
+      const filled = n > 0;
+      const inner = t.img
+        ? `<img src="${t.img}" alt="${t.name}" class="opp-kc-slot-img${filled ? '' : ' opp-kc-slot-img-ghost'}">`
+        : t.emoji;
+      return `<div class="opp-kc-slot-wrap">
+        <div class="opp-kc-slot ${cat}${filled ? ' filled' : ''}${t.img ? ' opp-kc-slot-has-img' : ''}" title="${t.name}">
+          ${inner}
+          ${n > 1 ? `<span class="opp-kc-count">×${n}</span>` : ''}
+        </div>
+        <span class="opp-kc-label">${t.name}</span>
       </div>`;
     }
 
@@ -1391,10 +1433,11 @@ function renderMyPlayed(played) {
   function makeSlot(t, cat) {
     const n = counts[t.id] || 0;
     const filled = n > 0;
-    const inner = (filled && t.img)
-      ? `<img src="${t.img}" alt="${t.name}" class="kc-slot-img">`
+    const inner = t.img
+      ? `<img src="${t.img}" alt="${t.name}" class="kc-slot-img${filled ? '' : ' kc-slot-img-ghost'}">
+         <span class="kc-slot-name-label">${t.name}</span>`
       : `<span class="kc-slot-emoji">${t.emoji}</span><span class="kc-slot-name">${t.name}</span>`;
-    return `<div class="kc-slot ${cat}${filled ? ' filled' : ''}${filled && t.img ? ' kc-slot-has-img' : ''}" title="${t.name}">
+    return `<div class="kc-slot ${cat}${filled ? ' filled' : ''}${t.img ? ' kc-slot-has-img' : ''}" title="${t.name}">
       ${inner}
       ${n > 1 ? `<span class="kc-slot-count">×${n}</span>` : ''}
     </div>`;
@@ -1441,6 +1484,7 @@ function selectCard(cardId) {
 
   if (gs.phase === 'discard') {
     // Discard immediately on click
+    hideCardZoom();
     send({ type:'game_action', action:'discard_card', cardId });
     return;
   }
@@ -1452,13 +1496,16 @@ function selectCard(cardId) {
       if (gs.iAmInstallBlocked && cardObj?.cat === 'defend') {
         showToast('⚙️ You are blocked from playing defend cards this turn (Installation)!');
         selectedHandCard = null;
+        hideCardZoom();
         renderHand(gs);
         return;
       }
+      hideCardZoom();
       send({ type:'game_action', action:'play_card', cardId });
       selectedHandCard = null;
     } else {
       selectedHandCard = cardId;
+      hideCardZoom();
       renderHand(gs);
       renderActionBar(gs, true);
     }
