@@ -488,7 +488,7 @@ body { padding-top: 44px; }
       <span class="player-dot" id="turn-dot"></span>
       <span id="turn-name">Blue's Turn</span>
     </div>
-    <div style="display:flex;align-items:center;gap:4px"><div class="view-toggle" id="view-toggle"></div><button class="info-btn" onclick="showInfo('firstplayer')" title="First Player">i</button></div>
+    <div class="view-toggle" id="view-toggle"></div>
     <span class="room-badge" id="room-badge">ABCD</span>
     <div class="round-info" id="round-info">Round 1</div>
     <div class="actions-info">Actions: <span class="actions-count" id="actions-count">3</span></div>
@@ -980,7 +980,7 @@ function renderTopBar() {
     if (isViewed) cls += ' active';
     if (isTurn) cls += ' is-turn';
     const viewArg = idx === myId ? -1 : idx;
-    const firstMark = idx === 0 ? '<span class="first-badge">1ST</span>' : '';
+    const firstMark = idx === 0 ? '<img src="images/icon-brain.png" style="width:16px;height:16px;vertical-align:middle;margin-left:2px"><span class="first-badge">1ST<span onclick="event.stopPropagation();showInfo(\'firstplayer\')" style="margin-left:3px;font-size:8px;width:13px;height:13px;line-height:13px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;border:1px solid rgba(255,255,255,0.7);background:rgba(255,255,255,0.25);cursor:pointer;padding:0 2px;font-weight:700">i</span></span>' : '';
     vhtml += `<button class="${cls}" onclick="setView(${viewArg})"><span class="vb-dot" style="background:${p.hex}"></span>${label}${firstMark}</button>`;
   }
   document.getElementById('view-toggle').innerHTML = vhtml;
