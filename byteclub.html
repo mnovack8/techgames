@@ -185,7 +185,9 @@ body{padding-top:44px;}
 .my-played-rows{display:flex;flex-direction:column;gap:4px;}
 /* My kill-chain slot grid */
 .kc-row{display:flex;align-items:center;gap:8px;}
-.kc-row-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#4b5563;width:64px;flex-shrink:0;text-align:right;}
+.kc-row-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#6b7280;width:72px;flex-shrink:0;text-align:right;display:flex;align-items:center;justify-content:flex-end;gap:5px;}
+.kc-row-label.attack{color:#f87171;}
+.kc-row-label.defend{color:#93c5fd;}
 .kc-slots{display:flex;gap:5px;flex-wrap:nowrap;}
 .kc-slot{display:flex;flex-direction:column;align-items:center;justify-content:center;width:56px;min-height:42px;padding:3px 2px;border-radius:7px;border:2px dashed #3d5570;color:#6b8aaa;position:relative;cursor:default;transition:all 0.2s;}
 .kc-slot.filled.attack{background:rgba(239,68,68,0.2);border:2px solid rgba(239,68,68,0.55);color:#fca5a5;}
@@ -1450,11 +1452,11 @@ function renderMyPlayed(played) {
 
   el.innerHTML = `
     <div class="kc-row">
-      <span class="kc-row-label">⚔️ Kill Chain <span class="info-btn" onclick="">i<div class="info-popup wide"><strong>Cyber Kill Chain</strong> — play one of each attack type to unlock <em>Action Objectives</em>.<br><br>🔍 <strong>Recon</strong> — look at a hand or swap played attack cards<br>⚒️ <strong>Weaponize</strong> — cancel an opponent's defend card (out of turn)<br>📨 <strong>Delivery</strong> — swap up to 2 played cards with opponents<br>💥 <strong>Exploit</strong> — blindly steal 1 card from a target<br>⚙️ <strong>Install</strong> — block a target from playing defend cards<br>📡 <strong>C2</strong> — steal the Data Flag, or target gives you a card</div></span></span>
+      <span class="kc-row-label attack">Cyberkill Chain<span class="info-btn" onclick="">i<div class="info-popup wide"><strong>Cyber Kill Chain</strong> — play one of each attack type to unlock <em>Action Objectives</em>.<br><br>🔍 <strong>Recon</strong> — look at a hand or swap played attack cards<br>⚒️ <strong>Weaponize</strong> — cancel an opponent's defend card (out of turn)<br>📨 <strong>Delivery</strong> — swap up to 2 played cards with opponents<br>💥 <strong>Exploit</strong> — blindly steal 1 card from a target<br>⚙️ <strong>Install</strong> — block a target from playing defend cards<br>📡 <strong>C2</strong> — steal the Data Flag, or target gives you a card</div></span></span>
       <div class="kc-slots">${attackSlots}</div>
     </div>
     <div class="kc-row">
-      <span class="kc-row-label">🛡️ NIST <span class="info-btn" onclick="">i<div class="info-popup wide"><strong>NIST Cybersecurity Framework</strong> — play one of each defend type to unlock <em>Govern</em>.<br><br>🔎 <strong>Identify</strong> — reveal Data Flag holder or swap played defend cards<br>🛡️ <strong>Protect</strong> — block attacks until your next turn<br>👁️ <strong>Detect</strong> — view and reorder the top 5 deck cards<br>🚨 <strong>Respond</strong> — cancel an attack targeting you (out of turn)<br>🔄 <strong>Recover</strong> — draw until you have 5 cards</div></span></span>
+      <span class="kc-row-label defend">NIST<span class="info-btn" onclick="">i<div class="info-popup wide"><strong>NIST Cybersecurity Framework</strong> — play one of each defend type to unlock <em>Govern</em>.<br><br>🔎 <strong>Identify</strong> — reveal Data Flag holder or swap played defend cards<br>🛡️ <strong>Protect</strong> — block attacks until your next turn<br>👁️ <strong>Detect</strong> — view and reorder the top 5 deck cards<br>🚨 <strong>Respond</strong> — cancel an attack targeting you (out of turn)<br>🔄 <strong>Recover</strong> — draw until you have 5 cards</div></span></span>
       <div class="kc-slots">${defendSlots}</div>
     </div>`;
 }
