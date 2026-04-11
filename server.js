@@ -2568,6 +2568,7 @@ const server = http.createServer((req, res) => {
   let pathname = parsed.pathname;
   if (pathname === '/byteclub' || pathname === '/byteclub.html') pathname = '/byteclub.html';
   else if (pathname === '/fuzznet' || pathname === '/fuzznet.html') pathname = '/fuzznet.html';
+  else if (pathname === '/qubit-waitlist' || pathname === '/qubit-waitlist.html') pathname = '/qubit-waitlist.html';
   else if (pathname === '/') pathname = '/index.html';
   const filePath = path.join(__dirname, pathname);
   // Only serve files under __dirname (prevent path traversal)
