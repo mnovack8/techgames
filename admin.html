@@ -3,238 +3,147 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin — FuzzNet Labs</title>
+<title>Tech Games Admin</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-
-<!-- Google Identity Services -->
 <script src="https://accounts.google.com/gsi/client" async defer></script>
-
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --yellow: #d1db24;
+  --yellow-dark: #b8c11e;
+  --green: #62b517;
+  --dark-green: #4a8c11;
+  --bg: #e8edd8;
+  --surface: #f4fae8;
+  --white: #ffffff;
+  --border: #a8c96a;
+  --border-light: #dde8c8;
+  --text: #2a2a2a;
+  --muted: #6b7a4a;
+  --subtle: #888;
+  --red: #c0392b;
+  --shadow: rgba(98,181,23,0.14);
+  --shadow-lg: rgba(98,181,23,0.22);
+}
+body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 
-  :root {
-    --yellow:  #d1db24;
-    --dark:    #0d1117;
-    --card-bg: #111827;
-    --border:  #1f2937;
-    --text:    #e5e7eb;
-    --muted:   #6b7280;
-    --green:   #62b517;
-    --red:     #ef4444;
-  }
+/* ── Login ── */
+#login-screen { display:flex; flex-direction:column; align-items:center; gap:28px; animation:fadein .4s ease; }
+.lock-logo { display:flex; flex-direction:column; align-items:center; gap:6px; }
+.lock-icon { font-size:48px; }
+.lock-title { font-size:22px; font-weight:900; color:var(--dark-green); }
+.lock-subtitle { font-size:13px; color:var(--subtle); font-weight:600; }
+.login-card { background:var(--white); border:2px solid var(--border); border-radius:16px; padding:32px 36px; display:flex; flex-direction:column; align-items:center; gap:20px; min-width:320px; box-shadow:0 4px 24px var(--shadow-lg); }
+.login-card p { font-size:13px; color:var(--subtle); text-align:center; line-height:1.5; }
+.divider { width:100%; border:none; border-top:1px solid var(--border-light); }
 
-  body {
-    font-family: 'Nunito', sans-serif;
-    background: var(--dark);
-    color: var(--text);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
+/* ── Denied ── */
+#denied-screen { display:none; flex-direction:column; align-items:center; gap:20px; animation:fadein .4s ease; }
+#denied-screen .icon { font-size:52px; }
+#denied-screen h2 { font-size:20px; font-weight:800; color:var(--red); }
+#denied-screen p { font-size:13px; color:var(--subtle); text-align:center; max-width:280px; line-height:1.6; }
+#denied-screen button { padding:9px 22px; background:transparent; border:1px solid var(--border); border-radius:8px; color:var(--muted); font-family:inherit; font-size:13px; font-weight:700; cursor:pointer; }
 
-  /* ── Lock screen ── */
-  #login-screen {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 28px;
-    animation: fadein 0.4s ease;
-  }
+/* ── Admin shell ── */
+#admin-screen { display:none; flex-direction:column; width:100%; min-height:100vh; animation:fadein .5s ease; }
 
-  .lock-logo {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-  }
-  .lock-icon {
-    font-size: 48px;
-    line-height: 1;
-    filter: drop-shadow(0 0 16px rgba(209,219,36,0.4));
-  }
-  .lock-title {
-    font-size: 22px;
-    font-weight: 900;
-    color: var(--yellow);
-    letter-spacing: -0.3px;
-  }
-  .lock-subtitle {
-    font-size: 13px;
-    color: var(--muted);
-    font-weight: 600;
-  }
+/* Top bar — mirrors the homepage header */
+.admin-topbar { background:var(--white); border-bottom:3px solid var(--yellow); padding:0 28px; height:56px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:10; box-shadow:0 2px 12px var(--shadow); }
+.brand { font-size:16px; font-weight:800; color:var(--dark-green); display:flex; align-items:center; gap:10px; letter-spacing:.5px; }
+.brand span { font-size:10px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; background:var(--yellow); color:#2a3a00; padding:2px 8px; border-radius:20px; }
+.topbar-right { display:flex; align-items:center; gap:12px; font-size:12px; color:var(--subtle); }
+.sign-out-btn { padding:6px 16px; background:transparent; border:1px solid var(--border); border-radius:8px; color:var(--muted); font-family:inherit; font-size:12px; font-weight:700; cursor:pointer; transition:all .15s; }
+.sign-out-btn:hover { border-color:var(--red); color:var(--red); }
 
-  .login-card {
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 32px 36px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-    min-width: 320px;
-    box-shadow: 0 8px 40px rgba(0,0,0,0.5);
-  }
+/* Page nav */
+.page-nav { background:var(--white); border-bottom:1px solid var(--border-light); padding:0 28px; display:flex; gap:2px; }
+.page-nav-btn { padding:13px 20px; background:transparent; border:none; border-bottom:3px solid transparent; color:var(--subtle); font-family:inherit; font-size:13px; font-weight:800; cursor:pointer; transition:all .15s; white-space:nowrap; }
+.page-nav-btn:hover { color:var(--dark-green); }
+.page-nav-btn.active { color:var(--dark-green); border-bottom-color:var(--yellow); }
 
-  .login-card p {
-    font-size: 13px;
-    color: var(--muted);
-    text-align: center;
-    line-height: 1.5;
-  }
+/* Content */
+.admin-content { padding:24px 28px; max-width:1100px; width:100%; margin:0 auto; display:flex; flex-direction:column; gap:28px; }
+#page-content { display:flex; flex-direction:column; gap:20px; }
 
-  /* Google sign-in button container */
-  #g_id_signin { display: flex; justify-content: center; }
+/* Mode filter pills */
+.mode-filter { display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+.mode-pill { padding:5px 13px; border-radius:20px; border:1px solid var(--border); background:var(--white); color:var(--muted); font-family:inherit; font-size:12px; font-weight:700; cursor:pointer; transition:all .15s; }
+.mode-pill:hover { border-color:var(--green); color:var(--dark-green); background:var(--surface); }
+.mode-pill.active { background:var(--yellow); color:#2a3a00; border-color:var(--yellow-dark); }
 
-  .divider {
-    width: 100%;
-    border: none;
-    border-top: 1px solid var(--border);
-  }
+/* Period tabs */
+.period-tabs { display:flex; gap:4px; }
+.period-btn { padding:6px 14px; border-radius:8px; border:1px solid var(--border); background:var(--white); color:var(--muted); font-family:inherit; font-size:12px; font-weight:700; cursor:pointer; transition:all .15s; }
+.period-btn:hover { border-color:var(--green); color:var(--dark-green); }
+.period-btn.active { background:var(--yellow); color:#2a3a00; border-color:var(--yellow-dark); }
 
-  /* ── Denied screen ── */
-  #denied-screen {
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-    animation: fadein 0.4s ease;
-  }
-  #denied-screen .icon { font-size: 52px; }
-  #denied-screen h2 { font-size: 20px; font-weight: 800; color: var(--red); }
-  #denied-screen p { font-size: 13px; color: var(--muted); text-align: center; max-width: 280px; line-height: 1.6; }
-  #denied-screen button {
-    margin-top: 4px;
-    padding: 9px 22px;
-    background: transparent;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    color: var(--muted);
-    font-family: inherit;
-    font-size: 13px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: border-color 0.15s, color 0.15s;
-  }
-  #denied-screen button:hover { border-color: var(--muted); color: var(--text); }
+/* Section label — matches homepage's green left-border label style */
+.section-lbl { font-size:10px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:var(--green); border-left:4px solid var(--yellow); padding-left:10px; }
 
-  /* ── Admin screen ── */
-  #admin-screen {
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    gap: 32px;
-    padding: 40px 20px;
-    width: 100%;
-    max-width: 900px;
-    animation: fadein 0.5s ease;
-  }
+/* Stat grid */
+.stat-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:16px; }
+.stat-card { background:var(--white); border:2px solid var(--border); border-radius:14px; padding:22px 20px 18px; box-shadow:0 4px 16px var(--shadow); }
+.stat-card .lbl { font-size:10px; font-weight:800; letter-spacing:.8px; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
+.stat-card .val { font-size:34px; font-weight:900; color:var(--text); line-height:1; }
+.stat-card .sub { font-size:11px; color:var(--subtle); font-weight:600; margin-top:4px; }
+.stat-card.hl { border-color:var(--yellow); background:linear-gradient(135deg,#fff 60%,#f8fce8); }
+.stat-card.hl .val { color:var(--dark-green); }
+.stat-card.green .val { color:var(--green); }
 
-  .admin-header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-    text-align: center;
-  }
-  .admin-header .badge {
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: var(--dark);
-    background: var(--yellow);
-    padding: 3px 10px;
-    border-radius: 20px;
-  }
-  .admin-header h1 {
-    font-size: 32px;
-    font-weight: 900;
-    color: var(--text);
-    letter-spacing: -0.5px;
-  }
-  .admin-header .welcome {
-    font-size: 14px;
-    color: var(--muted);
-    font-weight: 600;
-  }
-  #admin-email {
-    color: var(--yellow);
-  }
+/* Charts */
+.chart-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+@media(max-width:700px){ .chart-grid { grid-template-columns:1fr; } }
+.chart-card { background:var(--white); border:2px solid var(--border); border-radius:14px; padding:20px 22px; box-shadow:0 4px 16px var(--shadow); }
+.chart-card h3 { font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.8px; color:var(--muted); margin-bottom:14px; }
+.chart-wrap { position:relative; height:175px; }
+.chart-full { background:var(--white); border:2px solid var(--border); border-radius:14px; padding:20px 22px; box-shadow:0 4px 16px var(--shadow); }
+.chart-full h3 { font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.8px; color:var(--muted); margin-bottom:0; }
+.chart-full-wrap { position:relative; height:185px; }
 
-  .admin-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 16px;
-    width: 100%;
-  }
+/* Mode breakdown */
+.mode-card { background:var(--white); border:2px solid var(--border); border-radius:14px; padding:22px; box-shadow:0 4px 16px var(--shadow); }
+.mode-card h3 { font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.8px; color:var(--muted); margin-bottom:16px; }
+.mode-row { display:flex; align-items:center; gap:10px; margin-bottom:11px; }
+.mode-row:last-child { margin-bottom:0; }
+.mode-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+.mode-lbl { font-size:12px; font-weight:700; color:var(--muted); width:80px; flex-shrink:0; }
+.bar-wrap { flex:1; height:8px; background:var(--border-light); border-radius:4px; overflow:hidden; }
+.bar-fill { height:100%; border-radius:4px; transition:width .5s ease; }
+.bar-count { font-size:12px; font-weight:800; color:var(--text); width:32px; text-align:right; flex-shrink:0; }
 
-  .admin-card {
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 24px 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .admin-card .ac-icon { font-size: 28px; }
-  .admin-card h3 { font-size: 15px; font-weight: 800; color: var(--text); }
-  .admin-card p  { font-size: 12px; color: var(--muted); line-height: 1.5; }
+/* Export */
+.export-row { display:flex; gap:8px; flex-wrap:wrap; }
+.export-btn { padding:8px 16px; background:var(--white); border:1px solid var(--border); border-radius:8px; color:var(--muted); font-family:inherit; font-size:12px; font-weight:700; cursor:pointer; transition:all .15s; }
+.export-btn:hover { border-color:var(--green); color:var(--dark-green); background:var(--surface); }
 
-  .sign-out-btn {
-    padding: 9px 24px;
-    background: transparent;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    color: var(--muted);
-    font-family: inherit;
-    font-size: 13px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: border-color 0.15s, color 0.15s;
-  }
-  .sign-out-btn:hover { border-color: var(--red); color: var(--red); }
+.loading-msg { color:var(--subtle); font-size:13px; font-weight:600; padding:12px 0; }
 
-  @keyframes fadein { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+@keyframes fadein { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
 </style>
 </head>
 <body>
 
-<!-- ── Login screen ── -->
+<!-- ── Login ── -->
 <div id="login-screen">
   <div class="lock-logo">
     <div class="lock-icon">🔐</div>
-    <div class="lock-title">FuzzNet Labs Admin</div>
+    <div class="lock-title">Tech Games Admin</div>
     <div class="lock-subtitle">Restricted access — authorised users only</div>
   </div>
-
   <div class="login-card">
     <p>Sign in with your Google account to continue.<br>Only authorised accounts may proceed.</p>
     <hr class="divider">
-
-    <!-- Google One Tap + Sign-In button -->
     <div id="g_id_onload"
          data-client_id="655697852569-e4uu415rmg73dlggn6ih4llh15lnneeo.apps.googleusercontent.com"
-         data-callback="handleCredential"
-         data-auto_prompt="false">
-    </div>
-    <div class="g_id_signin"
-         data-type="standard"
-         data-shape="pill"
-         data-theme="outline"
-         data-text="sign_in_with"
-         data-size="large"
-         data-logo_alignment="left">
-    </div>
+         data-callback="handleCredential" data-auto_prompt="false"></div>
+    <div class="g_id_signin" data-type="standard" data-shape="pill" data-theme="outline"
+         data-text="sign_in_with" data-size="large" data-logo_alignment="left"></div>
   </div>
 </div>
 
-<!-- ── Access denied screen ── -->
+<!-- ── Denied ── -->
 <div id="denied-screen">
   <div class="icon">🚫</div>
   <h2>Access Denied</h2>
@@ -242,84 +151,347 @@
   <button onclick="resetToLogin()">Try a different account</button>
 </div>
 
-<!-- ── Admin screen ── -->
+<!-- ── Admin ── -->
 <div id="admin-screen">
-  <div class="admin-header">
-    <span class="badge">Admin</span>
-    <h1>You got to the admin screen.</h1>
-    <p class="welcome">Signed in as <span id="admin-email"></span></p>
-  </div>
-
-  <div class="admin-grid">
-    <div class="admin-card">
-      <div class="ac-icon">🎮</div>
-      <h3>FuzzNet Labs</h3>
-      <p>Live game — active players, session logs, and game stats.</p>
-    </div>
-    <div class="admin-card">
-      <div class="ac-icon">🔐</div>
-      <h3>Byte Club</h3>
-      <p>Live game — active sessions, tutorial completions, and feedback.</p>
-    </div>
-    <div class="admin-card">
-      <div class="ac-icon">⚛️</div>
-      <h3>Qubit Waitlist</h3>
-      <p>Waitlist signups via Google Forms. View responses in Google Sheets.</p>
+  <div class="admin-topbar">
+    <div class="brand"><img src="/images/logo.png" alt="logo" style="width:28px;height:28px;object-fit:contain;"> Tech Games <span>Admin</span></div>
+    <div class="topbar-right">
+      <span id="admin-email"></span>
+      <button class="sign-out-btn" onclick="signOut()">Sign out</button>
     </div>
   </div>
 
-  <button class="sign-out-btn" onclick="signOut()">Sign out</button>
+  <!-- Page navigation -->
+  <div class="page-nav">
+    <button class="page-nav-btn active" data-page="homepage"  onclick="setPage('homepage')">Homepage</button>
+    <button class="page-nav-btn"        data-page="fuzznet"   onclick="setPage('fuzznet')">FuzzNet Labs</button>
+    <button class="page-nav-btn"        data-page="byteclub"  onclick="setPage('byteclub')">Byte Club</button>
+  </div>
+
+  <div class="admin-content">
+    <!-- Period selector (shared) -->
+    <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+      <div class="section-lbl">Period</div>
+      <div class="period-tabs">
+        <button class="period-btn" data-days="7"   onclick="setPeriod(7)">7 days</button>
+        <button class="period-btn active" data-days="30"  onclick="setPeriod(30)">30 days</button>
+        <button class="period-btn" data-days="90"  onclick="setPeriod(90)">90 days</button>
+        <button class="period-btn" data-days="365" onclick="setPeriod(365)">365 days</button>
+      </div>
+    </div>
+
+    <div id="page-content">
+      <div class="loading-msg">Loading…</div>
+    </div>
+
+    <!-- Export (always shown) -->
+    <div>
+      <div class="section-lbl" style="margin-bottom:10px">CSV Export</div>
+      <div class="export-row">
+        <button class="export-btn" onclick="exportCSV(7)">⬇ 7 days</button>
+        <button class="export-btn" onclick="exportCSV(30)">⬇ 30 days</button>
+        <button class="export-btn" onclick="exportCSV(90)">⬇ 90 days</button>
+        <button class="export-btn" onclick="exportCSV(365)">⬇ 365 days</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
-// Send the Google credential token to the SERVER for verification.
-// The server checks the token with Google's API and validates the email.
-// The client secret never appears here — it lives only in .env on the server.
+let currentDays = 30, currentPage = 'homepage';
+const charts = {};
+
+const CHART_OPT = {
+  responsive: true, maintainAspectRatio: false,
+  plugins: { legend: { labels: { color:'#6b7a4a', font:{ family:'Nunito', size:11, weight:'700' }, boxWidth:12, padding:14 } } },
+  scales: {
+    x: { ticks:{ color:'#888', font:{ family:'Nunito', size:10 }, maxRotation:45 }, grid:{ color:'rgba(168,201,106,0.25)' } },
+    y: { ticks:{ color:'#888', font:{ family:'Nunito', size:10 } }, grid:{ color:'rgba(168,201,106,0.25)' }, beginAtZero:true },
+  },
+};
+
+function destroyCharts() {
+  Object.values(charts).forEach(c => c.destroy());
+  Object.keys(charts).forEach(k => delete charts[k]);
+}
+
 async function handleCredential(response) {
   try {
     const res = await fetch('/admin/verify', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ credential: response.credential }),
-      credentials: 'same-origin'   // sends/receives the session cookie
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ credential: response.credential }), credentials:'same-origin'
     });
     const data = await res.json();
     if (res.ok && data.ok) {
       document.getElementById('admin-email').textContent = data.email;
-      show('admin-screen');
-    } else {
-      show('denied-screen');
-    }
-  } catch (e) {
-    show('denied-screen');
-  }
+      show('admin-screen'); loadData();
+    } else { show('denied-screen'); }
+  } catch(e) { show('denied-screen'); }
 }
 
 async function signOut() {
-  await fetch('/admin/signout', { method: 'POST', credentials: 'same-origin' });
-  google.accounts.id.disableAutoSelect();
-  show('login-screen');
+  await fetch('/admin/signout', { method:'POST', credentials:'same-origin' });
+  google.accounts.id.disableAutoSelect(); show('login-screen');
 }
-
-function resetToLogin() {
-  google.accounts.id.disableAutoSelect();
-  show('login-screen');
-}
-
+function resetToLogin() { google.accounts.id.disableAutoSelect(); show('login-screen'); }
 function show(id) {
-  ['login-screen','denied-screen','admin-screen'].forEach(s => {
-    document.getElementById(s).style.display = (s === id) ? 'flex' : 'none';
+  ['login-screen','denied-screen','admin-screen'].forEach(s =>
+    document.getElementById(s).style.display = s === id ? 'flex' : 'none');
+}
+
+function setPeriod(days) {
+  currentDays = days;
+  activeHpFilters = new Set(ALL_HP_KEYS);
+  activeGameFilters = new Set(DEFAULT_GAME_KEYS);
+  _hpData = null;
+  document.querySelectorAll('[data-days]').forEach(b => b.classList.toggle('active', +b.dataset.days === days));
+  loadData();
+}
+
+function setPage(page) {
+  currentPage = page;
+  activeHpFilters = new Set(ALL_HP_KEYS);
+  activeGameFilters = new Set(DEFAULT_GAME_KEYS);
+  _gameData = null;
+  _hpData = null;
+  document.querySelectorAll('[data-page]').forEach(b => b.classList.toggle('active', b.dataset.page === page));
+  loadData();
+}
+
+async function loadData() {
+  document.getElementById('page-content').innerHTML = '<div class="loading-msg">Loading…</div>';
+  destroyCharts();
+  try {
+    const res = await fetch(`/admin/metrics?days=${currentDays}&page=${currentPage}`, { credentials:'same-origin' });
+    if (!res.ok) { document.getElementById('page-content').innerHTML = '<div class="loading-msg">Failed to load — check server.</div>'; return; }
+    const d = await res.json();
+    if (currentPage === 'homepage') renderHomepage(d);
+    else renderGame(d);
+  } catch(e) { document.getElementById('page-content').innerHTML = `<div class="loading-msg">Error: ${e.message}</div>`; console.error('loadData error:', e); }
+}
+
+/* ── HOMEPAGE PAGE ── */
+const HP_SERIES = [
+  { key:'visits',   label:'Homepage Visits',    data: d => d.chart.hp,     borderColor:'#d1db24', backgroundColor:'rgba(209,219,36,.15)' },
+  { key:'fuzznet',  label:'FuzzNet Buy',         data: d => d.chart.fnPhys, borderColor:'#3b82f6', backgroundColor:'rgba(59,130,246,.12)'  },
+  { key:'byteclub', label:'Byte Club Buy',        data: d => d.chart.bcPhys, borderColor:'#62b517', backgroundColor:'rgba(98,181,23,.12)'   },
+  { key:'qubit',    label:'Qubit Waitlist',       data: d => d.chart.qubit,  borderColor:'#8b5cf6', backgroundColor:'rgba(139,92,246,.12)'  },
+];
+const ALL_HP_KEYS = HP_SERIES.map(s => s.key);
+let activeHpFilters = new Set(ALL_HP_KEYS); // all on by default
+let _hpData = null;
+
+function buildHpChart(d) {
+  if (charts.hpMain) { charts.hpMain.destroy(); delete charts.hpMain; }
+  const { labels } = d.chart;
+  const zeros = new Array(labels.length).fill(0);
+  const datasets = HP_SERIES
+    .filter(s => activeHpFilters.has(s.key))
+    .map(s => ({ label: s.label, data: s.data(d) || zeros, borderColor: s.borderColor, backgroundColor: s.backgroundColor, fill: true, tension: .3, pointRadius: 3 }));
+  charts.hpMain = new Chart(document.getElementById('chart-hp-main'), {
+    type: 'line',
+    data: { labels, datasets },
+    options: { ...CHART_OPT },
   });
 }
 
-// On load: check if a valid session cookie already exists
+function toggleHpFilter(key) {
+  if (key === 'all') {
+    // If all already active, do nothing; otherwise restore all
+    ALL_HP_KEYS.forEach(k => activeHpFilters.add(k));
+  } else {
+    if (activeHpFilters.has(key)) {
+      if (activeHpFilters.size > 1) activeHpFilters.delete(key); // keep at least one series
+    } else {
+      activeHpFilters.add(key);
+    }
+  }
+  updateHpPills();
+  if (_hpData) buildHpChart(_hpData);
+}
+
+function updateHpPills() {
+  const allActive = ALL_HP_KEYS.every(k => activeHpFilters.has(k));
+  document.querySelectorAll('.hp-pill').forEach(b => {
+    const k = b.dataset.filter;
+    b.classList.toggle('active', k === 'all' ? allActive : activeHpFilters.has(k));
+  });
+}
+
+function renderHomepage(d) {
+  _hpData = d;
+  document.getElementById('page-content').innerHTML = `
+    <div>
+      <div class="section-lbl" style="margin-bottom:14px">Overview</div>
+      <div class="stat-grid" id="hp-stats"></div>
+    </div>
+    <div class="chart-full">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px">
+        <h3 style="margin-bottom:0">Activity over time</h3>
+        <div class="mode-filter" id="hp-filter-pills"></div>
+      </div>
+      <div class="chart-full-wrap"><canvas id="chart-hp-main"></canvas></div>
+    </div>
+  `;
+
+  document.getElementById('hp-stats').innerHTML = `
+    <div class="stat-card hl">
+      <div class="lbl">Homepage visits</div>
+      <div class="val">${d.hp.toLocaleString()}</div>
+      <div class="sub">past ${currentDays} days</div>
+    </div>
+    <div class="stat-card">
+      <div class="lbl">FuzzNet Buy Physical</div>
+      <div class="val">${d.fnPhys.toLocaleString()}</div>
+      <div class="sub">button clicks</div>
+    </div>
+    <div class="stat-card">
+      <div class="lbl">Byte Club Buy Physical</div>
+      <div class="val">${d.bcPhys.toLocaleString()}</div>
+      <div class="sub">button clicks</div>
+    </div>
+    <div class="stat-card">
+      <div class="lbl">Qubit Waitlist</div>
+      <div class="val">${d.qubit.toLocaleString()}</div>
+      <div class="sub">button clicks</div>
+    </div>
+  `;
+
+  document.getElementById('hp-filter-pills').innerHTML =
+    `<button class="mode-pill hp-pill active" data-filter="all" onclick="toggleHpFilter('all')">All</button>` +
+    HP_SERIES.map(s =>
+      `<button class="mode-pill hp-pill active" data-filter="${s.key}" onclick="toggleHpFilter('${s.key}')">${s.label}</button>`
+    ).join('');
+
+  buildHpChart(d);
+}
+
+/* ── GAME PAGE (FuzzNet / Byte Club) ── */
+const GAME_SERIES = [
+  { key:'started',  label:'All Started', data: d => d.chart.started,                      borderColor:'#3b82f6', backgroundColor:'rgba(59,130,246,.15)' },
+  { key:'completed',label:'Completed',   data: d => d.chart.completed,                    borderColor:'#62b517', backgroundColor:'rgba(98,181,23,.12)'  },
+  { key:'tutorial', label:'Tutorial',    data: d => (d.chart.modeStarted||{}).tutorial,   borderColor:'#d1db24', backgroundColor:'rgba(209,219,36,.12)'  },
+  { key:'1p_bot',   label:'1P + Bot',    data: d => (d.chart.modeStarted||{})['1p_bot'],  borderColor:'#60a5fa', backgroundColor:'rgba(96,165,250,.12)'  },
+  { key:'2p',       label:'2 Player',    data: d => (d.chart.modeStarted||{})['2p'],      borderColor:'#4aff8a', backgroundColor:'rgba(74,255,138,.1)'   },
+  { key:'3p',       label:'3 Player',    data: d => (d.chart.modeStarted||{})['3p'],      borderColor:'#f59e0b', backgroundColor:'rgba(245,158,11,.12)'  },
+  { key:'4p',       label:'4 Player',    data: d => (d.chart.modeStarted||{})['4p'],      borderColor:'#8b5cf6', backgroundColor:'rgba(139,92,246,.12)'  },
+];
+const DEFAULT_GAME_KEYS = new Set(['started', 'completed']);
+let activeGameFilters = new Set(DEFAULT_GAME_KEYS);
+let _gameData = null;
+
+function buildSessionsChart(d) {
+  if (charts.sessions) { charts.sessions.destroy(); delete charts.sessions; }
+  const { labels } = d.chart;
+  const zeros = new Array(labels.length).fill(0);
+  const datasets = GAME_SERIES
+    .filter(s => activeGameFilters.has(s.key))
+    .map(s => ({ label: s.label, data: s.data(d) || zeros, borderColor: s.borderColor, backgroundColor: s.backgroundColor, fill: true, tension: .3, pointRadius: 3 }));
+  charts.sessions = new Chart(document.getElementById('chart-sessions'), {
+    type: 'line',
+    data: { labels, datasets },
+    options: { ...CHART_OPT },
+  });
+}
+
+function toggleGameFilter(key) {
+  const ALL_GAME_KEYS = GAME_SERIES.map(s => s.key);
+  if (key === 'all') {
+    ALL_GAME_KEYS.forEach(k => activeGameFilters.add(k));
+  } else {
+    if (activeGameFilters.has(key)) {
+      if (activeGameFilters.size > 1) activeGameFilters.delete(key);
+    } else {
+      activeGameFilters.add(key);
+    }
+  }
+  updateGamePills();
+  if (_gameData) buildSessionsChart(_gameData);
+}
+
+function updateGamePills() {
+  const ALL_GAME_KEYS = GAME_SERIES.map(s => s.key);
+  const allActive = ALL_GAME_KEYS.every(k => activeGameFilters.has(k));
+  document.querySelectorAll('.game-pill').forEach(b => {
+    const k = b.dataset.series;
+    b.classList.toggle('active', k === 'all' ? allActive : activeGameFilters.has(k));
+  });
+}
+
+function renderGame(d) {
+  _gameData = d;
+  const pct = d.pct;
+  const gameName = d.page === 'fuzznet' ? 'FuzzNet Labs' : 'Byte Club';
+
+  document.getElementById('page-content').innerHTML = `
+    <div>
+      <div class="section-lbl" style="margin-bottom:14px">Overview — ${gameName}</div>
+      <div class="stat-grid" id="game-stats"></div>
+    </div>
+    <div class="chart-full">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px">
+        <h3 style="margin-bottom:0">Sessions started vs completed over time</h3>
+        <div class="mode-filter" id="mode-filter-pills"></div>
+      </div>
+      <div class="chart-full-wrap"><canvas id="chart-sessions"></canvas></div>
+    </div>
+    <div class="mode-card" id="mode-card">
+      <h3>Sessions by player mode</h3>
+      <div id="mode-breakdown"></div>
+    </div>
+  `;
+
+  document.getElementById('game-stats').innerHTML = `
+    <div class="stat-card hl">
+      <div class="lbl">Sessions started</div>
+      <div class="val">${d.started.toLocaleString()}</div>
+      <div class="sub">past ${currentDays} days</div>
+    </div>
+    <div class="stat-card">
+      <div class="lbl">Sessions completed</div>
+      <div class="val">${d.completed.toLocaleString()}</div>
+      <div class="sub">${d.started} started</div>
+    </div>
+    <div class="stat-card${pct >= 50 ? ' green' : ''}">
+      <div class="lbl">Completion rate</div>
+      <div class="val">${pct}%</div>
+      <div class="sub">${d.completed} / (${d.completed} + ${Math.max(d.started - d.completed, 0)})</div>
+    </div>
+  `;
+
+  // Build series filter pills
+  document.getElementById('mode-filter-pills').innerHTML =
+    `<button class="mode-pill game-pill${GAME_SERIES.every(s => activeGameFilters.has(s.key)) ? ' active' : ''}" data-series="all" onclick="toggleGameFilter('all')">All</button>` +
+    GAME_SERIES.map(s =>
+      `<button class="mode-pill game-pill${activeGameFilters.has(s.key) ? ' active' : ''}" data-series="${s.key}" onclick="toggleGameFilter('${s.key}')">${s.label}</button>`
+    ).join('');
+
+  buildSessionsChart(d);
+
+  // Mode breakdown bars (static summary, uses all modes regardless of chart filter)
+  const modeBars = GAME_SERIES.filter(s => !['started','completed'].includes(s.key));
+  const max = Math.max(...modeBars.map(s => d.by_mode[s.key] || 0), 1);
+  document.getElementById('mode-breakdown').innerHTML = modeBars.map(s => {
+    const count = d.by_mode[s.key] || 0;
+    return `<div class="mode-row">
+      <div class="mode-dot" style="background:${s.borderColor}"></div>
+      <div class="mode-lbl">${s.label}</div>
+      <div class="bar-wrap"><div class="bar-fill" style="width:${Math.round(count/max*100)}%;background:${s.borderColor}"></div></div>
+      <div class="bar-count">${count}</div>
+    </div>`;
+  }).join('');
+}
+
+function exportCSV(days) { window.location.href = `/admin/metrics/export?days=${days}`; }
+
+// Session restore on load
 (async () => {
-  const res = await fetch('/admin/session', { credentials: 'same-origin' });
+  const res = await fetch('/admin/session', { credentials:'same-origin' });
   if (res.ok) {
     const data = await res.json();
     if (data.ok) {
       document.getElementById('admin-email').textContent = data.email;
-      show('admin-screen');
+      show('admin-screen'); loadData();
     }
   }
 })();

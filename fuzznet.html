@@ -2007,6 +2007,8 @@ function handleTutAction(action, extra) {
 }
 
 function startTutorial() {
+  fetch('/track', { method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ type:'tutorial_started', gameType:'fuzznet' }) }).catch(()=>{});
   tutorialMode = true;
   tutorialStep = 0;
   tutorialDataPlaced = 0;

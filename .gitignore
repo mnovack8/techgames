@@ -10,3 +10,9 @@ Thumbs.db
 
 # Preview/temp files
 qubit-preview.html
+
+# Live metrics data — stored on server, never committed
+metrics.json
+
+# Google service account key — never committed
+google-service-account.json

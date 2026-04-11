@@ -4,20 +4,243 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const { WebSocketServer } = require('ws');
+const { google } = require('googleapis');
 
 const PORT = process.env.PORT || 8090;
 
 // ==================== ADMIN AUTH ====================
-const ADMIN_EMAIL      = process.env.ADMIN_EMAIL;
-const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
-// Derive session signing key from the two existing secrets — no extra value to store or rotate
-const SESSION_SECRET = crypto
-  .createHash('sha256')
-  .update(process.env.GOOGLE_CLIENT_ID + process.env.GOOGLE_CLIENT_SECRET)
-  .digest('hex');
+// GOOGLE_CLIENT_ID is public — it's already embedded in admin.html
+const GOOGLE_CLIENT_ID = '655697852569-e4uu415rmg73dlggn6ih4llh15lnneeo.apps.googleusercontent.com';
+const ADMIN_EMAIL = 'mnovack8@gmail.com';
+// Random secret generated at startup — no env vars required; sessions reset on server restart
+const SESSION_SECRET = crypto.randomBytes(32).toString('hex');
 
 // In-memory session store: token → { email, expires }
 const adminSessions = new Map();
+
+// ==================== METRICS ====================
+const METRICS_FILE = path.join(__dirname, 'metrics.json');
+let metricsEvents = [];
+
+// Load persisted events on startup
+try {
+  const raw = fs.readFileSync(METRICS_FILE, 'utf8');
+  metricsEvents = JSON.parse(raw);
+} catch (e) { metricsEvents = []; }
+
+// Unique-visitor deduplication — one homepage_visit per IP per calendar day.
+// We store a hashed token (SHA-256 of IP + date) in the event so raw IPs are never persisted.
+const seenVisitors = new Set();
+
+function pruneSeenVisitors() {
+  const cutoff = Date.now() - 24 * 60 * 60 * 1000;
+  seenVisitors.clear();
+  for (const e of metricsEvents) {
+    if (e.type === 'homepage_visit' && e.uvKey && e.ts >= cutoff) seenVisitors.add(e.uvKey);
+  }
+}
+
+// Build from persisted events on startup, then prune hourly
+pruneSeenVisitors();
+setInterval(pruneSeenVisitors, 60 * 60 * 1000);
+
+function visitorKey(req) {
+  const ip  = (req.headers['x-forwarded-for'] || '').split(',')[0].trim()
+              || req.socket.remoteAddress || 'unknown';
+  const day = new Date().toISOString().slice(0, 10); // YYYY-MM-DD in UTC
+  return crypto.createHash('sha256').update(ip + '|' + day).digest('hex').slice(0, 24);
+}
+
+function saveMetrics() {
+  // Keep at most 2 years of events (730 days) to prevent unbounded growth
+  const cutoff = Date.now() - 730 * 24 * 60 * 60 * 1000;
+  metricsEvents = metricsEvents.filter(e => e.ts >= cutoff);
+  fs.writeFile(METRICS_FILE, JSON.stringify(metricsEvents), () => {});
+}
+
+function trackEvent(type, extra = {}) {
+  const event = { type, ts: Date.now(), ...extra };
+  metricsEvents.push(event);
+  saveMetrics();
+  syncEventToSheets(event); // fire-and-forget to Google Sheets
+}
+
+function makeBuckets(cutoff, days) {
+  const DAY_MS = 24 * 60 * 60 * 1000;
+  const n = days <= 30 ? days : days <= 90 ? Math.ceil(days / 3) : Math.ceil(days / 7);
+  const bucketMs = (days * DAY_MS) / n;
+  const labels = [];
+  for (let i = 0; i < n; i++) {
+    const t = new Date(cutoff + (i + 0.5) * bucketMs);
+    labels.push(t.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+  }
+  return { n, bucketMs, labels };
+}
+
+function bucketIdx(ts, cutoff, bucketMs, n) {
+  return Math.min(n - 1, Math.floor((ts - cutoff) / bucketMs));
+}
+
+function getMetrics(days, page = 'homepage') {
+  const cutoff = Date.now() - days * 24 * 60 * 60 * 1000;
+  const ev = metricsEvents.filter(e => e.ts >= cutoff);
+  const { n, bucketMs, labels } = makeBuckets(cutoff, days);
+
+  if (page === 'homepage') {
+    const hpSeries      = new Array(n).fill(0);
+    const fnPhysSeries  = new Array(n).fill(0);
+    const bcPhysSeries  = new Array(n).fill(0);
+    const qubitSeries   = new Array(n).fill(0);
+    let hp = 0, fnPhys = 0, bcPhys = 0, qubit = 0;
+    for (const e of ev) {
+      const i = bucketIdx(e.ts, cutoff, bucketMs, n);
+      if (e.type === 'homepage_visit')  { hp++;     hpSeries[i]++; }
+      if (e.type === 'button_click') {
+        if (e.button === 'fuzznet_physical')  { fnPhys++;  fnPhysSeries[i]++; }
+        if (e.button === 'byteclub_physical') { bcPhys++;  bcPhysSeries[i]++; }
+        if (e.button === 'qubit_waitlist')    { qubit++;   qubitSeries[i]++;  }
+      }
+    }
+    return { page: 'homepage', hp, fnPhys, bcPhys, qubit,
+      chart: { labels, hp: hpSeries, fnPhys: fnPhysSeries, bcPhys: bcPhysSeries, qubit: qubitSeries } };
+  }
+
+  // fuzznet or byteclub page
+  const gt = page; // 'fuzznet' | 'byteclub'
+  const MODE_KEYS = ['tutorial', '1p_bot', '2p', '3p', '4p'];
+  const startedSeries   = new Array(n).fill(0);
+  const completedSeries = new Array(n).fill(0);
+  const byMode          = { tutorial: 0, '1p_bot': 0, '2p': 0, '3p': 0, '4p': 0 };
+  // Per-mode time series for chart filtering
+  const modeStarted    = {};
+  const modeCompleted  = {};
+  for (const mk of MODE_KEYS) {
+    modeStarted[mk]   = new Array(n).fill(0);
+    modeCompleted[mk] = new Array(n).fill(0);
+  }
+  let started = 0, completed = 0, tutorials = 0;
+
+  // Track which mode a session started in so we can attribute completions
+  // (completions don't carry a mode, so we approximate: completed series = global)
+  for (const e of ev) {
+    if (e.gameType !== gt) continue;
+    const i = bucketIdx(e.ts, cutoff, bucketMs, n);
+    if (e.type === 'session_started') {
+      started++;
+      startedSeries[i]++;
+      const mk = (e.mode && byMode[e.mode] !== undefined) ? e.mode : null;
+      if (mk) { byMode[mk]++; modeStarted[mk][i]++; }
+    }
+    if (e.type === 'session_completed') { completed++; completedSeries[i]++; }
+    if (e.type === 'tutorial_started')  { tutorials++; byMode.tutorial++; modeStarted.tutorial[i]++; }
+  }
+
+  const pct = (started + completed) > 0 ? Math.round(completed / (completed + Math.max(started - completed, 0)) * 100) : 0;
+  return { page: gt, started, completed, tutorials, pct, by_mode: byMode,
+    chart: { labels, started: startedSeries, completed: completedSeries, modeStarted } };
+}
+
+// Public lightweight tracking endpoint — called from game/index pages
+function handleTrack(req, res) {
+  let body = '';
+  req.on('data', d => { body += d; });
+  req.on('end', () => {
+    try {
+      const e = JSON.parse(body);
+      const ALLOWED = ['button_click', 'session_started', 'tutorial_started'];
+      const ALLOWED_BUTTONS = ['fuzznet_physical', 'byteclub_physical', 'qubit_waitlist'];
+      if (!ALLOWED.includes(e.type)) { res.writeHead(400); res.end(); return; }
+      if (e.type === 'button_click' && !ALLOWED_BUTTONS.includes(e.button)) { res.writeHead(400); res.end(); return; }
+      // Sanitise — only keep known fields
+      const safe = { type: e.type };
+      if (e.gameType) safe.gameType = e.gameType;
+      if (e.mode)     safe.mode     = e.mode;
+      if (e.button)   safe.button   = e.button;
+      trackEvent(safe.type, safe);
+    } catch(err) {}
+    res.writeHead(204); res.end();
+  });
+}
+
+async function handleAdminMetrics(req, res) {
+  if (!verifyToken(getSessionCookie(req))) { res.writeHead(401); res.end('Unauthorized'); return; }
+  try {
+    const u    = new URL(req.url, `http://${req.headers.host}`);
+    const days = parseInt(u.searchParams.get('days') || '30', 10);
+    const page = u.searchParams.get('page') || 'homepage';
+    const result = getMetrics(days, page);
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify(result));
+  } catch(e) {
+    console.error('[admin/metrics] error:', e);
+    res.writeHead(500, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: e.message }));
+  }
+}
+
+async function handleAdminExportCSV(req, res) {
+  if (!verifyToken(getSessionCookie(req))) { res.writeHead(401); res.end('Unauthorized'); return; }
+  const u = new URL(req.url, `http://${req.headers.host}`);
+  const days = parseInt(u.searchParams.get('days') || '365', 10);
+  const cutoff = Date.now() - days * 24 * 60 * 60 * 1000;
+  const ev = metricsEvents.filter(e => e.ts >= cutoff);
+  const lines = ['timestamp,type,gameType,mode'];
+  for (const e of ev) {
+    lines.push(`${new Date(e.ts).toISOString()},${e.type},${e.gameType||''},${e.mode||''}`);
+  }
+  res.writeHead(200, {
+    'Content-Type': 'text/csv',
+    'Content-Disposition': `attachment; filename="techgames-metrics-${days}d.csv"`,
+  });
+  res.end(lines.join('\n'));
+}
+
+// ==================== GOOGLE SHEETS SYNC ====================
+const SHEETS_ID = '1Ips9aX3ccRMd9IQVly1zHcUhuvzCl40aFSzf25DYOx0';
+const SA_KEY_FILE = path.join(__dirname, 'google-service-account.json');
+
+function getSheetsClient() {
+  if (!fs.existsSync(SA_KEY_FILE)) return null;
+  try {
+    const auth = new google.auth.GoogleAuth({
+      keyFile: SA_KEY_FILE,
+      scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+    });
+    return google.sheets({ version: 'v4', auth });
+  } catch (e) { return null; }
+}
+
+async function syncEventToSheets(event) {
+  const sheets = getSheetsClient();
+  if (!sheets) return; // service account not configured yet
+  try {
+    const ts = new Date(event.ts).toISOString();
+    const row = [ts, event.type, event.gameType || '', event.mode || ''];
+    // Overall Traffic tab — every event
+    await sheets.spreadsheets.values.append({
+      spreadsheetId: SHEETS_ID,
+      range: 'Overall Traffic!A:D',
+      valueInputOption: 'USER_ENTERED',
+      resource: { values: [row] },
+    });
+    // Per-game tab
+    if (event.gameType === 'fuzznet') {
+      await sheets.spreadsheets.values.append({
+        spreadsheetId: SHEETS_ID,
+        range: 'FuzzNet Labs!A:D',
+        valueInputOption: 'USER_ENTERED',
+        resource: { values: [row] },
+      });
+    } else if (event.gameType === 'byteclub') {
+      await sheets.spreadsheets.values.append({
+        spreadsheetId: SHEETS_ID,
+        range: 'Byte Club!A:D',
+        valueInputOption: 'USER_ENTERED',
+        resource: { values: [row] },
+      });
+    }
+  } catch (e) { /* Sheets unavailable — local metrics file still intact */ }
+}
 
 function makeSessionToken() {
   return crypto.randomBytes(32).toString('hex');
@@ -53,9 +276,6 @@ async function handleAdminVerify(req, res) {
       // Verify token with Google's tokeninfo endpoint — no secret needed for GIS tokens
       const gRes = await fetch(`https://oauth2.googleapis.com/tokeninfo?id_token=${credential}`);
       const gData = await gRes.json();
-      console.log('[admin/verify] gRes.ok:', gRes.ok);
-      console.log('[admin/verify] gData.email:', gData.email, '| ADMIN_EMAIL:', ADMIN_EMAIL);
-      console.log('[admin/verify] gData.aud:', gData.aud, '| CLIENT_ID:', GOOGLE_CLIENT_ID);
       if (!gRes.ok || gData.aud !== GOOGLE_CLIENT_ID || gData.email !== ADMIN_EMAIL) {
         res.writeHead(403, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ ok: false }));
@@ -669,6 +889,10 @@ function checkTestingImpossible(s) {
 function endGame(room) {
   room.state.gameOver = true;
   room.state.phase = 'idle';
+  const mode = room.players.some(p => p.isBot) ? '1p_bot'
+    : room.players.length === 2 ? '2p'
+    : room.players.length === 3 ? '3p' : '4p';
+  trackEvent('session_completed', { gameType: 'fuzznet', mode });
 }
 
 function processAction(room, playerIdx, msg) {
@@ -1094,6 +1318,10 @@ function handleMessage(ws, raw) {
       if (room.players.length < 2) return send(ws, {type:'error',msg:'Need at least 2 players'});
       if (room.started) return send(ws, {type:'error',msg:'Already started'});
       room.started = true;
+      const _startMode = room.players.some(p => p.isBot) ? '1p_bot'
+        : room.players.length === 2 ? '2p'
+        : room.players.length === 3 ? '3p' : '4p';
+      trackEvent('session_started', { gameType: room.gameType, mode: _startMode });
       if (room.gameType === 'byteclub') {
         initBCGame(room);
         for (const p of room.players) if (p.ws) send(p.ws, { type: 'bc_game_started' });
@@ -1722,6 +1950,7 @@ function bcDrawOne(room, playerIdx) {
       if (bcCheckWin(room, i) === 1) {
         gs.winner = i; gs.winCondition = 1; gs.phase = 'game_over';
         bcLog(room, `🏆 ${room.players[i].name} wins! (Data Flag + Times Up)`);
+        { const m = room.players.some(p=>p.isBot)?'1p_bot':room.players.length===2?'2p':room.players.length===3?'3p':'4p'; trackEvent('session_completed',{gameType:'byteclub',mode:m}); }
         return 'game_over';
       }
     }
@@ -1733,6 +1962,7 @@ function bcDrawOne(room, playerIdx) {
     if (gs.timesUpRevealed && bcCheckWin(room, playerIdx) === 1) {
       gs.winner = playerIdx; gs.winCondition = 1; gs.phase = 'game_over';
       bcLog(room, `🏆 ${room.players[playerIdx].name} wins! (Data Flag + Times Up)`);
+      { const m = room.players.some(p=>p.isBot)?'1p_bot':room.players.length===2?'2p':room.players.length===3?'3p':'4p'; trackEvent('session_completed',{gameType:'byteclub',mode:m}); }
       return 'game_over';
     }
     return 'ok';
@@ -2005,6 +2235,7 @@ function bcFinishPlay(room, playerIdx) {
   if (w) {
     gs.winner = playerIdx; gs.winCondition = w; gs.phase = 'game_over';
     bcLog(room, `🏆 ${room.players[playerIdx].name} wins!`);
+    { const m = room.players.some(p=>p.isBot)?'1p_bot':room.players.length===2?'2p':room.players.length===3?'3p':'4p'; trackEvent('session_completed',{gameType:'byteclub',mode:m}); }
   }
   bcBroadcastState(room);
   // Re-trigger bot if it's still their turn in play phase.
@@ -2657,9 +2888,20 @@ const server = http.createServer((req, res) => {
   let pathname = parsed.pathname;
 
   // ── Admin API endpoints ──
-  if (pathname === '/admin/verify'  && req.method === 'POST') return handleAdminVerify(req, res);
-  if (pathname === '/admin/session' && req.method === 'GET')  return handleAdminSession(req, res);
-  if (pathname === '/admin/signout' && req.method === 'POST') return handleAdminSignout(req, res);
+  if (pathname === '/track'               && req.method === 'POST') return handleTrack(req, res);
+  if (pathname === '/admin/verify'        && req.method === 'POST') return handleAdminVerify(req, res);
+  if (pathname === '/admin/session'       && req.method === 'GET')  return handleAdminSession(req, res);
+  if (pathname === '/admin/signout'       && req.method === 'POST') return handleAdminSignout(req, res);
+  if (pathname === '/admin/metrics'       && req.method === 'GET')  return handleAdminMetrics(req, res);
+  if (pathname === '/admin/metrics/export'&& req.method === 'GET')  return handleAdminExportCSV(req, res);
+  // Track homepage visits — deduplicated to one unique visitor per IP per calendar day
+  if ((pathname === '/' || pathname === '/index.html') && req.method === 'GET') {
+    const uvKey = visitorKey(req);
+    if (!seenVisitors.has(uvKey)) {
+      seenVisitors.add(uvKey);
+      trackEvent('homepage_visit', { uvKey });
+    }
+  }
   if (pathname === '/byteclub' || pathname === '/byteclub.html') pathname = '/byteclub.html';
   else if (pathname === '/fuzznet' || pathname === '/fuzznet.html') pathname = '/fuzznet.html';
   else if (pathname === '/qubit-waitlist' || pathname === '/qubit-waitlist.html') pathname = '/qubit-waitlist.html';

@@ -2446,6 +2446,8 @@ You\'re ready to play — click below to head back to the lobby!`,
 // ── Tutorial engine ──────────────────────────────────────────────────────────
 
 function startBcTutorial() {
+  fetch('/track', { method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ type:'tutorial_started', gameType:'byteclub' }) }).catch(()=>{});
   bcTutMode = true;
   bcTutStep = 0;
   bcTutG    = null;
