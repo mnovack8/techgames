@@ -262,6 +262,22 @@ header {
   white-space: nowrap;
 }
 .btn-buy:hover { border-color: #62b517; background: #f4fae8; }
+.btn-waitlist {
+  flex: 1;
+  padding: 10px 16px;
+  background: #d1db24;
+  color: #2a3a00;
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: 8px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, transform 0.15s;
+}
+.btn-waitlist:hover { background: #b8c11e; transform: scale(1.02); }
+.game-card.coming-soon .btn-waitlist { pointer-events: auto; }
 
 /* ===== FOOTER ===== */
 footer {
@@ -380,14 +396,16 @@ footer {
     <div class="game-card coming-soon">
       <div class="game-card-tech-header">Quantum Computing</div>
       <div class="game-card-image">
-        <div class="coming-soon-placeholder">Still in superposition — check back later</div>
+        <div class="coming-soon-placeholder">Still in superposition — coming soon</div>
       </div>
       <div class="game-card-body">
-        <div class="coming-soon-badge">Coming Soon</div>
         <div class="game-card-title">Qubit</div>
         <p class="game-card-theme">A quantum computing board game that makes qubits, superposition, and entanglement tangible through play.</p>
         <div class="game-card-learning">
           <p>Build an intuition for quantum computing concepts before the textbooks arrive</p>
+        </div>
+        <div class="game-card-actions">
+          <a class="btn-waitlist" href="https://forms.gle/uja7f5B3NZY1gLaB6" target="_blank" rel="noopener">Join the Waitlist</a>
         </div>
       </div>
     </div>
