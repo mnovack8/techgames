@@ -343,6 +343,46 @@ body{padding-top:44px;}
 #card-zoom.action-obj-card-type .cz-name { color:#fde68a; }
 #card-zoom .cz-desc { font-size:13px; color:#9ca3af; line-height:1.5; }
 
+/* ===== IMAGE CARDS IN HAND ===== */
+.card.card-has-img {
+  padding: 0;
+  overflow: hidden;
+  border-width: 2px;
+  min-width: 80px;
+  max-width: 110px;
+  height: 130px;
+}
+.card.card-has-img .card-art-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 6px;
+  display: block;
+  pointer-events: none;
+}
+/* Kill-chain slot with art thumbnail */
+.kc-slot.kc-slot-has-img {
+  padding: 0;
+  overflow: hidden;
+}
+.kc-slot.kc-slot-has-img .kc-slot-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 5px;
+  display: block;
+}
+/* Zoom overlay — art-only style */
+#card-zoom.card-zoom-art {
+  background: transparent;
+  border: none;
+  padding: 0;
+  min-width: 200px;
+  max-width: 260px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.9);
+  border-radius: 12px;
+}
+
 /* ===== BC TUTORIAL PANEL — right sidebar ===== */
 #bc-tut-panel {
   display: none;
@@ -767,12 +807,18 @@ function hideToast() {
 // ==================== CARD ZOOM ====================
 function showCardZoom(card, el) {
   const zoom = document.getElementById('card-zoom');
-  zoom.className = cardClass(card);
-  zoom.innerHTML =
-    `<div class="cz-cat">${card.cat === 'attack' ? '⚔️ Attack' : card.cat === 'defend' ? '🛡️ Defend' : '⭐ Special'}</div>` +
-    `<div class="cz-type">${typeName(card)}</div>` +
-    `<div class="cz-name">${card.name}</div>` +
-    `<div class="cz-desc">${card.desc || ''}</div>`;
+  const img = getCardImg(card);
+  if (img) {
+    zoom.className = 'card-zoom-art';
+    zoom.innerHTML = `<img src="${img}" alt="${card.name}" style="width:100%;display:block;border-radius:10px;">`;
+  } else {
+    zoom.className = cardClass(card);
+    zoom.innerHTML =
+      `<div class="cz-cat">${card.cat === 'attack' ? '⚔️ Attack' : card.cat === 'defend' ? '🛡️ Defend' : '⭐ Special'}</div>` +
+      `<div class="cz-type">${typeName(card)}</div>` +
+      `<div class="cz-name">${card.name}</div>` +
+      `<div class="cz-desc">${card.desc || ''}</div>`;
+  }
   const rect = el.getBoundingClientRect();
   const cx = rect.left + rect.width / 2;
   const ty = rect.top - 10;   // anchor bottom of zoom card 10px above the hand card
@@ -1093,22 +1139,34 @@ function handleMsg(msg) {
 
 // ==================== GAME RENDER ====================
 const ATTACK_TYPES = [
-  { id:'recon',     name:'Reconnaissance',   emoji:'🔍' },
-  { id:'weaponize', name:'Weaponization',     emoji:'⚒️' },
-  { id:'deliver',   name:'Delivery',          emoji:'📨' },
-  { id:'exploit',   name:'Exploitation',      emoji:'💥' },
-  { id:'install',   name:'Installation',      emoji:'⚙️' },
-  { id:'c2',        name:'Command & Control', emoji:'📡' },
-  { id:'action_obj',name:'Action Objectives', emoji:'🎯' },
+  { id:'recon',     name:'Reconnaissance',   emoji:'🔍', img:'images/attack-recon.png' },
+  { id:'weaponize', name:'Weaponization',     emoji:'⚒️', img:'images/attack-weaponize.png' },
+  { id:'deliver',   name:'Delivery',          emoji:'📨', img:'images/attack-delivery.png' },
+  { id:'exploit',   name:'Exploitation',      emoji:'💥', img:'images/attack-exploit.png' },
+  { id:'install',   name:'Installation',      emoji:'⚙️', img:'images/attack-install.png' },
+  { id:'c2',        name:'Command & Control', emoji:'📡', img:'images/attack-c2.png' },
+  { id:'action_obj',name:'Action Objectives', emoji:'🎯', img:'images/attack-action-obj.png' },
 ];
 const DEFEND_TYPES = [
-  { id:'identify', name:'Identify', emoji:'🔎' },
-  { id:'protect',  name:'Protect',  emoji:'🛡️' },
-  { id:'detect',   name:'Detect',   emoji:'👁️' },
-  { id:'respond',  name:'Respond',  emoji:'🚨' },
-  { id:'recover',  name:'Recover',  emoji:'🔄' },
-  { id:'govern',   name:'Govern',   emoji:'🏛️' },
+  { id:'identify', name:'Identify', emoji:'🔎', img:'images/defend-identify.png' },
+  { id:'protect',  name:'Protect',  emoji:'🛡️', img:'images/defend-protect.png' },
+  { id:'detect',   name:'Detect',   emoji:'👁️', img:'images/defend-detect.png' },
+  { id:'respond',  name:'Respond',  emoji:'🚨', img:'images/defend-respond.png' },
+  { id:'recover',  name:'Recover',  emoji:'🔄', img:'images/defend-recover.png' },
+  { id:'govern',   name:'Govern',   emoji:'🏛️', img:'images/defend-govern.png' },
 ];
+
+// Return the artwork image path for a card (by type), or null if none yet
+const SPECIAL_IMGS = {
+  data_flag: 'images/special-data-flag.png',
+  times_up:  'images/special-times-up.png',
+};
+function getCardImg(card) {
+  if (SPECIAL_IMGS[card.type]) return SPECIAL_IMGS[card.type];
+  const all = [...ATTACK_TYPES, ...DEFEND_TYPES];
+  const t = all.find(t => t.id === card.type);
+  return (t && t.img) ? t.img : (card.img || null);
+}
 
 function cardClass(card) {
   if (card.type === 'govern') return 'govern-card-type';
@@ -1131,14 +1189,19 @@ function typeName(card) {
 
 function buildHandCard(card, clickable, isSelected) {
   const div = document.createElement('div');
-  div.className = 'card ' + cardClass(card) + (isSelected ? ' selected' : '');
+  const img = getCardImg(card);
+  div.className = 'card ' + cardClass(card) + (isSelected ? ' selected' : '') + (img ? ' card-has-img' : '');
   div.dataset.cardId = card.id;
   if (!clickable) div.style.cursor = 'default';
-  div.innerHTML = `
-    <div class="card-cat">${card.cat === 'attack' ? '⚔️ Attack' : card.cat === 'defend' ? '🛡️ Defend' : '⭐ Special'}</div>
-    <div class="card-type">${typeName(card)}</div>
-    <div class="card-name">${card.name}</div>
-    <div class="card-desc">${card.desc || ''}</div>`;
+  if (img) {
+    div.innerHTML = `<img src="${img}" alt="${card.name}" class="card-art-img">`;
+  } else {
+    div.innerHTML = `
+      <div class="card-cat">${card.cat === 'attack' ? '⚔️ Attack' : card.cat === 'defend' ? '🛡️ Defend' : '⭐ Special'}</div>
+      <div class="card-type">${typeName(card)}</div>
+      <div class="card-name">${card.name}</div>
+      <div class="card-desc">${card.desc || ''}</div>`;
+  }
   if (clickable) div.onclick = () => selectCard(card.id);
   // Zoom on hover (desktop) and touch-hold (mobile)
   div.addEventListener('mouseenter', () => showCardZoom(card, div));
@@ -1328,9 +1391,11 @@ function renderMyPlayed(played) {
   function makeSlot(t, cat) {
     const n = counts[t.id] || 0;
     const filled = n > 0;
-    return `<div class="kc-slot ${cat}${filled ? ' filled' : ''}" title="${t.name}">
-      <span class="kc-slot-emoji">${t.emoji}</span>
-      <span class="kc-slot-name">${t.name}</span>
+    const inner = (filled && t.img)
+      ? `<img src="${t.img}" alt="${t.name}" class="kc-slot-img">`
+      : `<span class="kc-slot-emoji">${t.emoji}</span><span class="kc-slot-name">${t.name}</span>`;
+    return `<div class="kc-slot ${cat}${filled ? ' filled' : ''}${filled && t.img ? ' kc-slot-has-img' : ''}" title="${t.name}">
+      ${inner}
       ${n > 1 ? `<span class="kc-slot-count">×${n}</span>` : ''}
     </div>`;
   }
@@ -1984,27 +2049,27 @@ let bcTutG    = null;
 // IDs are integers so they match the selectedHandCard comparison in selectCard()
 const BTC = {
   // Alex's starting hand
-  recon:    { id:1001, cat:'attack', type:'recon',     name:'Reconnaissance', desc:'Look at target\'s hand, or swap your played attack cards.' },
-  c2:       { id:1002, cat:'attack', type:'c2',        name:'C2 Control',     desc:'Steal the Data Flag, or target must give you a card.' },
+  recon:    { id:1001, cat:'attack', type:'recon',     name:'Reconnaissance', img:'images/attack-recon.png', desc:'Look at target\'s hand, or swap your played attack cards.' },
+  c2:       { id:1002, cat:'attack', type:'c2',        name:'C2 Control',     img:'images/attack-c2.png',        desc:'Steal the Data Flag, or target must give you a card.' },
   respond:  { id:1003, cat:'defend', type:'respond',   name:'Respond',        desc:'Cancel an attack targeting you — played out of turn.' },
   identify: { id:1004, cat:'defend', type:'identify',  name:'Identify',       desc:'Reveal who holds the Data Flag, or swap defend cards.' },
   recover:  { id:1005, cat:'defend', type:'recover',   name:'Recover',        desc:'Draw cards until you have 5 in hand.' },
   // Mira's pre-played cards
-  exploit:  { id:2001, cat:'attack', type:'exploit',   name:'Exploitation',   desc:'Blindly steal 1 random card from target\'s hand.' },
-  deliver:  { id:2002, cat:'attack', type:'deliver',   name:'Delivery',       desc:'Swap up to 2 played cards with an opponent.' },
+  exploit:  { id:2001, cat:'attack', type:'exploit',   name:'Exploitation',   img:'images/attack-exploit.png',   desc:'Blindly steal 1 random card from target\'s hand.' },
+  deliver:  { id:2002, cat:'attack', type:'deliver',   name:'Delivery',       img:'images/attack-delivery.png',  desc:'Swap up to 2 played cards with an opponent.' },
   // Data Flag (moves to Alex's hand in step 4)
-  dataFlag: { id:3001, cat:'special', type:'data_flag', name:'🚩 Data Flag',  desc:'Hold this when Times Up is drawn to win instantly!' },
+  dataFlag: { id:3001, cat:'special', type:'data_flag', name:'🚩 Data Flag',  img:'images/special-data-flag.png', desc:'Hold this when Times Up is drawn to win instantly!' },
   // Step 7: the two "completing" cards
-  c2b:      { id:1006, cat:'attack', type:'c2',        name:'C2 Control',     desc:'Steal the Data Flag, or target must give you a card.' },
+  c2b:      { id:1006, cat:'attack', type:'c2',        name:'C2 Control',     img:'images/attack-c2.png',        desc:'Steal the Data Flag, or target must give you a card.' },
   recoverB: { id:1007, cat:'defend', type:'recover',   name:'Recover',        desc:'Draw cards until you have 5 in hand.' },
 };
 
 // Pre-built sets of pre-filled cards for the win-condition-2 step
 const BTC_PREFILLED_ATTACK = [
-  { id:4001, cat:'attack', type:'weaponize', name:'Weaponization', desc:'' },
-  { id:4002, cat:'attack', type:'deliver',   name:'Delivery',      desc:'' },
-  { id:4003, cat:'attack', type:'exploit',   name:'Exploitation',  desc:'' },
-  { id:4004, cat:'attack', type:'install',   name:'Installation',  desc:'' },
+  { id:4001, cat:'attack', type:'weaponize', name:'Weaponization', img:'images/attack-weaponize.png', desc:'' },
+  { id:4002, cat:'attack', type:'deliver',   name:'Delivery',      img:'images/attack-delivery.png',  desc:'' },
+  { id:4003, cat:'attack', type:'exploit',   name:'Exploitation',  img:'images/attack-exploit.png',   desc:'' },
+  { id:4004, cat:'attack', type:'install',   name:'Installation',  img:'images/attack-install.png',   desc:'' },
   { id:4005, cat:'attack', type:'action_obj',name:'Action Obj.',   desc:'' },
 ];
 const BTC_PREFILLED_DEFEND = [
