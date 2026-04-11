@@ -306,7 +306,7 @@ pm2 startup   # follow the printed command to enable autostart
 ```bash
 cd ~/techgames
 git pull origin master
-npm install                    # in case dependencies changed
+npm install          # always run — picks up any new dependencies (e.g. dotenv)
 pm2 delete techboardgames
 pm2 start npm --name "techboardgames" -- start
 pm2 save
@@ -330,19 +330,15 @@ Add the following keys (fill in your actual values):
 GOOGLE_CLIENT_ID=<your-google-oauth-client-id>
 GOOGLE_CLIENT_SECRET=<your-google-oauth-client-secret>
 ADMIN_EMAIL=<the-gmail-address-allowed-to-access-admin>
-SESSION_SECRET=<a-long-random-string-generate-with-openssl-rand-hex-48>
 ```
 
-Generate a strong `SESSION_SECRET` with:
-
-```bash
-openssl rand -hex 48
-```
+That's all three values needed. There is no separate `SESSION_SECRET` to generate or store — the server derives it automatically at startup by hashing `GOOGLE_CLIENT_ID + GOOGLE_CLIENT_SECRET` with SHA-256. This means the session signing key is deterministic, cryptographically strong, and requires nothing extra to manage.
 
 **Never commit `.env` to GitHub.** If you're using a hosting platform (Railway, Render, Fly.io, etc.) use their **Environment Variables** settings panel instead of a `.env` file — the values are injected at runtime and never touch your repository.
 
 **How credentials are kept server-side:**
-- `GOOGLE_CLIENT_SECRET`, `SESSION_SECRET`, and `ADMIN_EMAIL` are loaded from `.env` into `process.env` at startup and never sent to any browser.
+- `GOOGLE_CLIENT_SECRET` and `ADMIN_EMAIL` are loaded from `.env` into `process.env` at startup and never sent to any browser.
+- The session signing key is derived server-side and never leaves the process.
 - The admin login flow POSTs the Google token to `/admin/verify` on the server. The server calls Google's API to validate it, checks the email, and issues a signed **HttpOnly** session cookie — which JavaScript in the browser cannot read.
 - The only value the browser sees is `GOOGLE_CLIENT_ID`, which is intentionally public in Google's OAuth design and cannot be used to impersonate your app.
 

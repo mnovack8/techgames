@@ -8,9 +8,13 @@ const { WebSocketServer } = require('ws');
 const PORT = process.env.PORT || 8090;
 
 // ==================== ADMIN AUTH ====================
-const ADMIN_EMAIL    = process.env.ADMIN_EMAIL;
-const SESSION_SECRET = process.env.SESSION_SECRET;
+const ADMIN_EMAIL      = process.env.ADMIN_EMAIL;
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
+// Derive session signing key from the two existing secrets — no extra value to store or rotate
+const SESSION_SECRET = crypto
+  .createHash('sha256')
+  .update(process.env.GOOGLE_CLIENT_ID + process.env.GOOGLE_CLIENT_SECRET)
+  .digest('hex');
 
 // In-memory session store: token → { email, expires }
 const adminSessions = new Map();
@@ -49,6 +53,9 @@ async function handleAdminVerify(req, res) {
       // Verify token with Google's tokeninfo endpoint — no secret needed for GIS tokens
       const gRes = await fetch(`https://oauth2.googleapis.com/tokeninfo?id_token=${credential}`);
       const gData = await gRes.json();
+      console.log('[admin/verify] gRes.ok:', gRes.ok);
+      console.log('[admin/verify] gData.email:', gData.email, '| ADMIN_EMAIL:', ADMIN_EMAIL);
+      console.log('[admin/verify] gData.aud:', gData.aud, '| CLIENT_ID:', GOOGLE_CLIENT_ID);
       if (!gRes.ok || gData.aud !== GOOGLE_CLIENT_ID || gData.email !== ADMIN_EMAIL) {
         res.writeHead(403, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ ok: false }));
