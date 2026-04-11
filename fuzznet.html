@@ -515,7 +515,7 @@ body { padding-top: 44px; }
     <div id="side-panel">
       <div class="section-title">Actions <button class="info-btn" onclick="showInfo('actions')">i</button></div>
       <div class="action-btns">
-        <div style="display:flex;align-items:center;gap:4px"><button class="action-btn" id="btn-design" onclick="doAction('start_design')" style="flex:1">🧠 Design Model</button><button class="info-btn" onclick="showInfo('design')">i</button></div>
+        <div style="display:flex;align-items:center;gap:4px"><button class="action-btn" id="btn-design" onclick="doAction('start_design')" style="flex:1;display:flex;align-items:center;gap:6px;justify-content:center"><img src="images/token-design-node.png" style="width:18px;height:18px;flex-shrink:0"> Design Model</button><button class="info-btn" onclick="showInfo('design')">i</button></div>
         <div style="display:flex;align-items:center;gap:4px"><button class="action-btn" id="btn-train" onclick="doAction('start_train')" style="flex:1">📊 Train Model</button><button class="info-btn" onclick="showInfo('train')">i</button></div>
         <div style="display:flex;align-items:center;gap:4px"><button class="action-btn" id="btn-test" onclick="doAction('start_test')" style="flex:1">🧪 Test Model</button><button class="info-btn" onclick="showInfo('test')">i</button></div>
       </div>
@@ -1055,8 +1055,8 @@ function renderBoard() {
     if (!p.nodes[i]) {
       html += `<text class="node-label" x="${x}" y="${y+4}" text-anchor="middle">L${layer}</text>`;
     } else {
-      if (p.data[i]>0) html += `<text class="node-data" x="${x}" y="${y-4}" text-anchor="middle" fill="${p.data[i]>=3?'#fc0':'#7b9fff'}">${'●'.repeat(p.data[i])}</text>`;
-      html += `<text class="node-label" x="${x}" y="${y+(p.data[i]>0?14:4)}" text-anchor="middle" fill="#8b8bbb">N${i}</text>`;
+      html += `<image href="images/token-design-node.png" x="${x-22}" y="${y-22}" width="44" height="44" style="pointer-events:none;opacity:0.85"/>`;
+      if (p.data[i]>0) html += `<text class="node-data" x="${x}" y="${y+6}" text-anchor="middle" fill="${p.data[i]>=3?'#fc0':'#7b9fff'}">${'●'.repeat(p.data[i])}</text>`;
       if (p.data[i]>=3) html += `<text x="${x}" y="${y+28}" text-anchor="middle" font-size="9" fill="#fc0">MAX</text>`;
     }
   }
