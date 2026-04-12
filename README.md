@@ -316,31 +316,69 @@ pm2 save
 
 ### Secrets & Environment Variables
 
-The app requires a `.env` file (never committed to Git — already in `.gitignore`).
+All secrets are injected via PM2 env vars — no `.env` file needed on the server.
 
-**On a fresh server, create the file manually over SSH:**
+**Set each variable via PM2 before starting the app:**
 
 ```bash
-nano ~/techgames/.env
+pm2 set techboardgames:ADMIN_PASSWORD "your-admin-password"
+pm2 set techboardgames:SESSION_SECRET  "a-long-random-string"
+pm2 set techboardgames:SHEETS_ID       "your-google-sheet-id"
+pm2 set techboardgames:GOOGLE_SERVICE_ACCOUNT_EMAIL   "your-service-account@project.iam.gserviceaccount.com"
+pm2 set techboardgames:GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY "-----BEGIN RSA PRIVATE KEY-----\nMIIE..."
 ```
 
-Add the following keys (fill in your actual values):
+Then start (or restart) the app to pick them up:
 
+```bash
+pm2 delete techboardgames
+pm2 start npm --name "techboardgames" -- start
+pm2 save
 ```
-GOOGLE_CLIENT_ID=<your-google-oauth-client-id>
-GOOGLE_CLIENT_SECRET=<your-google-oauth-client-secret>
-ADMIN_EMAIL=<the-gmail-address-allowed-to-access-admin>
-```
 
-That's all three values needed. There is no separate `SESSION_SECRET` to generate or store — the server derives it automatically at startup by hashing `GOOGLE_CLIENT_ID + GOOGLE_CLIENT_SECRET` with SHA-256. This means the session signing key is deterministic, cryptographically strong, and requires nothing extra to manage.
+**Variables reference:**
 
-**Never commit `.env` to GitHub.** If you're using a hosting platform (Railway, Render, Fly.io, etc.) use their **Environment Variables** settings panel instead of a `.env` file — the values are injected at runtime and never touch your repository.
+| Variable | Purpose |
+|---|---|
+| `ADMIN_PASSWORD` | Password for the `/admin` dashboard |
+| `SESSION_SECRET` | Signs admin session cookies — use a long random string |
+| `SHEETS_ID` | Google Sheet ID from the sheet URL |
+| `GOOGLE_SERVICE_ACCOUNT_EMAIL` | Service account `client_email` from Google Cloud |
+| `GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY` | Service account `private_key` from Google Cloud (with `\n` between lines) |
 
-**How credentials are kept server-side:**
-- `GOOGLE_CLIENT_SECRET` and `ADMIN_EMAIL` are loaded from `.env` into `process.env` at startup and never sent to any browser.
-- The session signing key is derived server-side and never leaves the process.
-- The admin login flow POSTs the Google token to `/admin/verify` on the server. The server calls Google's API to validate it, checks the email, and issues a signed **HttpOnly** session cookie — which JavaScript in the browser cannot read.
-- The only value the browser sees is `GOOGLE_CLIENT_ID`, which is intentionally public in Google's OAuth design and cannot be used to impersonate your app.
+`SHEETS_ID` and the two `GOOGLE_SERVICE_ACCOUNT_*` vars are optional — if not set, Google Sheets sync is silently skipped and all metrics continue to be stored locally in `metrics.json`.
+
+---
+
+### Google Sheets Sync Setup
+
+The server syncs metrics to a Google Sheet automatically — real-time event logging and a nightly daily summary written at midnight ET.
+
+**1. Create a Google Cloud service account**
+
+- Go to [console.cloud.google.com](https://console.cloud.google.com)
+- Enable the **Google Sheets API** under APIs & Services → Library
+- Go to APIs & Services → Credentials → **Create Credentials → Service account**
+- Give it a name, click through, then open the service account → **Keys** tab → **Add Key → JSON**
+- From the downloaded JSON, copy `client_email` and `private_key`
+
+**2. Share the Google Sheet with the service account**
+
+- Open your Google Sheet and click **Share**
+- Paste the `client_email` address and set permission to **Editor**
+
+**3. Set up the sheet tabs with headers**
+
+Create four tabs in this exact order with these headers in row 1:
+
+| Tab | Headers (row 1) |
+|---|---|
+| **Events** | Timestamp, Type, GameType, Mode, Button, UVKey, Referrer |
+| **Daily Homepage** | Date, Visits, FuzzNet Buys, BC Buys, Qubit WL, Direct, Search, LinkedIn, Other, Bounce Rate, WS Disconnects |
+| **Daily Games** | Date, Game, Started, Completed, Completion%, Tutorials, 1P+Bot, 2P, 3P, 4P, Avg Duration, Rematches |
+| **Daily Funnel** | Date, Visits, Started, Completed, Buy Clicks, Visit→Start%, Start→Complete%, Complete→Buy% |
+
+**4. Set the env vars and restart** (see Secrets section above)
 
 ---
 
