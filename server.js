@@ -424,6 +424,7 @@ function scheduleMidnightSync() {
 }
 scheduleMidnightSync();
 
+
 function makeSessionToken() {
   return crypto.randomBytes(32).toString('hex');
 }
