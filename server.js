@@ -667,9 +667,8 @@ function botShouldUseClean(ps, diceSum, dataOnPath) {
 }
 
 function botPickOverfitEdge(overfitEdges, ps) {
-  // Pick the edge whose destination node has the most alternative incoming edges (least damaging)
+  if (!overfitEdges || overfitEdges.length === 0) return null;
   if (overfitEdges.length === 1) return overfitEdges[0].key;
-  // Simple: pick last edge in the list (tends to be less critical)
   return overfitEdges[overfitEdges.length - 1].key;
 }
 
@@ -722,8 +721,7 @@ async function executeBotTurn(room) {
           await delay(800);
           if (s.phase === 'train_overfit') {
             const key = botPickOverfitEdge(s.overfitEdges, ps);
-            processAction(room, botIdx, { action: 'select_overfit_edge', edgeKey: key });
-            broadcastState(room);
+            if (key) { processAction(room, botIdx, { action: 'select_overfit_edge', edgeKey: key }); broadcastState(room); }
             await delay(600);
           }
           if (s.phase !== 'train1' && s.phase !== 'train2') break;
@@ -736,8 +734,7 @@ async function executeBotTurn(room) {
         if (s.phase === 'train_overfit') {
           await delay(800);
           const key = botPickOverfitEdge(s.overfitEdges, ps);
-          processAction(room, botIdx, { action: 'select_overfit_edge', edgeKey: key });
-          broadcastState(room);
+          if (key) { processAction(room, botIdx, { action: 'select_overfit_edge', edgeKey: key }); broadcastState(room); }
         }
         break;
       }
@@ -803,8 +800,7 @@ async function executeBotTurn(room) {
           if (s.phase === 'backprop_overfit') {
             await delay(600);
             const key = botPickOverfitEdge(s.overfitEdges, ps);
-            processAction(room, botIdx, { action: 'backprop_select_overfit', edgeKey: key });
-            broadcastState(room);
+            if (key) { processAction(room, botIdx, { action: 'backprop_select_overfit', edgeKey: key }); broadcastState(room); }
           }
         }
         break;
