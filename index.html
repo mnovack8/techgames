@@ -28,6 +28,7 @@ header {
   flex-shrink: 0;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   box-shadow: 0 2px 12px rgba(98,181,23,0.08);
 }
 .header-logo {
@@ -51,6 +52,32 @@ header {
   display: block;
   line-height: 1;
   color: #b0b800;
+}
+nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+nav a {
+  font-size: 13px;
+  font-weight: 700;
+  color: #4a4a4a;
+  text-decoration: none;
+  padding: 6px 14px;
+  border-radius: 8px;
+  transition: background 0.15s, color 0.15s;
+}
+nav a:hover { background: #f4fae8; color: #4a8c11; }
+nav a.active { color: #4a8c11; background: #f4fae8; }
+nav a.nav-cta {
+  background: #d1db24;
+  color: #2a3a00;
+  margin-left: 6px;
+}
+nav a.nav-cta:hover { background: #b8c11e; color: #2a3a00; }
+@media (max-width: 600px) {
+  header { padding: 0 16px; }
+  nav a { padding: 6px 8px; font-size: 12px; }
 }
 
 /* ===== HERO ===== */
@@ -343,6 +370,10 @@ footer {
       <span class="logo-sub">Making Tech Make Sense</span>
     </div>
   </a>
+  <nav>
+    <a href="/" class="active">Games</a>
+    <a href="/contact" class="nav-cta">Contact</a>
+  </nav>
 </header>
 
 <section class="hero">

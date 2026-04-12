@@ -323,6 +323,8 @@ All secrets are injected via PM2 env vars — no `.env` file needed on the serve
 ```bash
 pm2 set techboardgames:ADMIN_PASSWORD "your-admin-password"
 pm2 set techboardgames:SESSION_SECRET  "a-long-random-string"
+pm2 set techboardgames:SMTP_USER       "mnovack8@gmail.com"
+pm2 set techboardgames:SMTP_PASS       "your-gmail-app-password"
 pm2 set techboardgames:SHEETS_ID       "your-google-sheet-id"
 pm2 set techboardgames:GOOGLE_SERVICE_ACCOUNT_EMAIL   "your-service-account@project.iam.gserviceaccount.com"
 pm2 set techboardgames:GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY "-----BEGIN RSA PRIVATE KEY-----\nMIIE..."
@@ -338,13 +340,15 @@ pm2 save
 
 **Variables reference:**
 
-| Variable | Purpose |
-|---|---|
-| `ADMIN_PASSWORD` | Password for the `/admin` dashboard |
-| `SESSION_SECRET` | Signs admin session cookies — use a long random string |
-| `SHEETS_ID` | Google Sheet ID from the sheet URL |
-| `GOOGLE_SERVICE_ACCOUNT_EMAIL` | Service account `client_email` from Google Cloud |
-| `GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY` | Service account `private_key` from Google Cloud (with `\n` between lines) |
+| Variable | Required | Purpose |
+|---|---|---|
+| `ADMIN_PASSWORD` | Yes | Password for the `/admin` dashboard |
+| `SESSION_SECRET` | Yes | Signs admin session cookies — use a long random string |
+| `SMTP_USER` | Yes | Gmail address used to send contact form emails |
+| `SMTP_PASS` | Yes | Gmail App Password for SMTP (generate at myaccount.google.com/apppasswords) |
+| `SHEETS_ID` | No | Google Sheet ID from the sheet URL |
+| `GOOGLE_SERVICE_ACCOUNT_EMAIL` | No | Service account `client_email` from Google Cloud |
+| `GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY` | No | Service account `private_key` from Google Cloud (with `\n` between lines) |
 
 `SHEETS_ID` and the two `GOOGLE_SERVICE_ACCOUNT_*` vars are optional — if not set, Google Sheets sync is silently skipped and all metrics continue to be stored locally in `metrics.json`.
 

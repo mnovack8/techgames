@@ -5,6 +5,47 @@ const path = require('path');
 const crypto = require('crypto');
 const { WebSocketServer } = require('ws');
 const { google } = require('googleapis');
+const nodemailer = require('nodemailer');
+
+// ==================== EMAIL ====================
+const emailTransporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS
+  }
+});
+
+async function handleContactSubmit(req, res) {
+  let body = '';
+  req.on('data', d => { body += d; });
+  req.on('end', async () => {
+    try {
+      const { name, email, message } = JSON.parse(body);
+      if (!name || !email || !message) { res.writeHead(400); res.end(); return; }
+      // Basic email format check
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { res.writeHead(400); res.end(); return; }
+      // Truncate to prevent abuse
+      const safeName    = String(name).slice(0, 100);
+      const safeEmail   = String(email).slice(0, 200);
+      const safeMessage = String(message).slice(0, 2000);
+
+      await emailTransporter.sendMail({
+        from: `"Tech Board Games" <${process.env.SMTP_USER}>`,
+        to: 'mnovack8@gmail.com',
+        replyTo: safeEmail,
+        subject: `Contact form — ${safeName}`,
+        text: `Name: ${safeName}\nEmail: ${safeEmail}\n\n${safeMessage}`,
+        html: `<p><strong>Name:</strong> ${safeName}</p><p><strong>Email:</strong> <a href="mailto:${safeEmail}">${safeEmail}</a></p><hr><p style="white-space:pre-wrap">${safeMessage}</p>`
+      });
+
+      res.writeHead(200); res.end();
+    } catch (err) {
+      console.error('[contact/submit] error:', err.message);
+      res.writeHead(500); res.end();
+    }
+  });
+}
 
 const PORT = process.env.PORT || 8090;
 
@@ -3080,6 +3121,7 @@ const server = http.createServer((req, res) => {
 
   // ── Admin API endpoints ──
   if (pathname === '/track'               && req.method === 'POST') return handleTrack(req, res);
+  if (pathname === '/contact/submit'      && req.method === 'POST') return handleContactSubmit(req, res);
   if (pathname === '/admin/verify'        && req.method === 'POST') return handleAdminVerify(req, res);
   if (pathname === '/admin/session'       && req.method === 'GET')  return handleAdminSession(req, res);
   if (pathname === '/admin/signout'       && req.method === 'POST') return handleAdminSignout(req, res);
@@ -3106,6 +3148,7 @@ const server = http.createServer((req, res) => {
   if (pathname === '/byteclub' || pathname === '/byteclub.html') pathname = '/byteclub.html';
   else if (pathname === '/fuzznet' || pathname === '/fuzznet.html') pathname = '/fuzznet.html';
   else if (pathname === '/qubit-waitlist' || pathname === '/qubit-waitlist.html') pathname = '/qubit-waitlist.html';
+  else if (pathname === '/contact' || pathname === '/contact.html') pathname = '/contact.html';
   else if (pathname === '/admin' || pathname === '/admin.html') pathname = '/admin.html';
   else if (pathname === '/') pathname = '/index.html';
   const filePath = path.join(__dirname, pathname);
