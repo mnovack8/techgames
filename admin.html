@@ -120,6 +120,32 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
 
 .loading-msg { color:var(--subtle); font-size:13px; font-weight:600; padding:12px 0; }
 
+/* Funnel flow */
+.funnel-flow { display:flex; align-items:center; flex-wrap:wrap; gap:0; }
+.funnel-stage { flex:1; min-width:130px; background:var(--white); border:2px solid var(--border); border-radius:12px; padding:16px 12px; text-align:center; box-shadow:0 4px 12px var(--shadow); }
+.funnel-stage.active-stage { border-color:var(--yellow); background:linear-gradient(135deg,#fff 60%,#f8fce8); }
+.funnel-stage .f-lbl { font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.8px; color:var(--muted); }
+.funnel-stage .f-val { font-size:30px; font-weight:900; color:var(--text); line-height:1.1; margin:4px 0 2px; }
+.funnel-stage .f-cvr { font-size:12px; font-weight:700; color:var(--green); }
+.funnel-drop { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:0 6px; min-width:52px; flex-shrink:0; }
+.funnel-drop .drop-arrow { font-size:16px; color:var(--border); line-height:1; }
+.funnel-drop .drop-lost { font-size:10px; font-weight:800; color:#c0392b; white-space:nowrap; margin-top:2px; }
+.funnel-drop .drop-pct  { font-size:10px; font-weight:600; color:var(--subtle); white-space:nowrap; }
+/* Weakest conversion highlight */
+.stat-card.warn { border-color:#f59e0b; background:linear-gradient(135deg,#fff 60%,#fffbeb); }
+.stat-card.warn .val { color:#d97706; }
+/* Period comparison table */
+.compare-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:12px; }
+.compare-card { background:var(--white); border:2px solid var(--border-light); border-radius:12px; padding:16px 14px; box-shadow:0 2px 8px var(--shadow); }
+.compare-card .c-lbl { font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.8px; color:var(--muted); margin-bottom:6px; }
+.compare-card .c-row { display:flex; justify-content:space-between; align-items:baseline; gap:8px; margin-bottom:3px; }
+.compare-card .c-period { font-size:10px; font-weight:700; color:var(--subtle); }
+.compare-card .c-num { font-size:15px; font-weight:900; color:var(--text); }
+.compare-card .c-delta { font-size:11px; font-weight:800; }
+.c-delta.up { color:var(--green); }
+.c-delta.down { color:#c0392b; }
+.c-delta.flat { color:var(--subtle); }
+
 @keyframes fadein { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
 </style>
 </head>
@@ -163,7 +189,8 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
 
   <!-- Page navigation -->
   <div class="page-nav">
-    <button class="page-nav-btn active" data-page="homepage"  onclick="setPage('homepage')">Homepage</button>
+    <button class="page-nav-btn active" data-page="funnel"    onclick="setPage('funnel')">Sales Funnel</button>
+    <button class="page-nav-btn"        data-page="homepage"  onclick="setPage('homepage')">Homepage</button>
     <button class="page-nav-btn"        data-page="fuzznet"   onclick="setPage('fuzznet')">FuzzNet Labs</button>
     <button class="page-nav-btn"        data-page="byteclub"  onclick="setPage('byteclub')">Byte Club</button>
   </div>
@@ -198,7 +225,7 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
 </div>
 
 <script>
-let currentDays = 30, currentPage = 'homepage';
+let currentDays = 30, currentPage = 'funnel';
 const charts = {};
 
 const CHART_OPT = {
@@ -266,6 +293,7 @@ async function loadData() {
     if (!res.ok) { document.getElementById('page-content').innerHTML = '<div class="loading-msg">Failed to load — check server.</div>'; return; }
     const d = await res.json();
     if (currentPage === 'homepage') renderHomepage(d);
+    else if (currentPage === 'funnel') renderFunnel(d);
     else renderGame(d);
   } catch(e) { document.getElementById('page-content').innerHTML = `<div class="loading-msg">Error: ${e.message}</div>`; console.error('loadData error:', e); }
 }
@@ -322,8 +350,12 @@ function renderHomepage(d) {
   _hpData = d;
   document.getElementById('page-content').innerHTML = `
     <div>
-      <div class="section-lbl" style="margin-bottom:14px">Overview</div>
+      <div class="section-lbl" style="margin-bottom:14px">Traffic</div>
       <div class="stat-grid" id="hp-stats"></div>
+    </div>
+    <div>
+      <div class="section-lbl" style="margin-bottom:14px">Engagement &amp; Quality</div>
+      <div class="stat-grid" id="hp-engage-stats"></div>
     </div>
     <div class="chart-full">
       <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px">
@@ -332,14 +364,42 @@ function renderHomepage(d) {
       </div>
       <div class="chart-full-wrap"><canvas id="chart-hp-main"></canvas></div>
     </div>
+    <div class="chart-grid">
+      <div class="chart-card">
+        <h3>Referrer source</h3>
+        <div class="chart-wrap"><canvas id="chart-referrer"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <h3>Traffic by hour of day (EST)</h3>
+        <div class="chart-wrap"><canvas id="chart-hourly"></canvas></div>
+      </div>
+    </div>
   `;
 
   document.getElementById('hp-stats').innerHTML = `
     <div class="stat-card hl">
-      <div class="lbl">Homepage visits</div>
+      <div class="lbl">Unique visitors</div>
       <div class="val">${d.hp.toLocaleString()}</div>
       <div class="sub">past ${currentDays} days</div>
     </div>
+    <div class="stat-card">
+      <div class="lbl">Return visitor rate</div>
+      <div class="val">${d.returnRate ?? 0}%</div>
+      <div class="sub">${(d.returnVisitors ?? 0).toLocaleString()} of ${d.hp.toLocaleString()} visits</div>
+    </div>
+    <div class="stat-card">
+      <div class="lbl">Bounce rate</div>
+      <div class="val">${d.bounceRate ?? 0}%</div>
+      <div class="sub">visited, no action taken</div>
+    </div>
+    <div class="stat-card">
+      <div class="lbl">WS disconnect rate</div>
+      <div class="val">${d.wsDCRate ?? 0}%</div>
+      <div class="sub">${(d.wsDCTotal ?? 0)} mid-game drops (all games)</div>
+    </div>
+  `;
+
+  document.getElementById('hp-engage-stats').innerHTML = `
     <div class="stat-card">
       <div class="lbl">FuzzNet Buy Physical</div>
       <div class="val">${d.fnPhys.toLocaleString()}</div>
@@ -364,6 +424,204 @@ function renderHomepage(d) {
     ).join('');
 
   buildHpChart(d);
+
+  // Referrer bar chart
+  if (charts.referrer) { charts.referrer.destroy(); delete charts.referrer; }
+  const ref = d.referrers || {};
+  charts.referrer = new Chart(document.getElementById('chart-referrer'), {
+    type: 'bar',
+    data: {
+      labels: ['Direct', 'Search', 'LinkedIn', 'Other'],
+      datasets: [{ label: 'Visits', data: [ref.direct||0, ref.search||0, ref.linkedin||0, ref.other||0],
+        backgroundColor: ['rgba(209,219,36,.7)','rgba(59,130,246,.7)','rgba(10,102,194,.7)','rgba(107,122,74,.5)'],
+        borderColor:     ['#d1db24','#3b82f6','#0a66c2','#6b7a4a'],
+        borderWidth: 2, borderRadius: 6 }],
+    },
+    options: { ...CHART_OPT },
+  });
+
+  // Hourly bar chart — rotate UTC buckets to Eastern Time (UTC-5)
+  if (charts.hourly) { charts.hourly.destroy(); delete charts.hourly; }
+  const EST_OFFSET = 5; // UTC-5; close enough year-round for display purposes
+  const utcHrs = d.hourly || new Array(24).fill(0);
+  const estHrs = Array.from({length:24}, (_, h) => utcHrs[(h + EST_OFFSET) % 24]);
+  const estLabels = Array.from({length:24}, (_, h) => {
+    const ampm = h < 12 ? 'am' : 'pm';
+    const display = h === 0 ? 12 : h > 12 ? h - 12 : h;
+    return display + ampm;
+  });
+  charts.hourly = new Chart(document.getElementById('chart-hourly'), {
+    type: 'bar',
+    data: {
+      labels: estLabels,
+      datasets: [{ label: 'Visits', data: estHrs,
+        backgroundColor: 'rgba(98,181,23,.55)', borderColor: '#62b517', borderWidth: 2, borderRadius: 4 }],
+    },
+    options: { ...CHART_OPT },
+  });
+}
+
+/* ── SALES FUNNEL PAGE ── */
+function renderFunnel(d) {
+  const visits       = d.visits || 0;
+  const fnStarted    = d.fnStarted || 0;
+  const bcStarted    = d.bcStarted || 0;
+  const totalStarted = fnStarted + bcStarted;
+  const fnCompleted  = d.fnCompleted || 0;
+  const bcCompleted  = d.bcCompleted || 0;
+  const totalCompleted = fnCompleted + bcCompleted;
+  const fnBuys       = d.fnBuys || 0;
+  const bcBuys       = d.bcBuys || 0;
+  const totalBuys    = fnBuys + bcBuys;
+
+  // Conversion rates between stages
+  const r_vToS = visits > 0        ? Math.round(totalStarted   / visits        * 100) : 0;
+  const r_sToC = totalStarted > 0  ? Math.round(totalCompleted / totalStarted  * 100) : 0;
+  const r_cToB = totalCompleted > 0 ? Math.round(totalBuys      / totalCompleted * 100) : 0;
+
+  // Weakest step (lowest conversion rate)
+  const steps = [{id:'vToS',rate:r_vToS},{id:'sToC',rate:r_sToC},{id:'cToB',rate:r_cToB}];
+  const weakest = steps.reduce((a,b) => a.rate <= b.rate ? a : b).id;
+
+  // Drop-off counts
+  const d_vToS = visits - totalStarted;
+  const d_sToC = totalStarted - totalCompleted;
+  const d_cToB = totalCompleted - totalBuys;
+
+  // Period comparison helpers
+  const prev = d.prev || {};
+  const pVisits    = prev.visits || 0;
+  const pStarted   = (prev.fnStarted||0) + (prev.bcStarted||0);
+  const pCompleted = (prev.fnCompleted||0) + (prev.bcCompleted||0);
+  const pBuys      = (prev.fnBuys||0) + (prev.bcBuys||0);
+  function delta(curr, prev) {
+    const diff = curr - prev;
+    if (diff === 0 || prev === 0) return `<span class="c-delta flat">—</span>`;
+    const pct = Math.abs(Math.round(diff / prev * 100));
+    return diff > 0
+      ? `<span class="c-delta up">▲ ${pct}%</span>`
+      : `<span class="c-delta down">▼ ${pct}%</span>`;
+  }
+
+  document.getElementById('page-content').innerHTML = `
+    <div>
+      <div class="section-lbl" style="margin-bottom:16px">Conversion Funnel — past ${currentDays} days</div>
+      <div class="funnel-flow" id="funnel-flow"></div>
+    </div>
+    <div>
+      <div class="section-lbl" style="margin-bottom:14px">Conversion rates <span style="font-size:10px;color:var(--subtle);font-weight:600;text-transform:none;letter-spacing:0">(weakest step highlighted)</span></div>
+      <div class="stat-grid" id="funnel-rates"></div>
+    </div>
+    <div class="chart-full">
+      <h3 style="margin-bottom:14px">Per-game breakdown</h3>
+      <div class="chart-full-wrap"><canvas id="chart-funnel"></canvas></div>
+    </div>
+    <div class="chart-grid">
+      <div class="chart-card">
+        <h3>Qubit interest — Visits → Waitlist</h3>
+        <div class="chart-wrap"><canvas id="chart-qubit-funnel"></canvas></div>
+      </div>
+      <div style="background:var(--white);border:2px solid var(--border);border-radius:14px;padding:20px 22px;box-shadow:0 4px 16px var(--shadow);">
+        <h3 style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:14px">Period comparison — previous ${currentDays} days</h3>
+        <div class="compare-grid" id="funnel-compare"></div>
+      </div>
+    </div>
+  `;
+
+  // Funnel flow visual
+  function stageHTML(lbl, val, cvr, isFirst) {
+    return `<div class="funnel-stage${isFirst ? ' active-stage' : ''}">
+      <div class="f-lbl">${lbl}</div>
+      <div class="f-val">${val.toLocaleString()}</div>
+      ${cvr !== null ? `<div class="f-cvr">${cvr}% conversion</div>` : ''}
+    </div>`;
+  }
+  function dropHTML(lost, pct) {
+    return `<div class="funnel-drop">
+      <div class="drop-arrow">→</div>
+      <div class="drop-lost">−${lost.toLocaleString()}</div>
+      <div class="drop-pct">${pct}% dropped</div>
+    </div>`;
+  }
+  document.getElementById('funnel-flow').innerHTML =
+    stageHTML('Site Visits',      visits,        null,  true) +
+    dropHTML(Math.max(d_vToS,0), 100 - r_vToS) +
+    stageHTML('Games Started',    totalStarted,  r_vToS, false) +
+    dropHTML(Math.max(d_sToC,0), 100 - r_sToC) +
+    stageHTML('Games Completed',  totalCompleted, r_sToC, false) +
+    dropHTML(Math.max(d_cToB,0), 100 - r_cToB) +
+    stageHTML('Buy Clicks',       totalBuys,      r_cToB, false);
+
+  // Conversion rate cards — highlight weakest
+  document.getElementById('funnel-rates').innerHTML = `
+    <div class="stat-card${weakest==='vToS' ? ' warn' : ''}">
+      <div class="lbl">Visit → Started</div>
+      <div class="val">${r_vToS}%</div>
+      <div class="sub">${totalStarted.toLocaleString()} of ${visits.toLocaleString()} visitors started a game</div>
+    </div>
+    <div class="stat-card${weakest==='sToC' ? ' warn' : ''}">
+      <div class="lbl">Started → Completed</div>
+      <div class="val">${r_sToC}%</div>
+      <div class="sub">${totalCompleted.toLocaleString()} of ${totalStarted.toLocaleString()} games finished</div>
+    </div>
+    <div class="stat-card${weakest==='cToB' ? ' warn' : ''}">
+      <div class="lbl">Completed → Buy Click</div>
+      <div class="val">${r_cToB}%</div>
+      <div class="sub">${totalBuys.toLocaleString()} of ${totalCompleted.toLocaleString()} completions led to buy</div>
+    </div>
+    <div class="stat-card">
+      <div class="lbl">Overall visit → buy</div>
+      <div class="val">${visits > 0 ? Math.round(totalBuys/visits*100) : 0}%</div>
+      <div class="sub">end-to-end conversion rate</div>
+    </div>
+  `;
+
+  // Per-game grouped bar chart
+  if (charts.funnel) { charts.funnel.destroy(); delete charts.funnel; }
+  charts.funnel = new Chart(document.getElementById('chart-funnel'), {
+    type: 'bar',
+    data: {
+      labels: ['Started', 'Completed', 'Buy Clicks'],
+      datasets: [
+        { label:'FuzzNet Labs', data:[fnStarted, fnCompleted, fnBuys],
+          backgroundColor:'rgba(59,130,246,.7)', borderColor:'#3b82f6', borderWidth:2, borderRadius:6 },
+        { label:'Byte Club',    data:[bcStarted, bcCompleted, bcBuys],
+          backgroundColor:'rgba(98,181,23,.7)',  borderColor:'#62b517', borderWidth:2, borderRadius:6 },
+      ],
+    },
+    options: { ...CHART_OPT },
+  });
+
+  // Qubit mini-funnel chart
+  if (charts.qubitFunnel) { charts.qubitFunnel.destroy(); delete charts.qubitFunnel; }
+  const qubitWL = d.qubitWL || 0;
+  const qubitRate = visits > 0 ? Math.round(qubitWL / visits * 100) : 0;
+  charts.qubitFunnel = new Chart(document.getElementById('chart-qubit-funnel'), {
+    type: 'bar',
+    data: {
+      labels: [`Site Visits (${visits.toLocaleString()})`, `Waitlist Clicks (${qubitWL.toLocaleString()})`],
+      datasets: [{ label:'Count', data:[visits, qubitWL],
+        backgroundColor:['rgba(209,219,36,.7)','rgba(139,92,246,.7)'],
+        borderColor:['#d1db24','#8b5cf6'], borderWidth:2, borderRadius:6 }],
+    },
+    options: { ...CHART_OPT, plugins:{ ...CHART_OPT.plugins,
+      legend:{ display:false },
+      subtitle:{ display: qubitRate > 0, text:`${qubitRate}% of visitors joined the waitlist`, color:'#6b7a4a', font:{family:'Nunito',size:11} }
+    }},
+  });
+
+  // Period comparison
+  document.getElementById('funnel-compare').innerHTML = [
+    { lbl:'Site Visits',      curr:visits,        prev:pVisits    },
+    { lbl:'Games Started',    curr:totalStarted,  prev:pStarted   },
+    { lbl:'Games Completed',  curr:totalCompleted,prev:pCompleted },
+    { lbl:'Buy Clicks',       curr:totalBuys,     prev:pBuys      },
+  ].map(({lbl,curr,prev}) => `
+    <div class="compare-card">
+      <div class="c-lbl">${lbl}</div>
+      <div class="c-row"><span class="c-period">This period</span><span class="c-num">${curr.toLocaleString()}</span></div>
+      <div class="c-row"><span class="c-period">Prev period</span><span class="c-num" style="color:var(--subtle)">${prev.toLocaleString()}</span>${delta(curr,prev)}</div>
+    </div>`).join('');
 }
 
 /* ── GAME PAGE (FuzzNet / Byte Club) ── */
@@ -441,6 +699,7 @@ function renderGame(d) {
     </div>
   `;
 
+  const avgLabel = d.avgDuration != null ? d.avgDuration + ' min' : '—';
   document.getElementById('game-stats').innerHTML = `
     <div class="stat-card hl">
       <div class="lbl">Sessions started</div>
@@ -450,12 +709,22 @@ function renderGame(d) {
     <div class="stat-card">
       <div class="lbl">Sessions completed</div>
       <div class="val">${d.completed.toLocaleString()}</div>
-      <div class="sub">${d.started} started</div>
+      <div class="sub">${Math.max(d.started - d.completed, 0)} abandoned</div>
     </div>
     <div class="stat-card${pct >= 50 ? ' green' : ''}">
       <div class="lbl">Completion rate</div>
       <div class="val">${pct}%</div>
-      <div class="sub">${d.completed} / (${d.completed} + ${Math.max(d.started - d.completed, 0)})</div>
+      <div class="sub">${d.completed} of ${d.started} started</div>
+    </div>
+    <div class="stat-card">
+      <div class="lbl">Avg session duration</div>
+      <div class="val">${avgLabel}</div>
+      <div class="sub">completed games only</div>
+    </div>
+    <div class="stat-card">
+      <div class="lbl">Rematch rate</div>
+      <div class="val">${d.rematchRate ?? 0}%</div>
+      <div class="sub">${d.rematches ?? 0} same-player rematches</div>
     </div>
   `;
 

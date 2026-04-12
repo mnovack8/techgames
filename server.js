@@ -32,6 +32,12 @@ try {
 // We store a hashed token (SHA-256 of IP + date) in the event so raw IPs are never persisted.
 const seenVisitors = new Set();
 
+// Known visitor IDs (SHA-256 of IP only, no date) — used for return-visitor detection.
+// Rebuilt from persisted events on startup; never pruned (all-time uniqueness).
+const knownVisitors = new Set(
+  metricsEvents.filter(e => e.type === 'homepage_visit' && e.vid).map(e => e.vid)
+);
+
 function pruneSeenVisitors() {
   const cutoff = Date.now() - 24 * 60 * 60 * 1000;
   seenVisitors.clear();
@@ -49,6 +55,23 @@ function visitorKey(req) {
               || req.socket.remoteAddress || 'unknown';
   const day = new Date().toISOString().slice(0, 10); // YYYY-MM-DD in UTC
   return crypto.createHash('sha256').update(ip + '|' + day).digest('hex').slice(0, 24);
+}
+
+// IP-only hash (no date) — identifies a visitor across days for return-visit tracking
+function rawVisitorId(req) {
+  const ip = (req.headers['x-forwarded-for'] || '').split(',')[0].trim()
+             || req.socket.remoteAddress || 'unknown';
+  return crypto.createHash('sha256').update('vid|' + ip).digest('hex').slice(0, 24);
+}
+
+// Returns true if this uvKey completed a game of the same type within the last 30 minutes
+function isRematch(uvKey, gameType) {
+  if (!uvKey) return false;
+  const cutoff = Date.now() - 30 * 60 * 1000;
+  return metricsEvents.some(e =>
+    e.type === 'session_completed' && e.uvKey === uvKey &&
+    e.gameType === gameType && e.ts >= cutoff
+  );
 }
 
 function saveMetrics() {
@@ -92,17 +115,75 @@ function getMetrics(days, page = 'homepage') {
     const bcPhysSeries  = new Array(n).fill(0);
     const qubitSeries   = new Array(n).fill(0);
     let hp = 0, fnPhys = 0, bcPhys = 0, qubit = 0;
+    let returnVisitors = 0, wsDCTotal = 0;
+    const referrers = { direct: 0, search: 0, linkedin: 0, other: 0 };
+    const hourly    = new Array(24).fill(0);
+
+    // Pre-build set of uvKeys that took any action (for bounce rate)
+    const engagedUvKeys = new Set(ev.filter(e => e.type !== 'homepage_visit' && e.uvKey).map(e => e.uvKey));
+    let bounced = 0;
+
+    // Total sessions started in period (for WS disconnect rate denominator)
+    const totalSessions = ev.filter(e => e.type === 'session_started').length;
+
     for (const e of ev) {
       const i = bucketIdx(e.ts, cutoff, bucketMs, n);
-      if (e.type === 'homepage_visit')  { hp++;     hpSeries[i]++; }
+      if (e.type === 'homepage_visit') {
+        hp++; hpSeries[i]++;
+        if (e.returnVisitor) returnVisitors++;
+        if (e.referrerSource && referrers[e.referrerSource] !== undefined) referrers[e.referrerSource]++;
+        hourly[new Date(e.ts).getUTCHours()]++;
+        if (e.uvKey && !engagedUvKeys.has(e.uvKey)) bounced++;
+      }
       if (e.type === 'button_click') {
         if (e.button === 'fuzznet_physical')  { fnPhys++;  fnPhysSeries[i]++; }
         if (e.button === 'byteclub_physical') { bcPhys++;  bcPhysSeries[i]++; }
         if (e.button === 'qubit_waitlist')    { qubit++;   qubitSeries[i]++;  }
       }
+      if (e.type === 'ws_disconnect') wsDCTotal++;
     }
+
+    const wsDCRate   = totalSessions > 0 ? Math.round(wsDCTotal / totalSessions * 100) : 0;
+    const bounceRate = hp > 0 ? Math.round(bounced / hp * 100) : 0;
+    const returnRate = hp > 0 ? Math.round(returnVisitors / hp * 100) : 0;
+
+    // Play-to-click: visitors who completed a game AND clicked a buy button on the same day
+    const completedKeys = new Set(ev.filter(e => e.type === 'session_completed' && e.uvKey).map(e => e.uvKey));
+    const buyKeys       = new Set(ev.filter(e => e.type === 'button_click' && ['fuzznet_physical','byteclub_physical'].includes(e.button) && e.uvKey).map(e => e.uvKey));
+    const playToBuy     = [...completedKeys].filter(k => buyKeys.has(k)).length;
+
     return { page: 'homepage', hp, fnPhys, bcPhys, qubit,
+      returnVisitors, returnRate, bounceRate, wsDCTotal, wsDCRate, referrers, hourly, playToBuy,
       chart: { labels, hp: hpSeries, fnPhys: fnPhysSeries, bcPhys: bcPhysSeries, qubit: qubitSeries } };
+  }
+
+  if (page === 'funnel') {
+    function funnelStats(events) {
+      let visits = 0, fnStarted = 0, bcStarted = 0, fnCompleted = 0, bcCompleted = 0, fnBuys = 0, bcBuys = 0, qubitWL = 0;
+      for (const e of events) {
+        if (e.type === 'homepage_visit') visits++;
+        if (e.type === 'session_started') {
+          if (e.gameType === 'fuzznet')  fnStarted++;
+          if (e.gameType === 'byteclub') bcStarted++;
+        }
+        if (e.type === 'session_completed') {
+          if (e.gameType === 'fuzznet')  fnCompleted++;
+          if (e.gameType === 'byteclub') bcCompleted++;
+        }
+        if (e.type === 'button_click') {
+          if (e.button === 'fuzznet_physical')  fnBuys++;
+          if (e.button === 'byteclub_physical') bcBuys++;
+          if (e.button === 'qubit_waitlist')    qubitWL++;
+        }
+      }
+      return { visits, fnStarted, bcStarted, fnCompleted, bcCompleted, fnBuys, bcBuys, qubitWL };
+    }
+    const curr = funnelStats(ev);
+    // Previous equivalent period for comparison
+    const prevCutoff = cutoff - days * 24 * 60 * 60 * 1000;
+    const prevEv = metricsEvents.filter(e => e.ts >= prevCutoff && e.ts < cutoff);
+    const prev = funnelStats(prevEv);
+    return { page: 'funnel', ...curr, prev };
   }
 
   // fuzznet or byteclub page
@@ -118,25 +199,32 @@ function getMetrics(days, page = 'homepage') {
     modeStarted[mk]   = new Array(n).fill(0);
     modeCompleted[mk] = new Array(n).fill(0);
   }
-  let started = 0, completed = 0, tutorials = 0;
+  let started = 0, completed = 0, tutorials = 0, rematches = 0;
+  let totalDuration = 0, durationCount = 0;
 
-  // Track which mode a session started in so we can attribute completions
-  // (completions don't carry a mode, so we approximate: completed series = global)
   for (const e of ev) {
     if (e.gameType !== gt) continue;
     const i = bucketIdx(e.ts, cutoff, bucketMs, n);
     if (e.type === 'session_started') {
       started++;
       startedSeries[i]++;
+      if (e.rematch) rematches++;
       const mk = (e.mode && byMode[e.mode] !== undefined) ? e.mode : null;
       if (mk) { byMode[mk]++; modeStarted[mk][i]++; }
     }
-    if (e.type === 'session_completed') { completed++; completedSeries[i]++; }
+    if (e.type === 'session_completed') {
+      completed++; completedSeries[i]++;
+      if (e.duration) { totalDuration += e.duration; durationCount++; }
+    }
     if (e.type === 'tutorial_started')  { tutorials++; byMode.tutorial++; modeStarted.tutorial[i]++; }
   }
 
-  const pct = (started + completed) > 0 ? Math.round(completed / (completed + Math.max(started - completed, 0)) * 100) : 0;
+  const pct         = (started + completed) > 0 ? Math.round(completed / (completed + Math.max(started - completed, 0)) * 100) : 0;
+  const avgDuration = durationCount > 0 ? Math.round(totalDuration / durationCount / 60 * 10) / 10 : null; // minutes, 1 dp
+  const rematchRate = started > 0 ? Math.round(rematches / started * 100) : 0;
+
   return { page: gt, started, completed, tutorials, pct, by_mode: byMode,
+    avgDuration, rematches, rematchRate,
     chart: { labels, started: startedSeries, completed: completedSeries, modeStarted } };
 }
 
@@ -151,8 +239,8 @@ function handleTrack(req, res) {
       const ALLOWED_BUTTONS = ['fuzznet_physical', 'byteclub_physical', 'qubit_waitlist'];
       if (!ALLOWED.includes(e.type)) { res.writeHead(400); res.end(); return; }
       if (e.type === 'button_click' && !ALLOWED_BUTTONS.includes(e.button)) { res.writeHead(400); res.end(); return; }
-      // Sanitise — only keep known fields
-      const safe = { type: e.type };
+      // Sanitise — only keep known fields; attach visitor key for funnel correlation
+      const safe = { type: e.type, uvKey: visitorKey(req) };
       if (e.gameType) safe.gameType = e.gameType;
       if (e.mode)     safe.mode     = e.mode;
       if (e.button)   safe.button   = e.button;
@@ -684,6 +772,7 @@ function decideBotAction(ps, s) {
 const rooms = new Map();
 const wsData = new Map();    // ws -> { roomCode, playerIdx }
 const sessions = new Map();  // token -> { roomCode, playerIdx }
+const wsUvKey = new Map();   // ws -> uvKey (hash of IP + day, captured at connection time)
 
 function generateToken() {
   const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
@@ -892,7 +981,8 @@ function endGame(room) {
   const mode = room.players.some(p => p.isBot) ? '1p_bot'
     : room.players.length === 2 ? '2p'
     : room.players.length === 3 ? '3p' : '4p';
-  trackEvent('session_completed', { gameType: 'fuzznet', mode });
+  const duration = room.sessionStartedAt ? Math.round((Date.now() - room.sessionStartedAt) / 1000) : null;
+  trackEvent('session_completed', { gameType: 'fuzznet', mode, uvKey: room.uvKey || '', duration });
 }
 
 function processAction(room, playerIdx, msg) {
@@ -1318,10 +1408,13 @@ function handleMessage(ws, raw) {
       if (room.players.length < 2) return send(ws, {type:'error',msg:'Need at least 2 players'});
       if (room.started) return send(ws, {type:'error',msg:'Already started'});
       room.started = true;
+      room.sessionStartedAt = Date.now();
+      room.uvKey = wsUvKey.get(ws) || '';
       const _startMode = room.players.some(p => p.isBot) ? '1p_bot'
         : room.players.length === 2 ? '2p'
         : room.players.length === 3 ? '3p' : '4p';
-      trackEvent('session_started', { gameType: room.gameType, mode: _startMode });
+      const _rematch = isRematch(room.uvKey, room.gameType);
+      trackEvent('session_started', { gameType: room.gameType, mode: _startMode, uvKey: room.uvKey, rematch: _rematch });
       if (room.gameType === 'byteclub') {
         initBCGame(room);
         for (const p of room.players) if (p.ws) send(p.ws, { type: 'bc_game_started' });
@@ -1407,6 +1500,13 @@ function leaveRoom(ws, explicit = false) {
       broadcastLobby(room);
     }
   } else {
+    // Track unexpected mid-game disconnects (not explicit leaves, not already finished games)
+    if (!explicit) {
+      const gameOver = room.gameType === 'byteclub'
+        ? (room.bcState && room.bcState.phase === 'game_over')
+        : (room.state && room.state.gameOver);
+      if (!gameOver) trackEvent('ws_disconnect', { gameType: room.gameType || '' });
+    }
     // Mark as disconnected in game — keep their slot for reconnection
     room.players[info.playerIdx].connected = false;
     room.players[info.playerIdx].ws = null;
@@ -1950,7 +2050,7 @@ function bcDrawOne(room, playerIdx) {
       if (bcCheckWin(room, i) === 1) {
         gs.winner = i; gs.winCondition = 1; gs.phase = 'game_over';
         bcLog(room, `🏆 ${room.players[i].name} wins! (Data Flag + Times Up)`);
-        { const m = room.players.some(p=>p.isBot)?'1p_bot':room.players.length===2?'2p':room.players.length===3?'3p':'4p'; trackEvent('session_completed',{gameType:'byteclub',mode:m}); }
+        { const m = room.players.some(p=>p.isBot)?'1p_bot':room.players.length===2?'2p':room.players.length===3?'3p':'4p'; const dur=room.sessionStartedAt?Math.round((Date.now()-room.sessionStartedAt)/1000):null; trackEvent('session_completed',{gameType:'byteclub',mode:m,uvKey:room.uvKey||'',duration:dur}); }
         return 'game_over';
       }
     }
@@ -1962,7 +2062,7 @@ function bcDrawOne(room, playerIdx) {
     if (gs.timesUpRevealed && bcCheckWin(room, playerIdx) === 1) {
       gs.winner = playerIdx; gs.winCondition = 1; gs.phase = 'game_over';
       bcLog(room, `🏆 ${room.players[playerIdx].name} wins! (Data Flag + Times Up)`);
-      { const m = room.players.some(p=>p.isBot)?'1p_bot':room.players.length===2?'2p':room.players.length===3?'3p':'4p'; trackEvent('session_completed',{gameType:'byteclub',mode:m}); }
+      { const m = room.players.some(p=>p.isBot)?'1p_bot':room.players.length===2?'2p':room.players.length===3?'3p':'4p'; const dur=room.sessionStartedAt?Math.round((Date.now()-room.sessionStartedAt)/1000):null; trackEvent('session_completed',{gameType:'byteclub',mode:m,uvKey:room.uvKey||'',duration:dur}); }
       return 'game_over';
     }
     return 'ok';
@@ -2235,7 +2335,7 @@ function bcFinishPlay(room, playerIdx) {
   if (w) {
     gs.winner = playerIdx; gs.winCondition = w; gs.phase = 'game_over';
     bcLog(room, `🏆 ${room.players[playerIdx].name} wins!`);
-    { const m = room.players.some(p=>p.isBot)?'1p_bot':room.players.length===2?'2p':room.players.length===3?'3p':'4p'; trackEvent('session_completed',{gameType:'byteclub',mode:m}); }
+    { const m = room.players.some(p=>p.isBot)?'1p_bot':room.players.length===2?'2p':room.players.length===3?'3p':'4p'; const dur=room.sessionStartedAt?Math.round((Date.now()-room.sessionStartedAt)/1000):null; trackEvent('session_completed',{gameType:'byteclub',mode:m,uvKey:room.uvKey||'',duration:dur}); }
   }
   bcBroadcastState(room);
   // Re-trigger bot if it's still their turn in play phase.
@@ -2899,7 +2999,17 @@ const server = http.createServer((req, res) => {
     const uvKey = visitorKey(req);
     if (!seenVisitors.has(uvKey)) {
       seenVisitors.add(uvKey);
-      trackEvent('homepage_visit', { uvKey });
+      const vid = rawVisitorId(req);
+      const returnVisitor = knownVisitors.has(vid);
+      knownVisitors.add(vid);
+      const ref = req.headers['referer'] || req.headers['referrer'] || '';
+      const host = (req.headers.host || '').split(':')[0];
+      let referrerSource;
+      if (!ref || ref.includes(host)) referrerSource = 'direct';
+      else if (/google|bing|yahoo|duckduckgo|baidu|yandex/i.test(ref)) referrerSource = 'search';
+      else if (/linkedin\.com/i.test(ref)) referrerSource = 'linkedin';
+      else referrerSource = 'other';
+      trackEvent('homepage_visit', { uvKey, vid, returnVisitor, referrerSource });
     }
   }
   if (pathname === '/byteclub' || pathname === '/byteclub.html') pathname = '/byteclub.html';
@@ -2921,10 +3031,14 @@ const server = http.createServer((req, res) => {
 
 const wss = new WebSocketServer({ server });
 
-wss.on('connection', (ws) => {
+wss.on('connection', (ws, req) => {
+  // Capture visitor key at connection time for session attribution
+  const ip  = (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || req.socket.remoteAddress || 'unknown';
+  const day = new Date().toISOString().slice(0, 10);
+  wsUvKey.set(ws, crypto.createHash('sha256').update(ip + '|' + day).digest('hex').slice(0, 24));
   ws.on('message', (raw) => handleMessage(ws, raw.toString()));
-  ws.on('close', () => leaveRoom(ws, false));   // disconnect — keep session
-  ws.on('error', () => leaveRoom(ws, false));   // disconnect — keep session
+  ws.on('close', () => { leaveRoom(ws, false); wsUvKey.delete(ws); });
+  ws.on('error', () => { leaveRoom(ws, false); wsUvKey.delete(ws); });
 });
 
 server.listen(PORT, () => {
