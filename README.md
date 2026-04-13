@@ -323,11 +323,6 @@ All secrets are injected via PM2 env vars — no `.env` file needed on the serve
 ```bash
 pm2 set techboardgames:ADMIN_PASSWORD "your-admin-password"
 pm2 set techboardgames:SESSION_SECRET  "a-long-random-string"
-pm2 set techboardgames:SMTP_USER       "mnovack8@gmail.com"
-pm2 set techboardgames:SMTP_PASS       "your-gmail-app-password"
-pm2 set techboardgames:SHEETS_ID       "your-google-sheet-id"
-pm2 set techboardgames:GOOGLE_SERVICE_ACCOUNT_EMAIL   "your-service-account@project.iam.gserviceaccount.com"
-pm2 set techboardgames:GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY "-----BEGIN RSA PRIVATE KEY-----\nMIIE..."
 ```
 
 Then start (or restart) the app to pick them up:
@@ -344,45 +339,6 @@ pm2 save
 |---|---|---|
 | `ADMIN_PASSWORD` | Yes | Password for the `/admin` dashboard |
 | `SESSION_SECRET` | Yes | Signs admin session cookies — use a long random string |
-| `SMTP_USER` | Yes | Gmail address used to send contact form emails |
-| `SMTP_PASS` | Yes | Gmail App Password for SMTP (generate at myaccount.google.com/apppasswords) |
-| `SHEETS_ID` | No | Google Sheet ID from the sheet URL |
-| `GOOGLE_SERVICE_ACCOUNT_EMAIL` | No | Service account `client_email` from Google Cloud |
-| `GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY` | No | Service account `private_key` from Google Cloud (with `\n` between lines) |
-
-`SHEETS_ID` and the two `GOOGLE_SERVICE_ACCOUNT_*` vars are optional — if not set, Google Sheets sync is silently skipped and all metrics continue to be stored locally in `metrics.json`.
-
----
-
-### Google Sheets Sync Setup
-
-The server syncs metrics to a Google Sheet automatically — real-time event logging and a nightly daily summary written at midnight ET.
-
-**1. Create a Google Cloud service account**
-
-- Go to [console.cloud.google.com](https://console.cloud.google.com)
-- Enable the **Google Sheets API** under APIs & Services → Library
-- Go to APIs & Services → Credentials → **Create Credentials → Service account**
-- Give it a name, click through, then open the service account → **Keys** tab → **Add Key → JSON**
-- From the downloaded JSON, copy `client_email` and `private_key`
-
-**2. Share the Google Sheet with the service account**
-
-- Open your Google Sheet and click **Share**
-- Paste the `client_email` address and set permission to **Editor**
-
-**3. Set up the sheet tabs with headers**
-
-Create four tabs in this exact order with these headers in row 1:
-
-| Tab | Headers (row 1) |
-|---|---|
-| **Events** | Timestamp, Type, GameType, Mode, Button, UVKey, Referrer |
-| **Daily Homepage** | Date, Visits, FuzzNet Buys, BC Buys, Qubit WL, Direct, Search, LinkedIn, Other, Bounce Rate, WS Disconnects |
-| **Daily Games** | Date, Game, Started, Completed, Completion%, Tutorials, 1P+Bot, 2P, 3P, 4P, Avg Duration, Rematches |
-| **Daily Funnel** | Date, Visits, Started, Completed, Buy Clicks, Visit→Start%, Start→Complete%, Complete→Buy% |
-
-**4. Set the env vars and restart** (see Secrets section above)
 
 ---
 
