@@ -23,8 +23,18 @@ body{padding-top:44px;}
 
 /* ===== LOBBY ===== */
 #lobby{flex-direction:row;align-items:center;justify-content:center;min-height:100vh;background:#111827;}
-.lobby-hero{flex:1;display:flex;align-items:center;justify-content:center;min-height:100vh;background:#0f172a;padding:40px;}
-.lobby-hero img{max-width:420px;width:100%;height:auto;border-radius:16px;box-shadow:0 16px 48px rgba(0,0,0,0.5);}
+.lobby-hero{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;min-height:100vh;overflow-y:auto;background:#0f172a;padding:48px 48px 60px;gap:0;}
+.lobby-hero img{max-width:340px;width:100%;height:auto;border-radius:16px;box-shadow:0 16px 48px rgba(0,0,0,0.5);}
+
+/* ===== LOBBY LEARNING OBJECTIVES ===== */
+.learn-section-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#62b517;border-left:4px solid #d1db24;padding-left:10px;margin-bottom:14px;width:100%;max-width:440px;}
+.concept-list{list-style:none;display:flex;flex-direction:column;width:100%;max-width:440px;margin:0;padding:0;}
+.concept-list li{display:block;}
+.concept-card{border-radius:12px;padding:16px 18px;margin-bottom:12px;border:2px solid #1e3a5f;background:#111827;box-shadow:0 2px 8px rgba(0,0,0,0.4);}
+.concept-card-top{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.concept-icon{font-size:18px;}
+.concept-card-top strong{font-size:14px;font-weight:900;color:#e2e8f0;}
+.concept-explain{font-size:13px;color:#94a3b8;line-height:1.65;margin:0;}
 .lobby-forms{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:20px;padding:30px;}
 #lobby h1{font-size:40px;color:#62b517;letter-spacing:2px;font-weight:800;}
 #lobby .subtitle{font-size:14px;color:#6b7280;margin-top:-6px;}
@@ -610,10 +620,48 @@ body.bc-tut-active .game-layout { height: calc(100vh - 44px); margin-right: 272p
 <div class="screen active" id="lobby">
   <div class="lobby-hero">
     <img src="/images/byteclub.png" alt="Byte Club">
+
+    <div style="height:36px"></div>
+    <div class="learn-section-label">What you'll actually understand after playing</div>
+
+    <ul class="concept-list">
+      <li>
+        <div class="concept-card">
+          <div class="concept-card-top">
+            <strong>Attacker Mindset</strong>
+          </div>
+          <p class="concept-explain">Attackers don't strike randomly — they follow a sequence. The Cyber Kill Chain maps every stage from the first bit of reconnaissance to the final objective. Playing the attack side teaches you how adversaries think, plan, and move, and why disrupting any single stage can collapse the entire operation.</p>
+        </div>
+      </li>
+      <li>
+        <div class="concept-card">
+          <div class="concept-card-top">
+            <strong>Defender Mindset</strong>
+          </div>
+          <p class="concept-explain">Defense isn't one big wall — it's a complete posture. The NIST Cybersecurity Framework gives defenders a structured approach: Identify what you're protecting, Protect it, Detect threats early, Respond fast, and Recover fully — with Govern at the center, providing the policies, roles, and decisions that hold it all together. Every gap in that posture is a stage of the Kill Chain a defender failed to cover.</p>
+        </div>
+      </li>
+      <li>
+        <div class="concept-card">
+          <div class="concept-card-top">
+            <strong>The Cycle of Cyberwarfare</strong>
+          </div>
+          <p class="concept-explain">Attack and defense are never finished — they feed each other. Defenders add controls to disrupt the Kill Chain; attackers find ways around them; defenders adapt again. That perpetual loop is the Cycle of Cyberwarfare — and once you see it, you can use it as a mental model to make sense of any threat, breach, or security decision you'll ever encounter.</p>
+        </div>
+      </li>
+      <li>
+        <div class="concept-card">
+          <div class="concept-card-top">
+            <strong>You are CyberFluent</strong>
+          </div>
+          <p class="concept-explain">Understanding that cycle means you can break down any cybersecurity incident or topic and ask the right questions. It won't make you a cyber expert — but it means you can appropriately challenge one. Instead of waiting for the latest checklist from experts to tell you what to think, you'll have the mental model to think critically yourself. Rather than just accepting what you're told or begrudgingly going along with it, you'll understand enough to be genuinely on the same page and push toward the best solution.</p>
+        </div>
+      </li>
+    </ul>
   </div>
   <div class="lobby-forms">
     <h1>BYTE CLUB</h1>
-    <p class="subtitle">Cybersecurity Card Game · 2–4 Players <span class="info-btn" style="font-size:11px;width:18px;height:18px;" onclick="">i<div class="info-popup wide"><strong>Byte Club</strong> is a card game where you build both an attack Kill Chain and a NIST defense framework.<br><br><strong>Win by:</strong><br>1. Hold the 🚩 Data Flag when ⏰ Times Up is drawn<br>2. Collect all attack + defend types in front of you<br><br>Play cards on your turn, respond to attacks out of turn, and race to complete your collection!</div></span></p>
+    <p class="subtitle">Experience the Cycle of Cyberwarfare from both sides · 2–4 Players</p>
 
     <button class="lobby-btn btn-tutorial" onclick="startBcTutorial()">📖 Interactive Tutorial — Learn to Play</button>
 

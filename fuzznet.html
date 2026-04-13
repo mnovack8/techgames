@@ -35,8 +35,18 @@ body { padding-top: 44px; }
 
 /* ===== LOBBY ===== */
 #lobby { flex-direction: row; align-items: center; justify-content: center; min-height: 100vh; gap: 0; background: linear-gradient(160deg, #f7f5f0 0%, #eae6dd 100%); }
-.lobby-hero { flex: 1; display: flex; align-items: center; justify-content: center; min-height: 100vh; background: #fff; padding: 40px; }
-.lobby-hero img { max-width: 480px; width: 100%; height: auto; filter: drop-shadow(0 8px 24px rgba(0,0,0,0.1)); }
+.lobby-hero { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; min-height: 100vh; overflow-y: auto; background: #fff; padding: 48px 48px 60px; gap: 0; }
+.lobby-hero img { max-width: 360px; width: 100%; height: auto; filter: drop-shadow(0 8px 24px rgba(0,0,0,0.1)); }
+
+/* ===== LOBBY LEARNING OBJECTIVES ===== */
+.learn-section-label { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: #62b517; border-left: 4px solid #d1db24; padding-left: 10px; margin-bottom: 14px; width: 100%; max-width: 440px; }
+.concept-list { list-style: none; display: flex; flex-direction: column; width: 100%; max-width: 440px; margin: 0; padding: 0; }
+.concept-list li { display: block; }
+.concept-card { border-radius: 12px; padding: 16px 18px; margin-bottom: 12px; border: 2px solid #a8c96a; background: #fff; box-shadow: 0 2px 8px rgba(98,181,23,0.1); }
+.concept-card-top { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.concept-icon { font-size: 18px; }
+.concept-card-top strong { font-size: 14px; font-weight: 900; color: #2a2a2a; }
+.concept-explain { font-size: 13px; color: #555; line-height: 1.65; margin: 0; }
 .lobby-forms { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; gap: 20px; padding: 30px; }
 #lobby h1 { font-size: 44px; color: #2d6a4f; letter-spacing: 2px; font-weight: 800; margin: 0; }
 #lobby .subtitle { font-size: 15px; color: #888; margin-top: -6px; }
@@ -420,6 +430,57 @@ body { padding-top: 44px; }
 <div id="lobby" class="screen active">
   <div class="lobby-hero">
     <img src="images/cover.png" alt="FuzzNet Labs — A dog scientist building a machine learning model">
+
+    <div style="height:36px"></div>
+    <div class="learn-section-label">What you'll actually understand after playing</div>
+
+    <ul class="concept-list">
+      <li>
+        <div class="concept-card">
+          <div class="concept-card-top">
+            <span class="concept-icon">🧮</span>
+            <strong>Training Data &amp; Bias</strong>
+          </div>
+          <p class="concept-explain">A model is only as good as the data it learns from. Skewed, incomplete, or unrepresentative data produces predictions that fail in the real world — even when accuracy on the training set looks perfect.</p>
+        </div>
+      </li>
+      <li>
+        <div class="concept-card">
+          <div class="concept-card-top">
+            <span class="concept-icon">🏷️</span>
+            <strong>Features &amp; Labels</strong>
+          </div>
+          <p class="concept-explain">Features are the measurable characteristics of each example; labels are the answers you want the model to learn. Choosing the right features is often more important than choosing the right algorithm.</p>
+        </div>
+      </li>
+      <li>
+        <div class="concept-card">
+          <div class="concept-card-top">
+            <span class="concept-icon">📉</span>
+            <strong>Overfitting vs. Generalization</strong>
+          </div>
+          <p class="concept-explain">A model that memorizes its training data will fail on anything new. Good models find patterns that generalize — not edge cases that only appear in examples they've already seen.</p>
+        </div>
+      </li>
+      <li>
+        <div class="concept-card">
+          <div class="concept-card-top">
+            <span class="concept-icon">✅</span>
+            <strong>Model Evaluation</strong>
+          </div>
+          <p class="concept-explain">Accuracy alone can be misleading. Understanding how to measure performance on held-out test data tells you whether a model genuinely works or just looks like it does on familiar examples.</p>
+        </div>
+      </li>
+      <li>
+        <div class="concept-card">
+          <div class="concept-card-top">
+            <span class="concept-icon">🔄</span>
+            <strong>The ML Pipeline</strong>
+          </div>
+          <p class="concept-explain">Real machine learning is a cycle: collect data, engineer features, train, evaluate, and iterate. No step is optional — and improving any one step can dramatically change what the model learns.</p>
+        </div>
+      </li>
+    </ul>
   </div>
   <div class="lobby-forms">
     <div class="subtitle">Animal Photo Classifier — The Board Game <button class="info-btn" onclick="showInfo('overview')" style="width:22px;height:22px;font-size:12px" title="How to Play">i</button></div>
