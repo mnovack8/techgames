@@ -9,11 +9,16 @@ const nodemailer = require('nodemailer');
 
 // ==================== EMAIL ====================
 const emailTransporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: 'smtp.gmail.com',
+  port: 587,
+  secure: false,
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS
-  }
+  },
+  connectionTimeout: 10000,
+  greetingTimeout: 10000,
+  socketTimeout: 10000
 });
 
 async function handleContactSubmit(req, res) {
@@ -3149,6 +3154,7 @@ const server = http.createServer((req, res) => {
   else if (pathname === '/fuzznet' || pathname === '/fuzznet.html') pathname = '/fuzznet.html';
   else if (pathname === '/qubit-waitlist' || pathname === '/qubit-waitlist.html') pathname = '/qubit-waitlist.html';
   else if (pathname === '/contact' || pathname === '/contact.html') pathname = '/contact.html';
+  else if (pathname === '/about' || pathname === '/about.html') pathname = '/about.html';
   else if (pathname === '/admin' || pathname === '/admin.html') pathname = '/admin.html';
   else if (pathname === '/') pathname = '/index.html';
   const filePath = path.join(__dirname, pathname);
