@@ -144,75 +144,13 @@ nav a.nav-cta:hover { background: #b8c11e; color: #2a3a00; }
   margin-bottom: 20px;
 }
 
-/* ===== FORM ===== */
-.form-group {
-  margin-bottom: 18px;
-}
-.form-group label {
-  display: block;
-  font-size: 13px;
-  font-weight: 700;
-  color: #3a3a3a;
-  margin-bottom: 6px;
-}
-.form-group input,
-.form-group textarea {
+/* ===== GOOGLE FORM EMBED ===== */
+.google-form-frame {
   width: 100%;
-  padding: 11px 14px;
-  border: 2px solid #c8d8a8;
-  border-radius: 9px;
-  font-family: inherit;
-  font-size: 14px;
-  color: #2a2a2a;
-  background: #fafcf7;
-  transition: border-color 0.15s;
-  outline: none;
-}
-.form-group input:focus,
-.form-group textarea:focus {
-  border-color: #62b517;
-  background: #fff;
-}
-.form-group textarea {
-  resize: vertical;
-  min-height: 130px;
-}
-
-.btn-submit {
-  width: 100%;
-  padding: 13px 20px;
-  background: #62b517;
-  color: #fff;
-  font-family: inherit;
-  font-size: 15px;
-  font-weight: 700;
+  min-height: 850px;
   border: none;
   border-radius: 9px;
-  cursor: pointer;
-  transition: background 0.15s, transform 0.15s;
-}
-.btn-submit:hover { background: #4d8f12; transform: scale(1.01); }
-.btn-submit:disabled { background: #a8c96a; cursor: not-allowed; transform: none; }
-
-/* ===== STATUS MESSAGES ===== */
-.status-msg {
-  display: none;
-  padding: 12px 16px;
-  border-radius: 9px;
-  font-size: 14px;
-  font-weight: 600;
-  margin-top: 14px;
-  text-align: center;
-}
-.status-msg.success {
-  background: #f0fae8;
-  border: 2px solid #a8c96a;
-  color: #3a6e10;
-}
-.status-msg.error {
-  background: #fff4f4;
-  border: 2px solid #f0a0a0;
-  color: #9a2020;
+  display: block;
 }
 
 /* ===== LINKEDIN SECTION ===== */
@@ -313,22 +251,13 @@ footer {
   <!-- Contact Form -->
   <div class="card">
     <div class="card-label">Send a Message</div>
-    <form id="contactForm">
-      <div class="form-group">
-        <label for="name">Your Name</label>
-        <input type="text" id="name" name="name" placeholder="Jane Smith" required>
-      </div>
-      <div class="form-group">
-        <label for="email">Email Address</label>
-        <input type="email" id="email" name="email" placeholder="jane@example.com" required>
-      </div>
-      <div class="form-group">
-        <label for="message">Message</label>
-        <textarea id="message" name="message" placeholder="What's on your mind?" required></textarea>
-      </div>
-      <button class="btn-submit" type="submit" id="submitBtn">Send Message</button>
-      <div class="status-msg" id="statusMsg"></div>
-    </form>
+    <iframe
+      class="google-form-frame"
+      src="https://docs.google.com/forms/d/e/1FAIpQLScF9MjYCpptnUHu1kGyU6_3fSaMOZbwZU0FbSZ4r1ssLWP37Q/viewform?embedded=true"
+      title="Contact Form"
+      loading="lazy">
+      Loading…
+    </iframe>
   </div>
 
   <!-- LinkedIn -->
@@ -351,45 +280,6 @@ footer {
   <p>© 2025 Tech Games. All rights reserved.</p>
 </footer>
 
-<script>
-document.getElementById('contactForm').addEventListener('submit', async function(e) {
-  e.preventDefault();
-  const btn = document.getElementById('submitBtn');
-  const msg = document.getElementById('statusMsg');
-
-  btn.disabled = true;
-  btn.textContent = 'Sending…';
-  msg.style.display = 'none';
-
-  try {
-    const res = await fetch('/contact/submit', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name:    document.getElementById('name').value.trim(),
-        email:   document.getElementById('email').value.trim(),
-        message: document.getElementById('message').value.trim()
-      })
-    });
-
-    if (res.ok) {
-      msg.className = 'status-msg success';
-      msg.textContent = 'Message sent! We\'ll get back to you soon.';
-      msg.style.display = 'block';
-      e.target.reset();
-    } else {
-      throw new Error('Server error');
-    }
-  } catch {
-    msg.className = 'status-msg error';
-    msg.textContent = 'Something went wrong. Please try emailing us directly.';
-    msg.style.display = 'block';
-  }
-
-  btn.disabled = false;
-  btn.textContent = 'Send Message';
-});
-</script>
 
 </body>
 </html>
