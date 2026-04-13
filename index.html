@@ -34,12 +34,12 @@ header {
   background: #fff;
   border-bottom: 3px solid #d1db24;
   padding: 0 40px;
-  height: 56px;
+  height: 68px;
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  box-shadow: 0 2px 12px rgba(98,181,23,0.08);
+  box-shadow: 0 2px 16px rgba(98,181,23,0.12);
 }
 .header-logo {
   display: flex;
@@ -69,25 +69,42 @@ nav {
   gap: 4px;
 }
 nav a {
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 700;
   color: #4a4a4a;
   text-decoration: none;
-  padding: 6px 14px;
+  padding: 8px 18px;
   border-radius: 8px;
   transition: background 0.15s, color 0.15s;
 }
 nav a:hover { background: #f4fae8; color: #4a8c11; }
 nav a.active { color: #4a8c11; background: #f4fae8; }
-nav a.nav-cta {
-  background: #d1db24;
-  color: #2a3a00;
-  margin-left: 6px;
-}
-nav a.nav-cta:hover { background: #b8c11e; color: #2a3a00; }
+nav a.nav-cta { color: #4a4a4a; background: none; margin-left: 0; }
+nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
 @media (max-width: 600px) {
   header { padding: 0 16px; }
   nav a { padding: 6px 8px; font-size: 12px; }
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes underline-grow {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+@keyframes hero-drift {
+  from { transform: translate(0, 0); }
+  to   { transform: translate(30px, 30px); }
+}
+@keyframes logo-roll {
+  from { transform: translateX(-140px) rotate(-400deg); opacity: 0; }
+  to   { transform: translateX(0)      rotate(0deg);    opacity: 1; }
+}
+.header-logo .logo-mark img {
+  animation: logo-roll 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 /* ===== HERO ===== */
@@ -97,6 +114,18 @@ nav a.nav-cta:hover { background: #b8c11e; color: #2a3a00; }
   flex-shrink: 0;
   background: linear-gradient(160deg, #f8faf2 0%, #edf2e0 100%);
   border-bottom: 1px solid #dde8c8;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: -56px;
+  background-image: radial-gradient(circle, rgba(98,181,23,0.13) 1.5px, transparent 1.5px);
+  background-size: 30px 30px;
+  animation: hero-drift 22s linear infinite;
+  pointer-events: none;
+  z-index: 0;
 }
 .hero h1 {
   font-size: 34px;
@@ -104,6 +133,9 @@ nav a.nav-cta:hover { background: #b8c11e; color: #2a3a00; }
   color: #2a2a2a;
   line-height: 1.1;
   margin-bottom: 8px;
+  position: relative;
+  z-index: 1;
+  animation: fade-up 0.45s ease both;
 }
 .hero h1 em {
   font-style: normal;
@@ -117,6 +149,9 @@ nav a.nav-cta:hover { background: #b8c11e; color: #2a3a00; }
   height: 4px;
   background: #d1db24;
   border-radius: 3px;
+  transform: scaleX(0);
+  transform-origin: left center;
+  animation: underline-grow 0.4s 0.5s ease forwards;
 }
 .hero p {
   font-size: 15px;
@@ -124,6 +159,9 @@ nav a.nav-cta:hover { background: #b8c11e; color: #2a3a00; }
   line-height: 1.6;
   max-width: 900px;
   margin: 0 auto;
+  position: relative;
+  z-index: 1;
+  animation: fade-up 0.45s 0.15s ease both;
 }
 
 /* ===== GAMES SECTION ===== */
@@ -165,7 +203,11 @@ nav a.nav-cta:hover { background: #b8c11e; color: #2a3a00; }
   display: flex;
   flex-direction: column;
   transition: transform 0.18s ease, box-shadow 0.18s ease;
+  animation: fade-up 0.4s ease both;
 }
+.games-grid .game-card:nth-child(1) { animation-delay: 0.25s; }
+.games-grid .game-card:nth-child(2) { animation-delay: 0.37s; }
+.games-grid .game-card:nth-child(3) { animation-delay: 0.49s; }
 .game-card:not(.coming-soon):hover {
   transform: translateY(-4px);
   box-shadow: 0 10px 36px rgba(98,181,23,0.26);
@@ -182,6 +224,19 @@ nav a.nav-cta:hover { background: #b8c11e; color: #2a3a00; }
   font-weight: 800;
   letter-spacing: 0.4px;
   color: #2a3a00;
+  position: relative;
+  overflow: hidden;
+}
+.game-card-tech-header::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -80%; width: 60%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.45), transparent);
+  transition: left 0.45s ease;
+}
+.game-card:hover .game-card-tech-header::after {
+  left: 130%;
 }
 
 /* Card image — fixed height, no scrolling blowout */
@@ -200,6 +255,10 @@ nav a.nav-cta:hover { background: #b8c11e; color: #2a3a00; }
   height: 100%;
   object-fit: contain;
   object-position: center;
+  transition: transform 0.35s ease;
+}
+.game-card:not(.coming-soon):hover .game-card-image img {
+  transform: scale(1.06);
 }
 .coming-soon-placeholder {
   font-size: 15px;

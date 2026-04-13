@@ -32,11 +32,11 @@ header {
   background: #fff;
   border-bottom: 3px solid #d1db24;
   padding: 0 40px;
-  height: 56px;
+  height: 68px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  box-shadow: 0 2px 12px rgba(98,181,23,0.08);
+  box-shadow: 0 2px 16px rgba(98,181,23,0.12);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -69,22 +69,37 @@ nav {
   gap: 4px;
 }
 nav a {
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 700;
   color: #4a4a4a;
   text-decoration: none;
-  padding: 6px 14px;
+  padding: 8px 18px;
   border-radius: 8px;
   transition: background 0.15s, color 0.15s;
 }
 nav a:hover { background: #f4fae8; color: #4a8c11; }
-nav a.active { color: #4a8c11; background: #f4fae8; }
-nav a.nav-cta {
-  background: #d1db24;
-  color: #2a3a00;
-  margin-left: 6px;
+@keyframes logo-roll {
+  from { transform: translateX(-140px) rotate(-400deg); opacity: 0; }
+  to   { transform: translateX(0)      rotate(0deg);    opacity: 1; }
 }
-nav a.nav-cta:hover { background: #b8c11e; color: #2a3a00; }
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes underline-grow {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+@keyframes hero-drift {
+  from { transform: translate(0, 0); }
+  to   { transform: translate(30px, 30px); }
+}
+.header-logo img {
+  animation: logo-roll 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+nav a.active { color: #4a8c11; background: #f4fae8; }
+nav a.nav-cta { color: #4a4a4a; background: none; margin-left: 0; }
+nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
 @media (max-width: 600px) {
   header { padding: 0 16px; }
   nav a { padding: 6px 8px; font-size: 12px; }
@@ -96,6 +111,18 @@ nav a.nav-cta:hover { background: #b8c11e; color: #2a3a00; }
   border-bottom: 1px solid #dde8c8;
   padding: 56px 24px 48px;
   text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: -56px;
+  background-image: radial-gradient(circle, rgba(98,181,23,0.13) 1.5px, transparent 1.5px);
+  background-size: 30px 30px;
+  animation: hero-drift 22s linear infinite;
+  pointer-events: none;
+  z-index: 0;
 }
 .hero h1 {
   font-size: 42px;
@@ -103,6 +130,9 @@ nav a.nav-cta:hover { background: #b8c11e; color: #2a3a00; }
   color: #1a1a1a;
   line-height: 1.1;
   margin-bottom: 14px;
+  position: relative;
+  z-index: 1;
+  animation: fade-up 0.45s ease both;
 }
 .hero h1 em {
   font-style: normal;
@@ -116,6 +146,9 @@ nav a.nav-cta:hover { background: #b8c11e; color: #2a3a00; }
   height: 4px;
   background: #d1db24;
   border-radius: 3px;
+  transform: scaleX(0);
+  transform-origin: left center;
+  animation: underline-grow 0.4s 0.5s ease forwards;
 }
 .hero p {
   font-size: 16px;
@@ -123,6 +156,20 @@ nav a.nav-cta:hover { background: #b8c11e; color: #2a3a00; }
   line-height: 1.7;
   max-width: 580px;
   margin: 0 auto;
+  position: relative;
+  z-index: 1;
+  animation: fade-up 0.45s 0.15s ease both;
+}
+
+/* ===== SCROLL ANIMATIONS ===== */
+.card, .founder-card {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.45s ease, transform 0.45s ease;
+}
+.card.visible, .founder-card.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* ===== MAIN CONTENT ===== */
@@ -391,5 +438,19 @@ footer {
   <p>© 2025 Tech Board Games. All rights reserved.</p>
 </footer>
 
+<script>
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.08 });
+document.querySelectorAll('.card, .founder-card').forEach((el, i) => {
+  el.style.transitionDelay = (i * 0.08) + 's';
+  observer.observe(el);
+});
+</script>
 </body>
 </html>
