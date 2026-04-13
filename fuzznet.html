@@ -3,7 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FuzzNet Labs - Animal Classifier</title>
+<meta name="description" content="FuzzNet Labs turns machine learning into a board game. Design a neural network, train it on data, test it on animals — and finally see inside the black box. Free to play online.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="FuzzNet Labs — AI & Machine Learning Board Game">
+<meta property="og:description" content="FuzzNet Labs turns machine learning into a board game. Design a neural network, train it on data, test it on animals — and finally see inside the black box. Free to play online.">
+<meta property="og:image" content="https://cybersecgames.com/images/cover.png">
+<meta property="og:url" content="https://cybersecgames.com/fuzznet">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="FuzzNet Labs — AI & Machine Learning Board Game">
+<meta name="twitter:description" content="FuzzNet Labs turns machine learning into a board game. Design a neural network, train it on data, test it on animals — and finally see inside the black box. Free to play online.">
+<meta name="twitter:image" content="https://cybersecgames.com/images/cover.png">
+<title>FuzzNet Labs — AI & Machine Learning Board Game</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -240,6 +250,10 @@ body { padding-top: 44px; }
 .go-mini-board-label { font-size: 11px; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px; }
 .go-mini-board-svg { width: 100%; height: auto; display: block; background: #f4f1ec; border-radius: 6px; border: 1px solid #e0dbd3; }
 #play-again-btn { padding: 12px 36px; font-size: 16px; border: none; border-radius: 8px; background: #2d6a4f; color: white; cursor: pointer; font-weight: 700; flex-shrink: 0; }
+.go-upsell { background: #fff; border-radius: 12px; padding: 16px 24px; min-width: 340px; max-width: 580px; width: 90vw; text-align: center; box-shadow: 0 4px 24px rgba(0,0,0,0.15); flex-shrink: 0; }
+.go-upsell p { font-size: 14px; color: #52796f; margin: 0 0 10px; font-weight: 600; }
+.go-upsell a { display: inline-block; background: #d1db24; color: #0f172a; text-decoration: none; padding: 10px 24px; border-radius: 8px; font-size: 14px; font-weight: 800; }
+.go-upsell a:hover { filter: brightness(1.08); }
 
 /* ===== INFO SYSTEM ===== */
 .info-btn { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid #bbb; background: transparent; color: #999; font-size: 11px; font-weight: 700; cursor: pointer; margin-left: 5px; vertical-align: middle; transition: all 0.15s; font-family: serif; line-height: 1; padding: 0; }
@@ -637,6 +651,10 @@ body { padding-top: 44px; }
 <div id="gameover" class="screen">
   <h2>Game Over!</h2>
   <div class="final-scores" id="final-scores"></div>
+  <div class="go-upsell">
+    <p>Loved it? The physical game is where FuzzNet Labs really shines.</p>
+    <a href="https://cybersecgames.com/products/fuzznet-labs" target="_blank" rel="noopener" onclick="trackClick('fuzznet_physical_postgame')">🛒 Get the Physical Game</a>
+  </div>
   <button id="play-again-btn" onclick="leaveRoom(); showScreen('lobby');">Play Again</button>
 </div>
 

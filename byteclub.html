@@ -3,6 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Byte Club is a cybersecurity card game teaching the Cyber Kill Chain and NIST Framework through strategic play. 2–4 players. Free to play online — physical version available.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Byte Club — Cybersecurity Card Game">
+<meta property="og:description" content="Byte Club is a cybersecurity card game teaching the Cyber Kill Chain and NIST Framework through strategic play. 2–4 players. Free to play online — physical version available.">
+<meta property="og:image" content="https://cybersecgames.com/images/byteclub.png">
+<meta property="og:url" content="https://cybersecgames.com/byteclub">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Byte Club — Cybersecurity Card Game">
+<meta name="twitter:description" content="Byte Club is a cybersecurity card game teaching the Cyber Kill Chain and NIST Framework through strategic play. 2–4 players. Free to play online — physical version available.">
+<meta name="twitter:image" content="https://cybersecgames.com/images/byteclub.png">
 <title>Byte Club — Cybersecurity Card Game</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Share+Tech+Mono&display=swap');
@@ -322,6 +332,10 @@ body{padding-top:44px;}
 .win-condition{font-size:15px;color:#9ca3af;margin-bottom:24px;}
 .win-btn{background:#62b517;color:#fff;border:none;padding:12px 32px;border-radius:10px;font-size:16px;font-weight:800;cursor:pointer;}
 .win-btn:hover{filter:brightness(1.1);}
+.win-upsell{margin:20px 0 16px;padding-top:20px;border-top:1px solid #2d3a50;text-align:center;}
+.win-upsell p{font-size:13px;color:#9ca3af;margin:0 0 12px;}
+.win-buy-btn{display:inline-block;background:#d1db24;color:#0f172a;text-decoration:none;padding:10px 24px;border-radius:10px;font-size:14px;font-weight:800;}
+.win-buy-btn:hover{filter:brightness(1.08);}
 
 /* ===== CARD ZOOM OVERLAY ===== */
 #card-zoom {
@@ -856,6 +870,10 @@ body.bc-tut-active .game-layout { height: calc(100vh - 44px); margin-right: 272p
     <div class="win-title">Byte Club Winner!</div>
     <div class="win-name" id="win-name"></div>
     <div class="win-condition" id="win-cond"></div>
+    <div class="win-upsell">
+      <p>Loved it? The physical game is where Byte Club really shines.</p>
+      <a class="win-buy-btn" href="https://cybersecgames.com/pages/byte-club-game" target="_blank" rel="noopener" onclick="trackClick('byteclub_physical_postgame')">🛒 Get the Physical Game</a>
+    </div>
     <button class="win-btn" onclick="location.reload()">Play Again</button>
   </div>
 </div>
