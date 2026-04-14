@@ -576,12 +576,24 @@ footer a:hover { text-decoration: underline; }
         <!-- Mid: positions icon at (centre + 58px right) = (168, 110) in SVG space -->
         <g transform="translate(168, 110)">
           <!-- Inner: counter-rotates around icon's own centre so it stays upright -->
+          <!-- Guy Fawkes / Anonymous mask — no hood, just the mask -->
           <g filter="url(#glow-a)" style="transform-box:fill-box; transform-origin:50% 50%; animation:counter-rotate 9s linear infinite;">
-            <path d="M0,-22 C-2,-20 -7,-17 -11,-12 C-15,-7 -16,-1 -15,6 L-12,19 L12,19 L15,6 C16,-1 15,-7 11,-12 C7,-17 2,-20 0,-22 Z" fill="#c8d400"/>
-            <ellipse cx="0" cy="-1" rx="8" ry="10.5" fill="rgba(12,12,0,0.80)"/>
-            <rect x="-7" y="-3.5" width="5" height="2.5" rx="1.2" fill="#eef56a"/>
-            <rect x="2" y="-3.5" width="5" height="2.5" rx="1.2" fill="#eef56a"/>
-            <path d="M-3,5 Q0,7.5 3,5" fill="none" stroke="rgba(238,245,106,0.3)" stroke-width="1"/>
+            <!-- Mask face — cream oval, slightly chin-tapered -->
+            <path d="M0,-15 C-12,-15 -13,0 -11,8 Q-6,17 0,17 Q6,17 11,8 C13,0 12,-15 0,-15 Z" fill="#ede8d0" stroke="rgba(100,80,40,0.18)" stroke-width="0.8"/>
+            <!-- Arched brows — THE most distinctive Guy Fawkes feature -->
+            <path d="M-11,-7 Q-6,-12 -2,-8" fill="none" stroke="#3a2a10" stroke-width="1.7" stroke-linecap="round"/>
+            <path d="M2,-8 Q6,-12 11,-7" fill="none" stroke="#3a2a10" stroke-width="1.7" stroke-linecap="round"/>
+            <!-- Eyes -->
+            <ellipse cx="-6.5" cy="-4" rx="2.8" ry="2" fill="#2a2010"/>
+            <ellipse cx="6.5" cy="-4" rx="2.8" ry="2" fill="#2a2010"/>
+            <!-- Rosy cheeks -->
+            <circle cx="-8.5" cy="1.5" r="3.2" fill="rgba(215,65,65,0.36)"/>
+            <circle cx="8.5" cy="1.5" r="3.2" fill="rgba(215,65,65,0.36)"/>
+            <!-- Handlebar mustache — sweeps outward and curls up at ends -->
+            <path d="M-1,5.5 Q-5,6 -8,4.5 Q-11,3 -10.5,1" fill="none" stroke="#3a2a10" stroke-width="2" stroke-linecap="round"/>
+            <path d="M1,5.5 Q5,6 8,4.5 Q11,3 10.5,1" fill="none" stroke="#3a2a10" stroke-width="2" stroke-linecap="round"/>
+            <!-- Pointed goatee -->
+            <path d="M-3,9.5 Q0,17 3,9.5 Z" fill="#3a2a10"/>
           </g>
         </g>
       </g>

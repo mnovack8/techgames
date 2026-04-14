@@ -111,6 +111,14 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
 }
 
 /* ===== ANIMATIONS ===== */
+@keyframes cy-orbit-clockwise {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes cy-counter-rotate {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(-360deg); }
+}
 @keyframes fade-up {
   from { opacity: 0; transform: translateY(16px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -316,22 +324,20 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
 .topic-link {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 20px 28px;
+  gap: 20px;
+  padding: 12px 24px 12px 12px;
   background: #fff;
   border: 2px solid #a8c96a;
-  border-radius: 12px;
-  font-size: 20px;
-  font-weight: 800;
-  color: #1a1a1a;
+  border-radius: 14px;
   text-decoration: none;
   transition: background 0.15s, border-color 0.15s, transform 0.15s;
 }
 .topic-link::after {
   content: '→';
-  font-size: 20px;
+  font-size: 22px;
   color: #62b517;
   transition: transform 0.15s;
+  flex-shrink: 0;
 }
 .topic-link:hover {
   background: #f4fae8;
@@ -339,6 +345,30 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
   transform: translateX(4px);
 }
 .topic-link:hover::after { transform: translateX(4px); }
+.topic-link-anim {
+  width: 110px;
+  height: 110px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: #f0f5e8;
+  overflow: hidden;
+}
+.topic-link-anim svg { width: 100%; height: 100%; display: block; }
+.topic-link-info { flex: 1; }
+.topic-link-subject {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #62b517;
+  margin-bottom: 4px;
+}
+.topic-link-title {
+  font-size: 20px;
+  font-weight: 900;
+  color: #1a1a1a;
+  line-height: 1.2;
+}
 
 /* ===== GAME CARD ===== */
 .game-card {
@@ -682,9 +712,143 @@ footer {
   <div class="games-section-inner">
     <div class="story-eyebrow">Games Available By Topic</div>
     <div class="topic-links">
-      <a class="topic-link" href="/ai">Artificial Intelligence</a>
-      <a class="topic-link" href="/cybersecurity">Cybersecurity</a>
-      <a class="topic-link" href="/qubit-waitlist">Quantum Computing</a>
+
+      <!-- Artificial Intelligence -->
+      <a class="topic-link" href="/ai">
+        <div class="topic-link-anim">
+          <svg viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <filter id="ai-glow">
+                <feGaussianBlur stdDeviation="3.5" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+              <filter id="ai-pulse">
+                <feGaussianBlur stdDeviation="4.5" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+            <g stroke="rgba(98,181,23,0.28)" stroke-width="0.75">
+              <line x1="25" y1="65"  x2="82" y2="50"/><line x1="25" y1="65"  x2="82" y2="88"/><line x1="25" y1="65"  x2="82" y2="126"/><line x1="25" y1="65"  x2="82" y2="164"/>
+              <line x1="25" y1="110" x2="82" y2="50"/><line x1="25" y1="110" x2="82" y2="88"/><line x1="25" y1="110" x2="82" y2="126"/><line x1="25" y1="110" x2="82" y2="164"/>
+              <line x1="25" y1="155" x2="82" y2="50"/><line x1="25" y1="155" x2="82" y2="88"/><line x1="25" y1="155" x2="82" y2="126"/><line x1="25" y1="155" x2="82" y2="164"/>
+            </g>
+            <g stroke="rgba(98,181,23,0.28)" stroke-width="0.75">
+              <line x1="82" y1="50"  x2="142" y2="65"/><line x1="82" y1="50"  x2="142" y2="110"/><line x1="82" y1="50"  x2="142" y2="155"/>
+              <line x1="82" y1="88"  x2="142" y2="65"/><line x1="82" y1="88"  x2="142" y2="110"/><line x1="82" y1="88"  x2="142" y2="155"/>
+              <line x1="82" y1="126" x2="142" y2="65"/><line x1="82" y1="126" x2="142" y2="110"/><line x1="82" y1="126" x2="142" y2="155"/>
+              <line x1="82" y1="164" x2="142" y2="65"/><line x1="82" y1="164" x2="142" y2="110"/><line x1="82" y1="164" x2="142" y2="155"/>
+            </g>
+            <g stroke="rgba(98,181,23,0.28)" stroke-width="0.75">
+              <line x1="142" y1="65"  x2="192" y2="88"/><line x1="142" y1="65"  x2="192" y2="132"/>
+              <line x1="142" y1="110" x2="192" y2="88"/><line x1="142" y1="110" x2="192" y2="132"/>
+              <line x1="142" y1="155" x2="192" y2="88"/><line x1="142" y1="155" x2="192" y2="132"/>
+            </g>
+            <g filter="url(#ai-glow)">
+              <circle cx="25" cy="65"  r="8" fill="rgba(255,255,255,0.7)" stroke="#62b517" stroke-width="1.5"/><circle cx="25" cy="65"  r="4.5" fill="#62b517"/><circle cx="25" cy="65"  r="2" fill="#d1db24"/>
+              <circle cx="25" cy="110" r="8" fill="rgba(255,255,255,0.7)" stroke="#62b517" stroke-width="1.5"/><circle cx="25" cy="110" r="4.5" fill="#62b517"/><circle cx="25" cy="110" r="2" fill="#d1db24"/>
+              <circle cx="25" cy="155" r="8" fill="rgba(255,255,255,0.7)" stroke="#62b517" stroke-width="1.5"/><circle cx="25" cy="155" r="4.5" fill="#62b517"/><circle cx="25" cy="155" r="2" fill="#d1db24"/>
+              <circle cx="82" cy="50"  r="8" fill="rgba(255,255,255,0.7)" stroke="#62b517" stroke-width="1.5"/><circle cx="82" cy="50"  r="4.5" fill="#62b517"/><circle cx="82" cy="50"  r="2" fill="#d1db24"/>
+              <circle cx="82" cy="88"  r="8" fill="rgba(255,255,255,0.7)" stroke="#62b517" stroke-width="1.5"/><circle cx="82" cy="88"  r="4.5" fill="#62b517"/><circle cx="82" cy="88"  r="2" fill="#d1db24"/>
+              <circle cx="82" cy="126" r="8" fill="rgba(255,255,255,0.7)" stroke="#62b517" stroke-width="1.5"/><circle cx="82" cy="126" r="4.5" fill="#62b517"/><circle cx="82" cy="126" r="2" fill="#d1db24"/>
+              <circle cx="82" cy="164" r="8" fill="rgba(255,255,255,0.7)" stroke="#62b517" stroke-width="1.5"/><circle cx="82" cy="164" r="4.5" fill="#62b517"/><circle cx="82" cy="164" r="2" fill="#d1db24"/>
+              <circle cx="142" cy="65"  r="8" fill="rgba(255,255,255,0.7)" stroke="#62b517" stroke-width="1.5"/><circle cx="142" cy="65"  r="4.5" fill="#62b517"/><circle cx="142" cy="65"  r="2" fill="#d1db24"/>
+              <circle cx="142" cy="110" r="8" fill="rgba(255,255,255,0.7)" stroke="#62b517" stroke-width="1.5"/><circle cx="142" cy="110" r="4.5" fill="#62b517"/><circle cx="142" cy="110" r="2" fill="#d1db24"/>
+              <circle cx="142" cy="155" r="8" fill="rgba(255,255,255,0.7)" stroke="#62b517" stroke-width="1.5"/><circle cx="142" cy="155" r="4.5" fill="#62b517"/><circle cx="142" cy="155" r="2" fill="#d1db24"/>
+              <circle cx="192" cy="88"  r="11" fill="rgba(255,255,255,0.7)" stroke="#d1db24" stroke-width="2"/><circle cx="192" cy="88"  r="6.5" fill="#d1db24" opacity="0.9"/><circle cx="192" cy="88"  r="3" fill="#fff" opacity="0.9"/>
+              <circle cx="192" cy="132" r="11" fill="rgba(255,255,255,0.7)" stroke="#d1db24" stroke-width="2"/><circle cx="192" cy="132" r="6.5" fill="#d1db24" opacity="0.9"/><circle cx="192" cy="132" r="3" fill="#fff" opacity="0.9"/>
+            </g>
+            <circle cx="192" cy="88" r="11" fill="none" stroke="#d1db24" stroke-width="1"><animate attributeName="r" values="11;22;11" dur="2.4s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.5;0;0.5" dur="2.4s" repeatCount="indefinite"/></circle>
+            <circle cx="192" cy="132" r="11" fill="none" stroke="#d1db24" stroke-width="1"><animate attributeName="r" values="11;22;11" dur="2.4s" begin="1.2s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.5;0;0.5" dur="2.4s" begin="1.2s" repeatCount="indefinite"/></circle>
+            <circle r="4" fill="#d1db24" filter="url(#ai-pulse)" opacity="0.95"><animateMotion dur="1.8s" repeatCount="indefinite" begin="0s" path="M 25,65 L 82,50 L 142,65 L 192,88"/></circle>
+            <circle r="4" fill="#d1db24" filter="url(#ai-pulse)" opacity="0.95"><animateMotion dur="1.8s" repeatCount="indefinite" begin="0.3s" path="M 25,110 L 82,88 L 142,110 L 192,88"/></circle>
+            <circle r="4" fill="#d1db24" filter="url(#ai-pulse)" opacity="0.95"><animateMotion dur="1.8s" repeatCount="indefinite" begin="0.6s" path="M 25,155 L 82,126 L 142,155 L 192,132"/></circle>
+            <circle r="3" fill="#a8c96a" filter="url(#ai-pulse)" opacity="0.8"><animateMotion dur="1.8s" repeatCount="indefinite" begin="0.9s" path="M 25,65 L 82,88 L 142,110 L 192,132"/></circle>
+            <circle r="3" fill="#a8c96a" filter="url(#ai-pulse)" opacity="0.8"><animateMotion dur="1.8s" repeatCount="indefinite" begin="1.2s" path="M 25,155 L 82,164 L 142,155 L 192,132"/></circle>
+            <circle r="3" fill="#a8c96a" filter="url(#ai-pulse)" opacity="0.8"><animateMotion dur="1.8s" repeatCount="indefinite" begin="1.5s" path="M 25,110 L 82,126 L 142,110 L 192,88"/></circle>
+          </svg>
+        </div>
+        <div class="topic-link-info">
+          <div class="topic-link-subject">Artificial Intelligence</div>
+          <div class="topic-link-title">FuzzNet Labs</div>
+        </div>
+      </a>
+
+      <!-- Cybersecurity -->
+      <a class="topic-link" href="/cybersecurity">
+        <div class="topic-link-anim">
+          <svg viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <filter id="cy-glow-d"><feGaussianBlur stdDeviation="4" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+              <filter id="cy-glow-a"><feGaussianBlur stdDeviation="4" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            </defs>
+            <circle cx="110" cy="110" r="82" fill="rgba(98,181,23,0.08)"/>
+            <circle cx="110" cy="110" r="58" fill="none" stroke="rgba(168,201,106,0.38)" stroke-width="1.5" stroke-dasharray="6 9"/>
+            <circle cx="110" cy="110" r="40" fill="none" stroke="rgba(98,181,23,0.3)" stroke-width="1">
+              <animate attributeName="r" values="32;52;32" dur="3.8s" repeatCount="indefinite"/>
+              <animate attributeName="opacity" values="0.5;0;0.5" dur="3.8s" repeatCount="indefinite"/>
+            </circle>
+            <g filter="url(#cy-glow-d)">
+              <path d="M110,84 L132,94 L132,112 C132,126 110,136 110,136 C110,136 88,126 88,112 L88,94 Z" fill="#62b517"/>
+              <path d="M110,84 L132,94 L132,112 C132,126 110,136 110,136 C110,136 88,126 88,112 L88,94 Z" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="1.5"/>
+              <path d="M104,105 L104,99 Q110,93 116,99 L116,105" fill="none" stroke="#d1db24" stroke-width="3" stroke-linecap="round"/>
+              <rect x="102" y="105" width="16" height="13" rx="3" fill="#d1db24"/>
+              <circle cx="110" cy="111.5" r="2.8" fill="#2a5a06"/>
+            </g>
+            <g style="transform-box:view-box; transform-origin:110px 110px; animation:cy-orbit-clockwise 9s linear infinite;">
+              <g transform="translate(168, 110)">
+                <g filter="url(#cy-glow-a)" style="transform-box:fill-box; transform-origin:50% 50%; animation:cy-counter-rotate 9s linear infinite;">
+                  <path d="M0,-15 C-12,-15 -13,0 -11,8 Q-6,17 0,17 Q6,17 11,8 C13,0 12,-15 0,-15 Z" fill="#ede8d0" stroke="rgba(100,80,40,0.18)" stroke-width="0.8"/>
+                  <path d="M-11,-7 Q-6,-12 -2,-8" fill="none" stroke="#3a2a10" stroke-width="1.7" stroke-linecap="round"/>
+                  <path d="M2,-8 Q6,-12 11,-7" fill="none" stroke="#3a2a10" stroke-width="1.7" stroke-linecap="round"/>
+                  <ellipse cx="-6.5" cy="-4" rx="2.8" ry="2" fill="#2a2010"/>
+                  <ellipse cx="6.5" cy="-4" rx="2.8" ry="2" fill="#2a2010"/>
+                  <circle cx="-8.5" cy="1.5" r="3.2" fill="rgba(215,65,65,0.36)"/>
+                  <circle cx="8.5" cy="1.5" r="3.2" fill="rgba(215,65,65,0.36)"/>
+                  <path d="M-1,5.5 Q-5,6 -8,4.5 Q-11,3 -10.5,1" fill="none" stroke="#3a2a10" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M1,5.5 Q5,6 8,4.5 Q11,3 10.5,1" fill="none" stroke="#3a2a10" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M-3,9.5 Q0,17 3,9.5 Z" fill="#3a2a10"/>
+                </g>
+              </g>
+            </g>
+          </svg>
+        </div>
+        <div class="topic-link-info">
+          <div class="topic-link-subject">Cybersecurity</div>
+          <div class="topic-link-title">Byte Club</div>
+        </div>
+      </a>
+
+      <!-- Quantum Computing -->
+      <a class="topic-link" href="/qubit-waitlist">
+        <div class="topic-link-anim">
+          <svg viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="qb-grad" cx="38%" cy="32%">
+                <stop offset="0%" stop-color="#a8e063"/>
+                <stop offset="45%" stop-color="#62b517"/>
+                <stop offset="100%" stop-color="#2a5a06"/>
+              </radialGradient>
+              <filter id="qb-glow"><feGaussianBlur stdDeviation="4" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            </defs>
+            <circle cx="90" cy="90" r="72" fill="rgba(98,181,23,0.1)"/>
+            <ellipse cx="90" cy="90" rx="68" ry="24" fill="none" stroke="rgba(168,201,106,0.4)" stroke-width="1.5" transform="rotate(-20 90 90)"/>
+            <ellipse cx="90" cy="90" rx="24" ry="68" fill="none" stroke="rgba(168,201,106,0.4)" stroke-width="1.5" transform="rotate(-20 90 90)"/>
+            <circle cx="90" cy="90" r="60" fill="none" stroke="rgba(168,201,106,0.2)" stroke-width="1"/>
+            <circle cx="90" cy="90" r="52" fill="url(#qb-grad)" filter="url(#qb-glow)"/>
+            <text x="90" y="28" text-anchor="middle" fill="rgba(74,140,17,0.7)" font-size="10" font-family="monospace">|0⟩</text>
+            <text x="90" y="160" text-anchor="middle" fill="rgba(74,140,17,0.7)" font-size="10" font-family="monospace">|1⟩</text>
+            <g><animateTransform attributeName="transform" type="rotate" from="0 90 90" to="360 90 90" dur="8s" repeatCount="indefinite"/>
+              <line x1="90" y1="90" x2="116" y2="52" stroke="#d1db24" stroke-width="2.5" stroke-linecap="round"/>
+              <circle cx="116" cy="52" r="5" fill="#eef56a" filter="url(#qb-glow)"/>
+            </g>
+          </svg>
+        </div>
+        <div class="topic-link-info">
+          <div class="topic-link-subject">Quantum Computing</div>
+          <div class="topic-link-title">Qubit</div>
+        </div>
+      </a>
+
     </div>
   </div>
 </section>
