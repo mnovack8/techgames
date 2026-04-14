@@ -224,15 +224,31 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
   transform: translateY(-2px);
   box-shadow: 0 8px 24px rgba(98,181,23,0.38);
 }
+.hero-picker {
+  display: inline-block;
+  margin-top: 32px;
+  padding: 18px 24px 20px;
+  background: rgba(255,255,255,0.75);
+  border: 1.5px solid rgba(98,181,23,0.35);
+  border-radius: 16px;
+  backdrop-filter: blur(6px);
+  position: relative;
+  z-index: 1;
+  animation: fade-up 0.45s 0.22s ease both;
+}
+.hero-question {
+  font-size: 11px;
+  font-weight: 800;
+  color: #4e9612;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin: 0 0 12px;
+}
 .hero-domain-pills {
   display: flex;
   gap: 10px;
   justify-content: center;
   flex-wrap: wrap;
-  margin-top: 28px;
-  position: relative;
-  z-index: 1;
-  animation: fade-up 0.45s 0.4s ease both;
 }
 .hero-pill {
   display: inline-block;
@@ -281,6 +297,39 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
 .story-section.bg-warm .who-item {
   background: #fff;
   border-color: #e8d84a;
+}
+
+/* Guide Moment */
+.story-section.bg-guide { background: #0d2200; }
+.story-section.bg-guide .story-container { max-width: 1200px; }
+.story-section.bg-guide .story-eyebrow { color: #62b517; border-color: #62b517; }
+.guide-body {
+  font-size: 19px;
+  color: rgba(255,255,255,0.85);
+  line-height: 1.8;
+  max-width: 780px;
+  margin-bottom: 40px;
+  font-weight: 500;
+}
+.guide-signals {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.guide-signal {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  font-size: 15px;
+  color: rgba(255,255,255,0.7);
+  font-weight: 600;
+}
+.guide-signal-check {
+  color: #62b517;
+  font-size: 18px;
+  font-weight: 900;
+  flex-shrink: 0;
+  margin-top: 1px;
 }
 
 /* Our Approach — slate blue-gray */
@@ -660,6 +709,101 @@ a.who-item:hover { border-color: #62b517; background: #f0fae0; transform: transl
 }
 .who-item--secondary { opacity: 0.82; }
 
+/* ===== 1-2-3 PLAN ===== */
+.story-section.bg-plan { background: #fff; }
+.plan-container { max-width: 1200px; }
+.plan-headline { color: #1a1a1a; }
+.plan-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 40px;
+  position: relative;
+}
+.plan-steps::before {
+  content: '';
+  position: absolute;
+  top: 36px;
+  left: calc(16.66% + 12px);
+  right: calc(16.66% + 12px);
+  height: 2px;
+  background: linear-gradient(90deg, #62b517, #d1db24, #62b517);
+  z-index: 0;
+}
+.plan-step {
+  background: #f8faf2;
+  border: 2px solid #d4e8a8;
+  border-radius: 16px;
+  padding: 32px 28px;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+.plan-number {
+  width: 52px;
+  height: 52px;
+  background: #62b517;
+  color: #fff;
+  font-size: 22px;
+  font-weight: 900;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  box-shadow: 0 4px 16px rgba(98,181,23,0.3);
+}
+.plan-step strong {
+  display: block;
+  font-size: 16px;
+  font-weight: 900;
+  color: #1a1a1a;
+  margin-bottom: 10px;
+}
+.plan-step p {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.65;
+}
+@media (max-width: 900px) {
+  .plan-steps { grid-template-columns: 1fr; }
+  .plan-steps::before { display: none; }
+}
+
+/* ===== TESTIMONIAL STRIP ===== */
+.testimonial-strip {
+  background: #f4fae8;
+  border-top: 1px solid #d4e8a8;
+  border-bottom: 1px solid #d4e8a8;
+  padding: 56px 24px;
+}
+.testimonial-inner {
+  max-width: 760px;
+  margin: 0 auto;
+  text-align: center;
+}
+.testimonial-mark {
+  width: 40px;
+  height: 30px;
+  margin-bottom: 20px;
+}
+.testimonial-strip blockquote {
+  font-size: clamp(20px, 2.8vw, 28px);
+  font-weight: 800;
+  color: #1a1a1a;
+  line-height: 1.4;
+  margin: 0 0 16px;
+  font-style: italic;
+}
+.testimonial-strip cite {
+  font-size: 13px;
+  font-weight: 700;
+  color: #62b517;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-style: normal;
+}
+
 /* ===== ABOUT CTA STRIP ===== */
 .about-cta {
   background: #1a3a00;
@@ -821,10 +965,13 @@ footer {
 <section class="hero">
   <h1>Your team doesn't get the tech.<br><em>That's a business risk.</em></h1>
   <p>Your security team speaks in acronyms. Your AI lead talks in models. Your quantum team might as well be speaking another language. We make board games that give your whole organisation the context to actually contribute.</p>
-  <div class="hero-domain-pills">
-    <a href="/cybersecurity" class="hero-pill">Cybersecurity</a>
-    <a href="/ai" class="hero-pill">Artificial Intelligence</a>
-    <a href="/qubit-waitlist" class="hero-pill">Quantum Computing</a>
+  <div class="hero-picker">
+    <p class="hero-question">What tech context does your team need?</p>
+    <div class="hero-domain-pills">
+      <a href="/cybersecurity" class="hero-pill">Cybersecurity</a>
+      <a href="/ai" class="hero-pill">Artificial Intelligence</a>
+      <a href="/qubit-waitlist" class="hero-pill">Quantum Computing</a>
+    </div>
   </div>
 </section>
 
@@ -839,6 +986,28 @@ footer {
     <p class="story-body" data-reveal data-delay="2">Your account managers, project leads, HR directors, and senior execs are sitting in security briefings, AI strategy sessions, and board presentations — nodding along. They're smart people. The problem isn't intelligence. It's that nobody has ever given them a way to actually experience how this technology works.</p>
     <div class="pull-quote" data-reveal="right" data-delay="3">
       <p>"You don't need to know how it's built. You need to understand it well enough to judge its risks, push back meaningfully, and drive toward the best solution."</p>
+    </div>
+  </div>
+</section>
+
+<!-- GUIDE MOMENT -->
+<section class="story-section bg-guide">
+  <div class="story-container">
+    <div class="story-eyebrow" data-reveal>Why We Built This</div>
+    <p class="guide-body" data-reveal data-delay="1">We spent years in security briefings watching smart, capable people shut down the moment jargon entered the room. Not because they didn't care — because nobody had ever given them a way in. The slide decks kept coming. The glazed eyes kept appearing. The decisions kept getting made by people who didn't fully understand what they were deciding. That's why we built these games.</p>
+    <div class="guide-signals" data-reveal data-delay="2">
+      <div class="guide-signal">
+        <span class="guide-signal-check">✓</span>
+        <span>Played in corporate security awareness programmes</span>
+      </div>
+      <div class="guide-signal">
+        <span class="guide-signal-check">✓</span>
+        <span>Covers three technology domains — cybersecurity, AI, and quantum computing</span>
+      </div>
+      <div class="guide-signal">
+        <span class="guide-signal-check">✓</span>
+        <span>Most teams are up and playing in under 10 minutes</span>
+      </div>
     </div>
   </div>
 </section>
@@ -892,6 +1061,31 @@ footer {
       <div class="approach-pillar" data-reveal data-delay="3">
         <strong>Fun Is the Mechanism</strong>
         <p>If a game isn't enjoyable enough to play with no interest in the topic, it doesn't ship. Fun is the required motivator — not a nice-to-have.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS (moved before games) -->
+<section class="story-section bg-plan">
+  <div class="story-container plan-container">
+    <div class="story-eyebrow" data-reveal>How It Works</div>
+    <h2 class="story-headline plan-headline" data-reveal data-delay="1">Three steps to a team that gets it.</h2>
+    <div class="plan-steps">
+      <div class="plan-step" data-reveal="scale" data-delay="1">
+        <div class="plan-number">1</div>
+        <strong>Choose your domain</strong>
+        <p>Pick the technology that matters most to your team right now — cybersecurity, AI, or quantum computing.</p>
+      </div>
+      <div class="plan-step" data-reveal="scale" data-delay="2">
+        <div class="plan-number">2</div>
+        <strong>Run a session</strong>
+        <p>Order the game and run it with your team. No facilitation experience needed. Most groups are playing within 10 minutes.</p>
+      </div>
+      <div class="plan-step" data-reveal="scale" data-delay="3">
+        <div class="plan-number">3</div>
+        <strong>Watch it land</strong>
+        <p>Within a single 60-minute session your people have the context to contribute to conversations they were previously locked out of.</p>
       </div>
     </div>
   </div>
@@ -1071,6 +1265,17 @@ footer {
   </div>
 </section>
 
+
+<!-- TESTIMONIAL -->
+<section class="testimonial-strip">
+  <div class="testimonial-inner">
+    <div class="testimonial-quote" data-reveal>
+      <svg class="testimonial-mark" viewBox="0 0 40 30" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 30V18C0 8 6 2 18 0l2 4C12 5.5 9 9 9 14h7v16H0zm22 0V18C22 8 28 2 40 0l2 4C34 5.5 31 9 31 14h7v16H22z" fill="#62b517" opacity="0.3"/></svg>
+      <blockquote>"I have customer service reps and account managers actually getting it."</blockquote>
+      <cite>— Security Champions Community Lead</cite>
+    </div>
+  </div>
+</section>
 
 <!-- TEAM CTA -->
 <div class="about-cta">
