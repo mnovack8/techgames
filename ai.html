@@ -126,7 +126,11 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
 .nav-dropdown-menu a.active { background: #f4fae8; color: #4a8c11; }
 @media (max-width: 600px) {
   header { padding: 0 16px; }
-  nav a { padding: 6px 8px; font-size: 12px; }
+  .header-logo .logo-text { font-size: 12px; }
+  .header-logo .logo-sub { font-size: 8px; letter-spacing: 1px; }
+  nav { gap: 0; }
+  nav a { padding: 6px 5px; font-size: 12px; }
+  .nav-dropdown-trigger { padding: 6px 5px; font-size: 12px; }
 }
 
 /* ===== HERO ===== */
@@ -369,6 +373,42 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
 .concept-card-top strong { font-size: 14px; font-weight: 900; color: #2a2a2a; }
 .concept-explain { font-size: 13px; color: #555; line-height: 1.65; margin-bottom: 0 !important; }
 
+/* ===== LEARNING SECTION (dark bg) ===== */
+.learning-bg {
+  background: #1a3a00 url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg stroke='%2362b517' stroke-opacity='0.11' stroke-width='1.5' fill='none' stroke-linecap='round'%3E%3Cpolyline points='0,30 40,30 40,75'/%3E%3Ccircle cx='40' cy='30' r='3'/%3E%3Ccircle cx='40' cy='75' r='3'/%3E%3Cline x1='40' y1='75' x2='100' y2='75'/%3E%3Cline x1='70' y1='0' x2='70' y2='30'/%3E%3Ccircle cx='70' cy='30' r='2.5'/%3E%3Cline x1='70' y1='30' x2='100' y2='30'/%3E%3Cline x1='0' y1='55' x2='15' y2='55'/%3E%3Ccircle cx='15' cy='55' r='2.5'/%3E%3Cline x1='15' y1='55' x2='15' y2='100'/%3E%3C/g%3E%3C/svg%3E") repeat;
+  background-size: 100px 100px;
+}
+.learning-bg .info-col h2 { color: #fff; }
+.learning-bg .info-col h2 em { color: #a8c96a; }
+.learning-bg .info-col > p { color: rgba(255,255,255,0.72); }
+.learning-bg .learn-section-label { color: #a8c96a; border-left-color: #62b517; }
+.learning-bg .concept-card {
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(168,201,106,0.28);
+  box-shadow: none;
+}
+.learning-bg .concept-card-top strong { color: #fff; }
+.learning-bg .concept-explain { color: rgba(255,255,255,0.70); }
+.learning-bg .superposition-tag { background: rgba(255,255,255,0.07); color: #a8c96a; }
+.learning-bg .concept-explain em { color: rgba(255,255,255,0.85); }
+
+/* ===== SCROLL REVEAL ===== */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.65s cubic-bezier(0.65,0,0.35,1),
+              transform 0.65s cubic-bezier(0.65,0,0.35,1);
+}
+[data-reveal].is-visible { opacity: 1; transform: none; }
+[data-delay="1"] { transition-delay: 0.10s; }
+[data-delay="2"] { transition-delay: 0.20s; }
+[data-delay="3"] { transition-delay: 0.30s; }
+[data-delay="4"] { transition-delay: 0.40s; }
+[data-delay="5"] { transition-delay: 0.50s; }
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal], [data-reveal].is-visible { opacity: 1 !important; transform: none !important; transition: none !important; }
+}
+
 /* ===== FOOTER ===== */
 footer {
   background: #2a2a2a;
@@ -595,16 +635,17 @@ footer a:hover { text-decoration: underline; }
 </div>
 
 <!-- MAIN: LEARNING OBJECTIVES (full width) -->
+<section class="learning-bg">
 <div class="main">
   <div class="info-col">
-    <h2>Train it, test it, <em>understand it.</em></h2>
-    <p>Every player manages a neural network model — choosing architecture, curating training data, and running test rounds against shared animal datasets. You're not just playing a game; you're experiencing exactly how AI researchers think, fail, and iterate.</p>
+    <h2 data-reveal>Train it, test it, <em>understand it.</em></h2>
+    <p data-reveal data-delay="1">Every player manages a neural network model — choosing architecture, curating training data, and running test rounds against shared animal datasets. You're not just playing a game; you're experiencing exactly how AI researchers think, fail, and iterate.</p>
 
-    <div class="learn-section-label">What you'll actually understand after playing</div>
+    <div class="learn-section-label" data-reveal data-delay="2">What you'll actually understand after playing</div>
 
     <ul class="concept-list">
       <li>
-        <div class="concept-card">
+        <div class="concept-card" data-reveal>
           <div class="concept-card-top">
             <strong>Open the Black Box</strong>
           </div>
@@ -612,7 +653,7 @@ footer a:hover { text-decoration: underline; }
         </div>
       </li>
       <li>
-        <div class="concept-card">
+        <div class="concept-card" data-reveal>
           <div class="concept-card-top">
             <strong>AI is a Probability Machine</strong>
           </div>
@@ -620,7 +661,7 @@ footer a:hover { text-decoration: underline; }
         </div>
       </li>
       <li>
-        <div class="concept-card">
+        <div class="concept-card" data-reveal>
           <div class="concept-card-top">
             <strong>How AI Gets Built</strong>
           </div>
@@ -628,7 +669,7 @@ footer a:hover { text-decoration: underline; }
         </div>
       </li>
       <li>
-        <div class="concept-card">
+        <div class="concept-card" data-reveal>
           <div class="concept-card-top">
             <strong>You are AI-Fluent</strong>
           </div>
@@ -638,6 +679,7 @@ footer a:hover { text-decoration: underline; }
     </ul>
   </div>
 </div>
+</section>
 
 <!-- FOOTER -->
 <footer>
@@ -645,6 +687,23 @@ footer a:hover { text-decoration: underline; }
 </footer>
 
 <script>
+// Scroll reveal
+(function() {
+  var els = document.querySelectorAll('[data-reveal]');
+  if (!els.length || !('IntersectionObserver' in window)) {
+    els.forEach(function(el) { el.classList.add('is-visible'); });
+    return;
+  }
+  var io = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  els.forEach(function(el) { io.observe(el); });
+})();
 function trackClick(button) {
   fetch('/track', { method:'POST', headers:{'Content-Type':'application/json'},
     body: JSON.stringify({ type:'button_click', button }) }).catch(()=>{});

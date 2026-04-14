@@ -22,7 +22,8 @@
 html, body {
   min-height: 100%;
   font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif;
-  background: #e8edd8;
+  background: #e8edd8 url("data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0.5' y='0.5' width='39' height='39' fill='none' stroke='%2362b517' stroke-opacity='0.07' stroke-width='1'/%3E%3Ccircle cx='0' cy='0' r='1.5' fill='%2362b517' fill-opacity='0.09'/%3E%3Ccircle cx='40' cy='0' r='1.5' fill='%2362b517' fill-opacity='0.09'/%3E%3Ccircle cx='0' cy='40' r='1.5' fill='%2362b517' fill-opacity='0.09'/%3E%3Ccircle cx='40' cy='40' r='1.5' fill='%2362b517' fill-opacity='0.09'/%3E%3C/svg%3E") repeat;
+  background-size: auto, 40px 40px;
   color: #2a2a2a;
   overflow-y: auto;
 }
@@ -126,7 +127,11 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
 .nav-dropdown-menu a.active { background: #f4fae8; color: #4a8c11; }
 @media (max-width: 600px) {
   header { padding: 0 16px; }
-  nav a { padding: 6px 8px; font-size: 12px; }
+  .header-logo .logo-text { font-size: 12px; }
+  .header-logo .logo-sub { font-size: 8px; letter-spacing: 1px; }
+  nav { gap: 0; }
+  nav a { padding: 6px 5px; font-size: 12px; }
+  .nav-dropdown-trigger { padding: 6px 5px; font-size: 12px; }
 }
 
 /* ===== HERO ===== */
@@ -185,15 +190,21 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
   animation: fade-up 0.45s 0.15s ease both;
 }
 
-/* ===== SCROLL ANIMATIONS ===== */
-.card, .founder-card {
+/* ===== SCROLL REVEAL ===== */
+[data-reveal] {
   opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.45s ease, transform 0.45s ease;
+  transform: translateY(28px);
+  transition: opacity 0.65s cubic-bezier(0.65,0,0.35,1),
+              transform 0.65s cubic-bezier(0.65,0,0.35,1);
 }
-.card.visible, .founder-card.visible {
-  opacity: 1;
-  transform: translateY(0);
+[data-reveal="scale"] { transform: scale(0.92) translateY(16px); }
+[data-reveal].is-visible { opacity: 1; transform: none; }
+[data-delay="1"] { transition-delay: 0.10s; }
+[data-delay="2"] { transition-delay: 0.22s; }
+[data-delay="3"] { transition-delay: 0.34s; }
+[data-delay="4"] { transition-delay: 0.46s; }
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal], [data-reveal].is-visible { opacity: 1 !important; transform: none !important; transition: none !important; }
 }
 
 /* ===== MAIN CONTENT ===== */
@@ -368,6 +379,7 @@ footer {
     padding: 24px 20px;
   }
   .founder-body .card-label { text-align: left; }
+  .pull-quote { margin: 16px 0; }
 }
 </style>
 </head>
@@ -404,7 +416,7 @@ footer {
 <main class="page-content">
 
   <!-- Mission -->
-  <div class="card">
+  <div class="card" data-reveal>
     <div class="card-label">The Mission</div>
     <h2>Why It Matters</h2>
     <p>Technology shapes every part of our lives, yet most people feel shut out of understanding it. These are smart, capable people who are experts in their own fields. The challenge is not intelligence. The tools for learning tech have simply never been built for anyone outside of tech.</p>
@@ -412,7 +424,7 @@ footer {
   </div>
 
   <!-- My Story -->
-  <div class="founder-card">
+  <div class="founder-card" data-reveal>
     <div class="founder-avatar">MN</div>
     <div class="founder-body">
       <div class="card-label">My Story</div>
@@ -432,24 +444,24 @@ footer {
   </div>
 
   <!-- Our Solution -->
-  <div class="card">
+  <div class="card" data-reveal>
     <div class="card-label">Our Solution</div>
     <h2>Slides Are Not Enough. Labs Are Not Realistic. There Is a Better Way.</h2>
 
     <div class="values-grid">
-      <div class="value-item">
+      <div class="value-item" data-reveal="scale" data-delay="1">
         <strong>You Have to Feel It to Get It</strong>
         <p>Slide decks explain what things are without letting you feel how they work. Labs require setup and prior knowledge most people do not have. A game lets anyone play the scenario, make real decisions, and build genuine understanding with no prior tech knowledge required.</p>
       </div>
-      <div class="value-item">
+      <div class="value-item" data-reveal="scale" data-delay="2">
         <strong>Real Mental Models</strong>
         <p>Every game teaches actual frameworks professionals use every day. The goal is not memorizing terms. It is building the mental model needed to think critically about technology and make informed decisions.</p>
       </div>
-      <div class="value-item">
+      <div class="value-item" data-reveal="scale" data-delay="3">
         <strong>Building a Community</strong>
         <p>A game puts experts and non-experts on the same footing, creating a shared experience that builds real bonds around a topic that can otherwise divide a room. That shared table becomes the foundation for an ongoing community where technical and non-technical people learn from each other, speak a common language, and stop talking past one another.</p>
       </div>
-      <div class="value-item">
+      <div class="value-item" data-reveal="scale" data-delay="4">
         <strong>Enjoyable Learning Is Effective Learning</strong>
         <p>Fun is not a nice-to-have. It is the required motivator. Without it, people go through the motions and walk away with checkbox thinking. Fun is what drives people to lean in and replay until they truly get it. The bar is simple: if a game is not enjoyable enough that you would play it even if you had no interest in the topic, it does not ship.</p>
       </div>
@@ -457,7 +469,7 @@ footer {
   </div>
 
   <!-- Who This Is For -->
-  <div class="card">
+  <div class="card" data-reveal>
     <div class="card-label">Who This Is For</div>
     <h2>From the Boardroom to the Living Room</h2>
     <p>These games are used in corporate training sessions to bring non-technical staff up to speed, in university classrooms to make abstract concepts concrete, and at home by curious people who just want to understand the technology running their world.</p>
@@ -471,18 +483,23 @@ footer {
 </footer>
 
 <script>
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-      observer.unobserve(entry.target);
-    }
-  });
-}, { threshold: 0.08 });
-document.querySelectorAll('.card, .founder-card').forEach((el, i) => {
-  el.style.transitionDelay = (i * 0.08) + 's';
-  observer.observe(el);
-});
+// Scroll reveal
+(function() {
+  var els = document.querySelectorAll('[data-reveal]');
+  if (!els.length || !('IntersectionObserver' in window)) {
+    els.forEach(function(el) { el.classList.add('is-visible'); });
+    return;
+  }
+  var io = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  els.forEach(function(el) { io.observe(el); });
+})();
 // Games dropdown click toggle
 (function() {
   var trigger = document.querySelector('.nav-dropdown-trigger');
