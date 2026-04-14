@@ -259,16 +259,16 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
 .feature:last-child { border-right: none; }
 
 .feature-icon {
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
   border-radius: 12px;
   background: #f4fae8;
   border: 1px solid #a8c96a;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 22px;
 }
+.feature-icon svg { width: 100%; height: 100%; }
 
 .feature h3 {
   font-size: 13px;
@@ -360,7 +360,8 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
   margin-bottom: 8px;
 }
 
-.concept-icon { font-size: 18px; }
+.concept-icon { width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center; }
+.concept-icon svg { width: 100%; height: 100%; }
 
 .concept-card-top strong {
   font-size: 14px;
@@ -430,8 +431,8 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
 }
+.form-card-header .header-icon svg { width: 100%; height: 100%; }
 
 .form-embed-wrap {
   padding: 4px 0 0;
@@ -585,27 +586,27 @@ footer a:hover { text-decoration: underline; }
 <!-- FEATURES STRIP -->
 <div class="features">
   <div class="feature">
-    <div class="feature-icon">👁️</div>
+    <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3" stroke="#d1db24"/><circle cx="12" cy="12" r="1" fill="#d1db24" stroke="none"/></svg></div>
     <h3>Superposition &amp; Measurement</h3>
     <p>Both states at once with distinct probabilities — until observed</p>
   </div>
   <div class="feature">
-    <div class="feature-icon">〰️</div>
+    <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2.5" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><path d="M2 12 C4 6, 6 6, 8 12 C10 18, 12 18, 14 12 C16 6, 18 6, 20 12 C21 15, 22 15, 23 12" stroke="#d1db24"/><line x1="2" y1="12" x2="23" y2="12" stroke="#62b517" stroke-opacity="0.3" stroke-width="1"/></svg></div>
     <h3>Phase &amp; Amplitude</h3>
     <p>Waves that interfere — amplifying right answers, cancelling wrong ones</p>
   </div>
   <div class="feature">
-    <div class="feature-icon">⚡</div>
+    <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><polygon points="13,2 4,13 11,13 11,22 20,11 13,11" fill="#62b517" stroke="#2a5a06" stroke-width="1.5" stroke-linejoin="round"/><polygon points="13,2 4,13 11,13 11,22 20,11 13,11" fill="#d1db24" stroke="none" opacity="0.25"/></svg></div>
     <h3>Quantum Circuits</h3>
     <p>Gates that steer interference to make useful computation possible</p>
   </div>
   <div class="feature">
-    <div class="feature-icon">📡</div>
+    <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><line x1="12" y1="9" x2="12" y2="20"/><path d="M8 13a6 6 0 0 1 8 0" stroke="#d1db24"/><path d="M5 10a10 10 0 0 1 14 0" stroke="#62b517" stroke-opacity="0.5"/><circle cx="12" cy="8" r="1.5" fill="#d1db24" stroke="none"/></svg></div>
     <h3>Noise &amp; Decoherence</h3>
     <p>Why any environmental interaction destroys everything built so far</p>
   </div>
   <div class="feature">
-    <div class="feature-icon">🔗</div>
+    <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" stroke="#d1db24"/></svg></div>
     <h3>Entanglement</h3>
     <p>Linked qubits processed together — the source of quantum parallelism</p>
   </div>
@@ -626,7 +627,7 @@ footer a:hover { text-decoration: underline; }
       <li>
         <div class="concept-card measure-card" data-reveal>
           <div class="concept-card-top">
-            <span class="concept-icon">👁️</span>
+            <span class="concept-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3" stroke="#d1db24"/><circle cx="12" cy="12" r="1" fill="#d1db24" stroke="none"/></svg></span>
             <strong>Superposition &amp; Measurement</strong>
           </div>
           <p class="concept-explain">A regular bit is either 0 or 1. A qubit can be both at the same time — each with its own probability. The moment you look at it (measure it), it snaps to one answer. That's not a quirk of our tools; it's how quantum systems actually behave, and it's the starting point for everything else.</p>
@@ -635,7 +636,7 @@ footer a:hover { text-decoration: underline; }
       <li>
         <div class="concept-card phase-card" data-reveal>
           <div class="concept-card-top">
-            <span class="concept-icon">〰️</span>
+            <span class="concept-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2.5" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><path d="M2 12 C4 6, 6 6, 8 12 C10 18, 12 18, 14 12 C16 6, 18 6, 20 12 C21 15, 22 15, 23 12" stroke="#d1db24"/><line x1="2" y1="12" x2="23" y2="12" stroke="#62b517" stroke-opacity="0.3" stroke-width="1"/></svg></span>
             <strong>Phase &amp; Amplitude</strong>
           </div>
           <p class="concept-explain">Being in both states is only useful if you can steer which one wins. Quantum states behave like waves — they can reinforce each other or cancel out depending on their direction. A quantum computer uses this to nudge the right answer to a higher probability and the wrong answers toward zero, all before measuring.</p>
@@ -644,7 +645,7 @@ footer a:hover { text-decoration: underline; }
       <li>
         <div class="concept-card circuit-card" data-reveal>
           <div class="concept-card-top">
-            <span class="concept-icon">⚡</span>
+            <span class="concept-icon"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><polygon points="13,2 4,13 11,13 11,22 20,11 13,11" fill="#62b517" stroke="#2a5a06" stroke-width="1.5" stroke-linejoin="round"/><polygon points="13,2 4,13 11,13 11,22 20,11 13,11" fill="#d1db24" stroke="none" opacity="0.25"/></svg></span>
             <strong>Quantum Circuits</strong>
           </div>
           <p class="concept-explain">That steering happens through quantum gates — small operations that carefully adjust a qubit's wave. String enough gates together and you have a circuit that shapes interference across all possible answers at once, so the right one rises to the top. That's how quantum computers tackle problems — like cracking encryption or simulating drug molecules — that would take a classical computer longer than the age of the universe.</p>
@@ -653,7 +654,7 @@ footer a:hover { text-decoration: underline; }
       <li>
         <div class="concept-card noise-card" data-reveal>
           <div class="concept-card-top">
-            <span class="concept-icon">📡</span>
+            <span class="concept-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><line x1="12" y1="9" x2="12" y2="20"/><path d="M8 13a6 6 0 0 1 8 0" stroke="#d1db24"/><path d="M5 10a10 10 0 0 1 14 0" stroke="#62b517" stroke-opacity="0.5"/><circle cx="12" cy="8" r="1.5" fill="#d1db24" stroke="none"/></svg></span>
             <strong>Noise &amp; Decoherence</strong>
           </div>
           <p class="concept-explain">There's a catch. Superposition is fragile — a single stray particle, a flicker of light, or a tiny vibration of heat is enough to destroy it. When that happens the qubit just becomes a regular bit. Keeping qubits isolated long enough to do useful work requires cooling them to near absolute zero and extreme engineering precision. It's the central challenge of making quantum computing real.</p>
@@ -662,7 +663,7 @@ footer a:hover { text-decoration: underline; }
       <li>
         <div class="concept-card entangle-card" data-reveal>
           <div class="concept-card-top">
-            <span class="concept-icon">🔗</span>
+            <span class="concept-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" stroke="#d1db24"/></svg></span>
             <strong>Entanglement</strong>
           </div>
           <p class="concept-explain">When qubits are entangled, they're linked — what happens to one instantly affects the other, no matter the distance. More importantly, entangled qubits can hold and process an enormous number of combinations at the same time. A normal computer with 300 bits holds one combination. A quantum computer with 300 entangled qubits holds all possible combinations simultaneously. That's why quantum computers can be exponentially faster for the right problems.</p>
@@ -680,7 +681,7 @@ footer a:hover { text-decoration: underline; }
   <div class="form-col">
     <div class="form-card">
       <div class="form-card-header">
-        <div class="header-icon">✉️</div>
+        <div class="header-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4" stroke="#d1db24" stroke-width="2"/></svg></div>
         <h3>Join the Qubit Waitlist</h3>
       </div>
       <div class="form-embed-wrap">
