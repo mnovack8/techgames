@@ -20,13 +20,11 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 html, body {
-  height: 100%;
-  overflow: hidden;
+  min-height: 100%;
   font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif;
   background: #e8edd8;
-  color: #3a3a3a;
-  display: flex;
-  flex-direction: column;
+  color: #2a2a2a;
+  overflow-y: auto;
 }
 
 /* ===== HEADER ===== */
@@ -35,11 +33,13 @@ header {
   border-bottom: 3px solid #d1db24;
   padding: 0 40px;
   height: 68px;
-  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
   box-shadow: 0 2px 16px rgba(98,181,23,0.12);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 .header-logo {
   display: flex;
@@ -134,8 +134,7 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
 /* ===== HERO ===== */
 .hero {
   text-align: center;
-  padding: 22px 24px 18px;
-  flex-shrink: 0;
+  padding: 72px 24px 64px;
   background: linear-gradient(160deg, #f8faf2 0%, #edf2e0 100%);
   border-bottom: 1px solid #dde8c8;
   position: relative;
@@ -152,11 +151,11 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
   z-index: 0;
 }
 .hero h1 {
-  font-size: 34px;
+  font-size: clamp(38px, 6vw, 62px);
   font-weight: 900;
   color: #2a2a2a;
   line-height: 1.1;
-  margin-bottom: 8px;
+  margin-bottom: 16px;
   position: relative;
   z-index: 1;
   animation: fade-up 0.45s ease both;
@@ -178,44 +177,168 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
   animation: underline-grow 0.4s 0.5s ease forwards;
 }
 .hero p {
-  font-size: 15px;
-  color: #666;
+  font-size: 18px;
+  color: #555;
   line-height: 1.6;
-  max-width: 900px;
+  max-width: 560px;
   margin: 0 auto;
   position: relative;
   z-index: 1;
   animation: fade-up 0.45s 0.15s ease both;
+  font-weight: 600;
 }
 
-/* ===== GAMES SECTION ===== */
-.games-section {
-  flex: 1;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  max-width: 1160px;
-  width: 100%;
-  margin: 0 auto;
-  padding: 0 24px;
+/* ===== STORY SECTIONS ===== */
+.story-section {
+  padding: 72px 24px;
 }
-.games-section h2 {
+/* The Problem — dark/serious */
+.story-section.bg-problem {
+  background: #1a3a00;
+}
+.story-section.bg-problem .story-eyebrow { color: #d1db24; border-color: #d1db24; }
+.story-section.bg-problem .story-headline { color: #f0f7e6; }
+.story-section.bg-problem .story-body { color: rgba(240,247,230,0.75); }
+.story-section.bg-problem .pull-quote {
+  background: rgba(209,219,36,0.12);
+  border-color: #d1db24;
+}
+.story-section.bg-problem .pull-quote p { color: #d1db24; }
+
+/* Who It's For — warm yellow */
+.story-section.bg-warm { background: #fefce8; }
+.story-section.bg-warm .who-item {
+  background: #fff;
+  border-color: #e8d84a;
+}
+
+/* Our Approach — slate blue-gray */
+.story-section.bg-cool { background: #f0f4f8; }
+.story-section.bg-cool .approach-pillar {
+  background: #fff;
+  border-color: #c8d8e8;
+}
+
+/* Games stays with existing #e8edd8 */
+.story-container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+.story-eyebrow {
   font-size: 10px;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 2.5px;
   color: #62b517;
-  margin-bottom: 14px;
   border-left: 4px solid #d1db24;
   padding-left: 10px;
-  flex-shrink: 0;
+  margin-bottom: 20px;
 }
-.games-grid {
+.story-headline {
+  font-size: clamp(28px, 4vw, 42px);
+  font-weight: 900;
+  color: #1a1a1a;
+  line-height: 1.15;
+  margin-bottom: 20px;
+}
+.story-headline em { font-style: normal; color: #62b517; }
+.story-body {
+  font-size: 16px;
+  color: #444;
+  line-height: 1.8;
+  max-width: 720px;
+  margin-bottom: 32px;
+}
+
+/* ===== PULL QUOTE ===== */
+.pull-quote {
+  position: relative;
+  padding: 28px 36px;
+  background: #f4fae8;
+  border-left: 5px solid #62b517;
+  border-radius: 0 12px 12px 0;
+  margin: 8px 0;
+}
+.pull-quote p {
+  font-size: 20px;
+  font-weight: 800;
+  color: #2a4a08;
+  line-height: 1.4;
+  font-style: italic;
+}
+
+/* ===== APPROACH PILLARS ===== */
+.approach-pillars {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
+  margin-top: 36px;
 }
+.approach-pillar {
+  background: #fff;
+  border: 2px solid #a8c96a;
+  border-radius: 14px;
+  padding: 24px 22px;
+  box-shadow: 0 2px 12px rgba(98,181,23,0.1);
+}
+.pillar-icon {
+  font-size: 28px;
+  margin-bottom: 12px;
+}
+.approach-pillar strong {
+  display: block;
+  font-size: 15px;
+  font-weight: 900;
+  color: #1a1a1a;
+  margin-bottom: 8px;
+}
+.approach-pillar p {
+  font-size: 13px;
+  color: #555;
+  line-height: 1.6;
+}
+
+/* ===== GAMES SECTION ===== */
+.games-section {
+  padding: 64px 24px;
+  background: #e8edd8;
+}
+.games-section-inner {
+  max-width: 900px;
+  margin: 0 auto;
+}
+.games-section .story-eyebrow { margin-bottom: 24px; }
+.topic-links {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.topic-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 28px;
+  background: #fff;
+  border: 2px solid #a8c96a;
+  border-radius: 12px;
+  font-size: 20px;
+  font-weight: 800;
+  color: #1a1a1a;
+  text-decoration: none;
+  transition: background 0.15s, border-color 0.15s, transform 0.15s;
+}
+.topic-link::after {
+  content: '→';
+  font-size: 20px;
+  color: #62b517;
+  transition: transform 0.15s;
+}
+.topic-link:hover {
+  background: #f4fae8;
+  border-color: #62b517;
+  transform: translateX(4px);
+}
+.topic-link:hover::after { transform: translateX(4px); }
 
 /* ===== GAME CARD ===== */
 .game-card {
@@ -227,11 +350,7 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
   display: flex;
   flex-direction: column;
   transition: transform 0.18s ease, box-shadow 0.18s ease;
-  animation: fade-up 0.4s ease both;
 }
-.games-grid .game-card:nth-child(1) { animation-delay: 0.25s; }
-.games-grid .game-card:nth-child(2) { animation-delay: 0.37s; }
-.games-grid .game-card:nth-child(3) { animation-delay: 0.49s; }
 .game-card:not(.coming-soon):hover {
   transform: translateY(-4px);
   box-shadow: 0 10px 36px rgba(98,181,23,0.26);
@@ -259,14 +378,10 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
   background: linear-gradient(90deg, transparent, rgba(255,255,255,0.45), transparent);
   transition: left 0.45s ease;
 }
-.game-card:hover .game-card-tech-header::after {
-  left: 130%;
-}
-
-/* Card image — fixed height, no scrolling blowout */
+.game-card:hover .game-card-tech-header::after { left: 130%; }
 .game-card-image {
   width: 100%;
-  height: 220px;
+  height: 200px;
   flex-shrink: 0;
   background: #f0f5e8;
   overflow: hidden;
@@ -281,9 +396,7 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
   object-position: center;
   transition: transform 0.35s ease;
 }
-.game-card:not(.coming-soon):hover .game-card-image img {
-  transform: scale(1.06);
-}
+.game-card:not(.coming-soon):hover .game-card-image img { transform: scale(1.06); }
 .coming-soon-placeholder {
   font-size: 15px;
   font-weight: 700;
@@ -293,24 +406,12 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
   font-style: italic;
   line-height: 1.4;
 }
-
 .game-card-body {
   padding: 14px 18px 16px;
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: 8px;
-}
-.coming-soon-badge {
-  display: inline-block;
-  font-size: 10px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  background: #e8e8e8;
-  color: #888;
-  border-radius: 5px;
-  padding: 2px 7px;
 }
 .game-card-title {
   font-size: 19px;
@@ -333,7 +434,6 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
   border-radius: 0 7px 7px 0;
   padding: 8px 10px;
 }
-.game-card-learning .learn-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
 .game-card-learning p {
   font-size: 12px;
   color: #4a8c11;
@@ -399,9 +499,69 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
 .btn-waitlist:hover { background: #b8c11e; transform: scale(1.02); }
 .game-card.coming-soon .btn-waitlist { pointer-events: auto; }
 
+/* ===== WHO IT'S FOR ===== */
+.who-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 36px;
+}
+.who-item {
+  background: #f4fae8;
+  border: 2px solid #d4e8a8;
+  border-radius: 14px;
+  padding: 28px 24px;
+  text-align: center;
+}
+.who-icon { font-size: 32px; margin-bottom: 12px; }
+.who-item strong {
+  display: block;
+  font-size: 15px;
+  font-weight: 900;
+  color: #1a1a1a;
+  margin-bottom: 8px;
+}
+.who-item p {
+  font-size: 13px;
+  color: #555;
+  line-height: 1.6;
+}
+
+/* ===== ABOUT CTA STRIP ===== */
+.about-cta {
+  background: #1a3a00;
+  padding: 56px 24px;
+  text-align: center;
+}
+.about-cta h2 {
+  font-size: 26px;
+  font-weight: 900;
+  color: #fff;
+  margin-bottom: 12px;
+  line-height: 1.2;
+}
+.about-cta p {
+  font-size: 15px;
+  color: rgba(255,255,255,0.7);
+  max-width: 500px;
+  margin: 0 auto 28px;
+  line-height: 1.6;
+}
+.btn-about {
+  display: inline-block;
+  padding: 13px 32px;
+  background: #d1db24;
+  color: #1a3a00;
+  font-size: 15px;
+  font-weight: 800;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: background 0.15s, transform 0.15s;
+}
+.btn-about:hover { background: #c4cc1e; transform: scale(1.02); }
+
 /* ===== FOOTER ===== */
 footer {
-  flex-shrink: 0;
   background: #2a2a2a;
   color: #777;
   text-align: center;
@@ -409,45 +569,18 @@ footer {
   font-size: 12px;
 }
 
-/* ===== RESPONSIVE — WIDTH ===== */
+/* ===== RESPONSIVE ===== */
 @media (max-width: 900px) {
   .games-grid { grid-template-columns: repeat(2, 1fr); }
+  .approach-pillars { grid-template-columns: 1fr; }
+  .who-grid { grid-template-columns: 1fr; }
 }
-
 @media (max-width: 600px) {
-  html, body { overflow: auto; height: auto; min-height: 100%; }
   .games-grid { grid-template-columns: 1fr; }
-  .games-section { overflow: visible; flex: none; padding-bottom: 24px; }
-  .game-card-image { height: 220px; }
-}
-
-/* ===== RESPONSIVE — HEIGHT ===== */
-/* Compact everything at short heights so cards fit without scrolling */
-@media (max-height: 820px) {
-  .hero { padding: 12px 24px 10px; }
-  .hero h1 { font-size: 26px; margin-bottom: 4px; }
-  .hero p { font-size: 13px; line-height: 1.4; }
-  .game-card-image { height: 180px; }
-  .game-card-body { padding: 10px 14px 12px; gap: 6px; }
-  .games-section h2 { margin-bottom: 10px; }
-}
-
-@media (max-height: 700px) {
-  .hero { padding: 8px 24px 6px; }
-  .hero h1 { font-size: 22px; margin-bottom: 2px; }
-  .hero p { display: none; }
-  .game-card-image { height: 150px; }
-  .game-card-body { padding: 8px 12px 10px; gap: 5px; }
-  .games-section { padding: 0 24px; }
-  .games-section h2 { margin-bottom: 8px; }
-  .game-card-actions { padding-top: 2px; }
-  .btn-play, .btn-buy { padding: 8px 12px; font-size: 13px; }
-}
-
-/* Last resort — allow scrolling when viewport is very short */
-@media (max-height: 560px) {
-  html, body { overflow: auto; height: auto; min-height: 100%; }
-  .games-section { overflow: visible; flex: none; padding-bottom: 20px; }
+  .hero { padding: 48px 20px 40px; }
+  .story-section { padding: 48px 20px; }
+  .pull-quote { padding: 20px 24px; }
+  .pull-quote p { font-size: 17px; }
 }
 </style>
 </head>
@@ -478,76 +611,94 @@ footer {
   </nav>
 </header>
 
+<!-- HERO -->
 <section class="hero">
   <h1>Technology is for <em>everyone</em></h1>
-  <p>Technology shapes every part of modern life, yet most people never get a chance to truly understand it. Not everyone needs to be an expert, but everyone deserves more than a slide deck. Real understanding comes from experience, and games are a format everyone can step into.</p>
+  <p>Not everyone needs to be an expert. But everyone deserves more than a slide deck.</p>
 </section>
 
-<section class="games-section">
-  <h2>Games Available Now</h2>
-  <div class="games-grid">
-
-    <!-- FuzzNet Labs -->
-    <div class="game-card">
-      <div class="game-card-tech-header">Artificial Intelligence</div>
-      <div class="game-card-image">
-        <img src="/images/cover.png" alt="FuzzNet Labs cover art">
-      </div>
-      <div class="game-card-body">
-        <div class="game-card-title">FuzzNet Labs</div>
-        <p class="game-card-theme">Build a machine learning model out of cardboard. Train it, test it, and race to classify animals before your opponents do.</p>
-        <div class="game-card-learning">
-          <p>Understand how data impacts machine learning and AI systems</p>
-        </div>
-        <div class="game-card-actions">
-          <a class="btn-play" href="/fuzznet">▶ Play Now</a>
-          <a class="btn-buy" href="https://cybersecgames.com/products/fuzznet-labs?_pos=1&_psq=FuzzNet&_ss=e&_v=1.0" target="_blank" rel="noopener" onclick="trackClick('fuzznet_physical')">🛒 Buy Physical</a>
-        </div>
-      </div>
+<!-- THE PROBLEM -->
+<section class="story-section bg-problem">
+  <div class="story-container">
+    <div class="story-eyebrow">The Problem</div>
+    <h2 class="story-headline">Smart people feel shut out of technology. That gap is growing.</h2>
+    <p class="story-body">Technology shapes every part of our lives, yet most people feel completely left behind when it comes to understanding it. These are smart, capable people who are experts in their own fields. The challenge isn't intelligence. The tools for learning tech have simply never been built for anyone outside of tech.</p>
+    <div class="pull-quote">
+      <p>"You don't need to know how it's built. You need to understand it well enough to judge its risks, push back meaningfully, and drive toward the best solution."</p>
     </div>
-
-    <!-- Byte Club -->
-    <div class="game-card">
-      <div class="game-card-tech-header">Cybersecurity</div>
-      <div class="game-card-image">
-        <img src="/images/byteclub.png" alt="Byte Club — cybersecurity card game">
-      </div>
-      <div class="game-card-body">
-        <div class="game-card-title">Byte Club</div>
-        <p class="game-card-theme">To hack or not to hack. A capture-the-flag card game that makes cybersecurity accessible and fun for everyone.</p>
-        <div class="game-card-learning">
-          <p>Think like an attacker, defend like a pro, and understand the Cycle of Cyberwarfare well enough to ask the right questions</p>
-        </div>
-        <div class="game-card-actions">
-          <a class="btn-play" href="/byteclub">▶ Play Now</a>
-          <a class="btn-buy" href="https://cybersecgames.com/pages/byte-club-game" target="_blank" rel="noopener" onclick="trackClick('byteclub_physical')">🛒 Buy Physical</a>
-        </div>
-      </div>
-    </div>
-
-    <!-- Qubit -->
-    <div class="game-card coming-soon">
-      <div class="game-card-tech-header">Quantum Computing</div>
-      <div class="game-card-image">
-        <div class="coming-soon-placeholder">Still in superposition — coming soon</div>
-      </div>
-      <div class="game-card-body">
-        <div class="game-card-title">Qubit</div>
-        <p class="game-card-theme">A quantum computing board game that makes qubits, superposition, and entanglement tangible through play.</p>
-        <div class="game-card-learning">
-          <p>Build an intuition for quantum computing concepts before the textbooks arrive</p>
-        </div>
-        <div class="game-card-actions">
-          <a class="btn-waitlist" href="/qubit-waitlist" onclick="trackClick('qubit_waitlist')">Join the Waitlist</a>
-        </div>
-      </div>
-    </div>
-
   </div>
 </section>
 
+<!-- WHO IT'S FOR -->
+<section class="story-section bg-warm">
+  <div class="story-container">
+    <div class="story-eyebrow">Who It's For</div>
+    <h2 class="story-headline">From the boardroom to the living room.</h2>
+    <div class="who-grid">
+      <div class="who-item">
+        <div class="who-icon">🏢</div>
+        <strong>Corporate Training</strong>
+        <p>Bring non-technical staff up to speed on the technology shaping their industry — without the jargon or the slide deck.</p>
+      </div>
+      <div class="who-item">
+        <div class="who-icon">🎓</div>
+        <strong>Classrooms</strong>
+        <p>Make abstract concepts concrete for students who've never worked with the technology before.</p>
+      </div>
+      <div class="who-item">
+        <div class="who-icon">🏠</div>
+        <strong>Curious Minds</strong>
+        <p>For anyone who wants to understand the technology running their world — on their own terms.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- THE APPROACH -->
+<section class="story-section bg-cool">
+  <div class="story-container">
+    <div class="story-eyebrow">Our Approach</div>
+    <h2 class="story-headline">Understanding comes from experience. <em>Not slides.</em></h2>
+    <p class="story-body">Slide decks explain what things are without letting you feel how they work. Labs require setup and prior knowledge most people don't have. A game lets anyone play the scenario, make real decisions, and build genuine understanding — no prior tech knowledge required.</p>
+    <div class="approach-pillars">
+      <div class="approach-pillar">
+        <strong>You Have to Feel It</strong>
+        <p>Decisions made in a game create real understanding. Not memorized facts — mental models that stick.</p>
+      </div>
+      <div class="approach-pillar">
+        <strong>Real Mental Models</strong>
+        <p>Every game teaches actual frameworks professionals use every day — built to transfer to the workplace, not stay on the table.</p>
+      </div>
+      <div class="approach-pillar">
+        <strong>Fun Is the Mechanism</strong>
+        <p>If a game isn't enjoyable enough to play with no interest in the topic, it doesn't ship. Fun is the required motivator — not a nice-to-have.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GAMES -->
+<section class="games-section">
+  <div class="games-section-inner">
+    <div class="story-eyebrow">Games Available By Topic</div>
+    <div class="topic-links">
+      <a class="topic-link" href="/ai">Artificial Intelligence</a>
+      <a class="topic-link" href="/cybersecurity">Cybersecurity</a>
+      <a class="topic-link" href="/qubit-waitlist">Quantum Computing</a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ABOUT CTA -->
+<div class="about-cta">
+  <h2>There's a story behind this.</h2>
+  <p>Why a cybersecurity professional decided the best way to close the tech gap was a card game.</p>
+  <a class="btn-about" href="/about">Read the Story</a>
+</div>
+
 <footer>
-  <p>© 2025 Tech Games. All rights reserved.</p>
+  <p>© 2025 Tech Board Games. All rights reserved.</p>
 </footer>
 
 <script>
