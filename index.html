@@ -86,6 +86,7 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
   font-size: 15px; font-weight: 700; color: #4a4a4a;
   background: none; border: none; padding: 8px 18px;
   border-radius: 8px; cursor: pointer; font-family: inherit;
+  line-height: inherit; display: flex; align-items: center;
   transition: background 0.15s, color 0.15s;
 }
 .nav-dropdown-trigger.open { background: #f4fae8; color: #4a8c11; }
@@ -106,8 +107,14 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
 .nav-dropdown-menu a:hover,
 .nav-dropdown-menu a.active { background: #f4fae8; color: #4a8c11; }
 @media (max-width: 600px) {
-  header { padding: 0 16px; }
-  nav a { padding: 6px 8px; font-size: 12px; }
+  header { padding: 0 12px; }
+  .header-logo { gap: 8px; }
+  .header-logo .logo-mark img { width: 28px; height: 28px; }
+  .header-logo .logo-text { font-size: 12px; }
+  .header-logo .logo-sub { font-size: 8px; letter-spacing: 1px; }
+  nav { gap: 0; }
+  nav a { padding: 6px 5px; font-size: 12px; }
+  .nav-dropdown-trigger { padding: 6px 5px; font-size: 12px; }
 }
 
 /* ===== ANIMATIONS ===== */
