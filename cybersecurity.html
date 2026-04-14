@@ -147,27 +147,29 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
   overflow: hidden;
   padding: 64px 24px 56px;
   text-align: center;
-  background: linear-gradient(160deg, #f8faf2 0%, #edf2e0 60%, #e2ecd0 100%);
-  border-bottom: 1px solid #dde8c8;
+  background: #060d03;
+  border-bottom: 2px solid #1a3800;
 }
 .hero::before {
   content: '';
   position: absolute;
-  inset: -56px;
-  background-image: radial-gradient(circle, rgba(98,181,23,0.13) 1.5px, transparent 1.5px);
-  background-size: 30px 30px;
-  animation: hero-drift 22s linear infinite;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(98,181,23,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(98,181,23,0.05) 1px, transparent 1px);
+  background-size: 36px 36px;
   pointer-events: none;
   z-index: 0;
 }
 .hero-badge {
   display: inline-block;
-  background: rgba(209,219,36,0.25);
-  border: 1px solid #d1db24;
-  color: #4a8c11;
+  background: rgba(98,181,23,0.08);
+  border: 1px solid rgba(98,181,23,0.5);
+  color: #7dd43f;
   font-size: 11px;
   font-weight: 800;
-  letter-spacing: 2px;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 3px;
   text-transform: uppercase;
   padding: 5px 14px;
   border-radius: 20px;
@@ -181,13 +183,14 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
   font-weight: 900;
   line-height: 1.1;
   margin-bottom: 6px;
-  color: #2a2a2a;
+  color: #fff;
   position: relative;
   z-index: 1;
   animation: fade-up 0.45s 0.1s ease both;
 }
 .hero h1 .game-name {
   color: #62b517;
+  text-shadow: 0 0 28px rgba(98,181,23,0.55), 0 0 8px rgba(98,181,23,0.3);
   position: relative;
 }
 .hero h1 .game-name::after {
@@ -204,7 +207,7 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
 .hero-subtitle {
   font-size: 17px;
   font-weight: 600;
-  color: #555;
+  color: rgba(255,255,255,0.65);
   margin-bottom: 32px;
   max-width: 540px;
   margin-left: auto;
@@ -225,6 +228,18 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
 .hero-visual svg {
   width: 100%;
   height: 100%;
+}
+
+/* Terminal cursor blink */
+.terminal-cursor {
+  color: #62b517;
+  text-shadow: 0 0 16px rgba(98,181,23,0.8);
+  animation: blink 1s step-end infinite;
+  margin-left: 1px;
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
 }
 
 /* ===== FEATURES STRIP (learning goal previews) ===== */
@@ -326,6 +341,19 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
 }
 .game-info-item:last-child { border-right: none; }
 .game-info-item span { font-size: 16px; }
+
+/* Lobby dark theming overrides */
+.features {
+  background: #080f03;
+  border-bottom-color: #1a3800;
+}
+.feature { border-right-color: #1a3800; }
+.feature h3 { color: #d4f5c0; }
+.feature p { color: rgba(255,255,255,0.52); }
+.feature-icon { background: rgba(98,181,23,0.1); border-color: rgba(98,181,23,0.28); }
+.cta-buttons-bar { background: #060d03; border-bottom-color: #1a3800; }
+.game-info-bar { background: #080f03; border-bottom-color: #1a3800; }
+.game-info-item { color: rgba(255,255,255,0.6); border-right-color: #1a3800; }
 
 /* ===== MAIN LAYOUT ===== */
 .main {
@@ -568,8 +596,8 @@ footer a:hover { text-decoration: underline; }
 
 <!-- HERO -->
 <div class="hero">
-  <div class="hero-badge">Cybersecurity · Available Now</div>
-  <h1><span class="game-name">Byte Club</span></h1>
+  <div class="hero-badge">[ Cybersecurity · Available Now ]</div>
+  <h1><span class="game-name">Byte Club</span><span class="terminal-cursor">_</span></h1>
   <p class="hero-subtitle">A capture-the-flag competition where you're hacking, getting hacked, and doing both at once — and so is everyone else at the table.</p>
   <!-- Cybersecurity animated visual: shield vs hooded hacker chasing in orbit -->
   <div class="hero-visual">
