@@ -619,6 +619,43 @@ footer {
   .pull-quote { padding: 20px 24px; }
   .pull-quote p { font-size: 17px; }
 }
+
+/* ===== SCROLL REVEAL ===== */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.65s cubic-bezier(0.65,0,0.35,1),
+              transform 0.65s cubic-bezier(0.65,0,0.35,1);
+}
+[data-reveal="right"] { transform: translateX(44px); }
+[data-reveal="scale"] { transform: scale(0.90) translateY(18px); }
+[data-reveal="lines"] { opacity: 1; transform: none; transition: none; }
+[data-reveal].is-visible { opacity: 1; transform: none; }
+
+[data-delay="1"] { transition-delay: 0.12s; }
+[data-delay="2"] { transition-delay: 0.24s; }
+[data-delay="3"] { transition-delay: 0.38s; }
+[data-delay="4"] { transition-delay: 0.52s; }
+
+.line-wrap { overflow: hidden; display: block; }
+.line-inner {
+  display: block;
+  transform: translateY(110%);
+  transition: transform 0.78s cubic-bezier(0.65,0,0.35,1);
+}
+.line-wrap:nth-child(2) .line-inner { transition-delay: 0.14s; }
+.line-wrap:nth-child(3) .line-inner { transition-delay: 0.28s; }
+[data-reveal="lines"].is-visible .line-inner { transform: translateY(0); }
+
+/* Restore hover transforms on topic-links after reveal */
+.topic-link[data-reveal].is-visible:hover { transform: translateX(4px); }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal], [data-reveal].is-visible {
+    opacity: 1 !important; transform: none !important; transition: none !important;
+  }
+  .line-inner { transform: none !important; transition: none !important; }
+}
 </style>
 </head>
 <body>
@@ -657,10 +694,13 @@ footer {
 <!-- THE PROBLEM -->
 <section class="story-section bg-problem">
   <div class="story-container">
-    <div class="story-eyebrow">The Problem</div>
-    <h2 class="story-headline">Smart people feel shut out of technology. That gap is growing.</h2>
-    <p class="story-body">Technology shapes every part of our lives, yet most people feel completely left behind when it comes to understanding it. These are smart, capable people who are experts in their own fields. The challenge isn't intelligence. The tools for learning tech have simply never been built for anyone outside of tech.</p>
-    <div class="pull-quote">
+    <div class="story-eyebrow" data-reveal>The Problem</div>
+    <h2 class="story-headline" data-reveal="lines">
+      <span class="line-wrap"><span class="line-inner">Smart people feel shut out of technology.</span></span>
+      <span class="line-wrap"><span class="line-inner">That gap is growing.</span></span>
+    </h2>
+    <p class="story-body" data-reveal data-delay="2">Technology shapes every part of our lives, yet most people feel completely left behind when it comes to understanding it. These are smart, capable people who are experts in their own fields. The challenge isn't intelligence. The tools for learning tech have simply never been built for anyone outside of tech.</p>
+    <div class="pull-quote" data-reveal="right" data-delay="3">
       <p>"You don't need to know how it's built. You need to understand it well enough to judge its risks, push back meaningfully, and drive toward the best solution."</p>
     </div>
   </div>
@@ -669,20 +709,20 @@ footer {
 <!-- WHO IT'S FOR -->
 <section class="story-section bg-warm">
   <div class="story-container">
-    <div class="story-eyebrow">Who It's For</div>
-    <h2 class="story-headline">From the boardroom to the living room.</h2>
+    <div class="story-eyebrow" data-reveal>Who It's For</div>
+    <h2 class="story-headline" data-reveal data-delay="1">From the boardroom to the living room.</h2>
     <div class="who-grid">
-      <div class="who-item">
+      <div class="who-item" data-reveal="scale" data-delay="1">
         <div class="who-icon">🏢</div>
         <strong>Corporate Training</strong>
         <p>Bring non-technical staff up to speed on the technology shaping their industry — without the jargon or the slide deck.</p>
       </div>
-      <div class="who-item">
+      <div class="who-item" data-reveal="scale" data-delay="2">
         <div class="who-icon">🎓</div>
         <strong>Classrooms</strong>
         <p>Make abstract concepts concrete for students who've never worked with the technology before.</p>
       </div>
-      <div class="who-item">
+      <div class="who-item" data-reveal="scale" data-delay="3">
         <div class="who-icon">🏠</div>
         <strong>Curious Minds</strong>
         <p>For anyone who wants to understand the technology running their world — on their own terms.</p>
@@ -694,19 +734,22 @@ footer {
 <!-- THE APPROACH -->
 <section class="story-section bg-cool">
   <div class="story-container">
-    <div class="story-eyebrow">Our Approach</div>
-    <h2 class="story-headline">Understanding comes from experience. <em>Not slides.</em></h2>
-    <p class="story-body">Slide decks explain what things are without letting you feel how they work. Labs require setup and prior knowledge most people don't have. A game lets anyone play the scenario, make real decisions, and build genuine understanding — no prior tech knowledge required.</p>
+    <div class="story-eyebrow" data-reveal>Our Approach</div>
+    <h2 class="story-headline" data-reveal="lines">
+      <span class="line-wrap"><span class="line-inner">Understanding comes from experience.</span></span>
+      <span class="line-wrap"><span class="line-inner"><em>Not slides.</em></span></span>
+    </h2>
+    <p class="story-body" data-reveal data-delay="2">Slide decks explain what things are without letting you feel how they work. Labs require setup and prior knowledge most people don't have. A game lets anyone play the scenario, make real decisions, and build genuine understanding — no prior tech knowledge required.</p>
     <div class="approach-pillars">
-      <div class="approach-pillar">
+      <div class="approach-pillar" data-reveal data-delay="1">
         <strong>You Have to Feel It</strong>
         <p>Decisions made in a game create real understanding. Not memorized facts — mental models that stick.</p>
       </div>
-      <div class="approach-pillar">
+      <div class="approach-pillar" data-reveal data-delay="2">
         <strong>Real Mental Models</strong>
         <p>Every game teaches actual frameworks professionals use every day — built to transfer to the workplace, not stay on the table.</p>
       </div>
-      <div class="approach-pillar">
+      <div class="approach-pillar" data-reveal data-delay="3">
         <strong>Fun Is the Mechanism</strong>
         <p>If a game isn't enjoyable enough to play with no interest in the topic, it doesn't ship. Fun is the required motivator — not a nice-to-have.</p>
       </div>
@@ -717,11 +760,11 @@ footer {
 <!-- GAMES -->
 <section class="games-section">
   <div class="games-section-inner">
-    <div class="story-eyebrow">Games Available By Topic</div>
+    <div class="story-eyebrow" data-reveal>Games Available By Topic</div>
     <div class="topic-links">
 
       <!-- Artificial Intelligence -->
-      <a class="topic-link" href="/ai">
+      <a class="topic-link" href="/ai" data-reveal data-delay="1">
         <div class="topic-link-anim">
           <svg viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
             <defs>
@@ -781,7 +824,7 @@ footer {
       </a>
 
       <!-- Cybersecurity -->
-      <a class="topic-link" href="/cybersecurity">
+      <a class="topic-link" href="/cybersecurity" data-reveal data-delay="2">
         <div class="topic-link-anim">
           <svg viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
             <defs>
@@ -850,7 +893,7 @@ footer {
       </a>
 
       <!-- Quantum Computing -->
-      <a class="topic-link" href="/qubit-waitlist">
+      <a class="topic-link" href="/qubit-waitlist" data-reveal data-delay="3">
         <div class="topic-link-anim">
           <svg viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg">
             <defs>
@@ -887,9 +930,9 @@ footer {
 
 <!-- ABOUT CTA -->
 <div class="about-cta">
-  <h2>There's a story behind this.</h2>
-  <p>Why a cybersecurity professional decided the best way to close the tech gap was a card game.</p>
-  <a class="btn-about" href="/about">Read the Story</a>
+  <h2 data-reveal>There's a story behind this.</h2>
+  <p data-reveal data-delay="1">Why a cybersecurity professional decided the best way to close the tech gap was a card game.</p>
+  <a class="btn-about" href="/about" data-reveal data-delay="2">Read the Story</a>
 </div>
 
 <footer>
@@ -901,6 +944,24 @@ function trackClick(button) {
   fetch('/track', { method:'POST', headers:{'Content-Type':'application/json'},
     body: JSON.stringify({ type:'button_click', button }) }).catch(()=>{});
 }
+// Scroll reveal
+(function() {
+  var els = document.querySelectorAll('[data-reveal]');
+  if (!els.length || !('IntersectionObserver' in window)) {
+    els.forEach(function(el) { el.classList.add('is-visible'); });
+    return;
+  }
+  var io = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -48px 0px' });
+  els.forEach(function(el) { io.observe(el); });
+})();
+
 // Games dropdown click toggle
 (function() {
   var trigger = document.querySelector('.nav-dropdown-trigger');
