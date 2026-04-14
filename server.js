@@ -3105,6 +3105,8 @@ const server = http.createServer((req, res) => {
   }
   if (pathname === '/byteclub' || pathname === '/byteclub.html') pathname = '/byteclub.html';
   else if (pathname === '/fuzznet' || pathname === '/fuzznet.html') pathname = '/fuzznet.html';
+  else if (pathname === '/cybersecurity' || pathname === '/cybersecurity.html') pathname = '/cybersecurity.html';
+  else if (pathname === '/ai' || pathname === '/ai.html') pathname = '/ai.html';
   else if (pathname === '/qubit-waitlist' || pathname === '/qubit-waitlist.html') pathname = '/qubit-waitlist.html';
   else if (pathname === '/contact' || pathname === '/contact.html') pathname = '/contact.html';
   else if (pathname === '/about' || pathname === '/about.html') pathname = '/about.html';
