@@ -2196,6 +2196,27 @@ const BTC_PREFILLED_DEFEND = [
   { id:4009, cat:'defend', type:'govern',    name:'Govern',        desc:'' },
 ];
 
+// ── Step 8 (Win Condition 2) — new multi-phase sequence cards ────────────────
+// Pre-filled board: 5 attack (missing exploit+action_obj), 4 defend (missing protect+govern)
+const BTC8_PRE_ATTACK = [
+  { id:4101, cat:'attack', type:'recon',     name:'Reconnaissance', img:'images/attack-recon.png',     desc:'' },
+  { id:4102, cat:'attack', type:'weaponize', name:'Weaponization',  img:'images/attack-weaponize.png', desc:'' },
+  { id:4103, cat:'attack', type:'deliver',   name:'Delivery',       img:'images/attack-delivery.png',  desc:'' },
+  { id:4104, cat:'attack', type:'install',   name:'Installation',   img:'images/attack-install.png',   desc:'' },
+  { id:4105, cat:'attack', type:'c2',        name:'C2 Control',     img:'images/attack-c2.png',        desc:'' },
+];
+const BTC8_PRE_DEFEND = [
+  { id:4106, cat:'defend', type:'identify',  name:'Identify',  desc:'' },
+  { id:4107, cat:'defend', type:'detect',    name:'Detect',    desc:'' },
+  { id:4108, cat:'defend', type:'respond',   name:'Respond',   desc:'' },
+  { id:4109, cat:'defend', type:'recover',   name:'Recover',   desc:'' },
+];
+// Cards that arrive / are earned during the sequence
+const TUT8_EXPLOIT    = { id:1008, cat:'attack', type:'exploit',    name:'Exploitation', img:'images/attack-exploit.png', desc:"Blindly steal 1 random card from target's hand." };
+const TUT8_PROTECT    = { id:4110, cat:'defend', type:'protect',    name:'Protect',      desc:'Block or nullify threats before they take hold.' };
+const TUT8_ACTION_OBJ = { id:4111, cat:'attack', type:'action_obj', name:'Action Obj.',  desc:"Earned: you completed the full Kill Chain." };
+const TUT8_GOVERN     = { id:4112, cat:'defend', type:'govern',     name:'Govern',       desc:"Earned: you completed the full NIST Framework." };
+
 // ── Base game-state factory ──────────────────────────────────────────────────
 function makeBcTutG(o) {
   o = o || {};
@@ -2442,48 +2463,85 @@ That\'s the first way to win Byte Club. Click <strong>Next</strong> to see the s
     isWinScreen: true,
     next: 'Next: Win Condition 2 →' },
 
-  // 8 — Win Condition 2 setup: play 2 remaining cards
-  { title: '🎯 Win Condition 2: Fill the Board',
-    body: `The <strong>second way</strong> to win: have one of <em>every</em> card type in front of you —<br>
-all 6 ⚔️ Kill Chain types <strong>+</strong> all 5 🛡️ NIST types (including the earned 🎯 Action Obj. and 🏛️ Govern).<br>
-You\'re one card away on each row. <em>Double-click both remaining cards</em> to complete the board.`,
+  // 8 — Win Condition 2: Exploit → steal Protect → earn Action Obj → earn Govern → win
+  { title: '🎯 Win Condition 2 — Complete the Board',
+    body: `The <strong>second way</strong> to win: have one of <em>every</em> card type played in front of you — all 6 ⚔️ Kill Chain types <strong>+</strong> all 5 🛡️ NIST types (plus the earned 🎯 Action Obj. and 🏛️ Govern).<br><br>
+Your board is nearly there. You hold a single card: <strong>Exploitation</strong>. Play it — it fills your last Kill Chain slot <em>and</em> steals a random card from Mira.`,
     makeG: () => makeBcTutG({
-      alexPlayed: [
-        {...BTC.recon}, ...BTC_PREFILLED_ATTACK,
-        {...BTC.identify}, ...BTC_PREFILLED_DEFEND,
-      ],
-      alexHand: [BTC.c2b, BTC.recoverB],
-      miraPlayed: [{...BTC.exploit}],
+      alexPlayed: [...BTC8_PRE_ATTACK.map(c=>({...c})), ...BTC8_PRE_DEFEND.map(c=>({...c}))],
+      alexHand: [{...TUT8_EXPLOIT}],
+      miraPlayed: [{...BTC.deliver}],
       miraHandCount: 4,
       phase: 'play',
-      log: ["Round 4 — Alex needs 2 more cards to complete the collection"],
+      log: ['Round 6 — Alex needs 2 more cards to complete the board'],
     }),
     forced: true,
-    tutHL: 'any',
-    _played: 0,
+    tutHL: 1008,  // TUT8_EXPLOIT.id — highlighted, all others dimmed
+    _subPhase: 0,
     interact(msg) {
-      if (msg.type !== 'game_action') return false;
-      if (msg.action === 'play_card') {
-        const card = bcTutG.myHand.find(c => c.id == msg.cardId);
-        if (!card) return true;
-        bcTutG.players[0].played.push({...card});
-        bcTutG.myHand = bcTutG.myHand.filter(c => c.id != msg.cardId);
-        bcTutG.players[0].handCount = bcTutG.myHand.length;
-        BCTSTEPS[7]._played++;
+      if (msg.type !== 'game_action') return;
+      const sp = BCTSTEPS[8]._subPhase;
+
+      // ── Sub-phase 0: play Exploit ──
+      if (sp === 0 && msg.action === 'play_card' && msg.cardId == TUT8_EXPLOIT.id) {
+        bcTutG.players[0].played.push({...TUT8_EXPLOIT});
+        bcTutG.myHand = [{...TUT8_PROTECT}, {...TUT8_ACTION_OBJ}];
+        bcTutG.players[0].handCount = 2;
+        BCTSTEPS[8]._subPhase = 1;
+        BCTSTEPS[8].tutHL = TUT8_PROTECT.id;
         gameState = bcTutG;
         selectedHandCard = null;
-        if (BCTSTEPS[7]._played >= 2) {
-          setTimeout(() => bcTutAdvanceTo(8), 400);
-        } else {
-          const rem = bcTutG.myHand[0];
-          document.getElementById('bc-tut-body').innerHTML =
-            `Good! Now play <strong>${rem.name}</strong> to finish the board.`;
-          renderGame(bcTutG);
-        }
-        return true;
+        document.getElementById('bc-tut-body').innerHTML =
+          `⚔️ <strong>Kill Chain complete!</strong> Exploitation filled the last attack slot — the board awarded you the <strong>Action Obj.</strong> card.<br><br>
+           The steal also grabbed <strong>Protect</strong> from Mira's hand — exactly the defend card your NIST row was missing!<br>
+           Now <em>play Protect</em> to fill that slot.`;
+        renderGame(bcTutG);
+        return;
       }
-      if (msg.action === 'end_play_phase') return true; // block until both played
-      return false;
+
+      // ── Sub-phase 1: play Protect ──
+      if (sp === 1 && msg.action === 'play_card' && msg.cardId == TUT8_PROTECT.id) {
+        bcTutG.players[0].played.push({...TUT8_PROTECT});
+        bcTutG.myHand = [{...TUT8_ACTION_OBJ}, {...TUT8_GOVERN}];
+        bcTutG.players[0].handCount = 2;
+        BCTSTEPS[8]._subPhase = 2;
+        BCTSTEPS[8].tutHL = TUT8_ACTION_OBJ.id;
+        gameState = bcTutG;
+        selectedHandCard = null;
+        document.getElementById('bc-tut-body').innerHTML =
+          `🛡️ <strong>NIST Framework complete!</strong> Protect filled the last regular slot — you've earned the <strong>Govern</strong> card.<br><br>
+           You now hold both bonus cards. Play <strong>Action Obj.</strong> first — that seals the Kill Chain side of the win.`;
+        renderGame(bcTutG);
+        return;
+      }
+
+      // ── Sub-phase 2: play Action Obj ──
+      if (sp === 2 && msg.action === 'play_card' && msg.cardId == TUT8_ACTION_OBJ.id) {
+        bcTutG.players[0].played.push({...TUT8_ACTION_OBJ});
+        bcTutG.myHand = [{...TUT8_GOVERN}];
+        bcTutG.players[0].handCount = 1;
+        BCTSTEPS[8]._subPhase = 3;
+        BCTSTEPS[8].tutHL = TUT8_GOVERN.id;
+        gameState = bcTutG;
+        selectedHandCard = null;
+        document.getElementById('bc-tut-body').innerHTML =
+          `🎯 <strong>You've completed half of this win condition</strong> — the full ⚔️ Cyber Kill Chain, including Action Obj.<br><br>
+           One card left. Play <strong>Govern</strong> to complete the 🛡️ NIST Framework side and <em>win the game</em>.`;
+        renderGame(bcTutG);
+        return;
+      }
+
+      // ── Sub-phase 3: play Govern → WIN ──
+      if (sp === 3 && msg.action === 'play_card' && msg.cardId == TUT8_GOVERN.id) {
+        bcTutG.players[0].played.push({...TUT8_GOVERN});
+        bcTutG.myHand = [];
+        bcTutG.players[0].handCount = 0;
+        gameState = bcTutG;
+        selectedHandCard = null;
+        renderGame(bcTutG);                    // show completed board briefly
+        setTimeout(() => bcTutAdvanceTo(9), 500); // then win screen
+        return;
+      }
     } },
 
   // 9 — Win Condition 2 screen
@@ -2491,21 +2549,18 @@ You\'re one card away on each row. <em>Double-click both remaining cards</em> to
     body: `All slots filled — Kill Chain ✓ and NIST Framework ✓ including the earned 🎯 Action Obj. and 🏛️ Govern.<br>
 <strong>Instant win!</strong> No need to wait for Times Up.<br>
 You\'re ready to play — click below to head back to the lobby!`,
-    makeG: () => {
-      const allPlayed = [
-        {...BTC.recon}, ...BTC_PREFILLED_ATTACK, {...BTC.c2b},
-        {...BTC.identify}, ...BTC_PREFILLED_DEFEND, {...BTC.recoverB},
-      ];
-      return makeBcTutG({
-        alexPlayed: allPlayed,
-        alexHand: [],
-        miraPlayed: [{...BTC.exploit}],
-        miraHandCount: 3,
-        phase: 'game_over',
-        winner: 0, winCondition: 2,
-        log: ['🎯 Alex completed the full collection — WINS!'],
-      });
-    },
+    makeG: () => makeBcTutG({
+      alexPlayed: [
+        ...BTC8_PRE_ATTACK.map(c=>({...c})), {...TUT8_EXPLOIT}, {...TUT8_ACTION_OBJ},
+        ...BTC8_PRE_DEFEND.map(c=>({...c})), {...TUT8_PROTECT}, {...TUT8_GOVERN},
+      ],
+      alexHand: [],
+      miraPlayed: [{...BTC.deliver}],
+      miraHandCount: 3,
+      phase: 'game_over',
+      winner: 0, winCondition: 2,
+      log: ['🎯 Alex completed the full collection — WINS!'],
+    }),
     forced: false,
     isWinScreen: true,
     next: '← Back to Lobby' },
@@ -2548,7 +2603,8 @@ function applyBcTutStep(idx) {
   bcTutStep = idx;
   const s = BCTSTEPS[idx];
   // Reset per-step mutable state
-  if (typeof s._played !== 'undefined') s._played = 0;
+  if (typeof s._played    !== 'undefined') s._played    = 0;
+  if (typeof s._subPhase  !== 'undefined') s._subPhase  = 0;
   s.nextAction = null; // clear any mid-step Next override
   // Always restore step's tutHL to its original definition value
   if (s._origTutHL === undefined) s._origTutHL = s.tutHL;
