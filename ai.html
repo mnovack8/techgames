@@ -371,6 +371,8 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
   margin-bottom: 8px;
 }
 .concept-card-top strong { font-size: 14px; font-weight: 900; color: #2a2a2a; }
+.concept-icon { width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.concept-icon svg { width: 100%; height: 100%; }
 .concept-explain { font-size: 13px; color: #555; line-height: 1.65; margin-bottom: 0 !important; }
 
 /* ===== LEARNING SECTION (dark bg) ===== */
@@ -655,6 +657,7 @@ footer a:hover { text-decoration: underline; }
       <li>
         <div class="concept-card" data-reveal>
           <div class="concept-card-top">
+            <span class="concept-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8" cy="12" r="1.5" fill="#d1db24" stroke="none"/><circle cx="12" cy="7" r="1.5" fill="#d1db24" stroke="none"/><circle cx="16" cy="12" r="1.5" fill="#d1db24" stroke="none"/><circle cx="12" cy="17" r="1.5" fill="#62b517" stroke="none"/><line x1="8" y1="12" x2="12" y2="7" stroke="#62b517" stroke-width="1.5"/><line x1="12" y1="7" x2="16" y2="12" stroke="#62b517" stroke-width="1.5"/><line x1="16" y1="12" x2="12" y2="17" stroke="#62b517" stroke-width="1.5"/><line x1="12" y1="17" x2="8" y2="12" stroke="#62b517" stroke-width="1.5"/></svg></span>
             <strong>Open the Black Box</strong>
           </div>
           <p class="concept-explain">AI stops being mysterious when you can see inside it. Neural networks process information through layers — input, hidden, and output — and that layered architecture is the foundation of the current AI revolution. It's the same structure powering large language models like ChatGPT. Playing FuzzNet Labs lets you visualize how data flows through those layers and why the architecture decisions you make change what your model can and can't learn.</p>
@@ -663,6 +666,7 @@ footer a:hover { text-decoration: underline; }
       <li>
         <div class="concept-card" data-reveal>
           <div class="concept-card-top">
+            <span class="concept-icon"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><line x1="3" y1="21" x2="21" y2="21" stroke="#62b517" stroke-width="2" stroke-linecap="round"/><rect x="5" y="12" width="4" height="9" fill="#62b517" rx="1"/><rect x="10" y="7" width="4" height="14" fill="#d1db24" rx="1"/><rect x="15" y="15" width="4" height="6" fill="#62b517" rx="1" opacity="0.6"/></svg></span>
             <strong>AI is a Probability Machine</strong>
           </div>
           <p class="concept-explain">No AI model ever achieves 100% accuracy — and that's not a bug, it's the nature of the problem. When you push for maximum accuracy on training data, you overfit: the model memorizes patterns instead of learning them, and it breaks on anything new. Optimize differently and you trade one kind of error for another — more false positives, fewer false negatives, or the reverse. Every AI deployment in the real world is navigating that exact tradeoff.</p>
@@ -671,6 +675,7 @@ footer a:hover { text-decoration: underline; }
       <li>
         <div class="concept-card" data-reveal>
           <div class="concept-card-top">
+            <span class="concept-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10"/><path d="M23 14l-4.64 4.36A9 9 0 0 1 3.51 15" stroke="#d1db24"/></svg></span>
             <strong>How AI Gets Built</strong>
           </div>
           <p class="concept-explain">AI isn't conjured — it's engineered through a repeating cycle: Design the model, Train it on data, Test it against reality, then go back and adjust. Data is destiny in that cycle; what you feed the model determines everything it can possibly learn. A brilliant architecture trained on bad or incomplete data will fail. Understanding that Design-Train-Test cycle is what separates people who can work effectively with AI teams from people who are just hoping the model figures it out.</p>
@@ -679,6 +684,7 @@ footer a:hover { text-decoration: underline; }
       <li>
         <div class="concept-card" data-reveal>
           <div class="concept-card-top">
+            <span class="concept-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><line x1="8" y1="10" x2="16" y2="10" stroke="#d1db24"/><line x1="8" y1="14" x2="12" y2="14" stroke="#d1db24"/></svg></span>
             <strong>You are AI-Fluent</strong>
           </div>
           <p class="concept-explain">The goal isn't to make you an AI engineer — it's to make you someone who can work with one effectively. Understanding the architecture, the tradeoffs, and the development cycle means you can ask the right questions, push back when something doesn't add up, and understand why a model behaves the way it does. Instead of accepting "the AI said so" as an answer, you'll have the mental model to dig in and demand a real one.</p>

@@ -178,18 +178,15 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
 .hero h1 em {
   font-style: normal;
   color: #62b517;
-  position: relative;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 4px;
+  text-underline-offset: 6px;
+  animation: underline-color-grow 0.4s 0.5s ease forwards;
 }
-.hero h1 em::after {
-  content: '';
-  position: absolute;
-  left: 0; right: 0; bottom: -2px;
-  height: 4px;
-  background: #d1db24;
-  border-radius: 3px;
-  transform: scaleX(0);
-  transform-origin: left center;
-  animation: underline-grow 0.4s 0.5s ease forwards;
+@keyframes underline-color-grow {
+  from { text-decoration-color: transparent; }
+  to   { text-decoration-color: #d1db24; }
 }
 .hero p {
   font-size: 18px;
