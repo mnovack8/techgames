@@ -300,7 +300,7 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
 }
 
 /* Guide Moment */
-.story-section.bg-guide { background: #0d2200; }
+.story-section.bg-guide { background: #1a3a00; }
 .story-section.bg-guide .story-container { max-width: 1200px; }
 .story-section.bg-guide .story-eyebrow { color: #62b517; border-color: #62b517; }
 .guide-body {
@@ -333,7 +333,7 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
 }
 
 /* Our Approach — slate blue-gray */
-.story-section.bg-cool { background: #f0f4f8; }
+.story-section.bg-cool { background: #eef5e8; }
 .story-section.bg-cool .story-container { max-width: 1200px; }
 .story-section.bg-cool .approach-pillar {
   background: #fff;
@@ -372,6 +372,35 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
 }
 
 /* ===== PULL QUOTE ===== */
+.stakes-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 32px 0;
+}
+.stakes-card {
+  background: rgba(0,0,0,0.25);
+  border: 1px solid rgba(209,219,36,0.25);
+  border-left: 4px solid #d1db24;
+  border-radius: 0 10px 10px 0;
+  padding: 20px 22px;
+}
+.stakes-label {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #d1db24;
+  margin-bottom: 10px;
+}
+.stakes-card p {
+  font-size: 15px;
+  color: rgba(255,255,255,0.82);
+  line-height: 1.65;
+  font-style: italic;
+  margin: 0;
+}
+@media (max-width: 700px) { .stakes-grid { grid-template-columns: 1fr; } }
 .pull-quote {
   position: relative;
   padding: 28px 36px;
@@ -669,7 +698,8 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
   text-align: center;
   transition: all 0.2s ease;
 }
-.who-icon { font-size: 32px; margin-bottom: 12px; }
+.who-icon { width: 52px; height: 52px; margin-bottom: 14px; flex-shrink: 0; }
+.who-icon svg { width: 100%; height: 100%; display: block; }
 .who-item strong {
   display: block;
   font-size: 15px;
@@ -695,7 +725,7 @@ a.who-item:hover { border-color: #62b517; background: #f0fae0; transform: transl
   border-width: 2.5px;
   padding: 32px 36px;
 }
-.who-item--featured .who-icon { font-size: 52px; flex-shrink: 0; margin-bottom: 0; margin-top: 4px; }
+.who-item--featured .who-icon { width: 68px; height: 68px; margin-bottom: 0; margin-top: 4px; }
 .who-item--featured strong { font-size: 20px; margin-bottom: 10px; }
 .who-item--featured p { font-size: 15px; max-width: 600px; }
 .who-featured-body { flex: 1; }
@@ -865,7 +895,7 @@ footer {
   .topic-links { grid-template-columns: 1fr; }
   .who-grid { grid-template-columns: 1fr; }
   .who-item--featured { flex-direction: column; gap: 16px; padding: 24px 20px; }
-  .who-item--featured .who-icon { font-size: 40px; }
+  .who-item--featured .who-icon { width: 52px; height: 52px; }
 }
 @media (max-width: 600px) {
   .games-grid { grid-template-columns: 1fr; }
@@ -876,17 +906,48 @@ footer {
 }
 
 /* ===== BACKGROUND PATTERNS ===== */
-/* Circuit board traces — dark green sections */
+
+/* 1. Circuit traces — Problem + CTA (dark sections with pattern) */
 .story-section.bg-problem,
 .about-cta {
   background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg stroke='%2362b517' stroke-opacity='0.11' stroke-width='1.5' fill='none' stroke-linecap='round'%3E%3Cpolyline points='0,30 40,30 40,75'/%3E%3Ccircle cx='40' cy='30' r='3'/%3E%3Ccircle cx='40' cy='75' r='3'/%3E%3Cline x1='40' y1='75' x2='100' y2='75'/%3E%3Cline x1='70' y1='0' x2='70' y2='30'/%3E%3Ccircle cx='70' cy='30' r='2.5'/%3E%3Cline x1='70' y1='30' x2='100' y2='30'/%3E%3Cline x1='0' y1='55' x2='15' y2='55'/%3E%3Ccircle cx='15' cy='55' r='2.5'/%3E%3Cline x1='15' y1='55' x2='15' y2='100'/%3E%3C/g%3E%3C/svg%3E");
   background-size: 100px 100px;
 }
-/* Game board grid — Our Approach section */
+
+/* 2. Guide Moment — no pattern, clean dark (empathy moment should breathe) */
+.story-section.bg-guide {
+  background-color: #1a3a00;
+}
+
+/* 3. Dot grid — Who It's For (light section with pattern) */
+.story-section.bg-warm {
+  background-image: radial-gradient(circle, rgba(98,181,23,0.12) 1.5px, transparent 1.5px);
+  background-size: 28px 28px;
+}
+
+/* 4. Game board grid — Our Approach (light section with pattern) */
 .story-section.bg-cool {
   background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0.5' y='0.5' width='39' height='39' fill='none' stroke='%2362b517' stroke-opacity='0.09' stroke-width='1'/%3E%3Ccircle cx='0' cy='0' r='2' fill='%2362b517' fill-opacity='0.12'/%3E%3Ccircle cx='40' cy='0' r='2' fill='%2362b517' fill-opacity='0.12'/%3E%3Ccircle cx='0' cy='40' r='2' fill='%2362b517' fill-opacity='0.12'/%3E%3Ccircle cx='40' cy='40' r='2' fill='%2362b517' fill-opacity='0.12'/%3E%3C/svg%3E");
   background-size: 40px 40px;
 }
+
+/* 5. How It Works — no pattern, clean white (visual rest between two patterned sections) */
+.story-section.bg-plan { background-image: none; }
+
+/* 6. Diagonal lines — Games section (medium section with pattern) */
+.games-section {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgba(98,181,23,0.07) 0,
+    rgba(98,181,23,0.07) 1px,
+    transparent 0,
+    transparent 50%
+  );
+  background-size: 18px 18px;
+}
+
+/* 7. Testimonial — no pattern, clean (let the quote breathe) */
+.testimonial-strip { background-image: none; }
 
 /* ===== SCROLL REVEAL ===== */
 [data-reveal] {
@@ -984,7 +1045,17 @@ footer {
       <span class="line-wrap"><span class="line-inner">they don't have the context for.</span></span>
     </h2>
     <p class="story-body" data-reveal data-delay="2">Your account managers, project leads, HR directors, and senior execs are sitting in security briefings, AI strategy sessions, and board presentations — nodding along. They're smart people. The problem isn't intelligence. It's that nobody has ever given them a way to actually experience how this technology works.</p>
-    <div class="pull-quote" data-reveal="right" data-delay="3">
+    <div class="stakes-grid" data-reveal data-delay="3">
+      <div class="stakes-card">
+        <div class="stakes-label">Cybersecurity</div>
+        <p>"A single click from someone who didn't understand the risk can cost millions. That's not a security problem — that's a literacy problem."</p>
+      </div>
+      <div class="stakes-card">
+        <div class="stakes-label">Artificial Intelligence</div>
+        <p>"AI is already inside your business. The question isn't whether your team needs to understand it — it's whether they'll understand it before it costs you."</p>
+      </div>
+    </div>
+    <div class="pull-quote" data-reveal="right" data-delay="4">
       <p>"You don't need to know how it's built. You need to understand it well enough to judge its risks, push back meaningfully, and drive toward the best solution."</p>
     </div>
   </div>
@@ -1019,7 +1090,18 @@ footer {
     <h2 class="story-headline" data-reveal data-delay="1">Built for corporate teams. Used everywhere.</h2>
     <div class="who-grid">
       <a class="who-item who-item--featured" href="/corporate-training" data-reveal="scale" data-delay="1">
-        <div class="who-icon">🏢</div>
+        <div class="who-icon">
+          <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <rect x="6" y="14" width="36" height="30" rx="2" fill="#2a5a06"/>
+            <rect x="4" y="10" width="40" height="7" rx="2" fill="#62b517"/>
+            <rect x="11" y="21" width="7" height="6" rx="1" fill="#d1db24"/>
+            <rect x="21" y="21" width="7" height="6" rx="1" fill="#d1db24"/>
+            <rect x="31" y="21" width="7" height="6" rx="1" fill="#d1db24"/>
+            <rect x="11" y="31" width="7" height="6" rx="1" fill="#a8c96a"/>
+            <rect x="31" y="31" width="7" height="6" rx="1" fill="#a8c96a"/>
+            <rect x="19" y="31" width="10" height="13" rx="1" fill="#1a3a00"/>
+          </svg>
+        </div>
         <div class="who-featured-body">
           <strong>Corporate Training</strong>
           <p>Bring non-technical staff up to speed on the technology shaping your industry — without the jargon, the slide deck, or the glazed-over eyes. Your security team, operations leads, and executives all at the same table, finally speaking the same language.</p>
@@ -1027,12 +1109,28 @@ footer {
         </div>
       </a>
       <a class="who-item who-item--secondary" href="/classrooms" data-reveal="scale" data-delay="2">
-        <div class="who-icon">🎓</div>
+        <div class="who-icon">
+          <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="24,7 46,19 24,31 2,19" fill="#62b517"/>
+            <path d="M34 24.5v9l-10 5-10-5v-9l10 5z" fill="#2a5a06"/>
+            <line x1="46" y1="19" x2="46" y2="31" stroke="#d1db24" stroke-width="2.5" stroke-linecap="round"/>
+            <circle cx="46" cy="33" r="3" fill="#d1db24"/>
+            <rect x="20" y="35" width="8" height="2.5" rx="1.25" fill="#a8c96a"/>
+          </svg>
+        </div>
         <strong>Classrooms</strong>
         <p>Make abstract concepts concrete for students who've never worked with the technology before.</p>
       </a>
       <a class="who-item who-item--secondary" href="/curious-minds" data-reveal="scale" data-delay="3">
-        <div class="who-icon">🏠</div>
+        <div class="who-icon">
+          <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+            <path d="M24 5C15.7 5 9 11.7 9 20c0 5.2 2.7 9.8 6.8 12.5V36h16.4v-3.5C36.3 29.8 39 25.2 39 20c0-8.3-6.7-15-15-15z" fill="#62b517"/>
+            <rect x="15.5" y="36" width="17" height="3.5" rx="1.75" fill="#2a5a06"/>
+            <rect x="17.5" y="39.5" width="13" height="3.5" rx="1.75" fill="#2a5a06"/>
+            <line x1="24" y1="13" x2="24" y2="27" stroke="#d1db24" stroke-width="2.5" stroke-linecap="round"/>
+            <line x1="17" y1="20" x2="31" y2="20" stroke="#d1db24" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+        </div>
         <strong>Curious Minds</strong>
         <p>For anyone who wants to understand the technology running their world — on their own terms.</p>
       </a>
