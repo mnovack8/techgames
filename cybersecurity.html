@@ -551,26 +551,25 @@ footer a:hover { text-decoration: underline; }
       <!-- Dashed orbit ring — hacker travels along this -->
       <circle cx="110" cy="110" r="58" fill="none" stroke="rgba(168,201,106,0.38)" stroke-width="1.5" stroke-dasharray="6 9"/>
 
-      <!-- Pulse ring -->
-      <circle cx="110" cy="110" r="40" fill="none" stroke="rgba(98,181,23,0.3)" stroke-width="1">
-        <animate attributeName="r" values="32;52;32" dur="3.8s" repeatCount="indefinite"/>
-        <animate attributeName="opacity" values="0.5;0;0.5" dur="3.8s" repeatCount="indefinite"/>
-      </circle>
-
-      <!-- DEFEND: Shield + Lock at centre -->
-      <g filter="url(#glow-d)">
-        <!-- Shield centred at (110,110): spans (88,84)→(132,136) -->
-        <path d="M110,84 L132,94 L132,112 C132,126 110,136 110,136 C110,136 88,126 88,112 L88,94 Z" fill="#62b517"/>
-        <path d="M110,84 L132,94 L132,112 C132,126 110,136 110,136 C110,136 88,126 88,112 L88,94 Z" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="1.5"/>
-        <!-- Lock shackle -->
-        <path d="M104,105 L104,99 Q110,93 116,99 L116,105" fill="none" stroke="#d1db24" stroke-width="3" stroke-linecap="round"/>
-        <!-- Lock body -->
-        <rect x="102" y="105" width="16" height="13" rx="3" fill="#d1db24"/>
-        <!-- Keyhole -->
-        <circle cx="110" cy="111.5" r="2.8" fill="#2a5a06"/>
+      <!-- DEFEND: Shield orbits opposite the hacker, same direction → chase illusion -->
+      <g style="transform-box:view-box; transform-origin:110px 110px; animation:orbit-clockwise 9s linear infinite;">
+        <!-- Starts at left (110−58, 110) = (52, 110), opposite the hacker at (168, 110) -->
+        <g transform="translate(52, 110)">
+          <g filter="url(#glow-d)" style="transform-box:fill-box; transform-origin:50% 50%; animation:counter-rotate 9s linear infinite;">
+            <!-- Shield centred at (0,0) -->
+            <path d="M0,-26 L22,-16 L22,2 C22,16 0,26 0,26 C0,26 -22,16 -22,2 L-22,-16 Z" fill="#62b517"/>
+            <path d="M0,-26 L22,-16 L22,2 C22,16 0,26 0,26 C0,26 -22,16 -22,2 L-22,-16 Z" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="1.5"/>
+            <!-- Lock shackle -->
+            <path d="M-6,-5 L-6,-11 Q0,-17 6,-11 L6,-5" fill="none" stroke="#d1db24" stroke-width="3" stroke-linecap="round"/>
+            <!-- Lock body -->
+            <rect x="-8" y="-5" width="16" height="13" rx="3" fill="#d1db24"/>
+            <!-- Keyhole -->
+            <circle cx="0" cy="1.5" r="2.8" fill="#2a5a06"/>
+          </g>
+        </g>
       </g>
 
-      <!-- ATTACK: Hooded hacker orbits the shield via CSS rotation -->
+      <!-- ATTACK: Hooded hacker orbits via CSS rotation -->
       <!-- Outer: rotates around SVG centre (110,110) -->
       <g style="transform-box:view-box; transform-origin:110px 110px; animation:orbit-clockwise 9s linear infinite;">
         <!-- Mid: positions icon at (centre + 58px right) = (168, 110) in SVG space -->
