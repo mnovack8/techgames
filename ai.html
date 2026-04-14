@@ -125,10 +125,10 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
 .nav-dropdown-menu a:hover,
 .nav-dropdown-menu a.active { background: #f4fae8; color: #4a8c11; }
 @media (max-width: 600px) {
-  header { padding: 0 16px; }
+  header { padding: 8px 16px 6px; height: auto; flex-direction: column; align-items: center; gap: 4px; }
   .header-logo .logo-text { font-size: 12px; }
   .header-logo .logo-sub { font-size: 8px; letter-spacing: 1px; }
-  nav { gap: 0; }
+  nav { gap: 0; justify-content: center; flex-wrap: wrap; }
   nav a { padding: 6px 5px; font-size: 12px; }
   .nav-dropdown-trigger { padding: 6px 5px; font-size: 12px; }
 }
@@ -424,7 +424,7 @@ footer a:hover { text-decoration: underline; }
 @media (max-width: 820px) {
   .main { padding: 0 16px; }
   .feature { padding: 20px 16px; }
-  header { padding: 0 16px; }
+  header { padding: 8px 16px 6px; height: auto; flex-direction: column; align-items: center; gap: 4px; }
   .cta-buttons-bar { flex-direction: column; align-items: stretch; padding: 20px 16px; }
   .btn-play-now, .btn-buy-physical { text-align: center; }
 }
@@ -449,6 +449,14 @@ footer a:hover { text-decoration: underline; }
         <a href="/cybersecurity">Cybersecurity</a>
         <a href="/ai" class="active">Artificial Intelligence</a>
         <a href="/qubit-waitlist">Quantum Computing</a>
+      </div>
+    </div>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-trigger">Use Cases ▾</button>
+      <div class="nav-dropdown-menu">
+        <a href="/corporate-training">Corporate Training</a>
+        <a href="/classrooms">Classrooms</a>
+        <a href="/curious-minds">Curious Minds</a>
       </div>
     </div>
     <a href="/about">About</a>
@@ -710,19 +718,33 @@ function trackClick(button) {
 }
 // Games dropdown click toggle
 (function() {
-  var trigger = document.querySelector('.nav-dropdown-trigger');
-  var menu = document.querySelector('.nav-dropdown-menu');
-  if (trigger && menu) {
+  var dropdowns = document.querySelectorAll('.nav-dropdown');
+  dropdowns.forEach(function(dd) {
+    var trigger = dd.querySelector('.nav-dropdown-trigger');
+    var menu    = dd.querySelector('.nav-dropdown-menu');
+    if (!trigger || !menu) return;
     trigger.addEventListener('click', function(e) {
       e.stopPropagation();
+      dropdowns.forEach(function(other) {
+        if (other !== dd) {
+          var om = other.querySelector('.nav-dropdown-menu');
+          var ot = other.querySelector('.nav-dropdown-trigger');
+          if (om) om.classList.remove('open');
+          if (ot) ot.classList.remove('open');
+        }
+      });
       var isOpen = menu.classList.toggle('open');
       trigger.classList.toggle('open', isOpen);
     });
-    document.addEventListener('click', function() {
-      menu.classList.remove('open');
-      trigger.classList.remove('open');
+  });
+  document.addEventListener('click', function() {
+    dropdowns.forEach(function(dd) {
+      var om = dd.querySelector('.nav-dropdown-menu');
+      var ot = dd.querySelector('.nav-dropdown-trigger');
+      if (om) om.classList.remove('open');
+      if (ot) ot.classList.remove('open');
     });
-  }
+  });
 })();
 </script>
 </body>

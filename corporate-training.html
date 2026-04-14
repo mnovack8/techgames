@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Use Byte Club to build real security fluency across your organisation. One session. No setup. Works for any non-technical team.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Corporate Training — Tech Board Games">
+<meta property="og:description" content="Use Byte Club to build real security fluency across your organisation. One session. No setup. Works for any non-technical team.">
+<meta property="og:image" content="https://cybersecgames.com/images/cover.png">
+<meta property="og:url" content="https://cybersecgames.com/corporate-training">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Corporate Training — Tech Board Games">
+<meta name="twitter:description" content="Use Byte Club to build real security fluency across your organisation. One session. No setup. Works for any non-technical team.">
+<meta name="twitter:image" content="https://cybersecgames.com/images/cover.png">
+<title>Corporate Training — Tech Board Games</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  min-height: 100%;
+  font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif;
+  background: #e8edd8;
+  color: #2a2a2a;
+  overflow-y: auto;
+}
+
+/* ===== HEADER ===== */
+header {
+  background: #fff;
+  border-bottom: 3px solid #d1db24;
+  padding: 0 40px;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 16px rgba(98,181,23,0.12);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+.header-logo .logo-mark img { width: 36px; height: 36px; object-fit: contain; }
+.header-logo .logo-text {
+  font-size: 16px;
+  font-weight: 800;
+  color: #4a8c11;
+  letter-spacing: 0.5px;
+}
+.header-logo .logo-sub {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  display: block;
+  line-height: 1;
+  color: #b0b800;
+}
+nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+nav a {
+  font-size: 15px;
+  font-weight: 700;
+  color: #4a4a4a;
+  text-decoration: none;
+  padding: 8px 18px;
+  border-radius: 8px;
+  transition: background 0.15s, color 0.15s;
+}
+nav a:hover { background: #f4fae8; color: #4a8c11; }
+nav a.active { color: #4a8c11; background: #f4fae8; }
+nav a.nav-cta { color: #4a4a4a; background: none; margin-left: 0; }
+nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
+.nav-dropdown { position: relative; display: flex; align-items: center; }
+.nav-dropdown-trigger {
+  font-size: 15px; font-weight: 700; color: #4a4a4a;
+  background: none; border: none; padding: 8px 18px;
+  border-radius: 8px; cursor: pointer; font-family: inherit;
+  line-height: inherit; display: flex; align-items: center;
+  transition: background 0.15s, color 0.15s;
+}
+.nav-dropdown-trigger.open { background: #f4fae8; color: #4a8c11; }
+.nav-dropdown-menu {
+  position: absolute; top: calc(100% + 4px); left: 0;
+  background: #fff; border: 1.5px solid #dde8c8;
+  border-radius: 10px; box-shadow: 0 8px 24px rgba(98,181,23,0.15);
+  padding: 6px; min-width: 200px;
+  display: none; flex-direction: column; gap: 2px; z-index: 200;
+}
+.nav-dropdown-menu.open { display: flex; }
+.nav-dropdown-menu a {
+  display: block; padding: 8px 14px; border-radius: 7px;
+  font-size: 14px; font-weight: 700; color: #4a4a4a;
+  text-decoration: none; transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+.nav-dropdown-menu a:hover,
+.nav-dropdown-menu a.active { background: #f4fae8; color: #4a8c11; }
+@media (max-width: 600px) {
+  header { padding: 8px 16px 6px; height: auto; flex-direction: column; align-items: center; gap: 4px; }
+  .header-logo { gap: 8px; }
+  .header-logo .logo-mark img { width: 28px; height: 28px; }
+  .header-logo .logo-text { font-size: 12px; }
+  .header-logo .logo-sub { font-size: 8px; letter-spacing: 1px; }
+  nav { gap: 0; justify-content: center; flex-wrap: wrap; }
+  nav a { padding: 6px 5px; font-size: 12px; }
+  .nav-dropdown-trigger { padding: 6px 5px; font-size: 12px; }
+}
+
+@keyframes logo-roll {
+  from { transform: translateX(-140px) rotate(-400deg); opacity: 0; }
+  to   { transform: translateX(0)      rotate(0deg);    opacity: 1; }
+}
+.header-logo .logo-mark img {
+  animation: logo-roll 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ===== STORY SECTIONS ===== */
+.story-section {
+  padding: 72px 24px;
+}
+.story-section.bg-problem {
+  background: #1a3a00;
+}
+.story-section.bg-problem .story-eyebrow { color: #d1db24; border-color: #d1db24; }
+.story-section.bg-problem .story-headline { color: #f0f7e6; }
+.story-section.bg-problem .story-body { color: rgba(240,247,230,0.75); }
+.story-section.bg-problem .pull-quote {
+  background: rgba(209,219,36,0.12);
+  border-color: #d1db24;
+}
+.story-section.bg-problem .pull-quote p { color: #d1db24; }
+
+.story-section.bg-warm { background: #fefce8; }
+.story-section.bg-warm .who-item {
+  background: #fff;
+  border-color: #e8d84a;
+}
+
+.story-section.bg-cool { background: #f0f4f8; }
+.story-section.bg-cool .approach-pillar {
+  background: #fff;
+  border-color: #c8d8e8;
+}
+
+.story-container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+.story-eyebrow {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  color: #62b517;
+  border-left: 4px solid #d1db24;
+  padding-left: 10px;
+  margin-bottom: 20px;
+}
+.story-headline {
+  font-size: clamp(28px, 4vw, 42px);
+  font-weight: 900;
+  color: #1a1a1a;
+  line-height: 1.15;
+  margin-bottom: 20px;
+}
+.story-headline em { font-style: normal; color: #62b517; }
+.story-body {
+  font-size: 16px;
+  color: #444;
+  line-height: 1.8;
+  max-width: 720px;
+  margin-bottom: 32px;
+}
+
+/* ===== PULL QUOTE ===== */
+.pull-quote {
+  position: relative;
+  padding: 28px 36px;
+  background: #f4fae8;
+  border-left: 5px solid #62b517;
+  border-radius: 0 12px 12px 0;
+  margin: 8px 0;
+}
+.pull-quote p {
+  font-size: 20px;
+  font-weight: 800;
+  color: #2a4a08;
+  line-height: 1.4;
+  font-style: italic;
+}
+.pull-quote cite {
+  display: block;
+  margin-top: 12px;
+  font-size: 12px;
+  font-weight: 800;
+  color: #62b517;
+  font-style: normal;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ===== APPROACH PILLARS ===== */
+.approach-pillars {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 36px;
+}
+.approach-pillar {
+  background: #fff;
+  border: 2px solid #a8c96a;
+  border-radius: 14px;
+  padding: 24px 22px;
+  box-shadow: 0 2px 12px rgba(98,181,23,0.1);
+}
+.approach-pillar strong {
+  display: block;
+  font-size: 15px;
+  font-weight: 900;
+  color: #1a1a1a;
+  margin-bottom: 8px;
+}
+.approach-pillar p {
+  font-size: 13px;
+  color: #555;
+  line-height: 1.6;
+}
+
+/* ===== WHO GRID ===== */
+.who-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 36px;
+}
+.who-item {
+  background: #f4fae8;
+  border: 2px solid #d4e8a8;
+  border-radius: 14px;
+  padding: 28px 24px;
+  text-align: center;
+}
+.who-icon { font-size: 32px; margin-bottom: 12px; }
+.who-item strong {
+  display: block;
+  font-size: 15px;
+  font-weight: 900;
+  color: #1a1a1a;
+  margin-bottom: 8px;
+}
+.who-item p {
+  font-size: 13px;
+  color: #555;
+  line-height: 1.6;
+}
+
+/* ===== ABOUT CTA STRIP ===== */
+.about-cta {
+  background: #1a3a00;
+  padding: 56px 24px;
+  text-align: center;
+}
+.about-cta h2 {
+  font-size: 26px;
+  font-weight: 900;
+  color: #fff;
+  margin-bottom: 12px;
+  line-height: 1.2;
+}
+.about-cta p {
+  font-size: 15px;
+  color: rgba(255,255,255,0.7);
+  max-width: 500px;
+  margin: 0 auto 28px;
+  line-height: 1.6;
+}
+.btn-about {
+  display: inline-block;
+  padding: 13px 32px;
+  background: #d1db24;
+  color: #1a3a00;
+  font-size: 15px;
+  font-weight: 800;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: background 0.15s, transform 0.15s;
+}
+.btn-about:hover { background: #c4cc1e; transform: scale(1.02); }
+
+/* ===== CTA BUTTONS ===== */
+.section-cta-buttons {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 32px;
+}
+.btn-play-now {
+  display: inline-block;
+  background: #62b517;
+  color: #fff;
+  text-decoration: none;
+  text-align: center;
+  padding: 14px 32px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 800;
+  transition: background 0.15s, transform 0.15s;
+}
+.btn-play-now:hover { background: #4d8f12; transform: scale(1.02); }
+.btn-buy-physical {
+  display: inline-block;
+  background: transparent;
+  color: #d1db24;
+  text-decoration: none;
+  text-align: center;
+  padding: 12px 28px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 800;
+  border: 2px solid #d1db24;
+  transition: all 0.15s;
+}
+.btn-buy-physical:hover { background: rgba(209,219,36,0.15); border-color: #fff; color: #fff; }
+
+/* ===== HERO VISUAL ===== */
+.hero-visual-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}
+.hero-visual-block {
+  background: #0d2200;
+  border-radius: 20px;
+  padding: 32px;
+  max-width: 360px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.hero-visual-block svg {
+  width: 100%;
+  display: block;
+}
+
+/* ===== FOOTER ===== */
+footer {
+  background: #2a2a2a;
+  padding: 12px 24px;
+  text-align: center;
+  font-size: 12px;
+  color: #777;
+}
+footer a { color: #d1db24; text-decoration: none; font-weight: 700; }
+footer a:hover { text-decoration: underline; }
+
+/* ===== BACKGROUND PATTERNS ===== */
+.story-section.bg-problem,
+.about-cta {
+  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg stroke='%2362b517' stroke-opacity='0.11' stroke-width='1.5' fill='none' stroke-linecap='round'%3E%3Cpolyline points='0,30 40,30 40,75'/%3E%3Ccircle cx='40' cy='30' r='3'/%3E%3Ccircle cx='40' cy='75' r='3'/%3E%3Cline x1='40' y1='75' x2='100' y2='75'/%3E%3Cline x1='70' y1='0' x2='70' y2='30'/%3E%3Ccircle cx='70' cy='30' r='2.5'/%3E%3Cline x1='70' y1='30' x2='100' y2='30'/%3E%3Cline x1='0' y1='55' x2='15' y2='55'/%3E%3Ccircle cx='15' cy='55' r='2.5'/%3E%3Cline x1='15' y1='55' x2='15' y2='100'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 100px 100px;
+}
+.story-section.bg-cool {
+  background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0.5' y='0.5' width='39' height='39' fill='none' stroke='%2362b517' stroke-opacity='0.09' stroke-width='1'/%3E%3Ccircle cx='0' cy='0' r='2' fill='%2362b517' fill-opacity='0.12'/%3E%3Ccircle cx='40' cy='0' r='2' fill='%2362b517' fill-opacity='0.12'/%3E%3Ccircle cx='0' cy='40' r='2' fill='%2362b517' fill-opacity='0.12'/%3E%3Ccircle cx='40' cy='40' r='2' fill='%2362b517' fill-opacity='0.12'/%3E%3C/svg%3E");
+  background-size: 40px 40px;
+}
+
+/* ===== SCROLL REVEAL ===== */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.65s cubic-bezier(0.65,0,0.35,1),
+              transform 0.65s cubic-bezier(0.65,0,0.35,1);
+}
+[data-reveal="right"] { transform: translateX(44px); }
+[data-reveal="scale"] { transform: scale(0.90) translateY(18px); }
+[data-reveal="lines"] { opacity: 1; transform: none; transition: none; }
+[data-reveal].is-visible { opacity: 1; transform: none; }
+
+[data-delay="1"] { transition-delay: 0.12s; }
+[data-delay="2"] { transition-delay: 0.24s; }
+[data-delay="3"] { transition-delay: 0.38s; }
+[data-delay="4"] { transition-delay: 0.52s; }
+
+.line-wrap { overflow: hidden; display: block; }
+.line-inner {
+  display: block;
+  transform: translateY(110%);
+  transition: transform 0.78s cubic-bezier(0.65,0,0.35,1);
+}
+.line-wrap:nth-child(2) .line-inner { transition-delay: 0.14s; }
+.line-wrap:nth-child(3) .line-inner { transition-delay: 0.28s; }
+[data-reveal="lines"].is-visible .line-inner { transform: translateY(0); }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal], [data-reveal].is-visible {
+    opacity: 1 !important; transform: none !important; transition: none !important;
+  }
+  .line-inner { transform: none !important; transition: none !important; }
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+  .approach-pillars { grid-template-columns: 1fr; }
+  .who-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .story-section { padding: 48px 20px; }
+  .pull-quote { padding: 20px 24px; }
+  .pull-quote p { font-size: 17px; }
+  .section-cta-buttons { flex-direction: column; }
+  .hero-visual-block { padding: 20px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="header-logo" href="/">
+    <div class="logo-mark">
+      <img src="/images/logo.png" alt="Tech Board Games logo">
+    </div>
+    <div>
+      <span class="logo-text">Tech Board Games</span>
+      <span class="logo-sub">Making Tech Make Sense</span>
+    </div>
+  </a>
+  <nav>
+    <a href="/">Home</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-trigger">Games ▾</button>
+      <div class="nav-dropdown-menu">
+        <a href="/cybersecurity">Cybersecurity</a>
+        <a href="/ai">Artificial Intelligence</a>
+        <a href="/qubit-waitlist">Quantum Computing</a>
+      </div>
+    </div>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-trigger open-indicator">Use Cases ▾</button>
+      <div class="nav-dropdown-menu">
+        <a href="/corporate-training" class="active">Corporate Training</a>
+        <a href="/classrooms">Classrooms</a>
+        <a href="/curious-minds">Curious Minds</a>
+      </div>
+    </div>
+    <a href="/about">About</a>
+    <a href="/contact">Contact</a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="story-section bg-problem">
+  <div class="story-container">
+    <div class="story-eyebrow" data-reveal>Use Case · Corporate Training</div>
+    <h1 class="story-headline" data-reveal="lines">
+      <span class="line-wrap"><span class="line-inner">Turn security talk into fluency</span></span>
+      <span class="line-wrap"><span class="line-inner">that actually sticks.</span></span>
+    </h1>
+    <p class="story-body" data-reveal data-delay="2">Your team doesn't need to become security engineers. They need to understand what's at stake — well enough to make good decisions, push back intelligently, and recognise a threat when they see one. Byte Club gets them there in a single session.</p>
+    <div class="hero-visual-wrap" data-reveal data-delay="3">
+      <div class="hero-visual-block">
+        <svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg">
+          <!-- Ambient glow -->
+          <ellipse cx="160" cy="120" rx="135" ry="105" fill="rgba(98,181,23,0.09)"/>
+          <!-- Shadow under table -->
+          <ellipse cx="162" cy="132" rx="88" ry="57" fill="rgba(0,0,0,0.28)"/>
+          <!-- Conference table -->
+          <ellipse cx="160" cy="126" rx="84" ry="53" fill="#1e4a04" stroke="#62b517" stroke-width="1.5" opacity="0.95"/>
+          <!-- Table sheen -->
+          <ellipse cx="160" cy="116" rx="50" ry="23" fill="rgba(255,255,255,0.05)"/>
+          <!-- Game card 1 (yellow) -->
+          <g transform="rotate(-13 137 113)">
+            <rect x="123" y="105" width="28" height="19" rx="3" fill="#d1db24"/>
+            <line x1="127" y1="110" x2="147" y2="110" stroke="#2a3a00" stroke-width="1.2" opacity="0.55"/>
+            <line x1="127" y1="114" x2="143" y2="114" stroke="#2a3a00" stroke-width="1" opacity="0.4"/>
+            <line x1="127" y1="118" x2="137" y2="118" stroke="#2a3a00" stroke-width="1" opacity="0.3"/>
+          </g>
+          <!-- Game card 2 (green) -->
+          <g transform="rotate(8 163 118)">
+            <rect x="149" y="110" width="28" height="19" rx="3" fill="#62b517"/>
+            <line x1="153" y1="115" x2="173" y2="115" stroke="rgba(255,255,255,0.55)" stroke-width="1.2"/>
+            <line x1="153" y1="119" x2="171" y2="119" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
+          </g>
+          <!-- Game card 3 (white) -->
+          <g transform="rotate(-5 188 130)">
+            <rect x="174" y="122" width="28" height="19" rx="3" fill="rgba(255,255,255,0.88)"/>
+            <line x1="178" y1="127" x2="198" y2="127" stroke="#62b517" stroke-width="1.2"/>
+            <line x1="178" y1="131" x2="196" y2="131" stroke="#62b517" stroke-width="1"/>
+            <line x1="178" y1="135" x2="190" y2="135" stroke="#62b517" stroke-width="0.8" opacity="0.7"/>
+          </g>
+          <!-- Game card 4 (lime) -->
+          <g transform="rotate(19 144 137)">
+            <rect x="130" y="130" width="28" height="19" rx="3" fill="#a8c96a" opacity="0.88"/>
+          </g>
+          <!-- Laptop on table -->
+          <rect x="153" y="118" width="22" height="16" rx="2.5" fill="#060d03" stroke="#62b517" stroke-width="0.8"/>
+          <rect x="154.5" y="119.5" width="19" height="10" rx="1.5" fill="#62b517" opacity="0.32"/>
+          <rect x="150" y="134" width="28" height="3" rx="1.5" fill="#1a3a00"/>
+          <!-- Person — Top centre -->
+          <circle cx="160" cy="52" r="15" fill="#2a5a06"/>
+          <ellipse cx="160" cy="47" rx="7" ry="9" fill="#d1db24" opacity="0.7"/>
+          <rect x="148" y="67" width="24" height="10" rx="5" fill="#2a5a06"/>
+          <!-- Person — Bottom centre -->
+          <circle cx="160" cy="198" r="14" fill="#2a5a06"/>
+          <ellipse cx="160" cy="193" rx="6.5" ry="8.5" fill="#a8c96a" opacity="0.65"/>
+          <rect x="148" y="184" width="24" height="10" rx="5" fill="#2a5a06"/>
+          <!-- Person — Left -->
+          <circle cx="52" cy="126" r="13" fill="#2a5a06"/>
+          <ellipse cx="52" cy="121.5" rx="6" ry="7.5" fill="#d1db24" opacity="0.62"/>
+          <rect x="65" y="118" width="10" height="18" rx="5" fill="#2a5a06"/>
+          <!-- Person — Right -->
+          <circle cx="268" cy="126" r="13" fill="#2a5a06"/>
+          <ellipse cx="268" cy="121.5" rx="6" ry="7.5" fill="#a8c96a" opacity="0.62"/>
+          <rect x="245" y="118" width="10" height="18" rx="5" fill="#2a5a06"/>
+          <!-- Person — Top-left -->
+          <circle cx="88" cy="72" r="11" fill="#1e4a04" stroke="#4a8c11" stroke-width="1"/>
+          <ellipse cx="88" cy="68" rx="5" ry="6.5" fill="#d1db24" opacity="0.55"/>
+          <!-- Person — Top-right -->
+          <circle cx="232" cy="72" r="11" fill="#1e4a04" stroke="#4a8c11" stroke-width="1"/>
+          <ellipse cx="232" cy="68" rx="5" ry="6.5" fill="#a8c96a" opacity="0.55"/>
+          <!-- Subtle engagement dashes -->
+          <line x1="160" y1="67" x2="160" y2="92" stroke="#d1db24" stroke-width="0.8" stroke-dasharray="3 3" opacity="0.35"/>
+          <line x1="75" y1="124" x2="98" y2="124" stroke="#d1db24" stroke-width="0.8" stroke-dasharray="3 3" opacity="0.28"/>
+          <line x1="245" y1="124" x2="222" y2="124" stroke="#d1db24" stroke-width="0.8" stroke-dasharray="3 3" opacity="0.28"/>
+          <!-- Speaking indicator dots near top person -->
+          <circle cx="173" cy="46" r="2.5" fill="#d1db24" opacity="0.7"/>
+          <circle cx="180" cy="52" r="1.8" fill="#d1db24" opacity="0.45"/>
+          <circle cx="177" cy="40" r="1.4" fill="#d1db24" opacity="0.35"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- THE PROBLEM -->
+<section class="story-section">
+  <div class="story-container">
+    <div class="story-eyebrow" data-reveal>The Problem</div>
+    <h2 class="story-headline" data-reveal="lines">
+      <span class="line-wrap"><span class="line-inner">Nobody in the room actually knows</span></span>
+      <span class="line-wrap"><span class="line-inner">what you're talking about.</span></span>
+    </h2>
+    <p class="story-body" data-reveal data-delay="2">It's a Tuesday all-hands. Your head of risk is presenting a slide about <strong>zero-day vulnerabilities</strong>. Marketing is nodding politely. Finance is mentally elsewhere. Nobody — except the one security engineer in the back — actually understands what's at stake.<br><br>This isn't a failure of intelligence. It's a failure of tools. Most security training was designed for security teams, not for the rest of your organisation. The result: a room full of people who can recite the word 'phishing' but couldn't explain how a phishing attack actually works.</p>
+    <div class="pull-quote" data-reveal="right" data-delay="3">
+      <p>"You can't protect what you don't understand. And you can't understand it without experiencing it."</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="story-section bg-warm">
+  <div class="story-container">
+    <div class="story-eyebrow" data-reveal>The Solution</div>
+    <h2 class="story-headline" data-reveal data-delay="1">One game. One session. Real understanding.</h2>
+    <p class="story-body" data-reveal data-delay="2">Byte Club puts your team in the shoes of both the attacker and the defender — simultaneously. In a single lunch-and-learn, people who've never worked in security go from passive listeners to people who can hold their own in a security conversation.</p>
+    <div class="approach-pillars">
+      <div class="approach-pillar" data-reveal data-delay="1">
+        <strong>No Setup Required</strong>
+        <p>Free to play online, right now. Or bring the physical game to any meeting room.</p>
+      </div>
+      <div class="approach-pillar" data-reveal data-delay="2">
+        <strong>Works for Any Team</strong>
+        <p>Legal, finance, marketing, ops — anyone who touches company data should understand how it's at risk.</p>
+      </div>
+      <div class="approach-pillar" data-reveal data-delay="3">
+        <strong>Designed to Transfer</strong>
+        <p>Every mechanic maps to a real-world concept. Recon, C2, social engineering — they mean something by the end.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LEARNING OUTCOMES -->
+<section class="story-section">
+  <div class="story-container">
+    <div class="story-eyebrow" data-reveal>Learning Outcomes</div>
+    <h2 class="story-headline" data-reveal data-delay="1">More than buzzword bingo.</h2>
+    <div class="approach-pillars">
+      <div class="approach-pillar" data-reveal data-delay="1">
+        <strong>The Attacker Mindset</strong>
+        <p>Why attacks are planned the way they are, and what makes them succeed.</p>
+      </div>
+      <div class="approach-pillar" data-reveal data-delay="2">
+        <strong>The Defender's Response</strong>
+        <p>What detection, containment, and recovery actually look like in practice.</p>
+      </div>
+      <div class="approach-pillar" data-reveal data-delay="3">
+        <strong>The Cycle</strong>
+        <p>Why attack and defence keep evolving against each other — and what that means for your team's posture.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIAL + CTA -->
+<section class="story-section bg-problem">
+  <div class="story-container">
+    <div class="pull-quote" data-reveal>
+      <p>"I have customer service reps and account managers actually getting it."</p>
+      <cite>— Security Champions Community Lead</cite>
+    </div>
+    <div class="section-cta-buttons" data-reveal data-delay="2">
+      <a class="btn-play-now" href="/byteclub">&#9658; Play Online — Free</a>
+      <a class="btn-buy-physical" href="https://cybersecgames.com/pages/byte-club-game" target="_blank" rel="noopener">&#128722; Buy Physical Copies</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2025 Tech Board Games. All rights reserved.</p>
+</footer>
+
+<script>
+// Scroll reveal
+(function() {
+  var els = document.querySelectorAll('[data-reveal]');
+  if (!els.length || !('IntersectionObserver' in window)) {
+    els.forEach(function(el) { el.classList.add('is-visible'); });
+    return;
+  }
+  var io = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -48px 0px' });
+  els.forEach(function(el) { io.observe(el); });
+})();
+
+// Multi-dropdown handler
+(function() {
+  var dropdowns = document.querySelectorAll('.nav-dropdown');
+  dropdowns.forEach(function(dd) {
+    var trigger = dd.querySelector('.nav-dropdown-trigger');
+    var menu    = dd.querySelector('.nav-dropdown-menu');
+    if (!trigger || !menu) return;
+    trigger.addEventListener('click', function(e) {
+      e.stopPropagation();
+      dropdowns.forEach(function(other) {
+        if (other !== dd) {
+          var om = other.querySelector('.nav-dropdown-menu');
+          var ot = other.querySelector('.nav-dropdown-trigger');
+          if (om) om.classList.remove('open');
+          if (ot) ot.classList.remove('open');
+        }
+      });
+      var isOpen = menu.classList.toggle('open');
+      trigger.classList.toggle('open', isOpen);
+    });
+  });
+  document.addEventListener('click', function() {
+    dropdowns.forEach(function(dd) {
+      var om = dd.querySelector('.nav-dropdown-menu');
+      var ot = dd.querySelector('.nav-dropdown-trigger');
+      if (om) om.classList.remove('open');
+      if (ot) ot.classList.remove('open');
+    });
+  });
+})();
+</script>
+</body>
+</html>

@@ -3110,6 +3110,9 @@ const server = http.createServer((req, res) => {
   else if (pathname === '/qubit-waitlist' || pathname === '/qubit-waitlist.html') pathname = '/qubit-waitlist.html';
   else if (pathname === '/contact' || pathname === '/contact.html') pathname = '/contact.html';
   else if (pathname === '/about' || pathname === '/about.html') pathname = '/about.html';
+  else if (pathname === '/corporate-training' || pathname === '/corporate-training.html') pathname = '/corporate-training.html';
+  else if (pathname === '/classrooms' || pathname === '/classrooms.html') pathname = '/classrooms.html';
+  else if (pathname === '/curious-minds' || pathname === '/curious-minds.html') pathname = '/curious-minds.html';
   else if (pathname === '/admin' || pathname === '/admin.html') pathname = '/admin.html';
   else if (pathname === '/') pathname = '/index.html';
   const filePath = path.join(__dirname, pathname);
