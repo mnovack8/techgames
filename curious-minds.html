@@ -3,17 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Understand the technology running your world — no experience required. Play Byte Club or FuzzNet Labs free, in your browser, starting right now.">
+<meta name="description" content="For the tech lover who can't bring their people along — and the person who wants to meet them halfway. Play together, start from zero, finally speak the same language.">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Curious Minds — Tech Board Games">
-<meta property="og:description" content="Understand the technology running your world — no experience required. Play Byte Club or FuzzNet Labs free, in your browser, starting right now.">
+<meta property="og:title" content="Bring Them Along — Tech Board Games">
+<meta property="og:description" content="For the tech lover who can't bring their people along — and the person who wants to meet them halfway. Play together, start from zero, finally speak the same language.">
 <meta property="og:image" content="https://cybersecgames.com/images/cover.png">
 <meta property="og:url" content="https://cybersecgames.com/curious-minds">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Curious Minds — Tech Board Games">
+<meta name="twitter:title" content="Bring Them Along — Tech Board Games">
 <meta name="twitter:description" content="Understand the technology running your world — no experience required. Play Byte Club or FuzzNet Labs free, in your browser, starting right now.">
 <meta name="twitter:image" content="https://cybersecgames.com/images/cover.png">
-<title>Curious Minds — Tech Board Games</title>
+<title>Bring Them Along — Tech Board Games</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
 
@@ -321,6 +321,33 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
   display: block;
 }
 
+/* ===== TWO PERSPECTIVES ===== */
+.two-perspectives {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin: 32px 0 40px;
+}
+.perspective-card {
+  background: #f4fae8;
+  border: 2px solid #c8e0a0;
+  border-radius: 16px;
+  padding: 28px 26px;
+}
+.perspective-label {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #62b517;
+  border-left: 3px solid #d1db24;
+  padding-left: 8px;
+  margin-bottom: 16px;
+}
+@media (max-width: 700px) {
+  .two-perspectives { grid-template-columns: 1fr; }
+}
+
 /* ===== FOOTER ===== */
 footer {
   background: #2a2a2a;
@@ -418,7 +445,7 @@ footer a:hover { text-decoration: underline; }
       <div class="nav-dropdown-menu">
         <a href="/corporate-training">Corporate Training</a>
         <a href="/classrooms">Classrooms</a>
-        <a href="/curious-minds" class="active">Curious Minds</a>
+        <a href="/curious-minds" class="active">Bring Them Along</a>
       </div>
     </div>
     <a href="/about">About</a>
@@ -429,105 +456,106 @@ footer a:hover { text-decoration: underline; }
 <!-- HERO -->
 <section class="story-section bg-problem">
   <div class="story-container">
-    <div class="story-eyebrow" data-reveal>Use Case · Curious Minds</div>
+    <div class="story-eyebrow" data-reveal>Use Case · Bring Them Along</div>
     <h1 class="story-headline" data-reveal="lines">
-      <span class="line-wrap"><span class="line-inner">From reading headlines</span></span>
-      <span class="line-wrap"><span class="line-inner">to explaining them.</span></span>
+      <span class="line-wrap"><span class="line-inner">Finally speak</span></span>
+      <span class="line-wrap"><span class="line-inner">the same language.</span></span>
     </h1>
-    <p class="story-body" data-reveal data-delay="2">You're not trying to become a software engineer. You just want to understand the technology running your world well enough to have an opinion on it. These games are free, require no setup, and assume you know nothing. That's the whole point.</p>
+    <p class="story-body" data-reveal data-delay="2">For the tech lover who can't seem to bring their people along — and the person who wants to meet them halfway. Both of you start from zero. No lectures, no rabbit holes. Just a game that builds the shared context you've been missing.</p>
   </div>
 </section>
 
-<!-- SOUND FAMILIAR? -->
+<!-- TWO PERSPECTIVES -->
 <section class="story-section">
   <div class="story-container">
     <div class="story-eyebrow" data-reveal>Sound Familiar?</div>
-    <h2 class="story-headline" data-reveal="lines">
-      <span class="line-wrap"><span class="line-inner">You closed the tab.</span></span>
-    </h2>
-    <p class="story-body" data-reveal data-delay="2">A major data breach makes the news. The article mentions a 'man-in-the-middle attack on an unsecured endpoint.' You almost understand it, but not quite — so you close the tab.<br><br><strong>That evening you find Byte Club online.</strong> By the end of a single session, you know exactly what that headline meant — the attack, why it worked, and what should have stopped it. That's the kind of fluency that doesn't come from reading articles. It comes from playing through the scenario yourself.</p>
+
+    <div class="two-perspectives">
+      <div class="perspective-card" data-reveal data-delay="1">
+        <div class="perspective-label">If you're the tech person</div>
+        <h2 class="story-headline" style="font-size: clamp(20px,3vw,28px); margin-bottom:16px;">You've tried explaining it. It didn't land.</h2>
+        <p class="story-body" style="margin-bottom:0;">You get excited, start simply, and somewhere between the second concept and the analogy you made up on the spot — you can see them trying to stay engaged. You don't want to lecture. You want to share something you love.<br><br>Byte Club gives you the bridge. You both start from zero. They discover it for themselves — the attack sequence, the decision points, the moments where it clicks. No presentation. No rabbit holes. Just the game, and a conversation that actually lands.</p>
+      </div>
+      <div class="perspective-card" data-reveal data-delay="2">
+        <div class="perspective-label">If tech isn't your thing</div>
+        <h2 class="story-headline" style="font-size: clamp(20px,3vw,28px); margin-bottom:16px;">The person you love lights up. You want to get it.</h2>
+        <p class="story-body" style="margin-bottom:0;">They talk about their work and you can tell it matters to them — you just don't know where to start, and asking questions feels like jumping into water without knowing the depth.<br><br>FuzzNet Labs is level ground. Neither of you has an advantage going in. You play the same game on equal terms, and somewhere in the middle of a round, the thing they've been trying to explain for months just makes sense.</p>
+      </div>
+    </div>
+
     <div class="hero-visual-wrap" data-reveal data-delay="3">
       <div class="hero-visual-block-dark">
         <svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg">
           <!-- Floor -->
           <rect x="0" y="185" width="320" height="55" fill="rgba(0,0,0,0.25)"/>
           <line x1="0" y1="185" x2="320" y2="185" stroke="rgba(98,181,23,0.2)" stroke-width="1"/>
-          <!-- Ambient glow from lamp -->
-          <radialGradient id="lamp-g" cx="78%" cy="28%" r="45%">
-            <stop offset="0%" stop-color="#d1db24" stop-opacity="0.22"/>
+          <!-- Lamp glow -->
+          <radialGradient id="lamp-g2" cx="50%" cy="30%" r="55%">
+            <stop offset="0%" stop-color="#d1db24" stop-opacity="0.18"/>
             <stop offset="100%" stop-color="#d1db24" stop-opacity="0"/>
           </radialGradient>
-          <rect width="320" height="240" fill="url(#lamp-g)"/>
-          <!-- Side table -->
-          <rect x="234" y="150" width="58" height="40" rx="6" fill="#1a3a00"/>
-          <rect x="229" y="145" width="68" height="9" rx="4" fill="#2a5a06"/>
-          <!-- Lamp pole -->
-          <rect x="256" y="98" width="6" height="50" rx="3" fill="#2a5a06"/>
-          <!-- Lampshade -->
-          <polygon points="238,98 274,98 269,74 243,74" fill="#d1db24" opacity="0.88"/>
-          <polygon points="238,98 274,98 269,74 243,74" fill="none" stroke="#b8c200" stroke-width="1.2"/>
-          <!-- Lamp glow orb -->
-          <circle cx="256" cy="100" r="22" fill="rgba(209,219,36,0.14)"/>
+          <rect width="320" height="240" fill="url(#lamp-g2)"/>
+          <!-- Coffee table -->
+          <rect x="108" y="172" width="104" height="10" rx="4" fill="#2a5a06"/>
+          <rect x="116" y="182" width="6" height="14" rx="2" fill="#1a3a00"/>
+          <rect x="198" y="182" width="6" height="14" rx="2" fill="#1a3a00"/>
+          <!-- Cards on table -->
+          <g transform="rotate(-8 140 176)">
+            <rect x="122" y="170" width="28" height="18" rx="3" fill="#d1db24"/>
+            <line x1="126" y1="175" x2="146" y2="175" stroke="#2a3a00" stroke-width="1.2" opacity="0.5"/>
+            <line x1="126" y1="179" x2="143" y2="179" stroke="#2a3a00" stroke-width="1" opacity="0.35"/>
+          </g>
+          <g transform="rotate(6 175 176)">
+            <rect x="160" y="170" width="28" height="18" rx="3" fill="#62b517" opacity="0.9"/>
+            <line x1="164" y1="175" x2="184" y2="175" stroke="rgba(255,255,255,0.55)" stroke-width="1.2"/>
+            <line x1="164" y1="179" x2="181" y2="179" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
+          </g>
           <!-- Couch backrest -->
-          <rect x="38" y="122" width="200" height="40" rx="12" fill="#1e4a04"/>
+          <rect x="30" y="118" width="260" height="44" rx="14" fill="#1e4a04"/>
           <!-- Couch seat -->
-          <rect x="44" y="156" width="188" height="38" rx="10" fill="#2a5a06"/>
+          <rect x="36" y="156" width="248" height="38" rx="12" fill="#2a5a06"/>
           <!-- Armrests -->
-          <rect x="36" y="136" width="22" height="56" rx="8" fill="#1e4a04"/>
-          <rect x="218" y="136" width="22" height="56" rx="8" fill="#1e4a04"/>
-          <!-- Seat cushion seam -->
-          <line x1="133" y1="158" x2="133" y2="190" stroke="rgba(0,0,0,0.2)" stroke-width="1.5"/>
+          <rect x="28" y="132" width="22" height="58" rx="9" fill="#1e4a04"/>
+          <rect x="270" y="132" width="22" height="58" rx="9" fill="#1e4a04"/>
+          <!-- Cushion seam -->
+          <line x1="160" y1="158" x2="160" y2="192" stroke="rgba(0,0,0,0.18)" stroke-width="1.5"/>
           <!-- Couch legs -->
-          <rect x="60" y="189" width="10" height="20" rx="4" fill="#1a3a00"/>
-          <rect x="206" y="189" width="10" height="20" rx="4" fill="#1a3a00"/>
-          <!-- Person body -->
-          <rect x="108" y="134" width="46" height="44" rx="9" fill="#3a7a0a"/>
-          <!-- Person head -->
-          <circle cx="131" cy="118" r="17" fill="#3a7a0a"/>
-          <ellipse cx="131" cy="113" rx="8" ry="10" fill="#d1db24" opacity="0.68"/>
-          <!-- Legs on couch -->
-          <rect x="154" y="155" width="58" height="15" rx="7" fill="#2a5a06"/>
-          <rect x="206" y="158" width="14" height="11" rx="5" fill="#1e4a04"/>
-          <!-- Laptop on lap -->
-          <rect x="110" y="162" width="48" height="32" rx="5" fill="#060d03" stroke="#62b517" stroke-width="1"/>
-          <rect x="112" y="164" width="44" height="24" rx="4" fill="#0d2200"/>
-          <!-- Game on screen -->
-          <rect x="114" y="166" width="40" height="20" rx="3" fill="#071a02"/>
-          <line x1="122" y1="166" x2="122" y2="186" stroke="#62b517" stroke-width="0.6" opacity="0.6"/>
-          <line x1="130" y1="166" x2="130" y2="186" stroke="#62b517" stroke-width="0.6" opacity="0.6"/>
-          <line x1="138" y1="166" x2="138" y2="186" stroke="#62b517" stroke-width="0.6" opacity="0.6"/>
-          <line x1="146" y1="166" x2="146" y2="186" stroke="#62b517" stroke-width="0.6" opacity="0.6"/>
-          <line x1="114" y1="172" x2="154" y2="172" stroke="#62b517" stroke-width="0.6" opacity="0.6"/>
-          <line x1="114" y1="179" x2="154" y2="179" stroke="#62b517" stroke-width="0.6" opacity="0.6"/>
-          <!-- Active cell -->
-          <rect x="130" y="172" width="8" height="7" rx="1.5" fill="#62b517" opacity="0.75"/>
-          <!-- A few score pips -->
-          <circle cx="118" cy="169" r="1.5" fill="#d1db24" opacity="0.8"/>
-          <circle cx="150" cy="183" r="1.5" fill="#62b517" opacity="0.8"/>
-          <!-- Game cards beside person on couch -->
-          <g transform="rotate(-14 80 170)">
-            <rect x="65" y="163" width="30" height="20" rx="3" fill="#d1db24"/>
-            <line x1="69" y1="168" x2="91" y2="168" stroke="#2a3a00" stroke-width="1.2" opacity="0.5"/>
-            <line x1="69" y1="172" x2="88" y2="172" stroke="#2a3a00" stroke-width="1" opacity="0.38"/>
-          </g>
-          <g transform="rotate(11 63 155)">
-            <rect x="49" y="148" width="30" height="20" rx="3" fill="#62b517" opacity="0.9"/>
-            <line x1="53" y1="153" x2="75" y2="153" stroke="rgba(255,255,255,0.55)" stroke-width="1.2"/>
-            <line x1="53" y1="157" x2="72" y2="157" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
-          </g>
-          <g transform="rotate(-5 90 178)">
-            <rect x="75" y="171" width="30" height="20" rx="3" fill="rgba(255,255,255,0.82)"/>
-            <line x1="79" y1="176" x2="101" y2="176" stroke="#62b517" stroke-width="1.2"/>
-            <line x1="79" y1="180" x2="98" y2="180" stroke="#62b517" stroke-width="1"/>
-          </g>
-          <!-- Thought bubbles above head -->
-          <circle cx="148" cy="110" r="3.5" fill="rgba(98,181,23,0.4)"/>
-          <circle cx="158" cy="100" r="5" fill="rgba(98,181,23,0.35)"/>
-          <circle cx="169" cy="88" r="7.5" fill="rgba(98,181,23,0.3)"/>
-          <text x="169" y="92" fill="#a8d478" font-size="9" text-anchor="middle" font-weight="bold">?</text>
-          <!-- Lightbulb hint -->
-          <circle cx="185" cy="78" r="9" fill="rgba(209,219,36,0.2)"/>
-          <text x="185" y="82" fill="#d1db24" font-size="11" text-anchor="middle" opacity="0.75">&#x1F4A1;</text>
+          <rect x="56" y="190" width="10" height="18" rx="3" fill="#1a3a00"/>
+          <rect x="254" y="190" width="10" height="18" rx="3" fill="#1a3a00"/>
+          <!-- Person 1 (left) body -->
+          <rect x="68" y="130" width="44" height="44" rx="9" fill="#3a7a0a"/>
+          <!-- Person 1 head -->
+          <circle cx="90" cy="114" r="16" fill="#3a7a0a"/>
+          <ellipse cx="90" cy="109" rx="7" ry="9" fill="#d1db24" opacity="0.65"/>
+          <!-- Person 1 thought bubble — confused -->
+          <circle cx="108" cy="107" r="3" fill="rgba(98,181,23,0.35)"/>
+          <circle cx="116" cy="98" r="4.5" fill="rgba(98,181,23,0.3)"/>
+          <circle cx="125" cy="88" r="7" fill="rgba(98,181,23,0.25)"/>
+          <text x="125" y="92" fill="#a8d478" font-size="9" text-anchor="middle" font-weight="bold">?</text>
+          <!-- Person 2 (right) body -->
+          <rect x="208" y="130" width="44" height="44" rx="9" fill="#2a6008"/>
+          <!-- Person 2 head -->
+          <circle cx="230" cy="114" r="16" fill="#2a6008"/>
+          <ellipse cx="230" cy="109" rx="7" ry="9" fill="#a8c96a" opacity="0.7"/>
+          <!-- Person 2 thought bubble — lightbulb moment -->
+          <circle cx="212" cy="107" r="3" fill="rgba(209,219,36,0.35)"/>
+          <circle cx="204" cy="98" r="4.5" fill="rgba(209,219,36,0.3)"/>
+          <circle cx="195" cy="88" r="7" fill="rgba(209,219,36,0.25)"/>
+          <text x="195" y="93" fill="#d1db24" font-size="10" text-anchor="middle" opacity="0.9">!</text>
+          <!-- Shared laptop between them -->
+          <rect x="130" y="155" width="60" height="38" rx="5" fill="#060d03" stroke="#62b517" stroke-width="1"/>
+          <rect x="132" y="157" width="56" height="28" rx="4" fill="#0d2200"/>
+          <rect x="134" y="159" width="52" height="24" rx="3" fill="#071a02"/>
+          <!-- Game grid on screen -->
+          <line x1="142" y1="159" x2="142" y2="183" stroke="#62b517" stroke-width="0.6" opacity="0.6"/>
+          <line x1="151" y1="159" x2="151" y2="183" stroke="#62b517" stroke-width="0.6" opacity="0.6"/>
+          <line x1="160" y1="159" x2="160" y2="183" stroke="#62b517" stroke-width="0.6" opacity="0.6"/>
+          <line x1="169" y1="159" x2="169" y2="183" stroke="#62b517" stroke-width="0.6" opacity="0.6"/>
+          <line x1="134" y1="167" x2="186" y2="167" stroke="#62b517" stroke-width="0.6" opacity="0.6"/>
+          <line x1="134" y1="175" x2="186" y2="175" stroke="#62b517" stroke-width="0.6" opacity="0.6"/>
+          <!-- Active cell highlighted -->
+          <rect x="151" y="167" width="9" height="8" rx="1.5" fill="#d1db24" opacity="0.8"/>
+          <rect x="160" y="175" width="9" height="8" rx="1.5" fill="#62b517" opacity="0.75"/>
         </svg>
       </div>
     </div>
@@ -538,41 +566,19 @@ footer a:hover { text-decoration: underline; }
 <section class="story-section bg-warm">
   <div class="story-container">
     <div class="story-eyebrow" data-reveal>What You'll Walk Away With</div>
-    <h2 class="story-headline" data-reveal data-delay="1">The kind of knowledge that actually transfers.</h2>
+    <h2 class="story-headline" data-reveal data-delay="1">More than just knowledge — a shared reference point.</h2>
     <div class="approach-pillars">
       <div class="approach-pillar" data-reveal data-delay="1">
-        <strong>Tech Fluency</strong>
-        <p>Understand what's actually happening in the headlines — breaches, AI bias, data collection, system failures.</p>
+        <strong>A Shared Language</strong>
+        <p>Concepts you both now understand and can reference long after the game ends. No more talking at each other — talking with each other.</p>
       </div>
       <div class="approach-pillar" data-reveal data-delay="2">
-        <strong>Better Decisions</strong>
-        <p>Make more informed choices about your own digital life — which tools to trust, what permissions to give, when to be worried.</p>
+        <strong>A New Way In</strong>
+        <p>You don't need to become a technologist. You just need enough context to be genuinely curious about theirs — and now you have it.</p>
       </div>
       <div class="approach-pillar" data-reveal data-delay="3">
-        <strong>Real Conversations</strong>
-        <p>Talk about technology with confidence. Challenge the people in the room who assume you won't understand.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- NO BARRIERS -->
-<section class="story-section bg-cool">
-  <div class="story-container">
-    <div class="story-eyebrow" data-reveal>No Barriers</div>
-    <h2 class="story-headline" data-reveal data-delay="1">Free. No account. No experience needed.</h2>
-    <div class="approach-pillars">
-      <div class="approach-pillar" data-reveal data-delay="1">
-        <strong>Play Solo or with Others</strong>
-        <p>Both games support solo play and multiplayer. Grab a friend or explore on your own.</p>
-      </div>
-      <div class="approach-pillar" data-reveal data-delay="2">
-        <strong>30–60 Minute Sessions</strong>
-        <p>A full session — including learning how to play — fits inside an hour. No long commitments, no waiting for other players to join.</p>
-      </div>
-      <div class="approach-pillar" data-reveal data-delay="3">
-        <strong>Built-in Tutorial</strong>
-        <p>Each game has an interactive tutorial that teaches you the rules in context — no reading a rulebook first.</p>
+        <strong>Something to Come Back To</strong>
+        <p>It's a game. You can play again, go deeper, switch sides, try a different strategy. The conversation doesn't have to end when the session does.</p>
       </div>
     </div>
   </div>
@@ -582,8 +588,8 @@ footer a:hover { text-decoration: underline; }
 <section class="story-section bg-problem">
   <div class="story-container">
     <div class="pull-quote" data-reveal>
-      <p>"I finally understand what my IT team is actually talking about. This is the first time tech has ever clicked for me."</p>
-      <cite>— Marketing Director</cite>
+      <p>"I've tried explaining AI to my dad five times. One round of FuzzNet Labs and he started asking questions I'd never heard him ask."</p>
+      <cite>— Software engineer</cite>
     </div>
     <div class="section-cta-buttons" data-reveal data-delay="2">
       <a class="btn-play-now" href="/byteclub">&#9658; Play Byte Club — Cybersecurity</a>
