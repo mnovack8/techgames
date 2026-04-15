@@ -299,6 +299,7 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
 /* Guide Moment */
 .story-section.bg-guide { background: #1a3a00; }
 .story-section.bg-guide .story-container { max-width: 1200px; }
+.story-section.bg-guide .guide-body { max-width: 100%; }
 .story-section.bg-guide .story-eyebrow { color: #62b517; border-color: #62b517; }
 .guide-body {
   font-size: 19px;
@@ -332,6 +333,7 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
 /* Our Approach — slate blue-gray */
 .story-section.bg-cool { background: #eef5e8; }
 .story-section.bg-cool .story-container { max-width: 1200px; }
+.story-section.bg-cool .story-body { max-width: 100%; }
 .story-section.bg-cool .approach-pillar {
   background: #fff;
   border-color: #c8d8e8;
@@ -713,19 +715,17 @@ a.who-item { display: block; text-decoration: none; color: inherit; }
 a.who-item:hover { border-color: #62b517; background: #f0fae0; transform: translateY(-3px); box-shadow: 0 6px 20px rgba(98,181,23,0.15); }
 .who-item--featured {
   grid-column: 1 / -1;
-  display: flex;
-  gap: 28px;
-  align-items: flex-start;
+  display: block;
   text-align: left;
   background: #eef7d8;
   border-color: #62b517;
   border-width: 2.5px;
   padding: 32px 36px;
 }
-.who-item--featured .who-icon { width: 68px; height: 68px; margin-bottom: 0; margin-top: 4px; }
-.who-item--featured strong { font-size: 20px; margin-bottom: 10px; }
-.who-item--featured p { font-size: 15px; max-width: 600px; }
-.who-featured-body { flex: 1; }
+.who-item--featured .who-item-header { margin-bottom: 14px; }
+.who-item--featured .who-item-header .who-icon { width: 44px; height: 44px; }
+.who-item--featured strong { font-size: 20px; }
+.who-item--featured p { font-size: 15px; width: 100%; max-width: none; }
 .who-cta-link {
   display: inline-block;
   margin-top: 14px;
@@ -734,7 +734,10 @@ a.who-item:hover { border-color: #62b517; background: #f0fae0; transform: transl
   color: #4e9612;
   letter-spacing: 0.02em;
 }
-.who-item--secondary { opacity: 0.82; }
+.who-item--secondary { opacity: 0.82; text-align: left; }
+.who-item-header { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.who-item-header .who-icon { margin-bottom: 0; width: 40px; height: 40px; flex-shrink: 0; }
+.who-item-header strong { margin-bottom: 0; }
 
 /* ===== 1-2-3 PLAN ===== */
 .story-section.bg-plan { background: #fff; }
@@ -1041,7 +1044,7 @@ footer {
       <span class="line-wrap"><span class="line-inner">Your non-technical staff are making decisions</span></span>
       <span class="line-wrap"><span class="line-inner">they don't have the context for.</span></span>
     </h2>
-    <p class="story-body" data-reveal data-delay="2">Your account managers, project leads, HR directors, and senior execs are sitting in security briefings, AI strategy sessions, and board presentations — nodding along. They're smart people. The problem isn't intelligence. It's that nobody has ever given them a way to actually experience how this technology works.</p>
+    <p class="story-body" data-reveal data-delay="2" style="max-width:100%">Your account managers, project leads, HR directors, and senior execs are sitting in security briefings, AI strategy sessions, and board presentations — nodding along. They're smart people. The problem isn't intelligence. It's that nobody has ever given them a way to actually experience how this technology works.</p>
     <div class="stakes-grid" data-reveal data-delay="3">
       <div class="stakes-card">
         <div class="stakes-label">Cybersecurity</div>
@@ -1073,48 +1076,52 @@ footer {
     <h2 class="story-headline" data-reveal data-delay="1">Built for corporate teams. Used everywhere.</h2>
     <div class="who-grid">
       <a class="who-item who-item--featured" href="/corporate-training" data-reveal="scale" data-delay="1">
-        <div class="who-icon">
-          <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-            <rect x="6" y="14" width="36" height="30" rx="2" fill="#2a5a06"/>
-            <rect x="4" y="10" width="40" height="7" rx="2" fill="#62b517"/>
-            <rect x="11" y="21" width="7" height="6" rx="1" fill="#d1db24"/>
-            <rect x="21" y="21" width="7" height="6" rx="1" fill="#d1db24"/>
-            <rect x="31" y="21" width="7" height="6" rx="1" fill="#d1db24"/>
-            <rect x="11" y="31" width="7" height="6" rx="1" fill="#a8c96a"/>
-            <rect x="31" y="31" width="7" height="6" rx="1" fill="#a8c96a"/>
-            <rect x="19" y="31" width="10" height="13" rx="1" fill="#1a3a00"/>
-          </svg>
-        </div>
-        <div class="who-featured-body">
+        <div class="who-item-header">
+          <div class="who-icon">
+            <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+              <rect x="6" y="14" width="36" height="30" rx="2" fill="#2a5a06"/>
+              <rect x="4" y="10" width="40" height="7" rx="2" fill="#62b517"/>
+              <rect x="11" y="21" width="7" height="6" rx="1" fill="#d1db24"/>
+              <rect x="21" y="21" width="7" height="6" rx="1" fill="#d1db24"/>
+              <rect x="31" y="21" width="7" height="6" rx="1" fill="#d1db24"/>
+              <rect x="11" y="31" width="7" height="6" rx="1" fill="#a8c96a"/>
+              <rect x="31" y="31" width="7" height="6" rx="1" fill="#a8c96a"/>
+              <rect x="19" y="31" width="10" height="13" rx="1" fill="#1a3a00"/>
+            </svg>
+          </div>
           <strong>Corporate Training</strong>
-          <p>Bring non-technical staff up to speed on the technology shaping your industry — without the jargon, the slide deck, or the glazed-over eyes. Your security team, operations leads, and executives all at the same table, finally speaking the same language.</p>
-          <span class="who-cta-link">Learn more →</span>
         </div>
+        <p>Bring non-technical staff up to speed on the technology shaping your industry — without the jargon, the slide deck, or the glazed-over eyes. Your security team, operations leads, and executives all at the same table, finally speaking the same language.</p>
+        <span class="who-cta-link">Learn more →</span>
       </a>
       <a class="who-item who-item--secondary" href="/classrooms" data-reveal="scale" data-delay="2">
-        <div class="who-icon">
-          <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-            <polygon points="24,7 46,19 24,31 2,19" fill="#62b517"/>
-            <path d="M34 24.5v9l-10 5-10-5v-9l10 5z" fill="#2a5a06"/>
-            <line x1="46" y1="19" x2="46" y2="31" stroke="#d1db24" stroke-width="2.5" stroke-linecap="round"/>
-            <circle cx="46" cy="33" r="3" fill="#d1db24"/>
-            <rect x="20" y="35" width="8" height="2.5" rx="1.25" fill="#a8c96a"/>
-          </svg>
+        <div class="who-item-header">
+          <div class="who-icon">
+            <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+              <polygon points="24,7 46,19 24,31 2,19" fill="#62b517"/>
+              <path d="M34 24.5v9l-10 5-10-5v-9l10 5z" fill="#2a5a06"/>
+              <line x1="46" y1="19" x2="46" y2="31" stroke="#d1db24" stroke-width="2.5" stroke-linecap="round"/>
+              <circle cx="46" cy="33" r="3" fill="#d1db24"/>
+              <rect x="20" y="35" width="8" height="2.5" rx="1.25" fill="#a8c96a"/>
+            </svg>
+          </div>
+          <strong>Classrooms</strong>
         </div>
-        <strong>Classrooms</strong>
         <p>Make abstract concepts concrete for students who've never worked with the technology before.</p>
       </a>
       <a class="who-item who-item--secondary" href="/curious-minds" data-reveal="scale" data-delay="3">
-        <div class="who-icon">
-          <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-            <path d="M24 5C15.7 5 9 11.7 9 20c0 5.2 2.7 9.8 6.8 12.5V36h16.4v-3.5C36.3 29.8 39 25.2 39 20c0-8.3-6.7-15-15-15z" fill="#62b517"/>
-            <rect x="15.5" y="36" width="17" height="3.5" rx="1.75" fill="#2a5a06"/>
-            <rect x="17.5" y="39.5" width="13" height="3.5" rx="1.75" fill="#2a5a06"/>
-            <line x1="24" y1="13" x2="24" y2="27" stroke="#d1db24" stroke-width="2.5" stroke-linecap="round"/>
-            <line x1="17" y1="20" x2="31" y2="20" stroke="#d1db24" stroke-width="2.5" stroke-linecap="round"/>
-          </svg>
+        <div class="who-item-header">
+          <div class="who-icon">
+            <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+              <path d="M24 5C15.7 5 9 11.7 9 20c0 5.2 2.7 9.8 6.8 12.5V36h16.4v-3.5C36.3 29.8 39 25.2 39 20c0-8.3-6.7-15-15-15z" fill="#62b517"/>
+              <rect x="15.5" y="36" width="17" height="3.5" rx="1.75" fill="#2a5a06"/>
+              <rect x="17.5" y="39.5" width="13" height="3.5" rx="1.75" fill="#2a5a06"/>
+              <line x1="24" y1="13" x2="24" y2="27" stroke="#d1db24" stroke-width="2.5" stroke-linecap="round"/>
+              <line x1="17" y1="20" x2="31" y2="20" stroke="#d1db24" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <strong>Bring Them Along</strong>
         </div>
-        <strong>Bring Them Along</strong>
         <p>For anyone who wants to understand the technology running their world — on their own terms.</p>
       </a>
     </div>
