@@ -109,6 +109,77 @@ body.observer-active #game .game-layout{height:calc(100vh - 44px - 32px);}
 .observer-hand-label{display:flex;align-items:center;gap:6px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#6b7280;}
 .observer-hand-label .obs-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
 .observer-hand-cards{display:flex;gap:5px;overflow-x:auto;padding-bottom:2px;}
+/* In-panel hand row for observer view (hand cards right below the mini map) */
+.opp-hand-row{display:flex;gap:6px;flex-wrap:wrap;padding:4px 0 2px;margin-top:6px;border-top:1px dashed #253347;padding-top:8px;}
+.opp-hand-row .card{min-width:72px;max-width:72px;padding:4px 5px;font-size:10px;border-width:1.5px;}
+.opp-hand-row .card.card-has-img{min-width:72px;max-width:72px;height:100px;padding:0;}
+.opp-hand-row .card .card-cat{font-size:9px;margin-bottom:2px;}
+.opp-hand-row .card .card-type{display:none;}
+.opp-hand-row .card .card-name{font-size:10px;line-height:1.15;font-weight:700;}
+.opp-hand-row .card .card-desc{display:none;}
+.opp-hand-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#6b7280;margin-top:6px;display:flex;align-items:center;gap:6px;}
+/* Observer-wide layout: CSS grid — opponent panels on the left, vertical sidebar
+   on the right containing game log, current-turn status, and special cards. */
+body.observer-active .game-layout{
+  display:grid;
+  grid-template-columns:1fr 280px;
+  grid-template-rows:auto 1fr auto;
+  grid-template-areas:
+    "turn turn"
+    "opps side"
+    "my   my";
+  overflow:hidden;
+}
+body.observer-active .turn-strip{grid-area:turn;}
+body.observer-active .opponents-bar{grid-area:opps;flex-wrap:wrap;overflow-x:visible;overflow-y:auto;gap:12px;padding:10px 14px;align-items:stretch;align-content:flex-start;min-height:0;}
+body.observer-active .center-area{grid-area:side;flex-direction:column;overflow-y:auto;background:#0d1117;border-left:1px solid #1e2d3d;min-height:0;}
+body.observer-active .my-area{grid-area:my;}
+/* Game log: full sidebar width, auto-growing, scrollable */
+body.observer-active .game-log{width:100%;max-height:none;border-right:none;border-bottom:1px solid #1e2d3d;flex:0 1 auto;padding:10px;max-height:40%;}
+/* Game middle (status banner + special cards): stacked vertically in sidebar */
+body.observer-active .game-middle{flex:0 0 auto;padding:10px;justify-content:flex-start;}
+body.observer-active .status-banner{max-width:100%;padding:6px 10px;}
+body.observer-active .status-banner .turn-player{font-size:15px;}
+body.observer-active .status-banner .phase-label{font-size:11px;}
+body.observer-active .special-cards-row{flex-direction:column;gap:5px;align-items:stretch;flex-wrap:nowrap;}
+body.observer-active .special-card{min-width:0;width:100%;padding:5px 8px;display:flex;align-items:center;gap:8px;text-align:left;}
+body.observer-active .special-card .sc-icon{flex-shrink:0;width:36px;height:46px;margin:0;}
+body.observer-active .special-card .sc-name{font-size:11px;margin:0;flex:1;text-align:left;}
+body.observer-active .special-card .sc-status{font-size:10px;margin:0;opacity:0.9;flex-shrink:0;}
+/* On smaller screens (under ~1100px), collapse grid back to single column */
+@media (max-width: 1099px) {
+  body.observer-active .game-layout{
+    display:flex;flex-direction:column;
+  }
+  body.observer-active .center-area{flex:0 0 auto;max-height:180px;flex-direction:row;border-left:none;}
+  body.observer-active .game-log{max-height:180px;border-bottom:none;border-right:1px solid #1e2d3d;width:200px;flex:0 0 auto;}
+  body.observer-active .special-cards-row{flex-direction:row;align-items:center;flex-wrap:wrap;justify-content:center;}
+  body.observer-active .special-card{width:auto;min-width:72px;flex-direction:column;text-align:center;}
+  body.observer-active .special-card .sc-name{text-align:center;}
+}
+body.observer-active .opponent-panel{min-width:520px;max-width:none;flex:1 1 520px;padding:10px 14px;}
+body.observer-active .opp-kc-slot{width:30px;height:30px;}
+body.observer-active .opp-kc-label{font-size:8px;max-width:36px;}
+/* On wider screens, panels scale up to fit 6+ cards comfortably without scroll */
+@media (min-width: 1200px) {
+  body.observer-active .opponent-panel{min-width:560px;flex:1 1 560px;}
+  body.observer-active .opp-hand-row .card{min-width:78px;max-width:78px;}
+  body.observer-active .opp-hand-row .card.card-has-img{min-width:78px;max-width:78px;height:108px;}
+}
+@media (min-width: 1600px) {
+  body.observer-active .opponent-panel{min-width:640px;flex:1 1 640px;}
+  body.observer-active .opp-hand-row .card{min-width:88px;max-width:88px;}
+  body.observer-active .opp-hand-row .card.card-has-img{min-width:88px;max-width:88px;height:122px;}
+}
+/* Observer hands-hidden toggle — hides the in-panel hand rows */
+body.obs-hands-hidden .opp-hand-row,
+body.obs-hands-hidden .opp-hand-label{display:none !important;}
+#obs-hide-hands-btn{background:#374151;color:#e2e8f0;border:1px solid #4b5563;border-radius:6px;padding:3px 10px;font-size:11px;font-weight:700;cursor:pointer;margin-left:auto;letter-spacing:0.3px;}
+#obs-hide-hands-btn:hover{background:#4b5563;}
+#obs-hide-hands-btn.hands-hidden{background:#1a2235;color:#9ca3af;}
+/* When the host's "Cancel Game" button is visible (top-right fixed), reserve room in
+   the observer banner so the Hide Hands button doesn't sit underneath it. */
+body.host-cancel-visible #observer-banner{padding-right:150px;}
 .waiting-observer-section{width:100%;max-width:320px;margin-top:4px;}
 .waiting-observer-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:#4b5563;margin-bottom:6px;display:flex;align-items:center;gap:5px;}
 .waiting-observer-row{display:flex;align-items:center;gap:10px;padding:7px 14px;background:#1a2235;border-radius:8px;border:1px solid #253347;margin-bottom:5px;}
@@ -930,6 +1001,7 @@ body.bc-tut-active .game-layout { height: calc(100vh - 44px); margin-right: 272p
 <div id="observer-banner">
   👁️ <span>Observer Mode</span>
   <span class="obs-pill">Read Only — you can see all cards but cannot play</span>
+  <button id="obs-hide-hands-btn" onclick="toggleObserverHands()">Hide Hands</button>
 </div>
 
 <!-- CANCEL GAME (host only, shown during game) -->
@@ -1714,6 +1786,16 @@ function buildHandCard(card, clickable, isSelected) {
 }
 
 // ==================== OBSERVER RENDER ====================
+// Toggle: show/hide all player hands in observer mode
+function toggleObserverHands() {
+  const hidden = document.body.classList.toggle('obs-hands-hidden');
+  const btn = document.getElementById('obs-hide-hands-btn');
+  if (btn) {
+    btn.textContent = hidden ? 'Show Hands' : 'Hide Hands';
+    btn.classList.toggle('hands-hidden', hidden);
+  }
+}
+
 function renderObserverGame(gs) {
   // Win screen
   if (gs.phase === 'game_over' || gs.winner >= 0) {
@@ -1772,6 +1854,7 @@ function renderObserverGame(gs) {
   renderTurnStrip(gs);
 
   // All players as "opponents" (no "me" slot — observers are not a player)
+  // Each panel contains: header, played mini-map, and the player's hand right below it.
   const bar = document.getElementById('opponents-bar');
   bar.innerHTML = '';
   gs.players.forEach((pl, i) => {
@@ -1797,6 +1880,19 @@ function renderObserverGame(gs) {
       <div class="opp-kc-row">${ATTACK_TYPES.map(t => oppSlot(t, t.id==='action_obj'?'special':'attack')).join('')}</div>
       <div class="opp-kc-row">${DEFEND_TYPES.map(t => oppSlot(t, t.id==='govern'?'special':'defend')).join('')}</div>
     </div>`;
+
+    // Build this player's hand (observers see all hands). Shown right below the mini-map.
+    const hand = pl.hand || [];
+    const sortedHand = sortByOrder(hand);
+    const handHtml = (hand.length || pl.handCount) ? `
+      <div class="opp-hand-label">Hand <span style="color:#4b5563;font-weight:400;font-size:9px">(${hand.length})</span></div>
+      <div class="opp-hand-row">${sortedHand.map(c => {
+        const img = getCardImg(c);
+        const catClass = c.cat === 'defend' ? 'defend' : c.cat === 'special' ? 'special-card-type' : 'attack';
+        const catLabel = c.cat === 'attack' ? '⚔️' : c.cat === 'defend' ? '🛡️' : '⭐';
+        return `<div class="card ${catClass}${img ? ' card-has-img' : ''}" style="cursor:default;flex-shrink:0" title="${c.name}\n${typeName(c)}">${img ? `<img src="${img}" alt="${c.name}" class="card-art-img" onerror="onCardImgError(this,'${c.cat}','${c.name}')">` : `<div class="card-cat">${catLabel}</div><div class="card-name">${c.name}</div>`}</div>`;
+      }).join('')}</div>` : '';
+
     div.innerHTML = `
       <div class="opp-header">
         <div class="opp-color-dot" style="background:${COLOR_INFO[pl.color]?.hex||'#888'}"></div>
@@ -1805,7 +1901,8 @@ function renderObserverGame(gs) {
         ${isProtected ? '<span class="opp-protected-badge"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L4 6v6c0 5.5 3.5 10.7 8 12 4.5-1.3 8-6.5 8-12V6L12 2z"/></svg> Protected</span>' : ''}
         ${isInstallBlocked ? '<span class="opp-blocked-badge"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9"/><line x1="6" y1="6" x2="18" y2="18"/></svg> No Defend</span>' : ''}
       </div>
-      <div class="opp-played">${oppPlayedHtml}</div>`;
+      <div class="opp-played">${oppPlayedHtml}</div>
+      ${handHtml}`;
     bar.appendChild(div);
   });
 
@@ -1813,32 +1910,10 @@ function renderObserverGame(gs) {
   const myPlayedEl = document.querySelector('.my-played-area');
   if (myPlayedEl) myPlayedEl.style.display = 'none';
 
-  // Hand area: hide normal hand, show observer hands
+  // Hide both the normal hand-area AND the old bottom observer-hands section
+  // (hands now live inside each opponent panel, directly below the mini-map)
   document.getElementById('hand-area').style.display = 'none';
-  const obsHandsEl = document.getElementById('observer-hands');
-  obsHandsEl.style.display = 'flex';
-  obsHandsEl.innerHTML = '';
-
-  gs.players.forEach((pl, i) => {
-    const hand = pl.hand || [];
-    if (!hand.length && !pl.handCount) return;
-    const sorted = sortByOrder(hand);
-    const colorHex = COLOR_INFO[pl.color]?.hex || '#888';
-    const handDiv = document.createElement('div');
-    handDiv.className = 'observer-player-hand';
-    handDiv.innerHTML = `<div class="observer-hand-label">
-      <span class="obs-dot" style="background:${colorHex}"></span>
-      ${pl.name}${i === gs.currentPlayer ? ' <span style="color:#d1db24;font-size:9px">▶ TURN</span>' : ''}
-      <span style="color:#4b5563;font-weight:400;font-size:9px">${hand.length} card${hand.length !== 1 ? 's' : ''}</span>
-    </div>
-    <div class="observer-hand-cards">${sorted.map(c => {
-      const img = getCardImg(c);
-      const catClass = c.cat === 'defend' ? 'defend' : c.cat === 'special' ? 'special-card-type' : 'attack';
-      const catLabel = c.cat === 'attack' ? '⚔️ Attack' : c.cat === 'defend' ? '🛡️ Defend' : '⭐ Special';
-      return `<div class="card ${catClass}${img ? ' card-has-img' : ''}" style="cursor:default;flex-shrink:0" title="${c.name}\n${typeName(c)}">${img ? `<img src="${img}" alt="${c.name}" class="card-art-img" onerror="onCardImgError(this,'${c.cat}','${c.name}')">` : `<div class="card-cat">${catLabel}</div><div class="card-name">${c.name}</div>`}</div>`;
-    }).join('')}</div>`;
-    obsHandsEl.appendChild(handDiv);
-  });
+  document.getElementById('observer-hands').style.display = 'none';
 
   // Action bar: read-only indicator
   const actionBar = document.getElementById('action-bar');
