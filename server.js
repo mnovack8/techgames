@@ -2128,6 +2128,24 @@ function bcBroadcastState(room) {
   }
   // Clear one-shot error after broadcasting
   gs.pendingError = null;
+
+  // Bot inactivity watchdog — resets on every state broadcast.
+  // If a bot is in 'play' phase and 3s pass with no further state change
+  // (e.g. stuck after Respond cancels attack, Weaponize cancels card, or
+  // Data Flag is revealed), force-end the turn so the game doesn't freeze.
+  clearTimeout(room._bcBotWatchdog);
+  if (gs.phase === 'play' && gs.winner < 0) {
+    const botIdx = gs.currentPlayer;
+    if (room.players[botIdx]?.isBot) {
+      room._bcBotWatchdog = setTimeout(() => {
+        if (gs.phase === 'play' && gs.currentPlayer === botIdx && gs.winner < 0) {
+          console.log(`[Bot watchdog] ${room.players[botIdx]?.name} inactive 3 s — forcing end_play_phase`);
+          room._bcBotRunning = false;
+          bcHandleAction(room, botIdx, { type: 'game_action', action: 'end_play_phase' });
+        }
+      }, 3000);
+    }
+  }
 }
 
 function bcDrawOne(room, playerIdx) {
@@ -2314,7 +2332,7 @@ function bcResolveDelivery(room, st) {
       bcLog(room, `📨 Delivery timed out — resolving with ${snapAtk.swaps.length} swap(s).`);
       bcExecuteDelivery(room);
     }
-  }, 15000);
+  }, 120000);
   if (room.players[st.attacker]?.isBot) {
     setTimeout(() => {
       if (gs.phase !== 'attack_delivery_pick' || gs.attackState?.attacker !== st.attacker) return;

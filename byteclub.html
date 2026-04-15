@@ -135,7 +135,7 @@ body{padding-top:44px;}
 .opp-kc-slot.filled.attack{background:rgba(239,68,68,0.22);border:1.5px solid rgba(239,68,68,0.55);}
 .opp-kc-slot.filled.defend{background:rgba(59,130,246,0.22);border:1.5px solid rgba(59,130,246,0.55);}
 .opp-kc-slot.filled.special{background:rgba(209,219,36,0.18);border:1.5px solid rgba(209,219,36,0.45);}
-.opp-kc-count{position:absolute;top:-4px;right:-4px;background:#f59e0b;color:#111;font-size:7px;font-weight:900;border-radius:6px;padding:0 3px;line-height:14px;}
+.opp-kc-count{position:absolute;bottom:-6px;left:50%;transform:translateX(-50%);background:#f59e0b;color:#111;font-size:10px;font-weight:900;border-radius:6px;padding:1px 5px;line-height:16px;border:1.5px solid #111;white-space:nowrap;}
 .opp-blocked-badge{font-size:10px;background:rgba(239,68,68,0.2);color:#f87171;padding:1px 6px;border-radius:4px;margin-left:auto;}
 
 /* CENTER AREA */
@@ -185,6 +185,9 @@ body{padding-top:44px;}
 .cancel-modal-actions .btn-yes:hover{background:#b91c1c;}
 .cancel-modal-actions .btn-no{padding:10px 28px;background:#374151;color:#e2e8f0;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;transition:background 0.15s;}
 .cancel-modal-actions .btn-no:hover{background:#4b5563;}
+.cancel-modal-actions .btn-warn{padding:10px 28px;background:#d97706;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;transition:background 0.15s;}
+.cancel-modal-actions .btn-warn:hover{background:#b45309;}
+.warn-modal-icon{margin-bottom:12px;display:flex;align-items:center;justify-content:center;}
 
 /* HOW TO PLAY BUTTON (replaces sidebar) */
 .how-to-play-btn{position:fixed;top:50px;right:14px;z-index:101;background:#1a2235;border:1px solid #374151;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;color:#62b517;cursor:pointer;display:flex;align-items:center;gap:5px;transition:background 0.15s;}
@@ -217,7 +220,7 @@ body{padding-top:44px;}
 .kc-slot.filled.special{background:rgba(209,219,36,0.15);border:2px solid rgba(209,219,36,0.45);color:#d1db24;}
 .kc-slot-emoji{font-size:14px;line-height:1;}
 .kc-slot-name{font-size:8px;font-weight:700;text-align:center;margin-top:3px;white-space:nowrap;overflow:hidden;max-width:56px;text-overflow:ellipsis;}
-.kc-slot-count{position:absolute;top:-6px;right:-6px;background:#f59e0b;color:#111;font-size:9px;font-weight:900;border-radius:8px;padding:0 5px;line-height:16px;}
+.kc-slot-count{position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);background:#f59e0b;color:#111;font-size:11px;font-weight:900;border-radius:8px;padding:1px 6px;line-height:18px;border:2px solid #111;white-space:nowrap;}
 .hand-area{padding:4px 12px 6px;flex-shrink:0;}
 .hand-title{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#4b5563;margin-bottom:4px;display:flex;align-items:center;justify-content:space-between;}
 .hand-cards{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;max-height:160px;}
@@ -266,6 +269,51 @@ body{padding-top:44px;}
 
 /* GOVERN VIEW OVERLAY */
 .govern-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:200;display:flex;align-items:center;justify-content:center;}
+/* ===== DELIVERY SWAP OVERLAY ===== */
+.delivery-swap-panel{background:#0f1923;border:2px solid #f59e0b;border-radius:16px;padding:24px 28px;max-width:700px;width:95%;max-height:88vh;overflow-y:auto;display:flex;flex-direction:column;gap:16px;}
+.delivery-swap-header{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #1e2d3d;padding-bottom:12px;}
+.delivery-swap-title{font-size:18px;font-weight:800;color:#fbbf24;}
+.delivery-swap-progress{font-size:12px;color:#9ca3af;background:#1e2d3d;padding:4px 10px;border-radius:20px;}
+.delivery-swap-instruction{font-size:14px;font-weight:700;color:#e2e8f0;background:rgba(245,158,11,0.1);border-left:3px solid #f59e0b;padding:8px 12px;border-radius:0 8px 8px 0;}
+.delivery-swap-section{display:flex;flex-direction:column;gap:8px;}
+.delivery-swap-section-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:#6b7280;}
+.delivery-swap-section-label.mine{color:#f87171;}
+.delivery-swap-section-label.theirs{color:#93c5fd;}
+.delivery-cards-grid{display:flex;flex-wrap:wrap;gap:8px;}
+.delivery-card-slot{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 10px;border-radius:8px;border:2px solid transparent;min-width:68px;max-width:80px;cursor:default;transition:all 0.15s;}
+.delivery-card-slot img{width:44px;height:44px;object-fit:contain;border-radius:4px;}
+.delivery-card-slot .dc-name{font-size:9px;font-weight:700;text-align:center;line-height:1.2;color:#9ca3af;}
+.delivery-card-slot.attack{background:rgba(239,68,68,0.12);border-color:rgba(239,68,68,0.3);}
+.delivery-card-slot.defend{background:rgba(59,130,246,0.12);border-color:rgba(59,130,246,0.3);}
+.delivery-card-slot.special{background:rgba(209,219,36,0.1);border-color:rgba(209,219,36,0.3);}
+.delivery-card-slot.selectable{cursor:pointer;}
+.delivery-card-slot.selectable:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(245,158,11,0.3);border-color:#f59e0b !important;}
+.delivery-card-slot.selectable.attack:hover{box-shadow:0 6px 20px rgba(239,68,68,0.35);}
+.delivery-card-slot.selectable.defend:hover{box-shadow:0 6px 20px rgba(59,130,246,0.35);}
+.delivery-card-slot.giving{border-color:#f87171 !important;background:rgba(239,68,68,0.25);opacity:1;}
+.delivery-card-slot.giving .dc-name{color:#fca5a5;}
+.delivery-card-slot.preview{opacity:0.45;}
+.delivery-giving-tag{font-size:8px;font-weight:800;color:#f87171;text-transform:uppercase;letter-spacing:0.5px;}
+.delivery-opp-section{display:flex;flex-direction:column;gap:6px;background:#111827;border-radius:10px;padding:10px 12px;}
+.delivery-opp-name{font-size:12px;font-weight:800;color:#e2e8f0;display:flex;align-items:center;gap:6px;}
+.delivery-opp-dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0;}
+.delivery-swap-done-list{display:flex;flex-direction:column;gap:4px;}
+.delivery-swap-done-item{font-size:11px;color:#62b517;background:rgba(98,181,23,0.1);border-radius:6px;padding:4px 10px;}
+.delivery-swap-footer{display:flex;gap:10px;align-items:center;justify-content:flex-end;border-top:1px solid #1e2d3d;padding-top:12px;margin-top:4px;}
+/* Card-art tiles inside the delivery swap panel */
+.delivery-swap-panel .kc-row{margin-bottom:6px;flex-wrap:wrap;}
+.delivery-swap-panel .kc-row-label{width:38px;font-size:8px;line-height:1.3;}
+.delivery-swap-panel .kc-slots{flex-wrap:wrap;gap:6px;align-items:flex-end;}
+.delivery-swap-panel .ds-card{min-width:72px;max-width:80px;height:108px;padding:0;overflow:hidden;cursor:default;position:relative;border-width:2px;transition:transform 0.15s,box-shadow 0.15s,border-color 0.15s,opacity 0.15s;}
+.delivery-swap-panel .ds-card .card-art-img{width:100%;height:100%;object-fit:cover;border-radius:4px;display:block;pointer-events:none;}
+.delivery-swap-panel .ds-card .ds-card-text{padding:6px 6px 4px;display:flex;flex-direction:column;gap:3px;height:100%;box-sizing:border-box;}
+.delivery-swap-panel .ds-card .ds-card-cat{font-size:8px;text-transform:uppercase;font-weight:700;letter-spacing:0.5px;}
+.delivery-swap-panel .ds-card .ds-card-name{font-size:10px;font-weight:800;line-height:1.2;}
+.delivery-swap-panel .ds-card.ds-selectable{cursor:pointer;}
+.delivery-swap-panel .ds-card.ds-selectable:hover{transform:translateY(-5px);box-shadow:0 10px 24px rgba(245,158,11,0.45);border-color:#f59e0b !important;}
+.delivery-swap-panel .ds-card.ds-giving{border-color:#f87171 !important;box-shadow:0 0 16px rgba(239,68,68,0.55);}
+.delivery-swap-panel .ds-card.ds-preview{opacity:0.32;pointer-events:none;}
+.delivery-swap-panel .ds-empty-slot{width:38px;min-height:54px;border-radius:5px;border:2px dashed;display:flex;align-items:center;justify-content:center;font-size:13px;opacity:0.22;flex-shrink:0;}
 .govern-panel{background:#1a2235;border:2px solid #7c3aed;border-radius:16px;padding:24px;max-width:600px;width:90%;}
 .govern-panel h3{font-size:18px;font-weight:800;color:#c4b5fd;margin-bottom:16px;}
 .govern-panel .govern-hand{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;}
@@ -679,7 +727,7 @@ body.bc-tut-active .game-layout { height: calc(100vh - 44px); margin-right: 272p
     <h1>BYTE CLUB</h1>
     <p class="subtitle">Experience the Cycle of Cyberwarfare from both sides · 2–4 Players</p>
 
-    <button class="lobby-btn btn-tutorial" onclick="startBcTutorial()">📖 Interactive Tutorial — Learn to Play</button>
+    <button class="lobby-btn btn-tutorial" onclick="startBcTutorial()">Interactive Tutorial — Learn to Play</button>
 
     <!-- CREATE GAME -->
     <div class="lobby-card">
@@ -715,7 +763,10 @@ body.bc-tut-active .game-layout { height: calc(100vh - 44px); margin-right: 272p
     <button class="copy-btn" onclick="copyCode()">Copy Code</button>
     <button class="copy-btn" onclick="copyLink()">Copy Link</button>
   </div>
-  <div class="waiting-players" id="waiting-players"></div>
+  <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:#62b517;margin-bottom:8px;display:flex;align-items:center;gap:6px;">
+  <span>↕</span><span>Play Order</span>
+</div>
+<div class="waiting-players" id="waiting-players"></div>
   <button class="copy-btn" id="btn-bot-toggle" onclick="toggleBot()" style="display:none;padding:10px 24px;font-size:14px;">Play Solo vs Bot</button>
   <button class="start-btn" id="btn-start" onclick="startGame()" disabled>Start Game</button>
   <p class="waiting-hint" id="waiting-hint">Share the room code to invite players.</p>
@@ -814,37 +865,50 @@ body.bc-tut-active .game-layout { height: calc(100vh - 44px); margin-right: 272p
   </div>
 </div>
 
+<!-- Warning / confirmation modal (overhand, no targets) -->
+<div class="cancel-modal-overlay" id="warn-modal-overlay">
+  <div class="cancel-modal">
+    <div class="warn-modal-icon" id="warn-modal-icon"></div>
+    <h3 id="warn-modal-title"></h3>
+    <p id="warn-modal-body"></p>
+    <div class="cancel-modal-actions">
+      <button class="btn-warn" id="warn-modal-confirm-btn" onclick="confirmWarnModal()">Continue</button>
+      <button class="btn-no" onclick="hideWarnModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <!-- HOW TO PLAY -->
-<button class="how-to-play-btn" id="htp-btn" onclick="document.getElementById('htp-panel').classList.toggle('open')">📖 How to Play</button>
+<button class="how-to-play-btn" id="htp-btn" onclick="document.getElementById('htp-panel').classList.toggle('open')">How to Play</button>
 <div class="how-to-play-panel" id="htp-panel">
   <button class="htp-close" onclick="this.parentElement.classList.remove('open')">✕</button>
   <h4>How to Play Byte Club</h4>
-  <h5>🎯 Goal</h5>
+  <h5><span style="color:#d1db24">◆</span> Goal</h5>
   <p>Win by one of two conditions:</p>
   <p><strong>1.</strong> Hold the 🚩 Data Flag when ⏰ Times Up is drawn from the deck.</p>
   <p><strong>2.</strong> Play one of every attack type (Kill Chain) AND every defend type (NIST) in front of you, including the earned Govern and Action Objectives cards.</p>
-  <h5>🔄 Turn Flow</h5>
+  <h5><span style="color:#62b517">◆</span> Turn Flow</h5>
   <p><strong>1. Play cards</strong> — double-click cards from your hand to play them. You can play multiple cards per turn.</p>
   <p><strong>2. End turn</strong> — click End Turn when done.</p>
   <p><strong>3. Draw</strong> — you automatically draw 1 card.</p>
   <p><strong>4. Discard</strong> — if you have more than 6 cards, click one to discard.</p>
-  <h5>⚔️ Kill Chain (Attack Cards)</h5>
-  <p>🔍 <strong>Recon</strong> — peek at a hand or swap played attack cards</p>
-  <p>⚒️ <strong>Weaponize</strong> — cancel an opponent's defend card (played out of turn)</p>
-  <p>📨 <strong>Delivery</strong> — swap up to 2 played cards with opponents</p>
-  <p>💥 <strong>Exploit</strong> — blindly steal 1 card from a target</p>
-  <p>⚙️ <strong>Install</strong> — block a target from playing defend cards</p>
-  <p>📡 <strong>C2</strong> — steal the Data Flag, or target gives you a card</p>
-  <h5>🛡️ NIST Framework (Defend Cards)</h5>
-  <p>🔎 <strong>Identify</strong> — reveal who has the Data Flag or swap played defend cards</p>
-  <p>🛡️ <strong>Protect</strong> — block attacks until your next turn</p>
-  <p>👁️ <strong>Detect</strong> — view and reorder the top 5 deck cards</p>
-  <p>🚨 <strong>Respond</strong> — cancel an attack targeting you (played out of turn)</p>
-  <p>🔄 <strong>Recover</strong> — draw until you have 5 cards in hand</p>
-  <h5>⭐ Special Earned Cards</h5>
-  <p>🏛️ <strong>Govern</strong> — earned by playing all 5 NIST types. Look at all hands, take 1 card from each player, then give 1 back to each.</p>
-  <p>🎯 <strong>Action Obj.</strong> — earned by playing all 6 Kill Chain types. The Data Flag holder must give it to you. Cannot be cancelled.</p>
-  <h5>💡 Tips</h5>
+  <h5><span style="color:#f87171">▸</span> Kill Chain — Attack Cards</h5>
+  <p><span style="color:#f87171;font-size:9px;font-weight:900">ATK</span> <strong>Recon</strong> — peek at a hand or swap played attack cards</p>
+  <p><span style="color:#f87171;font-size:9px;font-weight:900">ATK</span> <strong>Weaponize</strong> — cancel an opponent's defend card (played out of turn)</p>
+  <p><span style="color:#f87171;font-size:9px;font-weight:900">ATK</span> <strong>Delivery</strong> — swap up to 2 played cards with opponents</p>
+  <p><span style="color:#f87171;font-size:9px;font-weight:900">ATK</span> <strong>Exploit</strong> — blindly steal 1 card from a target</p>
+  <p><span style="color:#f87171;font-size:9px;font-weight:900">ATK</span> <strong>Install</strong> — block a target from playing defend cards</p>
+  <p><span style="color:#f87171;font-size:9px;font-weight:900">ATK</span> <strong>C2</strong> — steal the Data Flag, or target gives you a card</p>
+  <h5><span style="color:#93c5fd">▸</span> NIST Framework — Defend Cards</h5>
+  <p><span style="color:#93c5fd;font-size:9px;font-weight:900">DEF</span> <strong>Identify</strong> — reveal who has the Data Flag or swap played defend cards</p>
+  <p><span style="color:#93c5fd;font-size:9px;font-weight:900">DEF</span> <strong>Protect</strong> — block attacks until your next turn</p>
+  <p><span style="color:#93c5fd;font-size:9px;font-weight:900">DEF</span> <strong>Detect</strong> — view and reorder the top 5 deck cards</p>
+  <p><span style="color:#93c5fd;font-size:9px;font-weight:900">DEF</span> <strong>Respond</strong> — cancel an attack targeting you (played out of turn)</p>
+  <p><span style="color:#93c5fd;font-size:9px;font-weight:900">DEF</span> <strong>Recover</strong> — draw until you have 5 cards in hand</p>
+  <h5><span style="color:#d1db24">▸</span> Special Earned Cards</h5>
+  <p><span style="color:#c4b5fd;font-size:9px;font-weight:900">GOV</span> <strong>Govern</strong> — earned by playing all 5 NIST types. Look at all hands, take 1 card from each player, then give 1 back to each.</p>
+  <p><span style="color:#fbbf24;font-size:9px;font-weight:900">OBJ</span> <strong>Action Obj.</strong> — earned by playing all 6 Kill Chain types. The Data Flag holder must give it to you. Cannot be cancelled.</p>
+  <h5><span style="color:#d1db24">◆</span> Tips</h5>
   <p>• Click the <strong>ⓘ</strong> icons throughout the game for quick help on any element.</p>
   <p>• Dotted outlines in your played area show which cards you still need.</p>
   <p>• Watch the game log for opponent actions.</p>
@@ -868,15 +932,15 @@ body.bc-tut-active .game-layout { height: calc(100vh - 44px); margin-right: 272p
 <!-- WIN SCREEN -->
 <div id="win-screen">
   <div class="win-panel">
-    <div class="win-trophy">🏆</div>
+    <div class="win-trophy"><svg viewBox="0 0 64 64" width="72" height="72" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 8h40v20c0 11-9 20-20 20S12 39 12 28V8z" fill="#d1db24" opacity="0.9"/><path d="M12 12H4v8c0 6 4 11 8 13V12z" fill="#a8c96a"/><path d="M52 12h8v8c0 6-4 11-8 13V12z" fill="#a8c96a"/><rect x="24" y="48" width="16" height="5" rx="2" fill="#62b517"/><rect x="18" y="53" width="28" height="5" rx="2.5" fill="#2a5a06"/><path d="M22 22l4 4 10-10" stroke="#2a5a06" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
     <div class="win-title">Byte Club Winner!</div>
     <div class="win-name" id="win-name"></div>
     <div class="win-condition" id="win-cond"></div>
     <div class="win-upsell">
       <p>Loved it? The physical game is where Byte Club really shines.</p>
-      <a class="win-buy-btn" href="https://cybersecgames.com/pages/byte-club-game" target="_blank" rel="noopener" onclick="trackClick('byteclub_physical_postgame')">🛒 Get the Physical Game</a>
+      <a class="win-buy-btn" href="https://cybersecgames.com/pages/byte-club-game" target="_blank" rel="noopener" onclick="trackClick('byteclub_physical_postgame')">Get the Physical Game →</a>
     </div>
-    <button class="win-btn" onclick="location.reload()">Play Again</button>
+    <button class="win-btn" onclick="sessionStorage.removeItem('techgames_byteclub_session'); location.reload();">Play Again</button>
   </div>
 </div>
 
@@ -1105,6 +1169,28 @@ function confirmCancelGame() {
   send({ type: 'cancel_game' });
 }
 
+let _warnModalOnConfirm = null;
+function showWarnModal(iconHtml, title, body, confirmLabel, onConfirm) {
+  document.getElementById('warn-modal-icon').innerHTML = iconHtml;
+  document.getElementById('warn-modal-title').textContent = title;
+  document.getElementById('warn-modal-body').textContent = body;
+  document.getElementById('warn-modal-confirm-btn').textContent = confirmLabel;
+  _warnModalOnConfirm = onConfirm;
+  document.getElementById('warn-modal-overlay').classList.add('open');
+}
+function hideWarnModal() {
+  document.getElementById('warn-modal-overlay').classList.remove('open');
+  _warnModalOnConfirm = null;
+}
+function confirmWarnModal() {
+  const fn = _warnModalOnConfirm;
+  hideWarnModal();
+  if (fn) fn();
+}
+
+const WARN_ICON_HAND = `<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`;
+const WARN_ICON_TARGET = `<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6" stroke="#fbbf24"/><circle cx="12" cy="12" r="2" fill="#fbbf24" stroke="none"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke="#ef4444" stroke-width="2.5"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke="#ef4444" stroke-width="2.5"/><line x1="19.78" y1="4.22" x2="18.36" y2="5.64" stroke="#ef4444" stroke-width="2.5"/><line x1="5.64" y1="18.36" x2="4.22" y2="19.78" stroke="#ef4444" stroke-width="2.5"/></svg>`;
+
 function renderLobbyPlayers(players) {
   const el = document.getElementById('waiting-players');
   el.innerHTML = '';
@@ -1326,8 +1412,8 @@ function renderGame(gs) {
     const winName = gs.players[gs.winner]?.name || '?';
     document.getElementById('win-name').textContent = winName + ' wins!';
     document.getElementById('win-cond').textContent = gs.winCondition === 1
-      ? '🚩 Held the Data Flag when Times Up was revealed'
-      : '🎯 Collected all Attack and Defend card types';
+      ? 'Flag Win'
+      : 'Board Win';
     document.getElementById('win-screen').classList.add('show');
     if (bcTutMode) {
       const btn = document.querySelector('#win-screen .win-btn');
@@ -1378,11 +1464,11 @@ function renderGame(gs) {
   const dfEl = document.getElementById('sc-dataflag');
   const hasDf = gs.myHand.some(c => c.type === 'data_flag');
   dfEl.className = 'special-card sc-dataflag' + (hasDf ? ' revealed' : '');
-  document.getElementById('dataflag-status').textContent = hasDf ? '🚩 In your hand!' : 'In deck';
+  document.getElementById('dataflag-status').textContent = hasDf ? 'You hold it!' : 'In deck';
 
   const tuEl = document.getElementById('sc-timesup');
   tuEl.className = 'special-card sc-timesup' + (gs.timesUpRevealed ? ' revealed' : '');
-  document.getElementById('timesup-status').textContent = gs.timesUpRevealed ? '⏰ Revealed!' : 'In deck';
+  document.getElementById('timesup-status').textContent = gs.timesUpRevealed ? 'Revealed!' : 'In deck';
 
   const gvEl = document.getElementById('sc-govern');
   const govInHand = gs.myHand.some(c => c.type === 'govern');
@@ -1437,7 +1523,7 @@ function renderTurnStrip(gs) {
     badge.innerHTML =
       `<div class="tb-dot" style="background:${COLOR_INFO[pl.color]?.hex||'#888'}"></div>` +
       `<span>${pl.name}${isMe ? ' <span style="font-size:10px;color:#6b7280">(You)</span>' : ''}</span>` +
-      (isActive ? `<span class="tb-active">▶ TURN</span>` : '');
+      (isActive ? `<span class="tb-active"><svg width="8" height="8" viewBox="0 0 10 10" fill="#d1db24" xmlns="http://www.w3.org/2000/svg"><polygon points="0,0 10,5 0,10"/></svg> TURN</span>` : '');
     strip.appendChild(badge);
   });
 }
@@ -1484,9 +1570,9 @@ function renderOpponents(gs) {
       <div class="opp-header">
         <div class="opp-color-dot" style="background:${COLOR_INFO[pl.color]?.hex||'#888'}"></div>
         <span class="opp-name">${pl.name}</span>
-        <span class="opp-hand-count">🃏 ${pl.handCount}</span>
-        ${isProtected ? '<span class="opp-protected-badge">🛡️ Protected</span>' : ''}
-        ${isInstallBlocked ? '<span class="opp-blocked-badge">⚙️ No Defend</span>' : ''}
+        <span class="opp-hand-count"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="18" height="18" rx="3"/><line x1="3" y1="9" x2="21" y2="9"/></svg> ${pl.handCount}</span>
+        ${isProtected ? '<span class="opp-protected-badge"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L4 6v6c0 5.5 3.5 10.7 8 12 4.5-1.3 8-6.5 8-12V6L12 2z"/></svg> Protected</span>' : ''}
+        ${isInstallBlocked ? '<span class="opp-blocked-badge"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9"/><line x1="6" y1="6" x2="18" y2="18"/></svg> No Defend</span>' : ''}
       </div>
       <div class="opp-played">${oppPlayedHtml}</div>`;
     bar.appendChild(div);
@@ -1570,6 +1656,21 @@ function selectCard(cardId) {
         renderHand(gs);
         return;
       }
+      // No valid targets check for attack cards
+      if (cardObj?.cat === 'attack') {
+        const protected_ = gs.protectedPlayers || [];
+        const validTargets = (gs.players || []).filter((_, idx) => idx !== gs.myIndex && !protected_.includes(idx));
+        if (gs.players && gs.players.length > 1 && validTargets.length === 0) {
+          showWarnModal(
+            WARN_ICON_TARGET,
+            'No Valid Targets',
+            'All opponents are currently protected — ' + cardObj.name + ' will have no effect if played now. Cancel to hold it for a better moment, or play it anyway.',
+            'Play Anyway',
+            () => { hideCardZoom(); send({ type:'game_action', action:'play_card', cardId }); selectedHandCard = null; }
+          );
+          return;
+        }
+      }
       hideCardZoom();
       send({ type:'game_action', action:'play_card', cardId });
       selectedHandCard = null;
@@ -1624,7 +1725,17 @@ function renderActionBar(gs, isMyTurn) {
       }
       bar.insertBefore(mkBtn('End Turn (Draw 1)', 'action-btn btn-end-turn', () => {
         selectedHandCard = null;
-        send({ type:'game_action', action:'end_play_phase' });
+        if (gs.myHand.length >= 6) {
+          showWarnModal(
+            WARN_ICON_HAND,
+            'Hand Full — You\'ll Have to Discard',
+            'You have ' + gs.myHand.length + ' cards. Drawing will bring you to ' + (gs.myHand.length + 1) + ' — you\'ll need to discard one before your next turn. Play a card first, or draw and discard after.',
+            'Draw Anyway',
+            () => send({ type:'game_action', action:'end_play_phase' })
+          );
+        } else {
+          send({ type:'game_action', action:'end_play_phase' });
+        }
       }), hint);
     }
   } else if (gs.phase === 'discard') {
@@ -1652,6 +1763,24 @@ function mkBtn(label, cls, cb) {
 
 let detectOrderState = []; // client-side card order for detect reorder
 
+// Render a card as an HTML string using the same .card CSS as hand cards.
+// onclickStr — inline onclick value (string), or null for view-only.
+// extraStyle  — optional extra inline CSS string.
+function vcCard(c, onclickStr, extraStyle) {
+  const img = getCardImg(c);
+  const cls = cardClass(c);
+  const content = img
+    ? `<img src="${img}" alt="${c.name}" class="card-art-img">`
+    : `<div class="card-cat">${
+        c.cat === 'attack' ? '<span style="color:#f87171">ATK</span>'
+        : c.cat === 'defend' ? '<span style="color:#93c5fd">DEF</span>'
+        : '<span style="color:#d1db24">SPL</span>'
+      }</div><div class="card-name" style="font-size:11px;font-weight:800;line-height:1.2;margin-top:4px">${c.name}</div><div class="card-desc" style="font-size:9px;color:#4b5563;margin-top:3px;line-height:1.3">${c.desc||''}</div>`;
+  const cursor = onclickStr ? 'cursor:pointer' : 'cursor:default';
+  const styleAttr = [cursor, extraStyle].filter(Boolean).join(';');
+  return `<div class="card ${cls}${img ? ' card-has-img' : ''}" style="${styleAttr}" ${onclickStr ? `onclick="${onclickStr}"` : ''}>${content}</div>`;
+}
+
 function renderEffectOverlay(gs) {
   const overlay = document.getElementById('govern-overlay');
   const inner = document.getElementById('govern-overlay-inner');
@@ -1665,15 +1794,12 @@ function renderEffectOverlay(gs) {
     const fromName = gs.players[fromIdx]?.name || '?';
     const fromHand = gi.allHands.find(h => h.playerIdx === fromIdx)?.hand || [];
     const fromColor = COLOR_INFO[gs.players[fromIdx]?.color]?.hex || '#888';
-    let html = `<div class="govern-panel" style="background:#1a2235;border:2px solid #7c3aed;border-radius:16px;padding:24px;max-width:600px;width:90%">
+    let html = `<div class="govern-panel" style="background:#1a2235;border:2px solid #7c3aed;border-radius:16px;padding:24px;max-width:min(740px,94vw);width:90%">
       <h3 style="font-size:18px;font-weight:800;color:#c4b5fd;margin-bottom:4px">🏛️ Govern — Take a Card</h3>
       <p style="font-size:13px;color:#9ca3af;margin-bottom:16px">Step ${gi.step + 1} of ${gi.totalTargets} — pick one card from <span style="color:${fromColor};font-weight:700">${fromName}</span>'s hand</p>
       <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">`;
     fromHand.forEach(c => {
-      html += `<button class="govern-card-btn" onclick="send({type:'game_action',action:'govern_take_card',cardId:'${c.id}'})">
-        <div style="font-size:10px;color:${c.cat==='attack'?'#f87171':'#93c5fd'};font-weight:700;margin-bottom:3px">${c.cat==='attack'?'⚔️':'🛡️'} ${c.cat}</div>
-        <div style="font-size:13px;font-weight:800;color:#e2e8f0">${c.name}</div>
-      </button>`;
+      html += vcCard(c, `send({type:'game_action',action:'govern_take_card',cardId:'${c.id}'})`);
     });
     html += `</div></div>`;
     inner.innerHTML = html;
@@ -1687,15 +1813,12 @@ function renderEffectOverlay(gs) {
     const toIdx = gi.currentTargetIdx;
     const toName = gs.players[toIdx]?.name || '?';
     const toColor = COLOR_INFO[gs.players[toIdx]?.color]?.hex || '#888';
-    let html = `<div class="govern-panel" style="background:#1a2235;border:2px solid #7c3aed;border-radius:16px;padding:24px;max-width:600px;width:90%">
+    let html = `<div class="govern-panel" style="background:#1a2235;border:2px solid #7c3aed;border-radius:16px;padding:24px;max-width:min(740px,94vw);width:90%">
       <h3 style="font-size:18px;font-weight:800;color:#c4b5fd;margin-bottom:4px">🏛️ Govern — Give a Card</h3>
       <p style="font-size:13px;color:#9ca3af;margin-bottom:16px">Step ${gi.step + 1} of ${gi.totalTargets} — give one card from your hand to <span style="color:${toColor};font-weight:700">${toName}</span></p>
       <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">`;
     gs.myHand.forEach(c => {
-      html += `<button class="govern-card-btn" onclick="send({type:'game_action',action:'govern_give_card',cardId:'${c.id}'})">
-        <div style="font-size:10px;color:${c.cat==='attack'?'#f87171':'#93c5fd'};font-weight:700;margin-bottom:3px">${c.cat==='attack'?'⚔️':'🛡️'} ${c.cat}</div>
-        <div style="font-size:13px;font-weight:800;color:#e2e8f0">${c.name}</div>
-      </button>`;
+      html += vcCard(c, `send({type:'game_action',action:'govern_give_card',cardId:'${c.id}'})`);
     });
     html += `</div></div>`;
     inner.innerHTML = html;
@@ -1833,25 +1956,25 @@ function renderEffectOverlay(gs) {
         !detectOrderState.every((c,i) => gs.detectViewCards.some(d => d.id === c.id))) {
       detectOrderState = gs.detectViewCards.map(c => ({...c}));
     }
-    let html = `<div class="effect-panel"><h3>👁️ Detect — Top 5 cards of the deck</h3>
-      <p>Reorder these cards. Position 1 will be drawn next. Click Confirm when done.</p>
-      <div class="detect-list" id="detect-list">`;
+    const last = detectOrderState.length - 1;
+    let html = `<div class="effect-panel" style="max-width:min(740px,94vw)">
+      <h3>👁️ Detect — Top 5 cards of the deck</h3>
+      <p style="color:#9ca3af;font-size:13px;margin-bottom:14px">Reorder these cards — position 1 is drawn next. Use the arrows to swap, then confirm.</p>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;align-items:flex-end">`;
     detectOrderState.forEach((c, i) => {
-      const typeColor = c.cat === 'attack' ? '#f87171' : c.cat === 'defend' ? '#93c5fd' : '#d1db24';
-      html += `<div class="detect-row" data-idx="${i}">
-        <span class="dc-pos">${i+1}</span>
-        <div class="dc-info">
-          <div class="dc-name" style="color:${typeColor}">${c.name}</div>
-          <div class="dc-type">${c.cat === 'attack' ? '⚔️' : c.cat === 'defend' ? '🛡️' : '⭐'} ${c.type}</div>
-        </div>
-        <div class="dc-btns">
-          <button class="dc-btn" onclick="detectMove(${i},-1)" ${i===0?'disabled':''}>↑</button>
-          <button class="dc-btn" onclick="detectMove(${i},1)" ${i===detectOrderState.length-1?'disabled':''}>↓</button>
+      html += `<div style="display:flex;flex-direction:column;align-items:center;gap:5px">
+        <span style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:#6b7280">Draw ${i+1}</span>
+        ${vcCard(c, null)}
+        <div style="display:flex;gap:4px">
+          <button class="dc-btn" onclick="detectMove(${i},-1)" ${i===0?'disabled':''}
+            style="width:32px;height:26px;border-radius:6px;background:#374151;border:none;color:${i===0?'#4b5563':'#9ca3af'};cursor:${i===0?'not-allowed':'pointer'};font-size:13px;transition:all 0.12s">←</button>
+          <button class="dc-btn" onclick="detectMove(${i},1)" ${i===last?'disabled':''}
+            style="width:32px;height:26px;border-radius:6px;background:#374151;border:none;color:${i===last?'#4b5563':'#9ca3af'};cursor:${i===last?'not-allowed':'pointer'};font-size:13px;transition:all 0.12s">→</button>
         </div>
       </div>`;
     });
     html += `</div>
-      <button class="action-btn btn-end-turn" onclick="detectConfirm()" style="width:100%;margin-top:10px">Confirm Order</button>
+      <button class="action-btn btn-end-turn" onclick="detectConfirm()" style="width:100%;margin-top:14px">Confirm Order</button>
     </div>`;
     inner.innerHTML = html;
     return;
@@ -1924,18 +2047,15 @@ function renderEffectOverlay(gs) {
     overlay.style.display = 'flex';
     const attackerName = gs.players[gs.attackInfo.attacker]?.name || '?';
     const myHand = gs.attackInfo.targetHand || [];
-    let html = `<div class="effect-panel">
+    const giveable = myHand.filter(c => c.type !== 'data_flag');
+    let html = `<div class="effect-panel" style="max-width:min(740px,94vw)">
       <h3>📡 C2 — Choose a card to give to ${attackerName}</h3>
-      <p style="color:#9ca3af;font-size:13px">Pick any card from your hand (except the Data Flag) to give away.</p>
-      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px">`;
-    myHand.filter(c => c.type !== 'data_flag').forEach(c => {
-      const col = c.cat === 'attack' ? '#f87171' : c.cat === 'defend' ? '#93c5fd' : '#d1db24';
-      html += `<button class="govern-player-btn" onclick="send({type:'game_action',action:'attack_c2_give_card',cardId:'${c.id}'})" style="border-color:${col}40">
-        <span style="color:${col};font-weight:800">${c.name}</span>
-        <span style="font-size:10px;color:#6b7280">${c.cat === 'attack' ? '⚔️' : '🛡️'} ${c.type}</span>
-      </button>`;
+      <p style="color:#9ca3af;font-size:13px;margin-bottom:12px">Pick any card from your hand (except the Data Flag) to give away.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center">`;
+    giveable.forEach(c => {
+      html += vcCard(c, `send({type:'game_action',action:'attack_c2_give_card',cardId:'${c.id}'})`);
     });
-    if (myHand.filter(c => c.type !== 'data_flag').length === 0) html += `<p style="color:#6b7280">No cards available to give.</p>`;
+    if (giveable.length === 0) html += `<p style="color:#6b7280">No cards available to give.</p>`;
     html += '</div></div>';
     inner.innerHTML = html;
     return;
@@ -2026,16 +2146,10 @@ function renderEffectOverlay(gs) {
     const tgtName = gs.players[gs.attackInfo.target]?.name || '?';
     const tgtHand = gs.attackInfo.targetHand || [];
     overlay.style.display = 'flex';
-    let html = `<div class="effect-panel"><h3>🔍 ${tgtName}'s Hand</h3><div style="display:flex;flex-wrap:wrap;gap:8px;margin:10px 0">`;
-    tgtHand.forEach(c => {
-      const col = c.cat === 'attack' ? '#f87171' : c.cat === 'defend' ? '#93c5fd' : '#d1db24';
-      html += `<div style="background:#111827;border:1px solid ${col}40;border-radius:8px;padding:6px 10px;font-size:12px">
-        <div style="color:${col};font-weight:700">${c.name}</div>
-        <div style="color:#6b7280;font-size:10px">${c.cat === 'attack'?'⚔️':'🛡️'} ${c.type}</div>
-      </div>`;
-    });
+    let html = `<div class="effect-panel" style="max-width:min(740px,94vw)"><h3>🔍 ${tgtName}'s Hand</h3><div style="display:flex;flex-wrap:wrap;gap:8px;margin:12px 0;justify-content:center">`;
+    tgtHand.forEach(c => { html += vcCard(c, null); });
     if (tgtHand.length === 0) html += `<p style="color:#6b7280">Empty hand.</p>`;
-    html += `</div><button class="action-btn btn-govern" onclick="send({type:'game_action',action:'recon_look_done'})" style="width:100%">Done</button></div>`;
+    html += `</div><button class="action-btn btn-govern" onclick="send({type:'game_action',action:'recon_look_done'})" style="width:100%;margin-top:4px">Done</button></div>`;
     inner.innerHTML = html; return;
   }
 
@@ -2052,10 +2166,10 @@ function renderEffectOverlay(gs) {
   if (gs.phase === 'attack_recon_swap_my' && gs.attackInfo?.iAmAttacker) {
     overlay.style.display = 'flex';
     const myAttack = gs.players[myIdx].played.filter(c => c.cat === 'attack');
-    let html = `<div class="effect-panel"><h3>🔍 Swap — Select your attack card to give away</h3>
-      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px">`;
+    let html = `<div class="effect-panel" style="max-width:min(740px,94vw)"><h3>🔍 Swap — Select your attack card to give away</h3>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;justify-content:center">`;
     if (myAttack.length === 0) { html += `<p style="color:#9ca3af">No played attack cards to swap.</p>`; }
-    else { myAttack.forEach(c => { html += `<span class="played-select-card attack" onclick="send({type:'game_action',action:'recon_swap_my',cardId:'${c.id}'})">${c.name}</span>`; }); }
+    else { myAttack.forEach(c => { html += vcCard(c, `send({type:'game_action',action:'recon_swap_my',cardId:'${c.id}'})`); }); }
     html += '</div></div>';
     inner.innerHTML = html; return;
   }
@@ -2066,11 +2180,16 @@ function renderEffectOverlay(gs) {
     const tgtName = gs.players[tgt]?.name || '?';
     const theirAttack = gs.players[tgt]?.played.filter(c => c.cat === 'attack') || [];
     overlay.style.display = 'flex';
-    let html = `<div class="effect-panel"><h3>🔍 Swap — Select ${tgtName}'s attack card to take</h3>
-      <p>Giving away: <strong style="color:#f87171">${gs.attackInfo.reconSwapMyCard?.name||'?'}</strong></p>
-      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px">`;
+    const givingCard = gs.attackInfo.reconSwapMyCard;
+    let html = `<div class="effect-panel" style="max-width:min(740px,94vw)"><h3>🔍 Swap — Select ${tgtName}'s attack card to take</h3>`;
+    if (givingCard) {
+      html += `<div style="margin-bottom:14px"><p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#9ca3af;margin-bottom:6px">Giving away:</p>
+        <div style="display:flex;gap:8px;justify-content:center">${vcCard(givingCard, null, 'border-color:#f87171;opacity:0.75')}</div></div>
+        <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#9ca3af;margin-bottom:8px">Select ${tgtName}'s card to take:</p>`;
+    }
+    html += `<div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center">`;
     if (theirAttack.length === 0) { html += `<p style="color:#9ca3af">${tgtName} has no played attack cards.</p>`; }
-    else { theirAttack.forEach(c => { html += `<span class="played-select-card attack" onclick="send({type:'game_action',action:'recon_swap_their',cardId:'${c.id}'})">${c.name}</span>`; }); }
+    else { theirAttack.forEach(c => { html += vcCard(c, `send({type:'game_action',action:'recon_swap_their',cardId:'${c.id}'})`); }); }
     html += '</div></div>';
     inner.innerHTML = html; return;
   }
@@ -2103,30 +2222,104 @@ function renderEffectOverlay(gs) {
     overlay.style.display = 'flex';
     const swaps = gs.attackInfo.deliverySwaps || [];
     const pickStep = gs.attackInfo.deliveryPickStep;
-    let html = `<div class="effect-panel"><h3>📨 Delivery — Swap played cards</h3>
-      <p style="color:#9ca3af;font-size:12px">Pick up to 2 swaps. Each swap: select one of your cards, then select an opponent's card.</p>
-      ${swaps.length > 0 ? `<p style="color:#62b517;font-size:12px">✓ ${swaps.length} swap(s) selected</p>` : ''}`;
-    if (!pickStep) {
-      // Step 1: pick my card
-      html += `<p style="font-size:12px;margin-top:8px;color:#e2e8f0">Step 1: Pick one of your played cards to swap away:</p>
-        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px">`;
-      const myPlayed = gs.players[myIdx].played;
-      if (myPlayed.length === 0) { html += `<p style="color:#6b7280">No played cards.</p>`; }
-      else { myPlayed.forEach(c => { html += `<span class="played-select-card ${c.cat}" onclick="send({type:'game_action',action:'delivery_pick_mine',cardId:'${c.id}'})">${c.name}</span>`; }); }
+    const swapsDone = swaps.length;
+
+    // Render a single played card as a full card-art tile (uses .card CSS)
+    function dsSlot(c, extraCls, onclick) {
+      const catClass = c.cat === 'defend' ? 'defend' : c.cat === 'special' ? 'special-card-type' : 'attack';
+      const isGiving = extraCls.includes('ds-giving');
+      const content = c.img
+        ? `<img src="${c.img}" alt="${c.name}" class="card-art-img">`
+        : `<div class="ds-card-text">
+            <span class="ds-card-cat card-cat">${c.cat === 'defend' ? 'DEF' : c.cat === 'special' ? 'SPL' : 'ATK'}</span>
+            <span class="ds-card-name card-name">${c.name}</span>
+          </div>`;
+      return `<div class="card ${catClass} ds-card ${extraCls}" title="${c.name}" ${onclick ? `onclick="${onclick}"` : ''}>
+        ${content}
+        ${isGiving ? '<span class="delivery-giving-tag" style="position:absolute;bottom:4px;left:0;right:0;text-align:center">giving</span>' : ''}
+      </div>`;
+    }
+
+    // Render played cards in Kill Chain + NIST rows; empty types show as slim dashed placeholders
+    function dsRows(playedCards, getExtraCls, getOnclick) {
+      const byType = {};
+      playedCards.forEach(c => { (byType[c.type] = byType[c.type] || []).push(c); });
+      const atk = ATTACK_TYPES.map(t => {
+        const cards = byType[t.id] || [];
+        if (!cards.length) return `<div class="ds-empty-slot" style="border-color:#7f1d1d" title="${t.name}">${t.emoji}</div>`;
+        return cards.map(c => dsSlot(c, getExtraCls(c), getOnclick ? getOnclick(c) : null)).join('');
+      }).join('');
+      const def = DEFEND_TYPES.map(t => {
+        const cards = byType[t.id] || [];
+        if (!cards.length) return `<div class="ds-empty-slot" style="border-color:#1e3a5f" title="${t.name}">${t.emoji}</div>`;
+        return cards.map(c => dsSlot(c, getExtraCls(c), getOnclick ? getOnclick(c) : null)).join('');
+      }).join('');
+      return `<div class="kc-row"><span class="kc-row-label attack" style="width:38px;font-size:8px">Kill<br>Chain</span><div class="kc-slots">${atk}</div></div>
+        <div class="kc-row"><span class="kc-row-label defend" style="width:38px;font-size:8px">NIST</span><div class="kc-slots">${def}</div></div>`;
+    }
+
+    let html = `<div class="delivery-swap-panel">
+      <div class="delivery-swap-header">
+        <span class="delivery-swap-title">📨 Delivery</span>
+        <span class="delivery-swap-progress">Swap ${swapsDone + (pickStep ? 1 : 0)} of 2</span>
+      </div>`;
+
+    if (swapsDone > 0) {
+      html += `<div class="delivery-swap-done-list">`;
+      swaps.forEach((s,i) => {
+        html += `<div class="delivery-swap-done-item">✓ Swap ${i+1}: your <strong>${s.myCard?.name}</strong> ↔ ${gs.players[s.theirIdx]?.name}'s <strong>${s.theirCard?.name}</strong></div>`;
+      });
       html += `</div>`;
-    } else {
-      // Step 2: pick their card from any opponent
-      html += `<p style="font-size:12px;margin-top:8px;color:#e2e8f0">Step 2: Pick an opponent's card to take (giving: <strong style="color:#f87171">${pickStep.myCard?.name}</strong>):</p>`;
+    }
+
+    if (!pickStep) {
+      html += `<div class="delivery-swap-instruction">Step ${swapsDone + 1}a — Select one of <strong>your</strong> played cards to swap away</div>`;
+      html += `<div class="delivery-swap-section"><div class="delivery-swap-section-label mine" style="margin-bottom:8px">Your Played Cards</div>`;
+      const myPlayed = gs.players[myIdx].played;
+      if (myPlayed.length === 0) {
+        html += `<p style="color:#6b7280;font-size:13px">No played cards to swap.</p>`;
+      } else {
+        html += dsRows(myPlayed, () => 'ds-selectable', c => `send({type:'game_action',action:'delivery_pick_mine',cardId:'${c.id}'})`);
+      }
+      html += `</div>`;
+
+      // Preview opponents (dimmed)
       gs.players.forEach((pl, i) => {
         if (i === myIdx || pl.played.length === 0) return;
-        html += `<p style="font-size:11px;color:#6b7280;margin:6px 0 3px">${pl.name}:</p><div style="display:flex;flex-wrap:wrap;gap:4px">`;
-        pl.played.forEach(c => { html += `<span class="played-select-card ${c.cat}" onclick="send({type:'game_action',action:'delivery_pick_theirs',targetIdx:${i},cardId:'${c.id}'})">${c.name}</span>`; });
-        html += '</div>';
+        const dot = COLOR_INFO[pl.color]?.hex || '#888';
+        html += `<div class="delivery-opp-section"><div class="delivery-opp-name" style="margin-bottom:8px"><span class="delivery-opp-dot" style="background:${dot}"></span>${pl.name} <span style="font-size:10px;color:#4b5563">(preview)</span></div>`;
+        html += dsRows(pl.played, () => 'ds-preview', null);
+        html += `</div>`;
       });
-      html += `<button class="action-btn btn-cancel" onclick="send({type:'game_action',action:'delivery_go_back'})" style="margin-top:8px;width:100%">← Back</button>`;
+
+    } else {
+      html += `<div class="delivery-swap-instruction">Step ${swapsDone + 1}b — Select an <strong>opponent's</strong> card to take in exchange</div>`;
+
+      // My cards — giving one highlighted, rest dimmed
+      html += `<div class="delivery-swap-section"><div class="delivery-swap-section-label mine" style="margin-bottom:8px">Your Played Cards</div>`;
+      html += dsRows(gs.players[myIdx].played, c => c.id === pickStep.myCard?.id ? 'ds-giving' : 'ds-preview', null);
+      html += `</div>`;
+
+      // Opponents (clickable)
+      gs.players.forEach((pl, i) => {
+        if (i === myIdx || pl.played.length === 0) return;
+        const dot = COLOR_INFO[pl.color]?.hex || '#888';
+        html += `<div class="delivery-opp-section"><div class="delivery-opp-name" style="margin-bottom:8px"><span class="delivery-opp-dot" style="background:${dot}"></span>${pl.name} — click a card to take it</div>`;
+        html += dsRows(pl.played, () => 'ds-selectable', c => `send({type:'game_action',action:'delivery_pick_theirs',targetIdx:${i},cardId:'${c.id}'})`);
+        html += `</div>`;
+      });
+
+      html += `<div style="margin-top:4px"><button class="action-btn btn-cancel" onclick="send({type:'game_action',action:'delivery_go_back'})">← Back</button></div>`;
     }
-    if (swaps.length > 0) { html += `<button class="action-btn btn-end-turn" onclick="send({type:'game_action',action:'delivery_done'})" style="width:100%;margin-top:12px">Done (Execute ${swaps.length} Swap${swaps.length>1?'s':''})</button>`; }
-    html += '</div>';
+
+    html += `<div class="delivery-swap-footer">`;
+    if (swapsDone > 0) {
+      html += `<button class="action-btn btn-end-turn" onclick="send({type:'game_action',action:'delivery_done'})">✓ Done — Execute ${swapsDone} Swap${swapsDone>1?'s':''}</button>`;
+    } else if (!pickStep) {
+      html += `<button class="action-btn btn-cancel" onclick="send({type:'game_action',action:'delivery_done'})">Skip (no swaps)</button>`;
+    }
+    html += `</div>`;
+    html += `</div>`;
     inner.innerHTML = html; return;
   }
 
