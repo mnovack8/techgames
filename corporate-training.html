@@ -154,7 +154,7 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
 }
 
 .story-container {
-  max-width: 900px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 .story-eyebrow {
@@ -179,7 +179,7 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
   font-size: 16px;
   color: #444;
   line-height: 1.8;
-  max-width: 720px;
+  max-width: 100%;
   margin-bottom: 32px;
 }
 
@@ -334,16 +334,20 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
 .btn-buy-physical:hover { background: rgba(209,219,36,0.15); border-color: #fff; color: #fff; }
 
 /* ===== HERO VISUAL ===== */
+.hero-layout {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: 48px;
+  align-items: center;
+}
 .hero-visual-wrap {
   display: flex;
   justify-content: center;
-  margin-top: 40px;
 }
 .hero-visual-block {
   background: #0d2200;
   border-radius: 20px;
   padding: 32px;
-  max-width: 360px;
   width: 100%;
   display: flex;
   align-items: center;
@@ -352,6 +356,10 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
 .hero-visual-block svg {
   width: 100%;
   display: block;
+}
+@media (max-width: 900px) {
+  .hero-layout { grid-template-columns: 1fr; }
+  .hero-visual-wrap { margin-top: 32px; }
 }
 
 /* ===== FOOTER ===== */
@@ -462,13 +470,16 @@ footer a:hover { text-decoration: underline; }
 <!-- HERO -->
 <section class="story-section bg-problem">
   <div class="story-container">
-    <div class="story-eyebrow" data-reveal>Use Case · Corporate Training</div>
-    <h1 class="story-headline" data-reveal="lines">
-      <span class="line-wrap"><span class="line-inner">Turn security talk into fluency</span></span>
-      <span class="line-wrap"><span class="line-inner">that actually sticks.</span></span>
-    </h1>
-    <p class="story-body" data-reveal data-delay="2">Your team doesn't need to become security engineers. They need to understand what's at stake — well enough to make good decisions, push back intelligently, and recognise a threat when they see one. Byte Club gets them there in a single session.</p>
-    <div class="hero-visual-wrap" data-reveal data-delay="3">
+    <div class="hero-layout">
+      <div>
+        <div class="story-eyebrow" data-reveal>Use Case · Corporate Training</div>
+        <h1 class="story-headline" data-reveal="lines">
+          <span class="line-wrap"><span class="line-inner">Turn security talk into fluency</span></span>
+          <span class="line-wrap"><span class="line-inner">that actually sticks.</span></span>
+        </h1>
+        <p class="story-body" data-reveal data-delay="2">Your team doesn't need to become security engineers. They need to understand what's at stake — well enough to make good decisions, push back intelligently, and recognise a threat when they see one. Byte Club gets them there in a single session.</p>
+      </div>
+      <div class="hero-visual-wrap" data-reveal data-delay="3">
       <div class="hero-visual-block">
         <svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg">
           <!-- Ambient glow -->
@@ -540,6 +551,7 @@ footer a:hover { text-decoration: underline; }
         </svg>
       </div>
     </div>
+    </div><!-- end hero-layout -->
   </div>
 </section>
 
