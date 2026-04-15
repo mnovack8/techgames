@@ -2078,12 +2078,12 @@ function bcCheckSpecialAcquisition(room) {
     if (gs.governHolder === -1 && bcHasAllDefend(pl.played)) {
       gs.governHolder = i;
       pl.hand.push({ ...BC_GOVERN_CARD });
-      bcLog(room, `🏛️ ${room.players[i].name} collected all NIST defend types — receives the Govern card!`);
+      bcLog(room, `${room.players[i].name} collected all NIST defend types — receives the Govern card!`);
     }
     if (gs.actionObjHolder === -1 && bcHasAllAttack(pl.played)) {
       gs.actionObjHolder = i;
       pl.hand.push({ ...BC_ACTION_OBJ_CARD });
-      bcLog(room, `🎯 ${room.players[i].name} completed the Kill Chain — receives the Action Objectives card!`);
+      bcLog(room, `${room.players[i].name} completed the Kill Chain — receives the Action Objectives card!`);
     }
   }
 }
@@ -2320,11 +2320,11 @@ function bcDrawOne(room, playerIdx) {
   const card = gs.deck.shift();
   if (card.type === 'times_up') {
     gs.timesUpRevealed = true;
-    bcLog(room, `⏰ Times Up revealed! Any player holding the Data Flag can now win.`);
+    bcLog(room, `<span class="lb lb-time">TIME</span> Times Up revealed! Any player holding the Data Flag can now win.`);
     for (let i = 0; i < gs.players.length; i++) {
       if (bcCheckWin(room, i) === 1) {
         gs.winner = i; gs.winCondition = 1; gs.phase = 'game_over';
-        bcLog(room, `🏆 ${room.players[i].name} wins! (Data Flag + Times Up)`);
+        bcLog(room, `<span class="lb lb-win">WIN</span> ${room.players[i].name} wins! (Data Flag + Times Up)`);
         { const m = room.players.some(p=>p.isBot)?'1p_bot':room.players.length===2?'2p':room.players.length===3?'3p':'4p'; const dur=room.sessionStartedAt?Math.round((Date.now()-room.sessionStartedAt)/1000):null; trackEvent('session_completed',{gameType:'byteclub',mode:m,uvKey:room.uvKey||'',duration:dur}); }
         return 'game_over';
       }
@@ -2333,7 +2333,7 @@ function bcDrawOne(room, playerIdx) {
   }
   if (card.type === 'data_flag') {
     gs.players[playerIdx].hand.push(card);
-    bcLog(room, `🚩 ${room.players[playerIdx].name} drew the Data Flag!`);
+    bcLog(room, `<span class="lb lb-flag">FLAG</span> ${room.players[playerIdx].name} drew the Data Flag!`);
     if (gs.timesUpRevealed && bcCheckWin(room, playerIdx) === 1) {
       gs.winner = playerIdx; gs.winCondition = 1; gs.phase = 'game_over';
       bcLog(room, `🏆 ${room.players[playerIdx].name} wins! (Data Flag + Times Up)`);
@@ -2407,7 +2407,7 @@ function bcOpenWeaponizeWindow(room, playerIdx, card, resolveCb) {
 function bcResolveRecon(room, st) {
   const gs = room.bcState;
   gs.phase = 'attack_recon_choose';
-  bcLog(room, `🔍 Recon resolved — ${room.players[st.attacker].name} chooses: Look at hand or Swap attack cards.`);
+  bcLog(room, `Recon resolved — ${room.players[st.attacker].name} chooses: Look at hand or Swap attack cards.`);
   bcBroadcastState(room);
   if (room.players[st.attacker]?.isBot) {
     setTimeout(() => {
@@ -2425,12 +2425,12 @@ function bcResolveExploit(room, st) {
   const gs = room.bcState;
   const tgtPl = gs.players[st.target];
   if (tgtPl.hand.length === 0) {
-    bcLog(room, `💥 Exploit — ${room.players[st.target].name} has no cards to steal.`);
+    bcLog(room, `Exploit — ${room.players[st.target].name} has no cards to steal.`);
   } else {
     const randIdx = Math.floor(Math.random() * tgtPl.hand.length);
     const stolen = tgtPl.hand.splice(randIdx, 1)[0];
     gs.players[st.attacker].hand.push(stolen);
-    bcLog(room, `💥 ${room.players[st.attacker].name} blindly stole ${stolen.name} from ${room.players[st.target].name}!`);
+    bcLog(room, `${room.players[st.attacker].name} blindly stole ${stolen.name} from ${room.players[st.target].name}!`);
   }
   const attacker = st.attacker;
   gs.attackState = null; gs.phase = 'play';
@@ -2469,7 +2469,7 @@ function bcBotGovern(room, playerIdx) {
 function bcResolveInstall(room, st) {
   const gs = room.bcState;
   gs.installBlocked[st.target] = true;
-  bcLog(room, `⚙️ ${room.players[st.target].name} is blocked from playing defend cards until their next turn (Installation)!`);
+  bcLog(room, `${room.players[st.target].name} is blocked from playing defend cards until their next turn (Installation)!`);
   const attacker = st.attacker;
   gs.attackState = null; gs.phase = 'play';
   bcFinishPlay(room, attacker);
@@ -2481,13 +2481,13 @@ function bcResolveDelivery(room, st) {
   const myPlayed  = gs.players[st.attacker].played;
   const hasOppPlayed = gs.players.some((p, i) => i !== st.attacker && p.played.length > 0);
   if (myPlayed.length === 0 || !hasOppPlayed) {
-    bcLog(room, `📨 Delivery — no cards on the table to swap.`);
+    bcLog(room, `Delivery — no cards on the table to swap.`);
     gs.attackState = null; gs.phase = 'play';
     bcFinishPlay(room, st.attacker);
     return;
   }
   gs.phase = 'attack_delivery_pick';
-  bcLog(room, `📨 Delivery resolved — ${room.players[st.attacker].name} picks up to 2 card swaps.`);
+  bcLog(room, `Delivery resolved — ${room.players[st.attacker].name} picks up to 2 card swaps.`);
   gs.attackState.swaps = [];
   gs.attackState.pickStep = null;
   bcBroadcastState(room);
@@ -2495,7 +2495,7 @@ function bcResolveDelivery(room, st) {
   const snapAtk = gs.attackState;
   setTimeout(() => {
     if (gs.phase === 'attack_delivery_pick' && gs.attackState === snapAtk) {
-      bcLog(room, `📨 Delivery timed out — resolving with ${snapAtk.swaps.length} swap(s).`);
+      bcLog(room, `Delivery timed out — resolving with ${snapAtk.swaps.length} swap(s).`);
       bcExecuteDelivery(room);
     }
   }, 120000);
@@ -2524,7 +2524,7 @@ function bcExecuteDelivery(room) {
     gs.players[swap.theirIdx].played = gs.players[swap.theirIdx].played.filter(c => c.id !== swap.theirCard.id);
     attPl.played.push({ ...swap.theirCard });
     gs.players[swap.theirIdx].played.push({ ...swap.myCard });
-    bcLog(room, `📨 Delivery swap: ${swap.myCard.name} ↔ ${room.players[swap.theirIdx].name}'s ${swap.theirCard.name}`);
+    bcLog(room, `Delivery swap: ${swap.myCard.name} ↔ ${room.players[swap.theirIdx].name}'s ${swap.theirCard.name}`);
   }
   gs.attackState = null; gs.phase = 'play';
   bcFinishPlay(room, st.attacker);
@@ -2539,14 +2539,14 @@ function bcResolveC2(room, st) {
     // Target holds Data Flag — must give it to attacker
     tgtPl.hand = tgtPl.hand.filter(c => c.id !== dfCard.id);
     gs.players[attacker].hand.push(dfCard);
-    bcLog(room, `📡 C2 resolved — ${room.players[target].name} had the Data Flag and gave it to ${room.players[attacker].name}!`);
+    bcLog(room, `C2 resolved — ${room.players[target].name} had the Data Flag and gave it to ${room.players[attacker].name}!`);
     gs.attackState = null;
     gs.phase = 'play';
     bcFinishPlay(room, attacker);
   } else if (tgtPl.hand.length > 0) {
     // TARGET picks which card from their own hand to give
     gs.phase = 'attack_c2_give';
-    bcLog(room, `📡 C2 — ${room.players[target].name} must give a card of their choice to ${room.players[attacker].name}.`);
+    bcLog(room, `C2 — ${room.players[target].name} must give a card of their choice to ${room.players[attacker].name}.`);
     bcBroadcastState(room);
     if (room.players[target]?.isBot) {
       setTimeout(() => {
@@ -2561,7 +2561,7 @@ function bcResolveC2(room, st) {
       }, 1000);
     }
   } else {
-    bcLog(room, `📡 C2 — ${room.players[target].name} has no cards to give.`);
+    bcLog(room, `C2 — ${room.players[target].name} has no cards to give.`);
     gs.attackState = null;
     gs.phase = 'play';
     bcFinishPlay(room, attacker);
@@ -2609,7 +2609,7 @@ function bcFinishPlay(room, playerIdx) {
   const w = bcCheckWin(room, playerIdx);
   if (w) {
     gs.winner = playerIdx; gs.winCondition = w; gs.phase = 'game_over';
-    bcLog(room, `🏆 ${room.players[playerIdx].name} wins!`);
+    bcLog(room, `<span class="lb lb-win">WIN</span> ${room.players[playerIdx].name} wins!`);
     { const m = room.players.some(p=>p.isBot)?'1p_bot':room.players.length===2?'2p':room.players.length===3?'3p':'4p'; const dur=room.sessionStartedAt?Math.round((Date.now()-room.sessionStartedAt)/1000):null; trackEvent('session_completed',{gameType:'byteclub',mode:m,uvKey:room.uvKey||'',duration:dur}); }
   }
   bcBroadcastState(room);
@@ -2653,13 +2653,13 @@ function bcHandleAction(room, playerIdx, msg) {
         pl.played.push(card);
         const govTargets = gs.players.map((p, i) => i).filter(i => i !== playerIdx && gs.players[i].hand.length > 0);
         if (govTargets.length === 0) {
-          bcLog(room, `🏛️ ${room.players[playerIdx].name} plays Govern — no other players have cards.`);
+          bcLog(room, `${room.players[playerIdx].name} plays Govern — no other players have cards.`);
           bcFinishPlay(room, playerIdx);
           return;
         }
         gs.governState = { viewer: playerIdx, targets: govTargets, step: 0, mode: 'take', taken: [] };
         gs.phase = 'govern_take';
-        bcLog(room, `🏛️ ${room.players[playerIdx].name} plays Govern — privately viewing all hands and taking one card from each player.`);
+        bcLog(room, `${room.players[playerIdx].name} plays Govern — privately viewing all hands and taking one card from each player.`);
         bcBroadcastState(room);
         if (room.players[playerIdx]?.isBot) bcBotGovern(room, playerIdx);
         return;
@@ -2676,11 +2676,11 @@ function bcHandleAction(room, playerIdx, msg) {
           const dfCard = gs.players[dfHolder].hand.find(c => c.type === 'data_flag');
           gs.players[dfHolder].hand = gs.players[dfHolder].hand.filter(c => c.id !== dfCard.id);
           gs.players[playerIdx].hand.push(dfCard);
-          bcLog(room, `🎯 ${room.players[playerIdx].name} plays Action Objectives — ${room.players[dfHolder].name} must give up the Data Flag!`);
+          bcLog(room, `${room.players[playerIdx].name} plays Action Objectives — ${room.players[dfHolder].name} must give up the Data Flag!`);
         } else if (dfHolder === playerIdx) {
-          bcLog(room, `🎯 ${room.players[playerIdx].name} plays Action Objectives — they already hold the Data Flag!`);
+          bcLog(room, `${room.players[playerIdx].name} plays Action Objectives — they already hold the Data Flag!`);
         } else {
-          bcLog(room, `🎯 ${room.players[playerIdx].name} plays Action Objectives — the Data Flag is not in anyone's hand (fizzles).`);
+          bcLog(room, `${room.players[playerIdx].name} plays Action Objectives — the Data Flag is not in anyone's hand (fizzles).`);
         }
         bcFinishPlay(room, playerIdx); return;
       }
@@ -2688,7 +2688,7 @@ function bcHandleAction(room, playerIdx, msg) {
       // ── IDENTIFY ──
       if (card.type === 'identify') {
         pl.played.push(card);
-        bcLog(room, `🔎 ${room.players[playerIdx].name} plays Identify — choose to Swap defend cards or reveal the Data Flag.`);
+        bcLog(room, `${room.players[playerIdx].name} plays Identify — choose to Swap defend cards or reveal the Data Flag.`);
         return bcOpenWeaponizeWindow(room, playerIdx, card, () => {
           gs.phase = 'identify_choosing';
           gs.identifyState = { chooser: playerIdx };
@@ -2699,7 +2699,7 @@ function bcHandleAction(room, playerIdx, msg) {
       // ── PROTECT ──
       if (card.type === 'protect') {
         pl.played.push(card);
-        bcLog(room, `🛡️ ${room.players[playerIdx].name} plays Protect — cannot be targeted by attack effects until their next turn.`);
+        bcLog(room, `${room.players[playerIdx].name} plays Protect — cannot be targeted by attack effects until their next turn.`);
         return bcOpenWeaponizeWindow(room, playerIdx, card, () => {
           gs.protectedUntilTurn[playerIdx] = true;
           bcFinishPlay(room, playerIdx);
@@ -2709,7 +2709,7 @@ function bcHandleAction(room, playerIdx, msg) {
       // ── DETECT ──
       if (card.type === 'detect') {
         pl.played.push(card);
-        bcLog(room, `👁️ ${room.players[playerIdx].name} plays Detect — viewing top 5 cards of the deck.`);
+        bcLog(room, `${room.players[playerIdx].name} plays Detect — viewing top 5 cards of the deck.`);
         return bcOpenWeaponizeWindow(room, playerIdx, card, () => {
           const topCards = gs.deck.slice(0, 5).map(c => ({ ...c }));
           gs.detectView = { viewer: playerIdx, cards: topCards };
@@ -2721,14 +2721,14 @@ function bcHandleAction(room, playerIdx, msg) {
       // ── RESPOND (goes to table; played from hand on your turn as collection only — out-of-turn via play_respond) ──
       if (card.type === 'respond') {
         pl.played.push(card);
-        bcLog(room, `🚨 ${room.players[playerIdx].name} plays Respond — can be used to counter attack card effects.`);
+        bcLog(room, `${room.players[playerIdx].name} plays Respond — can be used to counter attack card effects.`);
         bcFinishPlay(room, playerIdx); return;
       }
 
       // ── RECOVER ──
       if (card.type === 'recover') {
         pl.played.push(card);
-        bcLog(room, `🔄 ${room.players[playerIdx].name} plays Recover — drawing up to 5 cards, skipping end-of-turn draw.`);
+        bcLog(room, `${room.players[playerIdx].name} plays Recover — drawing up to 5 cards, skipping end-of-turn draw.`);
         return bcOpenWeaponizeWindow(room, playerIdx, card, () => {
           const needed = Math.max(0, 5 - pl.hand.length);
           let drew = 0;
@@ -2738,7 +2738,7 @@ function bcHandleAction(room, playerIdx, msg) {
             drew++;
           }
           gs.recoverActive = true;
-          bcLog(room, `🔄 ${room.players[playerIdx].name} drew ${drew} card(s) via Recover.`);
+          bcLog(room, `${room.players[playerIdx].name} drew ${drew} card(s) via Recover.`);
           bcFinishPlay(room, playerIdx);
         });
       }
@@ -2760,19 +2760,19 @@ function bcHandleAction(room, playerIdx, msg) {
           // Check if any valid (non-protected, connected) targets exist before entering target phase
           const validTargets = gs.players.filter((_, i) => i !== playerIdx && !bcIsProtected(gs, i) && room.players[i]?.connected);
           if (validTargets.length === 0) {
-            bcLog(room, `⚠️ ${room.players[playerIdx].name} plays ${card.name} — no valid targets (all opponents are Protected). Effect cancelled.`);
+            bcLog(room, `<span class="lb lb-warn">!</span> ${room.players[playerIdx].name} plays ${card.name} — no valid targets (all opponents are Protected). Effect cancelled.`);
             bcFinishPlay(room, playerIdx);
             return;
           }
           gs.attackState = { type: card.type, attacker: playerIdx, card, swaps: [], pickStep: null };
           gs.phase = targetPhase;
-          bcLog(room, `${room.players[playerIdx].name} plays ${card.name} [⚔️ ${card.type}] — choose a target.`);
+          bcLog(room, `${room.players[playerIdx].name} plays ${card.name} [${card.type}] — choose a target.`);
           bcBroadcastState(room);
           if (room.players[playerIdx]?.isBot) { room._bcBotRunning = false; bcBotContinueTurn(room, playerIdx); }
           return;
         }
         // Weaponize: collection only (its power is played out-of-turn via play_weaponize)
-        bcLog(room, `⚒️ ${room.players[playerIdx].name} plays ${card.name} [Weaponize] — can cancel defend card effects out of turn.`);
+        bcLog(room, `${room.players[playerIdx].name} plays ${card.name} [Weaponize] — can cancel defend card effects out of turn.`);
         bcFinishPlay(room, playerIdx); break;
       }
 
@@ -2781,13 +2781,13 @@ function bcHandleAction(room, playerIdx, msg) {
         // Put card back in hand
         pl.hand.push(card);
         gs.pendingError = { playerIdx, message: `⚙️ You cannot play defend cards this turn — Installation is blocking you until the start of your next turn.` };
-        bcLog(room, `❌ ${room.players[playerIdx].name} is blocked from playing defend cards this turn (Installation)!`);
+        bcLog(room, `<span class="lb lb-block">blocked</span> ${room.players[playerIdx].name} is blocked from playing defend cards this turn (Installation)!`);
         bcBroadcastState(room); return;
       }
 
       // ── Generic defend card ──
       pl.played.push(card);
-      bcLog(room, `${room.players[playerIdx].name} plays ${card.name} [🛡️]`);
+      bcLog(room, `${room.players[playerIdx].name} plays ${card.name}`);
       bcFinishPlay(room, playerIdx); break;
     }
 
@@ -2805,11 +2805,11 @@ function bcHandleAction(room, playerIdx, msg) {
         const dfCard = gs.players[dfHolder].hand.find(c => c.type === 'data_flag');
         gs.players[dfHolder].hand = gs.players[dfHolder].hand.filter(c => c.id !== dfCard.id);
         gs.players[playerIdx].hand.push(dfCard);
-        bcLog(room, `🎯 ${room.players[playerIdx].name} plays Action Objectives — ${room.players[dfHolder].name} must give up the Data Flag!`);
+        bcLog(room, `${room.players[playerIdx].name} plays Action Objectives — ${room.players[dfHolder].name} must give up the Data Flag!`);
       } else if (dfHolder === playerIdx) {
-        bcLog(room, `🎯 ${room.players[playerIdx].name} plays Action Objectives — they already hold the Data Flag!`);
+        bcLog(room, `${room.players[playerIdx].name} plays Action Objectives — they already hold the Data Flag!`);
       } else {
-        bcLog(room, `🎯 ${room.players[playerIdx].name} plays Action Objectives — the Data Flag is not in anyone's hand (fizzles).`);
+        bcLog(room, `${room.players[playerIdx].name} plays Action Objectives — the Data Flag is not in anyone's hand (fizzles).`);
       }
       bcFinishPlay(room, playerIdx); break;
     }
@@ -2818,7 +2818,7 @@ function bcHandleAction(room, playerIdx, msg) {
     case 'cancel_attack': {
       const cancelPhases = ['attack_c2_target','attack_recon_target','attack_exploit_target','attack_install_target','attack_delivery_target'];
       if (!cancelPhases.includes(gs.phase) || gs.attackState?.attacker !== playerIdx) return;
-      bcLog(room, `❌ ${room.players[playerIdx].name} cancels their attack — no valid target.`);
+      bcLog(room, `<span class="lb lb-block">cancelled</span> ${room.players[playerIdx].name} cancels their attack — no valid target.`);
       gs.attackState = null; gs.phase = 'play';
       bcFinishPlay(room, playerIdx); break;
     }
@@ -2833,7 +2833,7 @@ function bcHandleAction(room, playerIdx, msg) {
       if (!wCard) return;
       pl.hand = pl.hand.filter(c => c.id !== wCard.id);
       pl.played.push(wCard);
-      bcLog(room, `⚒️ ${room.players[playerIdx].name} plays Weaponize — ${gs.weaponizeWindow.card?.name || 'defend card'} effect cancelled!`);
+      bcLog(room, `${room.players[playerIdx].name} plays Weaponize — ${gs.weaponizeWindow.card?.name || 'defend card'} effect cancelled!`);
       if (gs.weaponizeWindow._timer) clearTimeout(gs.weaponizeWindow._timer);
       gs.weaponizeWindow = null;
       gs.phase = 'play';
@@ -2860,12 +2860,12 @@ function bcHandleAction(room, playerIdx, msg) {
       if (!room.players[tgt]?.connected) return;
       if (bcIsProtected(gs, tgt)) {
         gs.pendingError = { playerIdx, message: `🛡️ ${room.players[tgt].name} is Protected — they cannot be targeted by attack cards right now.` };
-        bcLog(room, `❌ ${room.players[tgt].name} is Protected — cannot be targeted!`);
+        bcLog(room, `<span class="lb lb-block">protected</span> ${room.players[tgt].name} is Protected — cannot be targeted!`);
         bcBroadcastState(room); return;
       }
       gs.attackState.target = tgt;
       gs.phase = 'attack_respond_window';
-      bcLog(room, `📡 ${room.players[playerIdx].name} targets ${room.players[tgt].name} — Respond to cancel?`);
+      bcLog(room, `${room.players[playerIdx].name} targets ${room.players[tgt].name} — Respond to cancel?`);
       bcBroadcastState(room);
       // Auto-resolve for bot target
       if (room.players[tgt]?.isBot) {
@@ -2898,7 +2898,7 @@ function bcHandleAction(room, playerIdx, msg) {
       pl.hand = pl.hand.filter(c => c.id !== respondCard.id);
       pl.played.push(respondCard);
       const attackerIdx = gs.attackState.attacker;
-      bcLog(room, `🚨 ${room.players[playerIdx].name} plays Respond — ${gs.attackState.cardName || 'attack'} effect cancelled!`);
+      bcLog(room, `${room.players[playerIdx].name} plays Respond — ${gs.attackState.cardName || 'attack'} effect cancelled!`);
       gs.attackState = null;
       gs.phase = 'play';
       bcBroadcastState(room);
@@ -2934,7 +2934,7 @@ function bcHandleAction(room, playerIdx, msg) {
       if (gs.phase !== 'attack_recon_choose' || gs.attackState?.attacker !== playerIdx) return;
       if (msg.choice === 'look') {
         gs.phase = 'attack_recon_look';
-        bcLog(room, `🔍 ${room.players[playerIdx].name} looks at ${room.players[gs.attackState.target].name}'s hand.`);
+        bcLog(room, `${room.players[playerIdx].name} looks at ${room.players[gs.attackState.target].name}'s hand.`);
         bcBroadcastState(room);
         // Auto-dismiss after 10s
         setTimeout(() => {
@@ -2944,7 +2944,7 @@ function bcHandleAction(room, playerIdx, msg) {
         }, 10000);
       } else {
         gs.phase = 'attack_recon_swap_my';
-        bcLog(room, `🔍 ${room.players[playerIdx].name} chooses to swap attack cards.`);
+        bcLog(room, `${room.players[playerIdx].name} chooses to swap attack cards.`);
         bcBroadcastState(room);
         // Bot auto-picks swap-my card
         if (room.players[playerIdx]?.isBot) {
@@ -3023,7 +3023,7 @@ function bcHandleAction(room, playerIdx, msg) {
       gs.players[tgt].played = gs.players[tgt].played.filter(c => c.id !== theirCard.id);
       pl.played.push({ ...theirCard });
       gs.players[tgt].played.push({ ...st.reconSwapMyCard });
-      bcLog(room, `🔍 ${room.players[playerIdx].name} swapped ${st.reconSwapMyCard.name} for ${room.players[tgt].name}'s ${theirCard.name}.`);
+      bcLog(room, `${room.players[playerIdx].name} swapped ${st.reconSwapMyCard.name} for ${room.players[tgt].name}'s ${theirCard.name}.`);
       gs.attackState = null; gs.phase = 'play';
       bcFinishPlay(room, playerIdx); break;
     }
@@ -3046,7 +3046,7 @@ function bcHandleAction(room, playerIdx, msg) {
       // Record this swap
       gs.attackState.swaps.push({ myCard: gs.attackState.pickStep.myCard, theirCard, theirIdx: tgtIdx });
       gs.attackState.pickStep = null;
-      bcLog(room, `📨 Swap ${gs.attackState.swaps.length}: ${gs.attackState.pickStep?.myCard?.name||'card'} ↔ ${theirCard.name}`);
+      bcLog(room, `Swap ${gs.attackState.swaps.length}: ${gs.attackState.pickStep?.myCard?.name||'card'} ↔ ${theirCard.name}`);
       if (gs.attackState.swaps.length >= 2) {
         bcExecuteDelivery(room); // execute both swaps
       } else {
@@ -3067,7 +3067,7 @@ function bcHandleAction(room, playerIdx, msg) {
       if (!given) return;
       pl.hand = pl.hand.filter(c => c.id !== given.id);
       gs.players[att].hand.push(given);
-      bcLog(room, `📡 C2 resolved — ${room.players[playerIdx].name} gave ${given.name} to ${room.players[att].name}.`);
+      bcLog(room, `C2 resolved — ${room.players[playerIdx].name} gave ${given.name} to ${room.players[att].name}.`);
       gs.attackState = null; gs.phase = 'play';
       bcFinishPlay(room, att); break;
     }
@@ -3117,7 +3117,7 @@ function bcHandleAction(room, playerIdx, msg) {
       fromPl.hand = fromPl.hand.filter(c => c.id !== takenCard.id);
       gs.players[playerIdx].hand.push(takenCard);
       gst.taken.push({ fromIdx, card: takenCard });
-      bcLog(room, `🏛️ ${room.players[playerIdx].name} takes a card from ${room.players[fromIdx].name}.`);
+      bcLog(room, `${room.players[playerIdx].name} takes a card from ${room.players[fromIdx].name}.`);
       gst.step++;
       if (gst.step >= gst.targets.length) {
         // All taken — switch to give mode
@@ -3136,7 +3136,7 @@ function bcHandleAction(room, playerIdx, msg) {
       if (!giveCard) return;
       gs.players[playerIdx].hand = gs.players[playerIdx].hand.filter(c => c.id !== giveCard.id);
       gs.players[toIdx].hand.push(giveCard);
-      bcLog(room, `🏛️ ${room.players[playerIdx].name} gives a card to ${room.players[toIdx].name}.`);
+      bcLog(room, `${room.players[playerIdx].name} gives a card to ${room.players[toIdx].name}.`);
       gst.step++;
       if (gst.step >= gst.taken.length) {
         // Done — all exchanges complete
@@ -3162,11 +3162,11 @@ function bcHandleAction(room, playerIdx, msg) {
         gs.identifyState.dataFlagInDeck = dfInDeck;
         gs.phase = 'identify_dataflag';
         if (dfHolder >= 0) {
-          bcLog(room, `🔎 Data Flag reveal — ${room.players[dfHolder].name} is holding the Data Flag!`);
+          bcLog(room, `Data Flag reveal — ${room.players[dfHolder].name} is holding the Data Flag!`);
         } else if (dfInDeck) {
-          bcLog(room, `🔎 Data Flag reveal — the Data Flag is still in the deck.`);
+          bcLog(room, `Data Flag reveal — the Data Flag is still in the deck.`);
         } else {
-          bcLog(room, `🔎 Data Flag reveal — the Data Flag has not yet been drawn.`);
+          bcLog(room, `Data Flag reveal — the Data Flag has not yet been drawn.`);
         }
         bcBroadcastState(room);
         // Auto-dismiss for bot chooser
@@ -3182,7 +3182,7 @@ function bcHandleAction(room, playerIdx, msg) {
         gs.identifyState.swapMyCard = null;
         gs.identifyState.swapTargetIdx = -1;
         gs.phase = 'identify_swap_my';
-        bcLog(room, `🔎 Swap chosen — ${room.players[playerIdx].name} selects one of their played defend cards to swap.`);
+        bcLog(room, `Swap chosen — ${room.players[playerIdx].name} selects one of their played defend cards to swap.`);
         bcBroadcastState(room);
       }
       break;
@@ -3211,7 +3211,7 @@ function bcHandleAction(room, playerIdx, msg) {
       const tgtProtected = bcIsProtected(gs, tgt);
       const swappableCards = gs.players[tgt].played.filter(c => c.cat === 'defend' && !(c.type === 'protect' && tgtProtected));
       if (swappableCards.length === 0) {
-        bcLog(room, `❌ ${room.players[tgt].name} has no swappable defend cards${tgtProtected ? ' (Protect is active)' : ''}.`);
+        bcLog(room, `<span class="lb lb-block">fizzled</span> ${room.players[tgt].name} has no swappable defend cards${tgtProtected ? ' (Protect is active)' : ''}.`);
         bcBroadcastState(room); return;
       }
       gs.identifyState.swapTargetIdx = tgt;
@@ -3227,7 +3227,7 @@ function bcHandleAction(room, playerIdx, msg) {
       if (!theirCard) return;
       // Cannot swap an active Protect card
       if (theirCard.type === 'protect' && bcIsProtected(gs, tgt)) {
-        bcLog(room, `❌ ${room.players[tgt].name}'s Protect card is currently active — it cannot be swapped.`);
+        bcLog(room, `<span class="lb lb-block">blocked</span> ${room.players[tgt].name}'s Protect card is currently active — it cannot be swapped.`);
         bcBroadcastState(room); return;
       }
       // Execute swap: remove my card from my played, add their card; vice versa
@@ -3235,7 +3235,7 @@ function bcHandleAction(room, playerIdx, msg) {
       gs.players[tgt].played = gs.players[tgt].played.filter(c => c.id !== theirCard.id);
       pl.played.push({ ...theirCard });
       gs.players[tgt].played.push({ ...id.swapMyCard });
-      bcLog(room, `🔎 ${room.players[playerIdx].name} swapped ${id.swapMyCard.name} for ${room.players[tgt].name}'s ${theirCard.name}.`);
+      bcLog(room, `${room.players[playerIdx].name} swapped ${id.swapMyCard.name} for ${room.players[tgt].name}'s ${theirCard.name}.`);
       gs.identifyState = null; gs.phase = 'play';
       bcFinishPlay(room, playerIdx); break;
     }
@@ -3248,7 +3248,7 @@ function bcHandleAction(room, playerIdx, msg) {
       // Put reordered cards back on top of deck
       gs.deck.splice(0, ordered.length);
       gs.deck.unshift(...ordered);
-      bcLog(room, `👁️ ${room.players[playerIdx].name} rearranged the top of the deck.`);
+      bcLog(room, `${room.players[playerIdx].name} rearranged the top of the deck.`);
       gs.detectView = null; gs.phase = 'play';
       bcFinishPlay(room, playerIdx); break;
     }

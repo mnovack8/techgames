@@ -288,6 +288,17 @@ body.observer-active.host-cancel-visible #observer-banner{padding-right:290px;}
 .game-log h4{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#4b5563;margin-bottom:8px;}
 .log-entry{font-size:12px;color:#9ca3af;margin-bottom:5px;line-height:1.4;padding-bottom:5px;border-bottom:1px solid #1a2235;}
 .log-entry:first-child{color:#d1db24;}
+/* Styled badges for game log, status, and card categories */
+.lb{display:inline-block;font-size:8px;font-weight:900;text-transform:uppercase;letter-spacing:0.7px;border-radius:3px;padding:1px 4px;vertical-align:middle;margin-right:3px;line-height:1.4;flex-shrink:0;}
+.lb-win{background:rgba(209,219,36,0.12);border:1px solid rgba(209,219,36,0.45);color:#d1db24;}
+.lb-flag{background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.45);color:#f87171;}
+.lb-time{background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.45);color:#fbbf24;}
+.lb-warn{background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.45);color:#fbbf24;}
+.lb-block{background:rgba(107,114,128,0.10);border:1px solid rgba(107,114,128,0.35);color:#9ca3af;}
+/* Card category inline badges (ATK / DEF / SPL) */
+.cat-atk{font-size:9px;font-weight:900;color:#f87171;letter-spacing:0.5px;}
+.cat-def{font-size:9px;font-weight:900;color:#93c5fd;letter-spacing:0.5px;}
+.cat-spl{font-size:9px;font-weight:900;color:#fbbf24;letter-spacing:0.5px;}
 
 /* MIDDLE - DECK + STATUS */
 .game-middle{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:10px 16px;}
@@ -572,7 +583,13 @@ body.observer-active.host-cancel-visible #observer-banner{padding-right:290px;}
 
 /* ===== SPECIAL CARD PANEL ICONS — card art thumbnails ===== */
 .special-card .sc-icon { font-size: 0; line-height: 0; width: 54px; height: 70px; margin: 0 auto 2px; overflow: hidden; border-radius: 6px; }
-.special-card .sc-icon img { width: 100%; height: 100%; object-fit: contain; display: block; border-radius: 6px; }
+.special-card .sc-icon img { width: 100%; height: 100%; object-fit: contain; display: block; border-radius: 6px; transition: transform 0.15s ease, filter 0.15s ease; }
+.special-card.sc-zoomable .sc-icon { cursor: zoom-in; }
+.special-card.sc-zoomable .sc-icon:hover img { transform: scale(1.08); filter: brightness(1.15) drop-shadow(0 0 6px rgba(255,255,255,0.12)); }
+.special-card.sc-dataflag.sc-zoomable .sc-icon:hover { box-shadow: 0 0 0 2px rgba(239,68,68,0.45); border-radius: 6px; }
+.special-card.sc-timesup.sc-zoomable  .sc-icon:hover { box-shadow: 0 0 0 2px rgba(245,158,11,0.45); border-radius: 6px; }
+.special-card.sc-govern.sc-zoomable   .sc-icon:hover { box-shadow: 0 0 0 2px rgba(139,92,246,0.45); border-radius: 6px; }
+.special-card.sc-actionobj.sc-zoomable .sc-icon:hover { box-shadow: 0 0 0 2px rgba(245,158,11,0.45); border-radius: 6px; }
 @media(max-width:860px) { .special-card .sc-icon { width: 44px; height: 57px; } }
 @media(max-width:600px) { .special-card .sc-icon { width: 34px; height: 44px; } }
 
@@ -909,7 +926,7 @@ body.bc-tut-active .game-layout { height: calc(100vh - 44px); margin-right: 272p
       <div class="role-section-label">Choose Your Role</div>
       <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:4px;">
         <div id="create-player-role" style="border:2px solid #374151;border-radius:10px;padding:10px 14px;cursor:pointer;transition:all 0.15s;" onclick="selectCreateRole('player')">
-          <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#4b5563;margin-bottom:6px">⚔️ Player</div>
+          <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#62b517;margin-bottom:6px">Player</div>
           <div class="color-options" id="create-colors" style="margin:0;justify-content:flex-start;gap:8px;"></div>
         </div>
         <button class="observer-role-btn" id="create-obs-btn" onclick="toggleCreateObserver()">
@@ -936,7 +953,7 @@ body.bc-tut-active .game-layout { height: calc(100vh - 44px); margin-right: 272p
       <div class="role-section-label">Choose Your Role</div>
       <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:4px;">
         <div id="join-player-role" style="border:2px solid #374151;border-radius:10px;padding:10px 14px;cursor:pointer;transition:all 0.15s;" onclick="selectJoinRole('player')">
-          <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#4b5563;margin-bottom:6px">⚔️ Player</div>
+          <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#62b517;margin-bottom:6px">Player</div>
           <div class="color-options" id="join-colors" style="margin:0;justify-content:flex-start;gap:8px;"></div>
         </div>
         <button class="observer-role-btn" id="join-obs-btn" onclick="toggleJoinObserver()">
@@ -1006,7 +1023,7 @@ body.bc-tut-active .game-layout { height: calc(100vh - 44px); margin-right: 272p
 
         <div class="special-cards-row">
           <div class="special-card sc-deck">
-            <div class="sc-icon">🃏</div>
+            <div class="sc-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="14" height="18" rx="2"/><rect x="6" y="2" width="14" height="18" rx="2" fill="#1a2235" stroke="#374151"/><line x1="9" y1="9" x2="17" y2="9"/><line x1="9" y1="13" x2="15" y2="13"/></svg></div>
             <div class="sc-name">Draw Deck <span class="info-btn" onclick="">i<div class="info-popup below">At the end of each turn you <strong>draw 1 card</strong>. If you have more than 6 cards you must discard down to 6. The deck contains attack and defend cards.</div></span></div>
             <div class="sc-status" id="deck-count">— cards</div>
           </div>
@@ -1212,7 +1229,7 @@ function showCardZoom(card, el) {
   } else {
     zoom.className = cardClass(card);
     zoom.innerHTML =
-      `<div class="cz-cat">${card.cat === 'attack' ? '⚔️ Attack' : card.cat === 'defend' ? '🛡️ Defend' : '⭐ Special'}</div>` +
+      `<div class="cz-cat">${card.cat === 'attack' ? '<span class="cat-atk">ATK</span> Attack' : card.cat === 'defend' ? '<span class="cat-def">DEF</span> Defend' : '<span class="cat-spl">SPL</span> Special'}</div>` +
       `<div class="cz-type">${typeName(card)}</div>` +
       `<div class="cz-name">${card.name}</div>` +
       `<div class="cz-desc">${card.desc || ''}</div>`;
@@ -1235,6 +1252,27 @@ function showCardZoom(card, el) {
 function hideCardZoom() {
   _zoomEl = null;
   document.getElementById('card-zoom').style.display = 'none';
+}
+
+function setupSpecialCardZoom() {
+  const specials = [
+    { id: 'sc-dataflag',  card: { name: 'Data Flag',         cat: 'special', type: 'data_flag',  img: 'images/special-data-flag.png', desc: 'Hold this when Times Up is drawn to win instantly! Can be stolen with C2 or Action Objectives.' } },
+    { id: 'sc-timesup',   card: { name: 'Times Up',          cat: 'special', type: 'times_up',   img: 'images/special-times-up.png',  desc: 'Triggers instantly when drawn. If any player is holding the Data Flag, that player wins immediately!' } },
+    { id: 'sc-govern',    card: { name: 'Govern',            cat: 'defend',  type: 'govern',     img: 'images/defend-govern.png',     desc: 'Earned by playing all 5 NIST defend types. Look at each player\'s hand privately, take 1 card from each, then give 1 card back to each. Cannot be cancelled by Weaponize.' } },
+    { id: 'sc-actionobj', card: { name: 'Action Objectives', cat: 'attack',  type: 'action_obj', img: 'images/attack-action-obj.png', desc: 'Earned by completing the full Kill Chain (all 6 attack types). The Data Flag holder must give it to you immediately. Cannot be cancelled by Respond.' } },
+  ];
+  specials.forEach(({ id, card }) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.add('sc-zoomable');
+    const iconEl = el.querySelector('.sc-icon');
+    if (!iconEl) return;
+    iconEl.addEventListener('mouseenter', () => showCardZoom(card, iconEl));
+    iconEl.addEventListener('mouseleave', hideCardZoom);
+    iconEl.addEventListener('touchstart', (e) => { e.preventDefault(); showCardZoom(card, iconEl); }, { passive: false });
+    iconEl.addEventListener('touchend', hideCardZoom);
+    iconEl.addEventListener('touchcancel', hideCardZoom);
+  });
 }
 
 // ==================== INFO ICON TOOLTIPS ====================
@@ -1581,7 +1619,7 @@ function renderLobbyPlayers(players, observers) {
   playersSection.style.cssText = 'width:100%;max-width:320px;margin-bottom:4px;';
   const playersLabel = document.createElement('div');
   playersLabel.className = 'waiting-observer-label';
-  playersLabel.innerHTML = '⚔️ Players (' + players.length + ')';
+  playersLabel.innerHTML = 'Players (' + players.length + ')';
   playersSection.appendChild(playersLabel);
   players.forEach((p, pi) => {
     const isMe = !isObserver && pi === myId;
@@ -1822,7 +1860,7 @@ function onCardImgError(imgEl, cat, name) {
   const cardEl = imgEl.closest('.card');
   if (!cardEl) return;
   cardEl.classList.remove('card-has-img');
-  const catLabel = cat === 'attack' ? '⚔️ Attack' : cat === 'defend' ? '🛡️ Defend' : '⭐ Special';
+  const catLabel = cat === 'attack' ? '<span class="cat-atk">ATK</span> Attack' : cat === 'defend' ? '<span class="cat-def">DEF</span> Defend' : '<span class="cat-spl">SPL</span> Special';
   cardEl.innerHTML = `<div class="card-cat">${catLabel}</div><div class="card-name">${name}</div>`;
 }
 
@@ -1836,17 +1874,17 @@ function cardClass(card) {
 function typeName(card) {
   if (card.cat === 'attack') {
     const t = ATTACK_TYPES.find(t => t.id === card.type);
-    return t ? t.emoji + ' ' + t.name : card.type;
+    return t ? t.name : card.type;
   }
   if (card.cat === 'defend') {
     const t = DEFEND_TYPES.find(t => t.id === card.type);
-    return t ? t.emoji + ' ' + t.name : card.type;
+    return t ? t.name : card.type;
   }
   return card.name;
 }
 
 function cardTextHTML(card) {
-  return `<div class="card-cat">${card.cat === 'attack' ? '⚔️ Attack' : card.cat === 'defend' ? '🛡️ Defend' : '⭐ Special'}</div>
+  return `<div class="card-cat">${card.cat === 'attack' ? '<span class="cat-atk">ATK</span> Attack' : card.cat === 'defend' ? '<span class="cat-def">DEF</span> Defend' : '<span class="cat-spl">SPL</span> Special'}</div>
       <div class="card-type">${typeName(card)}</div>
       <div class="card-name">${card.name}</div>
       <div class="card-desc">${card.desc || ''}</div>`;
@@ -1912,7 +1950,7 @@ function renderObserverGame(gs) {
     govern_take: curName + ' is using Govern (taking cards)…',
     govern_give: curName + ' is using Govern (giving cards back)…',
     identify_choosing: curName + ' is using Identify…',
-    identify_dataflag: '🚩 Data Flag location revealed!',
+    identify_dataflag: 'Data Flag location revealed!',
     identify_swap_my: curName + ' is choosing a swap card…',
     identify_swap_target: curName + ' is choosing a swap target…',
     identify_swap_their: curName + ' is completing the swap…',
@@ -1930,7 +1968,7 @@ function renderObserverGame(gs) {
     attack_recon_swap_my: curName + ' choosing attack card to swap…',
     attack_recon_swap_their: curName + ' choosing target\'s attack card…',
     attack_delivery_pick: curName + ' is swapping played cards (Delivery)…',
-    game_over: '🏆 Game Over!',
+    game_over: 'Game Over!',
   };
   document.getElementById('status-phase').textContent = phaseLabels[gs.phase] || gs.phase;
 
@@ -1982,11 +2020,11 @@ function renderObserverGame(gs) {
     const defendSlots = DEFEND_TYPES.map(t => obsFullSlot(t, t.id==='govern'?'special':'defend')).join('');
     const oppPlayedHtml = `<div class="my-played-rows obs-played-rows">
       <div class="kc-row">
-        <span class="kc-row-label attack">Cyberkill Chain<span class="info-btn" onclick="">i<div class="info-popup wide"><strong>Cyber Kill Chain</strong> — the attack path. A player must play one of each attack type to unlock <em>Action Objectives</em>.<br><br>🔍 <strong>Recon</strong> — look at a hand or swap played attack cards<br>⚒️ <strong>Weaponize</strong> — cancel an opponent's defend card (out of turn)<br>📨 <strong>Delivery</strong> — swap up to 2 played cards with opponents<br>💥 <strong>Exploit</strong> — blindly steal 1 card from a target<br>⚙️ <strong>Install</strong> — block a target from playing defend cards<br>📡 <strong>C2</strong> — steal the Data Flag, or target gives you a card</div></span></span>
+        <span class="kc-row-label attack">Cyberkill Chain<span class="info-btn" onclick="">i<div class="info-popup wide"><strong>Cyber Kill Chain</strong> — the attack path. A player must play one of each attack type to unlock <em>Action Objectives</em>.<br><br><strong>Recon</strong> — look at a hand or swap played attack cards<br><strong>Weaponize</strong> — cancel an opponent's defend card (out of turn)<br><strong>Delivery</strong> — swap up to 2 played cards with opponents<br><strong>Exploit</strong> — blindly steal 1 card from a target<br><strong>Install</strong> — block a target from playing defend cards<br><strong>C2</strong> — steal the Data Flag, or target gives you a card</div></span></span>
         <div class="kc-slots">${attackSlots}</div>
       </div>
       <div class="kc-row">
-        <span class="kc-row-label defend">NIST<span class="info-btn" onclick="">i<div class="info-popup wide"><strong>NIST Cybersecurity Framework</strong> — the defense path. A player must play one of each defend type to unlock <em>Govern</em>.<br><br>🔎 <strong>Identify</strong> — reveal Data Flag holder or swap played defend cards<br>🛡️ <strong>Protect</strong> — block attacks until your next turn<br>👁️ <strong>Detect</strong> — view and reorder the top 5 deck cards<br>🚨 <strong>Respond</strong> — cancel an attack targeting you (out of turn)<br>🔄 <strong>Recover</strong> — draw until you have 5 cards</div></span></span>
+        <span class="kc-row-label defend">NIST<span class="info-btn" onclick="">i<div class="info-popup wide"><strong>NIST Cybersecurity Framework</strong> — the defense path. A player must play one of each defend type to unlock <em>Govern</em>.<br><br><strong>Identify</strong> — reveal Data Flag holder or swap played defend cards<br><strong>Protect</strong> — block attacks until your next turn<br><strong>Detect</strong> — view and reorder the top 5 deck cards<br><strong>Respond</strong> — cancel an attack targeting you (out of turn)<br><strong>Recover</strong> — draw until you have 5 cards</div></span></span>
         <div class="kc-slots">${defendSlots}</div>
       </div>
     </div>`;
@@ -2079,30 +2117,30 @@ function renderGame(gs) {
   const curName = gs.players[gs.currentPlayer]?.name || '?';
   document.getElementById('status-player').textContent = isMyTurn ? 'Your Turn' : curName + "'s Turn";
   const phaseLabels = {
-    play: isMyTurn ? (gs.recoverActive ? '🔄 Recover active — end your turn (no draw)' : 'Play cards from your hand, then end your turn') : 'Waiting for opponent to play…',
-    discard: isMyTurn ? '⚠️ Discard down to 6 cards' : 'Opponent is discarding…',
-    govern_take: isMyTurn ? '🏛️ Govern — take one card from each player\'s hand' : 'Opponent is using Govern…',
-    govern_give: isMyTurn ? '🏛️ Govern — give one card back to each player' : 'Opponent is distributing cards…',
-    identify_choosing: isMyTurn ? '🔎 Identify — choose Swap or reveal the Data Flag' : `${curName} is using Identify…`,
-    identify_dataflag: '🚩 Data Flag location revealed to all players!',
-    identify_swap_my: isMyTurn ? '🔎 Select one of your played defend cards to give away' : `${curName} is choosing a swap…`,
-    identify_swap_target: isMyTurn ? '🔎 Select a player to swap with' : `${curName} is choosing a swap target…`,
-    identify_swap_their: isMyTurn ? '🔎 Select their defend card to take' : `${curName} is completing the swap…`,
-    detect_view: isMyTurn ? '👁️ Reorder the top 5 deck cards' : `${curName} is using Detect…`,
-    weaponize_window: gs.weaponizeInfo?.iAmDefender ? '⚒️ Opponents can play Weaponize to cancel your defend card…' : `⚒️ ${gs.weaponizeInfo?.defenderName||'?'} played a defend card — play Weaponize to cancel?`,
-    attack_c2_target: isMyTurn ? '📡 C2 — Select a player to target' : `${curName} is targeting someone with C2…`,
-    attack_recon_target: isMyTurn ? '🔍 Recon — Select a player to target' : `${curName} is using Reconnaissance…`,
-    attack_exploit_target: isMyTurn ? '💥 Exploitation — Select a player to steal from (blind)' : `${curName} is using Exploitation…`,
-    attack_install_target: isMyTurn ? '⚙️ Installation — Select a player to block defend cards' : `${curName} is using Installation…`,
-    attack_delivery_target: isMyTurn ? '📨 Delivery — Select a player to swap cards with' : `${curName} is using Delivery…`,
-    attack_respond_window: gs.attackInfo?.iAmTarget ? '🚨 You are being targeted! Play Respond to cancel?' : gs.attackInfo?.iAmAttacker ? '⏳ Waiting for target to respond…' : '⚔️ Attack in progress…',
-    attack_c2_give: gs.attackInfo?.iAmTarget ? '📡 C2 — Choose a card to give to the attacker' : gs.attackInfo?.iAmAttacker ? '📡 C2 — Waiting for target to give a card…' : '📡 C2 resolving…',
-    attack_recon_choose: gs.attackInfo?.iAmAttacker ? '🔍 Recon — Look at hand or Swap attack cards?' : `${curName} is deciding…`,
-    attack_recon_look: gs.attackInfo?.iAmAttacker ? '🔍 Viewing target\'s hand…' : `${curName} is looking at your hand!`,
-    attack_recon_swap_my: gs.attackInfo?.iAmAttacker ? '🔍 Select your played attack card to swap away' : `${curName} is choosing an attack card to swap…`,
-    attack_recon_swap_their: gs.attackInfo?.iAmAttacker ? '🔍 Select their attack card to take' : `${curName} is picking your attack card…`,
-    attack_delivery_pick: gs.attackInfo?.iAmAttacker ? '📨 Delivery — Pick up to 2 card swaps (any played cards)' : `${curName} is swapping played cards…`,
-    game_over: '🏆 Game Over!',
+    play: isMyTurn ? (gs.recoverActive ? 'Recover active — end your turn (no draw)' : 'Play cards from your hand, then end your turn') : 'Waiting for opponent to play…',
+    discard: isMyTurn ? 'Discard down to 6 cards' : 'Opponent is discarding…',
+    govern_take: isMyTurn ? 'Govern — take one card from each player\'s hand' : 'Opponent is using Govern…',
+    govern_give: isMyTurn ? 'Govern — give one card back to each player' : 'Opponent is distributing cards…',
+    identify_choosing: isMyTurn ? 'Identify — choose Swap or reveal the Data Flag' : `${curName} is using Identify…`,
+    identify_dataflag: 'Data Flag location revealed to all players!',
+    identify_swap_my: isMyTurn ? 'Identify — select one of your played defend cards to give away' : `${curName} is choosing a swap…`,
+    identify_swap_target: isMyTurn ? 'Identify — select a player to swap with' : `${curName} is choosing a swap target…`,
+    identify_swap_their: isMyTurn ? 'Identify — select their defend card to take' : `${curName} is completing the swap…`,
+    detect_view: isMyTurn ? 'Detect — reorder the top 5 deck cards' : `${curName} is using Detect…`,
+    weaponize_window: gs.weaponizeInfo?.iAmDefender ? 'Opponents can play Weaponize to cancel your defend card…' : `${gs.weaponizeInfo?.defenderName||'?'} played a defend card — play Weaponize to cancel?`,
+    attack_c2_target: isMyTurn ? 'C2 — select a player to target' : `${curName} is targeting someone with C2…`,
+    attack_recon_target: isMyTurn ? 'Recon — select a player to target' : `${curName} is using Reconnaissance…`,
+    attack_exploit_target: isMyTurn ? 'Exploitation — select a player to steal from (blind)' : `${curName} is using Exploitation…`,
+    attack_install_target: isMyTurn ? 'Installation — select a player to block defend cards' : `${curName} is using Installation…`,
+    attack_delivery_target: isMyTurn ? 'Delivery — select a player to swap cards with' : `${curName} is using Delivery…`,
+    attack_respond_window: gs.attackInfo?.iAmTarget ? 'You are being targeted — play Respond to cancel?' : gs.attackInfo?.iAmAttacker ? 'Waiting for target to respond…' : 'Attack in progress…',
+    attack_c2_give: gs.attackInfo?.iAmTarget ? 'C2 — choose a card to give to the attacker' : gs.attackInfo?.iAmAttacker ? 'C2 — waiting for target to give a card…' : 'C2 resolving…',
+    attack_recon_choose: gs.attackInfo?.iAmAttacker ? 'Recon — look at hand or swap attack cards?' : `${curName} is deciding…`,
+    attack_recon_look: gs.attackInfo?.iAmAttacker ? 'Recon — viewing target\'s hand…' : `${curName} is looking at your hand!`,
+    attack_recon_swap_my: gs.attackInfo?.iAmAttacker ? 'Recon — select your played attack card to swap away' : `${curName} is choosing an attack card to swap…`,
+    attack_recon_swap_their: gs.attackInfo?.iAmAttacker ? 'Recon — select their attack card to take' : `${curName} is picking your attack card…`,
+    attack_delivery_pick: gs.attackInfo?.iAmAttacker ? 'Delivery — pick up to 2 card swaps (any played cards)' : `${curName} is swapping played cards…`,
+    game_over: 'Game Over!',
   };
   document.getElementById('status-phase').textContent = phaseLabels[gs.phase] || gs.phase;
 
@@ -2120,13 +2158,13 @@ function renderGame(gs) {
   const gvEl = document.getElementById('sc-govern');
   const govInHand = gs.myHand.some(c => c.type === 'govern');
   gvEl.className = 'special-card sc-govern' + (govInHand ? ' available' : '');
-  document.getElementById('govern-status').textContent = govInHand ? '🏛️ In your hand' : me.played.some(c=>c.type==='govern') ? '✓ Played' : 'Locked';
+  document.getElementById('govern-status').textContent = govInHand ? 'In your hand' : me.played.some(c=>c.type==='govern') ? '✓ Played' : 'Locked';
 
   const aoEl = document.getElementById('sc-actionobj');
   const aoInHand = gs.myHand.some(c => c.type === 'action_obj');
   const aoPlayed = me.played.some(c => c.type === 'action_obj');
   aoEl.className = 'special-card sc-actionobj' + (aoInHand ? ' available' : '');
-  document.getElementById('actionobj-status').textContent = aoInHand ? '🎯 In your hand' : aoPlayed ? '✓ Played' : 'Locked';
+  document.getElementById('actionobj-status').textContent = aoInHand ? 'In your hand' : aoPlayed ? '✓ Played' : 'Locked';
 
 
   // Opponents
@@ -2253,11 +2291,11 @@ function renderMyPlayed(played) {
 
   el.innerHTML = `
     <div class="kc-row">
-      <span class="kc-row-label attack">Cyberkill Chain<span class="info-btn" onclick="">i<div class="info-popup wide"><strong>Cyber Kill Chain</strong> — play one of each attack type to unlock <em>Action Objectives</em>.<br><br>🔍 <strong>Recon</strong> — look at a hand or swap played attack cards<br>⚒️ <strong>Weaponize</strong> — cancel an opponent's defend card (out of turn)<br>📨 <strong>Delivery</strong> — swap up to 2 played cards with opponents<br>💥 <strong>Exploit</strong> — blindly steal 1 card from a target<br>⚙️ <strong>Install</strong> — block a target from playing defend cards<br>📡 <strong>C2</strong> — steal the Data Flag, or target gives you a card</div></span></span>
+      <span class="kc-row-label attack">Cyberkill Chain<span class="info-btn" onclick="">i<div class="info-popup wide"><strong>Cyber Kill Chain</strong> — play one of each attack type to unlock <em>Action Objectives</em>.<br><br><strong>Recon</strong> — look at a hand or swap played attack cards<br><strong>Weaponize</strong> — cancel an opponent's defend card (out of turn)<br><strong>Delivery</strong> — swap up to 2 played cards with opponents<br><strong>Exploit</strong> — blindly steal 1 card from a target<br><strong>Install</strong> — block a target from playing defend cards<br><strong>C2</strong> — steal the Data Flag, or target gives you a card</div></span></span>
       <div class="kc-slots">${attackSlots}</div>
     </div>
     <div class="kc-row">
-      <span class="kc-row-label defend">NIST<span class="info-btn" onclick="">i<div class="info-popup wide"><strong>NIST Cybersecurity Framework</strong> — play one of each defend type to unlock <em>Govern</em>.<br><br>🔎 <strong>Identify</strong> — reveal Data Flag holder or swap played defend cards<br>🛡️ <strong>Protect</strong> — block attacks until your next turn<br>👁️ <strong>Detect</strong> — view and reorder the top 5 deck cards<br>🚨 <strong>Respond</strong> — cancel an attack targeting you (out of turn)<br>🔄 <strong>Recover</strong> — draw until you have 5 cards</div></span></span>
+      <span class="kc-row-label defend">NIST<span class="info-btn" onclick="">i<div class="info-popup wide"><strong>NIST Cybersecurity Framework</strong> — play one of each defend type to unlock <em>Govern</em>.<br><br><strong>Identify</strong> — reveal Data Flag holder or swap played defend cards<br><strong>Protect</strong> — block attacks until your next turn<br><strong>Detect</strong> — view and reorder the top 5 deck cards<br><strong>Respond</strong> — cancel an attack targeting you (out of turn)<br><strong>Recover</strong> — draw until you have 5 cards</div></span></span>
       <div class="kc-slots">${defendSlots}</div>
     </div>`;
 }
@@ -2277,7 +2315,7 @@ function renderHand(gs) {
     el.appendChild(div);
   });
   document.getElementById('hand-count-label').textContent = gs.myHand.length + ' card(s)'
-    + (gs.iAmInstallBlocked ? ' — ⚙️ Defend cards blocked this turn!' : '');
+    + (gs.iAmInstallBlocked ? ' — Defend cards blocked this turn!' : '');
 }
 
 function selectCard(cardId) {
@@ -2298,7 +2336,7 @@ function selectCard(cardId) {
       // Second click = play — check install block first
       const cardObj = gs.myHand?.find(c => c.id === cardId || c.id === Number(cardId));
       if (gs.iAmInstallBlocked && cardObj?.cat === 'defend') {
-        showToast('⚙️ You are blocked from playing defend cards this turn (Installation)!');
+        showToast('You are blocked from playing defend cards this turn (Installation)!');
         selectedHandCard = null;
         hideCardZoom();
         renderHand(gs);
@@ -2345,7 +2383,7 @@ function renderActionBar(gs, isMyTurn) {
   if (!isMyTurn) {
     hint.textContent = 'Waiting for your turn…';
     if (hasAO && !gs.actionObjActive) {
-      bar.insertBefore(mkBtn('🎯 Play Action Obj.', 'action-btn btn-action-obj', () =>
+      bar.insertBefore(mkBtn('Play Action Obj.', 'action-btn btn-action-obj', () =>
         send({ type:'game_action', action:'play_action_obj_anytime' })), hint);
     }
     return;
@@ -2354,7 +2392,7 @@ function renderActionBar(gs, isMyTurn) {
   // My turn
   if (gs.phase === 'play') {
     if (gs.recoverActive) {
-      hint.textContent = '🔄 Recover: You drew cards. You cannot play more this turn.';
+      hint.textContent = 'Recover: You drew cards. You cannot play more this turn.';
       bar.insertBefore(mkBtn('End Turn (No Draw)', 'action-btn btn-end-turn', () => {
         selectedHandCard = null;
         send({ type:'game_action', action:'end_play_phase' });
@@ -2503,7 +2541,7 @@ function renderEffectOverlay(gs) {
     const fromHand = gi.allHands.find(h => h.playerIdx === fromIdx)?.hand || [];
     const fromColor = COLOR_INFO[gs.players[fromIdx]?.color]?.hex || '#888';
     let html = `<div class="govern-panel" style="background:#1a2235;border:2px solid #7c3aed;border-radius:16px;padding:24px;max-width:min(740px,94vw);width:90%">
-      <h3 style="font-size:18px;font-weight:800;color:#c4b5fd;margin-bottom:4px">🏛️ Govern — Take a Card</h3>
+      <h3 style="font-size:18px;font-weight:800;color:#c4b5fd;margin-bottom:4px">Govern — Take a Card</h3>
       <p style="font-size:13px;color:#9ca3af;margin-bottom:16px">Step ${gi.step + 1} of ${gi.totalTargets} — pick one card from <span style="color:${fromColor};font-weight:700">${fromName}</span>'s hand</p>
       <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">`;
     sortByOrder(fromHand).forEach(c => {
@@ -2522,7 +2560,7 @@ function renderEffectOverlay(gs) {
     const toName = gs.players[toIdx]?.name || '?';
     const toColor = COLOR_INFO[gs.players[toIdx]?.color]?.hex || '#888';
     let html = `<div class="govern-panel" style="background:#1a2235;border:2px solid #7c3aed;border-radius:16px;padding:24px;max-width:min(740px,94vw);width:90%">
-      <h3 style="font-size:18px;font-weight:800;color:#c4b5fd;margin-bottom:4px">🏛️ Govern — Give a Card</h3>
+      <h3 style="font-size:18px;font-weight:800;color:#c4b5fd;margin-bottom:4px">Govern — Give a Card</h3>
       <p style="font-size:13px;color:#9ca3af;margin-bottom:16px">Step ${gi.step + 1} of ${gi.totalTargets} — give one card from your hand to <span style="color:${toColor};font-weight:700">${toName}</span></p>
       <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">`;
     sortByOrder(gs.myHand).forEach(c => {
@@ -2536,7 +2574,7 @@ function renderEffectOverlay(gs) {
   // ── Govern: waiting (non-viewer) ──
   if ((gs.phase === 'govern_take' || gs.phase === 'govern_give') && !gs.governInfo) {
     overlay.style.display = 'flex';
-    inner.innerHTML = `<div class="effect-panel"><h3>🏛️ Govern in progress…</h3>
+    inner.innerHTML = `<div class="effect-panel"><h3>Govern in progress…</h3>
       <p style="color:#6b7280;font-size:13px;text-align:center">Another player is exchanging cards with everyone. Please wait.</p></div>`;
     return;
   }
@@ -2545,13 +2583,13 @@ function renderEffectOverlay(gs) {
   if (gs.phase === 'identify_choosing' && gs.identifyInfo?.chooser === myIdx) {
     overlay.style.display = 'flex';
     inner.innerHTML = `<div class="effect-panel">
-      <h3>🔎 Identify — Choose an action</h3>
+      <h3>Identify — Choose an action</h3>
       <button class="effect-choice-btn" onclick="send({type:'game_action',action:'identify_choice',choice:'dataflag'})">
-        🚩 Reveal Data Flag
+        Reveal Data Flag
         <div class="sub">Reveal to ALL players who is currently holding the Data Flag — or if it is still in the deck.</div>
       </button>
       <button class="effect-choice-btn" onclick="send({type:'game_action',action:'identify_choice',choice:'swap'})">
-        🔄 Swap Defend Cards
+        Swap Defend Cards
         <div class="sub">Exchange one of your played defend cards for another player's played defend card. You cannot swap a player's active Protect card, but other cards are fair game.</div>
       </button>
     </div>`;
@@ -2568,13 +2606,13 @@ function renderEffectOverlay(gs) {
       const hp = gs.players[holder];
       const isMe = holder === myIdx;
       resultHtml = `<div style="text-align:center;margin:16px 0">
-        <div style="font-size:48px;margin-bottom:8px">🚩</div>
+        <div style="font-size:13px;font-weight:900;letter-spacing:1.5px;color:#ef4444;margin-bottom:8px;text-transform:uppercase">Data Flag</div>
         <div style="font-size:18px;font-weight:800;color:#d1db24">${isMe ? 'YOU are' : `<span style="color:${COLOR_INFO[hp.color]?.hex||'#fff'}">${hp.name}</span> is`} holding the Data Flag!</div>
         ${isMe ? '<div style="font-size:13px;color:#f87171;margin-top:6px">Everyone can see this — guard it carefully.</div>' : ''}
       </div>`;
     } else if (inDeck) {
       resultHtml = `<div style="text-align:center;margin:16px 0">
-        <div style="font-size:48px;margin-bottom:8px">🃏</div>
+        <div style="font-size:13px;font-weight:900;letter-spacing:1.5px;color:#6b7280;margin-bottom:8px;text-transform:uppercase">Not Yet Drawn</div>
         <div style="font-size:18px;font-weight:800;color:#6b7280">The Data Flag is still in the deck.</div>
       </div>`;
     } else {
@@ -2585,7 +2623,7 @@ function renderEffectOverlay(gs) {
     }
     const isChooser = gs.identifyInfo.chooser === myIdx;
     inner.innerHTML = `<div class="effect-panel">
-      <h3>🔎 Identify — Data Flag Location</h3>
+      <h3>Identify — Data Flag Location</h3>
       ${resultHtml}
       ${isChooser ? `<button class="action-btn btn-govern" onclick="send({type:'game_action',action:'identify_dataflag_done'})" style="margin-top:8px;width:100%">Continue</button>` : '<p style="color:#6b7280;font-size:13px;text-align:center">Waiting for the Identify player to continue…</p>'}
     </div>`;
@@ -2597,7 +2635,7 @@ function renderEffectOverlay(gs) {
     overlay.style.display = 'flex';
     const me = gs.players[myIdx];
     const myDefendCards = me.played.filter(c => c.cat === 'defend');
-    let html = `<div class="effect-panel" style="max-width:min(740px,94vw)"><h3>🔎 Swap — Select your defend card to give away</h3>`;
+    let html = `<div class="effect-panel" style="max-width:min(740px,94vw)"><h3>Identify Swap — Select your defend card to give away</h3>`;
     if (myDefendCards.length === 0) {
       html += `<p style="color:#9ca3af">You have no played defend cards to swap.</p>
         <button class="action-btn btn-cancel" onclick="send({type:'game_action',action:'identify_choice',choice:'dataflag'})" style="width:100%">Switch to Data Flag reveal instead</button>`;
@@ -2615,7 +2653,7 @@ function renderEffectOverlay(gs) {
   // ── Identify swap: select target player ──
   if (gs.phase === 'identify_swap_target' && gs.identifyInfo?.chooser === myIdx) {
     overlay.style.display = 'flex';
-    let html = `<div class="effect-panel"><h3>🔎 Swap — Select a player to swap with</h3>
+    let html = `<div class="effect-panel"><h3>Identify Swap — Select a player to swap with</h3>
       <p>Giving away: <strong style="color:#93c5fd">${gs.identifyInfo.swapMyCard?.name||'?'}</strong></p>`;
     gs.players.forEach((pl, i) => {
       if (i === myIdx) return;
@@ -2627,7 +2665,7 @@ function renderEffectOverlay(gs) {
       html += `<button class="govern-player-btn" ${canSwap?`onclick="send({type:'game_action',action:'identify_swap_target',targetIdx:${i}})"`:''} style="${canSwap?'':'opacity:0.4;cursor:not-allowed'}">
         <div style="width:10px;height:10px;border-radius:50%;background:${COLOR_INFO[pl.color]?.hex||'#888'}"></div>
         ${pl.name} — ${swappable.length} swappable card(s)
-        ${isProtected && theirDefend.some(c=>c.type==='protect') ? ' 🛡️ (Protect active — excluded)' : isProtected ? ' 🛡️ PROTECTED' : ''}
+        ${isProtected && theirDefend.some(c=>c.type==='protect') ? ' <span style="color:#3b82f6;font-size:10px;font-weight:700">(Protect active — excluded)</span>' : isProtected ? ' <span style="color:#3b82f6;font-size:10px;font-weight:700">PROTECTED</span>' : ''}
         ${theirDefend.length===0 ? ' (no defend cards)' : ''}
       </button>`;
     });
@@ -2643,7 +2681,7 @@ function renderEffectOverlay(gs) {
     const tgtPlayer = gs.players[tgt];
     const tgtProtected = gs.protectedPlayers?.includes(tgt);
     const theirDefend = tgtPlayer.played.filter(c => c.cat === 'defend');
-    let html = `<div class="effect-panel" style="max-width:min(740px,94vw)"><h3>🔎 Swap — Select ${tgtPlayer.name}'s defend card to take</h3>
+    let html = `<div class="effect-panel" style="max-width:min(740px,94vw)"><h3>Identify Swap — Select ${tgtPlayer.name}'s defend card to take</h3>
       <div style="margin-top:12px">` +
       dsRows(theirDefend,
         c => (c.type === 'protect' && tgtProtected) ? 'ds-preview' : 'ds-selectable',
@@ -2664,7 +2702,7 @@ function renderEffectOverlay(gs) {
     }
     const last = detectOrderState.length - 1;
     let html = `<div class="effect-panel" style="max-width:min(740px,94vw)">
-      <h3>👁️ Detect — Top 5 cards of the deck</h3>
+      <h3>Detect — Top 5 cards of the deck</h3>
       <p style="color:#9ca3af;font-size:13px;margin-bottom:14px">Reorder these cards — position 1 is drawn next. Use the arrows to swap, then confirm.</p>
       <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;align-items:flex-end">`;
     detectOrderState.forEach((c, i) => {
@@ -2689,16 +2727,16 @@ function renderEffectOverlay(gs) {
   // ── C2 target selection (attacker picks who to hit) ──
   if (gs.phase === 'attack_c2_target' && gs.attackInfo?.iAmAttacker) {
     overlay.style.display = 'flex';
-    let html = `<div class="effect-panel"><h3>📡 Command & Control — Choose a target</h3>
-      <p style="color:#9ca3af;font-size:13px">If they hold the Data Flag 🚩 they must give it to you. Otherwise they choose which card from their hand to give you.</p>`;
+    let html = `<div class="effect-panel"><h3>Command &amp; Control — Choose a target</h3>
+      <p style="color:#9ca3af;font-size:13px">If they hold the Data Flag they must give it to you. Otherwise they choose which card from their hand to give you.</p>`;
     gs.players.forEach((pl, i) => {
       if (i === myIdx) return;
       const isProtected = gs.protectedPlayers?.includes(i);
       const canTarget = !isProtected;
       html += `<button class="govern-player-btn" ${canTarget ? `onclick="send({type:'game_action',action:'attack_select_target',targetIdx:${i}})"` : ''} style="${canTarget ? '' : 'opacity:0.4;cursor:not-allowed'}">
         <div style="width:10px;height:10px;border-radius:50%;background:${COLOR_INFO[pl.color]?.hex||'#888'}"></div>
-        ${pl.name} — 🃏 ${pl.handCount} cards
-        ${isProtected ? '<span style="color:#62b517;font-size:11px">🛡️ PROTECTED</span>' : ''}
+        ${pl.name} — ${pl.handCount} cards
+        ${isProtected ? '<span style="color:#3b82f6;font-size:11px;font-weight:700">PROTECTED</span>' : ''}
       </button>`;
     });
     html += `<button class="action-btn btn-cancel" onclick="send({type:'game_action',action:'cancel_attack'})" style="margin-top:10px;width:100%">✕ Cancel Attack</button></div>`;
@@ -2715,13 +2753,13 @@ function renderEffectOverlay(gs) {
     if (ai.iAmTarget) {
       const respondCards = ai.myRespondCards || [];
       let html = `<div class="effect-panel">
-        <h3 style="color:#f87171">⚠️ You're being attacked!</h3>
+        <h3 style="color:#f87171">You're being attacked!</h3>
         <p><strong style="color:${COLOR_INFO[gs.players[ai.attacker]?.color]?.hex||'#fff'}">${attackerName}</strong> played <strong>${cardName}</strong> targeting you.</p>
-        <p style="color:#9ca3af;font-size:13px">If you have the Data Flag 🚩 you must give it to them. Otherwise they take a card of their choice.</p>
+        <p style="color:#9ca3af;font-size:13px">If you have the Data Flag you must give it to them. Otherwise they take a card of their choice.</p>
         <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">`;
       if (respondCards.length > 0) {
         respondCards.forEach(c => {
-          html += `<button class="action-btn btn-govern" onclick="send({type:'game_action',action:'play_respond',cardId:'${c.id}'})" style="flex:1">🚨 Play Respond (${c.name})</button>`;
+          html += `<button class="action-btn btn-govern" onclick="send({type:'game_action',action:'play_respond',cardId:'${c.id}'})" style="flex:1">Play Respond (${c.name})</button>`;
         });
       }
       html += `<button class="action-btn btn-cancel" onclick="send({type:'game_action',action:'respond_skip'})" style="flex:1">Allow Effect</button>
@@ -2730,18 +2768,18 @@ function renderEffectOverlay(gs) {
       </div>`;
       // Fix the C2 description based on what type of attack it is
       if (ai.type === 'c2') {
-        html = html.replace('<p style="color:#9ca3af;font-size:13px">If you have the Data Flag 🚩 you must give it to them. Otherwise they take a card of their choice.</p>',
-          '<p style="color:#9ca3af;font-size:13px">If you hold the Data Flag 🚩 you must give it to them. Otherwise you choose which card from your hand to give.</p>');
+        html = html.replace('<p style="color:#9ca3af;font-size:13px">If you have the Data Flag you must give it to them. Otherwise they take a card of their choice.</p>',
+          '<p style="color:#9ca3af;font-size:13px">If you hold the Data Flag you must give it to them. Otherwise you choose which card from your hand to give.</p>');
       }
       inner.innerHTML = html;
     } else if (ai.iAmAttacker) {
       inner.innerHTML = `<div class="effect-panel">
-        <h3>📡 Waiting…</h3>
+        <h3>C2 — Waiting…</h3>
         <p style="color:#9ca3af">${gs.players[ai.target]?.name || '?'} can play Respond to cancel your attack.</p>
       </div>`;
     } else {
       inner.innerHTML = `<div class="effect-panel">
-        <h3>📡 Attack in progress</h3>
+        <h3>C2 — Attack in progress</h3>
         <p style="color:#9ca3af">${attackerName} used ${cardName} — waiting for response.</p>
       </div>`;
     }
@@ -2755,7 +2793,7 @@ function renderEffectOverlay(gs) {
     const myHand = gs.attackInfo.targetHand || [];
     const giveable = myHand.filter(c => c.type !== 'data_flag');
     let html = `<div class="effect-panel" style="max-width:min(740px,94vw)">
-      <h3>📡 C2 — Choose a card to give to ${attackerName}</h3>
+      <h3>C2 — Choose a card to give to ${attackerName}</h3>
       <p style="color:#9ca3af;font-size:13px;margin-bottom:12px">Pick any card from your hand (except the Data Flag) to give away.</p>
       <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center">`;
     sortByOrder(giveable).forEach(c => {
@@ -2772,7 +2810,7 @@ function renderEffectOverlay(gs) {
     overlay.style.display = 'flex';
     const tgtName = gs.players[gs.attackInfo.target]?.name || '?';
     inner.innerHTML = `<div class="effect-panel">
-      <h3>📡 Waiting…</h3>
+      <h3>C2 — Waiting…</h3>
       <p style="color:#9ca3af">${tgtName} is choosing a card to give you.</p>
     </div>`;
     return;
@@ -2783,7 +2821,7 @@ function renderEffectOverlay(gs) {
     overlay.style.display = 'flex';
     const ai = gs.attackInfo;
     inner.innerHTML = `<div class="effect-panel">
-      <h3>📡 C2 resolving…</h3>
+      <h3>C2 resolving…</h3>
       <p style="color:#9ca3af">${gs.players[ai?.target]?.name||'?'} is choosing a card to give to ${gs.players[ai?.attacker]?.name||'?'}.</p>
     </div>`;
     return;
@@ -2795,18 +2833,18 @@ function renderEffectOverlay(gs) {
     const wi = gs.weaponizeInfo;
     if (wi.iAmDefender) {
       inner.innerHTML = `<div class="effect-panel">
-        <h3>⚒️ Opponents can Weaponize</h3>
+        <h3>Opponents can Weaponize</h3>
         <p style="color:#9ca3af">You played <strong>${wi.cardName}</strong>. Opponents have 8 seconds to play a Weaponize card to cancel the effect.</p>
         <p style="color:#4b5563;font-size:12px">Waiting…</p>
       </div>`;
     } else {
       const wCards = wi.myWeaponizeCards || [];
       inner.innerHTML = `<div class="effect-panel">
-        <h3>⚒️ Cancel Defend Card?</h3>
+        <h3>Cancel Defend Card?</h3>
         <p><strong style="color:${COLOR_INFO[gs.players[wi.defender]?.color]?.hex||'#fff'}">${wi.defenderName}</strong> played <strong>${wi.cardName}</strong>.</p>
         <p style="color:#9ca3af;font-size:13px">Play a Weaponize card to cancel its effect before it resolves.</p>
         <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
-          ${wCards.map(c => `<button class="action-btn btn-govern" onclick="send({type:'game_action',action:'play_weaponize',cardId:'${c.id}'})" style="flex:1">⚒️ Play Weaponize (${c.name})</button>`).join('')}
+          ${wCards.map(c => `<button class="action-btn btn-govern" onclick="send({type:'game_action',action:'play_weaponize',cardId:'${c.id}'})" style="flex:1">Play Weaponize (${c.name})</button>`).join('')}
           ${wCards.length === 0 ? '<p style="color:#4b5563;font-size:12px">No Weaponize cards in hand.</p>' : ''}
         </div>
         <p style="color:#4b5563;font-size:11px;margin-top:8px">Auto-resolves in 8 seconds.</p>
@@ -2818,14 +2856,14 @@ function renderEffectOverlay(gs) {
   // ── Recon target ──
   if (gs.phase === 'attack_recon_target' && gs.attackInfo?.iAmAttacker) {
     overlay.style.display = 'flex';
-    let html = `<div class="effect-panel"><h3>🔍 Reconnaissance — Choose a target</h3>
+    let html = `<div class="effect-panel"><h3>Reconnaissance — Choose a target</h3>
       <p style="color:#9ca3af;font-size:13px">Look at their hand OR swap one of your played attack cards with one of theirs.</p>`;
     gs.players.forEach((pl, i) => {
       if (i === myIdx) return;
       const isProtected = gs.protectedPlayers?.includes(i);
       html += `<button class="govern-player-btn" ${!isProtected ? `onclick="send({type:'game_action',action:'attack_select_target',targetIdx:${i}})"` : ''} style="${isProtected?'opacity:0.4;cursor:not-allowed':''}">
         <div style="width:10px;height:10px;border-radius:50%;background:${COLOR_INFO[pl.color]?.hex||'#888'}"></div>
-        ${pl.name} — 🃏 ${pl.handCount} cards ${isProtected ? '🛡️ PROTECTED' : ''}
+        ${pl.name} — ${pl.handCount} cards ${isProtected ? '<span style="color:#3b82f6;font-size:10px;font-weight:700">PROTECTED</span>' : ''}
       </button>`;
     });
     html += `<button class="action-btn btn-cancel" onclick="send({type:'game_action',action:'cancel_attack'})" style="margin-top:10px;width:100%">✕ Cancel Attack</button></div>`;
@@ -2840,9 +2878,9 @@ function renderEffectOverlay(gs) {
     const canSwap = myAttack.length > 0 && theirAttack.length > 0;
     overlay.style.display = 'flex';
     inner.innerHTML = `<div class="effect-panel">
-      <h3>🔍 Reconnaissance — Choose action vs ${tgtName}</h3>
-      <button class="govern-player-btn" onclick="send({type:'game_action',action:'recon_choice',choice:'look'})">👁️ Look at ${tgtName}'s Hand<br><small style="color:#9ca3af">See all cards (read-only, no stealing)</small></button>
-      ${canSwap ? `<button class="govern-player-btn" onclick="send({type:'game_action',action:'recon_choice',choice:'swap'})">🔄 Swap Attack Cards<br><small style="color:#9ca3af">Exchange one of your played attack cards with one of ${tgtName}'s</small></button>` : `<button class="govern-player-btn" style="opacity:0.4;cursor:not-allowed">🔄 Swap Attack Cards — unavailable<br><small style="color:#9ca3af">Both players need played attack cards</small></button>`}
+      <h3>Reconnaissance — Choose action vs ${tgtName}</h3>
+      <button class="govern-player-btn" onclick="send({type:'game_action',action:'recon_choice',choice:'look'})">Look at ${tgtName}'s Hand<br><small style="color:#9ca3af">See all cards (read-only, no stealing)</small></button>
+      ${canSwap ? `<button class="govern-player-btn" onclick="send({type:'game_action',action:'recon_choice',choice:'swap'})">Swap Attack Cards<br><small style="color:#9ca3af">Exchange one of your played attack cards with one of ${tgtName}'s</small></button>` : `<button class="govern-player-btn" style="opacity:0.4;cursor:not-allowed">Swap Attack Cards — unavailable<br><small style="color:#9ca3af">Both players need played attack cards</small></button>`}
       <button class="action-btn btn-end-turn" style="margin-top:8px;width:100%" onclick="send({type:'game_action',action:'recon_go_back'})">← Go Back</button>
     </div>`; return;
   }
@@ -2852,7 +2890,7 @@ function renderEffectOverlay(gs) {
     const tgtName = gs.players[gs.attackInfo.target]?.name || '?';
     const tgtHand = gs.attackInfo.targetHand || [];
     overlay.style.display = 'flex';
-    let html = `<div class="effect-panel" style="max-width:min(740px,94vw)"><h3>🔍 ${tgtName}'s Hand</h3><div style="display:flex;flex-wrap:wrap;gap:8px;margin:12px 0;justify-content:center">`;
+    let html = `<div class="effect-panel" style="max-width:min(740px,94vw)"><h3>Recon — ${tgtName}'s Hand</h3><div style="display:flex;flex-wrap:wrap;gap:8px;margin:12px 0;justify-content:center">`;
     sortByOrder(tgtHand).forEach(c => { html += vcCard(c, null); });
     if (tgtHand.length === 0) html += `<p style="color:#6b7280">Empty hand.</p>`;
     html += `</div><button class="action-btn btn-govern" onclick="send({type:'game_action',action:'recon_look_done'})" style="width:100%;margin-top:4px">Done</button></div>`;
@@ -2863,7 +2901,7 @@ function renderEffectOverlay(gs) {
   if (gs.phase === 'attack_recon_look' && !gs.attackInfo?.iAmAttacker) {
     overlay.style.display = 'flex';
     const ai = gs.attackInfo;
-    inner.innerHTML = `<div class="effect-panel"><h3>🔍 Recon in progress</h3>
+    inner.innerHTML = `<div class="effect-panel"><h3>Recon in progress</h3>
       <p style="color:#9ca3af">${gs.players[ai?.attacker]?.name||'?'} is looking at ${gs.players[ai?.target]?.name||'?'}'s hand.</p></div>`;
     return;
   }
@@ -2872,7 +2910,7 @@ function renderEffectOverlay(gs) {
   if (gs.phase === 'attack_recon_swap_my' && gs.attackInfo?.iAmAttacker) {
     overlay.style.display = 'flex';
     const myAttack = gs.players[myIdx].played.filter(c => c.cat === 'attack');
-    let html = `<div class="effect-panel" style="max-width:min(740px,94vw)"><h3>🔍 Swap — Select your attack card to give away</h3>`;
+    let html = `<div class="effect-panel" style="max-width:min(740px,94vw)"><h3>Recon Swap — Select your attack card to give away</h3>`;
     if (myAttack.length === 0) { html += `<p style="color:#9ca3af;margin-top:8px">No played attack cards to swap.</p>`; }
     else { html += `<div style="margin-top:12px">` + dsRows(myAttack, () => 'ds-selectable', c => `send({type:'game_action',action:'recon_swap_my',cardId:'${c.id}'})`, true, false) + `</div>`; }
     html += '</div>';
@@ -2886,7 +2924,7 @@ function renderEffectOverlay(gs) {
     const theirAttack = gs.players[tgt]?.played.filter(c => c.cat === 'attack') || [];
     overlay.style.display = 'flex';
     const givingCard = gs.attackInfo.reconSwapMyCard;
-    let html = `<div class="effect-panel" style="max-width:min(740px,94vw)"><h3>🔍 Swap — Select ${tgtName}'s attack card to take</h3>`;
+    let html = `<div class="effect-panel" style="max-width:min(740px,94vw)"><h3>Recon Swap — Select ${tgtName}'s attack card to take</h3>`;
     if (givingCard) {
       html += `<div style="margin-bottom:14px"><p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#9ca3af;margin-bottom:8px">Giving away:</p>
         <div style="margin-bottom:8px">` + dsRows([givingCard], () => 'ds-giving', null, true, false) + `</div>
@@ -2900,21 +2938,21 @@ function renderEffectOverlay(gs) {
 
   // ── Generic attack target overlays (Exploit, Install, Delivery) ──
   const genericTargetConfig = {
-    attack_exploit_target: { icon: '💥', title: 'Exploitation — Choose a target', desc: 'Take one random card from their hand (blind draw). Respond cancels.' },
-    attack_install_target: { icon: '⚙️', title: 'Installation — Choose a target', desc: 'They cannot play defend cards until the end of their next turn. Respond cancels.' },
-    attack_delivery_target: { icon: '📨', title: 'Delivery — Choose a target', desc: 'You may swap up to 2 of your played cards with theirs. Respond cancels.' },
+    attack_exploit_target: { title: 'Exploitation — Choose a target', desc: 'Take one random card from their hand (blind draw). Respond cancels.' },
+    attack_install_target: { title: 'Installation — Choose a target', desc: 'They cannot play defend cards until the end of their next turn. Respond cancels.' },
+    attack_delivery_target: { title: 'Delivery — Choose a target', desc: 'You may swap up to 2 of your played cards with theirs. Respond cancels.' },
   };
   if (genericTargetConfig[gs.phase] && gs.attackInfo?.iAmAttacker) {
     const cfg = genericTargetConfig[gs.phase];
     overlay.style.display = 'flex';
-    let html = `<div class="effect-panel"><h3>${cfg.icon} ${cfg.title}</h3>
+    let html = `<div class="effect-panel"><h3>${cfg.title}</h3>
       <p style="color:#9ca3af;font-size:13px">${cfg.desc}</p>`;
     gs.players.forEach((pl, i) => {
       if (i === myIdx) return;
       const isProtected = gs.protectedPlayers?.includes(i);
       html += `<button class="govern-player-btn" ${!isProtected ? `onclick="send({type:'game_action',action:'attack_select_target',targetIdx:${i}})"` : ''} style="${isProtected?'opacity:0.4;cursor:not-allowed':''}">
         <div style="width:10px;height:10px;border-radius:50%;background:${COLOR_INFO[pl.color]?.hex||'#888'}"></div>
-        ${pl.name} — 🃏 ${pl.handCount} cards ${isProtected ? '🛡️ PROTECTED' : ''}
+        ${pl.name} — ${pl.handCount} cards ${isProtected ? '<span style="color:#3b82f6;font-size:10px;font-weight:700">PROTECTED</span>' : ''}
       </button>`;
     });
     html += `<button class="action-btn btn-cancel" onclick="send({type:'game_action',action:'cancel_attack'})" style="margin-top:10px;width:100%">✕ Cancel Attack</button></div>`;
@@ -2930,7 +2968,7 @@ function renderEffectOverlay(gs) {
 
     let html = `<div class="delivery-swap-panel">
       <div class="delivery-swap-header">
-        <span class="delivery-swap-title">📨 Delivery</span>
+        <span class="delivery-swap-title">Delivery</span>
         <span class="delivery-swap-progress">Swap ${swapsDone + (pickStep ? 1 : 0)} of 2</span>
       </div>`;
 
@@ -2997,7 +3035,7 @@ function renderEffectOverlay(gs) {
   if (['attack_delivery_pick','attack_recon_swap_my','attack_recon_swap_their','attack_exploit_target','attack_install_target','attack_delivery_target','attack_recon_target'].includes(gs.phase) && !gs.attackInfo?.iAmAttacker) {
     overlay.style.display = 'flex';
     const ai = gs.attackInfo;
-    inner.innerHTML = `<div class="effect-panel"><h3>⚔️ Attack in progress</h3>
+    inner.innerHTML = `<div class="effect-panel"><h3>Attack in progress</h3>
       <p style="color:#9ca3af">${gs.players[ai?.attacker]?.name||'?'} is resolving their attack.</p></div>`;
     return;
   }
@@ -3038,7 +3076,7 @@ const BTC = {
   exploit:  { id:2001, cat:'attack', type:'exploit',   name:'Exploitation',   img:'images/attack-exploit.png',   desc:'Blindly steal 1 random card from target\'s hand.' },
   deliver:  { id:2002, cat:'attack', type:'deliver',   name:'Delivery',       img:'images/attack-delivery.png',  desc:'Swap up to 2 played cards with an opponent.' },
   // Data Flag (moves to Alex's hand in step 4)
-  dataFlag: { id:3001, cat:'special', type:'data_flag', name:'🚩 Data Flag',  img:'images/special-data-flag.png', desc:'Hold this when Times Up is drawn to win instantly!' },
+  dataFlag: { id:3001, cat:'special', type:'data_flag', name:'Data Flag',  img:'images/special-data-flag.png', desc:'Hold this when Times Up is drawn to win instantly!' },
   // Step 7: the two "completing" cards
   c2b:      { id:1006, cat:'attack', type:'c2',        name:'C2 Control',     img:'images/attack-c2.png',        desc:'Steal the Data Flag, or target must give you a card.' },
   recoverB: { id:1007, cat:'defend', type:'recover',   name:'Recover',        desc:'Draw cards until you have 5 in hand.' },
@@ -3618,6 +3656,8 @@ const urlRoom = new URLSearchParams(location.search).get('room');
 if (urlRoom) {
   document.getElementById('join-code').value = urlRoom.toUpperCase();
 }
+
+setupSpecialCardZoom();
 
 // On connect: try session rejoin first, then URL room check, then nothing
 connectWS(() => {
