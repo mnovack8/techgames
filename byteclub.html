@@ -111,8 +111,8 @@ body{padding-top:44px;}
 
 #observer-banner{display:none;position:fixed;top:44px;left:0;right:0;z-index:99;background:linear-gradient(180deg,rgba(8,47,73,0.95),rgba(6,32,52,0.95));border-bottom:2px solid #22d3ee;box-shadow:0 2px 12px rgba(34,211,238,0.25),inset 0 -1px 0 rgba(34,211,238,0.15);padding:6px 16px;align-items:center;gap:10px;font-size:12px;font-weight:700;color:#67e8f9;letter-spacing:0.8px;text-transform:uppercase;}
 #observer-banner .obs-pill{background:rgba(34,211,238,0.1);border:1px solid rgba(34,211,238,0.4);border-radius:20px;padding:2px 10px;font-size:11px;font-weight:700;color:#67e8f9;letter-spacing:0.5px;}
-body.observer-active{padding-top:calc(44px + 32px);}
-body.observer-active #game .game-layout{height:calc(100vh - 44px - 32px);}
+body.observer-active{padding-top:calc(44px + 36px + 10px);}
+body.observer-active #game .game-layout{height:calc(100vh - 44px - 36px - 10px);}
 .observer-hands{display:flex;flex-direction:column;gap:10px;padding:8px 12px 10px;overflow-y:auto;max-height:220px;background:#0d1117;}
 .observer-player-hand{display:flex;flex-direction:column;gap:4px;}
 .observer-hand-label{display:flex;align-items:center;gap:6px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#6b7280;}
@@ -139,8 +139,8 @@ body.observer-active .game-layout{
     "my   my";
   overflow:hidden;
 }
-body.observer-active .turn-strip{grid-area:turn;}
-body.observer-active .opponents-bar{grid-area:opps;flex-wrap:wrap;overflow-x:visible;overflow-y:auto;gap:12px;padding:10px 14px;align-items:stretch;align-content:flex-start;min-height:0;}
+body.observer-active .turn-strip{grid-area:turn;padding:6px 14px;margin-top:4px;}
+body.observer-active .opponents-bar{grid-area:opps;flex-wrap:wrap;overflow-x:visible;overflow-y:auto;gap:8px;padding:6px 10px;align-items:stretch;align-content:flex-start;min-height:0;}
 body.observer-active .center-area{grid-area:side;flex-direction:column;overflow-y:auto;background:#0d1117;border-left:1px solid #1e2d3d;min-height:0;}
 body.observer-active .my-area{grid-area:my;}
 /* Game log: full sidebar width, auto-growing, scrollable */
@@ -166,33 +166,43 @@ body.observer-active .special-card .sc-status{font-size:10px;margin:0;opacity:0.
   body.observer-active .special-card{width:auto;min-width:72px;flex-direction:column;text-align:center;}
   body.observer-active .special-card .sc-name{text-align:center;}
 }
-body.observer-active .opponent-panel{min-width:520px;max-width:none;flex:1 1 520px;padding:10px 14px;}
+body.observer-active .opponent-panel{min-width:520px;max-width:none;flex:1 1 520px;padding:6px 12px;}
 body.observer-active .opp-kc-slot{width:30px;height:30px;}
 body.observer-active .opp-kc-label{font-size:8px;max-width:36px;}
+body.observer-active .opp-header{margin-bottom:2px;}
+body.observer-active .opp-played{margin-top:2px;gap:2px;}
+body.observer-active .opp-hand-row{margin-top:3px;padding-top:4px;padding-bottom:0;gap:4px;}
+body.observer-active .opp-hand-label{margin-top:3px;}
 /* On wider screens, panels scale up to fit 6+ cards comfortably without scroll */
 @media (min-width: 1200px) {
   body.observer-active .opponent-panel{min-width:560px;flex:1 1 560px;}
-  body.observer-active .opp-hand-row .card{min-width:78px;max-width:78px;}
-  body.observer-active .opp-hand-row .card.card-has-img{min-width:78px;max-width:78px;height:108px;}
+  body.observer-active .opp-hand-row .card{min-width:70px;max-width:70px;}
+  body.observer-active .opp-hand-row .card.card-has-img{min-width:70px;max-width:70px;height:92px;}
 }
 @media (min-width: 1600px) {
   body.observer-active .opponent-panel{min-width:640px;flex:1 1 640px;}
-  body.observer-active .opp-hand-row .card{min-width:88px;max-width:88px;}
-  body.observer-active .opp-hand-row .card.card-has-img{min-width:88px;max-width:88px;height:122px;}
+  body.observer-active .opp-hand-row .card{min-width:78px;max-width:78px;}
+  body.observer-active .opp-hand-row .card.card-has-img{min-width:78px;max-width:78px;height:104px;}
 }
 /* Observer: full-size played-cards rows (matches the player's "Cards in Front of You" style) */
-.obs-played-rows{margin-top:4px;}
-.obs-played-rows .kc-row{align-items:center;gap:6px;}
+.obs-played-rows{margin-top:2px;}
+.obs-played-rows .kc-row{align-items:center;gap:6px;margin-bottom:1px;}
 .obs-played-rows .kc-row-label{width:56px;font-size:8px;line-height:1.1;text-align:right;}
-.obs-played-rows .kc-slots{gap:5px;flex-wrap:nowrap;}
-.obs-played-rows .kc-slot{width:52px;min-height:66px;}
+.obs-played-rows .kc-slots{gap:4px;flex-wrap:nowrap;}
+.obs-played-rows .kc-slot{width:48px;min-height:56px;}
 @media (min-width:1200px){
-  body.observer-active .obs-played-rows .kc-slot{width:58px;min-height:74px;}
-  body.observer-active .obs-played-rows .kc-row-label{width:62px;font-size:9px;}
+  body.observer-active .obs-played-rows .kc-slot{width:52px;min-height:62px;}
+  body.observer-active .obs-played-rows .kc-row-label{width:60px;font-size:9px;}
 }
 @media (min-width:1600px){
-  body.observer-active .obs-played-rows .kc-slot{width:66px;min-height:84px;}
-  body.observer-active .obs-played-rows .kc-row-label{width:72px;font-size:10px;}
+  body.observer-active .obs-played-rows .kc-slot{width:58px;min-height:70px;}
+  body.observer-active .obs-played-rows .kc-row-label{width:68px;font-size:10px;}
+}
+/* On tall screens, allow slightly more comfortable hand card size */
+@media (min-width: 1200px) and (min-height: 1000px) {
+  body.observer-active .opp-hand-row .card.card-has-img{height:108px;min-width:80px;max-width:80px;}
+  body.observer-active .opp-hand-row .card{min-width:80px;max-width:80px;}
+  body.observer-active .obs-played-rows .kc-slot{min-height:72px;}
 }
 /* Observer hands-hidden toggle — hides the in-panel hand rows */
 body.obs-hands-hidden .opp-hand-row,
@@ -200,9 +210,11 @@ body.obs-hands-hidden .opp-hand-label{display:none !important;}
 #obs-hide-hands-btn{background:#374151;color:#e2e8f0;border:1px solid #4b5563;border-radius:6px;padding:3px 10px;font-size:11px;font-weight:700;cursor:pointer;margin-left:auto;letter-spacing:0.3px;}
 #obs-hide-hands-btn:hover{background:#4b5563;}
 #obs-hide-hands-btn.hands-hidden{background:#1a2235;color:#9ca3af;}
-/* When the host's "Cancel Game" button is visible (top-right fixed), reserve room in
-   the observer banner so the Hide Hands button doesn't sit underneath it. */
-body.host-cancel-visible #observer-banner{padding-right:150px;}
+/* Reserve room on the right of the observer banner so the fixed top-right buttons
+   (How to Play, and — if host — Cancel Game) sit on the same horizontal line as the
+   Hide Hands button without overlapping it. */
+body.observer-active #observer-banner{padding-right:140px;}
+body.observer-active.host-cancel-visible #observer-banner{padding-right:290px;}
 .waiting-observer-section{width:100%;max-width:320px;margin-top:4px;}
 .waiting-observer-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:#67e8f9;margin-bottom:6px;display:flex;align-items:center;gap:6px;}
 .waiting-observer-row{display:flex;align-items:center;gap:10px;padding:7px 14px;background:#0a1e2a;border-radius:8px;border:1px solid rgba(34,211,238,0.25);margin-bottom:5px;}
@@ -322,9 +334,9 @@ body.host-cancel-visible #observer-banner{padding-right:150px;}
 /* HOW TO PLAY BUTTON (replaces sidebar) */
 .how-to-play-btn{position:fixed;top:50px;right:14px;z-index:101;background:#1a2235;border:1px solid #374151;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;color:#62b517;cursor:pointer;display:flex;align-items:center;gap:5px;transition:background 0.15s;}
 .how-to-play-btn:hover{background:#253347;}
-/* Shift How to Play down when Cancel Game is also showing */
-.host-cancel-visible .how-to-play-btn{top:82px;}
-.host-cancel-visible .how-to-play-panel{top:114px;}
+/* Keep How to Play on the same horizontal line as Cancel Game — just shift left of it */
+.host-cancel-visible .how-to-play-btn{top:50px;right:160px;}
+.host-cancel-visible .how-to-play-panel{top:82px;right:14px;}
 .how-to-play-panel{display:none;position:fixed;top:82px;right:14px;z-index:500;width:320px;max-height:calc(100vh - 100px);overflow-y:auto;background:#1a2235;border:1px solid #374151;border-radius:12px;padding:16px;box-shadow:0 12px 48px rgba(0,0,0,0.6);}
 .how-to-play-panel.open{display:block;}
 .how-to-play-panel h4{font-size:13px;font-weight:800;color:#62b517;margin-bottom:8px;}
@@ -491,11 +503,18 @@ body.host-cancel-visible #observer-banner{padding-right:150px;}
 /* INFO ICON TOOLTIPS */
 .info-btn{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:rgba(75,85,99,0.35);color:#6b8aaa;font-size:10px;font-weight:800;cursor:pointer;border:1px solid rgba(75,85,99,0.5);flex-shrink:0;line-height:1;vertical-align:middle;position:relative;user-select:none;transition:background 0.15s,color 0.15s;}
 .info-btn:hover{background:rgba(98,181,23,0.2);color:#62b517;border-color:rgba(98,181,23,0.4);}
-.info-popup{display:none;position:absolute;z-index:500;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:#1a2235;border:1px solid #374151;border-radius:10px;padding:10px 14px;width:240px;box-shadow:0 8px 32px rgba(0,0,0,0.6);font-size:11px;font-weight:400;color:#c9d1d9;line-height:1.5;text-align:left;text-transform:none;letter-spacing:0;pointer-events:auto;}
-.info-popup::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:#374151;}
+.info-popup{display:none;position:fixed;z-index:800;background:#1a2235;border:1px solid #374151;border-radius:10px;padding:10px 14px;width:240px;box-shadow:0 8px 32px rgba(0,0,0,0.6);font-size:11px;font-weight:400;color:#c9d1d9;line-height:1.5;text-align:left;text-transform:none;letter-spacing:0;pointer-events:auto;}
+.info-popup::after{content:none;}
 /* Downward variant for elements near the top of the screen */
-.info-popup.below{bottom:auto;top:calc(100% + 8px);}
-.info-popup.below::after{top:auto;bottom:100%;border-top-color:transparent;border-bottom-color:#374151;}
+/* Arrow tails (added by positionInfoPopup). `tail-above` means the popup is ABOVE
+   the button (tail on bottom, pointing down). `tail-below` means popup is BELOW
+   the button (tail on top, pointing up). */
+.info-popup.tail-below{}
+.info-popup.tail-below::after{content:'';position:absolute;bottom:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-bottom-color:#374151;}
+.info-popup.tail-above{}
+.info-popup.tail-above::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:#374151;}
+/* `.below` is kept as a preference hint only — the real direction is decided at runtime */
+.info-popup.below{}
 .info-btn.open .info-popup{display:block;}
 .info-popup strong{color:#62b517;font-weight:700;}
 .info-popup em{color:#d1db24;font-style:normal;font-weight:700;}
@@ -1222,25 +1241,61 @@ function hideCardZoom() {
 function positionInfoPopup(btn) {
   const popup = btn.querySelector('.info-popup');
   if (!popup) return;
-  // Reset any previous adjustments
+  // Reset all positioning — we'll compute explicit viewport coords and use
+  // position:fixed so popups render above any scrollable/clipped parent.
+  popup.style.position = 'fixed';
   popup.style.left = '';
   popup.style.right = '';
+  popup.style.top = '';
+  popup.style.bottom = '';
   popup.style.transform = '';
-  // Read where it landed in the viewport
-  const rect   = popup.getBoundingClientRect();
+  popup.style.maxHeight = '';
+  popup.style.overflowY = '';
+  popup.classList.remove('tail-below', 'tail-above');
+
   const btnRect = btn.getBoundingClientRect();
-  const vw     = window.innerWidth;
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
   const margin = 10;
-  if (rect.left < margin) {
-    // Clamp left edge — position relative to btn's left edge
-    popup.style.transform = 'none';
-    popup.style.left = (margin - btnRect.left) + 'px';
-  } else if (rect.right > vw - margin) {
-    // Clamp right edge — anchor to right side of btn
-    popup.style.transform = 'none';
-    popup.style.left = 'auto';
-    popup.style.right = (btnRect.right - (vw - margin)) + 'px';
+  const gap = 8;
+
+  // Measure current popup size (let CSS drive width)
+  const pw = popup.offsetWidth;
+  let   ph = popup.offsetHeight;
+
+  // Vertical direction: prefer CSS hint (.below => below), else above.
+  const preferBelow = popup.classList.contains('below');
+  const spaceAbove = btnRect.top - margin;
+  const spaceBelow = vh - btnRect.bottom - margin;
+
+  let placeBelow;
+  if (preferBelow) {
+    placeBelow = (ph + gap <= spaceBelow) || (spaceBelow >= spaceAbove);
+  } else {
+    placeBelow = !(ph + gap <= spaceAbove) && (spaceBelow > spaceAbove);
   }
+
+  // If neither side has room for full height, cap the height to the larger side
+  const bestSpace = placeBelow ? spaceBelow : spaceAbove;
+  if (ph + gap > bestSpace) {
+    ph = Math.max(60, bestSpace - gap);
+    popup.style.maxHeight = ph + 'px';
+    popup.style.overflowY = 'auto';
+  }
+
+  // Compute top
+  const top = placeBelow ? (btnRect.bottom + gap) : (btnRect.top - gap - ph);
+  popup.style.top = top + 'px';
+
+  // Compute left: center on the button, then clamp to viewport
+  const btnCenter = btnRect.left + btnRect.width / 2;
+  let left = btnCenter - pw / 2;
+  if (left < margin) left = margin;
+  if (left + pw > vw - margin) left = vw - margin - pw;
+  popup.style.left = left + 'px';
+
+  // Tail class drives the CSS arrow direction
+  popup.classList.add(placeBelow ? 'tail-above' : 'tail-below');
 }
 
 document.addEventListener('click', e => {
@@ -1927,11 +1982,11 @@ function renderObserverGame(gs) {
     const defendSlots = DEFEND_TYPES.map(t => obsFullSlot(t, t.id==='govern'?'special':'defend')).join('');
     const oppPlayedHtml = `<div class="my-played-rows obs-played-rows">
       <div class="kc-row">
-        <span class="kc-row-label attack">Cyberkill Chain</span>
+        <span class="kc-row-label attack">Cyberkill Chain<span class="info-btn" onclick="">i<div class="info-popup wide"><strong>Cyber Kill Chain</strong> — the attack path. A player must play one of each attack type to unlock <em>Action Objectives</em>.<br><br>🔍 <strong>Recon</strong> — look at a hand or swap played attack cards<br>⚒️ <strong>Weaponize</strong> — cancel an opponent's defend card (out of turn)<br>📨 <strong>Delivery</strong> — swap up to 2 played cards with opponents<br>💥 <strong>Exploit</strong> — blindly steal 1 card from a target<br>⚙️ <strong>Install</strong> — block a target from playing defend cards<br>📡 <strong>C2</strong> — steal the Data Flag, or target gives you a card</div></span></span>
         <div class="kc-slots">${attackSlots}</div>
       </div>
       <div class="kc-row">
-        <span class="kc-row-label defend">NIST</span>
+        <span class="kc-row-label defend">NIST<span class="info-btn" onclick="">i<div class="info-popup wide"><strong>NIST Cybersecurity Framework</strong> — the defense path. A player must play one of each defend type to unlock <em>Govern</em>.<br><br>🔎 <strong>Identify</strong> — reveal Data Flag holder or swap played defend cards<br>🛡️ <strong>Protect</strong> — block attacks until your next turn<br>👁️ <strong>Detect</strong> — view and reorder the top 5 deck cards<br>🚨 <strong>Respond</strong> — cancel an attack targeting you (out of turn)<br>🔄 <strong>Recover</strong> — draw until you have 5 cards</div></span></span>
         <div class="kc-slots">${defendSlots}</div>
       </div>
     </div>`;
@@ -1942,7 +1997,7 @@ function renderObserverGame(gs) {
     const sortedHand = sortByOrder(hand);
     const hasHand = hand.length || pl.handCount;
     const handShellHtml = hasHand ? `
-      <div class="opp-hand-label">Hand <span style="color:#4b5563;font-weight:400;font-size:9px">(${hand.length})</span></div>
+      <div class="opp-hand-label">Hand <span style="color:#4b5563;font-weight:400;font-size:9px">(${hand.length})</span> <span class="info-btn" onclick="">i<div class="info-popup below">Cards currently in this player's hand. As an observer you can see everyone's cards — a normal player only sees their own.<br><br>💡 <em>Hover any card to zoom in and read the full effect.</em><br><br>Players play cards on their turn to fill their Kill Chain / NIST rows above. A hand can hold up to 6 cards at end of turn.</div></span></div>
       <div class="opp-hand-row"></div>` : '';
 
     div.innerHTML = `
