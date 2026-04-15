@@ -89,19 +89,28 @@ body{padding-top:44px;}
 .or-divider{display:flex;align-items:center;gap:8px;margin:10px 0 6px;color:#374151;font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;}
 .or-divider::before,.or-divider::after{content:'';flex:1;height:1px;background:#1f2937;}
 .observer-role-btn{width:100%;padding:11px 14px;background:#0d1117;border:2px solid #374151;border-radius:10px;color:#6b7280;cursor:pointer;font-weight:700;display:flex;align-items:center;gap:10px;transition:all 0.15s;margin-bottom:0;}
-.observer-role-btn:hover{border-color:#4b5563;color:#9ca3af;background:#111827;}
-.observer-role-btn.selected{border-color:#d1db24;background:rgba(209,219,36,0.05);color:#d1db24;}
-.obs-role-icon{font-size:22px;line-height:1;flex-shrink:0;}
+.observer-role-btn:hover{border-color:#22d3ee;color:#67e8f9;background:#0a1e2a;}
+.observer-role-btn.selected{border-color:#22d3ee;background:rgba(34,211,238,0.07);color:#67e8f9;box-shadow:0 0 0 1px rgba(34,211,238,0.25),inset 0 0 12px rgba(34,211,238,0.08);}
+.obs-role-icon{flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;}
 .obs-role-text{display:flex;flex-direction:column;gap:1px;text-align:left;}
 .obs-role-title{font-size:13px;font-weight:700;}
 .obs-role-sub{font-size:10px;font-weight:400;color:#4b5563;line-height:1.3;}
-.observer-role-btn.selected .obs-role-sub{color:#a3a832;}
+.observer-role-btn.selected .obs-role-sub{color:#38bdf8;}
 .obs-role-check{margin-left:auto;width:18px;height:18px;border-radius:50%;border:2px solid #374151;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.15s;}
-.observer-role-btn.selected .obs-role-check{border-color:#d1db24;background:#d1db24;}
+.observer-role-btn.selected .obs-role-check{border-color:#22d3ee;background:#22d3ee;box-shadow:0 0 8px rgba(34,211,238,0.6);}
 
 /* ===== OBSERVER MODE ===== */
-#observer-banner{display:none;position:fixed;top:44px;left:0;right:0;z-index:99;background:rgba(30,37,53,0.97);border-bottom:2px solid #6b7280;padding:6px 16px;align-items:center;gap:8px;font-size:12px;font-weight:700;color:#9ca3af;letter-spacing:0.5px;}
-#observer-banner .obs-pill{background:#374151;border:1px solid #4b5563;border-radius:20px;padding:2px 10px;font-size:11px;font-weight:700;color:#9ca3af;}
+/* Thematic "scan eye" icon — cyan cybersec/surveillance accent */
+.obs-eye-icon{display:inline-block;width:18px;height:18px;color:#22d3ee;vertical-align:middle;filter:drop-shadow(0 0 4px rgba(34,211,238,0.5));flex-shrink:0;}
+.obs-eye-icon.obs-eye-lg{width:22px;height:22px;}
+.obs-eye-icon.obs-eye-xl{width:26px;height:26px;}
+.obs-eye-icon.obs-eye-sm{width:14px;height:14px;}
+/* Subtle pulse so the eye feels alive */
+@keyframes obs-eye-pulse{0%,100%{filter:drop-shadow(0 0 4px rgba(34,211,238,0.45));}50%{filter:drop-shadow(0 0 8px rgba(34,211,238,0.85));}}
+.obs-eye-icon.obs-eye-pulse{animation:obs-eye-pulse 2.4s ease-in-out infinite;}
+
+#observer-banner{display:none;position:fixed;top:44px;left:0;right:0;z-index:99;background:linear-gradient(180deg,rgba(8,47,73,0.95),rgba(6,32,52,0.95));border-bottom:2px solid #22d3ee;box-shadow:0 2px 12px rgba(34,211,238,0.25),inset 0 -1px 0 rgba(34,211,238,0.15);padding:6px 16px;align-items:center;gap:10px;font-size:12px;font-weight:700;color:#67e8f9;letter-spacing:0.8px;text-transform:uppercase;}
+#observer-banner .obs-pill{background:rgba(34,211,238,0.1);border:1px solid rgba(34,211,238,0.4);border-radius:20px;padding:2px 10px;font-size:11px;font-weight:700;color:#67e8f9;letter-spacing:0.5px;}
 body.observer-active{padding-top:calc(44px + 32px);}
 body.observer-active #game .game-layout{height:calc(100vh - 44px - 32px);}
 .observer-hands{display:flex;flex-direction:column;gap:10px;padding:8px 12px 10px;overflow-y:auto;max-height:220px;background:#0d1117;}
@@ -171,6 +180,20 @@ body.observer-active .opp-kc-label{font-size:8px;max-width:36px;}
   body.observer-active .opp-hand-row .card{min-width:88px;max-width:88px;}
   body.observer-active .opp-hand-row .card.card-has-img{min-width:88px;max-width:88px;height:122px;}
 }
+/* Observer: full-size played-cards rows (matches the player's "Cards in Front of You" style) */
+.obs-played-rows{margin-top:4px;}
+.obs-played-rows .kc-row{align-items:center;gap:6px;}
+.obs-played-rows .kc-row-label{width:56px;font-size:8px;line-height:1.1;text-align:right;}
+.obs-played-rows .kc-slots{gap:5px;flex-wrap:nowrap;}
+.obs-played-rows .kc-slot{width:52px;min-height:66px;}
+@media (min-width:1200px){
+  body.observer-active .obs-played-rows .kc-slot{width:58px;min-height:74px;}
+  body.observer-active .obs-played-rows .kc-row-label{width:62px;font-size:9px;}
+}
+@media (min-width:1600px){
+  body.observer-active .obs-played-rows .kc-slot{width:66px;min-height:84px;}
+  body.observer-active .obs-played-rows .kc-row-label{width:72px;font-size:10px;}
+}
 /* Observer hands-hidden toggle — hides the in-panel hand rows */
 body.obs-hands-hidden .opp-hand-row,
 body.obs-hands-hidden .opp-hand-label{display:none !important;}
@@ -181,11 +204,11 @@ body.obs-hands-hidden .opp-hand-label{display:none !important;}
    the observer banner so the Hide Hands button doesn't sit underneath it. */
 body.host-cancel-visible #observer-banner{padding-right:150px;}
 .waiting-observer-section{width:100%;max-width:320px;margin-top:4px;}
-.waiting-observer-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:#4b5563;margin-bottom:6px;display:flex;align-items:center;gap:5px;}
-.waiting-observer-row{display:flex;align-items:center;gap:10px;padding:7px 14px;background:#1a2235;border-radius:8px;border:1px solid #253347;margin-bottom:5px;}
-.waiting-observer-row .obs-name{font-size:13px;color:#6b7280;flex:1;}
-.btn-observe{background:#374151;color:#9ca3af;border:1px solid #4b5563;}
-.btn-observe:hover:not(:disabled){background:#4b5563;color:#e2e8f0;}
+.waiting-observer-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:#67e8f9;margin-bottom:6px;display:flex;align-items:center;gap:6px;}
+.waiting-observer-row{display:flex;align-items:center;gap:10px;padding:7px 14px;background:#0a1e2a;border-radius:8px;border:1px solid rgba(34,211,238,0.25);margin-bottom:5px;}
+.waiting-observer-row .obs-name{font-size:13px;color:#67e8f9;flex:1;}
+.btn-observe{background:#0a1e2a;color:#67e8f9;border:1px solid rgba(34,211,238,0.4);}
+.btn-observe:hover:not(:disabled){background:rgba(34,211,238,0.12);color:#a5f3fc;border-color:#22d3ee;}
 
 /* ===== WAITING ROOM ===== */
 #waiting{flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:20px;background:#111827;}
@@ -780,6 +803,24 @@ body.bc-tut-active .game-layout { height: calc(100vh - 44px); margin-right: 272p
 </head>
 <body>
 
+<!-- Thematic observer "scan eye" icon — used in lobby + observer game screen -->
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="icon-obs-eye" viewBox="0 0 24 24">
+    <!-- Outer almond eye shape -->
+    <path d="M2 12C4 6.5 7.5 4 12 4s8 2.5 10 8c-2 5.5-5.5 8-10 8S4 17.5 2 12z"
+          fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+    <!-- Outer iris ring -->
+    <circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.4"/>
+    <!-- Inner iris ring (target-style) -->
+    <circle cx="12" cy="12" r="2.2" fill="none" stroke="currentColor" stroke-width="1"/>
+    <!-- Pupil -->
+    <circle cx="12" cy="12" r="1" fill="currentColor"/>
+    <!-- HUD crosshair ticks -->
+    <path d="M12 1.2V3M12 21v1.8M1.2 12H3M21 12h1.8"
+          stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+  </symbol>
+</svg>
+
 <!-- TOP NAV -->
 <div id="top-nav">
   <a href="/"><img src="/images/logo.png" alt="TBG" style="height:22px;width:auto;"> Tech Board Games</a>
@@ -853,7 +894,7 @@ body.bc-tut-active .game-layout { height: calc(100vh - 44px); margin-right: 272p
           <div class="color-options" id="create-colors" style="margin:0;justify-content:flex-start;gap:8px;"></div>
         </div>
         <button class="observer-role-btn" id="create-obs-btn" onclick="toggleCreateObserver()">
-          <span class="obs-role-icon">👁️</span>
+          <span class="obs-role-icon"><svg class="obs-eye-icon obs-eye-lg"><use href="#icon-obs-eye"/></svg></span>
           <span class="obs-role-text">
             <span class="obs-role-title">Observer</span>
             <span class="obs-role-sub">Read-only · see all cards &amp; hands</span>
@@ -880,7 +921,7 @@ body.bc-tut-active .game-layout { height: calc(100vh - 44px); margin-right: 272p
           <div class="color-options" id="join-colors" style="margin:0;justify-content:flex-start;gap:8px;"></div>
         </div>
         <button class="observer-role-btn" id="join-obs-btn" onclick="toggleJoinObserver()">
-          <span class="obs-role-icon">👁️</span>
+          <span class="obs-role-icon"><svg class="obs-eye-icon obs-eye-lg"><use href="#icon-obs-eye"/></svg></span>
           <span class="obs-role-text">
             <span class="obs-role-title">Observer</span>
             <span class="obs-role-sub">Read-only · see all cards &amp; hands</span>
@@ -999,7 +1040,8 @@ body.bc-tut-active .game-layout { height: calc(100vh - 44px); margin-right: 272p
 
 <!-- OBSERVER BANNER (shown during game for observers) -->
 <div id="observer-banner">
-  👁️ <span>Observer Mode</span>
+  <svg class="obs-eye-icon obs-eye-xl obs-eye-pulse"><use href="#icon-obs-eye"/></svg>
+  <span>Observer Mode</span>
   <span class="obs-pill">Read Only — you can see all cards but cannot play</span>
   <button id="obs-hide-hands-btn" onclick="toggleObserverHands()">Hide Hands</button>
 </div>
@@ -1508,7 +1550,7 @@ function renderLobbyPlayers(players, observers) {
   if (observers.length > 0) {
     const obsSection = document.createElement('div');
     obsSection.className = 'waiting-observer-section';
-    obsSection.innerHTML = `<div class="waiting-observer-label">👁️ Observers (${observers.length})</div>`;
+    obsSection.innerHTML = `<div class="waiting-observer-label"><svg class="obs-eye-icon obs-eye-sm"><use href="#icon-obs-eye"/></svg> Observers (${observers.length})</div>`;
     observers.forEach((o, oi) => {
       const isMe = isObserver && oi === myObserverIdx;
       const row = document.createElement('div');
@@ -1868,30 +1910,40 @@ function renderObserverGame(gs) {
 
     const oppCounts = {};
     pl.played.forEach(c => { oppCounts[c.type] = (oppCounts[c.type] || 0) + 1; });
-    function oppSlot(t, cat) {
+    // Full-size played-card slot (matches the player's own "Cards in Front of You" style)
+    function obsFullSlot(t, cat) {
       const n = oppCounts[t.id] || 0;
       const filled = n > 0;
       const inner = t.img
-        ? `<img src="${t.img}" alt="${t.name}" class="opp-kc-slot-img${filled ? '' : ' opp-kc-slot-img-ghost'}">`
-        : t.emoji;
-      return `<div class="opp-kc-slot-wrap"><div class="opp-kc-slot ${cat}${filled ? ' filled' : ''}${t.img ? ' opp-kc-slot-has-img' : ''}" title="${t.name}">${inner}${n > 1 ? `<span class="opp-kc-count">×${n}</span>` : ''}</div><span class="opp-kc-label">${t.name}</span></div>`;
+        ? `<img src="${t.img}" alt="${t.name}" class="kc-slot-img${filled ? '' : ' kc-slot-img-ghost'}">
+           <span class="kc-slot-name-label">${t.name}</span>`
+        : `<span class="kc-slot-emoji">${t.emoji}</span><span class="kc-slot-name">${t.name}</span>`;
+      return `<div class="kc-slot ${cat}${filled ? ' filled' : ''}${t.img ? ' kc-slot-has-img' : ''}" title="${t.name}">
+        ${inner}
+        ${n > 1 ? `<span class="kc-slot-count">×${n}</span>` : ''}
+      </div>`;
     }
-    const oppPlayedHtml = `<div class="opp-kc-grid">
-      <div class="opp-kc-row">${ATTACK_TYPES.map(t => oppSlot(t, t.id==='action_obj'?'special':'attack')).join('')}</div>
-      <div class="opp-kc-row">${DEFEND_TYPES.map(t => oppSlot(t, t.id==='govern'?'special':'defend')).join('')}</div>
+    const attackSlots = ATTACK_TYPES.map(t => obsFullSlot(t, t.id==='action_obj'?'special':'attack')).join('');
+    const defendSlots = DEFEND_TYPES.map(t => obsFullSlot(t, t.id==='govern'?'special':'defend')).join('');
+    const oppPlayedHtml = `<div class="my-played-rows obs-played-rows">
+      <div class="kc-row">
+        <span class="kc-row-label attack">Cyberkill Chain</span>
+        <div class="kc-slots">${attackSlots}</div>
+      </div>
+      <div class="kc-row">
+        <span class="kc-row-label defend">NIST</span>
+        <div class="kc-slots">${defendSlots}</div>
+      </div>
     </div>`;
 
     // Build this player's hand (observers see all hands). Shown right below the mini-map.
+    // Use buildHandCard so hover-zoom works exactly like a player's own hand.
     const hand = pl.hand || [];
     const sortedHand = sortByOrder(hand);
-    const handHtml = (hand.length || pl.handCount) ? `
+    const hasHand = hand.length || pl.handCount;
+    const handShellHtml = hasHand ? `
       <div class="opp-hand-label">Hand <span style="color:#4b5563;font-weight:400;font-size:9px">(${hand.length})</span></div>
-      <div class="opp-hand-row">${sortedHand.map(c => {
-        const img = getCardImg(c);
-        const catClass = c.cat === 'defend' ? 'defend' : c.cat === 'special' ? 'special-card-type' : 'attack';
-        const catLabel = c.cat === 'attack' ? '⚔️' : c.cat === 'defend' ? '🛡️' : '⭐';
-        return `<div class="card ${catClass}${img ? ' card-has-img' : ''}" style="cursor:default;flex-shrink:0" title="${c.name}\n${typeName(c)}">${img ? `<img src="${img}" alt="${c.name}" class="card-art-img" onerror="onCardImgError(this,'${c.cat}','${c.name}')">` : `<div class="card-cat">${catLabel}</div><div class="card-name">${c.name}</div>`}</div>`;
-      }).join('')}</div>` : '';
+      <div class="opp-hand-row"></div>` : '';
 
     div.innerHTML = `
       <div class="opp-header">
@@ -1902,8 +1954,19 @@ function renderObserverGame(gs) {
         ${isInstallBlocked ? '<span class="opp-blocked-badge"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9"/><line x1="6" y1="6" x2="18" y2="18"/></svg> No Defend</span>' : ''}
       </div>
       <div class="opp-played">${oppPlayedHtml}</div>
-      ${handHtml}`;
+      ${handShellHtml}`;
     bar.appendChild(div);
+
+    // Populate hand row with real DOM card elements — buildHandCard attaches the
+    // hover/touch zoom handlers automatically (same as the player's own hand view).
+    if (hasHand) {
+      const handRow = div.querySelector('.opp-hand-row');
+      if (handRow) {
+        sortedHand.forEach(c => {
+          handRow.appendChild(buildHandCard(c, /*clickable=*/false, /*isSelected=*/false));
+        });
+      }
+    }
   });
 
   // Hide my-played-area (belongs to the local player, not meaningful for observers)
@@ -1917,7 +1980,7 @@ function renderObserverGame(gs) {
 
   // Action bar: read-only indicator
   const actionBar = document.getElementById('action-bar');
-  actionBar.innerHTML = '<span class="action-bar-hint" style="color:#4b5563">👁️ Observer — read only</span>';
+  actionBar.innerHTML = '<span class="action-bar-hint" style="color:#67e8f9;display:inline-flex;align-items:center;gap:6px;letter-spacing:1px"><svg class="obs-eye-icon obs-eye-sm"><use href="#icon-obs-eye"/></svg> Observer — read only</span>';
 }
 
 function renderGame(gs) {
