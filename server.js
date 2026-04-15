@@ -861,7 +861,7 @@ function decideBotAction(ps, s) {
 
 // ==================== ROOM MANAGEMENT ====================
 const rooms = new Map();
-const wsData = new Map();    // ws -> { roomCode, playerIdx }
+const wsData = new Map();    // ws -> { roomCode, playerIdx, isObserver?, observerIdx? }
 const sessions = new Map();  // token -> { roomCode, playerIdx }
 const wsUvKey = new Map();   // ws -> uvKey (hash of IP + day, captured at connection time)
 
@@ -885,6 +885,12 @@ setInterval(() => {
         if (p.connected && p.ws) {
           try { send(p.ws, { type: 'error', msg: 'This game expired after 24 hours.' }); } catch {}
           wsData.delete(p.ws);
+        }
+      }
+      for (const o of (room.observers || [])) {
+        if (o.connected && o.ws) {
+          try { send(o.ws, { type: 'error', msg: 'This game expired after 24 hours.' }); } catch {}
+          wsData.delete(o.ws);
         }
       }
       rooms.delete(code);
@@ -919,9 +925,16 @@ function broadcastLobby(room) {
     players: room.players.map((p, i) => ({
       color: p.color, name: p.name, connected: p.connected, isHost: i === room.hostIdx, isBot: !!p.isBot,
     })),
+    observers: (room.observers || []).map((o, i) => ({
+      name: o.name, connected: o.connected, isHost: i === 0,
+    })),
+    observerCount: (room.observers || []).length,
   };
   for (const p of room.players) {
     if (p.connected && p.ws) send(p.ws, lobbyInfo);
+  }
+  for (const o of (room.observers || [])) {
+    if (o.connected && o.ws) send(o.ws, lobbyInfo);
   }
 }
 
@@ -953,6 +966,10 @@ function broadcastState(room) {
     if (p.connected && p.ws) {
       send(p.ws, { ...base, yourId: i });
     }
+  }
+  // Observers get the full state (FuzzNet has no private hand info)
+  for (const o of (room.observers || [])) {
+    if (o.connected && o.ws) send(o.ws, { ...base, yourId: -1, isObserver: true });
   }
 }
 
@@ -1347,6 +1364,7 @@ function handleMessage(ws, raw) {
         code, hostIdx: 0,
         gameType: msg.gameType === 'byteclub' ? 'byteclub' : 'fuzznet',
         players: [{ color, name: sanitizeName(msg.playerName, COLOR_INFO[color].name), ws, connected: true }],
+        observers: [],
         started: false, state: null, bcState: null,
         createdAt: Date.now(),
       };
@@ -1360,22 +1378,44 @@ function handleMessage(ws, raw) {
       break;
     }
 
+    case 'create_room_as_observer': {
+      // Observer creates a room — no player slot taken, observer is host
+      leaveRoom(ws, true);
+      const code = generateCode();
+      const name = sanitizeName(msg.name, 'Observer');
+      const room = {
+        code, hostIdx: 0,
+        gameType: msg.gameType === 'byteclub' ? 'byteclub' : 'fuzznet',
+        players: [],
+        observers: [{ ws, name, connected: true }],
+        started: false, state: null, bcState: null,
+        createdAt: Date.now(),
+      };
+      rooms.set(code, room);
+      wsData.set(ws, { roomCode: code, playerIdx: -1, isObserver: true, observerIdx: 0 });
+      send(ws, { type: 'joined_as_observer', code, observerIdx: 0, isHost: true, started: false });
+      broadcastLobby(room);
+      break;
+    }
+
     case 'check_room': {
       const room = rooms.get((msg.code||'').toUpperCase());
       if (!room) return send(ws, {type:'room_info', exists:false});
+      const observerCount = (room.observers || []).length;
+      const canObserve = observerCount < 10;
       if (room.started) {
         const rejoinColors = room.players
           .filter(p => !p.isBot && !p.connected)
           .map(p => p.color);
-        return send(ws, { type:'room_info', exists:true, started:true, rejoinColors });
+        return send(ws, { type:'room_info', exists:true, started:true, rejoinColors, observerCount, canObserve });
       }
       const humanCount = room.players.filter(p => !p.isBot).length;
       // Full when 4 humans are already present (bots are always displaceable)
-      if (humanCount >= 4) return send(ws, {type:'room_info', exists:true, full:true});
+      if (humanCount >= 4) return send(ws, {type:'room_info', exists:true, full:true, observerCount, canObserve});
       // Available = all colors not held by human players (bots can be displaced)
       const humanColors = room.players.filter(p => !p.isBot).map(p => p.color);
       const available   = Object.keys(COLOR_INFO).filter(c => !humanColors.includes(c));
-      send(ws, { type:'room_info', exists:true, started:false, full:false, availableColors: available });
+      send(ws, { type:'room_info', exists:true, started:false, full:false, availableColors: available, observerCount, canObserve });
       break;
     }
 
@@ -1433,8 +1473,30 @@ function handleMessage(ws, raw) {
       wsData.set(ws, { roomCode: code, playerIdx: idx });
       const token = generateToken();
       sessions.set(token, { roomCode: code, playerIdx: idx });
-      send(ws, { type: 'room_joined', code, yourId: idx, token });
+      send(ws, { type: 'room_joined', code, yourId: idx, token, isHost: idx === room.hostIdx });
       broadcastLobby(room);
+      break;
+    }
+
+    case 'join_as_observer': {
+      const code = (msg.code||'').toUpperCase();
+      const room = rooms.get(code);
+      if (!room) return send(ws, {type:'error', msg:'Room not found'});
+      const observers = room.observers || (room.observers = []);
+      if (observers.length >= 10) return send(ws, {type:'error', msg:'Observer limit reached (max 10)'});
+      leaveRoom(ws, true);
+      const observerIdx = observers.length;
+      const isObsHost = observerIdx === 0;
+      const name = sanitizeName(msg.name, 'Observer');
+      observers.push({ ws, name, connected: true });
+      wsData.set(ws, { roomCode: code, playerIdx: -1, isObserver: true, observerIdx });
+      send(ws, { type: 'joined_as_observer', code, observerIdx, isHost: isObsHost, started: room.started });
+      broadcastLobby(room);
+      // If game already started send current state immediately
+      if (room.started) {
+        if (room.gameType === 'byteclub') bcBroadcastState(room);
+        else broadcastState(room);
+      }
       break;
     }
 
@@ -1467,7 +1529,9 @@ function handleMessage(ws, raw) {
       if (!info) return send(ws, {type:'error',msg:'Not in a room'});
       const room = rooms.get(info.roomCode);
       if (!room || room.started) return;
-      if (info.playerIdx !== room.hostIdx) return send(ws, {type:'error',msg:'Only host can add bot'});
+      const isPlayerHost = !info.isObserver && info.playerIdx === room.hostIdx;
+      const isObsHost = info.isObserver && info.observerIdx === 0;
+      if (!isPlayerHost && !isObsHost) return send(ws, {type:'error',msg:'Only host can add bot'});
       // Count humans
       const humans = room.players.filter(p => !p.isBot).length;
       if (humans > 1) return send(ws, {type:'error',msg:'Bot only available for single player'});
@@ -1495,7 +1559,9 @@ function handleMessage(ws, raw) {
       if (!info) return send(ws, {type:'error',msg:'Not in a room'});
       const room = rooms.get(info.roomCode);
       if (!room) return send(ws, {type:'error',msg:'Room not found'});
-      if (info.playerIdx !== room.hostIdx) return send(ws, {type:'error',msg:'Only host can start'});
+      const isPlayerHost = !info.isObserver && info.playerIdx === room.hostIdx;
+      const isObsHost = info.isObserver && info.observerIdx === 0;
+      if (!isPlayerHost && !isObsHost) return send(ws, {type:'error',msg:'Only host can start'});
       if (room.players.length < 2) return send(ws, {type:'error',msg:'Need at least 2 players'});
       if (room.started) return send(ws, {type:'error',msg:'Already started'});
       room.started = true;
@@ -1509,11 +1575,13 @@ function handleMessage(ws, raw) {
       if (room.gameType === 'byteclub') {
         initBCGame(room);
         for (const p of room.players) if (p.ws) send(p.ws, { type: 'bc_game_started' });
+        for (const o of (room.observers || [])) if (o.ws) send(o.ws, { type: 'bc_game_started' });
         bcBroadcastState(room);
       } else {
         room.state = createGameState(room.players.length);
         room.state.players[0].firstTurnDone = true;
         for (const p of room.players) if (p.ws) send(p.ws, { type: 'game_started' });
+        for (const o of (room.observers || [])) if (o.ws) send(o.ws, { type: 'game_started' });
         broadcastState(room);
         if (room.players[0].isBot) executeBotTurn(room);
       }
@@ -1540,10 +1608,15 @@ function handleMessage(ws, raw) {
       if (!info) break;
       const room = rooms.get(info.roomCode);
       if (!room || !room.started) break;
-      if (info.playerIdx !== room.hostIdx) break; // only host can cancel
-      // Notify all connected players
+      const isPlayerHost = !info.isObserver && info.playerIdx === room.hostIdx;
+      const isObsHost = info.isObserver && info.observerIdx === 0;
+      if (!isPlayerHost && !isObsHost) break; // only host can cancel
+      // Notify all connected players and observers
       for (const p of room.players) {
         if (p.connected && p.ws) send(p.ws, { type: 'game_cancelled' });
+      }
+      for (const o of (room.observers || [])) {
+        if (o.connected && o.ws) send(o.ws, { type: 'game_cancelled' });
       }
       // Clean up sessions and wsData
       for (const [t, s] of sessions.entries()) {
@@ -1551,6 +1624,9 @@ function handleMessage(ws, raw) {
       }
       for (const p of room.players) {
         if (p.ws) wsData.delete(p.ws);
+      }
+      for (const o of (room.observers || [])) {
+        if (o.ws) wsData.delete(o.ws);
       }
       rooms.delete(room.code);
       break;
@@ -1570,6 +1646,24 @@ function leaveRoom(ws, explicit = false) {
   const room = rooms.get(info.roomCode);
   wsData.delete(ws);
   if (!room) return;
+
+  // ── Observer disconnect ──
+  if (info.isObserver) {
+    const oIdx = info.observerIdx;
+    if (room.observers && oIdx < room.observers.length) {
+      room.observers.splice(oIdx, 1);
+      // Fix observerIdx for remaining observers in wsData
+      for (const [w, d] of wsData.entries()) {
+        if (d.roomCode === room.code && d.isObserver && d.observerIdx > oIdx) d.observerIdx--;
+      }
+    }
+    if (!room.started && room.players.length === 0 && (room.observers || []).length === 0) {
+      rooms.delete(room.code);
+    } else {
+      broadcastLobby(room);
+    }
+    return;
+  }
 
   if (!room.started) {
     // Remove player from lobby (always — can't hold a slot while disconnected pre-game)
@@ -2012,6 +2106,7 @@ function bcBroadcastState(room) {
   const protectedPlayers = Object.keys(gs.protectedUntilTurn)
     .map(Number)
     .filter(idx => bcIsProtected(gs, idx));
+  const installBlockedPlayers = Object.keys(gs.installBlocked).map(Number).filter(idx => gs.installBlocked[idx]);
 
   for (let i = 0; i < room.players.length; i++) {
     const p = room.players[i];
@@ -2038,9 +2133,6 @@ function bcBroadcastState(room) {
         swapTargetIdx: (i === id.chooser) ? (id.swapTargetIdx ?? -1) : -1,
       };
     }
-
-    // Install block
-    const installBlockedPlayers = Object.keys(gs.installBlocked).map(Number).filter(idx => gs.installBlocked[idx]);
 
     // Weaponize window info
     let weaponizeInfo = null;
@@ -2126,6 +2218,80 @@ function bcBroadcastState(room) {
       })),
     });
   }
+  // ── Observers — full state, all hands and private info visible ──
+  for (const o of (room.observers || [])) {
+    if (!o.connected || !o.ws) continue;
+    send(o.ws, {
+      type: 'bc_state',
+      isObserver: true,
+      myIndex: -1,
+      phase: gs.phase,
+      currentPlayer: gs.currentPlayer,
+      timesUpRevealed: gs.timesUpRevealed,
+      actionObjActive: gs.actionObjActive,
+      actionObjBlockedPlayer: gs.actionObjBlockedPlayer,
+      deckCount: gs.deck.length,
+      log: gs.log.slice(0, 20),
+      winner: gs.winner,
+      winCondition: gs.winCondition,
+      turnNumber: gs.turnNumber,
+      myHand: [],
+      recoverActive: false,
+      protectedPlayers,
+      installBlockedPlayers,
+      iAmInstallBlocked: false,
+      // Full private info visible to observers
+      detectViewCards: gs.detectView ? gs.detectView.cards : null,
+      identifyInfo: gs.identifyState ? {
+        chooser: gs.identifyState.chooser,
+        phase: gs.phase,
+        dataFlagHolder: gs.identifyState.dataFlagHolder ?? -2,
+        dataFlagInDeck: gs.identifyState.dataFlagInDeck ?? false,
+        swapMyCard: gs.identifyState.swapMyCard || null,
+        swapTargetIdx: gs.identifyState.swapTargetIdx ?? -1,
+      } : null,
+      attackInfo: gs.attackState ? {
+        type: gs.attackState.type,
+        attacker: gs.attackState.attacker,
+        target: gs.attackState.target,
+        cardName: gs.attackState.card?.name || '',
+        targetHand: gs.attackState.target >= 0 ? gs.players[gs.attackState.target].hand : null,
+        reconSwapMyCard: gs.attackState.reconSwapMyCard || null,
+        deliverySwaps: gs.attackState.swaps || [],
+        deliveryPickStep: gs.attackState.pickStep || null,
+        iAmTarget: false,
+        iAmAttacker: false,
+        myRespondCards: [],
+      } : null,
+      weaponizeInfo: gs.weaponizeWindow ? {
+        defender: gs.weaponizeWindow.defender,
+        defenderName: room.players[gs.weaponizeWindow.defender]?.name || '',
+        cardName: gs.weaponizeWindow.card?.name || '',
+        iAmDefender: false,
+        myWeaponizeCards: [],
+      } : null,
+      governInfo: gs.governState ? {
+        mode: gs.governState.mode,
+        step: gs.governState.step,
+        totalTargets: gs.governState.targets.length,
+        currentTargetIdx: gs.governState.targets[gs.governState.step] ?? -1,
+        allHands: gs.players.map((p, pi) => ({ playerIdx: pi, hand: p.hand })),
+        taken: gs.governState.taken,
+      } : null,
+      pendingError: null,
+      // Observers see full hands for every player
+      players: gs.players.map((gpl, pi) => ({
+        name: room.players[pi].name,
+        color: room.players[pi].color,
+        handCount: gpl.hand.length,
+        hand: gpl.hand,
+        played: gpl.played,
+        isBlocked: gs.actionObjActive && gs.actionObjBlockedPlayer === pi,
+        isProtected: bcIsProtected(gs, pi),
+      })),
+    });
+  }
+
   // Clear one-shot error after broadcasting
   gs.pendingError = null;
 

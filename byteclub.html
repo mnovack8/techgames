@@ -83,6 +83,39 @@ body{padding-top:44px;}
 .rules-banner{font-size:13px;color:rgba(255,255,255,0.5);background:rgba(255,255,255,0.04);border:1px solid rgba(98,181,23,0.2);border-radius:8px;padding:8px 14px;text-align:center;max-width:360px;line-height:1.5;}
 .rules-banner a{color:#62b517;font-weight:600;}
 
+/* ===== ROLE SELECTION (Player / Observer) ===== */
+.role-section-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:#4b5563;margin:12px 0 4px;display:flex;align-items:center;gap:8px;}
+.role-section-label::after{content:'';flex:1;height:1px;background:#1f2937;}
+.or-divider{display:flex;align-items:center;gap:8px;margin:10px 0 6px;color:#374151;font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;}
+.or-divider::before,.or-divider::after{content:'';flex:1;height:1px;background:#1f2937;}
+.observer-role-btn{width:100%;padding:11px 14px;background:#0d1117;border:2px solid #374151;border-radius:10px;color:#6b7280;cursor:pointer;font-weight:700;display:flex;align-items:center;gap:10px;transition:all 0.15s;margin-bottom:0;}
+.observer-role-btn:hover{border-color:#4b5563;color:#9ca3af;background:#111827;}
+.observer-role-btn.selected{border-color:#d1db24;background:rgba(209,219,36,0.05);color:#d1db24;}
+.obs-role-icon{font-size:22px;line-height:1;flex-shrink:0;}
+.obs-role-text{display:flex;flex-direction:column;gap:1px;text-align:left;}
+.obs-role-title{font-size:13px;font-weight:700;}
+.obs-role-sub{font-size:10px;font-weight:400;color:#4b5563;line-height:1.3;}
+.observer-role-btn.selected .obs-role-sub{color:#a3a832;}
+.obs-role-check{margin-left:auto;width:18px;height:18px;border-radius:50%;border:2px solid #374151;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.15s;}
+.observer-role-btn.selected .obs-role-check{border-color:#d1db24;background:#d1db24;}
+
+/* ===== OBSERVER MODE ===== */
+#observer-banner{display:none;position:fixed;top:44px;left:0;right:0;z-index:99;background:rgba(30,37,53,0.97);border-bottom:2px solid #6b7280;padding:6px 16px;align-items:center;gap:8px;font-size:12px;font-weight:700;color:#9ca3af;letter-spacing:0.5px;}
+#observer-banner .obs-pill{background:#374151;border:1px solid #4b5563;border-radius:20px;padding:2px 10px;font-size:11px;font-weight:700;color:#9ca3af;}
+body.observer-active{padding-top:calc(44px + 32px);}
+body.observer-active #game .game-layout{height:calc(100vh - 44px - 32px);}
+.observer-hands{display:flex;flex-direction:column;gap:10px;padding:8px 12px 10px;overflow-y:auto;max-height:220px;background:#0d1117;}
+.observer-player-hand{display:flex;flex-direction:column;gap:4px;}
+.observer-hand-label{display:flex;align-items:center;gap:6px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#6b7280;}
+.observer-hand-label .obs-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.observer-hand-cards{display:flex;gap:5px;overflow-x:auto;padding-bottom:2px;}
+.waiting-observer-section{width:100%;max-width:320px;margin-top:4px;}
+.waiting-observer-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:#4b5563;margin-bottom:6px;display:flex;align-items:center;gap:5px;}
+.waiting-observer-row{display:flex;align-items:center;gap:10px;padding:7px 14px;background:#1a2235;border-radius:8px;border:1px solid #253347;margin-bottom:5px;}
+.waiting-observer-row .obs-name{font-size:13px;color:#6b7280;flex:1;}
+.btn-observe{background:#374151;color:#9ca3af;border:1px solid #4b5563;}
+.btn-observe:hover:not(:disabled){background:#4b5563;color:#e2e8f0;}
+
 /* ===== WAITING ROOM ===== */
 #waiting{flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:20px;background:#111827;}
 #waiting h2{font-size:24px;font-weight:800;color:#62b517;}
@@ -93,6 +126,8 @@ body{padding-top:44px;}
 .copy-btn.copied{background:#62b517;color:#fff;border-color:#62b517;}
 .waiting-players{display:flex;flex-direction:column;gap:8px;min-width:280px;}
 .waiting-player{display:flex;align-items:center;gap:12px;padding:10px 16px;background:#1e2535;border-radius:10px;border:1px solid #374151;}
+.waiting-player-me{border-color:#62b517 !important;background:#0d1f0a !important;}
+.you-tag{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#62b517;background:rgba(98,181,23,0.12);border:1px solid rgba(98,181,23,0.3);border-radius:4px;padding:1px 5px;margin-left:4px;vertical-align:middle;}
 .waiting-player-dot{width:14px;height:14px;border-radius:50%;}
 .waiting-player-name{font-weight:700;font-size:15px;}
 .host-badge{font-size:11px;background:#d1db24;color:#111;padding:2px 8px;border-radius:20px;font-weight:700;margin-left:auto;}
@@ -737,20 +772,54 @@ body.bc-tut-active .game-layout { height: calc(100vh - 44px); margin-right: 272p
     <!-- CREATE GAME -->
     <div class="lobby-card">
       <h3>Create Game</h3>
-      <p style="font-size:12px;color:#6b7280;margin:-4px 0 10px">Share the room code to invite players, or play solo vs a bot.</p>
-      <input class="lobby-input name-input" id="create-name" maxlength="12" placeholder="Your name" oninput="updateCreateBtn()">
-      <div class="color-options" id="create-colors"></div>
-      <button class="lobby-btn btn-create" id="btn-create" onclick="createRoom()" disabled>▶ Create Game</button>
+      <p style="font-size:12px;color:#6b7280;margin:-4px 0 8px">Share the room code to invite players, or play solo vs a bot.</p>
+      <div class="role-section-label" style="margin-top:4px">Your Name</div>
+      <input class="lobby-input name-input" id="create-name" maxlength="12" placeholder="Required for all roles" oninput="onCreateNameInput()">
+      <div class="role-section-label">Choose Your Role</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:4px;">
+        <div id="create-player-role" style="border:2px solid #374151;border-radius:10px;padding:10px 14px;cursor:pointer;transition:all 0.15s;" onclick="selectCreateRole('player')">
+          <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#4b5563;margin-bottom:6px">⚔️ Player</div>
+          <div class="color-options" id="create-colors" style="margin:0;justify-content:flex-start;gap:8px;"></div>
+        </div>
+        <button class="observer-role-btn" id="create-obs-btn" onclick="toggleCreateObserver()">
+          <span class="obs-role-icon">👁️</span>
+          <span class="obs-role-text">
+            <span class="obs-role-title">Observer</span>
+            <span class="obs-role-sub">Read-only · see all cards &amp; hands</span>
+          </span>
+          <span class="obs-role-check">
+            <svg width="10" height="8" viewBox="0 0 10 8" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </button>
+      </div>
+      <button class="lobby-btn btn-create" id="btn-create" onclick="createRoom()" disabled style="margin-top:8px">▶ Create Game</button>
       <div class="error-msg" id="create-error"></div>
     </div>
 
     <!-- JOIN ROOM -->
     <div class="lobby-card">
       <h3>Join a Game</h3>
-      <input class="lobby-input name-input" id="join-name" maxlength="12" placeholder="Your name" oninput="updateJoinBtn()">
       <input class="lobby-input" id="join-code" maxlength="4" placeholder="ROOM CODE" oninput="onCodeInput(this)">
-      <div class="color-options" id="join-colors"></div>
-      <button class="lobby-btn btn-join" id="btn-join" onclick="joinRoom()" disabled>Join Room</button>
+      <div class="role-section-label">Your Name</div>
+      <input class="lobby-input name-input" id="join-name" maxlength="12" placeholder="Required for all roles" oninput="updateJoinBtn()">
+      <div class="role-section-label">Choose Your Role</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:4px;">
+        <div id="join-player-role" style="border:2px solid #374151;border-radius:10px;padding:10px 14px;cursor:pointer;transition:all 0.15s;" onclick="selectJoinRole('player')">
+          <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#4b5563;margin-bottom:6px">⚔️ Player</div>
+          <div class="color-options" id="join-colors" style="margin:0;justify-content:flex-start;gap:8px;"></div>
+        </div>
+        <button class="observer-role-btn" id="join-obs-btn" onclick="toggleJoinObserver()">
+          <span class="obs-role-icon">👁️</span>
+          <span class="obs-role-text">
+            <span class="obs-role-title">Observer</span>
+            <span class="obs-role-sub">Read-only · see all cards &amp; hands</span>
+          </span>
+          <span class="obs-role-check">
+            <svg width="10" height="8" viewBox="0 0 10 8" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 4l3 3 5-6" stroke="#111" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </button>
+      </div>
+      <button class="lobby-btn btn-join" id="btn-join" onclick="joinRoom()" disabled style="margin-top:8px">Join Room</button>
       <div class="error-msg" id="join-error"></div>
     </div>
 
@@ -841,18 +910,26 @@ body.bc-tut-active .game-layout { height: calc(100vh - 44px); margin-right: 272p
         <div class="my-played-title">Cards in Front of You <span class="info-btn" onclick="">i<div class="info-popup wide">Cards you play go here face-up. <strong>Win Condition 2:</strong> Have 1 of every attack type (Kill Chain) AND 1 of every defend type (NIST) in front of you — including the earned Govern and Action Objectives cards.<br><br>Dotted outlines show which cards you still need. Fill them all to win!</div></span></div>
         <div class="my-played-rows" id="my-played-rows"></div>
       </div>
-      <div class="hand-area">
+      <div class="hand-area" id="hand-area">
         <div class="hand-title">
           <span>Your Hand <span class="info-btn" onclick="">i<div class="info-popup wide">💡 <em>Hover over a card to zoom in and read it — or hold it down on mobile.</em><br><br><strong>Double-click</strong> a card to play it on your turn. You can play multiple cards per turn.<br><br><strong>Attack cards</strong> target opponents. <strong>Defend cards</strong> protect you or give special abilities.<br><br><em>Respond</em> and <em>Weaponize</em> can be played out of turn when prompted. Click <strong>End Turn</strong> when done.</div></span></span>
           <span id="hand-count-label" style="color:#4b5563;font-size:11px;"></span>
         </div>
         <div class="hand-cards" id="hand-cards"></div>
       </div>
+      <!-- Observer all-hands view (shown instead of hand-area for observers) -->
+      <div class="observer-hands" id="observer-hands" style="display:none"></div>
       <div class="action-bar" id="action-bar">
         <span class="action-bar-hint" id="action-hint">Waiting…</span>
       </div>
     </div>
   </div>
+</div>
+
+<!-- OBSERVER BANNER (shown during game for observers) -->
+<div id="observer-banner">
+  👁️ <span>Observer Mode</span>
+  <span class="obs-pill">Read Only — you can see all cards but cannot play</span>
 </div>
 
 <!-- CANCEL GAME (host only, shown during game) -->
@@ -1073,10 +1150,15 @@ const COLORS = Object.keys(COLOR_INFO);
 
 const WS_URL = location.protocol === 'https:' ? 'wss://' + location.host : 'ws://' + location.host;
 let ws;
-let myColor = null;
+let myColor = null;          // join form selected color
+let createColor = null;      // create form selected color
+let createObserverSelected = false;
+let joinObserverSelected = false;
 let myId = null;
+let myObserverIdx = -1;
 let roomCode = null;
 let isHost = false;
+let isObserver = false;
 let gameState = null;
 let selectedHandCard = null;
 
@@ -1095,6 +1177,7 @@ function connectWS(cb) {
 
 function send(msg) {
   if (bcTutMode) { handleBcTutAction(msg); return; }
+  if (isObserver && msg.type === 'game_action') return; // observers cannot affect gameplay
   if (ws && ws.readyState === 1) ws.send(JSON.stringify(msg));
 }
 
@@ -1113,48 +1196,147 @@ function renderColorButtons(containerId, selectedColor, disabledColors, onPick) 
   });
 }
 
-renderColorButtons('create-colors', null, [], c => {
-  myColor = c;
-  renderColorButtons('create-colors', c, [], cc => { myColor = cc; renderColorButtons('create-colors', cc, [], arguments.callee); updateCreateBtn(); });
+// ── Create colors init ──
+(function initCreateColors() {
+  function pick(c) {
+    createColor = c;
+    createObserverSelected = false;
+    document.getElementById('create-obs-btn').classList.remove('selected');
+    document.getElementById('create-player-role').style.borderColor = '#62b517';
+    renderColorButtons('create-colors', c, [], pick);
+    updateCreateBtn();
+  }
+  renderColorButtons('create-colors', null, [], pick);
+})();
+
+function selectCreateRole(role) {
+  // Clicking the player box area — deselect observer
+  if (role === 'player' && createObserverSelected) {
+    createObserverSelected = false;
+    document.getElementById('create-obs-btn').classList.remove('selected');
+    updateCreateBtn();
+  }
+}
+
+function selectJoinRole(role) {
+  if (role === 'player' && joinObserverSelected) {
+    joinObserverSelected = false;
+    document.getElementById('join-obs-btn').classList.remove('selected');
+    updateJoinBtn();
+  }
+}
+
+function onCreateNameInput() {
   updateCreateBtn();
-});
+}
+
+function toggleCreateObserver() {
+  createObserverSelected = !createObserverSelected;
+  const btn = document.getElementById('create-obs-btn');
+  const playerBox = document.getElementById('create-player-role');
+  if (createObserverSelected) {
+    btn.classList.add('selected');
+    // Visually deselect colors
+    createColor = null;
+    playerBox.style.borderColor = '#374151';
+    renderColorButtons('create-colors', null, [], function pick(c) {
+      createColor = c;
+      createObserverSelected = false;
+      btn.classList.remove('selected');
+      playerBox.style.borderColor = '#62b517';
+      renderColorButtons('create-colors', c, [], pick);
+      updateCreateBtn();
+    });
+  } else {
+    btn.classList.remove('selected');
+  }
+  updateCreateBtn();
+}
 
 function updateCreateBtn() {
   const name = document.getElementById('create-name')?.value.trim() || '';
-  document.getElementById('btn-create').disabled = !myColor || name.length < 1;
+  const playerReady = createColor && name.length >= 1;
+  const observerReady = createObserverSelected && name.length >= 1;
+  document.getElementById('btn-create').disabled = !playerReady && !observerReady;
 }
 
+function toggleJoinObserver() {
+  joinObserverSelected = !joinObserverSelected;
+  const btn = document.getElementById('join-obs-btn');
+  const playerBox = document.getElementById('join-player-role');
+  if (joinObserverSelected) {
+    btn.classList.add('selected');
+    myColor = null;
+    playerBox.style.borderColor = '#374151';
+    renderColorButtons('join-colors', null, [], function pick(c) {
+      myColor = c;
+      joinObserverSelected = false;
+      btn.classList.remove('selected');
+      playerBox.style.borderColor = '#62b517';
+      renderColorButtons('join-colors', c, [], pick);
+      updateJoinBtn();
+    });
+  } else {
+    btn.classList.remove('selected');
+  }
+  updateJoinBtn();
+}
 
 function onCodeInput(el) {
   el.value = el.value.toUpperCase().replace(/[^A-Z]/g,'');
   const code = el.value;
+  // Reset observer selection when code changes
+  joinObserverSelected = false;
+  document.getElementById('join-obs-btn').classList.remove('selected');
   if (code.length === 4) {
     send({ type:'check_room', code });
-    renderColorButtons('join-colors', null, [], c => {
+    renderColorButtons('join-colors', null, [], function pick(c) {
       myColor = c;
-      renderColorButtons('join-colors', c, [], cc => { myColor = cc; updateJoinBtn(); });
+      joinObserverSelected = false;
+      document.getElementById('join-obs-btn').classList.remove('selected');
+      document.getElementById('join-player-role').style.borderColor = '#62b517';
+      renderColorButtons('join-colors', c, [], pick);
       updateJoinBtn();
     });
   } else {
+    myColor = null;
     document.getElementById('join-colors').innerHTML = '';
+    document.getElementById('join-player-role').style.borderColor = '#374151';
     document.getElementById('btn-join').disabled = true;
   }
 }
 
 function updateJoinBtn() {
   const name = document.getElementById('join-name')?.value.trim() || '';
-  document.getElementById('btn-join').disabled = !myColor || document.getElementById('join-code').value.length < 4 || name.length < 1;
+  const code = document.getElementById('join-code').value;
+  const codeOk = code.length === 4;
+  const playerReady = myColor && codeOk && name.length >= 1;
+  const observerReady = joinObserverSelected && codeOk && name.length >= 1;
+  document.getElementById('btn-join').disabled = !playerReady && !observerReady;
 }
 
 function createRoom() {
-  if (!myColor) return;
+  if (createObserverSelected) {
+    const name = document.getElementById('create-name').value.trim();
+    if (!name) return;
+    connectWS(() => send({ type:'create_room_as_observer', gameType:'byteclub', name }));
+    return;
+  }
+  if (!createColor) return;
   const playerName = document.getElementById('create-name').value.trim();
-  connectWS(() => send({ type:'create_room', color:myColor, gameType:'byteclub', playerName }));
+  connectWS(() => send({ type:'create_room', color:createColor, gameType:'byteclub', playerName }));
 }
 
 function joinRoom() {
   const code = document.getElementById('join-code').value.toUpperCase();
-  if (!code || !myColor) return;
+  if (!code) return;
+  if (joinObserverSelected) {
+    const name = document.getElementById('join-name').value.trim();
+    if (!name) return;
+    connectWS(() => send({ type:'join_as_observer', code, name }));
+    return;
+  }
+  if (!myColor) return;
   const playerName = document.getElementById('join-name').value.trim();
   connectWS(() => send({ type:'join_room', code, color:myColor, playerName }));
 }
@@ -1187,6 +1369,15 @@ function confirmCancelGame() {
   hideCancelModal();
   sessionStorage.removeItem(SESSION_KEY);
   send({ type: 'cancel_game' });
+  // Navigate immediately — don't wait for server echo (prevents game screen flash
+  // if game_cancelled is delayed or never arrives)
+  roomCode = null; myId = null; myObserverIdx = -1; gameState = null; isHost = false; isObserver = false;
+  document.getElementById('btn-cancel-game').style.display = 'none';
+  document.body.classList.remove('host-cancel-visible');
+  document.getElementById('observer-banner').style.display = 'none';
+  document.body.classList.remove('observer-active');
+  history.replaceState({}, '', '/byteclub');
+  showScreen('lobby');
 }
 
 let _warnModalOnConfirm = null;
@@ -1211,18 +1402,50 @@ function confirmWarnModal() {
 const WARN_ICON_HAND = `<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`;
 const WARN_ICON_TARGET = `<svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6" stroke="#fbbf24"/><circle cx="12" cy="12" r="2" fill="#fbbf24" stroke="none"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" stroke="#ef4444" stroke-width="2.5"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" stroke="#ef4444" stroke-width="2.5"/><line x1="19.78" y1="4.22" x2="18.36" y2="5.64" stroke="#ef4444" stroke-width="2.5"/><line x1="5.64" y1="18.36" x2="4.22" y2="19.78" stroke="#ef4444" stroke-width="2.5"/></svg>`;
 
-function renderLobbyPlayers(players) {
+function renderLobbyPlayers(players, observers) {
+  observers = observers || [];
   const el = document.getElementById('waiting-players');
   el.innerHTML = '';
-  players.forEach(p => {
+
+  // Players section label + rows
+  const playersSection = document.createElement('div');
+  playersSection.style.cssText = 'width:100%;max-width:320px;margin-bottom:4px;';
+  const playersLabel = document.createElement('div');
+  playersLabel.className = 'waiting-observer-label';
+  playersLabel.innerHTML = '⚔️ Players (' + players.length + ')';
+  playersSection.appendChild(playersLabel);
+  players.forEach((p, pi) => {
+    const isMe = !isObserver && pi === myId;
     const row = document.createElement('div');
-    row.className = 'waiting-player';
+    row.className = 'waiting-player' + (isMe ? ' waiting-player-me' : '');
     row.innerHTML = `<div class="waiting-player-dot" style="background:${COLOR_INFO[p.color]?.hex||'#888'}"></div>
-      <span class="waiting-player-name">${p.name}</span>
+      <span class="waiting-player-name">${p.name}${isMe ? ' <span class="you-tag">You</span>' : ''}</span>
       ${p.isHost ? '<span class="host-badge">HOST</span>' : ''}
       ${p.isBot ? '<span class="host-badge" style="background:#374151;color:#9ca3af">BOT</span>' : ''}`;
-    el.appendChild(row);
+    playersSection.appendChild(row);
   });
+  if (players.length === 0) {
+    const empty = document.createElement('div');
+    empty.style.cssText = 'font-size:12px;color:#374151;padding:6px 14px;font-style:italic;';
+    empty.textContent = 'No players yet — share the code to invite.';
+    playersSection.appendChild(empty);
+  }
+  el.appendChild(playersSection);
+
+  // Observers section (if any)
+  if (observers.length > 0) {
+    const obsSection = document.createElement('div');
+    obsSection.className = 'waiting-observer-section';
+    obsSection.innerHTML = `<div class="waiting-observer-label">👁️ Observers (${observers.length})</div>`;
+    observers.forEach((o, oi) => {
+      const isMe = isObserver && oi === myObserverIdx;
+      const row = document.createElement('div');
+      row.className = 'waiting-observer-row' + (isMe ? ' waiting-player-me' : '');
+      row.innerHTML = `<span class="obs-name">${o.name}${isMe ? ' <span class="you-tag">You</span>' : ''}</span>${o.isHost ? '<span class="host-badge" style="background:#1e2a3a;color:#6b7280;border:1px solid #374151">HOST</span>' : ''}`;
+      obsSection.appendChild(row);
+    });
+    el.appendChild(obsSection);
+  }
 
   const startBtn = document.getElementById('btn-start');
   const botBtn   = document.getElementById('btn-bot-toggle');
@@ -1233,7 +1456,7 @@ function renderLobbyPlayers(players) {
   if (isHost) {
     startBtn.style.display = 'block';
     startBtn.disabled = players.length < 2;
-    // Show bot toggle only when host is alone
+    // Show bot toggle when host is alone (both player-host and observer-host can add a bot)
     if (humans === 1) {
       botBtn.style.display = 'inline-block';
       botBtn.textContent = hasBot ? 'Remove Bot' : 'Play Solo vs Bot';
@@ -1241,14 +1464,16 @@ function renderLobbyPlayers(players) {
       botBtn.style.display = 'none';
     }
     hint.textContent = players.length < 2
-      ? 'Add a bot or share the room code to invite players.'
+      ? 'Waiting for at least 2 players (or 1 player + bot) to start…'
       : players.length === 2 && hasBot
         ? 'Playing solo vs bot — or share the code to swap in a real player.'
         : `${humans} player(s) ready — start when you're ready!`;
   } else {
     startBtn.style.display = 'none';
     botBtn.style.display   = 'none';
-    hint.textContent = 'Waiting for the host to start the game…';
+    hint.textContent = isObserver
+      ? 'Observing — waiting for the host to start the game…'
+      : 'Waiting for the host to start the game…';
   }
 }
 
@@ -1260,17 +1485,20 @@ function handleMsg(msg) {
       roomCode = msg.code; myId = msg.yourId; isHost = true;
       if (msg.token) sessionStorage.setItem(SESSION_KEY, msg.token);
       document.getElementById('room-code-text').textContent = roomCode;
+      history.replaceState({}, '', '/byteclub?room=' + roomCode);
       showScreen('waiting');
       break;
     case 'room_joined':
-      roomCode = msg.code; myId = msg.yourId; isHost = false;
+      roomCode = msg.code; myId = msg.yourId; isHost = msg.isHost || false;
       if (msg.token) sessionStorage.setItem(SESSION_KEY, msg.token);
       document.getElementById('room-code-text').textContent = roomCode;
+      history.replaceState({}, '', '/byteclub?room=' + roomCode);
       showScreen('waiting');
       break;
     case 'room_rejoined':
       roomCode = msg.code; myId = msg.yourId; isHost = msg.isHost;
       if (msg.token) sessionStorage.setItem(SESSION_KEY, msg.token);
+      history.replaceState({}, '', '/byteclub?room=' + roomCode);
       if (msg.started) {
         showScreen('game');
         if (isHost) {
@@ -1284,37 +1512,64 @@ function handleMsg(msg) {
       break;
     case 'rejoin_failed':
       sessionStorage.removeItem(SESSION_KEY);
+      history.replaceState({}, '', '/byteclub');
       showScreen('lobby');
       break;
-    case 'room_info':
+    case 'room_info': {
+      const obsBtn = document.getElementById('join-obs-btn');
       if (!msg.exists) { document.getElementById('join-error').textContent = 'Room not found.'; return; }
       if (msg.started) {
         if (msg.rejoinColors && msg.rejoinColors.length > 0) {
           document.getElementById('join-error').textContent = 'Game in progress — select your color to rejoin.';
-          renderColorButtons('join-colors', null, COLORS.filter(c => !msg.rejoinColors.includes(c)), c => {
-            myColor = c;
-            renderColorButtons('join-colors', c, COLORS.filter(cc => !msg.rejoinColors.includes(cc)), cc => { myColor = cc; updateJoinBtn(); });
+          renderColorButtons('join-colors', null, COLORS.filter(c => !msg.rejoinColors.includes(c)), function pick(c) {
+            myColor = c; joinObserverSelected = false; obsBtn.classList.remove('selected');
+            renderColorButtons('join-colors', c, COLORS.filter(cc => !msg.rejoinColors.includes(cc)), pick);
             updateJoinBtn();
           });
           document.getElementById('btn-join').textContent = 'Rejoin Game';
         } else {
-          document.getElementById('join-error').textContent = 'Game in progress — no open slots to rejoin.';
+          // Game in progress, no player slots — auto-activate observer mode
+          document.getElementById('join-colors').innerHTML = '';
+          joinObserverSelected = true;
+          obsBtn.classList.add('selected');
+          document.getElementById('join-error').textContent = 'Game in progress — no open slots to rejoin. You can join as an observer.';
+          updateJoinBtn();
         }
         return;
       }
       if (msg.full) { document.getElementById('join-error').textContent = 'Room is full.'; return; }
       document.getElementById('btn-join').textContent = 'Join Room';
-      renderColorButtons('join-colors', null, COLORS.filter(c => !msg.availableColors.includes(c)), c => {
-        myColor = c;
-        renderColorButtons('join-colors', c, COLORS.filter(cc => !msg.availableColors.includes(cc)), cc => { myColor = cc; updateJoinBtn(); });
+      renderColorButtons('join-colors', null, COLORS.filter(c => !msg.availableColors.includes(c)), function pick(c) {
+        myColor = c; joinObserverSelected = false; obsBtn.classList.remove('selected');
+        renderColorButtons('join-colors', c, COLORS.filter(cc => !msg.availableColors.includes(cc)), pick);
         updateJoinBtn();
       });
       break;
+    }
+    case 'joined_as_observer':
+      isObserver = true;
+      isHost = msg.isHost;
+      myObserverIdx = msg.observerIdx;
+      roomCode = msg.code;
+      document.getElementById('room-code-text').textContent = roomCode;
+      history.replaceState({}, '', '/byteclub?room=' + roomCode);
+      showScreen('waiting');
+      if (msg.started) {
+        // Game already in progress — go straight to game screen
+        showScreen('game');
+        document.getElementById('observer-banner').style.display = 'flex';
+        document.body.classList.add('observer-active');
+      }
+      break;
     case 'lobby_update':
-      renderLobbyPlayers(msg.players);
+      renderLobbyPlayers(msg.players, msg.observers || []);
       break;
     case 'bc_game_started':
       showScreen('game');
+      if (isObserver) {
+        document.getElementById('observer-banner').style.display = 'flex';
+        document.body.classList.add('observer-active');
+      }
       if (isHost) {
         document.getElementById('btn-cancel-game').style.display = 'flex';
         document.body.classList.add('host-cancel-visible');
@@ -1322,28 +1577,35 @@ function handleMsg(msg) {
       break;
     case 'bc_state':
       gameState = msg;
-      if (msg.pendingError) showToast(msg.pendingError, 4000);
+      if (msg.pendingError && !isObserver) showToast(msg.pendingError, 4000);
       renderGame(msg);
       break;
     case 'left_room':
       sessionStorage.removeItem(SESSION_KEY);
-      roomCode = null; myId = null; gameState = null;
+      roomCode = null; myId = null; myObserverIdx = -1; gameState = null; isObserver = false;
       document.getElementById('btn-cancel-game').style.display = 'none';
       document.body.classList.remove('host-cancel-visible');
+      document.getElementById('observer-banner').style.display = 'none';
+      document.body.classList.remove('observer-active');
+      history.replaceState({}, '', '/byteclub');
       showScreen('lobby');
       break;
     case 'game_cancelled':
       sessionStorage.removeItem(SESSION_KEY);
-      roomCode = null; myId = null; gameState = null; isHost = false;
+      roomCode = null; myId = null; myObserverIdx = -1; gameState = null; isHost = false; isObserver = false;
       document.getElementById('btn-cancel-game').style.display = 'none';
       document.body.classList.remove('host-cancel-visible');
+      document.getElementById('observer-banner').style.display = 'none';
+      document.body.classList.remove('observer-active');
       hideCancelModal();
+      history.replaceState({}, '', '/byteclub');
       showScreen('lobby');
       document.getElementById('join-error').textContent = 'The host ended the game.';
       break;
     case 'error':
       document.getElementById('create-error').textContent = msg.msg;
       document.getElementById('join-error').textContent = msg.msg;
+      document.getElementById('obs-error').textContent = msg.msg;
       break;
   }
 }
@@ -1372,11 +1634,27 @@ const SPECIAL_IMGS = {
   data_flag: 'images/special-data-flag.png',
   times_up:  'images/special-times-up.png',
 };
+const NAME_TO_TYPE = {
+  'Reconnaissance': 'recon', 'Weaponization': 'weaponize', 'Delivery': 'deliver',
+  'Exploitation': 'exploit', 'Installation': 'install', 'C2': 'c2',
+  'Action Objectives': 'action_obj', 'Identify': 'identify', 'Protect': 'protect',
+  'Detect': 'detect', 'Respond': 'respond', 'Recover': 'recover', 'Govern': 'govern',
+  'Data Flag': 'data_flag', 'Times Up': 'times_up',
+};
 function getCardImg(card) {
-  if (SPECIAL_IMGS[card.type]) return SPECIAL_IMGS[card.type];
+  const type = card.type || NAME_TO_TYPE[card.name] || '';
+  if (SPECIAL_IMGS[type]) return SPECIAL_IMGS[type];
   const all = [...ATTACK_TYPES, ...DEFEND_TYPES];
-  const t = all.find(t => t.id === card.type);
+  const t = all.find(t => t.id === type);
   return (t && t.img) ? t.img : (card.img || null);
+}
+// Called by onerror on inline card img elements — falls back to text layout
+function onCardImgError(imgEl, cat, name) {
+  const cardEl = imgEl.closest('.card');
+  if (!cardEl) return;
+  cardEl.classList.remove('card-has-img');
+  const catLabel = cat === 'attack' ? '⚔️ Attack' : cat === 'defend' ? '🛡️ Defend' : '⭐ Special';
+  cardEl.innerHTML = `<div class="card-cat">${catLabel}</div><div class="card-name">${name}</div>`;
 }
 
 function cardClass(card) {
@@ -1398,6 +1676,13 @@ function typeName(card) {
   return card.name;
 }
 
+function cardTextHTML(card) {
+  return `<div class="card-cat">${card.cat === 'attack' ? '⚔️ Attack' : card.cat === 'defend' ? '🛡️ Defend' : '⭐ Special'}</div>
+      <div class="card-type">${typeName(card)}</div>
+      <div class="card-name">${card.name}</div>
+      <div class="card-desc">${card.desc || ''}</div>`;
+}
+
 function buildHandCard(card, clickable, isSelected) {
   const div = document.createElement('div');
   const img = getCardImg(card);
@@ -1405,13 +1690,18 @@ function buildHandCard(card, clickable, isSelected) {
   div.dataset.cardId = card.id;
   if (!clickable) div.style.cursor = 'default';
   if (img) {
-    div.innerHTML = `<img src="${img}" alt="${card.name}" class="card-art-img">`;
+    const imgEl = document.createElement('img');
+    imgEl.src = img;
+    imgEl.alt = card.name;
+    imgEl.className = 'card-art-img';
+    imgEl.onerror = () => {
+      div.classList.remove('card-has-img');
+      div.innerHTML = cardTextHTML(card);
+      if (clickable) div.onclick = () => selectCard(card.id);
+    };
+    div.appendChild(imgEl);
   } else {
-    div.innerHTML = `
-      <div class="card-cat">${card.cat === 'attack' ? '⚔️ Attack' : card.cat === 'defend' ? '🛡️ Defend' : '⭐ Special'}</div>
-      <div class="card-type">${typeName(card)}</div>
-      <div class="card-name">${card.name}</div>
-      <div class="card-desc">${card.desc || ''}</div>`;
+    div.innerHTML = cardTextHTML(card);
   }
   if (clickable) div.onclick = () => selectCard(card.id);
   // Zoom on hover (desktop) and touch-hold (mobile)
@@ -1423,7 +1713,151 @@ function buildHandCard(card, clickable, isSelected) {
   return div;
 }
 
+// ==================== OBSERVER RENDER ====================
+function renderObserverGame(gs) {
+  // Win screen
+  if (gs.phase === 'game_over' || gs.winner >= 0) {
+    const winName = gs.players[gs.winner]?.name || '?';
+    document.getElementById('win-name').textContent = winName + ' wins!';
+    document.getElementById('win-cond').textContent = gs.winCondition === 1 ? 'Flag Win' : 'Board Win';
+    document.getElementById('win-screen').classList.add('show');
+    const btn = document.querySelector('#win-screen .win-btn');
+    if (btn) { btn.textContent = 'Back to Lobby'; btn.onclick = () => send({ type: 'leave_room' }); }
+  }
+
+  // Status bar
+  const curName = gs.players[gs.currentPlayer]?.name || '?';
+  document.getElementById('status-player').textContent = curName + "'s Turn";
+  const phaseLabels = {
+    play: 'Playing cards…', discard: curName + ' is discarding…',
+    govern_take: curName + ' is using Govern (taking cards)…',
+    govern_give: curName + ' is using Govern (giving cards back)…',
+    identify_choosing: curName + ' is using Identify…',
+    identify_dataflag: '🚩 Data Flag location revealed!',
+    identify_swap_my: curName + ' is choosing a swap card…',
+    identify_swap_target: curName + ' is choosing a swap target…',
+    identify_swap_their: curName + ' is completing the swap…',
+    detect_view: curName + ' is using Detect…',
+    weaponize_window: 'Weaponize window open…',
+    attack_c2_target: curName + ' is targeting with C2…',
+    attack_recon_target: curName + ' is using Reconnaissance…',
+    attack_exploit_target: curName + ' is using Exploitation…',
+    attack_install_target: curName + ' is using Installation…',
+    attack_delivery_target: curName + ' is using Delivery…',
+    attack_respond_window: 'Attack in progress — Respond window open…',
+    attack_c2_give: 'C2 resolving — target choosing a card…',
+    attack_recon_choose: curName + ' deciding: look or swap?',
+    attack_recon_look: curName + ' is viewing target\'s hand…',
+    attack_recon_swap_my: curName + ' choosing attack card to swap…',
+    attack_recon_swap_their: curName + ' choosing target\'s attack card…',
+    attack_delivery_pick: curName + ' is swapping played cards (Delivery)…',
+    game_over: '🏆 Game Over!',
+  };
+  document.getElementById('status-phase').textContent = phaseLabels[gs.phase] || gs.phase;
+
+  // Deck count
+  document.getElementById('deck-count').textContent = gs.deckCount + ' cards';
+
+  // Special card statuses — all hidden from observer perspective
+  document.getElementById('dataflag-status').textContent = '(observer)';
+  document.getElementById('timesup-status').textContent = gs.timesUpRevealed ? 'Revealed!' : 'In deck';
+  document.getElementById('govern-status').textContent = '(observer)';
+  document.getElementById('actionobj-status').textContent = '(observer)';
+
+  // Log
+  const logEl = document.getElementById('log-entries');
+  logEl.innerHTML = gs.log.map(l => `<div class="log-entry">${l}</div>`).join('');
+
+  // Turn strip
+  renderTurnStrip(gs);
+
+  // All players as "opponents" (no "me" slot — observers are not a player)
+  const bar = document.getElementById('opponents-bar');
+  bar.innerHTML = '';
+  gs.players.forEach((pl, i) => {
+    const isProtected = gs.protectedPlayers && gs.protectedPlayers.includes(i);
+    const isInstallBlocked = gs.installBlockedPlayers && gs.installBlockedPlayers.includes(i);
+    const div = document.createElement('div');
+    div.className = 'opponent-panel'
+      + (i === gs.currentPlayer ? ' current-turn' : '')
+      + (pl.isBlocked ? ' blocked' : '')
+      + (isProtected ? ' protected' : '');
+
+    const oppCounts = {};
+    pl.played.forEach(c => { oppCounts[c.type] = (oppCounts[c.type] || 0) + 1; });
+    function oppSlot(t, cat) {
+      const n = oppCounts[t.id] || 0;
+      const filled = n > 0;
+      const inner = t.img
+        ? `<img src="${t.img}" alt="${t.name}" class="opp-kc-slot-img${filled ? '' : ' opp-kc-slot-img-ghost'}">`
+        : t.emoji;
+      return `<div class="opp-kc-slot-wrap"><div class="opp-kc-slot ${cat}${filled ? ' filled' : ''}${t.img ? ' opp-kc-slot-has-img' : ''}" title="${t.name}">${inner}${n > 1 ? `<span class="opp-kc-count">×${n}</span>` : ''}</div><span class="opp-kc-label">${t.name}</span></div>`;
+    }
+    const oppPlayedHtml = `<div class="opp-kc-grid">
+      <div class="opp-kc-row">${ATTACK_TYPES.map(t => oppSlot(t, t.id==='action_obj'?'special':'attack')).join('')}</div>
+      <div class="opp-kc-row">${DEFEND_TYPES.map(t => oppSlot(t, t.id==='govern'?'special':'defend')).join('')}</div>
+    </div>`;
+    div.innerHTML = `
+      <div class="opp-header">
+        <div class="opp-color-dot" style="background:${COLOR_INFO[pl.color]?.hex||'#888'}"></div>
+        <span class="opp-name">${pl.name}</span>
+        <span class="opp-hand-count"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="18" height="18" rx="3"/><line x1="3" y1="9" x2="21" y2="9"/></svg> ${pl.handCount}</span>
+        ${isProtected ? '<span class="opp-protected-badge"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L4 6v6c0 5.5 3.5 10.7 8 12 4.5-1.3 8-6.5 8-12V6L12 2z"/></svg> Protected</span>' : ''}
+        ${isInstallBlocked ? '<span class="opp-blocked-badge"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9"/><line x1="6" y1="6" x2="18" y2="18"/></svg> No Defend</span>' : ''}
+      </div>
+      <div class="opp-played">${oppPlayedHtml}</div>`;
+    bar.appendChild(div);
+  });
+
+  // Hide my-played-area (belongs to the local player, not meaningful for observers)
+  const myPlayedEl = document.querySelector('.my-played-area');
+  if (myPlayedEl) myPlayedEl.style.display = 'none';
+
+  // Hand area: hide normal hand, show observer hands
+  document.getElementById('hand-area').style.display = 'none';
+  const obsHandsEl = document.getElementById('observer-hands');
+  obsHandsEl.style.display = 'flex';
+  obsHandsEl.innerHTML = '';
+
+  gs.players.forEach((pl, i) => {
+    const hand = pl.hand || [];
+    if (!hand.length && !pl.handCount) return;
+    const sorted = sortByOrder(hand);
+    const colorHex = COLOR_INFO[pl.color]?.hex || '#888';
+    const handDiv = document.createElement('div');
+    handDiv.className = 'observer-player-hand';
+    handDiv.innerHTML = `<div class="observer-hand-label">
+      <span class="obs-dot" style="background:${colorHex}"></span>
+      ${pl.name}${i === gs.currentPlayer ? ' <span style="color:#d1db24;font-size:9px">▶ TURN</span>' : ''}
+      <span style="color:#4b5563;font-weight:400;font-size:9px">${hand.length} card${hand.length !== 1 ? 's' : ''}</span>
+    </div>
+    <div class="observer-hand-cards">${sorted.map(c => {
+      const img = getCardImg(c);
+      const catClass = c.cat === 'defend' ? 'defend' : c.cat === 'special' ? 'special-card-type' : 'attack';
+      const catLabel = c.cat === 'attack' ? '⚔️ Attack' : c.cat === 'defend' ? '🛡️ Defend' : '⭐ Special';
+      return `<div class="card ${catClass}${img ? ' card-has-img' : ''}" style="cursor:default;flex-shrink:0" title="${c.name}\n${typeName(c)}">${img ? `<img src="${img}" alt="${c.name}" class="card-art-img" onerror="onCardImgError(this,'${c.cat}','${c.name}')">` : `<div class="card-cat">${catLabel}</div><div class="card-name">${c.name}</div>`}</div>`;
+    }).join('')}</div>`;
+    obsHandsEl.appendChild(handDiv);
+  });
+
+  // Action bar: read-only indicator
+  const actionBar = document.getElementById('action-bar');
+  actionBar.innerHTML = '<span class="action-bar-hint" style="color:#4b5563">👁️ Observer — read only</span>';
+}
+
 function renderGame(gs) {
+  // ---- OBSERVER PATH ----
+  if (gs.isObserver) {
+    renderObserverGame(gs);
+    return;
+  }
+
+  // Ensure normal player layout is visible (may have been hidden if previously observed)
+  document.getElementById('hand-area').style.display = '';
+  document.getElementById('observer-hands').style.display = 'none';
+  const myPlayedAreaEl = document.querySelector('.my-played-area');
+  if (myPlayedAreaEl) myPlayedAreaEl.style.display = '';
+
   const me = gs.players[gs.myIndex];
   const isMyTurn = gs.currentPlayer === gs.myIndex;
 
@@ -1790,13 +2224,14 @@ let detectOrderState = []; // client-side card order for detect reorder
 function vcCard(c, onclickStr, extraStyle, extraAttrs) {
   const img = getCardImg(c);
   const cls = cardClass(c);
-  const content = img
-    ? `<img src="${img}" alt="${c.name}" class="card-art-img">`
-    : `<div class="card-cat">${
+  const fallbackContent = `<div class="card-cat">${
         c.cat === 'attack' ? '<span style="color:#f87171">ATK</span>'
         : c.cat === 'defend' ? '<span style="color:#93c5fd">DEF</span>'
         : '<span style="color:#d1db24">SPL</span>'
       }</div><div class="card-name" style="font-size:11px;font-weight:800;line-height:1.2;margin-top:4px">${c.name}</div><div class="card-desc" style="font-size:9px;color:#4b5563;margin-top:3px;line-height:1.3">${c.desc||''}</div>`;
+  const content = img
+    ? `<img src="${img}" alt="${c.name}" class="card-art-img" onerror="onCardImgError(this,'${c.cat}','${c.name}')">`
+    : fallbackContent;
   const cursor = onclickStr ? 'cursor:pointer' : 'cursor:default';
   const styleAttr = [cursor, extraStyle].filter(Boolean).join(';');
   return `<div class="card ${cls}${img ? ' card-has-img' : ''}" style="${styleAttr}" ${onclickStr ? `onclick="${onclickStr}"` : ''} ${extraAttrs||''}>${content}</div>`;
@@ -1820,7 +2255,7 @@ function dsSlot(c, extraCls, onclick, count) {
   const isGiving = extraCls && extraCls.includes('ds-giving');
   const img = getCardImg(c);
   const content = img
-    ? `<img src="${img}" alt="${c.name}" class="card-art-img">`
+    ? `<img src="${img}" alt="${c.name}" class="card-art-img" onerror="onCardImgError(this,'${c.cat}','${c.name}')">`
     : `<div class="card-cat">${c.cat === 'defend' ? '<span style="color:#93c5fd">DEF</span>' : c.cat === 'special' ? '<span style="color:#d1db24">SPL</span>' : '<span style="color:#f87171">ATK</span>'}</div><div class="card-name">${c.name}</div>`;
   const cursor = onclick ? 'cursor:pointer' : 'cursor:default';
   return `<div class="card ${catClass} ds-card${img ? ' card-has-img' : ''} ${extraCls||''}" title="${c.name}" style="${cursor}" ${onclick ? `onclick="${onclick}"` : ''}>
