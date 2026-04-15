@@ -34,8 +34,8 @@ body{padding-top:44px;}
 .screen.active{display:flex;}
 
 /* ===== LOBBY ===== */
-#lobby{flex-direction:row;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(to right,rgba(6,13,3,0) 0%,rgba(6,13,3,0) 38%,#060d03 66%) ,#1a3a00 url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg stroke='%2362b517' stroke-opacity='0.14' stroke-width='1.5' fill='none' stroke-linecap='round'%3E%3Cpolyline points='0,30 40,30 40,75'/%3E%3Ccircle cx='40' cy='30' r='3' fill='%2362b517' fill-opacity='0.14'/%3E%3Ccircle cx='40' cy='75' r='3' fill='%2362b517' fill-opacity='0.14'/%3E%3Cline x1='40' y1='75' x2='100' y2='75'/%3E%3Cline x1='70' y1='0' x2='70' y2='30'/%3E%3Ccircle cx='70' cy='30' r='2.5' fill='%2362b517' fill-opacity='0.14'/%3E%3Cline x1='70' y1='30' x2='100' y2='30'/%3E%3Cline x1='0' y1='55' x2='15' y2='55'/%3E%3Ccircle cx='15' cy='55' r='2.5' fill='%2362b517' fill-opacity='0.14'/%3E%3Cline x1='15' y1='55' x2='15' y2='100'/%3E%3C/g%3E%3C/svg%3E") repeat;background-size:auto,100px 100px;}
-.lobby-hero{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;min-height:100vh;overflow-y:auto;background:transparent;padding:48px 48px 60px;gap:0;}
+#lobby{flex-direction:row;align-items:flex-start;justify-content:center;min-height:calc(100vh - 44px);overflow-y:auto;background:linear-gradient(to right,rgba(6,13,3,0) 0%,rgba(6,13,3,0) 38%,#060d03 66%) ,#1a3a00 url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg stroke='%2362b517' stroke-opacity='0.14' stroke-width='1.5' fill='none' stroke-linecap='round'%3E%3Cpolyline points='0,30 40,30 40,75'/%3E%3Ccircle cx='40' cy='30' r='3' fill='%2362b517' fill-opacity='0.14'/%3E%3Ccircle cx='40' cy='75' r='3' fill='%2362b517' fill-opacity='0.14'/%3E%3Cline x1='40' y1='75' x2='100' y2='75'/%3E%3Cline x1='70' y1='0' x2='70' y2='30'/%3E%3Ccircle cx='70' cy='30' r='2.5' fill='%2362b517' fill-opacity='0.14'/%3E%3Cline x1='70' y1='30' x2='100' y2='30'/%3E%3Cline x1='0' y1='55' x2='15' y2='55'/%3E%3Ccircle cx='15' cy='55' r='2.5' fill='%2362b517' fill-opacity='0.14'/%3E%3Cline x1='15' y1='55' x2='15' y2='100'/%3E%3C/g%3E%3C/svg%3E") repeat;background-size:auto,100px 100px;}
+.lobby-hero{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;background:transparent;padding:48px 48px 60px;gap:0;}
 .lobby-hero img{max-width:340px;width:100%;height:auto;border-radius:16px;box-shadow:0 16px 48px rgba(0,0,0,0.5);}
 
 /* ===== LOBBY LEARNING OBJECTIVES ===== */
@@ -44,17 +44,18 @@ body{padding-top:44px;}
 .concept-list li{display:block;}
 .concept-card{border-radius:12px;padding:16px 18px;margin-bottom:12px;border:2px solid rgba(168,201,106,0.28);background:rgba(255,255,255,0.05);box-shadow:none;}
 .concept-card-top{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
-.concept-icon{font-size:18px;}
+.concept-icon{width:28px;height:28px;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;}
+.concept-icon svg{width:100%;height:100%;}
 .concept-card-top strong{font-size:14px;font-weight:900;color:#e2e8f0;}
 .concept-explain{font-size:13px;color:#94a3b8;line-height:1.65;margin:0;}
-.lobby-forms{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;position:sticky;top:44px;height:calc(100vh - 44px);overflow-y:auto;gap:16px;padding:24px 30px 30px;background:transparent;}
+.lobby-forms{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:16px;padding:24px 30px 30px;background:transparent;}
 #lobby h1{font-size:40px;color:#62b517;letter-spacing:3px;font-weight:800;text-shadow:0 0 28px rgba(98,181,23,0.5),0 0 8px rgba(98,181,23,0.3);font-family:'Share Tech Mono',monospace;}
 #lobby .subtitle{font-size:14px;color:rgba(255,255,255,0.55);margin-top:-6px;}
 @media(max-width:860px){
-  #lobby{flex-direction:column;background:linear-gradient(to bottom,rgba(6,13,3,0) 0%,rgba(6,13,3,0) 40%,#060d03 70%),#1a3a00 url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg stroke='%2362b517' stroke-opacity='0.14' stroke-width='1.5' fill='none' stroke-linecap='round'%3E%3Cpolyline points='0,30 40,30 40,75'/%3E%3Ccircle cx='40' cy='30' r='3' fill='%2362b517' fill-opacity='0.14'/%3E%3Ccircle cx='40' cy='75' r='3' fill='%2362b517' fill-opacity='0.14'/%3E%3Cline x1='40' y1='75' x2='100' y2='75'/%3E%3Cline x1='70' y1='0' x2='70' y2='30'/%3E%3Ccircle cx='70' cy='30' r='2.5' fill='%2362b517' fill-opacity='0.14'/%3E%3Cline x1='70' y1='30' x2='100' y2='30'/%3E%3Cline x1='0' y1='55' x2='15' y2='55'/%3E%3Ccircle cx='15' cy='55' r='2.5' fill='%2362b517' fill-opacity='0.14'/%3E%3Cline x1='15' y1='55' x2='15' y2='100'/%3E%3C/g%3E%3C/svg%3E") repeat;background-size:auto,100px 100px;}
-  .lobby-hero{min-height:auto;padding:30px 20px 10px;}
+  #lobby{flex-direction:column;height:auto;overflow:visible;background:linear-gradient(to bottom,rgba(6,13,3,0) 0%,rgba(6,13,3,0) 40%,#060d03 70%),#1a3a00 url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg stroke='%2362b517' stroke-opacity='0.14' stroke-width='1.5' fill='none' stroke-linecap='round'%3E%3Cpolyline points='0,30 40,30 40,75'/%3E%3Ccircle cx='40' cy='30' r='3' fill='%2362b517' fill-opacity='0.14'/%3E%3Ccircle cx='40' cy='75' r='3' fill='%2362b517' fill-opacity='0.14'/%3E%3Cline x1='40' y1='75' x2='100' y2='75'/%3E%3Cline x1='70' y1='0' x2='70' y2='30'/%3E%3Ccircle cx='70' cy='30' r='2.5' fill='%2362b517' fill-opacity='0.14'/%3E%3Cline x1='70' y1='30' x2='100' y2='30'/%3E%3Cline x1='0' y1='55' x2='15' y2='55'/%3E%3Ccircle cx='15' cy='55' r='2.5' fill='%2362b517' fill-opacity='0.14'/%3E%3Cline x1='15' y1='55' x2='15' y2='100'/%3E%3C/g%3E%3C/svg%3E") repeat;background-size:auto,100px 100px;}
+  .lobby-hero{height:auto;min-height:auto;padding:30px 20px 10px;overflow-y:visible;}
   .lobby-hero img{max-width:280px;}
-  .lobby-forms{position:static;height:auto;min-height:auto;padding:10px 20px 30px;overflow-y:visible;}
+  .lobby-forms{height:auto;min-height:auto;padding:10px 20px 30px;overflow-y:visible;}
 }
 
 .lobby-card{background:#0d1a06;border:1px solid rgba(98,181,23,0.2);border-radius:14px;padding:24px;width:360px;box-shadow:0 2px 12px rgba(0,0,0,0.4);}
@@ -692,6 +693,7 @@ body.bc-tut-active .game-layout { height: calc(100vh - 44px); margin-right: 272p
       <li>
         <div class="concept-card">
           <div class="concept-card-top">
+            <span class="concept-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M5 19L19 5M19 5h-6M19 5v6"/><path d="M3 21l2-2" stroke="#d1db24" stroke-width="2.5"/></svg></span>
             <strong>Attacker Mindset</strong>
           </div>
           <p class="concept-explain">Attackers don't strike randomly — they follow a sequence. The Cyber Kill Chain maps every stage from the first bit of reconnaissance to the final objective. Playing the attack side teaches you how adversaries think, plan, and move, and why disrupting any single stage can collapse the entire operation.</p>
@@ -700,6 +702,7 @@ body.bc-tut-active .game-layout { height: calc(100vh - 44px); margin-right: 272p
       <li>
         <div class="concept-card">
           <div class="concept-card-top">
+            <span class="concept-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L4 6v6c0 5.5 3.5 10.7 8 12 4.5-1.3 8-6.5 8-12V6L12 2z"/><path d="M9 12l2 2 4-4" stroke="#d1db24" stroke-width="2"/></svg></span>
             <strong>Defender Mindset</strong>
           </div>
           <p class="concept-explain">Defense isn't one big wall — it's a complete posture. The NIST Cybersecurity Framework gives defenders a structured approach: Identify what you're protecting, Protect it, Detect threats early, Respond fast, and Recover fully — with Govern at the center, providing the policies, roles, and decisions that hold it all together. Every gap in that posture is a stage of the Kill Chain a defender failed to cover.</p>
@@ -708,6 +711,7 @@ body.bc-tut-active .game-layout { height: calc(100vh - 44px); margin-right: 272p
       <li>
         <div class="concept-card">
           <div class="concept-card-top">
+            <span class="concept-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10"/><path d="M23 14l-4.64 4.36A9 9 0 0 1 3.51 15" stroke="#d1db24"/></svg></span>
             <strong>The Cycle of Cyberwarfare</strong>
           </div>
           <p class="concept-explain">Attack and defense are never finished — they feed each other. Defenders add controls to disrupt the Kill Chain; attackers find ways around them; defenders adapt again. That perpetual loop is the Cycle of Cyberwarfare — and once you see it, you can use it as a mental model to make sense of any threat, breach, or security decision you'll ever encounter.</p>
@@ -716,6 +720,7 @@ body.bc-tut-active .game-layout { height: calc(100vh - 44px); margin-right: 272p
       <li>
         <div class="concept-card">
           <div class="concept-card-top">
+            <span class="concept-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><line x1="8" y1="10" x2="16" y2="10" stroke="#d1db24"/><line x1="8" y1="14" x2="12" y2="14" stroke="#d1db24"/></svg></span>
             <strong>You are CyberFluent</strong>
           </div>
           <p class="concept-explain">Understanding that cycle means you can break down any cybersecurity incident or topic and ask the right questions. It won't make you a cyber expert — but it means you can appropriately challenge one. Instead of waiting for the latest checklist from experts to tell you what to think, you'll have the mental model to think critically yourself. Rather than just accepting what you're told or begrudgingly going along with it, you'll understand enough to be genuinely on the same page and push toward the best solution.</p>
@@ -974,7 +979,21 @@ function hideToast() {
 }
 
 // ==================== CARD ZOOM ====================
+// Track the element currently showing a zoom so we can detect when it leaves the DOM
+let _zoomEl = null;
+
+// Hide zoom whenever the mouse is no longer over the zoomed element
+// (catches re-renders where mouseleave never fires on the removed node)
+document.addEventListener('pointermove', () => {
+  if (_zoomEl && !_zoomEl.isConnected) hideCardZoom();
+});
+
 function showCardZoom(card, el) {
+  // Never show while any action overlay is open
+  const overlay = document.getElementById('govern-overlay');
+  if (overlay && overlay.style.display !== 'none') return;
+
+  _zoomEl = el;
   const zoom = document.getElementById('card-zoom');
   const img = getCardImg(card);
   if (img) {
@@ -1004,6 +1023,7 @@ function showCardZoom(card, el) {
   }
 }
 function hideCardZoom() {
+  _zoomEl = null;
   document.getElementById('card-zoom').style.display = 'none';
 }
 
@@ -1616,6 +1636,7 @@ function renderMyPlayed(played) {
 }
 
 function renderHand(gs) {
+  hideCardZoom();
   const el = document.getElementById('hand-cards');
   el.innerHTML = '';
   const isMyTurn = gs.currentPlayer === gs.myIndex;
@@ -1766,7 +1787,7 @@ let detectOrderState = []; // client-side card order for detect reorder
 // Render a card as an HTML string using the same .card CSS as hand cards.
 // onclickStr — inline onclick value (string), or null for view-only.
 // extraStyle  — optional extra inline CSS string.
-function vcCard(c, onclickStr, extraStyle) {
+function vcCard(c, onclickStr, extraStyle, extraAttrs) {
   const img = getCardImg(c);
   const cls = cardClass(c);
   const content = img
@@ -1778,10 +1799,69 @@ function vcCard(c, onclickStr, extraStyle) {
       }</div><div class="card-name" style="font-size:11px;font-weight:800;line-height:1.2;margin-top:4px">${c.name}</div><div class="card-desc" style="font-size:9px;color:#4b5563;margin-top:3px;line-height:1.3">${c.desc||''}</div>`;
   const cursor = onclickStr ? 'cursor:pointer' : 'cursor:default';
   const styleAttr = [cursor, extraStyle].filter(Boolean).join(';');
-  return `<div class="card ${cls}${img ? ' card-has-img' : ''}" style="${styleAttr}" ${onclickStr ? `onclick="${onclickStr}"` : ''}>${content}</div>`;
+  return `<div class="card ${cls}${img ? ' card-has-img' : ''}" style="${styleAttr}" ${onclickStr ? `onclick="${onclickStr}"` : ''} ${extraAttrs||''}>${content}</div>`;
+}
+
+// Sort cards in Kill Chain order (attack) then NIST order (defend), same types grouped together
+function cardSortKey(c) {
+  const ai = ATTACK_TYPES.findIndex(t => t.id === c.type);
+  if (ai !== -1) return ai;
+  const di = DEFEND_TYPES.findIndex(t => t.id === c.type);
+  if (di !== -1) return 100 + di;
+  return 200;
+}
+function sortByOrder(cards) {
+  return [...cards].sort((a, b) => cardSortKey(a) - cardSortKey(b));
+}
+
+// ── Shared card-slot renderer used by Delivery, Recon, and Identify swap UIs ──
+function dsSlot(c, extraCls, onclick, count) {
+  const catClass = c.cat === 'defend' ? 'defend' : c.cat === 'special' ? 'special-card-type' : 'attack';
+  const isGiving = extraCls && extraCls.includes('ds-giving');
+  const img = getCardImg(c);
+  const content = img
+    ? `<img src="${img}" alt="${c.name}" class="card-art-img">`
+    : `<div class="card-cat">${c.cat === 'defend' ? '<span style="color:#93c5fd">DEF</span>' : c.cat === 'special' ? '<span style="color:#d1db24">SPL</span>' : '<span style="color:#f87171">ATK</span>'}</div><div class="card-name">${c.name}</div>`;
+  const cursor = onclick ? 'cursor:pointer' : 'cursor:default';
+  return `<div class="card ${catClass} ds-card${img ? ' card-has-img' : ''} ${extraCls||''}" title="${c.name}" style="${cursor}" ${onclick ? `onclick="${onclick}"` : ''}>
+    ${content}
+    ${isGiving ? '<span class="delivery-giving-tag" style="position:absolute;bottom:4px;left:0;right:0;text-align:center">giving</span>' : ''}
+    ${count > 1 ? `<span class="opp-kc-count">×${count}</span>` : ''}
+  </div>`;
+}
+
+// Render played cards grouped by type in Kill Chain + NIST rows with count badges.
+// showAttack / showDefend (default true) control which rows are rendered.
+function dsRows(playedCards, getExtraCls, getOnclick, showAttack, showDefend) {
+  if (showAttack === undefined) showAttack = true;
+  if (showDefend === undefined) showDefend = true;
+  const byType = {};
+  playedCards.forEach(c => { (byType[c.type] = byType[c.type] || []).push(c); });
+  let result = '';
+  if (showAttack) {
+    const atk = ATTACK_TYPES.map(t => {
+      const cards = byType[t.id] || [];
+      if (!cards.length) return `<div style="width:34px;min-height:48px;border-radius:5px;border:2px dashed #7f1d1d;display:flex;align-items:center;justify-content:center;font-size:12px;opacity:0.22;flex-shrink:0" title="${t.name}">${t.emoji}</div>`;
+      // Use the giving card as representative if one exists, otherwise first card
+      const c = cards.find(card => (getExtraCls ? getExtraCls(card) : '').includes('ds-giving')) || cards[0];
+      return dsSlot(c, getExtraCls ? getExtraCls(c) : '', getOnclick ? getOnclick(c) : null, cards.length);
+    }).join('');
+    result += `<div class="kc-row" style="margin-bottom:6px"><span class="kc-row-label attack" style="width:38px;font-size:8px">Kill<br>Chain</span><div class="kc-slots" style="flex-wrap:wrap;gap:6px;align-items:flex-end">${atk}</div></div>`;
+  }
+  if (showDefend) {
+    const def = DEFEND_TYPES.map(t => {
+      const cards = byType[t.id] || [];
+      if (!cards.length) return `<div style="width:34px;min-height:48px;border-radius:5px;border:2px dashed #1e3a5f;display:flex;align-items:center;justify-content:center;font-size:12px;opacity:0.22;flex-shrink:0" title="${t.name}">${t.emoji}</div>`;
+      const c = cards.find(card => (getExtraCls ? getExtraCls(card) : '').includes('ds-giving')) || cards[0];
+      return dsSlot(c, getExtraCls ? getExtraCls(c) : '', getOnclick ? getOnclick(c) : null, cards.length);
+    }).join('');
+    result += `<div class="kc-row"><span class="kc-row-label defend" style="width:38px;font-size:8px">NIST</span><div class="kc-slots" style="flex-wrap:wrap;gap:6px;align-items:flex-end">${def}</div></div>`;
+  }
+  return result;
 }
 
 function renderEffectOverlay(gs) {
+  hideCardZoom();
   const overlay = document.getElementById('govern-overlay');
   const inner = document.getElementById('govern-overlay-inner');
   const myIdx = gs.myIndex;
@@ -1798,7 +1878,7 @@ function renderEffectOverlay(gs) {
       <h3 style="font-size:18px;font-weight:800;color:#c4b5fd;margin-bottom:4px">🏛️ Govern — Take a Card</h3>
       <p style="font-size:13px;color:#9ca3af;margin-bottom:16px">Step ${gi.step + 1} of ${gi.totalTargets} — pick one card from <span style="color:${fromColor};font-weight:700">${fromName}</span>'s hand</p>
       <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">`;
-    fromHand.forEach(c => {
+    sortByOrder(fromHand).forEach(c => {
       html += vcCard(c, `send({type:'game_action',action:'govern_take_card',cardId:'${c.id}'})`);
     });
     html += `</div></div>`;
@@ -1817,7 +1897,7 @@ function renderEffectOverlay(gs) {
       <h3 style="font-size:18px;font-weight:800;color:#c4b5fd;margin-bottom:4px">🏛️ Govern — Give a Card</h3>
       <p style="font-size:13px;color:#9ca3af;margin-bottom:16px">Step ${gi.step + 1} of ${gi.totalTargets} — give one card from your hand to <span style="color:${toColor};font-weight:700">${toName}</span></p>
       <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">`;
-    gs.myHand.forEach(c => {
+    sortByOrder(gs.myHand).forEach(c => {
       html += vcCard(c, `send({type:'game_action',action:'govern_give_card',cardId:'${c.id}'})`);
     });
     html += `</div></div>`;
@@ -1889,17 +1969,17 @@ function renderEffectOverlay(gs) {
     overlay.style.display = 'flex';
     const me = gs.players[myIdx];
     const myDefendCards = me.played.filter(c => c.cat === 'defend');
-    let html = `<div class="effect-panel"><h3>🔎 Swap — Select your defend card to give away</h3>
-      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px">`;
+    let html = `<div class="effect-panel" style="max-width:min(740px,94vw)"><h3>🔎 Swap — Select your defend card to give away</h3>`;
     if (myDefendCards.length === 0) {
       html += `<p style="color:#9ca3af">You have no played defend cards to swap.</p>
         <button class="action-btn btn-cancel" onclick="send({type:'game_action',action:'identify_choice',choice:'dataflag'})" style="width:100%">Switch to Data Flag reveal instead</button>`;
     } else {
-      myDefendCards.forEach(c => {
-        html += `<span class="played-select-card defend" onclick="send({type:'game_action',action:'identify_swap_my',cardId:'${c.id}'})">${c.name}</span>`;
-      });
+      html += `<div style="margin-top:12px">` + dsRows(myDefendCards,
+        () => 'ds-selectable',
+        c => `send({type:'game_action',action:'identify_swap_my',cardId:'${c.id}'})`,
+        false, true) + `</div>`;
     }
-    html += `</div><button class="action-btn btn-cancel" onclick="send({type:'game_action',action:'identify_go_back'})" style="margin-top:8px;width:100%">← Back</button></div>`;
+    html += `<button class="action-btn btn-cancel" onclick="send({type:'game_action',action:'identify_go_back'})" style="margin-top:12px;width:100%">← Back</button></div>`;
     inner.innerHTML = html;
     return;
   }
@@ -1935,15 +2015,13 @@ function renderEffectOverlay(gs) {
     const tgtPlayer = gs.players[tgt];
     const tgtProtected = gs.protectedPlayers?.includes(tgt);
     const theirDefend = tgtPlayer.played.filter(c => c.cat === 'defend');
-    let html = `<div class="effect-panel"><h3>🔎 Swap — Select ${tgtPlayer.name}'s defend card to take</h3>
-      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px">`;
-    theirDefend.forEach(c => {
-      const ineligible = c.type === 'protect' && tgtProtected;
-      html += ineligible
-        ? `<span class="played-select-card defend" style="opacity:0.35;cursor:not-allowed" title="Protect is active — cannot swap">${c.name} 🛡️</span>`
-        : `<span class="played-select-card defend" onclick="send({type:'game_action',action:'identify_swap_their',cardId:'${c.id}'})">${c.name}</span>`;
-    });
-    html += '</div></div>';
+    let html = `<div class="effect-panel" style="max-width:min(740px,94vw)"><h3>🔎 Swap — Select ${tgtPlayer.name}'s defend card to take</h3>
+      <div style="margin-top:12px">` +
+      dsRows(theirDefend,
+        c => (c.type === 'protect' && tgtProtected) ? 'ds-preview' : 'ds-selectable',
+        c => (c.type === 'protect' && tgtProtected) ? null : `send({type:'game_action',action:'identify_swap_their',cardId:'${c.id}'})`,
+        false, true) +
+      `</div></div>`;
     inner.innerHTML = html;
     return;
   }
@@ -2052,7 +2130,7 @@ function renderEffectOverlay(gs) {
       <h3>📡 C2 — Choose a card to give to ${attackerName}</h3>
       <p style="color:#9ca3af;font-size:13px;margin-bottom:12px">Pick any card from your hand (except the Data Flag) to give away.</p>
       <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center">`;
-    giveable.forEach(c => {
+    sortByOrder(giveable).forEach(c => {
       html += vcCard(c, `send({type:'game_action',action:'attack_c2_give_card',cardId:'${c.id}'})`);
     });
     if (giveable.length === 0) html += `<p style="color:#6b7280">No cards available to give.</p>`;
@@ -2147,7 +2225,7 @@ function renderEffectOverlay(gs) {
     const tgtHand = gs.attackInfo.targetHand || [];
     overlay.style.display = 'flex';
     let html = `<div class="effect-panel" style="max-width:min(740px,94vw)"><h3>🔍 ${tgtName}'s Hand</h3><div style="display:flex;flex-wrap:wrap;gap:8px;margin:12px 0;justify-content:center">`;
-    tgtHand.forEach(c => { html += vcCard(c, null); });
+    sortByOrder(tgtHand).forEach(c => { html += vcCard(c, null); });
     if (tgtHand.length === 0) html += `<p style="color:#6b7280">Empty hand.</p>`;
     html += `</div><button class="action-btn btn-govern" onclick="send({type:'game_action',action:'recon_look_done'})" style="width:100%;margin-top:4px">Done</button></div>`;
     inner.innerHTML = html; return;
@@ -2166,11 +2244,10 @@ function renderEffectOverlay(gs) {
   if (gs.phase === 'attack_recon_swap_my' && gs.attackInfo?.iAmAttacker) {
     overlay.style.display = 'flex';
     const myAttack = gs.players[myIdx].played.filter(c => c.cat === 'attack');
-    let html = `<div class="effect-panel" style="max-width:min(740px,94vw)"><h3>🔍 Swap — Select your attack card to give away</h3>
-      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;justify-content:center">`;
-    if (myAttack.length === 0) { html += `<p style="color:#9ca3af">No played attack cards to swap.</p>`; }
-    else { myAttack.forEach(c => { html += vcCard(c, `send({type:'game_action',action:'recon_swap_my',cardId:'${c.id}'})`); }); }
-    html += '</div></div>';
+    let html = `<div class="effect-panel" style="max-width:min(740px,94vw)"><h3>🔍 Swap — Select your attack card to give away</h3>`;
+    if (myAttack.length === 0) { html += `<p style="color:#9ca3af;margin-top:8px">No played attack cards to swap.</p>`; }
+    else { html += `<div style="margin-top:12px">` + dsRows(myAttack, () => 'ds-selectable', c => `send({type:'game_action',action:'recon_swap_my',cardId:'${c.id}'})`, true, false) + `</div>`; }
+    html += '</div>';
     inner.innerHTML = html; return;
   }
 
@@ -2183,14 +2260,13 @@ function renderEffectOverlay(gs) {
     const givingCard = gs.attackInfo.reconSwapMyCard;
     let html = `<div class="effect-panel" style="max-width:min(740px,94vw)"><h3>🔍 Swap — Select ${tgtName}'s attack card to take</h3>`;
     if (givingCard) {
-      html += `<div style="margin-bottom:14px"><p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#9ca3af;margin-bottom:6px">Giving away:</p>
-        <div style="display:flex;gap:8px;justify-content:center">${vcCard(givingCard, null, 'border-color:#f87171;opacity:0.75')}</div></div>
-        <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#9ca3af;margin-bottom:8px">Select ${tgtName}'s card to take:</p>`;
+      html += `<div style="margin-bottom:14px"><p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#9ca3af;margin-bottom:8px">Giving away:</p>
+        <div style="margin-bottom:8px">` + dsRows([givingCard], () => 'ds-giving', null, true, false) + `</div>
+        <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#9ca3af;margin-bottom:6px">Select ${tgtName}'s card to take:</p></div>`;
     }
-    html += `<div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center">`;
     if (theirAttack.length === 0) { html += `<p style="color:#9ca3af">${tgtName} has no played attack cards.</p>`; }
-    else { theirAttack.forEach(c => { html += vcCard(c, `send({type:'game_action',action:'recon_swap_their',cardId:'${c.id}'})`); }); }
-    html += '</div></div>';
+    else { html += `<div style="margin-top:4px">` + dsRows(theirAttack, () => 'ds-selectable', c => `send({type:'game_action',action:'recon_swap_their',cardId:'${c.id}'})`, true, false) + `</div>`; }
+    html += '</div>';
     inner.innerHTML = html; return;
   }
 
@@ -2223,40 +2299,6 @@ function renderEffectOverlay(gs) {
     const swaps = gs.attackInfo.deliverySwaps || [];
     const pickStep = gs.attackInfo.deliveryPickStep;
     const swapsDone = swaps.length;
-
-    // Render a single played card as a full card-art tile (uses .card CSS)
-    function dsSlot(c, extraCls, onclick) {
-      const catClass = c.cat === 'defend' ? 'defend' : c.cat === 'special' ? 'special-card-type' : 'attack';
-      const isGiving = extraCls.includes('ds-giving');
-      const content = c.img
-        ? `<img src="${c.img}" alt="${c.name}" class="card-art-img">`
-        : `<div class="ds-card-text">
-            <span class="ds-card-cat card-cat">${c.cat === 'defend' ? 'DEF' : c.cat === 'special' ? 'SPL' : 'ATK'}</span>
-            <span class="ds-card-name card-name">${c.name}</span>
-          </div>`;
-      return `<div class="card ${catClass} ds-card ${extraCls}" title="${c.name}" ${onclick ? `onclick="${onclick}"` : ''}>
-        ${content}
-        ${isGiving ? '<span class="delivery-giving-tag" style="position:absolute;bottom:4px;left:0;right:0;text-align:center">giving</span>' : ''}
-      </div>`;
-    }
-
-    // Render played cards in Kill Chain + NIST rows; empty types show as slim dashed placeholders
-    function dsRows(playedCards, getExtraCls, getOnclick) {
-      const byType = {};
-      playedCards.forEach(c => { (byType[c.type] = byType[c.type] || []).push(c); });
-      const atk = ATTACK_TYPES.map(t => {
-        const cards = byType[t.id] || [];
-        if (!cards.length) return `<div class="ds-empty-slot" style="border-color:#7f1d1d" title="${t.name}">${t.emoji}</div>`;
-        return cards.map(c => dsSlot(c, getExtraCls(c), getOnclick ? getOnclick(c) : null)).join('');
-      }).join('');
-      const def = DEFEND_TYPES.map(t => {
-        const cards = byType[t.id] || [];
-        if (!cards.length) return `<div class="ds-empty-slot" style="border-color:#1e3a5f" title="${t.name}">${t.emoji}</div>`;
-        return cards.map(c => dsSlot(c, getExtraCls(c), getOnclick ? getOnclick(c) : null)).join('');
-      }).join('');
-      return `<div class="kc-row"><span class="kc-row-label attack" style="width:38px;font-size:8px">Kill<br>Chain</span><div class="kc-slots">${atk}</div></div>
-        <div class="kc-row"><span class="kc-row-label defend" style="width:38px;font-size:8px">NIST</span><div class="kc-slots">${def}</div></div>`;
-    }
 
     let html = `<div class="delivery-swap-panel">
       <div class="delivery-swap-header">
