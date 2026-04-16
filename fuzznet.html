@@ -93,6 +93,45 @@ body { padding-top: 44px; }
 .rules-banner a:hover { text-decoration: none; }
 .error-msg { color: #d44; font-size: 13px; text-align: center; margin-top: 6px; min-height: 20px; }
 
+/* ===== ROLE SELECTION (Player / Observer) ===== */
+.role-section-label { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: #888; margin: 12px 0 6px; display: flex; align-items: center; gap: 8px; }
+.role-section-label::after { content: ''; flex: 1; height: 1px; background: #e3e7d6; }
+.player-role-box { border: 2px solid #dde8c8; border-radius: 10px; padding: 10px 14px; cursor: pointer; transition: all 0.15s; margin-bottom: 8px; }
+.player-role-box.active { border-color: #62b517; background: #fafdf2; }
+.player-role-box .role-title { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: #62b517; margin-bottom: 6px; }
+.observer-role-btn { width: 100%; padding: 11px 14px; background: #f8faf2; border: 2px solid #dde8c8; border-radius: 10px; color: #777; cursor: pointer; font-weight: 700; display: flex; align-items: center; gap: 10px; transition: all 0.15s; font-family: inherit; }
+.observer-role-btn:hover:not(:disabled) { border-color: #22d3ee; color: #0e7490; background: #ecfeff; }
+.observer-role-btn.selected { border-color: #22d3ee; background: #ecfeff; color: #0e7490; box-shadow: 0 0 0 1px rgba(34,211,238,0.25), inset 0 0 12px rgba(34,211,238,0.08); }
+.observer-role-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.obs-role-icon { flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center; }
+.obs-role-text { display: flex; flex-direction: column; gap: 1px; text-align: left; }
+.obs-role-title { font-size: 13px; font-weight: 700; }
+.obs-role-sub { font-size: 10px; font-weight: 400; color: #999; line-height: 1.3; }
+.observer-role-btn.selected .obs-role-sub { color: #0891b2; }
+.obs-role-check { margin-left: auto; width: 18px; height: 18px; border-radius: 50%; border: 2px solid #cfd6c0; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+.observer-role-btn.selected .obs-role-check { border-color: #22d3ee; background: #22d3ee; box-shadow: 0 0 8px rgba(34,211,238,0.4); }
+
+/* ===== OBSERVER MODE — eye icon ===== */
+.obs-eye-icon { display: inline-block; width: 18px; height: 18px; color: #22d3ee; vertical-align: middle; filter: drop-shadow(0 0 3px rgba(34,211,238,0.45)); flex-shrink: 0; }
+.obs-eye-icon.obs-eye-lg { width: 22px; height: 22px; }
+.obs-eye-icon.obs-eye-xl { width: 26px; height: 26px; }
+.obs-eye-icon.obs-eye-sm { width: 14px; height: 14px; }
+@keyframes obs-eye-pulse { 0%,100% { filter: drop-shadow(0 0 4px rgba(34,211,238,0.4)); } 50% { filter: drop-shadow(0 0 8px rgba(34,211,238,0.85)); } }
+.obs-eye-icon.obs-eye-pulse { animation: obs-eye-pulse 2.4s ease-in-out infinite; }
+
+/* ===== OBSERVER BANNER (game screen) ===== */
+#observer-banner { display: none; position: fixed; top: 44px; left: 0; right: 0; z-index: 99; background: linear-gradient(180deg, rgba(207,250,254,0.96), rgba(186,230,253,0.96)); border-bottom: 2px solid #22d3ee; box-shadow: 0 2px 10px rgba(34,211,238,0.2); padding: 6px 16px; align-items: center; gap: 10px; font-size: 12px; font-weight: 700; color: #0e7490; letter-spacing: 0.8px; text-transform: uppercase; }
+#observer-banner .obs-pill { background: rgba(34,211,238,0.15); border: 1px solid rgba(34,211,238,0.5); border-radius: 20px; padding: 2px 10px; font-size: 11px; font-weight: 700; color: #0e7490; letter-spacing: 0.5px; text-transform: none; }
+body.observer-active { padding-top: calc(44px + 36px + 4px); }
+body.observer-active #game { height: calc(100vh - 44px - 36px - 4px); }
+
+/* ===== WAITING ROOM — observer section ===== */
+.waiting-observer-section { width: 100%; max-width: 320px; margin-top: 8px; }
+.waiting-observer-label { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: #0891b2; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+.waiting-observer-row { display: flex; align-items: center; gap: 10px; padding: 8px 14px; background: #ecfeff; border-radius: 8px; border: 1px solid rgba(34,211,238,0.3); margin-bottom: 5px; }
+.waiting-observer-row .obs-name { font-size: 14px; color: #0e7490; flex: 1; font-weight: 600; }
+.waiting-observer-row .host-badge { font-size: 10px; color: #c90; font-weight: 700; }
+
 /* ===== WAITING ROOM ===== */
 #waiting { flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; gap: 20px; background: linear-gradient(160deg, #f8faf2 0%, #edf2e0 100%); }
 .room-code-display { font-size: 52px; font-weight: 800; letter-spacing: 12px; color: #62b517; background: #fff; padding: 16px 36px; border-radius: 14px; border: 2px solid #a8c96a; user-select: all; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
@@ -433,6 +472,24 @@ body { padding-top: 44px; }
 </head>
 <body>
 
+<!-- Thematic observer "scan eye" icon — used in lobby + observer game banner -->
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="icon-obs-eye" viewBox="0 0 24 24">
+    <path d="M2 12C4 6.5 7.5 4 12 4s8 2.5 10 8c-2 5.5-5.5 8-10 8S4 17.5 2 12z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+    <circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.4"/>
+    <circle cx="12" cy="12" r="2.2" fill="none" stroke="currentColor" stroke-width="1"/>
+    <circle cx="12" cy="12" r="1" fill="currentColor"/>
+    <path d="M12 1.2V3M12 21v1.8M1.2 12H3M21 12h1.8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+  </symbol>
+</svg>
+
+<!-- ===== OBSERVER BANNER (shown during game for observers) ===== -->
+<div id="observer-banner">
+  <svg class="obs-eye-icon obs-eye-xl obs-eye-pulse"><use href="#icon-obs-eye"/></svg>
+  <span>Observer Mode</span>
+  <span class="obs-pill">Read-only — you can see all player boards but cannot play</span>
+</div>
+
 <!-- ===== TOP NAV ===== -->
 <nav id="top-nav">
   <a href="/">← All Games</a>
@@ -496,27 +553,54 @@ body { padding-top: 44px; }
     <div class="lobby-card">
       <h3>Create a New Game</h3>
       <input class="lobby-input name-input" id="create-name" maxlength="12" placeholder="Your name" oninput="updateCreateBtn()">
-      <div style="font-size:13px; color:#888; margin-bottom:8px;">Pick your color:</div>
-      <div class="color-options" id="create-colors">
-        <button class="color-btn selected" data-color="blue" style="background:#4a9eff" onclick="selectCreateColor('blue')">Blue</button>
-        <button class="color-btn" data-color="red" style="background:#ff4a4a" onclick="selectCreateColor('red')">Red</button>
-        <button class="color-btn" data-color="green" style="background:#3aaa6a" onclick="selectCreateColor('green')">Green</button>
-        <button class="color-btn" data-color="purple" style="background:#a060dd" onclick="selectCreateColor('purple')">Purple</button>
+      <div class="role-section-label">Choose Your Role</div>
+      <div id="create-player-role" class="player-role-box active" onclick="selectCreateRole('player')">
+        <div class="role-title">Player</div>
+        <div class="color-options" id="create-colors" style="margin:4px 0 0;justify-content:flex-start;gap:8px">
+          <button class="color-btn selected" data-color="blue" style="background:#4a9eff" onclick="event.stopPropagation();selectCreateColor('blue')">Blue</button>
+          <button class="color-btn" data-color="red" style="background:#ff4a4a" onclick="event.stopPropagation();selectCreateColor('red')">Red</button>
+          <button class="color-btn" data-color="green" style="background:#3aaa6a" onclick="event.stopPropagation();selectCreateColor('green')">Green</button>
+          <button class="color-btn" data-color="purple" style="background:#a060dd" onclick="event.stopPropagation();selectCreateColor('purple')">Purple</button>
+        </div>
       </div>
-      <button class="lobby-btn btn-create" id="btn-create" onclick="createRoom()" disabled>Create Game</button>
+      <button class="observer-role-btn" id="create-obs-btn" onclick="toggleCreateObserver()">
+        <span class="obs-role-icon"><svg class="obs-eye-icon obs-eye-lg"><use href="#icon-obs-eye"/></svg></span>
+        <span class="obs-role-text">
+          <span class="obs-role-title">Observer</span>
+          <span class="obs-role-sub">Spectate only — see every board, no actions</span>
+        </span>
+        <span class="obs-role-check">
+          <svg width="10" height="8" viewBox="0 0 10 8" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </button>
+      <button class="lobby-btn btn-create" id="btn-create" onclick="createRoom()" disabled style="margin-top:10px">Create Game</button>
     </div>
 
     <div class="lobby-card">
       <h3>Join a Game</h3>
       <input class="lobby-input name-input" id="join-name" maxlength="12" placeholder="Your name" oninput="updateJoinBtn()">
       <input class="lobby-input" id="join-code" maxlength="4" placeholder="CODE" oninput="checkRoom()">
-      <div class="color-options" id="join-colors" style="opacity:0.3; pointer-events:none;">
-        <button class="color-btn" data-color="blue" style="background:#4a9eff" onclick="selectJoinColor('blue')">Blue</button>
-        <button class="color-btn" data-color="red" style="background:#ff4a4a" onclick="selectJoinColor('red')">Red</button>
-        <button class="color-btn" data-color="green" style="background:#3aaa6a" onclick="selectJoinColor('green')">Green</button>
-        <button class="color-btn" data-color="purple" style="background:#a060dd" onclick="selectJoinColor('purple')">Purple</button>
+      <div class="role-section-label">Choose Your Role</div>
+      <div id="join-player-role" class="player-role-box" onclick="selectJoinRole('player')">
+        <div class="role-title">Player</div>
+        <div class="color-options" id="join-colors" style="margin:4px 0 0;justify-content:flex-start;gap:8px;opacity:0.3; pointer-events:none;">
+          <button class="color-btn" data-color="blue" style="background:#4a9eff" onclick="event.stopPropagation();selectJoinColor('blue')">Blue</button>
+          <button class="color-btn" data-color="red" style="background:#ff4a4a" onclick="event.stopPropagation();selectJoinColor('red')">Red</button>
+          <button class="color-btn" data-color="green" style="background:#3aaa6a" onclick="event.stopPropagation();selectJoinColor('green')">Green</button>
+          <button class="color-btn" data-color="purple" style="background:#a060dd" onclick="event.stopPropagation();selectJoinColor('purple')">Purple</button>
+        </div>
       </div>
-      <button class="lobby-btn btn-join" id="btn-join" disabled onclick="joinRoom()">Join Game</button>
+      <button class="observer-role-btn" id="join-obs-btn" onclick="toggleJoinObserver()" disabled>
+        <span class="obs-role-icon"><svg class="obs-eye-icon obs-eye-lg"><use href="#icon-obs-eye"/></svg></span>
+        <span class="obs-role-text">
+          <span class="obs-role-title">Observer</span>
+          <span class="obs-role-sub">Spectate only — see every board, no actions</span>
+        </span>
+        <span class="obs-role-check">
+          <svg width="10" height="8" viewBox="0 0 10 8" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </button>
+      <button class="lobby-btn btn-join" id="btn-join" disabled onclick="joinRoom()" style="margin-top:10px">Join Game</button>
       <div class="error-msg" id="lobby-error"></div>
     </div>
     <a href="https://cybersecgames.com/products/fuzznet-labs?_pos=1&_psq=FuzzNet&_ss=e&_v=1.0" target="_blank" rel="noopener" style="font-size:13px;color:#888;text-decoration:none;margin-top:4px;transition:color 0.15s">Want the board game? <span style="color:#62b517;font-weight:600">Grab the tabletop version</span></a>
@@ -536,6 +620,13 @@ body { padding-top: 44px; }
     <span>While you wait: <a href="/rulebook.pdf" target="_blank" rel="noopener">read the rulebook (PDF)</a> — or just jump in, every action has a help <b>i</b> button in-game</span>
   </div>
   <div class="player-list" id="player-list"></div>
+  <div class="waiting-observer-section" id="waiting-observer-section" style="display:none">
+    <div class="waiting-observer-label">
+      <svg class="obs-eye-icon obs-eye-sm"><use href="#icon-obs-eye"/></svg>
+      <span id="waiting-observer-count">Observers</span>
+    </div>
+    <div id="waiting-observer-list"></div>
+  </div>
   <button class="bot-toggle" id="btn-bot-toggle" onclick="toggleBot()" style="display:none">Play Solo vs Bot</button>
   <div class="waiting-actions">
     <button id="btn-start-game" onclick="startGame()" disabled>Start Game</button>
@@ -710,12 +801,17 @@ let ws = null;
 let myId = -1;
 let roomCode = '';
 let isHost = false;
-let viewingPlayer = -1; // -1 = my board
+let isObserver = false;
+let myObserverIdx = -1;
+let viewingPlayer = -1; // -1 = my board (players); for observers: 0..N-1 (which player to view)
 let G = null;
 let selectedDice = new Set();
 let createColor = 'blue';
 let joinColor = '';
 let joinAvailable = [];
+let canObserveJoin = true;
+let createObserverSelected = false;
+let joinObserverSelected = false;
 let prevCurrentPlayer = -1;
 let tutorialMode = false;
 let tutorialStep = 0;
@@ -739,6 +835,7 @@ function connect() {
 }
 
 function sendMsg(msg) {
+  if (isObserver && msg.type === 'game_action') return; // observers cannot affect gameplay
   if (ws && ws.readyState === 1) ws.send(JSON.stringify(msg));
 }
 
@@ -746,6 +843,8 @@ function handleServerMsg(msg) {
   switch (msg.type) {
     case 'room_created':
       roomCode = msg.code; myId = msg.yourId; isHost = true;
+      isObserver = false; myObserverIdx = -1;
+      document.body.classList.remove('observer-active');
       if (msg.token) sessionStorage.setItem(SESSION_KEY, msg.token);
       showScreen('waiting');
       document.getElementById('room-code-display').textContent = roomCode;
@@ -755,12 +854,32 @@ function handleServerMsg(msg) {
       break;
     case 'room_joined':
       roomCode = msg.code; myId = msg.yourId; isHost = false;
+      isObserver = false; myObserverIdx = -1;
+      document.body.classList.remove('observer-active');
       if (msg.token) sessionStorage.setItem(SESSION_KEY, msg.token);
       showScreen('waiting');
       document.getElementById('room-code-display').textContent = roomCode;
       break;
+    case 'joined_as_observer':
+      roomCode = msg.code; myId = -1;
+      isObserver = true; myObserverIdx = msg.observerIdx; isHost = !!msg.isHost;
+      // Observers don't get a session token (they reload as fresh observer)
+      sessionStorage.removeItem(SESSION_KEY);
+      if (msg.started) {
+        viewingPlayer = 0;
+        document.body.classList.add('observer-active');
+        showScreen('game');
+        document.getElementById('btn-cancel-game').style.display = isHost ? 'inline-block' : 'none';
+      } else {
+        document.body.classList.remove('observer-active');
+        showScreen('waiting');
+        document.getElementById('room-code-display').textContent = roomCode;
+      }
+      break;
     case 'room_rejoined':
       roomCode = msg.code; myId = msg.yourId; isHost = msg.isHost;
+      isObserver = false; myObserverIdx = -1;
+      document.body.classList.remove('observer-active');
       if (msg.token) sessionStorage.setItem(SESSION_KEY, msg.token);
       if (msg.started) {
         viewingPlayer = -1;
@@ -776,14 +895,30 @@ function handleServerMsg(msg) {
       showScreen('lobby');
       break;
     case 'lobby_update':
-      renderLobbyPlayers(msg.players);
+      renderLobbyPlayers(msg.players, msg.observers || []);
       break;
     case 'game_started':
-      viewingPlayer = -1;
+      if (isObserver) {
+        viewingPlayer = 0;
+        document.body.classList.add('observer-active');
+      } else {
+        viewingPlayer = -1;
+      }
       showScreen('game');
       document.getElementById('btn-cancel-game').style.display = isHost ? 'inline-block' : 'none';
       break;
     case 'state_update':
+      // For observers, msg.yourId === -1; keep myId at -1 and don't auto-switch view
+      if (msg.isObserver || isObserver) {
+        isObserver = true;
+        myId = -1;
+        G = msg.state;
+        if (viewingPlayer < 0 || viewingPlayer >= G.players.length) viewingPlayer = 0;
+        prevCurrentPlayer = G.currentPlayer;
+        renderGame();
+        if (G.gameOver) showGameOver();
+        break;
+      }
       myId = msg.yourId;
       G = msg.state;
       // Auto-switch to own board when your turn starts
@@ -798,11 +933,15 @@ function handleServerMsg(msg) {
     case 'left_room':
       sessionStorage.removeItem(SESSION_KEY);
       roomCode = ''; myId = -1; G = null;
+      isObserver = false; myObserverIdx = -1;
+      document.body.classList.remove('observer-active');
       showScreen('lobby');
       break;
     case 'game_cancelled':
       sessionStorage.removeItem(SESSION_KEY);
       roomCode = ''; myId = -1; G = null; isHost = false;
+      isObserver = false; myObserverIdx = -1;
+      document.body.classList.remove('observer-active');
       hideCancelModal();
       showScreen('lobby');
       document.getElementById('lobby-error').textContent = 'The host ended the game.';
@@ -833,23 +972,92 @@ function showScreen(id) {
 // ==================== LOBBY ====================
 function selectCreateColor(color) {
   createColor = color;
+  // Deselect observer when picking a color
+  if (createObserverSelected) {
+    createObserverSelected = false;
+    document.getElementById('create-obs-btn').classList.remove('selected');
+    document.getElementById('create-player-role').classList.add('active');
+  }
   document.querySelectorAll('#create-colors .color-btn').forEach(b =>
     b.classList.toggle('selected', b.dataset.color === color));
   updateCreateBtn();
 }
 function selectJoinColor(color) {
   joinColor = color;
+  if (joinObserverSelected) {
+    joinObserverSelected = false;
+    document.getElementById('join-obs-btn').classList.remove('selected');
+    document.getElementById('join-player-role').classList.add('active');
+  }
   document.querySelectorAll('#join-colors .color-btn').forEach(b =>
     b.classList.toggle('selected', b.dataset.color === color));
   updateJoinBtn();
 }
+function selectCreateRole(role) {
+  if (role === 'player' && createObserverSelected) {
+    createObserverSelected = false;
+    document.getElementById('create-obs-btn').classList.remove('selected');
+    document.getElementById('create-player-role').classList.add('active');
+    updateCreateBtn();
+  }
+}
+function selectJoinRole(role) {
+  if (role === 'player' && joinObserverSelected) {
+    joinObserverSelected = false;
+    document.getElementById('join-obs-btn').classList.remove('selected');
+    document.getElementById('join-player-role').classList.add('active');
+    updateJoinBtn();
+  }
+}
+function toggleCreateObserver() {
+  createObserverSelected = !createObserverSelected;
+  const btn = document.getElementById('create-obs-btn');
+  const playerBox = document.getElementById('create-player-role');
+  if (createObserverSelected) {
+    btn.classList.add('selected');
+    playerBox.classList.remove('active');
+    // Deselect color to make it obvious observer mode is active
+    createColor = null;
+    document.querySelectorAll('#create-colors .color-btn').forEach(b => b.classList.remove('selected'));
+  } else {
+    btn.classList.remove('selected');
+    playerBox.classList.add('active');
+    // Restore default color
+    createColor = 'blue';
+    document.querySelectorAll('#create-colors .color-btn').forEach(b =>
+      b.classList.toggle('selected', b.dataset.color === 'blue'));
+  }
+  updateCreateBtn();
+}
+function toggleJoinObserver() {
+  if (!canObserveJoin) return;
+  joinObserverSelected = !joinObserverSelected;
+  const btn = document.getElementById('join-obs-btn');
+  const playerBox = document.getElementById('join-player-role');
+  if (joinObserverSelected) {
+    btn.classList.add('selected');
+    playerBox.classList.remove('active');
+    joinColor = null;
+    document.querySelectorAll('#join-colors .color-btn').forEach(b => b.classList.remove('selected'));
+  } else {
+    btn.classList.remove('selected');
+    playerBox.classList.add('active');
+  }
+  updateJoinBtn();
+}
 function updateCreateBtn() {
   const name = document.getElementById('create-name')?.value.trim() || '';
-  document.getElementById('btn-create').disabled = name.length < 1;
+  const playerReady = createColor && name.length >= 1;
+  const observerReady = createObserverSelected && name.length >= 1;
+  document.getElementById('btn-create').disabled = !playerReady && !observerReady;
 }
 function updateJoinBtn() {
   const name = document.getElementById('join-name')?.value.trim() || '';
-  document.getElementById('btn-join').disabled = !joinColor || name.length < 1;
+  const code = document.getElementById('join-code').value.trim();
+  const codeOk = code.length === 4;
+  const playerReady = joinColor && codeOk && name.length >= 1;
+  const observerReady = joinObserverSelected && codeOk && name.length >= 1;
+  document.getElementById('btn-join').disabled = !playerReady && !observerReady;
 }
 function renderJoinColors() {
   const c = document.getElementById('join-colors');
@@ -859,21 +1067,34 @@ function renderJoinColors() {
     b.classList.remove('selected');
   });
   joinColor = '';
+  // Reset observer selection when room changes
+  joinObserverSelected = false;
+  document.getElementById('join-obs-btn').classList.remove('selected');
+  document.getElementById('join-player-role').classList.add('active');
   updateJoinBtn();
 }
 function checkRoom() {
   const code = document.getElementById('join-code').value.trim().toUpperCase();
   document.getElementById('lobby-error').textContent = '';
-  if (code.length === 4) sendMsg({ type: 'check_room', code });
-  else {
-    document.getElementById('join-colors').style.opacity = '0.3';
-    document.getElementById('join-colors').style.pointerEvents = 'none';
+  // Reset observer state when code changes
+  joinObserverSelected = false;
+  document.getElementById('join-obs-btn').classList.remove('selected');
+  document.getElementById('join-player-role').classList.add('active');
+  if (code.length === 4) {
+    sendMsg({ type: 'check_room', code });
+  } else {
+    const colors = document.getElementById('join-colors');
+    colors.style.opacity = '0.3';
+    colors.style.pointerEvents = 'none';
+    document.getElementById('join-obs-btn').disabled = true;
+    canObserveJoin = false;
     document.getElementById('btn-join').disabled = true;
   }
 }
 function handleRoomInfo(msg) {
   const el = document.getElementById('lobby-error');
-  if (!msg.exists) { el.textContent = 'Room not found'; return; }
+  const obsBtn = document.getElementById('join-obs-btn');
+  if (!msg.exists) { el.textContent = 'Room not found'; canObserveJoin = false; obsBtn.disabled = true; return; }
   if (msg.started) {
     if (msg.rejoinColors && msg.rejoinColors.length > 0) {
       el.textContent = 'Game in progress — select your color to rejoin.';
@@ -883,29 +1104,51 @@ function handleRoomInfo(msg) {
     } else {
       el.textContent = 'Game in progress — no open slots to rejoin.';
     }
+    // Allow observer to join mid-game if slots are open for observing
+    canObserveJoin = msg.canObserve !== false;
+    obsBtn.disabled = !canObserveJoin;
     return;
   }
-  if (msg.full) { el.textContent = 'Room is full'; return; }
+  if (msg.full) {
+    el.textContent = 'Room is full';
+    canObserveJoin = msg.canObserve !== false;
+    obsBtn.disabled = !canObserveJoin;
+    return;
+  }
   el.textContent = '';
   joinAvailable = msg.availableColors || [];
+  canObserveJoin = msg.canObserve !== false;
+  obsBtn.disabled = !canObserveJoin;
   document.getElementById('btn-join').textContent = 'Join Game';
   renderJoinColors();
 }
 function createRoom() {
-  const playerName = document.getElementById('create-name').value.trim();
-  if (!playerName) return;
-  sendMsg({ type: 'create_room', color: createColor, playerName });
+  const name = document.getElementById('create-name').value.trim();
+  if (!name) return;
+  if (createObserverSelected) {
+    sendMsg({ type: 'create_room_as_observer', gameType: 'fuzznet', name });
+    return;
+  }
+  if (!createColor) return;
+  sendMsg({ type: 'create_room', color: createColor, playerName: name });
 }
 function joinRoom() {
   const code = document.getElementById('join-code').value.trim().toUpperCase();
-  const playerName = document.getElementById('join-name').value.trim();
-  if (!code || !joinColor || !playerName) return;
-  sendMsg({ type: 'join_room', code, color: joinColor, playerName });
+  const name = document.getElementById('join-name').value.trim();
+  if (!code || !name) return;
+  if (joinObserverSelected) {
+    sendMsg({ type: 'join_as_observer', code, name });
+    return;
+  }
+  if (!joinColor) return;
+  sendMsg({ type: 'join_room', code, color: joinColor, playerName: name });
 }
 function leaveRoom() {
   sessionStorage.removeItem(SESSION_KEY);
   sendMsg({ type: 'leave_room' });
   roomCode = ''; myId = -1; G = null; isHost = false;
+  isObserver = false; myObserverIdx = -1;
+  document.body.classList.remove('observer-active');
 }
 
 function showCancelModal() {
@@ -938,36 +1181,62 @@ function flashCopied(btnId) {
 function getHex(color) {
   return {blue:'#4a9eff',red:'#ff4a4a',green:'#4aff8a',purple:'#c880ff'}[color]||'#888';
 }
-function renderLobbyPlayers(players) {
+function renderLobbyPlayers(players, observers = []) {
   const hasBot = players.some(p => p.isBot);
   const humans = players.filter(p => !p.isBot).length;
   const list = document.getElementById('player-list');
   list.innerHTML = players.map((p, i) =>
     `<div class="player-slot"><span class="dot" style="background:${getHex(p.color)}"></span><span>${p.name}</span>${p.isBot?'<span class="bot-badge">BOT</span>':''}${p.isHost?'<span class="host-badge">HOST</span>':''}${i===0?'<span class="first-badge">1ST</span>':''}</div>`
   ).join('');
+
+  // Render observer section
+  const obsSection = document.getElementById('waiting-observer-section');
+  const obsList = document.getElementById('waiting-observer-list');
+  const obsCount = document.getElementById('waiting-observer-count');
+  if (observers.length > 0) {
+    obsSection.style.display = 'block';
+    obsCount.textContent = `Observers (${observers.length})`;
+    obsList.innerHTML = observers.map(o =>
+      `<div class="waiting-observer-row">
+        <svg class="obs-eye-icon obs-eye-sm"><use href="#icon-obs-eye"/></svg>
+        <span class="obs-name">${o.name}</span>
+        ${o.isHost ? '<span class="host-badge">HOST</span>' : ''}
+      </div>`
+    ).join('');
+  } else {
+    obsSection.style.display = 'none';
+    obsList.innerHTML = '';
+  }
+
+  // Observer-host can start/use controls; show start button for any isHost (player or observer)
   const btn = document.getElementById('btn-start-game');
   btn.style.display = isHost ? 'inline-block' : 'none';
   btn.disabled = players.length < 2;
-  // Bot toggle: only show for host when alone or with bot
+  // Bot toggle: only show for player-host when alone or with bot (observer-host can't be a player)
   const botBtn = document.getElementById('btn-bot-toggle');
-  if (isHost && humans === 1) {
+  if (isHost && !isObserver && humans === 1) {
     botBtn.style.display = 'block';
     botBtn.textContent = hasBot ? 'Remove Bot' : 'Play Solo vs Bot';
     botBtn.classList.toggle('active', hasBot);
   } else {
     botBtn.style.display = 'none';
   }
-  const errMsg = isHost
-    ? (players.length < 2 ? 'Add a bot or invite players to start' : '')
-    : (players.length < 2 ? 'Waiting for more players...' : 'Waiting for host to start...');
+  const errMsg = isObserver
+    ? (players.length < 2 ? 'Waiting for players to join...' : isHost ? 'Ready — start the game when players are set.' : 'Waiting for host to start...')
+    : isHost
+      ? (players.length < 2 ? 'Add a bot or invite players to start' : '')
+      : (players.length < 2 ? 'Waiting for more players...' : 'Waiting for host to start...');
   document.getElementById('waiting-error').textContent = errMsg;
 }
 function toggleBot() { sendMsg({ type: 'toggle_bot' }); }
 function startGame() { sendMsg({ type: 'start_game' }); }
 
 // ==================== GAME RENDERING ====================
-function isMyTurn() { return G && G.currentPlayer === myId && !G.gameOver; }
-function viewedIdx() { return (viewingPlayer === -1) ? myId : viewingPlayer; }
+function isMyTurn() { return G && !isObserver && G.currentPlayer === myId && !G.gameOver; }
+function viewedIdx() {
+  if (isObserver) return (viewingPlayer >= 0) ? viewingPlayer : 0;
+  return (viewingPlayer === -1) ? myId : viewingPlayer;
+}
 function vp() { return G ? G.players[viewedIdx()] : null; }
 function cp() { return G ? G.players[G.currentPlayer] : null; }
 
@@ -1029,24 +1298,36 @@ function applyTutStatusHL() {
 function renderTopBar() {
   const c = cp();
   document.getElementById('turn-dot').style.background = c.hex;
-  document.getElementById('turn-name').textContent = (G.currentPlayer === myId ? 'Your' : c.name + "'s") + ' Turn';
+  // Observers never have a "Your Turn"
+  document.getElementById('turn-name').textContent = (!isObserver && G.currentPlayer === myId ? 'Your' : c.name + "'s") + ' Turn';
   document.getElementById('round-info').textContent = 'Round ' + G.round + (G.gameEnding ? ' (Final)' : '');
   document.getElementById('room-badge').textContent = roomCode;
   document.getElementById('actions-count').textContent = G.actionsLeft;
 
-  // Build player board tabs: your board first, then others in player order
-  const order = [myId];
-  for (let i = 0; i < G.players.length; i++) { if (i !== myId) order.push(i); }
+  // Observer banner visibility
+  const banner = document.getElementById('observer-banner');
+  if (banner) banner.style.display = isObserver ? 'flex' : 'none';
+
+  // Build player board tabs
+  // For players: own board first, then others; for observers: all boards in order
+  let order;
+  if (isObserver) {
+    order = G.players.map((_, i) => i);
+  } else {
+    order = [myId];
+    for (let i = 0; i < G.players.length; i++) { if (i !== myId) order.push(i); }
+  }
   let vhtml = '';
   for (const idx of order) {
     const p = G.players[idx];
     const isViewed = viewedIdx() === idx;
     const isTurn = G.currentPlayer === idx;
-    const label = idx === myId ? 'You' : p.name;
+    // Observers use viewingPlayer directly (0..N-1); players use -1 for self
+    const label = (!isObserver && idx === myId) ? 'You' : p.name;
     let cls = 'view-btn';
     if (isViewed) cls += ' active';
     if (isTurn) cls += ' is-turn';
-    const viewArg = idx === myId ? -1 : idx;
+    const viewArg = (!isObserver && idx === myId) ? -1 : idx;
     const firstMark = idx === 0 ? '<img src="images/icon-brain.png" style="width:16px;height:16px;vertical-align:middle;margin-left:2px"><span class="first-badge">1ST<span onclick="event.stopPropagation();showInfo(\'firstplayer\')" style="margin-left:3px;font-size:8px;width:13px;height:13px;line-height:13px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;border:1px solid rgba(255,255,255,0.7);background:rgba(255,255,255,0.25);cursor:pointer;padding:0 2px;font-weight:700">i</span></span>' : '';
     vhtml += `<button class="${cls}" onclick="setView(${viewArg})"><span class="vb-dot" style="background:${p.hex}"></span>${label}${firstMark}</button>`;
   }
