@@ -34,32 +34,52 @@ body{padding-top:44px;}
 .screen.active{display:flex;}
 
 /* ===== LOBBY ===== */
-#lobby{flex-direction:row;align-items:flex-start;justify-content:center;min-height:calc(100vh - 44px);overflow-y:auto;background:linear-gradient(to right,rgba(6,13,3,0) 0%,rgba(6,13,3,0) 38%,#060d03 66%) ,#1a3a00 url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg stroke='%2362b517' stroke-opacity='0.14' stroke-width='1.5' fill='none' stroke-linecap='round'%3E%3Cpolyline points='0,30 40,30 40,75'/%3E%3Ccircle cx='40' cy='30' r='3' fill='%2362b517' fill-opacity='0.14'/%3E%3Ccircle cx='40' cy='75' r='3' fill='%2362b517' fill-opacity='0.14'/%3E%3Cline x1='40' y1='75' x2='100' y2='75'/%3E%3Cline x1='70' y1='0' x2='70' y2='30'/%3E%3Ccircle cx='70' cy='30' r='2.5' fill='%2362b517' fill-opacity='0.14'/%3E%3Cline x1='70' y1='30' x2='100' y2='30'/%3E%3Cline x1='0' y1='55' x2='15' y2='55'/%3E%3Ccircle cx='15' cy='55' r='2.5' fill='%2362b517' fill-opacity='0.14'/%3E%3Cline x1='15' y1='55' x2='15' y2='100'/%3E%3C/g%3E%3C/svg%3E") repeat;background-size:auto,100px 100px;}
-.lobby-hero{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;background:transparent;padding:48px 48px 60px;gap:0;}
-.lobby-hero img{max-width:340px;width:100%;height:auto;border-radius:16px;box-shadow:0 16px 48px rgba(0,0,0,0.5);}
+#lobby{flex-direction:column;align-items:center;justify-content:flex-start;min-height:calc(100vh - 44px);overflow-y:auto;padding:0 20px 40px;background:radial-gradient(ellipse 1100px 600px at 50% 0%,rgba(98,181,23,0.18) 0%,rgba(6,13,3,0) 70%),#060d03 url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg stroke='%2362b517' stroke-opacity='0.07' stroke-width='1.5' fill='none' stroke-linecap='round'%3E%3Cpolyline points='0,30 40,30 40,75'/%3E%3Ccircle cx='40' cy='30' r='3' fill='%2362b517' fill-opacity='0.07'/%3E%3Ccircle cx='40' cy='75' r='3' fill='%2362b517' fill-opacity='0.07'/%3E%3Cline x1='40' y1='75' x2='100' y2='75'/%3E%3Cline x1='70' y1='0' x2='70' y2='30'/%3E%3Ccircle cx='70' cy='30' r='2.5' fill='%2362b517' fill-opacity='0.07'/%3E%3Cline x1='70' y1='30' x2='100' y2='30'/%3E%3Cline x1='0' y1='55' x2='15' y2='55'/%3E%3Ccircle cx='15' cy='55' r='2.5' fill='%2362b517' fill-opacity='0.07'/%3E%3Cline x1='15' y1='55' x2='15' y2='100'/%3E%3C/g%3E%3C/svg%3E") repeat;background-size:auto,100px 100px;}
+.lobby-container{width:100%;max-width:880px;display:flex;flex-direction:column;align-items:center;gap:32px;padding:36px 0 0;}
 
-/* ===== LOBBY LEARNING OBJECTIVES ===== */
-.learn-section-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#62b517;border-left:4px solid #d1db24;padding-left:10px;margin-bottom:14px;width:100%;max-width:440px;}
-.concept-list{list-style:none;display:flex;flex-direction:column;width:100%;max-width:440px;margin:0;padding:0;}
-.concept-list li{display:block;}
-.concept-card{border-radius:12px;padding:16px 18px;margin-bottom:12px;border:2px solid rgba(168,201,106,0.28);background:rgba(255,255,255,0.05);box-shadow:none;}
-.concept-card-top{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
-.concept-icon{width:28px;height:28px;flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;}
-.concept-icon svg{width:100%;height:100%;}
-.concept-card-top strong{font-size:14px;font-weight:900;color:#e2e8f0;}
-.concept-explain{font-size:13px;color:#94a3b8;line-height:1.65;margin:0;}
-.lobby-forms{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:16px;padding:24px 30px 30px;background:transparent;}
-#lobby h1{font-size:40px;color:#62b517;letter-spacing:3px;font-weight:800;text-shadow:0 0 28px rgba(98,181,23,0.5),0 0 8px rgba(98,181,23,0.3);font-family:'Share Tech Mono',monospace;}
-#lobby .subtitle{font-size:14px;color:rgba(255,255,255,0.55);margin-top:-6px;}
-@media(max-width:860px){
-  #lobby{flex-direction:column;height:auto;overflow:visible;background:linear-gradient(to bottom,rgba(6,13,3,0) 0%,rgba(6,13,3,0) 40%,#060d03 70%),#1a3a00 url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg stroke='%2362b517' stroke-opacity='0.14' stroke-width='1.5' fill='none' stroke-linecap='round'%3E%3Cpolyline points='0,30 40,30 40,75'/%3E%3Ccircle cx='40' cy='30' r='3' fill='%2362b517' fill-opacity='0.14'/%3E%3Ccircle cx='40' cy='75' r='3' fill='%2362b517' fill-opacity='0.14'/%3E%3Cline x1='40' y1='75' x2='100' y2='75'/%3E%3Cline x1='70' y1='0' x2='70' y2='30'/%3E%3Ccircle cx='70' cy='30' r='2.5' fill='%2362b517' fill-opacity='0.14'/%3E%3Cline x1='70' y1='30' x2='100' y2='30'/%3E%3Cline x1='0' y1='55' x2='15' y2='55'/%3E%3Ccircle cx='15' cy='55' r='2.5' fill='%2362b517' fill-opacity='0.14'/%3E%3Cline x1='15' y1='55' x2='15' y2='100'/%3E%3C/g%3E%3C/svg%3E") repeat;background-size:auto,100px 100px;}
-  .lobby-hero{height:auto;min-height:auto;padding:30px 20px 10px;overflow-y:visible;}
-  .lobby-hero img{max-width:280px;}
-  .lobby-forms{height:auto;min-height:auto;padding:10px 20px 30px;overflow-y:visible;}
-}
+/* HERO */
+.lobby-hero{display:grid;grid-template-columns:280px 1fr;gap:36px;align-items:center;width:100%;}
+.lobby-hero img{width:100%;max-width:280px;height:auto;border-radius:16px;box-shadow:0 12px 40px rgba(0,0,0,0.55),0 0 0 1px rgba(98,181,23,0.15);}
+.lobby-hero-text{display:flex;flex-direction:column;gap:10px;}
+#lobby h1{font-size:46px;color:#62b517;letter-spacing:3px;font-weight:800;text-shadow:0 0 28px rgba(98,181,23,0.5),0 0 8px rgba(98,181,23,0.3);font-family:'Share Tech Mono',monospace;line-height:1;margin:0;}
+#lobby .subtitle{font-size:15px;color:rgba(255,255,255,0.65);margin:0;line-height:1.5;}
+.lobby-meta{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:1.5px;margin-top:4px;}
+.lobby-meta-item{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;background:rgba(98,181,23,0.08);border:1px solid rgba(98,181,23,0.2);border-radius:20px;color:#a8c96a;}
+.lobby-tutorial-cta{margin-top:8px;align-self:flex-start;padding:13px 26px;font-size:14px;font-weight:700;background:linear-gradient(135deg,#62b517 0%,#4a8e10 100%);color:#fff;border:none;border-radius:10px;cursor:pointer;letter-spacing:0.5px;box-shadow:0 4px 18px rgba(98,181,23,0.35);transition:all 0.15s;display:inline-flex;align-items:center;gap:8px;}
+.lobby-tutorial-cta:hover{transform:translateY(-1px);box-shadow:0 6px 22px rgba(98,181,23,0.5);}
 
-.lobby-card{background:#0d1a06;border:1px solid rgba(98,181,23,0.2);border-radius:14px;padding:24px;width:360px;box-shadow:0 2px 12px rgba(0,0,0,0.4);}
+/* SECTION LABEL */
+.lobby-section{width:100%;display:flex;flex-direction:column;align-items:center;gap:14px;}
+.lobby-section-head{display:flex;align-items:center;gap:12px;width:100%;}
+.lobby-section-head::before,.lobby-section-head::after{content:'';flex:1;height:1px;background:linear-gradient(to right,transparent,rgba(98,181,23,0.25),transparent);}
+.lobby-section-label{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:2.5px;color:#62b517;white-space:nowrap;}
+
+/* LEARNING OBJECTIVES STRIP */
+.lobby-lo-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid rgba(98,181,23,0.18);border-radius:12px;overflow:hidden;width:100%;background:#0a1200;}
+.lobby-lo-item{display:flex;flex-direction:column;align-items:center;text-align:center;padding:18px 14px 20px;background:#0a1200;border-right:1px solid rgba(98,181,23,0.12);}
+.lobby-lo-item:last-child{border-right:none;}
+.lobby-lo-icon{width:44px;height:44px;background:rgba(98,181,23,0.1);border:1px solid rgba(98,181,23,0.28);border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:11px;flex-shrink:0;}
+.lobby-lo-icon svg{width:22px;height:22px;}
+.lobby-lo-title{font-size:12px;font-weight:800;color:#e2e8f0;letter-spacing:0.2px;margin-bottom:6px;line-height:1.3;}
+.lobby-lo-desc{font-size:11px;color:#6b7280;line-height:1.5;}
+
+/* PLAY GRID */
+.lobby-play-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;width:100%;}
+.lobby-card{background:#0d1a06;border:1px solid rgba(98,181,23,0.2);border-radius:14px;padding:24px;width:100%;box-shadow:0 2px 12px rgba(0,0,0,0.4);}
 .lobby-card h3{font-size:13px;color:#62b517;margin-bottom:14px;text-transform:uppercase;letter-spacing:1px;}
+
+/* RESPONSIVE */
+@media(max-width:780px){
+  .lobby-hero{grid-template-columns:1fr;text-align:center;gap:20px;}
+  .lobby-hero img{max-width:240px;margin:0 auto;}
+  .lobby-tutorial-cta{align-self:center;}
+  .lobby-meta{justify-content:center;}
+  .lobby-lo-strip{grid-template-columns:1fr 1fr;}
+  .lobby-lo-item:nth-child(2){border-right:none;}
+  .lobby-lo-item:nth-child(1),.lobby-lo-item:nth-child(2){border-bottom:1px solid rgba(98,181,23,0.12);}
+  .lobby-play-grid{grid-template-columns:1fr;}
+  #lobby h1{font-size:36px;}
+}
 
 .color-options{display:flex;gap:10px;justify-content:center;margin:12px 0;}
 .color-btn{width:56px;height:56px;border-radius:12px;border:3px solid transparent;cursor:pointer;font-size:11px;font-weight:bold;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,0.5);transition:all 0.15s;display:flex;align-items:center;justify-content:center;}
@@ -80,10 +100,10 @@ body{padding-top:44px;}
 .name-input{letter-spacing:normal;text-transform:none;font-size:16px;font-family:'Nunito','Segoe UI',system-ui,sans-serif;}
 .name-input::placeholder{letter-spacing:normal;font-size:14px;}
 .error-msg{color:#f87171;font-size:13px;text-align:center;margin-top:6px;min-height:20px;}
-.rules-banner{font-size:13px;color:rgba(255,255,255,0.5);background:rgba(255,255,255,0.04);border:1px solid rgba(98,181,23,0.2);border-radius:8px;padding:8px 14px;text-align:center;max-width:360px;line-height:1.5;}
+.rules-banner{font-size:13px;color:rgba(255,255,255,0.5);background:rgba(255,255,255,0.04);border:1px solid rgba(98,181,23,0.2);border-radius:8px;padding:10px 18px;text-align:center;width:100%;max-width:560px;line-height:1.5;margin-top:6px;}
 .rules-banner a{color:#62b517;font-weight:600;}
 /* ===== EVENT HUB ===== */
-.event-hub-card{width:760px;max-width:calc(100vw - 40px);background:#0a1200;border:1px solid rgba(98,181,23,0.18);border-radius:14px;padding:20px 24px 22px;}
+.event-hub-card{width:100%;background:#0a1200;border:1px solid rgba(98,181,23,0.18);border-radius:14px;padding:20px 24px 22px;}
 .event-hub-card h3{font-size:13px;color:#62b517;margin-bottom:4px;text-transform:uppercase;letter-spacing:1px;}
 .event-hub-add{display:flex;gap:10px;margin-top:12px;align-items:center;}
 .event-hub-add button{flex-shrink:0;padding:9px 18px;background:#111d04;border:1px solid rgba(98,181,23,0.45);border-radius:8px;color:#62b517;font-size:13px;font-weight:700;cursor:pointer;transition:all 0.15s;white-space:nowrap;}
@@ -323,6 +343,13 @@ body.observer-active.host-cancel-visible #observer-banner{padding-right:290px;}
 
 /* MIDDLE - DECK + STATUS */
 .game-middle{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:10px 16px;}
+.lo-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid rgba(98,181,23,0.15);border-radius:10px;overflow:hidden;width:100%;max-width:680px;flex-shrink:0;}
+.lo-item{display:flex;flex-direction:column;align-items:center;text-align:center;padding:10px 10px 12px;background:#0a1200;border-right:1px solid rgba(98,181,23,0.12);}
+.lo-item:last-child{border-right:none;}
+.lo-icon{width:36px;height:36px;background:rgba(98,181,23,0.1);border:1px solid rgba(98,181,23,0.25);border-radius:9px;display:flex;align-items:center;justify-content:center;margin-bottom:7px;flex-shrink:0;}
+.lo-icon svg{width:18px;height:18px;}
+.lo-title{font-size:10px;font-weight:800;color:#d1fae5;letter-spacing:0.3px;margin-bottom:4px;line-height:1.3;}
+.lo-desc{font-size:9px;color:#4b5563;line-height:1.4;}
 .status-banner{background:#1a2235;border:1px solid #253347;border-radius:10px;padding:8px 16px;text-align:center;width:100%;max-width:400px;}
 .status-banner .turn-label{font-size:12px;color:#6b7280;text-transform:uppercase;letter-spacing:1px;}
 .status-banner .turn-player{font-size:18px;font-weight:800;color:#62b517;}
@@ -887,56 +914,57 @@ body.bc-tut-active .game-layout { height: calc(100vh - 44px); margin-right: 272p
 
 <!-- SCREEN: LOBBY -->
 <div class="screen active" id="lobby">
-  <div class="lobby-hero">
-    <img src="/images/byteclub.png" alt="Byte Club">
+  <div class="lobby-container">
 
-    <div style="height:36px"></div>
-    <div class="learn-section-label">What you'll actually understand after playing</div>
+    <!-- HERO -->
+    <section class="lobby-hero">
+      <img src="/images/byteclub.png" alt="Byte Club">
+      <div class="lobby-hero-text">
+        <h1>BYTE CLUB</h1>
+        <p class="subtitle">Experience the Cycle of Cyberwarfare from both sides — race to steal the Data Flag while defending your own.</p>
+        <div class="lobby-meta">
+          <span class="lobby-meta-item"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><circle cx="9" cy="7" r="3"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg> 2–4 Players</span>
+          <span class="lobby-meta-item"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg> 20–40 Min</span>
+          <span class="lobby-meta-item"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/></svg> Ages 14+</span>
+        </div>
+        <button class="lobby-tutorial-cta" onclick="startBcTutorial()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Interactive Tutorial — Learn to Play
+        </button>
+      </div>
+    </section>
 
-    <ul class="concept-list">
-      <li>
-        <div class="concept-card">
-          <div class="concept-card-top">
-            <span class="concept-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M5 19L19 5M19 5h-6M19 5v6"/><path d="M3 21l2-2" stroke="#d1db24" stroke-width="2.5"/></svg></span>
-            <strong>Attacker Mindset</strong>
-          </div>
-          <p class="concept-explain">Attackers don't strike randomly — they follow a sequence. The Cyber Kill Chain maps every stage from the first bit of reconnaissance to the final objective. Playing the attack side teaches you how adversaries think, plan, and move, and why disrupting any single stage can collapse the entire operation.</p>
+    <!-- LEARNING OBJECTIVES -->
+    <section class="lobby-section">
+      <div class="lobby-section-head"><span class="lobby-section-label">What you'll learn</span></div>
+      <div class="lobby-lo-strip">
+        <div class="lobby-lo-item">
+          <div class="lobby-lo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M5 19L19 5M19 5h-6M19 5v6"/><path d="M3 21l2-2" stroke="#d1db24" stroke-width="2.5"/></svg></div>
+          <div class="lobby-lo-title">Attacker Mindset</div>
+          <div class="lobby-lo-desc">How hackers plan and execute attacks, stage by stage</div>
         </div>
-      </li>
-      <li>
-        <div class="concept-card">
-          <div class="concept-card-top">
-            <span class="concept-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L4 6v6c0 5.5 3.5 10.7 8 12 4.5-1.3 8-6.5 8-12V6L12 2z"/><path d="M9 12l2 2 4-4" stroke="#d1db24" stroke-width="2"/></svg></span>
-            <strong>Defender Mindset</strong>
-          </div>
-          <p class="concept-explain">Defense isn't one big wall — it's a complete posture. The NIST Cybersecurity Framework gives defenders a structured approach: Identify what you're protecting, Protect it, Detect threats early, Respond fast, and Recover fully — with Govern at the center, providing the policies, roles, and decisions that hold it all together. Every gap in that posture is a stage of the Kill Chain a defender failed to cover.</p>
+        <div class="lobby-lo-item">
+          <div class="lobby-lo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L4 6v6c0 5.5 3.5 10.7 8 12 4.5-1.3 8-6.5 8-12V6L12 2z"/><path d="M9 12l2 2 4-4" stroke="#d1db24" stroke-width="2"/></svg></div>
+          <div class="lobby-lo-title">Defender Mindset</div>
+          <div class="lobby-lo-desc">How security teams protect, detect, and respond to threats</div>
         </div>
-      </li>
-      <li>
-        <div class="concept-card">
-          <div class="concept-card-top">
-            <span class="concept-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10"/><path d="M23 14l-4.64 4.36A9 9 0 0 1 3.51 15" stroke="#d1db24"/></svg></span>
-            <strong>The Cycle of Cyberwarfare</strong>
-          </div>
-          <p class="concept-explain">Attack and defense are never finished — they feed each other. Defenders add controls to disrupt the Kill Chain; attackers find ways around them; defenders adapt again. That perpetual loop is the Cycle of Cyberwarfare — and once you see it, you can use it as a mental model to make sense of any threat, breach, or security decision you'll ever encounter.</p>
+        <div class="lobby-lo-item">
+          <div class="lobby-lo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10"/><path d="M23 14l-4.64 4.36A9 9 0 0 1 3.51 15" stroke="#d1db24"/></svg></div>
+          <div class="lobby-lo-title">The Cycle of Cyberwarfare</div>
+          <div class="lobby-lo-desc">Why attack and defense never stop evolving against each other</div>
         </div>
-      </li>
-      <li>
-        <div class="concept-card">
-          <div class="concept-card-top">
-            <span class="concept-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><line x1="8" y1="10" x2="16" y2="10" stroke="#d1db24"/><line x1="8" y1="14" x2="12" y2="14" stroke="#d1db24"/></svg></span>
-            <strong>You are CyberFluent</strong>
-          </div>
-          <p class="concept-explain">Understanding that cycle means you can break down any cybersecurity incident or topic and ask the right questions. It won't make you a cyber expert — but it means you can appropriately challenge one. Instead of waiting for the latest checklist from experts to tell you what to think, you'll have the mental model to think critically yourself. Rather than just accepting what you're told or begrudgingly going along with it, you'll understand enough to be genuinely on the same page and push toward the best solution.</p>
+        <div class="lobby-lo-item">
+          <div class="lobby-lo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><line x1="8" y1="10" x2="16" y2="10" stroke="#d1db24"/><line x1="8" y1="14" x2="12" y2="14" stroke="#d1db24"/></svg></div>
+          <div class="lobby-lo-title">You are CyberFluent</div>
+          <div class="lobby-lo-desc">Break down any incident and challenge anyone who can't explain it</div>
         </div>
-      </li>
-    </ul>
-  </div>
-  <div class="lobby-forms">
-    <h1>BYTE CLUB</h1>
-    <p class="subtitle">Experience the Cycle of Cyberwarfare from both sides · 2–4 Players</p>
+      </div>
+    </section>
 
-    <button class="lobby-btn btn-tutorial" onclick="startBcTutorial()">Interactive Tutorial — Learn to Play</button>
+    <!-- PLAY -->
+    <section class="lobby-section">
+      <div class="lobby-section-head"><span class="lobby-section-label">Play now</span></div>
+      <div class="lobby-play-grid">
 
     <!-- CREATE GAME -->
     <div class="lobby-card">
@@ -992,7 +1020,12 @@ body.bc-tut-active .game-layout { height: calc(100vh - 44px); margin-right: 272p
       <div class="error-msg" id="join-error"></div>
     </div>
 
-    <!-- EVENT HUB -->
+      </div>
+    </section>
+
+    <!-- EVENT HUB SECTION -->
+    <section class="lobby-section">
+      <div class="lobby-section-head"><span class="lobby-section-label">For organizers</span></div>
     <div class="event-hub-card" id="event-hub-card">
       <h3>Event Hub — Run Multiple Tables</h3>
       <p style="font-size:12px;color:#4b5563;margin:2px 0 0">Create and manage multiple game rooms at once. Players join using the shareable link for each table — you are added as an observer to each room.</p>
@@ -1020,6 +1053,7 @@ body.bc-tut-active .game-layout { height: calc(100vh - 44px); margin-right: 272p
         </table>
       </div>
     </div>
+    </section>
 
     <div class="rules-banner">
       Byte Club · Cybersecurity card game by <a href="https://cybersecgames.com" target="_blank">CybersecGames.com</a>
@@ -1061,6 +1095,7 @@ body.bc-tut-active .game-layout { height: calc(100vh - 44px); margin-right: 272p
       <div class="game-log">
         <h4>Game Log <span class="info-btn" onclick="">i<div class="info-popup below">Shows all game actions in real-time. Newest events appear at the top. Watch here to see what opponents are doing.</div></span></h4>
         <div id="log-entries"></div>
+
       </div>
 
       <!-- MIDDLE -->
@@ -1096,6 +1131,30 @@ body.bc-tut-active .game-layout { height: calc(100vh - 44px); margin-right: 272p
             <div class="sc-icon"><img src="images/attack-action-obj.png" alt="Action Obj."></div>
             <div class="sc-name">Action Obj. <span class="info-btn" onclick="">i<div class="info-popup wide below"><strong>How to unlock:</strong> Be the first to play all 6 Kill Chain attack types (Recon, Weaponize, Delivery, Exploit, Install, C2) in front of you.<br><br><strong>Effect:</strong> Play at any time — the player holding the Data Flag must give it to you. <em>Respond cannot cancel this card.</em></div></span></div>
             <div class="sc-status" id="actionobj-status">Locked</div>
+          </div>
+        </div>
+
+        <!-- LEARNING OBJECTIVES STRIP -->
+        <div class="lo-strip">
+          <div class="lo-item">
+            <div class="lo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M5 19L19 5M19 5h-6M19 5v6"/><path d="M3 21l2-2" stroke="#d1db24" stroke-width="2.5"/></svg></div>
+            <div class="lo-title">Attacker Mindset</div>
+            <div class="lo-desc">How hackers plan and execute attacks, stage by stage</div>
+          </div>
+          <div class="lo-item">
+            <div class="lo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L4 6v6c0 5.5 3.5 10.7 8 12 4.5-1.3 8-6.5 8-12V6L12 2z"/><path d="M9 12l2 2 4-4" stroke="#d1db24" stroke-width="2"/></svg></div>
+            <div class="lo-title">Defender Mindset</div>
+            <div class="lo-desc">How security teams protect, detect, and respond to threats</div>
+          </div>
+          <div class="lo-item">
+            <div class="lo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10"/><path d="M23 14l-4.64 4.36A9 9 0 0 1 3.51 15" stroke="#d1db24"/></svg></div>
+            <div class="lo-title">The Cycle of Cyberwarfare</div>
+            <div class="lo-desc">Why attack and defense never stop evolving against each other</div>
+          </div>
+          <div class="lo-item">
+            <div class="lo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><line x1="8" y1="10" x2="16" y2="10" stroke="#d1db24"/><line x1="8" y1="14" x2="12" y2="14" stroke="#d1db24"/></svg></div>
+            <div class="lo-title">You are CyberFluent</div>
+            <div class="lo-desc">Break down any incident and challenge anyone who can't explain it</div>
           </div>
         </div>
 
