@@ -82,6 +82,27 @@ body{padding-top:44px;}
 .error-msg{color:#f87171;font-size:13px;text-align:center;margin-top:6px;min-height:20px;}
 .rules-banner{font-size:13px;color:rgba(255,255,255,0.5);background:rgba(255,255,255,0.04);border:1px solid rgba(98,181,23,0.2);border-radius:8px;padding:8px 14px;text-align:center;max-width:360px;line-height:1.5;}
 .rules-banner a{color:#62b517;font-weight:600;}
+/* ===== EVENT HUB ===== */
+.event-hub-card{width:760px;max-width:calc(100vw - 40px);background:#0a1200;border:1px solid rgba(98,181,23,0.18);border-radius:14px;padding:20px 24px 22px;}
+.event-hub-card h3{font-size:13px;color:#62b517;margin-bottom:4px;text-transform:uppercase;letter-spacing:1px;}
+.event-hub-add{display:flex;gap:10px;margin-top:12px;align-items:center;}
+.event-hub-add button{flex-shrink:0;padding:9px 18px;background:#111d04;border:1px solid rgba(98,181,23,0.45);border-radius:8px;color:#62b517;font-size:13px;font-weight:700;cursor:pointer;transition:all 0.15s;white-space:nowrap;}
+.event-hub-add button:hover{background:rgba(98,181,23,0.1);border-color:#62b517;}
+.event-hub-empty{font-size:12px;color:#374151;padding:16px 0 4px;text-align:center;font-style:italic;}
+.event-table{width:100%;border-collapse:collapse;margin-top:14px;font-size:13px;}
+.event-table th{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#374151;padding:4px 10px 8px;text-align:left;border-bottom:1px solid #1a2200;}
+.event-table td{padding:9px 10px;border-bottom:1px solid #0f1900;vertical-align:middle;}
+.event-table tr:last-child td{border-bottom:none;}
+.ev-code{font-size:17px;font-weight:800;letter-spacing:3px;color:#d1db24;font-family:'Share Tech Mono',monospace;}
+.ev-copy-btn{background:#111d04;border:1px solid #253347;border-radius:6px;padding:3px 10px;font-size:11px;font-weight:700;color:#62b517;cursor:pointer;transition:all 0.12s;white-space:nowrap;}
+.ev-copy-btn:hover{border-color:#62b517;background:rgba(98,181,23,0.08);}
+.ev-copy-btn.copied{color:#d1db24;border-color:rgba(209,219,36,0.5);}
+.ev-players{color:#9ca3af;font-size:13px;}
+.ev-status{display:inline-block;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;border-radius:3px;padding:2px 7px;}
+.ev-status.pending    {background:rgba(107,114,128,0.12);border:1px solid rgba(107,114,128,0.3);color:#6b7280;}
+.ev-status.in-progress{background:rgba(209,219,36,0.10);border:1px solid rgba(209,219,36,0.4);color:#d1db24;}
+.ev-status.completed  {background:rgba(98,181,23,0.10);border:1px solid rgba(98,181,23,0.35);color:#62b517;}
+.ev-status.cancelled  {background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.3);color:#f87171;}
 
 /* ===== ROLE SELECTION (Player / Observer) ===== */
 .role-section-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:#4b5563;margin:12px 0 4px;display:flex;align-items:center;gap:8px;}
@@ -971,6 +992,35 @@ body.bc-tut-active .game-layout { height: calc(100vh - 44px); margin-right: 272p
       <div class="error-msg" id="join-error"></div>
     </div>
 
+    <!-- EVENT HUB -->
+    <div class="event-hub-card" id="event-hub-card">
+      <h3>Event Hub — Run Multiple Tables</h3>
+      <p style="font-size:12px;color:#4b5563;margin:2px 0 0">Create and manage multiple game rooms at once. Players join using the shareable link for each table — you are added as an observer to each room.</p>
+      <div style="margin-top:12px;display:flex;align-items:center;gap:8px">
+        <input type="text" id="event-hub-name" maxlength="20" placeholder="Your organizer name…"
+          oninput="updateEventAddBtn()"
+          style="flex:1;max-width:220px;background:#0d1a03;border:1px solid #253347;border-radius:8px;color:#d1fae5;font-size:13px;font-weight:600;padding:8px 12px;outline:none;font-family:inherit;" />
+      </div>
+      <div class="event-hub-add">
+        <button id="event-add-btn" onclick="createEventRoom()" disabled style="opacity:0.4;cursor:not-allowed">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;margin-right:4px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add Table
+        </button>
+        <span style="font-size:12px;color:#374151" id="event-hub-hint">Enter your name above, then click Add Table.</span>
+      </div>
+      <div id="event-table-wrap" style="display:none">
+        <table class="event-table">
+          <thead><tr>
+            <th>Room</th>
+            <th>Invite Link</th>
+            <th>Players</th>
+            <th>Status</th>
+            <th></th>
+          </tr></thead>
+          <tbody id="event-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+
     <div class="rules-banner">
       Byte Club · Cybersecurity card game by <a href="https://cybersecgames.com" target="_blank">CybersecGames.com</a>
     </div>
@@ -1553,6 +1603,82 @@ function showScreen(id) {
   document.getElementById(id).classList.add('active');
 }
 
+// ==================== EVENT HUB ====================
+const eventRooms = new Map(); // code → {code, playerCount, status}
+const EV_STORAGE_KEY = 'byteclub_event_rooms';
+
+function saveEventRooms() {
+  localStorage.setItem(EV_STORAGE_KEY, JSON.stringify([...eventRooms.keys()]));
+}
+
+function updateEventAddBtn() {
+  const name = (document.getElementById('event-hub-name')?.value || '').trim();
+  const btn = document.getElementById('event-add-btn');
+  if (!btn) return;
+  const atLimit = eventRooms.size >= 10;
+  const ok = !!name && !atLimit;
+  btn.disabled = !ok;
+  btn.style.opacity = ok ? '1' : '0.4';
+  btn.style.cursor = ok ? 'pointer' : 'not-allowed';
+  btn.title = atLimit ? 'Maximum of 10 tables reached' : '';
+  if (name) localStorage.setItem('byteclub_event_name', name);
+}
+
+function createEventRoom() {
+  const name = (document.getElementById('event-hub-name')?.value || '').trim();
+  if (!name) return;
+  send({ type: 'create_event_room', name });
+}
+
+function renderEventTable() {
+  const tbody = document.getElementById('event-table-body');
+  const wrap  = document.getElementById('event-table-wrap');
+  const hint  = document.getElementById('event-hub-hint');
+  if (eventRooms.size === 0) {
+    wrap.style.display = 'none';
+    hint.style.display = '';
+    return;
+  }
+  hint.style.display = 'none';
+  wrap.style.display = '';
+  tbody.innerHTML = '';
+  for (const [code, room] of eventRooms) {
+    const statusClass = room.status === 'in_progress' ? 'in-progress'
+                      : room.status === 'completed'   ? 'completed'
+                      : room.status === 'cancelled'   ? 'cancelled' : 'pending';
+    const statusLabel = room.status === 'in_progress' ? 'In Progress'
+                      : room.status === 'completed'   ? 'Completed'
+                      : room.status === 'cancelled'   ? 'Cancelled'  : 'Pending';
+    const tr = document.createElement('tr');
+    tr.id = 'ev-row-' + code;
+    tr.innerHTML = `
+      <td><span class="ev-code">${code}</span></td>
+      <td><button class="ev-copy-btn" id="ev-copy-${code}" onclick="copyEventLink('${code}')">Copy Link</button></td>
+      <td class="ev-players">${room.playerCount}<span style="color:#253347"> / 4</span></td>
+      <td><span class="ev-status ${statusClass}">${statusLabel}</span></td>
+      <td><button class="ev-copy-btn" onclick="removeEventRoom('${code}')" title="Remove from list" style="color:#4b5563;border-color:#1e2d3d">✕</button></td>`;
+    tbody.appendChild(tr);
+  }
+  updateEventAddBtn();
+}
+
+function copyEventLink(code) {
+  const link = `${location.origin}/byteclub?room=${code}`;
+  navigator.clipboard.writeText(link).catch(() => {});
+  const btn = document.getElementById('ev-copy-' + code);
+  if (!btn) return;
+  const orig = btn.textContent;
+  btn.textContent = 'Copied!';
+  btn.classList.add('copied');
+  setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 1600);
+}
+
+function removeEventRoom(code) {
+  eventRooms.delete(code);
+  saveEventRooms();
+  renderEventTable();
+}
+
 // ==================== WAITING ROOM ====================
 function copyCode() {
   navigator.clipboard.writeText(roomCode).then(() => {
@@ -1813,6 +1939,24 @@ function handleMsg(msg) {
       document.getElementById('create-error').textContent = msg.msg;
       document.getElementById('join-error').textContent = msg.msg;
       document.getElementById('obs-error').textContent = msg.msg;
+      break;
+    case 'event_room_created':
+      eventRooms.set(msg.code, { code: msg.code, playerCount: 0, status: 'pending' });
+      saveEventRooms();
+      renderEventTable();
+      break;
+    case 'event_status_update':
+      if (eventRooms.has(msg.code)) {
+        const er = eventRooms.get(msg.code);
+        er.playerCount = msg.playerCount;
+        er.status = msg.status;
+        renderEventTable();
+      }
+      break;
+    case 'event_rooms_expired':
+      for (const code of (msg.codes || [])) eventRooms.delete(code);
+      saveEventRooms();
+      renderEventTable();
       break;
   }
 }
@@ -3662,6 +3806,20 @@ setupSpecialCardZoom();
 // On connect: try session rejoin first, then URL room check, then nothing
 connectWS(() => {
   if (urlRoom) send({ type:'check_room', code: urlRoom.toUpperCase() });
+  // Restore event hub state from previous session
+  const savedName = localStorage.getItem('byteclub_event_name');
+  if (savedName) {
+    const nameInput = document.getElementById('event-hub-name');
+    if (nameInput) { nameInput.value = savedName; updateEventAddBtn(); }
+  }
+  const savedCodes = JSON.parse(localStorage.getItem(EV_STORAGE_KEY) || '[]');
+  if (savedCodes.length > 0) {
+    for (const code of savedCodes) {
+      if (!eventRooms.has(code)) eventRooms.set(code, { code, playerCount: 0, status: 'pending' });
+    }
+    renderEventTable();
+    send({ type: 'query_event_rooms', codes: savedCodes });
+  }
 });
 </script>
 </body>

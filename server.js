@@ -936,6 +936,20 @@ function broadcastLobby(room) {
   for (const o of (room.observers || [])) {
     if (o.connected && o.ws) send(o.ws, lobbyInfo);
   }
+  sendEventStatus(room);
+}
+
+function sendEventStatus(room) {
+  if (!room.eventOrganizers || room.eventOrganizers.length === 0) return;
+  let status = 'pending';
+  if (room.started) {
+    status = (room.bcState && room.bcState.phase === 'game_over') ? 'completed' : 'in_progress';
+  }
+  const playerCount = room.players.filter(p => !p.isBot).length;
+  const update = { type: 'event_status_update', code: room.code, playerCount, status };
+  for (const orgWs of room.eventOrganizers) {
+    send(orgWs, update);
+  }
 }
 
 function broadcastState(room) {
@@ -1398,6 +1412,42 @@ function handleMessage(ws, raw) {
       break;
     }
 
+    case 'create_event_room': {
+      const orgRoomCount = [...rooms.values()].filter(r => r.isEventRoom && r.eventOrganizers?.includes(ws)).length;
+      if (orgRoomCount >= 10) return send(ws, { type: 'error', msg: 'Maximum of 10 event tables reached.' });
+      const code = generateCode();
+      const orgName = sanitizeName(msg.name, 'Organizer');
+      const room = {
+        code, hostIdx: 0,
+        gameType: 'byteclub',
+        players: [],
+        // Add organizer as a virtual observer (no ws — won't receive broadcasts, but shows in lobby)
+        observers: [{ ws: null, name: orgName, connected: true }],
+        eventOrganizers: [ws],
+        isEventRoom: true,
+        started: false, state: null, bcState: null,
+        createdAt: Date.now(),
+      };
+      rooms.set(code, room);
+      send(ws, { type: 'event_room_created', code });
+      sendEventStatus(room);
+      break;
+    }
+
+    case 'query_event_rooms': {
+      const codes = Array.isArray(msg.codes) ? msg.codes.slice(0, 20) : [];
+      const valid = [], dead = [];
+      for (const code of codes) {
+        const room = rooms.get(code);
+        if (!room || !room.isEventRoom) { dead.push(code); continue; }
+        if (!room.eventOrganizers.includes(ws)) room.eventOrganizers.push(ws);
+        valid.push(code);
+        sendEventStatus(room);
+      }
+      if (dead.length > 0) send(ws, { type: 'event_rooms_expired', codes: dead });
+      break;
+    }
+
     case 'check_room': {
       const room = rooms.get((msg.code||'').toUpperCase());
       if (!room) return send(ws, {type:'room_info', exists:false});
@@ -1585,6 +1635,7 @@ function handleMessage(ws, raw) {
         broadcastState(room);
         if (room.players[0].isBot) executeBotTurn(room);
       }
+      sendEventStatus(room);
       break;
     }
 
@@ -1628,6 +1679,11 @@ function handleMessage(ws, raw) {
       for (const o of (room.observers || [])) {
         if (o.ws) wsData.delete(o.ws);
       }
+      // Notify event organizers before the room is deleted
+      if (room.isEventRoom && room.eventOrganizers?.length > 0) {
+        const update = { type: 'event_status_update', code: room.code, playerCount: 0, status: 'cancelled' };
+        for (const orgWs of room.eventOrganizers) send(orgWs, update);
+      }
       rooms.delete(room.code);
       break;
     }
@@ -1657,7 +1713,8 @@ function leaveRoom(ws, explicit = false) {
         if (d.roomCode === room.code && d.isObserver && d.observerIdx > oIdx) d.observerIdx--;
       }
     }
-    if (!room.started && room.players.length === 0 && (room.observers || []).length === 0) {
+    if (!room.started && room.players.length === 0 && (room.observers || []).length === 0
+        && !(room.isEventRoom && room.eventOrganizers?.length > 0)) {
       rooms.delete(room.code);
     } else {
       broadcastLobby(room);
@@ -1679,7 +1736,7 @@ function leaveRoom(ws, explicit = false) {
       }
     }
     if (room.hostIdx >= room.players.length) room.hostIdx = 0;
-    if (room.players.length === 0) {
+    if (room.players.length === 0 && !(room.isEventRoom && room.eventOrganizers?.length > 0)) {
       rooms.delete(room.code);
     } else {
       broadcastLobby(room);
@@ -2312,6 +2369,9 @@ function bcBroadcastState(room) {
       }, 3000);
     }
   }
+
+  // Notify event organizers of status changes (in_progress → completed on game_over)
+  if (room.isEventRoom) sendEventStatus(room);
 }
 
 function bcDrawOne(room, playerIdx) {
@@ -3319,8 +3379,20 @@ wss.on('connection', (ws, req) => {
   const day = new Date().toISOString().slice(0, 10);
   wsUvKey.set(ws, crypto.createHash('sha256').update(ip + '|' + day).digest('hex').slice(0, 24));
   ws.on('message', (raw) => handleMessage(ws, raw.toString()));
-  ws.on('close', () => { leaveRoom(ws, false); wsUvKey.delete(ws); });
-  ws.on('error', () => { leaveRoom(ws, false); wsUvKey.delete(ws); });
+  ws.on('close', () => {
+    for (const [, room] of rooms) {
+      if (room.eventOrganizers) room.eventOrganizers = room.eventOrganizers.filter(w => w !== ws);
+    }
+    leaveRoom(ws, false);
+    wsUvKey.delete(ws);
+  });
+  ws.on('error', () => {
+    for (const [, room] of rooms) {
+      if (room.eventOrganizers) room.eventOrganizers = room.eventOrganizers.filter(w => w !== ws);
+    }
+    leaveRoom(ws, false);
+    wsUvKey.delete(ws);
+  });
 });
 
 server.listen(PORT, () => {
