@@ -20,13 +20,24 @@
 body{font-family:'Nunito','Segoe UI',system-ui,sans-serif;background:#111827;color:#e2e8f0;min-height:100vh;overflow-x:hidden;}
 
 /* ===== TOP NAV ===== */
-#top-nav{position:fixed;top:0;left:0;right:0;z-index:100;height:44px;background:rgba(6,13,3,0.96);backdrop-filter:blur(8px);border-bottom:2px solid #d1db24;display:flex;align-items:center;padding:0 20px;box-shadow:0 1px 8px rgba(0,0,0,0.4);}
-#top-nav a{font-size:13px;font-weight:700;color:#62b517;text-decoration:none;display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:7px;transition:background 0.15s;}
+#top-nav{position:fixed;top:0;left:0;right:0;z-index:100;height:44px;background:rgba(6,13,3,0.96);backdrop-filter:blur(8px);border-bottom:2px solid #d1db24;display:flex;align-items:center;padding:0 12px 0 16px;box-shadow:0 1px 8px rgba(0,0,0,0.4);gap:0;}
+#top-nav a{font-size:13px;font-weight:700;color:#62b517;text-decoration:none;display:flex;align-items:center;gap:5px;padding:5px 8px;border-radius:7px;transition:background 0.15s;flex-shrink:0;}
 #top-nav a:hover{background:rgba(98,181,23,0.12);}
 @keyframes logo-roll{from{transform:translateX(-140px) rotate(-400deg);opacity:0;}to{transform:translateX(0) rotate(0deg);opacity:1;}}
 #top-nav a img{animation:logo-roll 0.75s cubic-bezier(0.22,1,0.36,1) both;}
-#top-nav .nav-divider{margin:0 8px;color:#4b5563;font-size:16px;}
-#top-nav .nav-current{font-size:13px;font-weight:600;color:#6b7280;}
+#top-nav .nav-divider{margin:0 6px;color:#4b5563;font-size:16px;flex-shrink:0;}
+#top-nav .nav-current{font-size:13px;font-weight:600;color:#6b7280;flex-shrink:0;}
+#top-nav .nav-brand-text{display:inline;}
+#nav-game-btns{margin-left:auto;display:flex;align-items:center;gap:6px;flex-shrink:0;}
+#htp-btn{background:#1a2235;border:1px solid #374151;border-radius:7px;padding:5px 10px;font-size:12px;font-weight:700;color:#62b517;cursor:pointer;display:none;align-items:center;gap:4px;transition:background 0.15s;white-space:nowrap;line-height:1;}
+#htp-btn:hover{background:#253347;}
+#btn-cancel-game{background:transparent;border:1.5px solid #ef4444;border-radius:7px;padding:5px 10px;font-size:12px;font-weight:700;color:#ef4444;cursor:pointer;display:none;align-items:center;gap:4px;transition:all 0.15s;white-space:nowrap;line-height:1;}
+#btn-cancel-game:hover{background:#ef4444;color:#fff;}
+@media(max-width:480px){
+  #top-nav .nav-brand-text{display:none;}
+  #htp-btn{padding:5px 8px;font-size:11px;}
+  #btn-cancel-game{padding:5px 8px;font-size:11px;}
+}
 body{padding-top:44px;}
 
 /* ===== SCREENS ===== */
@@ -269,11 +280,6 @@ body.obs-hands-hidden .opp-hand-label{display:none !important;}
 #obs-hide-hands-btn{background:#374151;color:#e2e8f0;border:1px solid #4b5563;border-radius:6px;padding:3px 10px;font-size:11px;font-weight:700;cursor:pointer;margin-left:auto;letter-spacing:0.3px;}
 #obs-hide-hands-btn:hover{background:#4b5563;}
 #obs-hide-hands-btn.hands-hidden{background:#1a2235;color:#9ca3af;}
-/* Reserve room on the right of the observer banner so the fixed top-right buttons
-   (How to Play, and — if host — Cancel Game) sit on the same horizontal line as the
-   Hide Hands button without overlapping it. */
-body.observer-active #observer-banner{padding-right:140px;}
-body.observer-active.host-cancel-visible #observer-banner{padding-right:290px;}
 .waiting-observer-section{width:100%;max-width:320px;margin-top:4px;}
 .waiting-observer-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:#67e8f9;margin-bottom:6px;display:flex;align-items:center;gap:6px;}
 .waiting-observer-row{display:flex;align-items:center;gap:10px;padding:7px 14px;background:#0a1e2a;border-radius:8px;border:1px solid rgba(34,211,238,0.25);margin-bottom:5px;}
@@ -383,8 +389,6 @@ body.observer-active.host-cancel-visible #observer-banner{padding-right:290px;}
 
 
 /* Cancel Game */
-.cancel-game-btn{position:fixed;top:50px;right:14px;z-index:102;background:transparent;border:1.5px solid #ef4444;border-radius:8px;padding:5px 12px;font-size:12px;font-weight:700;color:#ef4444;cursor:pointer;display:none;align-items:center;gap:5px;transition:all 0.15s;white-space:nowrap;}
-.cancel-game-btn:hover{background:#ef4444;color:#fff;}
 
 /* Cancel confirmation modal */
 .cancel-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:1000;align-items:center;justify-content:center;}
@@ -401,13 +405,9 @@ body.observer-active.host-cancel-visible #observer-banner{padding-right:290px;}
 .cancel-modal-actions .btn-warn:hover{background:#b45309;}
 .warn-modal-icon{margin-bottom:12px;display:flex;align-items:center;justify-content:center;}
 
-/* HOW TO PLAY BUTTON (replaces sidebar) */
-.how-to-play-btn{position:fixed;top:50px;right:14px;z-index:101;background:#1a2235;border:1px solid #374151;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;color:#62b517;cursor:pointer;display:flex;align-items:center;gap:5px;transition:background 0.15s;}
-.how-to-play-btn:hover{background:#253347;}
-/* Keep How to Play on the same horizontal line as Cancel Game — just shift left of it */
-.host-cancel-visible .how-to-play-btn{top:50px;right:160px;}
-.host-cancel-visible .how-to-play-panel{top:82px;right:14px;}
-.how-to-play-panel{display:none;position:fixed;top:82px;right:14px;z-index:500;width:320px;max-height:calc(100vh - 100px);overflow-y:auto;background:#1a2235;border:1px solid #374151;border-radius:12px;padding:16px;box-shadow:0 12px 48px rgba(0,0,0,0.6);}
+/* HOW TO PLAY PANEL */
+.how-to-play-panel{display:none;position:fixed;top:50px;right:8px;z-index:500;width:320px;max-height:calc(100vh - 58px);overflow-y:auto;background:#1a2235;border:1px solid #374151;border-radius:12px;padding:16px;box-shadow:0 12px 48px rgba(0,0,0,0.6);}
+@media(max-width:480px){.how-to-play-panel{width:calc(100vw - 16px);right:8px;}}
 .how-to-play-panel.open{display:block;}
 .how-to-play-panel h4{font-size:13px;font-weight:800;color:#62b517;margin-bottom:8px;}
 .how-to-play-panel h5{font-size:11px;font-weight:700;color:#d1db24;margin:10px 0 4px;}
@@ -440,6 +440,19 @@ body.observer-active.host-cancel-visible #observer-banner{padding-right:290px;}
 /* CARDS */
 .card{border-radius:8px;padding:7px 8px 6px;cursor:pointer;transition:all 0.15s;border:2px solid transparent;min-width:100px;max-width:120px;flex-shrink:0;position:relative;}
 .card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,0.4);}
+/* Suppress hover lift on touch-only screens */
+@media(hover:none){.card:hover{transform:none;box-shadow:none;}}
+
+/* ── Mobile portrait: all 6 hand cards visible at once, no horizontal scroll ── */
+@media(max-width:540px){
+  .hand-area{padding:4px 6px 6px;}
+  .hand-cards{overflow-x:hidden;gap:3px;max-height:none;}
+  .hand-cards .card{min-width:0;max-width:none;flex:1 1 0;padding:5px 4px 4px;}
+  .hand-cards .card.card-has-img{height:auto;aspect-ratio:3/4;}
+  .hand-cards .card:not(.card-has-img){height:86px;overflow:hidden;}
+  .hand-cards .card:not(.card-has-img) .card-desc{display:none;}
+  .hand-cards .card:not(.card-has-img) .card-name{font-size:10px;}
+}
 .card.selected{transform:translateY(-8px);box-shadow:0 12px 32px rgba(0,0,0,0.5);}
 .card.attack{background:#1a1015;border-color:#7f1d1d;}
 .card.attack.selected{border-color:#ef4444;box-shadow:0 12px 32px rgba(239,68,68,0.3);}
@@ -619,6 +632,12 @@ body.observer-active.host-cancel-visible #observer-banner{padding-right:290px;}
   box-shadow: 0 16px 52px rgba(0,0,0,0.85), 0 0 0 1px rgba(255,255,255,0.06);
   border: 2px solid transparent;
   transform: translateX(-50%) translateY(-100%);
+}
+/* On touch screens (no hover), center the zoom in the viewport so it's
+   easy to read regardless of where the held card sits */
+@media(hover:none){
+  #card-zoom{transform:none !important;left:50% !important;top:50% !important;translate:-50% -50%;max-width:min(260px,80vw);}
+  #card-zoom.card-zoom-art{max-width:min(220px,70vw);}
 }
 #card-zoom.attack             { background:#1a1015; border-color:#ef4444; }
 #card-zoom.defend             { background:#0f1a2e; border-color:#3b82f6; }
@@ -918,9 +937,13 @@ body.bc-tut-active .game-layout { height: calc(100vh - 44px); margin-right: 272p
 
 <!-- TOP NAV -->
 <div id="top-nav">
-  <a href="/"><img src="/images/logo.png" alt="TBG" style="height:22px;width:auto;"> Tech Board Games</a>
+  <a href="/"><img src="/images/logo.png" alt="TBG" style="height:22px;width:auto;"><span class="nav-brand-text"> Tech Board Games</span></a>
   <span class="nav-divider">/</span>
   <span class="nav-current">Byte Club</span>
+  <div id="nav-game-btns">
+    <button id="htp-btn" onclick="document.getElementById('htp-panel').classList.toggle('open')">How to Play</button>
+    <button id="btn-cancel-game" onclick="showCancelModal()">✕ Cancel Game</button>
+  </div>
 </div>
 
 <!-- SCREEN: LOBBY -->
@@ -1166,7 +1189,7 @@ body.bc-tut-active .game-layout { height: calc(100vh - 44px); margin-right: 272p
       </div>
       <div class="hand-area" id="hand-area">
         <div class="hand-title">
-          <span>Your Hand <span class="info-btn" onclick="">i<div class="info-popup wide">💡 <em>Hover over a card to zoom in and read it — or hold it down on mobile.</em><br><br><strong>Double-click</strong> a card to play it on your turn. You can play multiple cards per turn.<br><br><strong>Attack cards</strong> target opponents. <strong>Defend cards</strong> protect you or give special abilities.<br><br><em>Respond</em> and <em>Weaponize</em> can be played out of turn when prompted. Click <strong>End Turn</strong> when done.</div></span></span>
+          <span>Your Hand <span class="info-btn" onclick="">i<div class="info-popup wide">💡 <em>Hover over a card to zoom in and read it — or hold it down on mobile.</em><br><br><strong>Click</strong> a card to play it on your turn. You can play multiple cards per turn.<br><br><strong>Attack cards</strong> target opponents. <strong>Defend cards</strong> protect you or give special abilities.<br><br><em>Respond</em> and <em>Weaponize</em> can be played out of turn when prompted. Click <strong>End Turn</strong> when done.</div></span></span>
           <span id="hand-count-label" style="color:#4b5563;font-size:11px;"></span>
         </div>
         <div class="hand-cards" id="hand-cards"></div>
@@ -1187,9 +1210,6 @@ body.bc-tut-active .game-layout { height: calc(100vh - 44px); margin-right: 272p
   <span class="obs-pill">Read Only — you can see all cards but cannot play</span>
   <button id="obs-hide-hands-btn" onclick="toggleObserverHands()">Hide Hands</button>
 </div>
-
-<!-- CANCEL GAME (host only, shown during game) -->
-<button class="cancel-game-btn" id="btn-cancel-game" onclick="showCancelModal()">✕ Cancel Game</button>
 
 <!-- Cancel confirmation modal -->
 <div class="cancel-modal-overlay" id="cancel-modal-overlay">
@@ -1216,8 +1236,7 @@ body.bc-tut-active .game-layout { height: calc(100vh - 44px); margin-right: 272p
   </div>
 </div>
 
-<!-- HOW TO PLAY -->
-<button class="how-to-play-btn" id="htp-btn" onclick="document.getElementById('htp-panel').classList.toggle('open')">How to Play</button>
+<!-- HOW TO PLAY PANEL -->
 <div class="how-to-play-panel" id="htp-panel">
   <button class="htp-close" onclick="this.parentElement.classList.remove('open')">✕</button>
   <h4>How to Play Byte Club</h4>
@@ -1226,7 +1245,7 @@ body.bc-tut-active .game-layout { height: calc(100vh - 44px); margin-right: 272p
   <p><strong>1.</strong> Hold the 🚩 Data Flag when ⏰ Times Up is drawn from the deck.</p>
   <p><strong>2.</strong> Play one of every attack type (Kill Chain) AND every defend type (NIST) in front of you, including the earned Govern and Action Objectives cards.</p>
   <h5><span style="color:#62b517">◆</span> Turn Flow</h5>
-  <p><strong>1. Play cards</strong> — double-click cards from your hand to play them. You can play multiple cards per turn.</p>
+  <p><strong>1. Play cards</strong> — click cards from your hand to play them. You can play multiple cards per turn.</p>
   <p><strong>2. End turn</strong> — click End Turn when done.</p>
   <p><strong>3. Draw</strong> — you automatically draw 1 card.</p>
   <p><strong>4. Discard</strong> — if you have more than 6 cards, click one to discard.</p>
@@ -1288,6 +1307,7 @@ body.bc-tut-active .game-layout { height: calc(100vh - 44px); margin-right: 272p
 </div>
 
 <!-- CARD ZOOM -->
+<div id="card-zoom-backdrop" style="display:none;position:fixed;inset:0;z-index:399;background:rgba(0,0,0,0.55);pointer-events:none;"></div>
 <div id="card-zoom"></div>
 
 <!-- TOAST NOTIFICATION -->
@@ -1321,6 +1341,8 @@ document.addEventListener('pointermove', () => {
   if (_zoomEl && !_zoomEl.isConnected) hideCardZoom();
 });
 
+const _isTouchDevice = () => window.matchMedia('(hover: none)').matches;
+
 function showCardZoom(card, el) {
   // Never show while any action overlay is open
   const overlay = document.getElementById('govern-overlay');
@@ -1328,6 +1350,7 @@ function showCardZoom(card, el) {
 
   _zoomEl = el;
   const zoom = document.getElementById('card-zoom');
+  const backdrop = document.getElementById('card-zoom-backdrop');
   const img = getCardImg(card);
   if (img) {
     zoom.className = 'card-zoom-art';
@@ -1340,24 +1363,36 @@ function showCardZoom(card, el) {
       `<div class="cz-name">${card.name}</div>` +
       `<div class="cz-desc">${card.desc || ''}</div>`;
   }
-  const rect = el.getBoundingClientRect();
-  const cx = rect.left + rect.width / 2;
-  const ty = rect.top - 10;   // anchor bottom of zoom card 10px above the hand card
-  zoom.style.left = cx + 'px';
-  zoom.style.top  = ty + 'px';
-  zoom.style.display = 'block';
-  // Clamp horizontally so the panel never overflows the viewport
-  const pad = 10;
-  const zr = zoom.getBoundingClientRect();
-  if (zr.left < pad) {
-    zoom.style.left = (cx + (pad - zr.left)) + 'px';
-  } else if (zr.right > window.innerWidth - pad) {
-    zoom.style.left = (cx - (zr.right - (window.innerWidth - pad))) + 'px';
+
+  if (_isTouchDevice()) {
+    // Touch: CSS media query centers the zoom in viewport — just show it
+    zoom.style.left = '';
+    zoom.style.top  = '';
+    zoom.style.display = 'block';
+    if (backdrop) backdrop.style.display = 'block';
+  } else {
+    // Desktop: anchor above the hovered element
+    const rect = el.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const ty = rect.top - 10;
+    zoom.style.left = cx + 'px';
+    zoom.style.top  = ty + 'px';
+    zoom.style.display = 'block';
+    // Clamp horizontally so the panel never overflows the viewport
+    const pad = 10;
+    const zr = zoom.getBoundingClientRect();
+    if (zr.left < pad) {
+      zoom.style.left = (cx + (pad - zr.left)) + 'px';
+    } else if (zr.right > window.innerWidth - pad) {
+      zoom.style.left = (cx - (zr.right - (window.innerWidth - pad))) + 'px';
+    }
   }
 }
 function hideCardZoom() {
   _zoomEl = null;
   document.getElementById('card-zoom').style.display = 'none';
+  const backdrop = document.getElementById('card-zoom-backdrop');
+  if (backdrop) backdrop.style.display = 'none';
 }
 
 function setupSpecialCardZoom() {
@@ -1761,8 +1796,8 @@ function confirmCancelGame() {
   // Navigate immediately — don't wait for server echo (prevents game screen flash
   // if game_cancelled is delayed or never arrives)
   roomCode = null; myId = null; myObserverIdx = -1; gameState = null; isHost = false; isObserver = false;
+  document.getElementById('htp-btn').style.display = 'none';
   document.getElementById('btn-cancel-game').style.display = 'none';
-  document.body.classList.remove('host-cancel-visible');
   document.getElementById('observer-banner').style.display = 'none';
   document.body.classList.remove('observer-active');
   history.replaceState({}, '', '/byteclub');
@@ -1890,10 +1925,8 @@ function handleMsg(msg) {
       history.replaceState({}, '', '/byteclub?room=' + roomCode);
       if (msg.started) {
         showScreen('game');
-        if (isHost) {
-          document.getElementById('btn-cancel-game').style.display = 'flex';
-          document.body.classList.add('host-cancel-visible');
-        }
+        document.getElementById('htp-btn').style.display = 'flex';
+        if (isHost) document.getElementById('btn-cancel-game').style.display = 'flex';
       } else {
         document.getElementById('room-code-text').textContent = roomCode;
         showScreen('waiting');
@@ -1946,6 +1979,7 @@ function handleMsg(msg) {
       if (msg.started) {
         // Game already in progress — go straight to game screen
         showScreen('game');
+        document.getElementById('htp-btn').style.display = 'flex';
         document.getElementById('observer-banner').style.display = 'flex';
         document.body.classList.add('observer-active');
       }
@@ -1955,13 +1989,13 @@ function handleMsg(msg) {
       break;
     case 'bc_game_started':
       showScreen('game');
+      document.getElementById('htp-btn').style.display = 'flex';
       if (isObserver) {
         document.getElementById('observer-banner').style.display = 'flex';
         document.body.classList.add('observer-active');
       }
       if (isHost) {
         document.getElementById('btn-cancel-game').style.display = 'flex';
-        document.body.classList.add('host-cancel-visible');
       }
       break;
     case 'bc_state':
@@ -1972,8 +2006,8 @@ function handleMsg(msg) {
     case 'left_room':
       sessionStorage.removeItem(SESSION_KEY);
       roomCode = null; myId = null; myObserverIdx = -1; gameState = null; isObserver = false;
+      document.getElementById('htp-btn').style.display = 'none';
       document.getElementById('btn-cancel-game').style.display = 'none';
-      document.body.classList.remove('host-cancel-visible');
       document.getElementById('observer-banner').style.display = 'none';
       document.body.classList.remove('observer-active');
       history.replaceState({}, '', '/byteclub');
@@ -1982,8 +2016,8 @@ function handleMsg(msg) {
     case 'game_cancelled':
       sessionStorage.removeItem(SESSION_KEY);
       roomCode = null; myId = null; myObserverIdx = -1; gameState = null; isHost = false; isObserver = false;
+      document.getElementById('htp-btn').style.display = 'none';
       document.getElementById('btn-cancel-game').style.display = 'none';
-      document.body.classList.remove('host-cancel-visible');
       document.getElementById('observer-banner').style.display = 'none';
       document.body.classList.remove('observer-active');
       hideCancelModal();
@@ -2111,12 +2145,40 @@ function buildHandCard(card, clickable, isSelected) {
     div.innerHTML = cardTextHTML(card);
   }
   if (clickable) div.onclick = () => selectCard(card.id);
-  // Zoom on hover (desktop) and touch-hold (mobile)
+  // Desktop: zoom on hover
   div.addEventListener('mouseenter', () => showCardZoom(card, div));
   div.addEventListener('mouseleave', hideCardZoom);
-  div.addEventListener('touchstart', (e) => { e.preventDefault(); showCardZoom(card, div); }, { passive: false });
-  div.addEventListener('touchend', hideCardZoom);
-  div.addEventListener('touchcancel', hideCardZoom);
+  // Touch: hold 400ms to zoom; short tap falls through to click (plays card)
+  let _holdTimer = null;
+  let _holdFired = false;
+  div.addEventListener('touchstart', () => {
+    _holdFired = false;
+    _holdTimer = setTimeout(() => {
+      _holdFired = true;
+      showCardZoom(card, div);
+    }, 400);
+  }, { passive: true });
+  div.addEventListener('touchend', (e) => {
+    clearTimeout(_holdTimer);
+    _holdTimer = null;
+    if (_holdFired) {
+      hideCardZoom();
+      e.preventDefault(); // block the synthetic click so we don't also play the card
+      _holdFired = false;
+    }
+  });
+  div.addEventListener('touchmove', () => {
+    // Finger moved — cancel hold (user is probably scrolling)
+    clearTimeout(_holdTimer);
+    _holdTimer = null;
+    if (_holdFired) { hideCardZoom(); _holdFired = false; }
+  }, { passive: true });
+  div.addEventListener('touchcancel', () => {
+    clearTimeout(_holdTimer);
+    _holdTimer = null;
+    hideCardZoom();
+    _holdFired = false;
+  });
   return div;
 }
 
@@ -2510,8 +2572,7 @@ function renderHand(gs) {
   const clickable = isMyTurn && (gs.phase === 'play' || gs.phase === 'discard') && !gs.recoverActive;
 
   gs.myHand.forEach(card => {
-    const isSelected = selectedHandCard === card.id;
-    const div = buildHandCard(card, clickable, isSelected);
+    const div = buildHandCard(card, clickable, false);
     el.appendChild(div);
   });
   document.getElementById('hand-count-label').textContent = gs.myHand.length + ' card(s)'
@@ -2525,47 +2586,40 @@ function selectCard(cardId) {
   if (!isMyTurn) return;
 
   if (gs.phase === 'discard') {
-    // Discard immediately on click
+    // Single click discards immediately
     hideCardZoom();
     send({ type:'game_action', action:'discard_card', cardId });
     return;
   }
 
   if (gs.phase === 'play') {
-    if (selectedHandCard === cardId) {
-      // Second click = play — check install block first
-      const cardObj = gs.myHand?.find(c => c.id === cardId || c.id === Number(cardId));
-      if (gs.iAmInstallBlocked && cardObj?.cat === 'defend') {
-        showToast('You are blocked from playing defend cards this turn (Installation)!');
-        selectedHandCard = null;
-        hideCardZoom();
-        renderHand(gs);
+    // Single click plays immediately — run guards first
+    const cardObj = gs.myHand?.find(c => c.id === cardId || c.id === Number(cardId));
+
+    // Install block check
+    if (gs.iAmInstallBlocked && cardObj?.cat === 'defend') {
+      showToast('You are blocked from playing defend cards this turn (Installation)!');
+      return;
+    }
+
+    // No valid targets check for attack cards
+    if (cardObj?.cat === 'attack') {
+      const protected_ = gs.protectedPlayers || [];
+      const validTargets = (gs.players || []).filter((_, idx) => idx !== gs.myIndex && !protected_.includes(idx));
+      if (gs.players && gs.players.length > 1 && validTargets.length === 0) {
+        showWarnModal(
+          WARN_ICON_TARGET,
+          'No Valid Targets',
+          'All opponents are currently protected — ' + cardObj.name + ' will have no effect if played now. Cancel to hold it for a better moment, or play it anyway.',
+          'Play Anyway',
+          () => { hideCardZoom(); send({ type:'game_action', action:'play_card', cardId }); }
+        );
         return;
       }
-      // No valid targets check for attack cards
-      if (cardObj?.cat === 'attack') {
-        const protected_ = gs.protectedPlayers || [];
-        const validTargets = (gs.players || []).filter((_, idx) => idx !== gs.myIndex && !protected_.includes(idx));
-        if (gs.players && gs.players.length > 1 && validTargets.length === 0) {
-          showWarnModal(
-            WARN_ICON_TARGET,
-            'No Valid Targets',
-            'All opponents are currently protected — ' + cardObj.name + ' will have no effect if played now. Cancel to hold it for a better moment, or play it anyway.',
-            'Play Anyway',
-            () => { hideCardZoom(); send({ type:'game_action', action:'play_card', cardId }); selectedHandCard = null; }
-          );
-          return;
-        }
-      }
-      hideCardZoom();
-      send({ type:'game_action', action:'play_card', cardId });
-      selectedHandCard = null;
-    } else {
-      selectedHandCard = cardId;
-      hideCardZoom();
-      renderHand(gs);
-      renderActionBar(gs, true);
     }
+
+    hideCardZoom();
+    send({ type:'game_action', action:'play_card', cardId });
   }
 }
 
@@ -2594,23 +2648,11 @@ function renderActionBar(gs, isMyTurn) {
     if (gs.recoverActive) {
       hint.textContent = 'Recover: You drew cards. You cannot play more this turn.';
       bar.insertBefore(mkBtn('End Turn (No Draw)', 'action-btn btn-end-turn', () => {
-        selectedHandCard = null;
         send({ type:'game_action', action:'end_play_phase' });
       }), hint);
     } else {
-      if (selectedHandCard) {
-        const card = gs.myHand.find(c => c.id === selectedHandCard);
-        if (card) {
-          hint.textContent = `Selected: ${card.name} — click the card again to play, or cancel`;
-          bar.insertBefore(mkBtn('Cancel', 'action-btn btn-cancel', () => {
-            selectedHandCard = null; renderHand(gs); renderActionBar(gs, true);
-          }), hint);
-        }
-      } else {
-        hint.textContent = 'Click a card to select it, click again to play. Or end your turn.';
-      }
+      hint.textContent = 'Click a card to play it. You can play multiple cards per turn. Or end your turn.';
       bar.insertBefore(mkBtn('End Turn (Draw 1)', 'action-btn btn-end-turn', () => {
-        selectedHandCard = null;
         if (gs.myHand.length >= 6) {
           showWarnModal(
             WARN_ICON_HAND,
@@ -3367,7 +3409,7 @@ There are <strong>two ways to win</strong> — this tutorial shows you both.`,
   { title: '⚔️ Your Turn — Play Recon',
     body: `Your hand has 5 cards. <strong>Red/dark</strong> cards are ⚔️ <strong>Attack</strong>; <strong>blue/dark</strong> are 🛡️ <strong>Defend</strong>.<br>
 Playing a card places it face-up in your row below, filling a slot.<br>
-<em>Double-click Reconnaissance</em> in your hand to play it — it lets you peek at Mira's hand!`,
+<em>Click Reconnaissance</em> in your hand to play it — it lets you peek at Mira's hand!`,
     makeG: () => makeBcTutG({ alexHand:[BTC.recon,BTC.c2,BTC.respond,BTC.identify,BTC.recover] }),
     forced: true,
     tutHL: 1001, // BTC.recon.id
@@ -3450,7 +3492,7 @@ Click the glowing <em>🚨 Play Respond</em> button to block it.`,
   { title: '📡 Steal the Data Flag with C2',
     body: `Respond cancelled the attack! Now it\'s your turn.<br>
 Mira is holding the 🚩 <strong>Data Flag</strong>. Whoever holds it when ⏰ <em>Times Up</em> is drawn wins instantly.<br>
-<em>Double-click C2 Control</em> to play it and steal the flag.`,
+<em>Click C2 Control</em> to play it and steal the flag.`,
     makeG: () => makeBcTutG({
       alexPlayed: [{...BTC.recon}],
       alexHand:   [BTC.c2, BTC.identify, BTC.recover],
@@ -3679,8 +3721,8 @@ function startBcTutorial() {
   myId = 0;
   document.body.classList.add('bc-tut-active');
   showScreen('game');
+  document.getElementById('htp-btn').style.display = 'flex';
   document.getElementById('btn-cancel-game').style.display = 'none';
-  document.body.classList.remove('host-cancel-visible');
   document.getElementById('win-screen').classList.remove('show');
   applyBcTutStep(0);
 }
@@ -3692,6 +3734,7 @@ function endBcTutorial() {
   selectedHandCard = null;
   document.body.classList.remove('bc-tut-active');
   document.getElementById('win-screen').classList.remove('show');
+  document.getElementById('htp-btn').style.display = 'none';
   showScreen('lobby');
 }
 
