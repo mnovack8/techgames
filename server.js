@@ -1419,7 +1419,7 @@ function handleMessage(ws, raw) {
       const orgName = sanitizeName(msg.name, 'Organizer');
       const room = {
         code, hostIdx: 0,
-        gameType: 'byteclub',
+        gameType: msg.gameType || 'byteclub',
         players: [],
         // Add organizer as a virtual observer (no ws — won't receive broadcasts, but shows in lobby)
         observers: [{ ws: null, name: orgName, connected: true }],

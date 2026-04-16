@@ -44,31 +44,76 @@ body { padding-top: 44px; }
 .screen.active { display: flex; }
 
 /* ===== LOBBY ===== */
-#lobby { flex-direction: row; align-items: center; justify-content: center; min-height: 100vh; gap: 0; background: linear-gradient(160deg, #f8faf2 0%, #edf2e0 100%); }
-.lobby-hero { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; min-height: 100vh; overflow-y: auto; background: #fff url("data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0.5' y='0.5' width='39' height='39' fill='none' stroke='%2362b517' stroke-opacity='0.07' stroke-width='1'/%3E%3Ccircle cx='0' cy='0' r='1.5' fill='%2362b517' fill-opacity='0.09'/%3E%3Ccircle cx='40' cy='0' r='1.5' fill='%2362b517' fill-opacity='0.09'/%3E%3Ccircle cx='0' cy='40' r='1.5' fill='%2362b517' fill-opacity='0.09'/%3E%3Ccircle cx='40' cy='40' r='1.5' fill='%2362b517' fill-opacity='0.09'/%3E%3C/svg%3E") repeat; background-size: auto, 40px 40px; padding: 48px 48px 60px; gap: 0; }
-.lobby-hero img { max-width: 360px; width: 100%; height: auto; filter: drop-shadow(0 8px 24px rgba(0,0,0,0.1)); }
+#lobby { flex-direction: column; align-items: center; overflow-y: auto; min-height: calc(100vh - 44px); padding: 0 20px 52px; background: linear-gradient(160deg, #f8faf2 0%, #edf2e0 100%); }
+.lobby-container { width: 100%; max-width: 880px; display: flex; flex-direction: column; align-items: center; gap: 32px; padding: 36px 0 0; }
 
-/* ===== LOBBY LEARNING OBJECTIVES ===== */
-.learn-section-label { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: #62b517; border-left: 4px solid #d1db24; padding-left: 10px; margin-bottom: 14px; width: 100%; max-width: 440px; }
-.concept-list { list-style: none; display: flex; flex-direction: column; width: 100%; max-width: 440px; margin: 0; padding: 0; }
-.concept-list li { display: block; }
-.concept-card { border-radius: 12px; padding: 16px 18px; margin-bottom: 12px; border: 2px solid #a8c96a; background: #fff; box-shadow: 0 2px 8px rgba(98,181,23,0.1); }
-.concept-card-top { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
-.concept-icon { font-size: 18px; }
-.concept-card-top strong { font-size: 14px; font-weight: 900; color: #2a2a2a; }
-.concept-explain { font-size: 13px; color: #555; line-height: 1.65; margin: 0; }
-.lobby-forms { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; gap: 20px; padding: 30px; }
-#lobby h1 { font-size: 44px; color: #62b517; letter-spacing: 2px; font-weight: 800; margin: 0; }
-#lobby .subtitle { font-size: 15px; color: #888; margin-top: -6px; }
-@media (max-width: 860px) {
-  #lobby { flex-direction: column; }
-  .lobby-hero { min-height: auto; padding: 30px 20px 10px; }
-  .lobby-hero img { max-width: 300px; }
-  .lobby-forms { min-height: auto; padding: 10px 20px 30px; }
+/* HERO */
+.lobby-hero { display: grid; grid-template-columns: 220px 1fr; gap: 40px; align-items: center; width: 100%; }
+.lobby-hero img { width: 100%; max-width: 220px; height: auto; border-radius: 16px; box-shadow: 0 8px 32px rgba(98,181,23,0.2), 0 0 0 1px rgba(98,181,23,0.12); }
+.lobby-hero-text { display: flex; flex-direction: column; gap: 10px; }
+#lobby h1 { font-size: 42px; color: #62b517; letter-spacing: 2px; font-weight: 800; margin: 0; line-height: 1.1; }
+#lobby .subtitle { font-size: 15px; color: #555; margin: 0; line-height: 1.55; }
+.lobby-meta { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 2px; }
+.lobby-meta-item { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; background: #f0f7e6; border: 1px solid #a8c96a; border-radius: 20px; font-size: 12px; font-weight: 700; color: #4a8c11; text-transform: uppercase; letter-spacing: 1.2px; }
+.lobby-tutorial-cta { align-self: flex-start; padding: 12px 24px; font-size: 14px; font-weight: 700; background: linear-gradient(135deg, #62b517 0%, #4a8e10 100%); color: #fff; border: none; border-radius: 10px; cursor: pointer; letter-spacing: 0.4px; box-shadow: 0 4px 18px rgba(98,181,23,0.32); transition: all 0.15s; display: inline-flex; align-items: center; gap: 8px; font-family: inherit; margin-top: 4px; }
+.lobby-tutorial-cta:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(98,181,23,0.48); }
+
+/* SECTION DIVIDERS */
+.lobby-section { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.lobby-section-head { display: flex; align-items: center; gap: 12px; width: 100%; }
+.lobby-section-head::before, .lobby-section-head::after { content: ''; flex: 1; height: 1px; background: linear-gradient(to right, transparent, rgba(98,181,23,0.35), transparent); }
+.lobby-section-label { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 2.5px; color: #62b517; white-space: nowrap; }
+
+/* LEARNING OBJECTIVES STRIP */
+.lo-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border: 1px solid #dde8c8; border-radius: 12px; overflow: hidden; width: 100%; background: #fff; }
+.lo-item { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 20px 14px 22px; background: #fff; border-right: 1px solid #edf2e4; }
+.lo-item:last-child { border-right: none; }
+.lo-item-icon { width: 46px; height: 46px; background: #f4fae8; border: 1.5px solid #a8c96a; border-radius: 11px; display: flex; align-items: center; justify-content: center; color: #62b517; margin-bottom: 10px; flex-shrink: 0; }
+.lo-item-title { font-size: 12px; font-weight: 800; color: #2a3a10; margin-bottom: 5px; line-height: 1.3; }
+.lo-item-desc { font-size: 11px; color: #777; line-height: 1.5; }
+
+/* PLAY GRID */
+.lobby-play-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%; }
+.lobby-card { background: #fff; border: 1.5px solid #dde8c8; border-radius: 14px; padding: 24px; width: 100%; box-shadow: 0 2px 16px rgba(98,181,23,0.08); position: relative; transition: border-color 0.2s, box-shadow 0.2s; }
+.lobby-card h3 { font-size: 13px; font-weight: 800; color: #4a8c11; letter-spacing: 1px; margin-bottom: 4px; text-transform: uppercase; }
+.lobby-card .card-desc { font-size: 12px; color: #888; margin-bottom: 12px; }
+
+/* RESPONSIVE */
+@media (max-width: 780px) {
+  .lobby-hero { grid-template-columns: 1fr; text-align: center; gap: 20px; }
+  .lobby-hero img { max-width: 200px; margin: 0 auto; }
+  .lobby-tutorial-cta { align-self: center; }
+  .lobby-meta { justify-content: center; }
+  .lobby-play-grid { grid-template-columns: 1fr; }
+  #lobby h1 { font-size: 34px; }
+  .lo-strip { grid-template-columns: 1fr 1fr; }
+  .lo-item:nth-child(2) { border-right: none; }
+  .lo-item:nth-child(1), .lo-item:nth-child(2) { border-bottom: 1px solid #edf2e4; }
+}
+@media (max-width: 480px) {
+  .lobby-container { gap: 24px; padding: 20px 0 0; }
+  #lobby h1 { font-size: 28px; }
+  .lo-item { padding: 14px 8px 16px; }
+  .lo-item-icon { width: 36px; height: 36px; }
+  .lo-item-desc { display: none; }
 }
 
-.lobby-card { background: #ffffff; border: 1.5px solid #dde8c8; border-radius: 14px; padding: 24px; width: 360px; box-shadow: 0 2px 16px rgba(98,181,23,0.1); }
-.lobby-card h3 { font-size: 13px; font-weight: 800; color: #4a8c11; letter-spacing: 1px; margin-bottom: 14px; text-transform: uppercase; }
+/* INVITED-VIA-LINK STATES */
+@keyframes invitedPulse { 0%,100% { box-shadow: 0 0 0 2px rgba(98,181,23,0.45), 0 0 22px rgba(98,181,23,0.18), 0 4px 16px rgba(98,181,23,0.1); } 50% { box-shadow: 0 0 0 2px rgba(98,181,23,0.75), 0 0 38px rgba(98,181,23,0.32), 0 4px 16px rgba(98,181,23,0.18); } }
+.lobby-card.lobby-card-focus { border-color: #62b517; background: linear-gradient(180deg, #f0fae4 0%, #fff 100%); animation: invitedPulse 2.6s ease-in-out infinite; }
+.lobby-card.lobby-card-focus::before { content: 'YOU\'RE INVITED'; position: absolute; top: -11px; left: 18px; background: #62b517; color: #fff; font-size: 10px; font-weight: 900; letter-spacing: 1.5px; padding: 3px 10px; border-radius: 4px; box-shadow: 0 4px 12px rgba(98,181,23,0.4); }
+.lobby-card.lobby-card-dim { opacity: 0.4; filter: saturate(0.5); transition: opacity 0.2s, filter 0.2s; }
+.lobby-card.lobby-card-dim:hover { opacity: 0.75; filter: saturate(0.8); }
+.invited-banner { display: none; width: 100%; background: linear-gradient(135deg, rgba(98,181,23,0.1) 0%, rgba(209,219,36,0.06) 100%); border: 1.5px solid rgba(98,181,23,0.4); border-radius: 12px; padding: 14px 20px; align-items: center; gap: 14px; box-shadow: 0 4px 16px rgba(98,181,23,0.12); }
+.invited-banner.show { display: flex; }
+.invited-banner-icon { width: 38px; height: 38px; background: rgba(98,181,23,0.12); border: 1px solid rgba(98,181,23,0.35); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: #4a8c11; }
+.invited-banner-text { flex: 1; display: flex; flex-direction: column; gap: 3px; }
+.invited-banner-title { font-size: 13px; font-weight: 800; color: #2a3a10; letter-spacing: 0.2px; }
+.invited-banner-sub { font-size: 12px; color: #777; }
+.invited-banner-code { font-family: monospace; color: #4a8c11; font-weight: 900; letter-spacing: 2px; font-size: 14px; }
+.invited-banner-arrow { color: #62b517; font-size: 22px; font-weight: 900; animation: invitedArrow 1.6s ease-in-out infinite; }
+@keyframes invitedArrow { 0%,100% { transform: translateY(0); } 50% { transform: translateY(5px); } }
+@media (max-width: 780px) { .invited-banner-arrow { display: none; } }
 
 .color-options { display: flex; gap: 10px; justify-content: center; margin: 12px 0; }
 .color-btn { width: 56px; height: 56px; border-radius: 12px; border: 3px solid transparent; cursor: pointer; font-size: 11px; font-weight: bold; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.3); transition: all 0.15s; display: flex; align-items: center; justify-content: center; }
@@ -80,7 +125,8 @@ body { padding-top: 44px; }
 .lobby-btn:hover:not(:disabled) { transform: scale(1.01); filter: brightness(1.05); }
 .lobby-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 .btn-create { background: #62b517; color: white; }
-.btn-join { background: #4a8c11; color: white; }
+.btn-join { background: #f0f7e6; color: #4a8c11; border: 1.5px solid #a8c96a; }
+.btn-join:hover:not(:disabled) { background: #e2f3cc; border-color: #62b517; }
 
 .lobby-input { width: 100%; padding: 12px 16px; font-size: 20px; text-align: center; letter-spacing: 8px; text-transform: uppercase; background: #f8f7f4; border: 2px solid #ccc; border-radius: 8px; color: #333; font-weight: bold; margin: 8px 0; }
 .lobby-input::placeholder { letter-spacing: 2px; font-size: 14px; color: #aaa; }
@@ -92,6 +138,28 @@ body { padding-top: 44px; }
 .rules-banner a { color: #62b517; font-weight: 600; }
 .rules-banner a:hover { text-decoration: none; }
 .error-msg { color: #d44; font-size: 13px; text-align: center; margin-top: 6px; min-height: 20px; }
+
+/* ===== EVENT HUB ===== */
+.event-hub-card { width: 100%; background: #fff; border: 1.5px solid #dde8c8; border-radius: 14px; padding: 20px 24px 22px; box-shadow: 0 2px 16px rgba(98,181,23,0.08); }
+.event-hub-card h3 { font-size: 13px; color: #4a8c11; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px; font-weight: 800; }
+.event-hub-add { display: flex; gap: 10px; margin-top: 12px; align-items: center; }
+.event-hub-add button { flex-shrink: 0; padding: 9px 18px; background: #f0f7e6; border: 1.5px solid #a8c96a; border-radius: 8px; color: #4a8c11; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.15s; white-space: nowrap; font-family: inherit; }
+.event-hub-add button:hover:not(:disabled) { background: #e2f3cc; border-color: #62b517; color: #2d6309; }
+.event-hub-empty { font-size: 12px; color: #999; padding: 16px 0 4px; text-align: center; font-style: italic; }
+.event-table { width: 100%; border-collapse: collapse; margin-top: 14px; font-size: 13px; }
+.event-table th { font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: #9aad7a; padding: 4px 10px 8px; text-align: left; border-bottom: 1px solid #e8f0d4; }
+.event-table td { padding: 9px 10px; border-bottom: 1px solid #edf2e4; vertical-align: middle; }
+.event-table tr:last-child td { border-bottom: none; }
+.ev-code { font-size: 17px; font-weight: 800; letter-spacing: 3px; color: #4a8c11; font-family: monospace; }
+.ev-copy-btn { background: #f4fae8; border: 1px solid #c8dda0; border-radius: 6px; padding: 3px 10px; font-size: 11px; font-weight: 700; color: #4a8c11; cursor: pointer; transition: all 0.12s; white-space: nowrap; font-family: inherit; }
+.ev-copy-btn:hover { border-color: #62b517; background: #e2f3cc; }
+.ev-copy-btn.copied { color: #62b517; border-color: #a8c96a; background: #e2f3cc; }
+.ev-players { color: #888; font-size: 13px; }
+.ev-status { display: inline-block; font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; border-radius: 3px; padding: 2px 7px; }
+.ev-status.pending     { background: rgba(107,114,128,0.08); border: 1px solid rgba(107,114,128,0.25); color: #888; }
+.ev-status.in-progress { background: rgba(98,181,23,0.10); border: 1px solid rgba(98,181,23,0.35); color: #4a8c11; }
+.ev-status.completed   { background: rgba(74,140,17,0.10); border: 1px solid rgba(74,140,17,0.3); color: #2d6309; }
+.ev-status.cancelled   { background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.25); color: #c0392b; }
 
 /* ===== ROLE SELECTION (Player / Observer) ===== */
 .role-section-label { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: #888; margin: 12px 0 6px; display: flex; align-items: center; gap: 8px; }
@@ -499,111 +567,194 @@ body.observer-active #game { height: calc(100vh - 44px - 36px - 4px); }
 
 <!-- ===== LOBBY ===== -->
 <div id="lobby" class="screen active">
-  <div class="lobby-hero">
-    <img src="images/cover.png" alt="FuzzNet Labs — A dog scientist building a machine learning model">
+  <div class="lobby-container">
 
-    <div style="height:36px"></div>
-    <div class="learn-section-label">What you'll actually understand after playing</div>
-
-    <ul class="concept-list">
-      <li>
-        <div class="concept-card">
-          <div class="concept-card-top">
-            <strong>Open the Black Box</strong>
-          </div>
-          <p class="concept-explain">Most people interact with AI as a black box — input goes in, output comes out, and nobody knows what happened in between. FuzzNet Labs changes that. You design the architecture, feed it data, and trace exactly how it flows through each layer to a prediction. That visualisation is the mental model most people never get — and it's the same foundation behind every large language model and AI product reshaping industries today.</p>
+    <!-- HERO -->
+    <section class="lobby-hero">
+      <img src="images/cover.png" alt="FuzzNet Labs">
+      <div class="lobby-hero-text">
+        <h1>FuzzNet Labs</h1>
+        <p class="subtitle">Build a neural network to classify animal photos — and finally understand what's actually happening inside an AI.</p>
+        <div class="lobby-meta">
+          <span class="lobby-meta-item">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><circle cx="9" cy="7" r="3"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg>
+            2–4 Players
+          </span>
+          <span class="lobby-meta-item">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+            30 Min
+          </span>
+          <span class="lobby-meta-item">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/></svg>
+            Ages 14+
+          </span>
         </div>
-      </li>
-      <li>
-        <div class="concept-card">
-          <div class="concept-card-top">
-            <strong>AI is a Probability Machine</strong>
-          </div>
-          <p class="concept-explain">Even with perfect data, 100% accuracy is never on the table. Every model is making a probabilistic bet — and optimising for one outcome creates tradeoffs elsewhere. Push too hard on training data and you overfit, failing on anything new. Relax the threshold and false positives creep in. Understanding that tension is what separates people who use AI critically from people who just trust the output.</p>
-        </div>
-      </li>
-      <li>
-        <div class="concept-card">
-          <div class="concept-card-top">
-            <strong>How AI Gets Built</strong>
-          </div>
-          <p class="concept-explain">Real ML isn't a one-shot process. It's a loop: Design an architecture, Train on data, Test on examples the model has never seen, and iterate. But the cycle always starts with data — and data is destiny. What you feed in determines everything that comes out. A brilliant architecture trained on bad data fails just as surely as a weak one trained on good data. Once you see that loop, you recognise it in every AI product, benchmark claim, or demo you'll ever encounter.</p>
-        </div>
-      </li>
-      <li>
-        <div class="concept-card">
-          <div class="concept-card-top">
-            <strong>You are AI-Fluent</strong>
-          </div>
-          <p class="concept-explain">Understanding that cycle won't make you an AI expert — and it's not supposed to. The goal is to work with one effectively. Instead of waiting for the latest report or checklist to tell you what to think, you'll have the mental model to ask the right questions yourself: challenge the training data, question the evaluation metrics, spot when overfitting might be the real issue. You'll understand enough to be genuinely on the same page — and push toward the best outcome instead of just nodding along.</p>
-        </div>
-      </li>
-    </ul>
-  </div>
-  <div class="lobby-forms">
-    <h1 style="font-size:36px;font-weight:900;color:#62b517;letter-spacing:1px;margin:0;">FuzzNet Labs</h1>
-    <div class="subtitle">Animal Photo Classifier — The Board Game</div>
+        <button class="lobby-tutorial-cta" onclick="startTutorial()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Interactive Tutorial — Learn to Play
+        </button>
+        <p style="font-size:12px;color:#888;margin-top:2px;">In-game help on every action via <b>i</b> buttons, or <a href="/rulebook.pdf" target="_blank" rel="noopener" style="color:#62b517;font-weight:600;">read the rulebook (PDF)</a></p>
+      </div>
+    </section>
 
-    <div class="rules-banner">
-      <span>New here? In-game help is built in via <b>i</b> buttons, or <a href="/rulebook.pdf" target="_blank" rel="noopener">read the full rulebook (PDF)</a></span>
-    </div>
-
-    <button class="lobby-btn btn-tutorial" onclick="startTutorial()" style="max-width:360px">📖 Interactive Tutorial — Learn to Play</button>
-
-    <div class="lobby-card">
-      <h3>Create a New Game</h3>
-      <input class="lobby-input name-input" id="create-name" maxlength="12" placeholder="Your name" oninput="updateCreateBtn()">
-      <div class="role-section-label">Choose Your Role</div>
-      <div id="create-player-role" class="player-role-box active" onclick="selectCreateRole('player')">
-        <div class="role-title">Player</div>
-        <div class="color-options" id="create-colors" style="margin:4px 0 0;justify-content:flex-start;gap:8px">
-          <button class="color-btn selected" data-color="blue" style="background:#4a9eff" onclick="event.stopPropagation();selectCreateColor('blue')">Blue</button>
-          <button class="color-btn" data-color="red" style="background:#ff4a4a" onclick="event.stopPropagation();selectCreateColor('red')">Red</button>
-          <button class="color-btn" data-color="green" style="background:#3aaa6a" onclick="event.stopPropagation();selectCreateColor('green')">Green</button>
-          <button class="color-btn" data-color="purple" style="background:#a060dd" onclick="event.stopPropagation();selectCreateColor('purple')">Purple</button>
+    <!-- LEARNING OBJECTIVES -->
+    <section class="lobby-section">
+      <div class="lobby-section-head"><span class="lobby-section-label">What you'll learn</span></div>
+      <div class="lo-strip">
+        <div class="lo-item">
+          <div class="lo-item-icon">
+            <svg width="22" height="22" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="6" y="6" width="14" height="14" rx="2" stroke="currentColor" stroke-width="1.7" transform="rotate(45 13 13)" fill="none"/>
+              <circle cx="13" cy="13" r="2.2" fill="currentColor"/>
+            </svg>
+          </div>
+          <div class="lo-item-title">Open the Black Box</div>
+          <div class="lo-item-desc">See inside the neural network architecture powering modern AI</div>
+        </div>
+        <div class="lo-item">
+          <div class="lo-item-icon">
+            <svg width="22" height="22" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="4" y="14" width="4" height="8" rx="1" fill="currentColor" opacity="0.5"/>
+              <rect x="11" y="9" width="4" height="13" rx="1" fill="currentColor" opacity="0.72"/>
+              <rect x="18" y="4" width="4" height="18" rx="1" fill="currentColor"/>
+            </svg>
+          </div>
+          <div class="lo-item-title">AI is a Probability Machine</div>
+          <div class="lo-item-desc">Why 100% accuracy is impossible and every model navigates tradeoffs</div>
+        </div>
+        <div class="lo-item">
+          <div class="lo-item-icon">
+            <svg width="22" height="22" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20 8.5A8 8 0 1 0 21.5 14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+              <polyline points="20,4 20,9 15,9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="lo-item-title">How AI Gets Built</div>
+          <div class="lo-item-desc">The Design-Train-Test cycle and why data is destiny</div>
+        </div>
+        <div class="lo-item">
+          <div class="lo-item-icon">
+            <svg width="22" height="22" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="3" y="3" width="20" height="15" rx="3" stroke="currentColor" stroke-width="1.7" fill="none"/>
+              <line x1="7" y1="8" x2="19" y2="8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <line x1="7" y1="12" x2="14" y2="12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M9 21l3-3h7a2 2 0 0 0 2-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="lo-item-title">You are AI-Fluent</div>
+          <div class="lo-item-desc">Ask the right questions and push back when "the AI said so" isn't good enough</div>
         </div>
       </div>
-      <button class="observer-role-btn" id="create-obs-btn" onclick="toggleCreateObserver()">
-        <span class="obs-role-icon"><svg class="obs-eye-icon obs-eye-lg"><use href="#icon-obs-eye"/></svg></span>
-        <span class="obs-role-text">
-          <span class="obs-role-title">Observer</span>
-          <span class="obs-role-sub">Spectate only — see every board, no actions</span>
-        </span>
-        <span class="obs-role-check">
-          <svg width="10" height="8" viewBox="0 0 10 8" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </span>
-      </button>
-      <button class="lobby-btn btn-create" id="btn-create" onclick="createRoom()" disabled style="margin-top:10px">Create Game</button>
-    </div>
+    </section>
 
-    <div class="lobby-card">
-      <h3>Join a Game</h3>
-      <input class="lobby-input name-input" id="join-name" maxlength="12" placeholder="Your name" oninput="updateJoinBtn()">
-      <input class="lobby-input" id="join-code" maxlength="4" placeholder="CODE" oninput="checkRoom()">
-      <div class="role-section-label">Choose Your Role</div>
-      <div id="join-player-role" class="player-role-box" onclick="selectJoinRole('player')">
-        <div class="role-title">Player</div>
-        <div class="color-options" id="join-colors" style="margin:4px 0 0;justify-content:flex-start;gap:8px;opacity:0.3; pointer-events:none;">
-          <button class="color-btn" data-color="blue" style="background:#4a9eff" onclick="event.stopPropagation();selectJoinColor('blue')">Blue</button>
-          <button class="color-btn" data-color="red" style="background:#ff4a4a" onclick="event.stopPropagation();selectJoinColor('red')">Red</button>
-          <button class="color-btn" data-color="green" style="background:#3aaa6a" onclick="event.stopPropagation();selectJoinColor('green')">Green</button>
-          <button class="color-btn" data-color="purple" style="background:#a060dd" onclick="event.stopPropagation();selectJoinColor('purple')">Purple</button>
+    <!-- PLAY -->
+    <section class="lobby-section">
+      <div class="lobby-section-head"><span class="lobby-section-label">Play now</span></div>
+      <div class="invited-banner" id="invited-banner">
+        <div class="invited-banner-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="7.5 4.21 12 6.81 16.5 4.21"/><polyline points="7.5 19.79 7.5 14.6 3 12"/><polyline points="21 12 16.5 14.6 16.5 19.79"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+        </div>
+        <div class="invited-banner-text">
+          <span class="invited-banner-title">You've been invited to room <span class="invited-banner-code" id="invited-banner-code"></span></span>
+          <span class="invited-banner-sub">Enter your name and pick a role in the highlighted Join card below to play.</span>
+        </div>
+        <div class="invited-banner-arrow">↓</div>
+      </div>
+      <div class="lobby-play-grid">
+
+        <!-- CREATE GAME -->
+        <div class="lobby-card" id="lobby-create-card">
+          <h3>Create Game</h3>
+          <p class="card-desc">Share the room code to invite players, or play solo vs a bot.</p>
+          <div class="role-section-label">Your Name</div>
+          <input class="lobby-input name-input" id="create-name" maxlength="12" placeholder="Required for all roles" oninput="updateCreateBtn()">
+          <div class="role-section-label">Choose Your Role</div>
+          <div id="create-player-role" class="player-role-box active" onclick="selectCreateRole('player')">
+            <div class="role-title">Player</div>
+            <div class="color-options" id="create-colors" style="margin:4px 0 0;justify-content:flex-start;gap:8px">
+              <button class="color-btn selected" data-color="blue" style="background:#4a9eff" onclick="event.stopPropagation();selectCreateColor('blue')">Blue</button>
+              <button class="color-btn" data-color="red" style="background:#ff4a4a" onclick="event.stopPropagation();selectCreateColor('red')">Red</button>
+              <button class="color-btn" data-color="green" style="background:#3aaa6a" onclick="event.stopPropagation();selectCreateColor('green')">Green</button>
+              <button class="color-btn" data-color="purple" style="background:#a060dd" onclick="event.stopPropagation();selectCreateColor('purple')">Purple</button>
+            </div>
+          </div>
+          <button class="observer-role-btn" id="create-obs-btn" onclick="toggleCreateObserver()">
+            <span class="obs-role-icon"><svg class="obs-eye-icon obs-eye-lg"><use href="#icon-obs-eye"/></svg></span>
+            <span class="obs-role-text">
+              <span class="obs-role-title">Observer</span>
+              <span class="obs-role-sub">Spectate only — see every board, no actions</span>
+            </span>
+            <span class="obs-role-check">
+              <svg width="10" height="8" viewBox="0 0 10 8" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+          </button>
+          <button class="lobby-btn btn-create" id="btn-create" onclick="createRoom()" disabled style="margin-top:10px">▶ Create Game</button>
+        </div>
+
+        <!-- JOIN GAME -->
+        <div class="lobby-card" id="lobby-join-card">
+          <h3>Join a Game</h3>
+          <p class="card-desc">Have a room code? Enter it below to join.</p>
+          <input class="lobby-input" id="join-code" maxlength="4" placeholder="ROOM CODE" oninput="checkRoom()">
+          <div class="role-section-label">Your Name</div>
+          <input class="lobby-input name-input" id="join-name" maxlength="12" placeholder="Required for all roles" oninput="updateJoinBtn()">
+          <div class="role-section-label">Choose Your Role</div>
+          <div id="join-player-role" class="player-role-box" onclick="selectJoinRole('player')">
+            <div class="role-title">Player</div>
+            <div class="color-options" id="join-colors" style="margin:4px 0 0;justify-content:flex-start;gap:8px;opacity:0.3;pointer-events:none;">
+              <button class="color-btn" data-color="blue" style="background:#4a9eff" onclick="event.stopPropagation();selectJoinColor('blue')">Blue</button>
+              <button class="color-btn" data-color="red" style="background:#ff4a4a" onclick="event.stopPropagation();selectJoinColor('red')">Red</button>
+              <button class="color-btn" data-color="green" style="background:#3aaa6a" onclick="event.stopPropagation();selectJoinColor('green')">Green</button>
+              <button class="color-btn" data-color="purple" style="background:#a060dd" onclick="event.stopPropagation();selectJoinColor('purple')">Purple</button>
+            </div>
+          </div>
+          <button class="observer-role-btn" id="join-obs-btn" onclick="toggleJoinObserver()" disabled>
+            <span class="obs-role-icon"><svg class="obs-eye-icon obs-eye-lg"><use href="#icon-obs-eye"/></svg></span>
+            <span class="obs-role-text">
+              <span class="obs-role-title">Observer</span>
+              <span class="obs-role-sub">Spectate only — see every board, no actions</span>
+            </span>
+            <span class="obs-role-check">
+              <svg width="10" height="8" viewBox="0 0 10 8" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+          </button>
+          <button class="lobby-btn btn-join" id="btn-join" disabled onclick="joinRoom()" style="margin-top:10px">Join Room</button>
+          <div class="error-msg" id="lobby-error"></div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- EVENT HUB -->
+    <section class="lobby-section">
+      <div class="lobby-section-head"><span class="lobby-section-label">For organizers</span></div>
+      <div class="event-hub-card" id="fn-event-hub-card" style="max-width:none;">
+        <h3>Event Hub — Run Multiple Tables</h3>
+        <p style="font-size:12px;color:#888;margin:2px 0 0">Create and manage multiple game rooms at once. Players join using the shareable link for each table — you are added as an observer to each room.</p>
+        <div style="margin-top:12px;display:flex;align-items:center;gap:8px">
+          <input type="text" id="fn-event-hub-name" maxlength="20" placeholder="Your organizer name…"
+            oninput="fnUpdateEventAddBtn()"
+            style="flex:1;max-width:220px;background:#f8f7f4;border:1.5px solid #c8dda0;border-radius:8px;color:#333;font-size:13px;font-weight:600;padding:8px 12px;outline:none;font-family:inherit;" />
+        </div>
+        <div class="event-hub-add">
+          <button id="fn-event-add-btn" onclick="fnCreateEventRoom()" disabled style="opacity:0.4;cursor:not-allowed">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;margin-right:4px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add Table
+          </button>
+          <span style="font-size:12px;color:#999" id="fn-event-hub-hint">Enter your name above, then click Add Table.</span>
+        </div>
+        <div id="fn-event-table-wrap" style="display:none">
+          <table class="event-table">
+            <thead><tr>
+              <th>Room</th><th>Invite Link</th><th>Players</th><th>Status</th><th></th>
+            </tr></thead>
+            <tbody id="fn-event-table-body"></tbody>
+          </table>
         </div>
       </div>
-      <button class="observer-role-btn" id="join-obs-btn" onclick="toggleJoinObserver()" disabled>
-        <span class="obs-role-icon"><svg class="obs-eye-icon obs-eye-lg"><use href="#icon-obs-eye"/></svg></span>
-        <span class="obs-role-text">
-          <span class="obs-role-title">Observer</span>
-          <span class="obs-role-sub">Spectate only — see every board, no actions</span>
-        </span>
-        <span class="obs-role-check">
-          <svg width="10" height="8" viewBox="0 0 10 8" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </span>
-      </button>
-      <button class="lobby-btn btn-join" id="btn-join" disabled onclick="joinRoom()" style="margin-top:10px">Join Game</button>
-      <div class="error-msg" id="lobby-error"></div>
-    </div>
-    <a href="https://cybersecgames.com/products/fuzznet-labs?_pos=1&_psq=FuzzNet&_ss=e&_v=1.0" target="_blank" rel="noopener" style="font-size:13px;color:#888;text-decoration:none;margin-top:4px;transition:color 0.15s">Want the board game? <span style="color:#62b517;font-weight:600">Grab the tabletop version</span></a>
+    </section>
+
+    <a href="https://cybersecgames.com/products/fuzznet-labs?_pos=1&_psq=FuzzNet&_ss=e&_v=1.0" target="_blank" rel="noopener" style="font-size:13px;color:#888;text-decoration:none;transition:color 0.15s">Want the board game? <span style="color:#62b517;font-weight:600">Grab the tabletop version →</span></a>
+
   </div>
 </div>
 
@@ -820,6 +971,82 @@ let tutHighlightNodes = [];
 let tutHighlightAction = ''; // 'design' | 'train' | 'test' | ''
 let tutHighlightStatus = ''; // 'reroll'|'flip'|'score'|'acceptfail'|'reroll_selected'|''
 
+// ==================== EVENT HUB ====================
+const fnEventRooms = new Map(); // code → {code, playerCount, status}
+const FN_EV_STORAGE_KEY = 'fuzznet_event_rooms';
+
+function fnSaveEventRooms() {
+  localStorage.setItem(FN_EV_STORAGE_KEY, JSON.stringify([...fnEventRooms.keys()]));
+}
+
+function fnUpdateEventAddBtn() {
+  const name = (document.getElementById('fn-event-hub-name')?.value || '').trim();
+  const btn = document.getElementById('fn-event-add-btn');
+  if (!btn) return;
+  const atLimit = fnEventRooms.size >= 10;
+  const ok = !!name && !atLimit;
+  btn.disabled = !ok;
+  btn.style.opacity = ok ? '1' : '0.4';
+  btn.style.cursor = ok ? 'pointer' : 'not-allowed';
+  btn.title = atLimit ? 'Maximum of 10 tables reached' : '';
+  if (name) localStorage.setItem('fuzznet_event_name', name);
+}
+
+function fnCreateEventRoom() {
+  const name = (document.getElementById('fn-event-hub-name')?.value || '').trim();
+  if (!name) return;
+  sendMsg({ type: 'create_event_room', gameType: 'fuzznet', name });
+}
+
+function fnRenderEventTable() {
+  const tbody = document.getElementById('fn-event-table-body');
+  const wrap  = document.getElementById('fn-event-table-wrap');
+  const hint  = document.getElementById('fn-event-hub-hint');
+  if (fnEventRooms.size === 0) {
+    wrap.style.display = 'none';
+    hint.style.display = '';
+    return;
+  }
+  hint.style.display = 'none';
+  wrap.style.display = '';
+  tbody.innerHTML = '';
+  for (const [code, room] of fnEventRooms) {
+    const statusClass = room.status === 'in_progress' ? 'in-progress'
+                      : room.status === 'completed'   ? 'completed'
+                      : room.status === 'cancelled'   ? 'cancelled' : 'pending';
+    const statusLabel = room.status === 'in_progress' ? 'In Progress'
+                      : room.status === 'completed'   ? 'Completed'
+                      : room.status === 'cancelled'   ? 'Cancelled'  : 'Pending';
+    const tr = document.createElement('tr');
+    tr.id = 'fn-ev-row-' + code;
+    tr.innerHTML = `
+      <td><span class="ev-code">${code}</span></td>
+      <td><button class="ev-copy-btn" id="fn-ev-copy-${code}" onclick="fnCopyEventLink('${code}')">Copy Link</button></td>
+      <td class="ev-players">${room.playerCount}<span style="color:#253347"> / 4</span></td>
+      <td><span class="ev-status ${statusClass}">${statusLabel}</span></td>
+      <td><button class="ev-copy-btn" onclick="fnRemoveEventRoom('${code}')" title="Remove from list" style="color:#4b5563;border-color:#1e2d3d">✕</button></td>`;
+    tbody.appendChild(tr);
+  }
+  fnUpdateEventAddBtn();
+}
+
+function fnCopyEventLink(code) {
+  const link = `${location.origin}/fuzznet?room=${code}`;
+  navigator.clipboard.writeText(link).catch(() => {});
+  const btn = document.getElementById('fn-ev-copy-' + code);
+  if (!btn) return;
+  const orig = btn.textContent;
+  btn.textContent = 'Copied!';
+  btn.classList.add('copied');
+  setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 1600);
+}
+
+function fnRemoveEventRoom(code) {
+  fnEventRooms.delete(code);
+  fnSaveEventRooms();
+  fnRenderEventTable();
+}
+
 // ==================== WEBSOCKET ====================
 const SESSION_KEY = 'techgames_fuzznet_session';
 
@@ -829,6 +1056,21 @@ function connect() {
   ws.onopen = () => {
     const token = sessionStorage.getItem(SESSION_KEY);
     if (token) sendMsg({ type: 'rejoin_room', token });
+    else if (urlRoom) sendMsg({ type: 'check_room', code: urlRoom.toUpperCase() });
+    // Restore Event Hub rooms from localStorage
+    const savedEvName = localStorage.getItem('fuzznet_event_name');
+    if (savedEvName) {
+      const nameInput = document.getElementById('fn-event-hub-name');
+      if (nameInput) { nameInput.value = savedEvName; fnUpdateEventAddBtn(); }
+    }
+    const savedEvCodes = JSON.parse(localStorage.getItem(FN_EV_STORAGE_KEY) || '[]');
+    if (savedEvCodes.length > 0) {
+      for (const code of savedEvCodes) {
+        if (!fnEventRooms.has(code)) fnEventRooms.set(code, { code, playerCount: 0, status: 'pending' });
+      }
+      fnRenderEventTable();
+      sendMsg({ type: 'query_event_rooms', codes: savedEvCodes });
+    }
   };
   ws.onclose = () => setTimeout(connect, 2000);
   ws.onmessage = (e) => handleServerMsg(JSON.parse(e.data));
@@ -945,6 +1187,24 @@ function handleServerMsg(msg) {
       hideCancelModal();
       showScreen('lobby');
       document.getElementById('lobby-error').textContent = 'The host ended the game.';
+      break;
+    case 'event_room_created':
+      fnEventRooms.set(msg.code, { code: msg.code, playerCount: 0, status: 'pending' });
+      fnSaveEventRooms();
+      fnRenderEventTable();
+      break;
+    case 'event_status_update':
+      if (fnEventRooms.has(msg.code)) {
+        const er = fnEventRooms.get(msg.code);
+        er.playerCount = msg.playerCount;
+        er.status = msg.status;
+        fnRenderEventTable();
+      }
+      break;
+    case 'event_rooms_expired':
+      for (const code of (msg.codes || [])) fnEventRooms.delete(code);
+      fnSaveEventRooms();
+      fnRenderEventTable();
       break;
     case 'error': {
       const lobbyActive = document.getElementById('lobby').classList.contains('active');
@@ -2468,23 +2728,25 @@ function updateTutOverlay(idx) {
 // ==================== INIT ====================
 connect();
 
-// Check URL for room code (e.g. ?room=ABCD)
-(function checkUrlRoom() {
-  const params = new URLSearchParams(location.search);
-  const code = (params.get('room') || '').toUpperCase();
-  if (code && code.length === 4) {
-    const input = document.getElementById('join-code');
-    input.value = code;
-    // Wait for websocket to connect, then auto-check
-    const waitForWs = setInterval(() => {
-      if (ws && ws.readyState === 1) {
-        clearInterval(waitForWs);
-        checkRoom();
-      }
-    }, 100);
-    setTimeout(() => clearInterval(waitForWs), 5000);
-  }
-})();
+// Check URL for room code (e.g. ?room=ABCD) — highlight Join card, dim Create card
+const urlRoom = new URLSearchParams(location.search).get('room');
+if (urlRoom) {
+  const code = urlRoom.toUpperCase();
+  document.getElementById('join-code').value = code;
+  const joinCard  = document.getElementById('lobby-join-card');
+  const createCard = document.getElementById('lobby-create-card');
+  const banner    = document.getElementById('invited-banner');
+  const bannerCode = document.getElementById('invited-banner-code');
+  if (joinCard)   joinCard.classList.add('lobby-card-focus');
+  if (createCard) createCard.classList.add('lobby-card-dim');
+  if (banner)     banner.classList.add('show');
+  if (bannerCode) bannerCode.textContent = code;
+  setTimeout(() => {
+    const nameInput = document.getElementById('join-name');
+    if (nameInput) nameInput.focus({ preventScroll: true });
+    if (joinCard) joinCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 250);
+}
 </script>
 </body>
 </html>
