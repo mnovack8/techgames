@@ -65,8 +65,26 @@ body{padding-top:44px;}
 
 /* PLAY GRID */
 .lobby-play-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;width:100%;}
-.lobby-card{background:#0d1a06;border:1px solid rgba(98,181,23,0.2);border-radius:14px;padding:24px;width:100%;box-shadow:0 2px 12px rgba(0,0,0,0.4);}
+.lobby-card{background:#0d1a06;border:1px solid rgba(98,181,23,0.2);border-radius:14px;padding:24px;width:100%;box-shadow:0 2px 12px rgba(0,0,0,0.4);position:relative;transition:all 0.25s ease;}
 .lobby-card h3{font-size:13px;color:#62b517;margin-bottom:14px;text-transform:uppercase;letter-spacing:1px;}
+
+/* INVITED-VIA-LINK STATES */
+@keyframes invitedPulse{0%,100%{box-shadow:0 0 0 1px rgba(98,181,23,0.5),0 0 28px rgba(98,181,23,0.35),0 8px 30px rgba(0,0,0,0.55);}50%{box-shadow:0 0 0 1px rgba(98,181,23,0.7),0 0 44px rgba(98,181,23,0.55),0 8px 30px rgba(0,0,0,0.55);}}
+.lobby-card.lobby-card-focus{border-color:#62b517;background:linear-gradient(180deg,#10210a 0%,#0d1a06 100%);animation:invitedPulse 2.6s ease-in-out infinite;}
+.lobby-card.lobby-card-focus h3{color:#d1db24;}
+.lobby-card.lobby-card-focus::before{content:'YOU\'RE INVITED';position:absolute;top:-10px;left:18px;background:#62b517;color:#0a1200;font-size:10px;font-weight:900;letter-spacing:1.5px;padding:3px 10px;border-radius:4px;box-shadow:0 4px 12px rgba(98,181,23,0.5);}
+.lobby-card.lobby-card-dim{opacity:0.42;filter:saturate(0.6);}
+.lobby-card.lobby-card-dim:hover{opacity:0.85;filter:saturate(0.9);}
+.invited-banner{display:none;width:100%;background:linear-gradient(135deg,rgba(98,181,23,0.18) 0%,rgba(209,219,36,0.10) 100%);border:1px solid rgba(98,181,23,0.45);border-radius:12px;padding:14px 20px;align-items:center;gap:14px;box-shadow:0 4px 20px rgba(98,181,23,0.18);}
+.invited-banner.show{display:flex;}
+.invited-banner-icon{width:38px;height:38px;background:rgba(98,181,23,0.18);border:1px solid rgba(98,181,23,0.5);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#d1db24;}
+.invited-banner-text{flex:1;display:flex;flex-direction:column;gap:2px;}
+.invited-banner-title{font-size:13px;font-weight:800;color:#d1fae5;letter-spacing:0.3px;}
+.invited-banner-sub{font-size:12px;color:#9ca3af;}
+.invited-banner-code{font-family:'Share Tech Mono',monospace;color:#d1db24;font-weight:800;letter-spacing:2px;font-size:14px;}
+.invited-banner-arrow{color:#62b517;font-size:22px;font-weight:900;animation:invitedArrow 1.6s ease-in-out infinite;}
+@keyframes invitedArrow{0%,100%{transform:translateY(0);}50%{transform:translateY(4px);}}
+@media(max-width:780px){.invited-banner-arrow{display:none;}}
 
 /* RESPONSIVE */
 @media(max-width:780px){
@@ -343,13 +361,6 @@ body.observer-active.host-cancel-visible #observer-banner{padding-right:290px;}
 
 /* MIDDLE - DECK + STATUS */
 .game-middle{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:10px 16px;}
-.lo-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid rgba(98,181,23,0.15);border-radius:10px;overflow:hidden;width:100%;max-width:680px;flex-shrink:0;}
-.lo-item{display:flex;flex-direction:column;align-items:center;text-align:center;padding:10px 10px 12px;background:#0a1200;border-right:1px solid rgba(98,181,23,0.12);}
-.lo-item:last-child{border-right:none;}
-.lo-icon{width:36px;height:36px;background:rgba(98,181,23,0.1);border:1px solid rgba(98,181,23,0.25);border-radius:9px;display:flex;align-items:center;justify-content:center;margin-bottom:7px;flex-shrink:0;}
-.lo-icon svg{width:18px;height:18px;}
-.lo-title{font-size:10px;font-weight:800;color:#d1fae5;letter-spacing:0.3px;margin-bottom:4px;line-height:1.3;}
-.lo-desc{font-size:9px;color:#4b5563;line-height:1.4;}
 .status-banner{background:#1a2235;border:1px solid #253347;border-radius:10px;padding:8px 16px;text-align:center;width:100%;max-width:400px;}
 .status-banner .turn-label{font-size:12px;color:#6b7280;text-transform:uppercase;letter-spacing:1px;}
 .status-banner .turn-player{font-size:18px;font-weight:800;color:#62b517;}
@@ -964,10 +975,20 @@ body.bc-tut-active .game-layout { height: calc(100vh - 44px); margin-right: 272p
     <!-- PLAY -->
     <section class="lobby-section">
       <div class="lobby-section-head"><span class="lobby-section-label">Play now</span></div>
+      <div class="invited-banner" id="invited-banner">
+        <div class="invited-banner-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="7.5 4.21 12 6.81 16.5 4.21"/><polyline points="7.5 19.79 7.5 14.6 3 12"/><polyline points="21 12 16.5 14.6 16.5 19.79"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+        </div>
+        <div class="invited-banner-text">
+          <span class="invited-banner-title">You've been invited to room <span class="invited-banner-code" id="invited-banner-code"></span></span>
+          <span class="invited-banner-sub">Enter your name and pick a role in the highlighted Join card to play.</span>
+        </div>
+        <div class="invited-banner-arrow">↓</div>
+      </div>
       <div class="lobby-play-grid">
 
     <!-- CREATE GAME -->
-    <div class="lobby-card">
+    <div class="lobby-card" id="lobby-create-card">
       <h3>Create Game</h3>
       <p style="font-size:12px;color:#6b7280;margin:-4px 0 8px">Share the room code to invite players, or play solo vs a bot.</p>
       <div class="role-section-label" style="margin-top:4px">Your Name</div>
@@ -994,7 +1015,7 @@ body.bc-tut-active .game-layout { height: calc(100vh - 44px); margin-right: 272p
     </div>
 
     <!-- JOIN ROOM -->
-    <div class="lobby-card">
+    <div class="lobby-card" id="lobby-join-card">
       <h3>Join a Game</h3>
       <input class="lobby-input" id="join-code" maxlength="4" placeholder="ROOM CODE" oninput="onCodeInput(this)">
       <div class="role-section-label">Your Name</div>
@@ -1131,30 +1152,6 @@ body.bc-tut-active .game-layout { height: calc(100vh - 44px); margin-right: 272p
             <div class="sc-icon"><img src="images/attack-action-obj.png" alt="Action Obj."></div>
             <div class="sc-name">Action Obj. <span class="info-btn" onclick="">i<div class="info-popup wide below"><strong>How to unlock:</strong> Be the first to play all 6 Kill Chain attack types (Recon, Weaponize, Delivery, Exploit, Install, C2) in front of you.<br><br><strong>Effect:</strong> Play at any time — the player holding the Data Flag must give it to you. <em>Respond cannot cancel this card.</em></div></span></div>
             <div class="sc-status" id="actionobj-status">Locked</div>
-          </div>
-        </div>
-
-        <!-- LEARNING OBJECTIVES STRIP -->
-        <div class="lo-strip">
-          <div class="lo-item">
-            <div class="lo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M5 19L19 5M19 5h-6M19 5v6"/><path d="M3 21l2-2" stroke="#d1db24" stroke-width="2.5"/></svg></div>
-            <div class="lo-title">Attacker Mindset</div>
-            <div class="lo-desc">How hackers plan and execute attacks, stage by stage</div>
-          </div>
-          <div class="lo-item">
-            <div class="lo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L4 6v6c0 5.5 3.5 10.7 8 12 4.5-1.3 8-6.5 8-12V6L12 2z"/><path d="M9 12l2 2 4-4" stroke="#d1db24" stroke-width="2"/></svg></div>
-            <div class="lo-title">Defender Mindset</div>
-            <div class="lo-desc">How security teams protect, detect, and respond to threats</div>
-          </div>
-          <div class="lo-item">
-            <div class="lo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10"/><path d="M23 14l-4.64 4.36A9 9 0 0 1 3.51 15" stroke="#d1db24"/></svg></div>
-            <div class="lo-title">The Cycle of Cyberwarfare</div>
-            <div class="lo-desc">Why attack and defense never stop evolving against each other</div>
-          </div>
-          <div class="lo-item">
-            <div class="lo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><line x1="8" y1="10" x2="16" y2="10" stroke="#d1db24"/><line x1="8" y1="14" x2="12" y2="14" stroke="#d1db24"/></svg></div>
-            <div class="lo-title">You are CyberFluent</div>
-            <div class="lo-desc">Break down any incident and challenge anyone who can't explain it</div>
           </div>
         </div>
 
@@ -3857,7 +3854,23 @@ function applyBcTutHL() {
 // ==================== INIT ====================
 const urlRoom = new URLSearchParams(location.search).get('room');
 if (urlRoom) {
-  document.getElementById('join-code').value = urlRoom.toUpperCase();
+  const code = urlRoom.toUpperCase();
+  document.getElementById('join-code').value = code;
+  // Highlight Join card, dim Create card, show invitation banner
+  const joinCard = document.getElementById('lobby-join-card');
+  const createCard = document.getElementById('lobby-create-card');
+  const banner = document.getElementById('invited-banner');
+  const bannerCode = document.getElementById('invited-banner-code');
+  if (joinCard) joinCard.classList.add('lobby-card-focus');
+  if (createCard) createCard.classList.add('lobby-card-dim');
+  if (banner) banner.classList.add('show');
+  if (bannerCode) bannerCode.textContent = code;
+  // Focus the name field after a brief delay (after layout settles)
+  setTimeout(() => {
+    const nameInput = document.getElementById('join-name');
+    if (nameInput) nameInput.focus({ preventScroll: true });
+    if (joinCard) joinCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }, 250);
 }
 
 setupSpecialCardZoom();
