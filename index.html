@@ -251,20 +251,22 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
   display: inline-block;
   padding: 7px 16px;
   border-radius: 999px;
-  border: 1.5px solid rgba(98,181,23,0.35);
-  background: rgba(255,255,255,0.7);
-  color: #3a5c10;
+  border: 1.5px solid #2a5c0a;
+  background: #2a5c0a;
+  color: #f0f9e8;
   font-size: 13px;
   font-weight: 700;
   text-decoration: none;
   letter-spacing: 0.01em;
   backdrop-filter: blur(4px);
-  transition: background 0.16s, border-color 0.16s, transform 0.14s;
+  transition: background 0.16s, border-color 0.16s, transform 0.14s, box-shadow 0.16s;
 }
 .hero-pill:hover {
-  background: rgba(98,181,23,0.12);
-  border-color: #62b517;
+  background: #1e4407;
+  border-color: #1e4407;
+  color: #f0f9e8;
   transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(42,92,10,0.35);
 }
 
 /* ===== STORY SECTIONS ===== */
@@ -1025,7 +1027,7 @@ footer {
 <!-- HERO -->
 <section class="hero">
   <h1>Your team doesn't get the tech.<br><em>That's a business risk.</em></h1>
-  <p>Your security team speaks in acronyms. Your AI lead talks in models. Your quantum team might as well be speaking another language. We make board games that give your whole organisation the context to actually contribute.</p>
+  <p>Your security team speaks in acronyms. Your AI lead talks in models. Your quantum team might as well be speaking another language. We design board games based on proven learning principles that give your whole organization the context to contribute to operational successes.</p>
   <div class="hero-picker">
     <p class="hero-question">What tech context does your team need?</p>
     <div class="hero-domain-pills">
@@ -1042,16 +1044,14 @@ footer {
     <div class="story-eyebrow" data-reveal>The Problem</div>
     <h2 class="story-headline" data-reveal="lines">
       <span class="line-wrap"><span class="line-inner">Your non-technical staff are making decisions</span></span>
-      <span class="line-wrap"><span class="line-inner">they don't have the context for.</span></span>
+      <span class="line-wrap"><span class="line-inner">without the foundational knowledge they need.</span></span>
     </h2>
     <p class="story-body" data-reveal data-delay="2" style="max-width:100%">Your account managers, project leads, HR directors, and senior execs are sitting in security briefings, AI strategy sessions, and board presentations — nodding along. They're smart people. The problem isn't intelligence. It's that nobody has ever given them a way to actually experience how this technology works.</p>
     <div class="stakes-grid" data-reveal data-delay="3">
       <div class="stakes-card">
-        <div class="stakes-label">Cybersecurity</div>
         <p>"A single click from someone who didn't understand the risk can cost millions. That's not a security problem — that's a literacy problem."</p>
       </div>
       <div class="stakes-card">
-        <div class="stakes-label">Artificial Intelligence</div>
         <p>"AI is already inside your business. The question isn't whether your team needs to understand it — it's whether they'll understand it before it costs you."</p>
       </div>
     </div>
