@@ -465,6 +465,67 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
   margin-bottom: 28px;
   font-weight: 600;
 }
+.plan-mini-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 14px;
+}
+.plan-mini-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  background: #fff;
+  border: 1.5px solid #d4e8a8;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: border-color 0.15s, background 0.15s, transform 0.14s;
+}
+.plan-mini-card:hover {
+  border-color: #62b517;
+  background: #f4fae8;
+  transform: translateY(-1px);
+}
+.plan-mini-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  font-size: 9px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  letter-spacing: 0.04em;
+  color: #fff;
+}
+.plan-mini-icon--ai { background: transparent; }
+.plan-mini-icon--cy { background: transparent; }
+.plan-mini-icon--qb { background: transparent; }
+.plan-mini-text {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  flex: 1;
+}
+.plan-mini-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: #1a1a1a;
+  line-height: 1.2;
+}
+.plan-mini-sub {
+  font-size: 10px;
+  color: #6a8a40;
+  font-weight: 600;
+  line-height: 1.3;
+}
+.plan-mini-arrow {
+  font-size: 13px;
+  color: #62b517;
+  font-weight: 700;
+}
 .topic-links {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -784,6 +845,36 @@ a.who-item:hover { border-color: #62b517; background: #f0fae0; transform: transl
   justify-content: center;
   margin: 0 auto 20px;
   box-shadow: 0 4px 16px rgba(98,181,23,0.3);
+}
+.plan-step-icon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+.plan-step-questions {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0 0;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.plan-step-questions li {
+  font-size: 12px;
+  color: #555;
+  line-height: 1.5;
+  padding-left: 14px;
+  position: relative;
+}
+.plan-step-questions li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: #62b517;
+  font-weight: 700;
+  font-size: 10px;
+  top: 1px;
 }
 .plan-step strong {
   display: block;
@@ -1168,37 +1259,294 @@ footer {
   </div>
 </section>
 
-<!-- HOW IT WORKS (moved before games) -->
+<!-- HOW IT WORKS + GAMES -->
 <section class="story-section bg-plan">
   <div class="story-container plan-container">
     <div class="story-eyebrow" data-reveal>How It Works</div>
-    <h2 class="story-headline plan-headline" data-reveal data-delay="1">Three steps to a team that gets it.</h2>
+    <h2 class="story-headline plan-headline" data-reveal data-delay="1">No trainer. No slides. Just a team that gets it.</h2>
     <div class="plan-steps">
       <div class="plan-step" data-reveal="scale" data-delay="1">
         <div class="plan-number">1</div>
-        <strong>Choose your domain</strong>
-        <p>Pick the technology that matters most to your team right now — cybersecurity, AI, or quantum computing.</p>
+        <strong>Identify the learning needs of your team</strong>
+        <div class="plan-step-icon">
+          <svg viewBox="0 0 200 72" xmlns="http://www.w3.org/2000/svg" width="100%" height="56" style="max-width:200px">
+            <defs>
+              <filter id="step1-glow"><feGaussianBlur stdDeviation="2.5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+              <linearGradient id="bar-good" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#a8c96a"/>
+                <stop offset="100%" stop-color="#2a5a06"/>
+              </linearGradient>
+              <linearGradient id="bar-gap" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#eef56a"/>
+                <stop offset="100%" stop-color="#b0b800"/>
+              </linearGradient>
+            </defs>
+
+            <!-- Grid lines -->
+            <line x1="8" y1="22" x2="152" y2="22" stroke="rgba(98,181,23,0.12)" stroke-width="0.75"/>
+            <line x1="8" y1="32" x2="152" y2="32" stroke="rgba(98,181,23,0.12)" stroke-width="0.75"/>
+            <line x1="8" y1="42" x2="152" y2="42" stroke="rgba(98,181,23,0.12)" stroke-width="0.75"/>
+            <line x1="8" y1="52" x2="152" y2="52" stroke="rgba(98,181,23,0.2)" stroke-width="1"/>
+
+            <!-- Col 1: x=18, good, bar height 30 -->
+            <rect x="13" y="22" width="10" height="30" rx="2.5" fill="url(#bar-good)" opacity="0.85"/>
+            <circle cx="18" cy="57" r="4.5" fill="#3a7a0a"/>
+            <path d="M10,71 C10,63 26,63 26,71 Z" fill="#3a7a0a"/>
+
+            <!-- Col 2: x=48, GAP, bar height 9 -->
+            <rect x="43" y="43" width="10" height="9" rx="2.5" fill="url(#bar-gap)" filter="url(#step1-glow)">
+              <animate attributeName="opacity" values="1;0.35;1" dur="1.7s" repeatCount="indefinite"/>
+            </rect>
+            <circle cx="48" cy="57" r="4.5" fill="#3a7a0a" opacity="0.5"/>
+            <path d="M40,71 C40,63 56,63 56,71 Z" fill="#3a7a0a" opacity="0.5"/>
+            <text x="48" y="38" text-anchor="middle" font-size="9" font-weight="900" fill="#b0b800" font-family="sans-serif">?</text>
+
+            <!-- Col 3: x=78, good, bar height 26 -->
+            <rect x="73" y="26" width="10" height="26" rx="2.5" fill="url(#bar-good)" opacity="0.85"/>
+            <circle cx="78" cy="57" r="4.5" fill="#3a7a0a"/>
+            <path d="M70,71 C70,63 86,63 86,71 Z" fill="#3a7a0a"/>
+
+            <!-- Col 4: x=108, GAP, bar height 7 -->
+            <rect x="103" y="45" width="10" height="7" rx="2.5" fill="url(#bar-gap)" filter="url(#step1-glow)">
+              <animate attributeName="opacity" values="1;0.35;1" dur="1.7s" begin="0.85s" repeatCount="indefinite"/>
+            </rect>
+            <circle cx="108" cy="57" r="4.5" fill="#3a7a0a" opacity="0.5"/>
+            <path d="M100,71 C100,63 116,63 116,71 Z" fill="#3a7a0a" opacity="0.5"/>
+            <text x="108" y="40" text-anchor="middle" font-size="9" font-weight="900" fill="#b0b800" font-family="sans-serif">?</text>
+
+            <!-- Col 5: x=138, good, bar height 22 -->
+            <rect x="133" y="30" width="10" height="22" rx="2.5" fill="url(#bar-good)" opacity="0.85"/>
+            <circle cx="138" cy="57" r="4.5" fill="#3a7a0a"/>
+            <path d="M130,71 C130,63 146,63 146,71 Z" fill="#3a7a0a"/>
+
+            <!-- Animated scan beam -->
+            <line x1="8" y1="36" x2="152" y2="36" stroke="rgba(209,219,36,0.55)" stroke-width="1.5" stroke-dasharray="5 4">
+              <animate attributeName="y1" values="18;52;18" dur="3s" repeatCount="indefinite"/>
+              <animate attributeName="y2" values="18;52;18" dur="3s" repeatCount="indefinite"/>
+            </line>
+
+            <!-- Magnifying glass -->
+            <circle cx="172" cy="32" r="17" fill="rgba(98,181,23,0.07)" stroke="#62b517" stroke-width="2"/>
+            <line x1="184" y1="44" x2="194" y2="54" stroke="#62b517" stroke-width="3.5" stroke-linecap="round"/>
+            <!-- Crosshair -->
+            <line x1="163" y1="32" x2="181" y2="32" stroke="rgba(98,181,23,0.35)" stroke-width="1"/>
+            <line x1="172" y1="23" x2="172" y2="41" stroke="rgba(98,181,23,0.35)" stroke-width="1"/>
+            <!-- Pulsing outer ring -->
+            <circle cx="172" cy="32" r="17" fill="none" stroke="#d1db24" stroke-width="1.2">
+              <animate attributeName="r" values="17;24;17" dur="2.2s" repeatCount="indefinite"/>
+              <animate attributeName="opacity" values="0.7;0;0.7" dur="2.2s" repeatCount="indefinite"/>
+            </circle>
+          </svg>
+        </div>
+        <ul class="plan-step-questions">
+          <li>Are your people making decisions about technology they can't fully evaluate?</li>
+          <li>Is there a technology shaping your industry that your non-technical staff can't speak to?</li>
+        </ul>
       </div>
       <div class="plan-step" data-reveal="scale" data-delay="2">
         <div class="plan-number">2</div>
-        <strong>Run a session</strong>
-        <p>Order the game and run it with your team. No facilitation experience needed. Most groups are playing within 10 minutes.</p>
+        <strong>Select a game</strong>
+        <div class="plan-mini-cards">
+          <a href="/ai" class="plan-mini-card">
+            <span class="plan-mini-icon plan-mini-icon--ai">
+              <svg viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg" width="32" height="32">
+                <defs>
+                  <filter id="mini-ai-glow"><feGaussianBlur stdDeviation="3.5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                  <filter id="mini-ai-pulse"><feGaussianBlur stdDeviation="4.5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                </defs>
+                <g stroke="rgba(98,181,23,0.28)" stroke-width="0.75">
+                  <line x1="25" y1="65"  x2="82" y2="50"/><line x1="25" y1="65"  x2="82" y2="88"/><line x1="25" y1="65"  x2="82" y2="126"/><line x1="25" y1="65"  x2="82" y2="164"/>
+                  <line x1="25" y1="110" x2="82" y2="50"/><line x1="25" y1="110" x2="82" y2="88"/><line x1="25" y1="110" x2="82" y2="126"/><line x1="25" y1="110" x2="82" y2="164"/>
+                  <line x1="25" y1="155" x2="82" y2="50"/><line x1="25" y1="155" x2="82" y2="88"/><line x1="25" y1="155" x2="82" y2="126"/><line x1="25" y1="155" x2="82" y2="164"/>
+                </g>
+                <g stroke="rgba(98,181,23,0.28)" stroke-width="0.75">
+                  <line x1="82" y1="50"  x2="142" y2="65"/><line x1="82" y1="50"  x2="142" y2="110"/><line x1="82" y1="50"  x2="142" y2="155"/>
+                  <line x1="82" y1="88"  x2="142" y2="65"/><line x1="82" y1="88"  x2="142" y2="110"/><line x1="82" y1="88"  x2="142" y2="155"/>
+                  <line x1="82" y1="126" x2="142" y2="65"/><line x1="82" y1="126" x2="142" y2="110"/><line x1="82" y1="126" x2="142" y2="155"/>
+                  <line x1="82" y1="164" x2="142" y2="65"/><line x1="82" y1="164" x2="142" y2="110"/><line x1="82" y1="164" x2="142" y2="155"/>
+                </g>
+                <g stroke="rgba(98,181,23,0.28)" stroke-width="0.75">
+                  <line x1="142" y1="65"  x2="192" y2="88"/><line x1="142" y1="65"  x2="192" y2="132"/>
+                  <line x1="142" y1="110" x2="192" y2="88"/><line x1="142" y1="110" x2="192" y2="132"/>
+                  <line x1="142" y1="155" x2="192" y2="88"/><line x1="142" y1="155" x2="192" y2="132"/>
+                </g>
+                <g filter="url(#mini-ai-glow)">
+                  <circle cx="25" cy="65"  r="8" fill="rgba(255,255,255,0.7)" stroke="#62b517" stroke-width="1.5"/><circle cx="25" cy="65"  r="4.5" fill="#62b517"/><circle cx="25" cy="65"  r="2" fill="#d1db24"/>
+                  <circle cx="25" cy="110" r="8" fill="rgba(255,255,255,0.7)" stroke="#62b517" stroke-width="1.5"/><circle cx="25" cy="110" r="4.5" fill="#62b517"/><circle cx="25" cy="110" r="2" fill="#d1db24"/>
+                  <circle cx="25" cy="155" r="8" fill="rgba(255,255,255,0.7)" stroke="#62b517" stroke-width="1.5"/><circle cx="25" cy="155" r="4.5" fill="#62b517"/><circle cx="25" cy="155" r="2" fill="#d1db24"/>
+                  <circle cx="82" cy="50"  r="8" fill="rgba(255,255,255,0.7)" stroke="#62b517" stroke-width="1.5"/><circle cx="82" cy="50"  r="4.5" fill="#62b517"/><circle cx="82" cy="50"  r="2" fill="#d1db24"/>
+                  <circle cx="82" cy="88"  r="8" fill="rgba(255,255,255,0.7)" stroke="#62b517" stroke-width="1.5"/><circle cx="82" cy="88"  r="4.5" fill="#62b517"/><circle cx="82" cy="88"  r="2" fill="#d1db24"/>
+                  <circle cx="82" cy="126" r="8" fill="rgba(255,255,255,0.7)" stroke="#62b517" stroke-width="1.5"/><circle cx="82" cy="126" r="4.5" fill="#62b517"/><circle cx="82" cy="126" r="2" fill="#d1db24"/>
+                  <circle cx="82" cy="164" r="8" fill="rgba(255,255,255,0.7)" stroke="#62b517" stroke-width="1.5"/><circle cx="82" cy="164" r="4.5" fill="#62b517"/><circle cx="82" cy="164" r="2" fill="#d1db24"/>
+                  <circle cx="142" cy="65"  r="8" fill="rgba(255,255,255,0.7)" stroke="#62b517" stroke-width="1.5"/><circle cx="142" cy="65"  r="4.5" fill="#62b517"/><circle cx="142" cy="65"  r="2" fill="#d1db24"/>
+                  <circle cx="142" cy="110" r="8" fill="rgba(255,255,255,0.7)" stroke="#62b517" stroke-width="1.5"/><circle cx="142" cy="110" r="4.5" fill="#62b517"/><circle cx="142" cy="110" r="2" fill="#d1db24"/>
+                  <circle cx="142" cy="155" r="8" fill="rgba(255,255,255,0.7)" stroke="#62b517" stroke-width="1.5"/><circle cx="142" cy="155" r="4.5" fill="#62b517"/><circle cx="142" cy="155" r="2" fill="#d1db24"/>
+                  <circle cx="192" cy="88"  r="11" fill="rgba(255,255,255,0.7)" stroke="#d1db24" stroke-width="2"/><circle cx="192" cy="88"  r="6.5" fill="#d1db24" opacity="0.9"/><circle cx="192" cy="88"  r="3" fill="#fff" opacity="0.9"/>
+                  <circle cx="192" cy="132" r="11" fill="rgba(255,255,255,0.7)" stroke="#d1db24" stroke-width="2"/><circle cx="192" cy="132" r="6.5" fill="#d1db24" opacity="0.9"/><circle cx="192" cy="132" r="3" fill="#fff" opacity="0.9"/>
+                </g>
+                <circle cx="192" cy="88" r="11" fill="none" stroke="#d1db24" stroke-width="1"><animate attributeName="r" values="11;22;11" dur="2.4s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.5;0;0.5" dur="2.4s" repeatCount="indefinite"/></circle>
+                <circle cx="192" cy="132" r="11" fill="none" stroke="#d1db24" stroke-width="1"><animate attributeName="r" values="11;22;11" dur="2.4s" begin="1.2s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.5;0;0.5" dur="2.4s" begin="1.2s" repeatCount="indefinite"/></circle>
+                <circle r="4" fill="#d1db24" filter="url(#mini-ai-pulse)" opacity="0.95"><animateMotion dur="1.8s" repeatCount="indefinite" begin="0s" path="M 25,65 L 82,50 L 142,65 L 192,88"/></circle>
+                <circle r="4" fill="#d1db24" filter="url(#mini-ai-pulse)" opacity="0.95"><animateMotion dur="1.8s" repeatCount="indefinite" begin="0.6s" path="M 25,155 L 82,126 L 142,155 L 192,132"/></circle>
+              </svg>
+            </span>
+            <span class="plan-mini-text"><span class="plan-mini-title">FuzzNet Labs</span><span class="plan-mini-sub">Artificial Intelligence</span></span>
+            <span class="plan-mini-arrow">→</span>
+          </a>
+          <a href="/cybersecurity" class="plan-mini-card">
+            <span class="plan-mini-icon plan-mini-icon--cy">
+              <svg viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg" width="32" height="32">
+                <defs>
+                  <filter id="mini-cy-glow-d"><feGaussianBlur stdDeviation="4" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                  <filter id="mini-cy-glow-a"><feGaussianBlur stdDeviation="4" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                </defs>
+                <circle cx="110" cy="110" r="82" fill="rgba(98,181,23,0.08)"/>
+                <circle cx="110" cy="110" r="58" fill="none" stroke="rgba(168,201,106,0.38)" stroke-width="1.5" stroke-dasharray="6 9"/>
+                <g style="transform-box:view-box; transform-origin:110px 110px; animation:cy-orbit-clockwise 9s linear infinite;">
+                  <g transform="translate(52, 110)">
+                    <g filter="url(#mini-cy-glow-d)" style="transform-box:fill-box; transform-origin:50% 50%; animation:cy-counter-rotate 9s linear infinite;">
+                      <path d="M0,-26 L22,-16 L22,2 C22,16 0,26 0,26 C0,26 -22,16 -22,2 L-22,-16 Z" fill="#62b517"/>
+                      <path d="M0,-26 L22,-16 L22,2 C22,16 0,26 0,26 C0,26 -22,16 -22,2 L-22,-16 Z" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="1.5"/>
+                      <path d="M-6,-5 L-6,-11 Q0,-17 6,-11 L6,-5" fill="none" stroke="#d1db24" stroke-width="3" stroke-linecap="round"/>
+                      <rect x="-8" y="-5" width="16" height="13" rx="3" fill="#d1db24"/>
+                      <circle cx="0" cy="1.5" r="2.8" fill="#2a5a06"/>
+                    </g>
+                  </g>
+                </g>
+                <g style="transform-box:view-box; transform-origin:110px 110px; animation:cy-orbit-clockwise 9s linear infinite;">
+                  <g transform="translate(168, 110)">
+                    <g filter="url(#mini-cy-glow-a)" style="transform-box:fill-box; transform-origin:50% 50%; animation:cy-counter-rotate 9s linear infinite;">
+                      <path d="M0,-20 C-5,-20 -11,-14 -12,-4 L-13,18 Q-7,21 0,21 Q7,21 13,18 L12,-4 C11,-14 5,-20 0,-20 Z" fill="#1e4a04"/>
+                      <path d="M-12,-4 Q-7,-24 0,-24 Q7,-24 12,-4 Z" fill="#2a5a06"/>
+                      <path d="M-12,0 L-20,7 Q-17,12 -13,10 L-12,5 Z" fill="#1e4a04"/>
+                      <path d="M12,0 L20,7 Q17,12 13,10 L12,5 Z" fill="#1e4a04"/>
+                      <rect x="-10" y="6" width="20" height="13" rx="2" fill="#4a8c11"/>
+                      <rect x="-8.5" y="7.5" width="17" height="8" rx="1.5" fill="#0d1a06"/>
+                      <path d="M-4.5,9.5 L-7,11 L-4.5,12.5" fill="none" stroke="#d1db24" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                      <line x1="-1" y1="9.2" x2="1" y2="13.3" stroke="#d1db24" stroke-width="1.2" stroke-linecap="round"/>
+                      <path d="M4.5,9.5 L7,11 L4.5,12.5" fill="none" stroke="#d1db24" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M0,-20 C-9,-20 -10,-9 -8,-3 Q-4,5 0,5 Q4,5 8,-3 C10,-9 9,-20 0,-20 Z" fill="#d1db24" stroke="rgba(100,120,0,0.18)" stroke-width="0.8"/>
+                      <path d="M-8,-14 Q0,-19 8,-14" fill="none" stroke="#b0b800" stroke-width="0.8"/>
+                      <path d="M-7,-11 Q-4,-16 -1,-12" fill="none" stroke="#2a4a08" stroke-width="1.5" stroke-linecap="round"/>
+                      <path d="M1,-12 Q4,-16 7,-11" fill="none" stroke="#2a4a08" stroke-width="1.5" stroke-linecap="round"/>
+                      <ellipse cx="-4" cy="-8" rx="2.5" ry="1.8" fill="#1e3a06"/>
+                      <ellipse cx="4" cy="-8" rx="2.5" ry="1.8" fill="#1e3a06"/>
+                      <circle cx="-6.5" cy="-3" r="2.5" fill="rgba(98,181,23,0.35)"/>
+                      <circle cx="6.5" cy="-3" r="2.5" fill="rgba(98,181,23,0.35)"/>
+                      <path d="M-0.5,0.5 Q-3,1.5 -6,0 Q-9,-1.5 -8.5,-3.5" fill="none" stroke="#2a4a08" stroke-width="1.7" stroke-linecap="round"/>
+                      <path d="M0.5,0.5 Q3,1.5 6,0 Q9,-1.5 8.5,-3.5" fill="none" stroke="#2a4a08" stroke-width="1.7" stroke-linecap="round"/>
+                      <path d="M-2.5,3 Q0,7 2.5,3 Z" fill="#2a4a08"/>
+                    </g>
+                  </g>
+                </g>
+              </svg>
+            </span>
+            <span class="plan-mini-text"><span class="plan-mini-title">Byte Club</span><span class="plan-mini-sub">Cybersecurity</span></span>
+            <span class="plan-mini-arrow">→</span>
+          </a>
+          <a href="/qubit-waitlist" class="plan-mini-card">
+            <span class="plan-mini-icon plan-mini-icon--qb">
+              <svg viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg" width="32" height="32">
+                <defs>
+                  <radialGradient id="mini-qb-grad" cx="38%" cy="32%">
+                    <stop offset="0%" stop-color="#a8e063"/>
+                    <stop offset="45%" stop-color="#62b517"/>
+                    <stop offset="100%" stop-color="#2a5a06"/>
+                  </radialGradient>
+                  <filter id="mini-qb-glow"><feGaussianBlur stdDeviation="4" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                </defs>
+                <circle cx="90" cy="90" r="72" fill="rgba(98,181,23,0.1)"/>
+                <ellipse cx="90" cy="90" rx="68" ry="24" fill="none" stroke="rgba(168,201,106,0.4)" stroke-width="1.5" transform="rotate(-20 90 90)"/>
+                <ellipse cx="90" cy="90" rx="24" ry="68" fill="none" stroke="rgba(168,201,106,0.4)" stroke-width="1.5" transform="rotate(-20 90 90)"/>
+                <circle cx="90" cy="90" r="60" fill="none" stroke="rgba(168,201,106,0.2)" stroke-width="1"/>
+                <circle cx="90" cy="90" r="52" fill="url(#mini-qb-grad)" filter="url(#mini-qb-glow)"/>
+                <text x="90" y="28" text-anchor="middle" fill="rgba(74,140,17,0.7)" font-size="10" font-family="monospace">|0⟩</text>
+                <text x="90" y="160" text-anchor="middle" fill="rgba(74,140,17,0.7)" font-size="10" font-family="monospace">|1⟩</text>
+                <g><animateTransform attributeName="transform" type="rotate" from="0 90 90" to="360 90 90" dur="8s" repeatCount="indefinite"/>
+                  <line x1="90" y1="90" x2="116" y2="52" stroke="#d1db24" stroke-width="2.5" stroke-linecap="round"/>
+                  <circle cx="116" cy="52" r="5" fill="#eef56a" filter="url(#mini-qb-glow)"/>
+                </g>
+              </svg>
+            </span>
+            <span class="plan-mini-text"><span class="plan-mini-title">Qubit</span><span class="plan-mini-sub">Quantum Computing</span></span>
+            <span class="plan-mini-arrow">→</span>
+          </a>
+        </div>
       </div>
       <div class="plan-step" data-reveal="scale" data-delay="3">
         <div class="plan-number">3</div>
         <strong>Watch it land</strong>
-        <p>Within a single 60-minute session your people have the context to contribute to conversations they were previously locked out of.</p>
+        <div class="plan-step-icon">
+          <svg viewBox="0 0 200 72" xmlns="http://www.w3.org/2000/svg" width="100%" height="56" style="max-width:200px">
+            <defs>
+              <filter id="step3-glow"><feGaussianBlur stdDeviation="2.5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+              <radialGradient id="step3-board" cx="50%" cy="50%">
+                <stop offset="0%" stop-color="rgba(98,181,23,0.18)"/>
+                <stop offset="100%" stop-color="rgba(42,90,6,0.06)"/>
+              </radialGradient>
+            </defs>
+
+            <!-- Faded "no trainer" silhouette far left -->
+            <g opacity="0.22">
+              <rect x="6" y="52" width="20" height="14" rx="2" fill="#555"/>
+              <rect x="4" y="48" width="24" height="5" rx="1.5" fill="#555"/>
+              <circle cx="16" cy="36" r="5" fill="#555"/>
+              <path d="M9,44 C9,38 23,38 23,44 Z" fill="#555"/>
+            </g>
+            <line x1="3" y1="66" x2="30" y2="26" stroke="#c0392b" stroke-width="1.5" stroke-linecap="round" opacity="0.35"/>
+            <line x1="36" y1="8" x2="36" y2="68" stroke="rgba(98,181,23,0.15)" stroke-width="1" stroke-dasharray="3 3"/>
+
+            <!-- Game board -->
+            <rect x="50" y="14" width="102" height="44" rx="8" fill="url(#step3-board)" stroke="#62b517" stroke-width="1.5"/>
+            <!-- Cards -->
+            <rect x="63" y="22" width="13" height="18" rx="2" fill="#fff" stroke="#a8c96a" stroke-width="1" transform="rotate(-5 69 31)"/>
+            <rect x="83" y="20" width="13" height="18" rx="2" fill="#fff" stroke="#a8c96a" stroke-width="1"/>
+            <rect x="103" y="22" width="13" height="18" rx="2" fill="#fff" stroke="#a8c96a" stroke-width="1" transform="rotate(5 109 31)"/>
+            <rect x="123" y="23" width="13" height="18" rx="2" fill="#fff" stroke="#a8c96a" stroke-width="1" transform="rotate(-3 129 32)"/>
+
+            <!-- Player left — upright -->
+            <circle cx="40" cy="28" r="4" fill="#3a7a0a"/>
+            <path d="M33,37 C33,31 47,31 47,37 Z" fill="#3a7a0a"/>
+
+            <!-- Player top — upright -->
+            <circle cx="101" cy="6" r="4" fill="#3a7a0a"/>
+            <path d="M94,15 C94,9 108,9 108,15 Z" fill="#3a7a0a"/>
+
+            <!-- Player right — upright -->
+            <circle cx="162" cy="28" r="4" fill="#3a7a0a"/>
+            <path d="M155,37 C155,31 169,31 169,37 Z" fill="#3a7a0a"/>
+
+            <!-- Player bottom — upright -->
+            <circle cx="101" cy="60" r="4" fill="#3a7a0a"/>
+            <path d="M94,69 C94,63 108,63 108,69 Z" fill="#3a7a0a"/>
+
+            <!-- Faint interaction lines between players -->
+            <line x1="40" y1="28" x2="101" y2="6"  stroke="rgba(98,181,23,0.18)" stroke-width="1"/>
+            <line x1="101" y1="6"  x2="162" y2="28" stroke="rgba(98,181,23,0.18)" stroke-width="1"/>
+            <line x1="162" y1="28" x2="101" y2="60" stroke="rgba(98,181,23,0.18)" stroke-width="1"/>
+            <line x1="101" y1="60" x2="40"  y2="28" stroke="rgba(98,181,23,0.18)" stroke-width="1"/>
+            <line x1="40"  y1="28" x2="162" y2="28" stroke="rgba(98,181,23,0.12)" stroke-width="1"/>
+            <line x1="101" y1="6"  x2="101" y2="60" stroke="rgba(98,181,23,0.12)" stroke-width="1"/>
+
+            <!-- Interaction dots travelling between players -->
+            <circle r="3" fill="#d1db24" filter="url(#step3-glow)" opacity="0.9">
+              <animateMotion dur="1.2s" begin="0s" repeatCount="indefinite" path="M 40,28 L 101,6"/>
+            </circle>
+            <circle r="3" fill="#d1db24" filter="url(#step3-glow)" opacity="0.9">
+              <animateMotion dur="1.2s" begin="0.5s" repeatCount="indefinite" path="M 101,6 L 162,28"/>
+            </circle>
+            <circle r="3" fill="#d1db24" filter="url(#step3-glow)" opacity="0.9">
+              <animateMotion dur="1.2s" begin="1.0s" repeatCount="indefinite" path="M 162,28 L 101,60"/>
+            </circle>
+            <circle r="3" fill="#d1db24" filter="url(#step3-glow)" opacity="0.9">
+              <animateMotion dur="1.2s" begin="1.5s" repeatCount="indefinite" path="M 101,60 L 40,28"/>
+            </circle>
+          </svg>
+        </div>
+        <p>No specialist. No expensive programme. The game does the work. The interaction between your people doesn't just build knowledge — it builds a culture of learning.</p>
       </div>
     </div>
-  </div>
-</section>
-
-<!-- GAMES -->
-<section class="games-section">
-  <div class="games-section-inner">
-    <div class="story-eyebrow" data-reveal>Games Available By Topic</div>
-    <p class="games-section-cta" data-reveal data-delay="1">Explore the games to see how they address the knowledge gaps in your talent pool.</p>
-    <div class="topic-links">
+    <div class="topic-links-hidden" style="display:none">
 
       <!-- Artificial Intelligence -->
       <a class="topic-link" href="/ai" data-reveal data-delay="1">
