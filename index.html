@@ -436,6 +436,17 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
   font-size: 28px;
   margin-bottom: 12px;
 }
+.pillar-icon-svg {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+}
+.pillar-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
 .approach-pillar strong {
   display: block;
   font-size: 15px;
@@ -1118,7 +1129,7 @@ footer {
 <!-- HERO -->
 <section class="hero">
   <h1>Your team doesn't get the tech.<br><em>That's a business risk.</em></h1>
-  <p>Your security team speaks in acronyms. Your AI lead talks in models. Your quantum team might as well be speaking another language. We design board games based on proven learning principles that give your whole organization the context to contribute to operational successes.</p>
+  <p>Your security team speaks in acronyms. Your AI lead talks in models. And the rest of the room nods and moves on. We make board games that close that gap — so your whole team can contribute, challenge, and keep up. One session. No prior knowledge. No slides.</p>
   <div class="hero-picker">
     <p class="hero-question">What tech context does your team need?</p>
     <div class="hero-domain-pills">
@@ -1164,15 +1175,66 @@ footer {
     <p class="story-body" data-reveal data-delay="2">The slide decks keep coming. The glazed eyes keep appearing. Slide decks explain what things are without letting you feel how they work. Labs require setup and prior knowledge most people don't have. A game lets anyone play the scenario, make real decisions, and build genuine understanding — no prior tech knowledge required.</p>
     <div class="approach-pillars">
       <div class="approach-pillar" data-reveal data-delay="1">
-        <strong>You Have to Feel It</strong>
+        <div class="pillar-title-row">
+          <svg class="pillar-icon-svg" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Brain outline -->
+            <path d="M24 9C18 9 12 14 12 21C12 27 15 31 19 33L18 39H30L29 33C33 31 36 27 36 21C36 14 30 9 24 9Z" fill="#f0fae0" stroke="#62b517" stroke-width="1.8" stroke-linejoin="round"/>
+            <!-- Centre divider -->
+            <line x1="24" y1="9" x2="24" y2="33" stroke="#a8c96a" stroke-width="1" stroke-dasharray="2 3"/>
+            <!-- Brain fold hints -->
+            <path d="M15 17 Q17 14 20 16" stroke="#a8c96a" stroke-width="1.3" stroke-linecap="round"/>
+            <path d="M33 17 Q31 14 28 16" stroke="#a8c96a" stroke-width="1.3" stroke-linecap="round"/>
+            <!-- Lightning bolt -->
+            <path d="M27 11 L22 23 L27 23 L21 37" stroke="#d1db24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <strong>You Have to Feel It</strong>
+        </div>
         <p>Decisions made in a game create real understanding. Not memorized facts — mental models that stick.</p>
       </div>
       <div class="approach-pillar" data-reveal data-delay="2">
-        <strong>Real Mental Models</strong>
+        <div class="pillar-title-row">
+          <svg class="pillar-icon-svg" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Top node (key concept, yellow) -->
+            <circle cx="24" cy="11" r="6" fill="#d1db24"/>
+            <circle cx="24" cy="11" r="2" fill="#1a3a00"/>
+            <!-- Connecting lines -->
+            <line x1="20" y1="16" x2="13" y2="32" stroke="#62b517" stroke-width="2" stroke-linecap="round"/>
+            <line x1="28" y1="16" x2="35" y2="32" stroke="#62b517" stroke-width="2" stroke-linecap="round"/>
+            <!-- Bottom nodes -->
+            <circle cx="12" cy="37" r="6" fill="#f0fae0" stroke="#62b517" stroke-width="2"/>
+            <circle cx="12" cy="37" r="2.5" fill="#62b517"/>
+            <circle cx="36" cy="37" r="6" fill="#f0fae0" stroke="#62b517" stroke-width="2"/>
+            <circle cx="36" cy="37" r="2.5" fill="#62b517"/>
+            <!-- Horizontal connector between bottom nodes -->
+            <line x1="18" y1="37" x2="30" y2="37" stroke="#a8c96a" stroke-width="1.5" stroke-dasharray="2 2" stroke-linecap="round"/>
+          </svg>
+          <strong>Real Mental Models</strong>
+        </div>
         <p>Every game teaches actual frameworks professionals use every day — built to transfer to the workplace, not stay on the table.</p>
       </div>
       <div class="approach-pillar" data-reveal data-delay="3">
-        <strong>Fun Is the Motivator</strong>
+        <div class="pillar-title-row">
+          <svg class="pillar-icon-svg" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Die face -->
+            <rect x="9" y="9" width="30" height="30" rx="7" fill="#d1db24"/>
+            <!-- 5 dots -->
+            <circle cx="17" cy="17" r="2.5" fill="#1a3a00"/>
+            <circle cx="31" cy="17" r="2.5" fill="#1a3a00"/>
+            <circle cx="24" cy="24" r="2.5" fill="#1a3a00"/>
+            <circle cx="17" cy="31" r="2.5" fill="#1a3a00"/>
+            <circle cx="31" cy="31" r="2.5" fill="#1a3a00"/>
+            <!-- Corner sparkles (+ cross marks) -->
+            <line x1="3" y1="5" x2="7" y2="5" stroke="#62b517" stroke-width="1.8" stroke-linecap="round"/>
+            <line x1="5" y1="3" x2="5" y2="7" stroke="#62b517" stroke-width="1.8" stroke-linecap="round"/>
+            <line x1="45" y1="5" x2="41" y2="5" stroke="#62b517" stroke-width="1.8" stroke-linecap="round"/>
+            <line x1="43" y1="3" x2="43" y2="7" stroke="#62b517" stroke-width="1.8" stroke-linecap="round"/>
+            <line x1="3" y1="43" x2="7" y2="43" stroke="#62b517" stroke-width="1.8" stroke-linecap="round"/>
+            <line x1="5" y1="41" x2="5" y2="45" stroke="#62b517" stroke-width="1.8" stroke-linecap="round"/>
+            <line x1="45" y1="43" x2="41" y2="43" stroke="#62b517" stroke-width="1.8" stroke-linecap="round"/>
+            <line x1="43" y1="41" x2="43" y2="45" stroke="#62b517" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+          <strong>Fun Is the Motivator</strong>
+        </div>
         <p>The moment someone disengages, learning stops. Fun is what prevents that — not a reward for paying attention, but the reason they do.</p>
       </div>
     </div>
