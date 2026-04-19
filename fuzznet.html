@@ -516,6 +516,8 @@ body.observer-active #game { height: calc(100vh - 44px - 36px - 4px); }
 
 /* Tutorial node highlight (pulsing glow on the target node) */
 .node-circle.tut-node-hl { animation: tut-hl-pulse 1.1s ease-in-out infinite; }
+/* Tutorial animal input highlight (same pulse on SVG rect) */
+rect.tut-animal-hl { animation: tut-hl-pulse 1.1s ease-in-out infinite; }
 @keyframes tut-hl-pulse {
   0%,100% { stroke: #d1db24; stroke-width: 4; filter: drop-shadow(0 0 6px #d1db24); }
   50%      { stroke: #4aff4a; stroke-width: 5; filter: drop-shadow(0 0 14px #4aff4a); }
@@ -994,6 +996,7 @@ let tutorialMode = false;
 let tutorialStep = 0;
 let tutorialDataPlaced = 0;
 let tutHighlightNodes = [];
+let tutHighlightAnimal = -1; // -1 = none, 0-4 = specific animal input index to glow
 let tutHighlightAction = ''; // 'design' | 'train' | 'test' | ''
 let tutHighlightStatus = ''; // 'reroll'|'flip'|'score'|'acceptfail'|'reroll_selected'|''
 
@@ -1548,10 +1551,11 @@ function applyTutStatusHL() {
     if (btn.classList.contains('info-btn')) return;
     const text = btn.textContent.trim();
     const isTarget =
-      (target === 'reroll'          && text === 'Reroll Dice')     ||
-      (target === 'flip'            && text === 'Flip a Die')       ||
-      (target === 'score'           && text === 'Score!')           ||
-      (target === 'acceptfail'      && text === 'Accept Fail')      ||
+      (target === 'roll_dice'       && text === 'Roll Dice')        ||
+      (target === 'reroll'          && text === 'Reroll Dice')      ||
+      (target === 'flip'            && text === 'Flip a Die')        ||
+      (target === 'score'           && text === 'Score!')            ||
+      (target === 'acceptfail'      && text === 'Accept Fail')       ||
       (target === 'reroll_selected' && text === 'Reroll Selected');
     btn.classList.toggle('tut-status-hl', isTarget);
     btn.disabled      = !isTarget && target !== 'flip_die';
@@ -1572,8 +1576,18 @@ function applyTutStatusHL() {
       die.style.opacity      = isTarget ? '' : '0.3';
       die.style.pointerEvents = isTarget ? '' : 'none';
     }
+  } else if (target === 'reroll_selected') {
+    // In reroll-selection mode: pulse dice showing 1 to guide the player
+    for (let i = 0; i < 3; i++) {
+      const die = document.getElementById('die-' + i);
+      if (!die) continue;
+      const isOne = tutorialG && tutorialG.dice[i] === 1;
+      die.classList.toggle('tut-die-hl', isOne);
+      die.style.opacity = '';
+      die.style.pointerEvents = '';
+    }
   } else {
-    // Reset any die styling left from a previous flip-die pass
+    // Reset any die styling left from a previous flip-die or reroll pass
     for (let i = 0; i < 3; i++) {
       const die = document.getElementById('die-' + i);
       if (die) { die.classList.remove('tut-die-hl'); die.style.opacity = ''; die.style.pointerEvents = ''; }
@@ -1659,13 +1673,14 @@ function renderBoard() {
   for (let i=0;i<5;i++) {
     const {x,y}=INP[i];
     const test = canAct && G.phase==='test_animal' && !p.tested[i];
+    const tutAnimalHL = tutorialMode && test && tutHighlightAnimal === i;
     const sz=38, fw=5, cx=x, cy=y-6;
     const bx=cx-sz/2-fw, by=cy-sz/2-fw, bw=sz+fw*2, bh=sz+fw*2;
     const oc = test?` onclick="clickAnimal(${i})" style="cursor:pointer"`:'';
     // Colored box background
-    html += `<rect x="${bx}" y="${by}" width="${bw}" height="${bh}" rx="4" fill="${playerHex}" opacity="${test?1:0.85}"${oc}/>`;
-    // Bright border when clickable (test phase)
-    if (test) html += `<rect x="${bx}" y="${by}" width="${bw}" height="${bh}" rx="4" fill="none" stroke="white" stroke-width="2.5" stroke-dasharray="6,3" opacity="0.9"/>`;
+    html += `<rect${tutAnimalHL?' class="tut-animal-hl"':''} x="${bx}" y="${by}" width="${bw}" height="${bh}" rx="4" fill="${playerHex}" opacity="${test?1:0.85}"${oc}/>`;
+    // Bright border when clickable in non-tutorial mode
+    if (test && !tutAnimalHL) html += `<rect x="${bx}" y="${by}" width="${bw}" height="${bh}" rx="4" fill="none" stroke="white" stroke-width="2.5" stroke-dasharray="6,3" opacity="0.9"/>`;
     // Grayscale animal image
     html += `<image href="images/${ANIMAL_IMGS[i]}.png" x="${cx-sz/2}" y="${cy-sz/2}" width="${sz}" height="${sz}" style="filter:grayscale(1)"${oc}/>`;
     html += `<text class="input-label" x="${x}" y="${y+26}" text-anchor="middle" font-size="10" fill="${playerHex}">${ANIMALS[i]}</text>`;
@@ -2394,13 +2409,12 @@ const TSTEPS = [
 
   // 7 — FORCED: Overfit (block an edge)
   { title:'⚠️ Step 2½: Node Maxed — Block an Edge',
-    body:`<p>Node 0 has <b>3 Data Tokens</b> — maxed out! You must <b>permanently block one connecting edge</b> by clicking one of the highlighted yellow connections on the board.</p>
-<p>Choose wisely: blocking the edge to N4 would break your Dog path! Block one of the <b>input side edges</b> instead.</p>`,
+    body:`<p>Node 0 has <b>3 Data Tokens</b> — maxed out! You must <b>permanently block one connecting edge</b>.</p>
+<p>The highlighted path goes <b>downward from N0</b> — blocking it keeps the Dog path (N0→N4) intact. <b>Click the glowing edge</b> to block it.</p>`,
     makeG:()=>{ const n=Array(11).fill(false); n[0]=n[4]=n[8]=true;
       const d=Array(11).fill(0); d[0]=3; d[4]=1; d[8]=1;
       return tutMakeG({nodes:n,data:d},{phase:'train_overfit',actionsLeft:1,
-        overfitEdges:[{from:'in0',to:'n0',key:'in0-0'},{from:'in1',to:'n0',key:'in1-0'},
-          {from:'n0',to:'n4',key:'0-4'},{from:'n0',to:'n6',key:'0-6'}]}); },
+        overfitEdges:[{from:'n0',to:'n6',key:'0-6'}]}); },
     forced:true,
     interact:(action,extra)=>{
       if(action==='select_overfit_edge'){
@@ -2423,13 +2437,14 @@ const TSTEPS = [
     interact:(action,extra)=>{
       if(action==='start_test'){
         tutorialG.phase='test_animal';
-        tutHighlightAction=''; tutHighlightNodes=[];
+        tutHighlightAction=''; tutHighlightNodes=[]; tutHighlightAnimal=0;
         document.getElementById('tut-body').innerHTML=`<p>Animals with a valid path are highlighted on the left. <b>Click the Dog image</b> to start testing it.</p>`;
         renderGame(); return true;
       }
       if(action==='select_animal'){
         const path=tutFindPath(extra.animalIdx);
         if(path.length){
+          tutHighlightAnimal=-1;
           tutorialG.testAnimal=extra.animalIdx; tutorialG.testPath=path;
           tutorialG.phase='test_roll'; renderGame();
           setTimeout(()=>tutAdvanceTo(9),350); return true;
@@ -2454,7 +2469,7 @@ const TSTEPS = [
       g.scoreboard[0]=[{player:1,round:1,bonusTokens:0}];
       return g;
     },
-    forced:true,
+    forced:true, tutStatusHL:'roll_dice',
     interact:(action,extra)=>{
       if(action==='roll_dice'){
         tutorialG.dice=[6,5,4]; tutorialG.phase='test_eval';
@@ -2480,7 +2495,7 @@ const TSTEPS = [
       g.scoreboard[0]=[{player:1,round:1,bonusTokens:0}];
       return g;
     },
-    forced:true,
+    forced:true, tutStatusHL:'score',
     interact:(action,extra)=>{
       if(action==='resolve_success'){
         // Add player 0's 2nd-place Dog score and visibly update the scoreboard
@@ -2596,14 +2611,14 @@ const TSTEPS = [
       // Paths used: Dog   N0→N4→N8→out2
       //             Bunny N1→N4→N7→out0
       //             Frog  N1→N5→N8→out1
-      //             Squirrel N3→N6→N10→out4  (N3→N4 blocked because N4 maxed)
+      //             Squirrel N3→N6→N10→out4
       //             Fish     N3→N6→N9→out3
       const n0=Array(11).fill(false);
       [0,1,3,4,5,6,7,8,9,10].forEach(i=>n0[i]=true); // 10 nodes (N2 not needed)
       const d0=Array(11).fill(0);
       d0[0]=2; d0[1]=2; d0[3]=2; d0[4]=3; d0[5]=2; d0[6]=3; d0[7]=1; d0[8]=2; d0[9]=1; d0[10]=1;
-      // N4 maxed → blocked '3-4' (safe: Squirrel/Fish use N6 instead)
-      // N6 maxed → blocked '0-6' (safe: Dog/Bunny/Frog use N4 instead)
+      // N4 maxed → blocked '4-8' (outgoing from N4 forward to N8; Dog rerouted via N5)
+      // N6 maxed → blocked '6-10' (outgoing from N6 forward to N10; Squirrel rerouted via N4)
 
       // Jordan — tested Dog, Bunny, Squirrel; couldn't test Frog (N8→out1 blocked) or Fish (N9 not placed)
       // Paths: Dog N0→N4→N8→out2 | Bunny N1→N4→N7→out0 | Squirrel N3→N6→N10→out4
@@ -2615,7 +2630,7 @@ const TSTEPS = [
       // Block is outgoing from L3 node N8 toward OUTPUT, correct direction
 
       return { players:[
-          tutMakePlayer({nodes:n0,data:d0,blocked:['3-4','0-6'],cleanUses:1,tested:Array(5).fill(true)}),
+          tutMakePlayer({nodes:n0,data:d0,blocked:['4-8','6-10'],cleanUses:1,tested:Array(5).fill(true)}),
           {_idx:1,name:'Jordan',hex:'#ff4a4a',color:'red',nodes:n1,data:d1,blocked:['8-out1'],cleanUses:0,
            tested:[true,true,false,true,false],firstTurnDone:true}],
         currentPlayer:1,phase:'idle',actionsLeft:0,round:5,gameEnding:false,gameOver:true,
@@ -2712,6 +2727,7 @@ function endTutorial() {
   tutHighlightAction = '';
   tutHighlightStatus = '';
   tutHighlightNodes = [];
+  tutHighlightAnimal = -1;
   document.getElementById('game').classList.remove('tut-active');
   G = null; myId = -1; viewingPlayer = -1; roomCode = '';
   document.getElementById('tutorial-overlay').classList.remove('active');
