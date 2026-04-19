@@ -358,6 +358,33 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
   .two-perspectives { grid-template-columns: 1fr; }
 }
 
+/* ===== AUDIENCE GRID ===== */
+.audience-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-top: 32px;
+}
+.audience-card {
+  background: rgba(209,219,36,0.1);
+  border: 1.5px solid rgba(209,219,36,0.4);
+  border-radius: 12px;
+  padding: 20px 22px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+.audience-icon {
+  width: 32px; height: 32px; flex-shrink: 0;
+  background: rgba(209,219,36,0.2);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+}
+.audience-icon svg { width: 18px; height: 18px; }
+.audience-card strong { display: block; font-size: 13px; font-weight: 800; color: #f0f7e6; margin-bottom: 4px; }
+.audience-card p { font-size: 12px; color: rgba(240,247,230,0.7); line-height: 1.5; }
+@media (max-width: 640px) { .audience-grid { grid-template-columns: 1fr; } }
+
 /* ===== FOOTER ===== */
 footer {
   background: #2a2a2a;
@@ -451,10 +478,11 @@ footer a:hover { text-decoration: underline; }
       </div>
     </div>
     <div class="nav-dropdown">
-      <button class="nav-dropdown-trigger open-indicator">Use Cases ▾</button>
+      <button class="nav-dropdown-trigger open-indicator">Audience ▾</button>
       <div class="nav-dropdown-menu">
-        <a href="/corporate-training">Corporate Training</a>
-        <a href="/classrooms">Classrooms</a>
+        <a href="/corporate-training">L&D & Corporate Teams</a>
+        <a href="/specialized-training">Tech Consultants &amp; Trainers</a>
+        <a href="/classrooms">Classrooms & Educators</a>
         <a href="/curious-minds" class="active">Bring Them Along</a>
       </div>
     </div>
@@ -468,7 +496,7 @@ footer a:hover { text-decoration: underline; }
   <div class="story-container">
     <div class="hero-layout">
       <div>
-        <div class="story-eyebrow" data-reveal>Use Case · Bring Them Along</div>
+        <div class="story-eyebrow" data-reveal>Audience · Personal &amp; Curious</div>
         <h1 class="story-headline" data-reveal="lines">
           <span class="line-wrap"><span class="line-inner">Finally speak</span></span>
           <span class="line-wrap"><span class="line-inner">the same language.</span></span>
@@ -549,6 +577,64 @@ footer a:hover { text-decoration: underline; }
             <rect x="151" y="167" width="9" height="8" rx="1.5" fill="#d1db24" opacity="0.8"/>
             <rect x="160" y="175" width="9" height="8" rx="1.5" fill="#62b517" opacity="0.75"/>
           </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHO THIS IS FOR -->
+<section class="story-section bg-problem">
+  <div class="story-container">
+    <div class="story-eyebrow" data-reveal>Who This Is For</div>
+    <h2 class="story-headline" data-reveal="lines">
+      <span class="line-wrap"><span class="line-inner">For the curious, the connected,</span></span>
+      <span class="line-wrap"><span class="line-inner">and the ones trying to bridge the gap.</span></span>
+    </h2>
+    <div class="audience-grid" data-reveal data-delay="1">
+      <div class="audience-card">
+        <div class="audience-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#d1db24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+          </svg>
+        </div>
+        <div>
+          <strong>The Curious Non-Techie</strong>
+          <p>Tech shapes your world and you want to understand it — on your own terms, without an engineering degree. These games meet you exactly where you are.</p>
+        </div>
+      </div>
+      <div class="audience-card">
+        <div class="audience-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#d1db24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+        </div>
+        <div>
+          <strong>The Tech Professional</strong>
+          <p>You work in tech and want to bring the people you love along for the ride — without a lecture, a whiteboard, or a 45-minute deep dive they didn't ask for.</p>
+        </div>
+      </div>
+      <div class="audience-card">
+        <div class="audience-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#d1db24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+          </svg>
+        </div>
+        <div>
+          <strong>The Career Crosser</strong>
+          <p>You're moving into a tech-adjacent role — product, UX, operations, compliance — and need to build your foundations without going back to school.</p>
+        </div>
+      </div>
+      <div class="audience-card">
+        <div class="audience-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#d1db24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/>
+          </svg>
+        </div>
+        <div>
+          <strong>The Lifelong Learner</strong>
+          <p>You read, you explore, you stay curious. Games are just another way to learn something real — and these ones happen to be genuinely fun.</p>
         </div>
       </div>
     </div>

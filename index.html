@@ -756,12 +756,73 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
 .btn-waitlist:hover { background: #b8c11e; transform: scale(1.02); }
 .game-card.coming-soon .btn-waitlist { pointer-events: auto; }
 
+/* ===== SCENARIO CARDS ===== */
+.scenario-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 36px;
+}
+.scenario-card {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  background: #fff;
+  border: 2px solid #a8c96a;
+  border-radius: 16px;
+  padding: 32px 28px;
+  transition: all 0.2s ease;
+}
+.scenario-card:hover {
+  border-color: #62b517;
+  transform: translateY(-4px);
+  box-shadow: 0 10px 32px rgba(98,181,23,0.18);
+}
+.scenario-tag {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #62b517;
+  border-left: 4px solid #d1db24;
+  padding-left: 8px;
+  margin-bottom: 18px;
+}
+.scenario-icon { margin-bottom: 14px; }
+.scenario-icon svg { width: 40px; height: 40px; display: block; }
+.scenario-card strong {
+  display: block;
+  font-size: 18px;
+  font-weight: 900;
+  color: #1a1a1a;
+  line-height: 1.25;
+  margin-bottom: 12px;
+}
+.scenario-card p {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.7;
+  flex: 1;
+  margin-bottom: 20px;
+}
+.scenario-cta {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 800;
+  color: #4e9612;
+  letter-spacing: 0.03em;
+  border-top: 1px solid #d4e8a8;
+  padding-top: 14px;
+}
+@media (max-width: 700px) { .scenario-grid { grid-template-columns: 1fr; } }
+
 /* ===== WHO IT'S FOR ===== */
 .who-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
-  margin-top: 36px;
+  margin-top: 20px;
 }
 .who-item {
   background: #f4fae8;
@@ -1114,11 +1175,12 @@ footer {
       </div>
     </div>
     <div class="nav-dropdown">
-      <button class="nav-dropdown-trigger">Use Cases ▾</button>
+      <button class="nav-dropdown-trigger">Audience ▾</button>
       <div class="nav-dropdown-menu">
-        <a href="/corporate-training">Corporate Training</a>
-        <a href="/classrooms">Classrooms</a>
-        <a href="/curious-minds">Bring Them Along</a>
+        <a href="/corporate-training">L&D & Corporate Teams</a>
+        <a href="/specialized-training">Tech Consultants &amp; Trainers</a>
+        <a href="/classrooms">Classrooms & Educators</a>
+        <a href="/curious-minds">Personal & Curious</a>
       </div>
     </div>
     <a href="/about">About</a>
@@ -1260,28 +1322,62 @@ footer {
 <section class="story-section bg-warm">
   <div class="story-container">
     <div class="story-eyebrow" data-reveal>Who It's For</div>
-    <h2 class="story-headline" data-reveal data-delay="1">Built for corporate teams. Used everywhere.</h2>
-    <div class="who-grid">
-      <a class="who-item who-item--featured" href="/corporate-training" data-reveal="scale" data-delay="1">
-        <div class="who-item-header">
-          <div class="who-icon">
-            <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-              <rect x="6" y="14" width="36" height="30" rx="2" fill="#2a5a06"/>
-              <rect x="4" y="10" width="40" height="7" rx="2" fill="#62b517"/>
-              <rect x="11" y="21" width="7" height="6" rx="1" fill="#d1db24"/>
-              <rect x="21" y="21" width="7" height="6" rx="1" fill="#d1db24"/>
-              <rect x="31" y="21" width="7" height="6" rx="1" fill="#d1db24"/>
-              <rect x="11" y="31" width="7" height="6" rx="1" fill="#a8c96a"/>
-              <rect x="31" y="31" width="7" height="6" rx="1" fill="#a8c96a"/>
-              <rect x="19" y="31" width="10" height="13" rx="1" fill="#1a3a00"/>
-            </svg>
-          </div>
-          <strong>Corporate Training</strong>
+    <h2 class="story-headline" data-reveal data-delay="1">Two ways in. One for every context.</h2>
+    <p class="story-body" data-reveal data-delay="2" style="max-width:700px;margin-bottom:0">Whether you're building tech fluency across a large organisation or running sharp, targeted client engagements — there's a path built for exactly what you do.</p>
+
+    <div class="scenario-grid">
+      <!-- Scenario 1 -->
+      <a class="scenario-card" href="/corporate-training" data-reveal="scale" data-delay="1">
+        <div class="scenario-tag">For L&amp;D &amp; HR Teams</div>
+        <div class="scenario-icon">
+          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Building -->
+            <rect x="6" y="14" width="36" height="30" rx="2" fill="#2a5a06"/>
+            <rect x="4" y="10" width="40" height="7" rx="2" fill="#62b517"/>
+            <rect x="11" y="21" width="7" height="6" rx="1" fill="#d1db24"/>
+            <rect x="21" y="21" width="7" height="6" rx="1" fill="#d1db24"/>
+            <rect x="31" y="21" width="7" height="6" rx="1" fill="#d1db24"/>
+            <rect x="11" y="31" width="7" height="6" rx="1" fill="#a8c96a"/>
+            <rect x="31" y="31" width="7" height="6" rx="1" fill="#a8c96a"/>
+            <rect x="19" y="31" width="10" height="13" rx="1" fill="#1a3a00"/>
+            <!-- Checkmark badge -->
+            <circle cx="38" cy="12" r="8" fill="#d1db24"/>
+            <path d="M34 12 L37 15 L42 9" stroke="#1a3a00" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
         </div>
-        <p>Bring non-technical staff up to speed on the technology shaping your industry — no specialist trainer required. Open the box, run the game, and let it do the heavy lifting. Your security team, operations leads, and executives all at the same table, finally speaking the same language.</p>
-        <span class="who-cta-link">Learn more →</span>
+        <strong>Scalable Team Fluency — Ready Out of the Box</strong>
+        <p>Open the box on Monday, run your first session by Friday. Any team lead can facilitate it — the learning is built in, it scales across every department, and it fits alongside any existing training programme. Built for L&amp;D teams who need to build real tech understanding across large organisations, efficiently and repeatably.</p>
+        <span class="scenario-cta">For L&amp;D &amp; HR professionals at large organisations →</span>
       </a>
-      <a class="who-item who-item--secondary" href="/classrooms" data-reveal="scale" data-delay="2">
+      <!-- Scenario 2 -->
+      <a class="scenario-card" href="/specialized-training" data-reveal="scale" data-delay="2">
+        <div class="scenario-tag">For Tech Consultants &amp; Boutique Trainers</div>
+        <div class="scenario-icon">
+          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Laptop / consulting surface -->
+            <rect x="6" y="28" width="36" height="2" rx="1" fill="#62b517"/>
+            <rect x="10" y="14" width="28" height="18" rx="3" fill="#2a5a06"/>
+            <rect x="12" y="16" width="24" height="14" rx="2" fill="#0d2200"/>
+            <!-- AI node pattern on screen -->
+            <circle cx="24" cy="23" r="2.5" fill="#d1db24"/>
+            <circle cx="17" cy="20" r="1.8" fill="#62b517"/>
+            <circle cx="31" cy="20" r="1.8" fill="#62b517"/>
+            <line x1="17" y1="20" x2="24" y2="23" stroke="#a8c96a" stroke-width="1"/>
+            <line x1="31" y1="20" x2="24" y2="23" stroke="#a8c96a" stroke-width="1"/>
+            <!-- Consultant figure -->
+            <circle cx="24" cy="8" r="4.5" fill="#62b517"/>
+            <path d="M15,26 C15,18 33,18 33,26" fill="#62b517"/>
+          </svg>
+        </div>
+        <strong>A standalone session your clients will remember.</strong>
+        <p>You run boutique workshops and consulting engagements — on AI fluency, cybersecurity, or digital transformation. You don't need a programme. You need one high-impact session that earns the room before the real work begins. Drop the game in, surface the gaps your clients don't know they have, then deliver the expertise only you can bring.</p>
+        <span class="scenario-cta">For tech consultants, AI trainers &amp; boutique advisory firms →</span>
+      </a>
+    </div>
+
+    <!-- Secondary audience cards -->
+    <div class="who-grid">
+      <a class="who-item who-item--secondary" href="/classrooms" data-reveal="scale" data-delay="3">
         <div class="who-item-header">
           <div class="who-icon">
             <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
@@ -1296,36 +1392,24 @@ footer {
         </div>
         <p>Make abstract concepts concrete for students who've never worked with the technology before.</p>
       </a>
-      <a class="who-item who-item--secondary" href="/curious-minds" data-reveal="scale" data-delay="3">
+      <a class="who-item who-item--secondary" href="/curious-minds" data-reveal="scale" data-delay="4">
         <div class="who-item-header">
           <div class="who-icon">
             <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-              <!-- Person 1 head (left) -->
               <circle cx="12" cy="10" r="5.5" fill="#3a7a0a"/>
               <ellipse cx="12" cy="8.5" rx="2.5" ry="3.5" fill="#d1db24" opacity="0.65"/>
-              <!-- Person 2 head (right) -->
               <circle cx="36" cy="10" r="5.5" fill="#2a6008"/>
               <ellipse cx="36" cy="8.5" rx="2.5" ry="3.5" fill="#a8c96a" opacity="0.7"/>
-              <!-- Sofa backrest -->
               <rect x="3" y="17" width="42" height="9" rx="5" fill="#1e4a04"/>
-              <!-- Sofa seat -->
               <rect x="5" y="24" width="38" height="11" rx="4" fill="#2a5a06"/>
-              <!-- Armrests -->
               <rect x="2" y="20" width="7" height="13" rx="4" fill="#1e4a04"/>
               <rect x="39" y="20" width="7" height="13" rx="4" fill="#1e4a04"/>
-              <!-- Cushion seam -->
               <line x1="24" y1="24" x2="24" y2="35" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-              <!-- Coffee table -->
               <rect x="13" y="36" width="22" height="3.5" rx="2" fill="#2a5a06"/>
               <rect x="15" y="39.5" width="2.5" height="5" rx="1" fill="#1a3a00"/>
               <rect x="30.5" y="39.5" width="2.5" height="5" rx="1" fill="#1a3a00"/>
-              <!-- Cards on table -->
-              <g transform="rotate(-7 21 37)">
-                <rect x="14" y="33" width="9" height="5.5" rx="1.5" fill="#d1db24"/>
-              </g>
-              <g transform="rotate(6 28 37)">
-                <rect x="25" y="33" width="9" height="5.5" rx="1.5" fill="#62b517"/>
-              </g>
+              <g transform="rotate(-7 21 37)"><rect x="14" y="33" width="9" height="5.5" rx="1.5" fill="#d1db24"/></g>
+              <g transform="rotate(6 28 37)"><rect x="25" y="33" width="9" height="5.5" rx="1.5" fill="#62b517"/></g>
             </svg>
           </div>
           <strong>Bring Them Along</strong>
