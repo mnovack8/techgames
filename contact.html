@@ -22,8 +22,7 @@
 html, body {
   min-height: 100%;
   font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif;
-  background: #e8edd8 url("data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0.5' y='0.5' width='39' height='39' fill='none' stroke='%2362b517' stroke-opacity='0.07' stroke-width='1'/%3E%3Ccircle cx='0' cy='0' r='1.5' fill='%2362b517' fill-opacity='0.09'/%3E%3Ccircle cx='40' cy='0' r='1.5' fill='%2362b517' fill-opacity='0.09'/%3E%3Ccircle cx='0' cy='40' r='1.5' fill='%2362b517' fill-opacity='0.09'/%3E%3Ccircle cx='40' cy='40' r='1.5' fill='%2362b517' fill-opacity='0.09'/%3E%3C/svg%3E") repeat;
-  background-size: auto, 40px 40px;
+  background: #e8edd8;
   color: #2a2a2a;
   overflow-y: auto;
 }
@@ -79,28 +78,7 @@ nav a {
   transition: background 0.15s, color 0.15s;
 }
 nav a:hover { background: #f4fae8; color: #4a8c11; }
-@keyframes logo-roll {
-  from { transform: translateX(-140px) rotate(-400deg); opacity: 0; }
-  to   { transform: translateX(0)      rotate(0deg);    opacity: 1; }
-}
-@keyframes fade-up {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-@keyframes underline-grow {
-  from { transform: scaleX(0); }
-  to   { transform: scaleX(1); }
-}
-@keyframes hero-drift {
-  from { transform: translate(0, 0); }
-  to   { transform: translate(30px, 30px); }
-}
-.header-logo img {
-  animation: logo-roll 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
 nav a.active { color: #4a8c11; background: #f4fae8; }
-nav a.nav-cta { color: #4a4a4a; background: none; margin-left: 0; }
-nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
 .nav-dropdown { position: relative; display: flex; align-items: center; }
 .nav-dropdown-trigger {
   font-size: 15px; font-weight: 700; color: #4a4a4a;
@@ -125,20 +103,37 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
 }
 .nav-dropdown-menu a:hover,
 .nav-dropdown-menu a.active { background: #f4fae8; color: #4a8c11; }
+@keyframes logo-roll {
+  from { transform: translateX(-140px) rotate(-400deg); opacity: 0; }
+  to   { transform: translateX(0)      rotate(0deg);    opacity: 1; }
+}
+.header-logo img { animation: logo-roll 0.75s cubic-bezier(0.22, 1, 0.36, 1) both; }
 @media (max-width: 600px) {
   header { padding: 8px 16px 6px; height: auto; flex-direction: column; align-items: center; gap: 4px; }
-  .header-logo .logo-text { font-size: 12px; }
-  .header-logo .logo-sub { font-size: 8px; letter-spacing: 1px; }
+  .logo-text { font-size: 12px; }
+  .logo-sub { font-size: 8px; letter-spacing: 1px; }
   nav { gap: 0; justify-content: center; flex-wrap: wrap; }
   nav a { padding: 6px 5px; font-size: 12px; }
   .nav-dropdown-trigger { padding: 6px 5px; font-size: 12px; }
 }
 
 /* ===== HERO ===== */
+@keyframes hero-drift {
+  from { transform: translate(0, 0); }
+  to   { transform: translate(30px, 30px); }
+}
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes underline-grow {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
 .hero {
   background: linear-gradient(160deg, #f8faf2 0%, #edf2e0 100%);
   border-bottom: 1px solid #dde8c8;
-  padding: 48px 24px 40px;
+  padding: 56px 24px 48px;
   text-align: center;
   position: relative;
   overflow: hidden;
@@ -154,11 +149,11 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
   z-index: 0;
 }
 .hero h1 {
-  font-size: 36px;
+  font-size: clamp(28px, 5vw, 42px);
   font-weight: 900;
   color: #1a1a1a;
   line-height: 1.1;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   position: relative;
   z-index: 1;
   animation: fade-up 0.45s ease both;
@@ -180,48 +175,39 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
   animation: underline-grow 0.4s 0.5s ease forwards;
 }
 .hero p {
-  font-size: 15px;
+  font-size: 16px;
   color: #666;
-  line-height: 1.6;
-  max-width: 560px;
+  line-height: 1.65;
+  max-width: 520px;
   margin: 0 auto;
   position: relative;
   z-index: 1;
   animation: fade-up 0.45s 0.15s ease both;
 }
 
-/* ===== SCROLL REVEAL ===== */
-[data-reveal] {
-  opacity: 0;
-  transform: translateY(28px);
-  transition: opacity 0.65s cubic-bezier(0.65,0,0.35,1),
-              transform 0.65s cubic-bezier(0.65,0,0.35,1);
+/* ===== SECTIONS ===== */
+.contact-section {
+  padding: 64px 24px;
 }
-[data-reveal].is-visible { opacity: 1; transform: none; }
-[data-delay="1"] { transition-delay: 0.12s; }
-@media (prefers-reduced-motion: reduce) {
-  [data-reveal], [data-reveal].is-visible { opacity: 1 !important; transform: none !important; transition: none !important; }
-}
-
-/* ===== MAIN CONTENT ===== */
-.page-content {
-  max-width: 680px;
+.contact-container {
+  max-width: 720px;
   margin: 0 auto;
-  padding: 40px 24px 60px;
-  display: flex;
-  flex-direction: column;
-  gap: 28px;
 }
 
-/* ===== CARD ===== */
-.card {
-  background: #fff;
-  border-radius: 14px;
-  border: 2px solid #a8c96a;
-  box-shadow: 0 4px 20px rgba(98,181,23,0.12);
-  padding: 28px 32px;
+/* Form section — light with subtle square grid */
+.contact-section.bg-white {
+  background-color: #fff;
+  background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0.5' y='0.5' width='39' height='39' fill='none' stroke='%2362b517' stroke-opacity='0.07' stroke-width='1'/%3E%3Ccircle cx='0' cy='0' r='1.5' fill='%2362b517' fill-opacity='0.09'/%3E%3Ccircle cx='40' cy='0' r='1.5' fill='%2362b517' fill-opacity='0.09'/%3E%3Ccircle cx='0' cy='40' r='1.5' fill='%2362b517' fill-opacity='0.09'/%3E%3Ccircle cx='40' cy='40' r='1.5' fill='%2362b517' fill-opacity='0.09'/%3E%3C/svg%3E");
+  background-size: 40px 40px;
 }
-.card-label {
+
+/* LinkedIn section — solid sage, no pattern */
+.contact-section.bg-sage {
+  background: #f4fae8;
+}
+
+/* ===== SECTION LABEL ===== */
+.section-label {
   font-size: 10px;
   font-weight: 800;
   text-transform: uppercase;
@@ -241,44 +227,44 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
   display: block;
 }
 
-/* ===== LINKEDIN SECTION ===== */
+/* ===== LINKEDIN CARD ===== */
 .linkedin-card {
-  background: #fff;
-  border-radius: 14px;
-  border: 2px solid #a8c96a;
-  box-shadow: 0 4px 20px rgba(98,181,23,0.12);
-  padding: 24px 32px;
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 24px;
+  background: #fff;
+  border: 2px solid #c8dfa0;
+  border-radius: 16px;
+  padding: 28px 32px;
+  box-shadow: 0 4px 20px rgba(98,181,23,0.1);
 }
 .linkedin-icon {
   flex-shrink: 0;
-  width: 48px;
-  height: 48px;
+  width: 52px;
+  height: 52px;
   background: #0a66c2;
-  border-radius: 10px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.linkedin-icon svg { width: 26px; height: 26px; fill: #fff; }
+.linkedin-icon svg { width: 28px; height: 28px; fill: #fff; }
 .linkedin-body { flex: 1; }
 .linkedin-body strong {
   display: block;
   font-size: 15px;
   font-weight: 800;
   color: #1a1a1a;
-  margin-bottom: 3px;
+  margin-bottom: 4px;
 }
 .linkedin-body p {
   font-size: 13px;
   color: #666;
-  line-height: 1.4;
+  line-height: 1.5;
 }
 .btn-linkedin {
   flex-shrink: 0;
-  padding: 10px 18px;
+  padding: 11px 20px;
   background: #0a66c2;
   color: #fff;
   font-family: inherit;
@@ -291,6 +277,19 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
 }
 .btn-linkedin:hover { background: #084e96; transform: scale(1.02); }
 
+/* ===== SCROLL REVEAL ===== */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.65s cubic-bezier(0.65,0,0.35,1),
+              transform 0.65s cubic-bezier(0.65,0,0.35,1);
+}
+[data-reveal].is-visible { opacity: 1; transform: none; }
+[data-delay="1"] { transition-delay: 0.12s; }
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal], [data-reveal].is-visible { opacity: 1 !important; transform: none !important; transition: none !important; }
+}
+
 /* ===== FOOTER ===== */
 footer {
   background: #2a2a2a;
@@ -302,11 +301,11 @@ footer {
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 600px) {
-  .hero h1 { font-size: 26px; }
-  .card { padding: 20px 20px; }
+  .contact-section { padding: 48px 20px; }
   .linkedin-card {
     flex-direction: column;
     text-align: center;
+    padding: 24px 20px;
   }
   .linkedin-body { text-align: center; }
 }
@@ -346,16 +345,16 @@ footer {
   </nav>
 </header>
 
+<!-- HERO -->
 <section class="hero">
   <h1>Get in <em>Touch</em></h1>
   <p>Have a question about a game, interested in bulk orders for classrooms, or just want to say hi? We'd love to hear from you.</p>
 </section>
 
-<main class="page-content">
-
-  <!-- Contact Form -->
-  <div class="card" data-reveal>
-    <div class="card-label">Send a Message</div>
+<!-- CONTACT FORM -->
+<section class="contact-section bg-white">
+  <div class="contact-container">
+    <div class="section-label" data-reveal>Send a Message</div>
     <iframe
       class="google-form-frame"
       src="https://docs.google.com/forms/d/e/1FAIpQLScF9MjYCpptnUHu1kGyU6_3fSaMOZbwZU0FbSZ4r1ssLWP37Q/viewform?embedded=true"
@@ -364,27 +363,29 @@ footer {
       Loading…
     </iframe>
   </div>
+</section>
 
-  <!-- LinkedIn -->
-  <div class="linkedin-card" data-reveal data-delay="1">
-    <div class="linkedin-icon">
-      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-      </svg>
+<!-- LINKEDIN -->
+<section class="contact-section bg-sage">
+  <div class="contact-container">
+    <div class="linkedin-card" data-reveal>
+      <div class="linkedin-icon">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+        </svg>
+      </div>
+      <div class="linkedin-body">
+        <strong>Michael Novack — Founder</strong>
+        <p>Follow along for game updates, launch announcements, and behind-the-scenes content.</p>
+      </div>
+      <a class="btn-linkedin" href="https://www.linkedin.com/in/michael-novack/" target="_blank" rel="noopener">Connect on LinkedIn</a>
     </div>
-    <div class="linkedin-body">
-      <strong>Michael Novack — Founder</strong>
-      <p>Follow along for game updates, launch announcements, and behind-the-scenes content.</p>
-    </div>
-    <a class="btn-linkedin" href="https://www.linkedin.com/in/michael-novack/" target="_blank" rel="noopener">Connect on LinkedIn</a>
   </div>
-
-</main>
+</section>
 
 <footer>
-  <p>© 2025 Tech Games. All rights reserved.</p>
+  <p>© 2025 Tech Board Games. All rights reserved.</p>
 </footer>
-
 
 <script>
 // Scroll reveal
@@ -404,7 +405,7 @@ footer {
   }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
   els.forEach(function(el) { io.observe(el); });
 })();
-// Games dropdown click toggle
+// Nav dropdown toggle
 (function() {
   var dropdowns = document.querySelectorAll('.nav-dropdown');
   dropdowns.forEach(function(dd) {
