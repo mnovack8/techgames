@@ -233,6 +233,143 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
   to   { transform: rotate(360deg); }
 }
 
+/* ===== MYTH EXPLAINERS ===== */
+.myth-explainers {
+  background: #f4fae8;
+  border-bottom: 1px solid #dde8c8;
+  padding: 56px 24px;
+}
+
+.myth-explainers-inner {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.myth-explainers-label {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #62b517;
+  border-left: 4px solid #d1db24;
+  padding-left: 10px;
+  margin-bottom: 28px;
+}
+
+.myth-explainer-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.myth-explainer-card {
+  border-radius: 14px;
+  border: 1.5px solid #a8c96a;
+  background: #f4fae8;
+  padding: 22px 22px 20px;
+}
+
+.myth-explainer-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.myth-x {
+  font-size: 11px;
+  font-weight: 900;
+  color: #62b517;
+  background: rgba(98,181,23,0.12);
+  border-radius: 4px;
+  padding: 2px 6px;
+  flex-shrink: 0;
+}
+
+.myth-explainer-title {
+  font-size: 13px;
+  font-weight: 900;
+  color: #4a8c11;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.myth-explainer-card p {
+  font-size: 13px;
+  color: #555;
+  line-height: 1.7;
+}
+
+.myth-intro-note {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.7;
+  margin-bottom: 20px;
+  font-style: italic;
+}
+
+.myth-nuance-note {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.75;
+  padding: 20px 0 0;
+  border-top: 1px solid #d1e8b0;
+}
+
+.myth-nuance-note strong {
+  color: #4a8c11;
+  font-weight: 900;
+}
+
+@media (max-width: 680px) {
+  .myth-explainer-grid { grid-template-columns: 1fr; }
+}
+
+/* ===== CONCEPTS SUBLABEL ===== */
+.concepts-sublabel {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #888;
+  margin: 28px 0 14px;
+}
+
+/* ===== FEATURES INNER (inside combined section) ===== */
+.features-inner {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  border: 1.5px solid #a8c96a;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #f8faf2;
+}
+
+.features-inner .feature {
+  border-right: 1px solid #dde8c8;
+  border-bottom: none;
+}
+
+.features-inner .feature:last-child {
+  border-right: none;
+}
+
+/* ===== FEATURES LABEL ===== */
+.features-label {
+  background: #fff;
+  border-bottom: 1px solid #dde8c8;
+  border-top: 1px solid #dde8c8;
+  text-align: center;
+  padding: 18px 24px 0;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #62b517;
+}
+
 /* ===== FEATURES STRIP ===== */
 .features {
   display: flex;
@@ -446,6 +583,264 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
   display: block;
 }
 
+/* ===== WHY IT MATTERS SECTION ===== */
+.why-section {
+  background-color: #fff;
+  background-image:
+    radial-gradient(circle, rgba(98,181,23,0.1) 1px, transparent 1px),
+    radial-gradient(circle, rgba(209,219,36,0.06) 1px, transparent 1px);
+  background-size: 40px 40px, 20px 20px;
+  background-position: 0 0, 10px 10px;
+  border-bottom: 1px solid #dde8c8;
+  padding: 64px 24px;
+}
+
+.why-inner {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.why-badge {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #62b517;
+  border-left: 4px solid #d1db24;
+  padding-left: 10px;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.why-section h2 {
+  font-size: clamp(22px, 3.5vw, 32px);
+  font-weight: 900;
+  color: #2a2a2a;
+  line-height: 1.2;
+  margin-bottom: 14px;
+}
+
+.why-section h2 em {
+  font-style: normal;
+  color: #62b517;
+}
+
+.why-intro {
+  font-size: 15px;
+  color: #555;
+  line-height: 1.72;
+  margin-bottom: 40px;
+}
+
+.matters-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 52px;
+}
+
+.matters-card {
+  border-radius: 14px;
+  border: 2px solid #a8c96a;
+  background: #f8faf2;
+  padding: 22px 20px;
+  box-shadow: 0 2px 10px rgba(98,181,23,0.09);
+}
+
+.matters-card-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: #e8f5d8;
+  border: 1px solid #a8c96a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+}
+.matters-card-icon svg { width: 22px; height: 22px; }
+
+.matters-card h3 {
+  font-size: 14px;
+  font-weight: 900;
+  color: #2a2a2a;
+  margin-bottom: 8px;
+}
+
+.matters-card p {
+  font-size: 13px;
+  color: #555;
+  line-height: 1.65;
+}
+
+/* ===== COMMON MISCONCEPTIONS SECTION ===== */
+.misconceptions-section {
+  background: #111;
+  padding: 64px 24px;
+}
+
+.misconceptions-inner {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* ===== HONEST SECTION (now a full section, styles kept for child elements) ===== */
+
+.honest-header {
+  text-align: left;
+  margin-bottom: 40px;
+  position: relative;
+}
+
+.honest-eyebrow {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #fc8181;
+  border-left: 4px solid #e53e3e;
+  padding-left: 10px;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.misconceptions-inner h3 {
+  font-size: clamp(20px, 3vw, 28px);
+  font-weight: 900;
+  color: #fff;
+  margin-bottom: 14px;
+  line-height: 1.25;
+}
+
+.honest-intro {
+  font-size: 15px;
+  color: rgba(255,255,255,0.58);
+  line-height: 1.72;
+  margin: 0;
+}
+
+.misconception-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 28px;
+  position: relative;
+}
+
+.misconception-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(229,62,62,0.25);
+  border-left: 4px solid #e53e3e;
+  border-radius: 0 12px 12px 0;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.misconception-x {
+  font-size: 13px;
+  font-weight: 900;
+  color: #e53e3e;
+  margin-bottom: 2px;
+}
+
+.misconception-title {
+  font-size: 12px;
+  font-weight: 900;
+  color: #fc8181;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.misconception-quote {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.65);
+  font-style: italic;
+  line-height: 1.55;
+}
+
+.misconception-cta {
+  background: rgba(229,62,62,0.1);
+  border: 1px solid rgba(229,62,62,0.3);
+  border-radius: 12px;
+  padding: 18px 22px;
+  font-size: 15px;
+  font-weight: 800;
+  color: #fc8181;
+  line-height: 1.55;
+  text-align: center;
+  margin-bottom: 40px;
+  position: relative;
+}
+
+.misconception-cta span {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.5);
+  margin-top: 6px;
+}
+
+.feynman-quote {
+  border-top: 1px solid rgba(209,219,36,0.2);
+  padding-top: 36px;
+  text-align: center;
+  position: relative;
+}
+
+.quote-mark {
+  font-size: 80px;
+  line-height: 0.8;
+  color: #d1db24;
+  font-family: Georgia, serif;
+  display: block;
+  margin-bottom: 16px;
+  opacity: 0.7;
+}
+
+.quote-body blockquote {
+  font-size: clamp(17px, 2.5vw, 22px);
+  font-weight: 700;
+  color: #fff;
+  font-style: italic;
+  line-height: 1.5;
+  margin-bottom: 18px;
+  max-width: 680px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.quote-body cite {
+  font-size: 12px;
+  font-weight: 800;
+  color: #a8c96a;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  font-style: normal;
+}
+
+.honest-closing {
+  font-size: 14px;
+  color: rgba(255,255,255,0.5);
+  line-height: 1.75;
+  text-align: center;
+  margin-top: 28px !important;
+  max-width: 620px;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+@media (max-width: 700px) {
+  .matters-grid { grid-template-columns: 1fr 1fr; }
+  .misconceptions-section { padding: 40px 16px; }
+  .misconception-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 480px) {
+  .matters-grid { grid-template-columns: 1fr; }
+}
+
 /* ===== LEARNING SECTION (dark bg) ===== */
 .learning-bg {
   background: #1a3a00 url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg stroke='%2362b517' stroke-opacity='0.11' stroke-width='1.5' fill='none' stroke-linecap='round'%3E%3Cpolyline points='0,30 40,30 40,75'/%3E%3Ccircle cx='40' cy='30' r='3'/%3E%3Ccircle cx='40' cy='75' r='3'/%3E%3Cline x1='40' y1='75' x2='100' y2='75'/%3E%3Cline x1='70' y1='0' x2='70' y2='30'/%3E%3Ccircle cx='70' cy='30' r='2.5'/%3E%3Cline x1='70' y1='30' x2='100' y2='30'/%3E%3Cline x1='0' y1='55' x2='15' y2='55'/%3E%3Ccircle cx='15' cy='55' r='2.5'/%3E%3Cline x1='15' y1='55' x2='15' y2='100'/%3E%3C/g%3E%3C/svg%3E") repeat;
@@ -548,7 +943,7 @@ footer a:hover { text-decoration: underline; }
 <div class="hero">
   <div class="hero-badge">Quantum Computing · Coming Soon</div>
   <h1><span class="qubit-name">Qubit</span></h1>
-  <p class="hero-subtitle">A board game that makes entanglement, superposition, decoherence, and quantum circuits tangible — learned in 5 minutes, played in under 30.</p>
+  <p class="hero-subtitle">The board game that finally makes quantum computing click — tackle problems classical computers can never solve, no physics degree required.</p>
 
   <!-- Bloch sphere SVG -->
   <div class="hero-visual">
@@ -583,34 +978,165 @@ footer a:hover { text-decoration: underline; }
   </div>
 </div>
 
-<!-- FEATURES STRIP -->
-<div class="features">
-  <div class="feature">
-    <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3" stroke="#d1db24"/><circle cx="12" cy="12" r="1" fill="#d1db24" stroke="none"/></svg></div>
-    <h3>Superposition &amp; Measurement</h3>
-    <p>Both states at once with distinct probabilities — until observed</p>
+<!-- WHY IT MATTERS -->
+<section class="why-section">
+  <div class="why-inner">
+
+    <div data-reveal>
+      <div class="why-badge">Why It Matters</div>
+      <h2>Not just faster. A <em>fundamentally different</em> kind of computing.</h2>
+      <p class="why-intro">Quantum computers are not classical computers with a bigger engine. They operate on completely different physics and unlock a new category of problems that are simply out of reach no matter how many chips you throw at them. Some of the most important challenges facing humanity — designing life-saving drugs, securing communications, solving massive optimization puzzles — are problems where classical computing hits a hard wall. Quantum computing is what's on the other side of that wall.</p>
+    </div>
+
+    <div class="matters-grid">
+      <div class="matters-card" data-reveal data-delay="1">
+        <div class="matters-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M9 3H5a2 2 0 0 0-2 2v4"/><path d="M9 21H5a2 2 0 0 1-2-2v-4"/><path d="M15 3h4a2 2 0 0 1 2 2v4"/><path d="M15 21h4a2 2 0 0 0 2-2v-4"/><circle cx="12" cy="12" r="3" stroke="#d1db24"/></svg>
+        </div>
+        <h3>Drug &amp; Materials Discovery</h3>
+        <p>Classical computers can only approximate how molecules behave. Quantum computers can simulate them directly — potentially cutting drug development from decades to years.</p>
+      </div>
+      <div class="matters-card" data-reveal data-delay="2">
+        <div class="matters-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M3 3h7v7H3z" stroke="#d1db24"/><path d="M14 3h7v7h-7z"/><path d="M3 14h7v7H3z"/><path d="M14 14h7v7h-7z" stroke="#d1db24"/></svg>
+        </div>
+        <h3>Optimization at Scale</h3>
+        <p>Supply chains, financial portfolios, power grids — classical computers find good enough answers. Certain quantum algorithms are built to find the actual optimal one.</p>
+      </div>
+      <div class="matters-card" data-reveal data-delay="3">
+        <div class="matters-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4" stroke="#d1db24"/><circle cx="12" cy="16" r="1" fill="#d1db24" stroke="none"/></svg>
+        </div>
+        <h3>Cryptography &amp; Security</h3>
+        <p>Shor's algorithm can break the encryption protecting most of the internet. Quantum key distribution offers the opposite — communication that is physically impossible to intercept undetected.</p>
+      </div>
+      <div class="matters-card" data-reveal data-delay="4">
+        <div class="matters-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 2a10 10 0 0 1 0 20A10 10 0 0 1 12 2z" stroke="#d1db24"/><path d="M2 12h4M18 12h4M12 2v4M12 18v4"/><path d="M6 6l2.5 2.5M15.5 15.5 18 18M18 6l-2.5 2.5M8.5 15.5 6 18"/></svg>
+        </div>
+        <h3>Climate &amp; Energy</h3>
+        <p>Better batteries, solar cells, and fertilizers all require modeling chemistry at the quantum level — exactly what quantum computers are built to do.</p>
+      </div>
+    </div>
+
   </div>
-  <div class="feature">
-    <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2.5" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><path d="M2 12 C4 6, 6 6, 8 12 C10 18, 12 18, 14 12 C16 6, 18 6, 20 12 C21 15, 22 15, 23 12" stroke="#d1db24"/><line x1="2" y1="12" x2="23" y2="12" stroke="#62b517" stroke-opacity="0.3" stroke-width="1"/></svg></div>
-    <h3>Phase &amp; Amplitude</h3>
-    <p>Waves that interfere — amplifying right answers, cancelling wrong ones</p>
+</section>
+
+<!-- COMMON MISCONCEPTIONS -->
+<section class="misconceptions-section">
+  <div class="misconceptions-inner">
+
+    <div class="honest-header" data-reveal>
+      <div class="honest-eyebrow">Common Misconceptions</div>
+      <h3>Why most explanations leave you more confused than when you started</h3>
+      <p class="honest-intro">The concepts resist everyday analogy. The field is full of well-meaning explainers that trade accuracy for accessibility — leaving people with confident-sounding mental models that are fundamentally wrong.</p>
+    </div>
+
+    <div class="misconception-grid" data-reveal>
+      <div class="misconception-card">
+        <div class="misconception-x">✕</div>
+        <div class="misconception-title">The Parallelism Myth</div>
+        <div class="misconception-quote">"Quantum computers try all possible answers at the same time, in parallel."</div>
+      </div>
+      <div class="misconception-card">
+        <div class="misconception-x">✕</div>
+        <div class="misconception-title">The Coin Flip Shortcut</div>
+        <div class="misconception-quote">"A qubit is just 0 and 1 at the same time."</div>
+      </div>
+      <div class="misconception-card">
+        <div class="misconception-x">✕</div>
+        <div class="misconception-title">Just a Faster Replacement</div>
+        <div class="misconception-quote">"Quantum computers are faster classical computers that will eventually replace them entirely."</div>
+      </div>
+    </div>
+
+    <div class="misconception-cta" data-reveal>
+      Do any of these sound like your understanding of quantum computing?
+      <span>You're not alone — but you have some unlearning to do. These ideas are everywhere, and they feel right until you look closer.</span>
+    </div>
+
+    <div class="feynman-quote" data-reveal>
+      <div class="quote-body">
+        <div class="quote-mark">&ldquo;</div>
+        <blockquote>If you think you understand quantum mechanics, you don't understand quantum mechanics.</blockquote>
+        <cite>Richard Feynman — Nobel Prize-winning physicist and one of the founding voices of quantum computing</cite>
+      </div>
+    </div>
+
+    <p class="honest-closing" data-reveal>Qubit doesn't pretend the subject is simple. It gives you a feel for how these ideas actually fit together — the kind of intuition that makes further learning click instead of confuse.</p>
+
   </div>
-  <div class="feature">
-    <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><polygon points="13,2 4,13 11,13 11,22 20,11 13,11" fill="#62b517" stroke="#2a5a06" stroke-width="1.5" stroke-linejoin="round"/><polygon points="13,2 4,13 11,13 11,22 20,11 13,11" fill="#d1db24" stroke="none" opacity="0.25"/></svg></div>
-    <h3>Quantum Circuits</h3>
-    <p>Gates that steer interference to make useful computation possible</p>
+</section>
+
+<!-- MYTH EXPLAINERS -->
+<section class="myth-explainers">
+  <div class="myth-explainers-inner">
+    <div class="myth-explainers-label">What's actually true</div>
+    <p class="myth-intro-note">If that didn't fully click — that's completely normal. These nuances only start to make sense once you have a solid grasp of the underlying concepts.</p>
+    <div class="myth-explainer-grid">
+
+      <div class="myth-explainer-card" data-reveal>
+        <div class="myth-explainer-top">
+          <span class="myth-x">✓</span>
+          <span class="myth-explainer-title">The Parallelism Myth</span>
+        </div>
+        <p>A quantum computer doesn't check every answer simultaneously. It sets up interference — a mathematical pattern where wrong answers cancel each other out and the right answer grows stronger. You still get one result when you measure; the art is engineering the math so that result is almost certainly correct.</p>
+      </div>
+
+      <div class="myth-explainer-card" data-reveal data-delay="1">
+        <div class="myth-explainer-top">
+          <span class="myth-x">✓</span>
+          <span class="myth-explainer-title">The Coin Flip Shortcut</span>
+        </div>
+        <p>A qubit isn't toggling between two values — it exists as a wave with both magnitude and direction, called amplitude and phase. That wave-like nature is exactly what makes interference possible. Strip it from the explanation and the rest of quantum computing stops making sense.</p>
+      </div>
+
+      <div class="myth-explainer-card" data-reveal data-delay="2">
+        <div class="myth-explainer-top">
+          <span class="myth-x">✓</span>
+          <span class="myth-explainer-title">Just a Faster Replacement</span>
+        </div>
+        <p>Quantum computers are actually slower and more expensive to operate for most tasks. They only offer an advantage for specific problems where quantum algorithms apply. They also require temperatures near absolute zero — they will never run your operating system. Classical and quantum computing will coexist, each handling the problems it was built for.</p>
+      </div>
+
+
+    </div>
+
+    <div class="myth-nuance-note" data-reveal>
+      <strong>So how do I actually understand this?</strong> The five foundational concepts below are the starting point. They give you the framework to see past the hype — to judge for yourself what quantum computing can genuinely do, where it falls short, and why so much of what's written about it misses the mark.
+    </div>
+
+    <div class="concepts-sublabel">Five Foundational Concepts of Quantum Computing</div>
+    <div class="features-inner">
+      <div class="feature">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3" stroke="#d1db24"/><circle cx="12" cy="12" r="1" fill="#d1db24" stroke="none"/></svg></div>
+        <h3>Superposition &amp; Measurement</h3>
+        <p>Both states at once with distinct probabilities — until observed</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2.5" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><path d="M2 12 C4 6, 6 6, 8 12 C10 18, 12 18, 14 12 C16 6, 18 6, 20 12 C21 15, 22 15, 23 12" stroke="#d1db24"/><line x1="2" y1="12" x2="23" y2="12" stroke="#62b517" stroke-opacity="0.3" stroke-width="1"/></svg></div>
+        <h3>Phase &amp; Amplitude</h3>
+        <p>Waves that interfere — amplifying right answers, cancelling wrong ones</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><polygon points="13,2 4,13 11,13 11,22 20,11 13,11" fill="#62b517" stroke="#2a5a06" stroke-width="1.5" stroke-linejoin="round"/><polygon points="13,2 4,13 11,13 11,22 20,11 13,11" fill="#d1db24" stroke="none" opacity="0.25"/></svg></div>
+        <h3>Quantum Circuits</h3>
+        <p>Gates that steer interference to make useful computation possible</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><line x1="12" y1="9" x2="12" y2="20"/><path d="M8 13a6 6 0 0 1 8 0" stroke="#d1db24"/><path d="M5 10a10 10 0 0 1 14 0" stroke="#62b517" stroke-opacity="0.5"/><circle cx="12" cy="8" r="1.5" fill="#d1db24" stroke="none"/></svg></div>
+        <h3>Noise &amp; Decoherence</h3>
+        <p>Why any environmental interaction destroys everything built so far</p>
+      </div>
+      <div class="feature">
+        <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" stroke="#d1db24"/></svg></div>
+        <h3>Entanglement</h3>
+        <p>Linked qubits that share state — enabling interference across exponentially more combinations</p>
+      </div>
+    </div>
+
   </div>
-  <div class="feature">
-    <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><line x1="12" y1="9" x2="12" y2="20"/><path d="M8 13a6 6 0 0 1 8 0" stroke="#d1db24"/><path d="M5 10a10 10 0 0 1 14 0" stroke="#62b517" stroke-opacity="0.5"/><circle cx="12" cy="8" r="1.5" fill="#d1db24" stroke="none"/></svg></div>
-    <h3>Noise &amp; Decoherence</h3>
-    <p>Why any environmental interaction destroys everything built so far</p>
-  </div>
-  <div class="feature">
-    <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" stroke="#d1db24"/></svg></div>
-    <h3>Entanglement</h3>
-    <p>Linked qubits processed together — the source of quantum parallelism</p>
-  </div>
-</div>
+</section>
 
 <!-- MAIN: INFO + FORM -->
 <section class="learning-bg">
