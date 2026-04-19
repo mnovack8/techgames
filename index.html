@@ -421,7 +421,7 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
 /* ===== APPROACH PILLARS ===== */
 .approach-pillars {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 20px;
   margin-top: 36px;
 }
@@ -995,7 +995,7 @@ footer {
 /* ===== RESPONSIVE ===== */
 @media (max-width: 900px) {
   .games-grid { grid-template-columns: repeat(2, 1fr); }
-  .approach-pillars { grid-template-columns: 1fr; }
+  .approach-pillars { grid-template-columns: repeat(2, 1fr); }
   .topic-links { grid-template-columns: 1fr; }
   .who-grid { grid-template-columns: 1fr; }
   .who-item--featured { flex-direction: column; gap: 16px; padding: 24px 20px; }
@@ -1232,6 +1232,25 @@ footer {
           <strong>Fun Is the Motivator</strong>
         </div>
         <p>The moment someone disengages, learning stops. Fun is what prevents that — not a reward for paying attention, but the reason they do.</p>
+      </div>
+      <div class="approach-pillar" data-reveal data-delay="4">
+        <div class="pillar-title-row">
+          <svg class="pillar-icon-svg" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Left person -->
+            <circle cx="13" cy="16" r="6" fill="#a8c96a"/>
+            <path d="M2,38 C2,24 24,24 24,38 Z" fill="#a8c96a"/>
+            <!-- Right person -->
+            <circle cx="35" cy="16" r="6" fill="#62b517"/>
+            <path d="M24,38 C24,24 46,24 46,38 Z" fill="#62b517"/>
+            <!-- Connection spark in the middle -->
+            <circle cx="24" cy="24" r="4" fill="#d1db24"/>
+            <line x1="24" y1="18" x2="24" y2="14" stroke="#d1db24" stroke-width="2" stroke-linecap="round"/>
+            <line x1="28" y1="20" x2="31" y2="17" stroke="#d1db24" stroke-width="2" stroke-linecap="round"/>
+            <line x1="20" y1="20" x2="17" y2="17" stroke="#d1db24" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <strong>Culture of Empowerment</strong>
+        </div>
+        <p>One session builds a shared language. Over time it builds a culture — where non-technical people stop deferring and start contributing.</p>
       </div>
     </div>
   </div>
