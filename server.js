@@ -3356,6 +3356,7 @@ const server = http.createServer((req, res) => {
   else if (pathname === '/about' || pathname === '/about.html') pathname = '/about.html';
   else if (pathname === '/corporate-training' || pathname === '/corporate-training.html') pathname = '/corporate-training.html';
   else if (pathname === '/specialized-training' || pathname === '/specialized-training.html') pathname = '/specialized-training.html';
+  else if (pathname === '/threat-vector' || pathname === '/threat-vector.html') pathname = '/threat-vector.html';
   else if (pathname === '/classrooms' || pathname === '/classrooms.html') pathname = '/classrooms.html';
   else if (pathname === '/curious-minds' || pathname === '/curious-minds.html') pathname = '/curious-minds.html';
   else if (pathname === '/admin' || pathname === '/admin.html') pathname = '/admin.html';

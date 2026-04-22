@@ -1,0 +1,1996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Virtual War Room — AI Security Adventure | Tech Board Games</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  min-height: 100%;
+  font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif;
+  background: #0d1f00;
+  color: #f0f7e6;
+  overflow-y: auto;
+}
+
+/* ===== HEADER ===== */
+header {
+  background: rgba(10,26,0,0.95);
+  border-bottom: 2px solid rgba(209,219,36,0.3);
+  padding: 0 32px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  backdrop-filter: blur(8px);
+}
+.header-logo {
+  display: flex; align-items: center; gap: 10px; text-decoration: none;
+}
+.header-logo img { width: 30px; height: 30px; object-fit: contain; }
+.logo-text { font-size: 14px; font-weight: 800; color: #a8c96a; }
+.logo-sub { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; display: block; line-height: 1; color: rgba(209,219,36,0.6); }
+.header-back { font-size: 13px; font-weight: 700; color: rgba(209,219,36,0.7); text-decoration: none; padding: 6px 14px; border: 1px solid rgba(209,219,36,0.25); border-radius: 7px; transition: all 0.15s; }
+.header-back:hover { color: #d1db24; border-color: rgba(209,219,36,0.6); background: rgba(209,219,36,0.08); }
+
+/* ===== GAME WRAPPER ===== */
+#game {
+  min-height: calc(100vh - 60px);
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== STATUS BAR ===== */
+#status-bar {
+  background: rgba(0,0,0,0.5);
+  border-bottom: 1px solid rgba(98,181,23,0.25);
+  padding: 10px 32px;
+  display: none;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+#status-bar.visible { display: flex; }
+.sb-section { display: flex; flex-direction: column; gap: 3px; }
+.sb-label {
+  font-size: 9px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px;
+  color: rgba(240,247,230,0.3);
+}
+.sb-divider {
+  width: 1px; height: 36px; background: rgba(98,181,23,0.25); flex-shrink: 0;
+}
+.status-role {
+  font-size: 12px; font-weight: 800; color: #d1db24; letter-spacing: 0.3px;
+}
+.status-items {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap; min-height: 20px;
+}
+.status-item {
+  font-size: 11px; font-weight: 700;
+  background: rgba(209,219,36,0.12); border: 1px solid rgba(209,219,36,0.35);
+  border-radius: 20px; padding: 4px 12px; color: #d1db24;
+  animation: item-pop 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+@keyframes item-pop { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.status-phase {
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px;
+  color: rgba(240,247,230,0.3); margin-left: auto;
+}
+
+/* ===== MOOD BAR ===== */
+#mood-bar {
+  background: rgba(0,0,0,0.5);
+  border-bottom: 1px solid rgba(98,181,23,0.18);
+  display: none; flex-direction: column;
+}
+#mood-bar.visible { display: flex; }
+#mood-decision-row {
+  display: none; align-items: center; justify-content: center;
+  gap: 10px; padding: 5px 24px;
+  background: rgba(0,0,0,0.35);
+  border-bottom: 1px solid rgba(98,181,23,0.1);
+  font-size: 11px; flex-wrap: wrap;
+}
+#mood-decision-row.active { display: flex; }
+#mood-decision-text { color: rgba(240,247,230,0.45); font-weight: 700; white-space: nowrap; }
+.mood-d-pill {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 10px; font-weight: 900; padding: 2px 10px;
+  border-radius: 20px; letter-spacing: 0.3px;
+}
+.mood-d-pill.pos { background: rgba(98,181,23,0.2); border: 1px solid rgba(98,181,23,0.4); color: #8ed95a; }
+.mood-d-pill.neg { background: rgba(220,50,30,0.18); border: 1px solid rgba(220,50,30,0.35); color: #e07060; }
+.mood-d-pill.neu { background: rgba(200,200,200,0.08); border: 1px solid rgba(240,247,230,0.15); color: rgba(240,247,230,0.4); }
+#mood-faces-row { display: flex; align-items: stretch; }
+.mood-cell {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 1px; padding: 7px 6px 8px; flex: 1;
+  border-right: 1px solid rgba(98,181,23,0.1);
+  transition: background 0.45s;
+}
+.mood-cell:last-child { border-right: none; }
+.mood-cell-icon { font-size: 11px; opacity: 0.45; line-height: 1; }
+.mood-face { font-size: 19px; line-height: 1; transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1); }
+.mood-level { font-size: 8px; font-weight: 900; color: rgba(240,247,230,0.25); }
+.mood-delta { font-size: 9px; font-weight: 900; min-height: 13px; line-height: 1.4; }
+.mood-delta.up   { color: #62b517; }
+.mood-delta.neu  { color: rgba(240,247,230,0.38); }
+.mood-delta.dn   { color: #e05050; }
+.mood-role-label { font-size: 7px; font-weight: 900; text-transform: uppercase; letter-spacing: 1.3px; color: rgba(240,247,230,0.22); }
+/* Level-based cell tints */
+.mood-cell.lv1 { background: rgba(220,50,30,0.16); }
+.mood-cell.lv2 { background: rgba(220,50,30,0.07); }
+.mood-cell.lv3 { background: rgba(200,200,200,0.03); }
+.mood-cell.lv4 { background: rgba(98,181,23,0.07); }
+.mood-cell.lv5 { background: rgba(98,181,23,0.16); }
+/* Level-based label tints */
+.mood-cell.lv1 .mood-role-label,.mood-cell.lv2 .mood-role-label { color: rgba(220,80,60,0.5); }
+.mood-cell.lv3 .mood-role-label { color: rgba(240,247,230,0.28); }
+.mood-cell.lv4 .mood-role-label,.mood-cell.lv5 .mood-role-label { color: rgba(98,181,23,0.5); }
+/* Skill pill history per stakeholder */
+.mood-history {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 3px; margin-top: 6px; width: 100%;
+}
+.mood-hist-pill {
+  font-size: 7px; font-weight: 900; letter-spacing: 0.2px;
+  padding: 2px 6px; border-radius: 8px; text-align: center;
+  line-height: 1.5; width: 100%; box-sizing: border-box;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  animation: pill-in 0.3s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+@keyframes pill-in { from { transform: scale(0.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.mood-hist-pill.pos { background: rgba(98,181,23,0.18); border: 1px solid rgba(98,181,23,0.32); color: #8ed95a; }
+.mood-hist-pill.neg { background: rgba(220,50,30,0.16); border: 1px solid rgba(220,50,30,0.3); color: #e07060; }
+.mood-hist-pill.gry { background: rgba(200,200,200,0.07); border: 1px solid rgba(240,247,230,0.12); color: rgba(240,247,230,0.35); }
+
+/* ===== SCREEN BASE ===== */
+.screen {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 48px 24px 80px;
+  animation: screen-in 0.4s ease both;
+}
+@keyframes screen-in { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
+
+.screen-inner {
+  width: 100%;
+  max-width: 780px;
+}
+
+/* ===== EYEBROW / LABEL ===== */
+.eyebrow {
+  font-size: 10px; font-weight: 800; text-transform: uppercase;
+  letter-spacing: 2.5px; color: #d1db24;
+  border-left: 3px solid rgba(209,219,36,0.5); padding-left: 10px;
+  margin-bottom: 20px;
+}
+
+/* ===== COVER SCREEN ===== */
+.cover-wrap {
+  min-height: calc(100vh - 60px);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: 48px 24px;
+  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg stroke='%2362b517' stroke-opacity='0.08' stroke-width='1.5' fill='none' stroke-linecap='round'%3E%3Cpolyline points='0,30 40,30 40,75'/%3E%3Ccircle cx='40' cy='30' r='3'/%3E%3Ccircle cx='40' cy='75' r='3'/%3E%3Cline x1='40' y1='75' x2='100' y2='75'/%3E%3Cline x1='70' y1='0' x2='70' y2='30'/%3E%3Ccircle cx='70' cy='30' r='2.5'/%3E%3Cline x1='70' y1='30' x2='100' y2='30'/%3E%3Cline x1='0' y1='55' x2='15' y2='55'/%3E%3Ccircle cx='15' cy='55' r='2.5'/%3E%3Cline x1='15' y1='55' x2='15' y2='100'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 100px 100px;
+}
+.cover-kicker {
+  font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 3px;
+  color: rgba(209,219,36,0.6); margin-bottom: 20px;
+}
+.cover-title {
+  font-size: clamp(38px,8vw,72px); font-weight: 900; color: #f0f7e6;
+  line-height: 1.05; margin-bottom: 10px;
+}
+.cover-title span { color: #d1db24; }
+.cover-subtitle {
+  font-size: clamp(14px,2vw,18px); color: rgba(240,247,230,0.6);
+  margin-bottom: 40px; line-height: 1.5; max-width: 520px;
+}
+.cover-meta {
+  font-size: 12px; color: rgba(240,247,230,0.35); margin-top: 24px;
+  line-height: 1.8;
+}
+.debug-toggle {
+  display: inline-flex; align-items: center; gap: 7px; margin-top: 14px;
+  font-size: 11px; font-weight: 700; color: rgba(209,219,36,0.45);
+  cursor: pointer; user-select: none; letter-spacing: 0.5px;
+}
+.debug-toggle input[type=checkbox] {
+  width: 14px; height: 14px; accent-color: #d1db24; cursor: pointer;
+}
+.debug-toggle:hover { color: rgba(209,219,36,0.75); }
+
+/* ===== BUTTONS ===== */
+.btn-primary {
+  display: inline-block; padding: 16px 40px;
+  background: #d1db24; color: #1a3a00;
+  font-family: inherit; font-size: 15px; font-weight: 900;
+  border: none; border-radius: 10px; cursor: pointer;
+  text-decoration: none; letter-spacing: 0.3px;
+  transition: all 0.15s; box-shadow: 0 4px 20px rgba(209,219,36,0.3);
+}
+.btn-primary:hover { background: #e0ea2a; transform: translateY(-2px); box-shadow: 0 6px 28px rgba(209,219,36,0.45); }
+.btn-secondary {
+  display: inline-block; padding: 12px 28px;
+  background: rgba(240,247,230,0.08); color: #f0f7e6;
+  font-family: inherit; font-size: 13px; font-weight: 700;
+  border: 1.5px solid rgba(240,247,230,0.2); border-radius: 9px; cursor: pointer;
+  text-decoration: none; transition: all 0.15s;
+}
+.btn-secondary:hover { background: rgba(240,247,230,0.14); border-color: rgba(240,247,230,0.4); }
+
+/* ===== STORY TEXT ===== */
+.story-text {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(98,181,23,0.2);
+  border-radius: 16px;
+  padding: 32px 36px;
+  margin-bottom: 28px;
+}
+.story-text h2 {
+  font-size: clamp(20px,3vw,28px); font-weight: 900; color: #f0f7e6;
+  margin-bottom: 16px; line-height: 1.2;
+}
+.story-text p {
+  font-size: 15px; color: rgba(240,247,230,0.8); line-height: 1.8;
+  margin-bottom: 12px;
+}
+.story-text p:last-child { margin-bottom: 0; }
+.story-text .scene-detail {
+  font-size: 13px; color: rgba(240,247,230,0.5);
+  border-top: 1px solid rgba(98,181,23,0.15);
+  margin-top: 16px; padding-top: 14px; line-height: 1.7;
+  font-style: italic;
+}
+
+/* ===== ROLE CARDS ===== */
+.role-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 16px; margin-top: 28px;
+}
+@media (max-width: 600px) { .role-grid { grid-template-columns: 1fr; } }
+.role-card {
+  background: rgba(255,255,255,0.04);
+  border: 2px solid rgba(98,181,23,0.25);
+  border-radius: 14px; padding: 24px;
+  cursor: pointer; transition: all 0.2s; text-align: left;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.role-card:hover { border-color: #d1db24; background: rgba(209,219,36,0.08); transform: translateY(-3px); }
+.role-icon { font-size: 32px; }
+.role-name { font-size: 16px; font-weight: 900; color: #f0f7e6; }
+.role-desc { font-size: 13px; color: rgba(240,247,230,0.6); line-height: 1.5; }
+.role-power {
+  font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
+  color: #d1db24; border-top: 1px solid rgba(209,219,36,0.2); padding-top: 10px;
+  margin-top: 4px;
+}
+
+/* ===== DECISION CARDS ===== */
+.question-text {
+  font-size: 16px; font-weight: 700; color: #f0f7e6;
+  line-height: 1.65; margin-bottom: 24px;
+}
+.choices { display: flex; flex-direction: column; gap: 12px; }
+.choice-card {
+  background: rgba(255,255,255,0.04);
+  border: 2px solid rgba(98,181,23,0.2);
+  border-radius: 12px; padding: 18px 22px;
+  cursor: pointer; transition: all 0.18s;
+  display: flex; align-items: flex-start; gap: 14px;
+}
+.choice-card:hover { border-color: rgba(209,219,36,0.5); background: rgba(209,219,36,0.06); }
+.choice-letter {
+  width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+  background: rgba(98,181,23,0.2); border: 1.5px solid rgba(98,181,23,0.4);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 900; color: #a8c96a;
+}
+.choice-label { font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(209,219,36,0.65); margin-bottom: 5px; }
+.choice-text { font-size: 14px; color: rgba(240,247,230,0.85); line-height: 1.55; }
+
+/* Impact intro box (replaces full story block on scene screen) */
+.impact-intro-box {
+  background: rgba(255,255,255,0.03); border: 1px solid rgba(98,181,23,0.18);
+  border-radius: 12px; padding: 18px 22px; margin-bottom: 22px;
+}
+.impact-intro-label { font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; color: rgba(209,219,36,0.5); margin-bottom: 8px; }
+.impact-intro-text { font-size: 13px; color: rgba(240,247,230,0.6); line-height: 1.7; margin: 0; font-style: italic; }
+
+/* Feedback after choice */
+.choice-card.correct { border-color: #d1db24; background: rgba(209,219,36,0.1); }
+.choice-card.correct .choice-letter { background: #d1db24; color: #1a3a00; border-color: #d1db24; }
+.choice-card.wrong { border-color: rgba(240,247,230,0.1); opacity: 0.4; }
+.feedback-box {
+  border-radius: 10px; padding: 16px 20px; margin-top: 16px;
+  font-size: 14px; line-height: 1.6; font-weight: 600;
+}
+.feedback-box.good { background: rgba(209,219,36,0.12); border: 1.5px solid rgba(209,219,36,0.4); color: #d1db24; }
+.feedback-box.info { background: rgba(240,247,230,0.05); border: 1.5px solid rgba(240,247,230,0.12); color: rgba(240,247,230,0.65); }
+.feedback-box.bad  { background: rgba(240,247,230,0.05); border: 1.5px solid rgba(240,247,230,0.12); color: rgba(240,247,230,0.65); }
+.item-earned { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: #d1db24; }
+
+/* ===== DFD DIAGRAM ===== */
+.dfd-wrap {
+  background: rgba(0,0,0,0.3); border: 1px solid rgba(98,181,23,0.25);
+  border-radius: 14px; padding: 28px; margin: 24px 0; overflow-x: auto;
+}
+.dfd-wrap svg { display: block; width: 100%; max-width: 700px; margin: 0 auto; }
+
+/* ===== BRANCH EVENTS ===== */
+.branch-event {
+  background: rgba(255,255,255,0.04);
+  border: 1.5px solid rgba(98,181,23,0.25);
+  border-radius: 12px; padding: 22px 26px; margin-bottom: 16px;
+}
+.branch-num {
+  font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px;
+  color: rgba(209,219,36,0.6); margin-bottom: 8px;
+}
+.branch-event h3 { font-size: 15px; font-weight: 800; color: #f0f7e6; margin-bottom: 8px; }
+.branch-event p { font-size: 13px; color: rgba(240,247,230,0.7); line-height: 1.6; }
+.threat-tag {
+  display: inline-block; margin-top: 12px;
+  font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 1.5px;
+  background: rgba(255,60,60,0.15); border: 1px solid rgba(255,100,100,0.3);
+  color: #ff8a8a; padding: 4px 10px; border-radius: 4px;
+}
+
+/* ===== CONTROL CHALLENGES ===== */
+.control-challenge {
+  background: rgba(255,255,255,0.04);
+  border: 1.5px solid rgba(98,181,23,0.2);
+  border-radius: 14px; padding: 28px 32px; margin-bottom: 20px;
+}
+.control-challenge h3 { font-size: 18px; font-weight: 900; color: #f0f7e6; margin-bottom: 14px; }
+.control-challenge p { font-size: 14px; color: rgba(240,247,230,0.75); line-height: 1.7; margin-bottom: 18px; }
+.control-reqs {
+  background: rgba(0,0,0,0.25); border-radius: 8px; padding: 14px 18px;
+  margin-bottom: 20px; font-size: 13px; color: rgba(240,247,230,0.6);
+}
+.control-reqs strong { color: rgba(240,247,230,0.9); display: block; margin-bottom: 6px; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
+.req-item { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
+.req-check { width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; flex-shrink: 0; }
+.req-check.pass { background: rgba(209,219,36,0.25); color: #d1db24; }
+.req-check.fail { background: rgba(240,247,230,0.08); color: rgba(240,247,230,0.3); }
+.control-result {
+  border-radius: 10px; padding: 18px 22px;
+  font-size: 14px; line-height: 1.65; font-weight: 700;
+}
+.control-result.success { background: rgba(98,181,23,0.12); border: 1.5px solid rgba(98,181,23,0.4); color: #a8c96a; }
+.control-result.failure { background: rgba(200,50,50,0.1); border: 1.5px solid rgba(200,50,50,0.3); color: #ff8a8a; }
+.control-tag { font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 1.5px; display: block; margin-bottom: 8px; }
+
+/* ===== ENDINGS ===== */
+.ending-wrap { text-align: center; max-width: 680px; margin: 0 auto; }
+.ending-icon { font-size: 72px; margin-bottom: 24px; }
+.ending-verdict { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 16px; }
+.ending-wrap h2 { font-size: clamp(26px,4vw,40px); font-weight: 900; line-height: 1.15; margin-bottom: 20px; }
+.ending-wrap p { font-size: 15px; color: rgba(240,247,230,0.75); line-height: 1.8; margin-bottom: 14px; }
+.failure-summary {
+  background: rgba(0,0,0,0.3); border: 1px solid rgba(240,247,230,0.1);
+  border-radius: 12px; padding: 20px 24px; margin: 24px 0; text-align: left;
+}
+.failure-summary-title { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(240,247,230,0.4); margin-bottom: 12px; }
+.failure-line { font-size: 13px; color: #ff8a8a; padding: 6px 0; border-bottom: 1px solid rgba(240,247,230,0.06); display: flex; gap: 10px; }
+.failure-line:last-child { border-bottom: none; }
+.success-line { font-size: 13px; color: #a8c96a; padding: 6px 0; border-bottom: 1px solid rgba(240,247,230,0.06); display: flex; gap: 10px; }
+.success-line:last-child { border-bottom: none; }
+
+/* ===== PROGRESS ===== */
+.progress-bar {
+  display: flex; gap: 6px; margin-bottom: 28px;
+}
+.progress-step {
+  height: 3px; flex: 1; border-radius: 2px;
+  background: rgba(240,247,230,0.12);
+  transition: background 0.3s;
+}
+.progress-step.done { background: rgba(209,219,36,0.5); }
+.progress-step.active { background: #d1db24; }
+
+/* ===== CONTINUE BUTTON AREA ===== */
+.continue-area { margin-top: 28px; display: flex; justify-content: center; }
+.action-area { margin-top: 28px; display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+/* ===== IMPACT SELECTION ===== */
+.impact-card {
+  display: flex; align-items: center; gap: 20px;
+  background: rgba(255,255,255,0.04); border: 2px solid rgba(98,181,23,0.25);
+  border-radius: 14px; padding: 22px 24px; cursor: pointer; transition: all 0.2s;
+}
+.impact-card:hover { border-color: #d1db24; background: rgba(209,219,36,0.07); transform: translateX(4px); }
+.impact-num {
+  font-size: 28px; font-weight: 900; color: rgba(209,219,36,0.25);
+  min-width: 36px; line-height: 1; flex-shrink: 0;
+}
+.impact-body { flex: 1; }
+.impact-title { font-size: 15px; font-weight: 900; color: #f0f7e6; margin-bottom: 6px; }
+.impact-desc { font-size: 13px; color: rgba(240,247,230,0.55); line-height: 1.6; }
+.impact-arrow { font-size: 20px; color: rgba(209,219,36,0.4); flex-shrink: 0; transition: all 0.2s; }
+.impact-card:hover .impact-arrow { color: #d1db24; transform: translateX(4px); }
+.impact-tag { font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(209,219,36,0.55); margin-bottom: 5px; }
+.impact-def { font-size: 12px; color: rgba(240,247,230,0.5); line-height: 1.6; margin-top: 5px; margin-bottom: 8px; }
+.impact-scene { font-size: 12px; color: rgba(240,247,230,0.55); line-height: 1.75; font-style: italic; border-left: 2px solid rgba(98,181,23,0.3); padding-left: 10px; margin-top: 2px; }
+
+/* ===== PATH SELECTION ===== */
+.path-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-top: 8px; }
+@media (max-width:640px) { .path-grid { grid-template-columns: 1fr; } }
+.path-card {
+  background: rgba(255,255,255,0.04); border: 2px solid rgba(98,181,23,0.25);
+  border-radius: 14px; padding: 22px 16px; cursor: pointer;
+  transition: all 0.2s; text-align: center;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+}
+.path-card:hover { border-color: #d1db24; background: rgba(209,219,36,0.08); transform: translateY(-2px); }
+.path-icon { font-size: 28px; }
+.path-label { font-size: 13px; font-weight: 800; color: #f0f7e6; line-height: 1.3; }
+.path-desc { font-size: 11.5px; color: rgba(240,247,230,0.45); line-height: 1.5; }
+.path-chosen {
+  font-size: 12px; font-weight: 700; color: rgba(209,219,36,0.8);
+  background: rgba(209,219,36,0.08); border: 1px solid rgba(209,219,36,0.2);
+  border-radius: 8px; padding: 7px 14px; margin-bottom: 18px; display: inline-block;
+}
+.auto-select-banner {
+  background: rgba(209,219,36,0.1); border: 1.5px solid rgba(209,219,36,0.3);
+  border-radius: 10px; padding: 14px 18px; margin-top: 16px;
+  font-size: 13px; color: #d1db24; font-weight: 700; line-height: 1.5;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 600px) {
+  .screen { padding: 28px 16px 60px; }
+  .story-text { padding: 22px 20px; }
+  .control-challenge { padding: 22px 20px; }
+  header { padding: 0 16px; }
+  #status-bar { padding: 10px 16px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="header-logo" href="/">
+    <img src="/images/logo.png" alt="Tech Board Games">
+    <div>
+      <span class="logo-text">Tech Board Games</span>
+      <span class="logo-sub">Close the Tech Gap</span>
+    </div>
+  </a>
+  <a class="header-back" href="/">← All Games</a>
+</header>
+
+<div id="mood-bar">
+  <div id="mood-decision-row">
+    <span id="mood-decision-text"></span>
+    <span id="mood-decision-pill" class="mood-d-pill neu"></span>
+  </div>
+  <div id="mood-faces-row">
+    <div class="mood-cell lv3" id="mood-business">
+      <div class="mood-cell-icon">🏛️</div>
+      <div class="mood-face">😐</div>
+      <div class="mood-level">3/5</div>
+      <div class="mood-delta"></div>
+      <div class="mood-role-label">Business</div>
+      <div class="mood-history"></div>
+    </div>
+    <div class="mood-cell lv3" id="mood-engineer">
+      <div class="mood-cell-icon">💻</div>
+      <div class="mood-face">😐</div>
+      <div class="mood-level">3/5</div>
+      <div class="mood-delta"></div>
+      <div class="mood-role-label">Engineer</div>
+      <div class="mood-history"></div>
+    </div>
+    <div class="mood-cell lv3" id="mood-security">
+      <div class="mood-cell-icon">🛡️</div>
+      <div class="mood-face">😐</div>
+      <div class="mood-level">3/5</div>
+      <div class="mood-delta"></div>
+      <div class="mood-role-label">Security</div>
+      <div class="mood-history"></div>
+    </div>
+    <div class="mood-cell lv3" id="mood-datascientist">
+      <div class="mood-cell-icon">🔬</div>
+      <div class="mood-face">😐</div>
+      <div class="mood-level">3/5</div>
+      <div class="mood-delta"></div>
+      <div class="mood-role-label">Data Sci</div>
+      <div class="mood-history"></div>
+    </div>
+  </div>
+</div>
+
+<div id="status-bar">
+  <div class="sb-section" style="flex:1">
+    <div class="sb-label">Insights Earned</div>
+    <div class="status-items" id="sb-items"></div>
+  </div>
+  <div class="status-phase" id="sb-phase"></div>
+</div>
+
+<div id="game"></div>
+
+<script>
+// ===== GAME STATE =====
+const G = {
+  started: false,       // true once team intro is passed
+  role: null,           // unused — kept for legacy compat only
+  items: [],            // insight keys earned this run
+  controls: [],         // [{id, pass}]
+  selectedImpact: null, // 'leakage' | 'fairlending' | 'explainability'
+  moods: { business: 3, engineer: 3, security: 3, datascientist: 3 }, // 1–5 scale
+  lastChoice: null,      // { label, item, effects } — drives decision row in mood bar
+  choiceHistory: [],     // all past choices — drives per-stakeholder pill history
+  screen: 'cover'
+};
+
+const ROLES = {
+  business: {
+    icon: '🏛️', name: 'Business Stakeholder',
+    desc: 'You own the lending portfolio. You translate credit risk into regulatory language and board-level consequence.',
+    power: 'Auto-pass: Fair Lending & Compliance controls'
+  },
+  engineer: {
+    icon: '💻', name: 'AI / Software Engineer',
+    desc: 'You built CLEO. You know every data flow, API call, and where the underwriting logic lives.',
+    power: 'Auto-pass: Auditability & Technical controls'
+  },
+  security: {
+    icon: '🛡️', name: 'Security Practitioner',
+    desc: 'You hunt threats. You know how attackers probe decision systems and where sensitive signals leak.',
+    power: 'Auto-pass: Auditability & Threat controls'
+  },
+  datascientist: {
+    icon: '🔬', name: 'Data Scientist',
+    desc: 'You trained CLEO. You know what a healthy credit risk distribution looks like and how to detect when it shifts.',
+    power: 'Auto-pass: Monitoring & Data controls'
+  }
+};
+
+const ITEMS = {
+  // Leakage path insights
+  credit_risk_brief:{ label: '💰 Credit Risk Insight',      short: '💰 Credit Risk' },
+  evasion_report:   { label: '🔍 Evasion Insight',          short: '🔍 Evasion' },
+  // Fair Lending path insights
+  compliance_shield:{ label: '⚖️ Compliance Insight',       short: '⚖️ Compliance' },
+  bias_analysis:    { label: '📊 Bias Analysis Insight',    short: '📊 Bias Analysis' },
+  // Explainability path insights
+  audit_trail:      { label: '📋 Audit Trail Insight',      short: '📋 Audit Trail' },
+  lean_spec:        { label: '📐 Lean Delivery Insight',    short: '📐 Lean Delivery' }
+};
+
+// Mood shifts per impact × choice
+// A & B both earn an insight and roughly mirror each other across stakeholders
+// C earns nothing and is broadly negative
+const MOOD_MAP = {
+  leakage: {
+    a: { business:+2, engineer: 0, security:-1, datascientist:-1 }, // Credit Risk Insight — Business loves it, technical roles frustrated
+    b: { business:-1, engineer:+1, security:+2, datascientist:+1 }, // Evasion Insight — Security/DS love it, Business finds it abstract
+    c: { business:-1, engineer:-1, security:-2, datascientist:-2 }  // No insight — Everyone loses, technical roles most frustrated
+  },
+  fairlending: {
+    a: { business:+2, engineer:-1, security: 0, datascientist:-1 }, // Compliance Insight — Business delighted, DS/Eng groan at compliance overhead
+    b: { business:-1, engineer:+1, security: 0, datascientist:+2 }, // Bias Analysis Insight — DS thrilled, Eng appreciates it, Business finds it too technical
+    c: { business:-1, engineer:-1, security:-2, datascientist:-1 }  // No insight — Everyone negative, Security most frustrated
+  },
+  explainability: {
+    a: { business:-1, engineer:-2, security:+1, datascientist:+2 }, // Audit Trail Insight — Security/DS want this, Eng horrified by scope, Business nervous
+    b: { business:+2, engineer:+1, security:-1, datascientist:-1 }, // Lean Delivery Insight — Business/Eng love it, Security/DS see the gaps
+    c: { business:-2, engineer:-1, security:-1, datascientist:-1 }  // No insight — Business most frustrated, everyone negative
+  }
+};
+
+// ===== STATUS BAR =====
+function updateStatusBar() {
+  const bar = document.getElementById('status-bar');
+  if (!G.started) { bar.classList.remove('visible'); return; }
+  bar.classList.add('visible');
+  const itemsEl = document.getElementById('sb-items');
+  itemsEl.innerHTML = G.items.length
+    ? G.items.map(i => `<span class="status-item">${ITEMS[i].short}</span>`).join('')
+    : '<span style="font-size:11px;color:rgba(240,247,230,0.2);font-style:italic">No insights yet</span>';
+  const phases = {
+    setting:'Phase 1 · Business Impact', impact:'Phase 1 · Business Impact',
+    impact_dive:'Phase 1 · Business Impact', impact_choice:'Phase 1 · Business Impact',
+    dfd_intro:'Phase 2 · Architecture', dfd_branch:'Phase 2 · Architecture',
+    threat_paths:'Phase 2 · Threat Analysis', threat_choice:'Phase 2 · Threat Analysis',
+    control1:'Phase 3 · Controls', control2:'Phase 3 · Controls', control3:'Phase 3 · Controls',
+    ending:'Complete'
+  };
+  document.getElementById('sb-phase').textContent = phases[G.screen] || '';
+  updateMoodBar();
+}
+
+// ===== MOOD BAR =====
+function updateMoodBar() {
+  const bar = document.getElementById('mood-bar');
+  if (!bar) return;
+  if (!G.started) { bar.classList.remove('visible'); return; }
+  bar.classList.add('visible');
+
+  const FACES = { 1:'😡', 2:'😟', 3:'😐', 4:'😊', 5:'😄' };
+  const roles = ['business','engineer','security','datascientist'];
+  const effects = G.lastChoice ? G.lastChoice.effects : {};
+
+  roles.forEach(r => {
+    const cell = document.getElementById('mood-' + r);
+    if (!cell) return;
+    const v = Math.max(1, Math.min(5, G.moods[r]));
+    const delta = (effects[r] !== undefined) ? effects[r] : null;
+
+    cell.className = 'mood-cell lv' + v;
+    cell.querySelector('.mood-face').textContent = FACES[v];
+    cell.querySelector('.mood-level').textContent = v + '/5';
+
+    const dEl = cell.querySelector('.mood-delta');
+    if (delta === null) {
+      dEl.textContent = ''; dEl.className = 'mood-delta';
+    } else if (delta > 0) {
+      dEl.textContent = '▲ +' + delta; dEl.className = 'mood-delta up';
+    } else if (delta < 0) {
+      dEl.textContent = '▼ ' + delta; dEl.className = 'mood-delta dn';
+    } else {
+      dEl.textContent = '→ 0'; dEl.className = 'mood-delta neu';
+    }
+
+    // Pill history
+    const histEl = cell.querySelector('.mood-history');
+    if (histEl) {
+      histEl.innerHTML = G.choiceHistory.map(c => {
+        const d = (c.effects && c.effects[r] !== undefined) ? c.effects[r] : 0;
+        const cls = d > 0 ? 'pos' : d < 0 ? 'neg' : 'gry';
+        const txt = c.item
+          ? ITEMS[c.item].short.split(' ').slice(0, 2).join(' ')
+          : '✗ No insight';
+        return `<div class="mood-hist-pill ${cls}">${txt}</div>`;
+      }).join('');
+    }
+  });
+
+  // Decision header row
+  const decRow = document.getElementById('mood-decision-row');
+  if (G.lastChoice && decRow) {
+    decRow.classList.add('active');
+    document.getElementById('mood-decision-text').textContent = G.lastChoice.label + '  →';
+    const pill = document.getElementById('mood-decision-pill');
+    const net = Object.values(effects).reduce((s, v) => s + v, 0);
+    pill.className = 'mood-d-pill ' + (net > 0 ? 'pos' : net < 0 ? 'neg' : 'neu');
+    pill.textContent = G.lastChoice.item ? ITEMS[G.lastChoice.item].short : '✗ No skill earned';
+  }
+}
+
+// ===== RENDER =====
+function render(html) {
+  document.getElementById('game').innerHTML = html;
+  updateStatusBar();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ===== PROGRESS BAR =====
+function progress(active) {
+  const steps = ['impact','dfd_intro','threat_paths','control1','control2','control3'];
+  const idx = steps.indexOf(active);
+  return `<div class="progress-bar">${steps.map((s,i) =>
+    `<div class="progress-step ${i < idx ? 'done' : i === idx ? 'active' : ''}"></div>`
+  ).join('')}</div>`;
+}
+
+// ===== SCREENS =====
+
+function showCover() {
+  G.screen = 'cover';
+  render(`
+    <div class="cover-wrap">
+      <div class="cover-kicker">An AI Security Role-Play Adventure</div>
+      <h1 class="cover-title">Virtual<span> War Room</span></h1>
+      <p class="cover-subtitle">CLEO is live. Thousands of loan decisions a day. No underwriter in the loop. Your job is to threat model her before the regulators find out she isn't safe.</p>
+      <button class="btn-primary" onclick="beginMission()">Begin Mission</button>
+      <label class="debug-toggle">
+        <input type="checkbox" id="debug-checkbox" ${DEBUG ? 'checked' : ''} onchange="DEBUG=this.checked;initDebug()">
+        <span>Debug mode</span>
+      </label>
+      <p class="cover-meta">Based on the OWASP AI Exchange threat modeling framework<br>Agentic AI · Credit Decisions · Banking</p>
+    </div>
+  `);
+}
+
+function beginMission() {
+  DEBUG = document.getElementById('debug-checkbox')?.checked ?? DEBUG;
+  initDebug();
+  showRoleIntro();
+}
+
+function showRoleIntro() {
+  G.screen = 'role';
+  render(`
+    <div class="screen">
+      <div class="screen-inner">
+        <div class="eyebrow">Step 1 — Meet the Team</div>
+        <h2 style="font-size:clamp(22px,4vw,32px);font-weight:900;color:#f0f7e6;margin-bottom:12px">You represent all four stakeholders.</h2>
+        <p style="font-size:14px;color:rgba(240,247,230,0.55);margin-bottom:8px;line-height:1.7">This is a threat modelling exercise, not a role-play. Every decision you make is a collective one — and each stakeholder will react differently. Some choices will satisfy one group while frustrating another. <strong style="color:rgba(240,247,230,0.8)">The goal is a balanced threat model that everyone can stand behind.</strong></p>
+        <p style="font-size:13px;color:rgba(240,247,230,0.35);margin-bottom:24px;line-height:1.6">Watch the stakeholder bar at the top of the screen. Their satisfaction reflects the choices you make. Start neutral. Try to finish green.</p>
+        <div class="role-grid">
+          ${Object.entries(ROLES).map(([id, r]) => `
+            <div class="role-card" style="cursor:default;border-color:rgba(98,181,23,0.18)">
+              <div class="role-icon">${r.icon}</div>
+              <div class="role-name">${r.name}</div>
+              <div class="role-desc">${r.desc}</div>
+            </div>
+          `).join('')}
+        </div>
+        <div class="continue-area" style="margin-top:32px">
+          <button class="btn-primary" onclick="initTeam()">Begin Threat Modelling →</button>
+        </div>
+      </div>
+    </div>
+  `);
+}
+
+function initTeam() {
+  G.started = true;
+  updateMoodBar();
+  showSetting();
+}
+
+function showSetting() {
+  G.screen = 'setting';
+  render(`
+    <div class="screen">
+      <div class="screen-inner">
+        <div class="eyebrow">Phase 1 · Business Impact — Setting</div>
+        <div class="story-text">
+          <h2>Synapse Bank. Monday morning. CLEO is live.</h2>
+          <p>Eight months ago, Synapse Bank deployed CLEO — the Credit and Loan Evaluation Officer. When a customer submits a loan application, CLEO doesn't simply score it. She investigates.</p>
+          <p>CLEO pulls credit bureau data, verifies income and employment records, cross-references affordability models, and reasons through the full picture. Then she decides: approve the loan, reject the application, or route to a human underwriter if her confidence falls below threshold. She processes thousands of applications a day. The human review queue is the exception, not the rule.</p>
+          <p>Your team has been asked to complete a threat model before the next regulatory review. Three scenarios have landed on your desk this week. Your job is to identify what is actually at stake.</p>
+          <div class="scene-detail">Business Case: AI agent for autonomous loan underwriting and credit decisioning at Synapse Bank. CLEO uses an LLM reasoning core (KC1), an orchestration layer to plan her verification steps (KC2), applicant memory and cross-product history (KC4), integrations with credit bureaus, income verification APIs, and the bank's lending platform (KC5), and operates with authority to approve loans, issue rejections, and set interest rate bands (KC6).</div>
+        </div>
+        <div class="continue-area">
+          <button class="btn-primary" onclick="showImpactSelection()">Select Your Focus Area →</button>
+        </div>
+      </div>
+    </div>
+  `);
+}
+
+// ===== IMPACT SELECTION =====
+function showImpactSelection() {
+  G.screen = 'impact';
+  render(`
+    <div class="screen"><div class="screen-inner">
+      ${progress('impact')}
+      <div class="eyebrow">Phase 1 · Business Impact — Choose Your Focus</div>
+      <h2 style="font-size:clamp(20px,3vw,26px);font-weight:900;color:#f0f7e6;margin-bottom:10px;line-height:1.2">Three reports have landed in the war room.</h2>
+      <p style="font-size:14px;color:rgba(240,247,230,0.5);margin-bottom:28px;line-height:1.6">Each tells a different story about what CLEO is doing — and what it's costing. Your team has capacity to threat model one. Which risk do you take into the room?</p>
+      <div style="display:flex;flex-direction:column;gap:16px;">
+
+        <div class="impact-card" onclick="showImpactScene('leakage')">
+          <div class="impact-num">01</div>
+          <div class="impact-body">
+            <div class="impact-tag">The Signal</div>
+            <div class="impact-title">Confidence Leakage & Credit Evasion</div>
+            <div class="impact-def">When an AI agent exposes its internal confidence scores in API responses, adversaries can use that signal to reverse-engineer decision thresholds and systematically game approvals — without ever needing to understand the model.</div>
+            <div class="impact-scene">Imagine a fraud ring that never tries to fool CLEO — they just listen to her. Every time they resubmit with slightly adjusted figures, her confidence score tells them whether they're getting closer. By the time the pattern shows up as an unusual approval cluster, the attack has been running silently for months. With no real-time monitoring on how CLEO's outputs are being consumed, there is nothing to stop it.</div>
+            ${dbgPill('A: 💰 Credit Risk &nbsp;·&nbsp; B: 🔍 Evasion &nbsp;·&nbsp; C: ✗ No insight')}
+          </div>
+          <div class="impact-arrow">→</div>
+        </div>
+
+        <div class="impact-card" onclick="showImpactScene('fairlending')">
+          <div class="impact-num">02</div>
+          <div class="impact-body">
+            <div class="impact-tag">The Letter</div>
+            <div class="impact-title">Fair Lending Violation</div>
+            <div class="impact-def">If an AI lending model produces outcomes that systematically differ across protected characteristics — even without discriminatory intent — the bank faces regulatory enforcement and legal liability under fair lending law.</div>
+            <div class="impact-scene">Consider a scenario where patterns absorbed during training cause CLEO to approve applicants in some postcodes at nearly three times the rate of comparable applicants elsewhere — and those zones map to ethnicity. Without outcome monitoring by protected characteristic, no one inside the bank would ever know. The first signal would be an FCA inquiry, and by then the bank would have no audit trail, no documented oversight, and no way to demonstrate it was paying attention.</div>
+            ${dbgPill('A: ⚖️ Compliance &nbsp;·&nbsp; B: 📊 Bias Analysis &nbsp;·&nbsp; C: ✗ No insight')}
+          </div>
+          <div class="impact-arrow">→</div>
+        </div>
+
+        <div class="impact-card" onclick="showImpactScene('explainability')">
+          <div class="impact-num">03</div>
+          <div class="impact-body">
+            <div class="impact-tag">The Call</div>
+            <div class="impact-title">Inability to Explain Decisions</div>
+            <div class="impact-def">When an AI agent reasons in memory and discards its chain of thought after each decision, the organisation loses the ability to explain, justify, or defend any individual outcome — creating legal exposure every time a decision is challenged.</div>
+            <div class="impact-scene">Imagine the Financial Ombudsman requesting the reasoning behind a rejected loan for a long-standing customer with a clean credit history. If CLEO processes each application in memory and retains nothing, there is nothing to retrieve — no inputs considered, no confidence score, no reasoning chain. Just the outcome. Every decision made without an audit trail is a decision the bank cannot defend, and CLEO makes thousands of them every day.</div>
+            ${dbgPill('A: 📋 Audit Trail &nbsp;·&nbsp; B: 📐 Lean Delivery &nbsp;·&nbsp; C: ✗ No insight')}
+          </div>
+          <div class="impact-arrow">→</div>
+        </div>
+
+      </div>
+    </div></div>
+  `);
+}
+
+// ===== IMPACT SCENES (3 scoping choices each — A & B earn insights, C earns nothing) =====
+const IMPACT_SCENES = {
+  leakage: {
+    title: 'The Signal',
+    eyebrow: 'Confidence Leakage & Credit Evasion',
+    intro: 'A fraud ring has been gaming CLEO\'s approvals by reading her confidence score from the API response — iterating applications until she approves. The team has agreed this is the scenario to threat model. Now agree on how the business impact is scoped.',
+    question: 'How does the team document this in the threat model? Three framings are on the table.',
+    choiceA: {
+      label: 'Scope A — Financial Exposure',
+      text: 'Document the business impact as direct financial loss — fraudulent loan approvals are draining the portfolio and the exposure is measurable.',
+      earns: 'credit_risk_brief',
+      feedback: 'A Credit Risk Insight is earned — this framing unlocks budget and board attention fast, and gives the risk committee something concrete to escalate. The tradeoff: it scopes the impact as a fraud loss problem rather than an AI evasion attack, which means the remediation effort will focus on after-the-fact fraud detection rather than removing the exploitable confidence signal that makes the attack repeatable.'
+    },
+    choiceB: {
+      label: 'Scope B — AI Evasion Threat',
+      text: 'Document the business impact as a repeatable fraud vulnerability — criminals have found a reliable method to force loan approvals and will keep exploiting it until it is closed.',
+      earns: 'evasion_report',
+      feedback: 'An Evasion Insight is earned — this is the mechanistically correct scope. It names the confidence signal as the attack vector and correctly frames the risk as systemic to AI decisioning, not just this cluster. The tradeoff: it is harder to translate into board language and requires stakeholders to accept a more complex problem than a fraud case.'
+    },
+    choiceC: {
+      label: 'Scope C — API Governance Gap',
+      text: 'Document the business impact as a minor information disclosure — the system shared more than it should — and treat it as resolved once the oversharing is patched.',
+      earns: null,
+      feedback: 'This framing closes the wrong door and produces no actionable insight. Removing the field is a five-minute fix — but an adversary with enough submissions can still map CLEO\'s decision boundary through approval and rejection signals alone. The threat model has produced an API ticket, not a control. The attack surface is unchanged.'
+    }
+  },
+  fairlending: {
+    title: 'The Letter',
+    eyebrow: 'Fair Lending Violation',
+    intro: 'CLEO\'s approval rates diverge sharply across postcodes that correlate with ethnicity — a pattern that has attracted an FCA preliminary inquiry. The team has agreed this is the scenario to threat model. Now agree on how the business impact is scoped.',
+    question: 'How does the team document this in the threat model? Three framings are on the table.',
+    choiceA: {
+      label: 'Scope A — Regulatory Enforcement Risk',
+      text: 'Document the business impact as a regulatory enforcement risk — CLEO\'s discriminatory outcomes expose the bank to FCA action, loan book remediation, and significant financial liability.',
+      earns: 'compliance_shield',
+      feedback: 'A Compliance Insight is earned — this is the framing that creates an internal mandate. Fair lending law is outcome-based and the FCA will focus on what CLEO decided, not why. Documenting this as regulatory enforcement risk is what forces demographic outcome monitoring to be built and prioritised as a compliance control, not deferred as a model improvement.'
+    },
+    choiceB: {
+      label: 'Scope B — Statistical Bias Finding',
+      text: 'Document the business impact as a statistical model bias problem — CLEO\'s decision surface produces discriminatory outputs by postcode, requiring fairness metric monitoring and potential retraining.',
+      earns: 'bias_analysis',
+      feedback: 'A Bias Analysis Insight is earned — this is the causally correct diagnosis and the framing that data scientists and engineers need to build a proper fix. The tradeoff: the FCA is not asking about model performance metrics. Scoping this as a technical bias problem deprioritises the compliance urgency and risks producing an ML backlog item where a regulatory control mandate is needed.'
+    },
+    choiceC: {
+      label: 'Scope C — Customer Harm Risk',
+      text: 'Document the business impact as customer harm — creditworthy applicants from protected groups being wrongly rejected — scoped to complaint volumes and Ombudsman referrals.',
+      earns: null,
+      feedback: 'This framing produces no useful insight and makes the regulatory situation worse. Customer harm language invites media and public scrutiny without satisfying the FCA\'s compliance inquiry. It provides no internal mandate to build monitoring, no causal diagnosis of the model, and no legal defence. The preliminary inquiry remains open and now has additional evidence of inadequate governance.'
+    }
+  },
+  explainability: {
+    title: 'The Call',
+    eyebrow: 'Inability to Explain Decisions',
+    intro: 'The Financial Ombudsman has requested the reasoning behind a loan rejection — and the bank has nothing to show. CLEO processes decisions in memory and retains no record. The team has agreed this is the scenario to threat model. Now agree on how the business impact is scoped.',
+    question: 'How does the team document this in the threat model? Three framings are on the table.',
+    choiceA: {
+      label: 'Scope A — Systemic Legal Liability',
+      text: 'Document the business impact as a legal liability across the entire loan book — the bank cannot defend any credit decision it has made, past or future, if it is challenged.',
+      earns: 'audit_trail',
+      feedback: 'An Audit Trail Insight is earned — this is the scope that matches the actual legal exposure. The Ombudsman and FCA can request any past decision, not just future ones. Scoping at portfolio level drives the right control: inference-layer decision logging that covers the full loan book retrospectively. The tradeoff is significant engineering complexity and a scope that makes the business uncomfortable.'
+    },
+    choiceB: {
+      label: 'Scope B — Customer Transparency Gap',
+      text: 'Document the business impact as a customer entitlement breach — applicants are being rejected without the explanations they are legally owed, creating complaint and regulatory exposure.',
+      earns: 'lean_spec',
+      feedback: 'A Lean Delivery Insight is earned — this scoping is fast to ship, directly resolves the customer-facing complaint, and is easy to communicate to the business. The tradeoff: it leaves the retrospective exposure entirely open. The Ombudsman and FCA can still ask about decisions already made, and the bank still has nothing to provide for any of them. The liability is deferred, not addressed.'
+    },
+    choiceC: {
+      label: 'Scope C — AI Governance Maturity Gap',
+      text: 'Document the business impact as a process gap in how the system was launched — frame it as a lesson for future projects and close it as a delivery improvement.',
+      earns: null,
+      feedback: 'This produces a retrospective critique, not a threat model. Documenting that CLEO should have been built differently does not identify the current business risk, does not specify a control, and does not address the open Ombudsman case. The team has spent its threat modelling session on a post-mortem while the actual liability — every undefendable decision in the loan book — remains entirely unaddressed.'
+    }
+  }
+};
+
+function showImpactScene(impact) {
+  G.screen = 'impact_choice';
+  G.selectedImpact = impact;
+  const s = IMPACT_SCENES[impact];
+  const eA = s.choiceA.earns, eB = s.choiceB.earns, eC = s.choiceC.earns;
+  const pill = k => k ? `✓ ${ITEMS[k].short}` : '✗ No insight';
+  render(`
+    <div class="screen"><div class="screen-inner">
+      ${progress('impact')}
+      <div class="eyebrow">Phase 1 · ${s.eyebrow}</div>
+      <div class="impact-intro-box">
+        <div class="impact-intro-label">${s.title}</div>
+        <p class="impact-intro-text">${s.intro}</p>
+      </div>
+      ${dbgPill(`A: ${pill(eA)} &nbsp;·&nbsp; B: ${pill(eB)} &nbsp;·&nbsp; C: ${pill(eC)}`, 'margin-bottom:14px')}
+      <p class="question-text">${s.question}</p>
+      <div class="choices">
+        <div class="choice-card" id="imp-a" onclick="answerImpact('${impact}','a')">
+          <div class="choice-letter">A</div>
+          <div style="flex:1">
+            <div class="choice-label">${s.choiceA.label}</div>
+            <div class="choice-text">${s.choiceA.text}</div>
+            ${dbgPill(pill(eA))}
+          </div>
+        </div>
+        <div class="choice-card" id="imp-b" onclick="answerImpact('${impact}','b')">
+          <div class="choice-letter">B</div>
+          <div style="flex:1">
+            <div class="choice-label">${s.choiceB.label}</div>
+            <div class="choice-text">${s.choiceB.text}</div>
+            ${dbgPill(pill(eB))}
+          </div>
+        </div>
+        <div class="choice-card" id="imp-c" onclick="answerImpact('${impact}','c')">
+          <div class="choice-letter">C</div>
+          <div style="flex:1">
+            <div class="choice-label">${s.choiceC.label}</div>
+            <div class="choice-text">${s.choiceC.text}</div>
+            ${dbgPill(pill(eC))}
+          </div>
+        </div>
+      </div>
+      <div id="imp-feedback"></div>
+    </div></div>
+  `);
+}
+
+function answerImpact(impact, choice) {
+  const els = { a: document.getElementById('imp-a'), b: document.getElementById('imp-b'), c: document.getElementById('imp-c') };
+  if (!els.a) return;
+  Object.values(els).filter(Boolean).forEach(el => { el.onclick = null; el.classList.add('wrong'); });
+  if (els[choice]) { els[choice].classList.remove('wrong'); els[choice].classList.add('correct'); }
+
+  const s = IMPACT_SCENES[impact];
+  const chosen = s['choice' + choice.toUpperCase()];
+  const earnItem = chosen.earns;
+
+  if (earnItem && !G.items.includes(earnItem)) G.items.push(earnItem);
+
+  // Apply mood shifts (clamped to 1–5)
+  const moodShift = (MOOD_MAP[impact] && MOOD_MAP[impact][choice]) || {};
+  Object.entries(moodShift).forEach(([role, delta]) => {
+    G.moods[role] = Math.max(1, Math.min(5, (G.moods[role] || 3) + delta));
+  });
+
+  // Store in history
+  const choiceEntry = { label: s.eyebrow, item: earnItem, effects: moodShift };
+  G.lastChoice = choiceEntry;
+  G.choiceHistory.push(choiceEntry);
+
+  const boxStyle = earnItem ? 'good' : 'bad';
+  document.getElementById('imp-feedback').innerHTML = `
+    <div class="feedback-box ${boxStyle}">${chosen.feedback}${earnItem ? `<div class="item-earned">${ITEMS[earnItem].label} — Earned</div>` : ''}</div>
+    <div class="continue-area"><button class="btn-primary" onclick="showDFD()">Enter the Architecture →</button></div>`;
+  updateStatusBar();
+}
+
+// ===== LEGACY STUBS (replaced by impact flow above) =====
+function showDecision1() { showImpactSelection(); }
+function showDecision2() { showImpactSelection(); }
+function showDecision3() { showImpactSelection(); }
+function _OLD_showDecision1() {
+  G.screen = 'decision1';
+  render(`
+    <div class="screen"><div class="screen-inner">
+      ${progress('decision1')}
+      <div class="eyebrow">Phase 1 · Scenario 1 of 3 — Business Impact</div>
+      <div class="story-text">
+        <h2>The Broker Portal</h2>
+        <p>A risk analyst flags an unusual approval pattern. Over the past month, 63 personal loan applications submitted through the same broker portal have been approved — each for amounts just above CLEO's minimum loan threshold. Income figures are suspiciously round. Employment histories follow identical formatting. A cross-check reveals the broker portal receives CLEO's confidence score in the API response. Any broker with basic technical knowledge can read it.</p>
+      </div>
+      <p class="question-text">Where do you start your investigation?</p>
+      <div class="path-grid">
+        <div class="path-card" onclick="showDecision1Choice('applications')">
+          <div class="path-icon">📋</div>
+          <div class="path-label">Review the application cluster</div>
+          <div class="path-desc">Pull the 63 applications and map what they have in common</div>
+        </div>
+        <div class="path-card" onclick="showDecision1Choice('broker')">
+          <div class="path-icon">🖥️</div>
+          <div class="path-label">Check the broker portal logs</div>
+          <div class="path-desc">See what data the portal is sending — and receiving — from CLEO</div>
+        </div>
+        <div class="path-card" onclick="showDecision1Choice('api')">
+          <div class="path-icon">🔌</div>
+          <div class="path-label">Examine CLEO's API responses</div>
+          <div class="path-desc">Inspect what fields CLEO returns and whether any expose her internal scoring signals</div>
+        </div>
+      </div>
+    </div></div>
+  `);
+}
+
+function showDecision1Choice(path) {
+  const auto = G.role === 'datascientist';
+  const label = {applications:'Application Cluster', broker:'Broker Portal Logs', api:'CLEO\'s API Responses'}[path];
+  render(`
+    <div class="screen"><div class="screen-inner">
+      ${progress('decision1')}
+      <div class="eyebrow">Phase 1 · Scenario 1 of 3 — Business Impact</div>
+      <div class="path-chosen">📍 Investigating: ${label}</div>
+      <div class="story-text">
+        <h2>The Broker Portal</h2>
+        <p>Your investigation confirms it. CLEO's API response includes her confidence score as a JSON field returned to the broker portal after every decision. A fraud ring has been reading that signal, adjusting application details in real time — tweaking income figures, loan amounts, and declared employment — until CLEO's score clears the approval threshold. The applications look legitimate. The signal is doing the work.</p>
+      </div>
+      <p class="question-text">What is the most critical business impact to document?</p>
+      <div class="choices">
+        <div class="choice-card" id="d1a" onclick="${auto ? '' : "answerDecision1('a')"}">
+          <div class="choice-letter">A</div>
+          <div class="choice-text">Confidence leakage enabling credit evasion — CLEO's approval signal is exposed in the API, giving fraud rings the calibration data to structure applications precisely to her threshold</div>
+        </div>
+        <div class="choice-card" id="d1b" onclick="${auto ? '' : "answerDecision1('b')"}">
+          <div class="choice-letter">B</div>
+          <div class="choice-text">An identity verification gap — the income verification feed is failing to detect synthetic identities and needs a more robust third-party data source</div>
+        </div>
+      </div>
+      ${auto ? `<div class="auto-select-banner">⚡ As a Data Scientist, you understand how model output signals can be reverse-engineered. You see the leakage immediately.</div>` : ''}
+      <div id="d1-feedback"></div>
+    </div></div>
+  `);
+  if (auto) setTimeout(() => answerDecision1('a', true), 1400);
+}
+
+function answerDecision1(choice, auto = false) {
+  const aEl = document.getElementById('d1a');
+  const bEl = document.getElementById('d1b');
+  if (!aEl) return;
+  aEl.onclick = null; bEl.onclick = null;
+  aEl.classList.add('correct'); bEl.classList.add('wrong');
+  if (choice === 'a') {
+    if (!G.items.includes('evasion_report')) G.items.push('evasion_report');
+    document.getElementById('d1-feedback').innerHTML = `
+      <div class="feedback-box good">${auto ? '⚡ Auto-selected by your role. ' : '✓ '}Correct. The confidence score in the API response is the attack vector. Fraud rings don't need to break CLEO — they just need to read her output and iterate until she approves. Documenting this as confidence leakage unlocks the right control.
+        <div class="item-earned">🔍 Item Earned: Evasion Detection Report</div>
+      </div>
+      <div class="continue-area"><button class="btn-primary" onclick="showDecision2()">Continue →</button></div>`;
+  } else {
+    document.getElementById('d1-feedback').innerHTML = `
+      <div class="feedback-box bad">✗ Better identity verification might slow the fraud ring — but it doesn't close the real vulnerability. As long as CLEO's confidence score is visible in the API, attackers can calibrate any application to her threshold regardless of the identity data used.</div>
+      <div class="continue-area"><button class="btn-primary" onclick="showDecision2()">Continue →</button></div>`;
+  }
+  updateStatusBar();
+}
+
+// ===== DECISION 2 =====
+function showDecision2() {
+  G.screen = 'decision2';
+  render(`
+    <div class="screen"><div class="screen-inner">
+      ${progress('decision2')}
+      <div class="eyebrow">Phase 1 · Scenario 2 of 3 — Business Impact</div>
+      <div class="story-text">
+        <h2>The Approval Gap</h2>
+        <p>The bank's compliance officer flags an anomaly in CLEO's approval rates. Applicants in certain postcodes are being approved at 71% — while applicants in neighbouring postcodes with similar average credit scores are approved at only 28%. The low-approval postcodes correlate strongly with ethnic minority populations. Three rejected applicants have filed complaints with the regulator. The FCA has sent a preliminary inquiry letter asking how CLEO makes her lending decisions.</p>
+      </div>
+      <p class="question-text">How do you approach this?</p>
+      <div class="path-grid">
+        <div class="path-card" onclick="showDecision2Choice('approvals')">
+          <div class="path-icon">📊</div>
+          <div class="path-label">Pull the approval rate data</div>
+          <div class="path-desc">Break down CLEO's decisions by postcode, credit score band, and demographic</div>
+        </div>
+        <div class="path-card" onclick="showDecision2Choice('training')">
+          <div class="path-icon">🧠</div>
+          <div class="path-label">Review CLEO's training data</div>
+          <div class="path-desc">Trace whether historical lending patterns introduced bias into her model</div>
+        </div>
+        <div class="path-card" onclick="showDecision2Choice('regulator')">
+          <div class="path-icon">⚖️</div>
+          <div class="path-label">Talk to the compliance officer</div>
+          <div class="path-desc">Understand the regulatory exposure and what the FCA letter is actually asking</div>
+        </div>
+      </div>
+    </div></div>
+  `);
+}
+
+function showDecision2Choice(path) {
+  const auto = G.role === 'business';
+  const label = {approvals:'Approval Rate Data', training:'Training Data Review', regulator:'Compliance Officer'}[path];
+  render(`
+    <div class="screen"><div class="screen-inner">
+      ${progress('decision2')}
+      <div class="eyebrow">Phase 1 · Scenario 2 of 3 — Business Impact</div>
+      <div class="path-chosen">📍 Investigating: ${label}</div>
+      <div class="story-text">
+        <h2>The Approval Gap</h2>
+        <p>The picture becomes clear. CLEO is using postcode as a significant input variable — and postcode correlates with ethnicity in this region. Whether introduced through biased historical approval data or as a proxy variable the model learned to weight heavily, the output is the same: CLEO is making lending decisions that systematically disadvantage applicants from minority communities. The FCA inquiry is the opening move, not the last.</p>
+      </div>
+      <p class="question-text">What business impact must you document first?</p>
+      <div class="choices">
+        <div class="choice-card" id="d2a" onclick="${auto ? '' : "answerDecision2('a')"}">
+          <div class="choice-letter">A</div>
+          <div class="choice-text">Fair lending violation with regulatory and reputational exposure — CLEO is producing discriminatory lending decisions that disproportionately harm a protected group at scale</div>
+        </div>
+        <div class="choice-card" id="d2b" onclick="${auto ? '' : "answerDecision2('b')"}">
+          <div class="choice-letter">B</div>
+          <div class="choice-text">A geographic risk calibration issue — certain postcodes have higher historical default rates and CLEO is correctly pricing that risk into her decisions</div>
+        </div>
+      </div>
+      ${auto ? `<div class="auto-select-banner">⚡ As a Business Stakeholder, you recognise the regulatory framing immediately — this is a fair lending violation, not a risk model debate.</div>` : ''}
+      <div id="d2-feedback"></div>
+    </div></div>
+  `);
+  if (auto) setTimeout(() => answerDecision2('a', true), 1400);
+}
+
+function answerDecision2(choice, auto = false) {
+  const aEl = document.getElementById('d2a');
+  const bEl = document.getElementById('d2b');
+  if (!aEl) return;
+  aEl.onclick = null; bEl.onclick = null;
+  aEl.classList.add('correct'); bEl.classList.add('wrong');
+  if (choice === 'a') {
+    if (!G.items.includes('compliance_shield')) G.items.push('compliance_shield');
+    document.getElementById('d2-feedback').innerHTML = `
+      <div class="feedback-box good">${auto ? '⚡ Auto-selected by your role. ' : '✓ '}Correct. Fair lending law doesn't care whether the discrimination was intentional — disparate impact is enough. CLEO producing systematically biased outcomes creates regulatory liability, potential remediation of the entire loan book, and reputational damage the bank cannot easily recover from.
+        <div class="item-earned">⚖️ Item Earned: Compliance Shield</div>
+      </div>
+      <div class="continue-area"><button class="btn-primary" onclick="showDecision3()">Continue →</button></div>`;
+  } else {
+    document.getElementById('d2-feedback').innerHTML = `
+      <div class="feedback-box bad">✗ "Higher default rates justify lower approvals" is a defence that fair lending law explicitly challenges. When the variable correlates with a protected characteristic, the burden is on the bank to prove the model is not discriminatory — and that burden is now with the FCA.</div>
+      <div class="continue-area"><button class="btn-primary" onclick="showDecision3()">Continue →</button></div>`;
+  }
+  updateStatusBar();
+}
+
+// ===== DECISION 3 =====
+function showDecision3() {
+  G.screen = 'decision3';
+  render(`
+    <div class="screen"><div class="screen-inner">
+      ${progress('decision3')}
+      <div class="eyebrow">Phase 1 · Scenario 3 of 3 — Business Impact</div>
+      <div class="story-text">
+        <h2>The Ombudsman</h2>
+        <p>A small business owner was rejected for a £75,000 growth loan by CLEO. She has a clean credit history, an established trading record, and has banked with Synapse for eleven years. She appealed internally. The appeal was rejected with no additional explanation. She escalated to the Financial Ombudsman. The Ombudsman now requests a complete record of how CLEO reached her decision — what data she pulled, how she weighted it, what threshold her confidence fell below, and what alternatives she considered. Your engineering team goes looking. There is no decision log anywhere.</p>
+      </div>
+      <p class="question-text">Where do you look first?</p>
+      <div class="path-grid">
+        <div class="path-card" onclick="showDecision3Choice('logs')">
+          <div class="path-icon">🗂️</div>
+          <div class="path-label">Search the processing logs</div>
+          <div class="path-desc">Dig through application and server logs for any trace of CLEO's reasoning</div>
+        </div>
+        <div class="path-card" onclick="showDecision3Choice('pipeline')">
+          <div class="path-icon">⚙️</div>
+          <div class="path-label">Audit the inference pipeline</div>
+          <div class="path-desc">Check what CLEO stores — or discards — after each application is processed</div>
+        </div>
+        <div class="path-card" onclick="showDecision3Choice('team')">
+          <div class="path-icon">👥</div>
+          <div class="path-label">Talk to the engineering team</div>
+          <div class="path-desc">Find out what logging was — or wasn't — built into CLEO from the start</div>
+        </div>
+      </div>
+    </div></div>
+  `);
+}
+
+function showDecision3Choice(path) {
+  const auto = G.role === 'security' || G.role === 'engineer';
+  const label = {logs:'Processing Logs', pipeline:'Inference Pipeline', team:'Engineering Team'}[path];
+  const banner = G.role === 'engineer'
+    ? 'As the engineer who built CLEO, you already know the answer — nothing is logged after inference.'
+    : 'As a Security Practitioner, you recognise the missing evidence chain immediately.';
+  render(`
+    <div class="screen"><div class="screen-inner">
+      ${progress('decision3')}
+      <div class="eyebrow">Phase 1 · Scenario 3 of 3 — Business Impact</div>
+      <div class="path-chosen">📍 Investigating: ${label}</div>
+      <div class="story-text">
+        <h2>The Ombudsman</h2>
+        <p>Your investigation confirms what you feared. CLEO processes each application in memory and returns a decision. No inputs are stored. No reasoning chain is logged. No confidence score is retained. The outcome — approve or reject — is the only record that exists. You cannot reconstruct a single lending decision CLEO has ever made. The Ombudsman is waiting.</p>
+      </div>
+      <p class="question-text">What is the core business impact to document?</p>
+      <div class="choices">
+        <div class="choice-card" id="d3a" onclick="${auto ? '' : "answerDecision3('a')"}">
+          <div class="choice-letter">A</div>
+          <div class="choice-text">Inability to explain decisions — CLEO's reasoning cannot be reconstructed or audited, leaving the bank unable to demonstrate compliance, defend appeals, or satisfy regulatory requests</div>
+        </div>
+        <div class="choice-card" id="d3b" onclick="${auto ? '' : "answerDecision3('b')"}">
+          <div class="choice-letter">B</div>
+          <div class="choice-text">A wrongful rejection — CLEO made an incorrect credit decision on this specific application, which retraining on small business profiles would prevent in future</div>
+        </div>
+      </div>
+      ${auto ? `<div class="auto-select-banner">⚡ ${banner}</div>` : ''}
+      <div id="d3-feedback"></div>
+    </div></div>
+  `);
+  if (auto) setTimeout(() => answerDecision3('a', true), 1400);
+}
+
+function answerDecision3(choice, auto = false) {
+  const aEl = document.getElementById('d3a');
+  const bEl = document.getElementById('d3b');
+  if (!aEl) return;
+  aEl.onclick = null; bEl.onclick = null;
+  aEl.classList.add('correct'); bEl.classList.add('wrong');
+  if (choice === 'a') {
+    if (!G.items.includes('audit_trail')) G.items.push('audit_trail');
+    document.getElementById('d3-feedback').innerHTML = `
+      <div class="feedback-box good">${auto ? '⚡ Auto-selected by your role. ' : '✓ '}Correct. Explainability is a legal requirement in AI-driven lending, not a nice-to-have. Without decision logs, the bank cannot defend any rejection — not this one, not any of them. Every appeal and regulatory inquiry is unwinnable until this is fixed.
+        <div class="item-earned">📋 Item Earned: Audit Trail</div>
+      </div>
+      <div class="continue-area"><button class="btn-primary" onclick="showDFD()">Enter the Architecture →</button></div>`;
+  } else {
+    document.getElementById('d3-feedback').innerHTML = `
+      <div class="feedback-box bad">✗ Whether this specific decision was right or wrong is secondary. The structural problem is that CLEO cannot explain any decision she has ever made. Retraining improves accuracy — it doesn't create the audit trail the Ombudsman, the regulator, and the courts are now demanding.</div>
+      <div class="continue-area"><button class="btn-primary" onclick="showDFD()">Enter the Architecture →</button></div>`;
+  }
+  updateStatusBar();
+}
+
+// ===== DFD PHASE =====
+function showDFD() {
+  G.screen = 'dfd_intro';
+  render(`
+    <div class="screen"><div class="screen-inner">
+      ${progress('dfd_intro')}
+      <div class="eyebrow">Phase 2 · Architecture — CLEO's Data Flow</div>
+      <div class="story-text">
+        <h2>Inside CLEO</h2>
+        <p>Your team pulls up CLEO's architecture. The AI engineer walks the group through the data flow — from application intake to decision output. Four gaps surface immediately during the walkthrough that nobody had documented before.</p>
+        <ul style="margin-top:12px;padding-left:18px;font-size:13px;color:rgba(240,247,230,0.65);line-height:2">
+          <li>CLEO's tools are managed via an MCP server. When new tools are added, CLEO gets access automatically — <em>no one in the organisation is necessarily aware.</em></li>
+          <li>Compliance officers can log into a dashboard and review decisions manually, but <em>there are no active alerts or triggers</em> to prompt a review in any specific situation.</li>
+          <li>Nothing is stored that provides true explainability for CLEO's decisions — <em>only outcomes, not reasoning chains.</em></li>
+          <li>Engineers have direct, unrestricted access to the full applicant database in the lower environment <em>to build and test the model.</em></li>
+        </ul>
+      </div>
+      <div class="dfd-wrap">
+        <svg viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg" style="height:210px">
+          <defs><marker id="arr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="rgba(98,181,23,0.6)"/></marker></defs>
+          <!-- KC1 LLM Core (Foundation Model) -->
+          <rect x="270" y="120" width="160" height="65" rx="8" fill="rgba(209,219,36,0.12)" stroke="#d1db24" stroke-width="1.5"/>
+          <text x="350" y="145" fill="#d1db24" font-size="11" font-weight="800" text-anchor="middle" font-family="Nunito,sans-serif">KC1 · LLM Core</text>
+          <text x="350" y="161" fill="rgba(209,219,36,0.6)" font-size="9.5" text-anchor="middle" font-family="Nunito,sans-serif">Foundation model (3rd party)</text>
+          <text x="350" y="177" fill="rgba(209,219,36,0.4)" font-size="9" text-anchor="middle" font-family="Nunito,sans-serif">Credit reasoning engine</text>
+          <!-- KC2 Orchestration -->
+          <rect x="270" y="20" width="160" height="50" rx="8" fill="rgba(98,181,23,0.1)" stroke="rgba(98,181,23,0.4)" stroke-width="1.5"/>
+          <text x="350" y="43" fill="#a8c96a" font-size="11" font-weight="800" text-anchor="middle" font-family="Nunito,sans-serif">KC2 · Orchestration</text>
+          <text x="350" y="60" fill="rgba(168,201,106,0.6)" font-size="9.5" text-anchor="middle" font-family="Nunito,sans-serif">Verification workflow planner</text>
+          <!-- KC4 Memory -->
+          <rect x="50" y="120" width="145" height="65" rx="8" fill="rgba(98,181,23,0.1)" stroke="rgba(98,181,23,0.4)" stroke-width="1.5"/>
+          <text x="122" y="145" fill="#a8c96a" font-size="11" font-weight="800" text-anchor="middle" font-family="Nunito,sans-serif">KC4 · Memory</text>
+          <text x="122" y="161" fill="rgba(168,201,106,0.6)" font-size="9.5" text-anchor="middle" font-family="Nunito,sans-serif">Applicant history</text>
+          <text x="122" y="176" fill="rgba(168,201,106,0.4)" font-size="9" text-anchor="middle" font-family="Nunito,sans-serif">Cross-product data</text>
+          <!-- KC5 Tool Integration / MCP Server — HIGHLIGHTED -->
+          <rect x="50" y="245" width="600" height="70" rx="8" fill="rgba(209,219,36,0.07)" stroke="#d1db24" stroke-width="2" stroke-dasharray="5 3"/>
+          <text x="350" y="270" fill="#d1db24" font-size="11" font-weight="800" text-anchor="middle" font-family="Nunito,sans-serif">KC5 · Tool Integration Layer (MCP Server)  ← INVESTIGATING</text>
+          <text x="350" y="288" fill="rgba(209,219,36,0.5)" font-size="9" text-anchor="middle" font-family="Nunito,sans-serif">Credit Bureau API · Income Verification · Affordability Models · Lending Platform · Broker Portal</text>
+          <text x="350" y="305" fill="rgba(255,140,100,0.5)" font-size="9" text-anchor="middle" font-family="Nunito,sans-serif">⚠ New tools auto-granted to CLEO when added — no org-wide awareness</text>
+          <!-- KC6 Environment -->
+          <rect x="510" y="120" width="140" height="65" rx="8" fill="rgba(98,181,23,0.1)" stroke="rgba(98,181,23,0.4)" stroke-width="1.5"/>
+          <text x="580" y="145" fill="#a8c96a" font-size="11" font-weight="800" text-anchor="middle" font-family="Nunito,sans-serif">KC6 · Environment</text>
+          <text x="580" y="161" fill="rgba(168,201,106,0.6)" font-size="9.5" text-anchor="middle" font-family="Nunito,sans-serif">Admin dashboard</text>
+          <text x="580" y="176" fill="rgba(255,140,100,0.4)" font-size="9" text-anchor="middle" font-family="Nunito,sans-serif">⚠ No active alerts</text>
+          <!-- Arrows -->
+          <line x1="350" y1="70" x2="350" y2="120" stroke="rgba(98,181,23,0.5)" stroke-width="1.5" marker-end="url(#arr)"/>
+          <line x1="270" y1="152" x2="195" y2="152" stroke="rgba(98,181,23,0.5)" stroke-width="1.5" marker-end="url(#arr)"/>
+          <line x1="430" y1="152" x2="510" y2="152" stroke="rgba(98,181,23,0.5)" stroke-width="1.5" marker-end="url(#arr)"/>
+          <line x1="350" y1="185" x2="350" y2="245" stroke="#d1db24" stroke-width="1.5" stroke-dasharray="4 2" marker-end="url(#arr)"/>
+          <line x1="122" y1="185" x2="122" y2="245" stroke="#d1db24" stroke-width="1.5" stroke-dasharray="4 2" marker-end="url(#arr)"/>
+          <line x1="580" y1="185" x2="580" y2="245" stroke="#d1db24" stroke-width="1.5" stroke-dasharray="4 2" marker-end="url(#arr)"/>
+        </svg>
+      </div>
+      <p class="question-text">Which component do you investigate first?</p>
+      <div class="path-grid">
+        <div class="path-card" onclick="showDFDChoice('kc1')">
+          <div class="path-icon">🧠</div>
+          <div class="path-label">KC1 · LLM Reasoning Core</div>
+          <div class="path-desc">Foundation model from a third-party provider — CLEO's credit decision engine</div>
+        </div>
+        <div class="path-card" onclick="showDFDChoice('kc4')">
+          <div class="path-icon">🗃️</div>
+          <div class="path-label">KC4 · Memory & Context</div>
+          <div class="path-desc">Applicant history and cross-product data — the context shaping each decision</div>
+        </div>
+        <div class="path-card" onclick="showDFDChoice('kc5')">
+          <div class="path-icon">🔌</div>
+          <div class="path-label">KC5 · MCP Tool Layer</div>
+          <div class="path-desc">Credit bureaus, income verification, broker portal — where external data enters and lending authority is exercised</div>
+        </div>
+      </div>
+    </div></div>
+  `);
+}
+
+function showDFDChoice(component) {
+  const auto = G.role === 'engineer';
+  const label = {kc1:'LLM Reasoning Core (KC1)', kc4:'Memory & Context (KC4)', kc5:'MCP Tool Layer (KC5)'}[component];
+  render(`
+    <div class="screen"><div class="screen-inner">
+      ${progress('dfd_intro')}
+      <div class="eyebrow">Phase 2 · Architecture Deep Dive</div>
+      <div class="path-chosen">📍 Investigating: ${label}</div>
+      <div class="story-text">
+        <h2>Inside CLEO</h2>
+        <p>Your investigation maps the full data flow. External applicant data — credit bureau scores, income verification, affordability assessments — all enters through the MCP Tool Layer (KC5). New tools can be added to the MCP server at any time; CLEO gains access automatically. No one in the organisation is necessarily aware when the tool surface expands. This is also where CLEO exercises her real authority: loan approvals, rejections, and interest rate bands are all issued through KC5 calls to the lending platform.</p>
+        <p>The compliance dashboard (KC6) lets officers review decisions manually — but there are no alerts, no triggers. A bias pattern or evasion campaign would only be caught if someone thought to look.</p>
+      </div>
+      <p class="question-text">Which layer carries the widest threat surface?</p>
+      <div class="choices">
+        <div class="choice-card" id="dfd-a" onclick="${auto ? '' : "answerDFD('a')"}">
+          <div class="choice-letter">A</div>
+          <div class="choice-text">The MCP Tool Layer (KC5) — untrusted external data enters here, tools can be added without awareness, and CLEO exercises real lending authority through it</div>
+        </div>
+        <div class="choice-card" id="dfd-b" onclick="${auto ? '' : "answerDFD('b')"}">
+          <div class="choice-letter">B</div>
+          <div class="choice-text">The LLM Reasoning Core (KC1) — every credit decision passes through the foundation model, making it the single most critical point of failure</div>
+        </div>
+      </div>
+      ${auto ? `<div class="auto-select-banner">⚡ As the engineer who built CLEO, you know the MCP server is where the real exposure is — you've seen what happens when a new tool gets quietly added.</div>` : ''}
+      <div id="dfd-feedback"></div>
+    </div></div>
+  `);
+  if (auto) setTimeout(() => answerDFD('a', true), 1400);
+}
+
+function answerDFD(choice, auto = false) {
+  const aEl = document.getElementById('dfd-a');
+  const bEl = document.getElementById('dfd-b');
+  if (!aEl) return;
+  aEl.onclick = null; bEl.onclick = null;
+  aEl.classList.add('correct'); bEl.classList.add('wrong');
+  const msg = choice === 'a'
+    ? `<div class="feedback-box good">${auto ? '⚡ Auto-selected. ' : '✓ '}Correct. KC5 is the widest attack surface. Untrusted external data enters here, the tool set can expand silently via MCP, and CLEO's lending authority — approvals, rejections, rate bands — is exercised entirely through this layer. Three threats have been identified here.</div>`
+    : `<div class="feedback-box bad">✗ KC1 processes what it receives — it doesn't control what enters the system or what actions are taken. The threat surface is widest at KC5, where external data flows in, tools can be added without awareness, and CLEO's real-world authority over lending decisions is exercised.</div>`;
+  document.getElementById('dfd-feedback').innerHTML = msg +
+    `<div class="continue-area"><button class="btn-primary" onclick="showThreatPaths()">Investigate the Threats →</button></div>`;
+}
+
+// ===== THREAT PATHS =====
+function showThreatPaths() {
+  G.screen = 'threat_paths';
+  render(`
+    <div class="screen"><div class="screen-inner">
+      ${progress('threat_paths')}
+      <div class="eyebrow">Phase 2 · Threat Analysis — Threats in KC5</div>
+      <div class="story-text">
+        <h2>Three threats. One layer.</h2>
+        <p>Your security practitioner has mapped three distinct threats inside KC5. Each exploits a different gap in how CLEO interacts with the world. Before moving to controls, your team needs to understand which threats are real, how severe they are, and whether they're connected.</p>
+      </div>
+      <div class="branch-event">
+        <div class="branch-num">Threat 01 · Broker Portal API Response</div>
+        <h3>Confidence Leakage → Credit Evasion</h3>
+        <p>CLEO returns her approval confidence score in the broker portal API response. There is no real-time monitoring of CLEO's agent interactions. Fraud rings read the score, adjust application inputs — income figures, loan amounts, declared employment — and iterate until CLEO approves. Without monitoring, no one notices until the defaults arrive.</p>
+        <div class="threat-tag">⚠ Evasion — High severity: no real-time monitoring in place</div>
+      </div>
+      <div class="branch-event">
+        <div class="branch-num">Threat 02 · MCP Server Tool Access</div>
+        <h3>Scope Violation via Prompt Injection</h3>
+        <p>CLEO's MCP server grants her access to any tool added to it. There is no mechanism to verify in real time that CLEO is operating within her intended lending mandate. A malicious input — embedded in an application document or a data feed — could instruct CLEO to take actions outside her authorised scope: querying systems she shouldn't access, or making decisions she isn't authorised to make.</p>
+        <div class="threat-tag">⚠ Prompt Injection — High severity: no business-scope enforcement</div>
+      </div>
+      <div class="branch-event">
+        <div class="branch-num">Threat 03 · Development Environment Access</div>
+        <h3>Sensitive Data Exposure at Build Time</h3>
+        <p>Engineers have direct, unrestricted access to the full applicant database in the lower environment to build and test CLEO. Real applicant names, income data, credit histories, and decision outcomes are accessible without restriction. A breach or insider threat at development time exposes the entire historical loan book.</p>
+        <div class="threat-tag">⚠ Data Exposure — High severity: no access restriction in dev</div>
+      </div>
+      <p class="question-text">Which threat do you investigate first?</p>
+      <div class="path-grid">
+        <div class="path-card" onclick="showThreatChoice('evasion')">
+          <div class="path-icon">🎯</div>
+          <div class="path-label">Confidence Leakage & Evasion</div>
+          <div class="path-desc">No real-time monitoring — fraud rings read CLEO's score and calibrate to approval</div>
+        </div>
+        <div class="path-card" onclick="showThreatChoice('injection')">
+          <div class="path-icon">💉</div>
+          <div class="path-label">Prompt Injection & Scope Violation</div>
+          <div class="path-desc">No scope enforcement — CLEO could be instructed to act outside her mandate</div>
+        </div>
+        <div class="path-card" onclick="showThreatChoice('devleak')">
+          <div class="path-icon">🗄️</div>
+          <div class="path-label">Dev-Time Data Exposure</div>
+          <div class="path-desc">Unrestricted access to real applicant data in the lower environment</div>
+        </div>
+      </div>
+    </div></div>
+  `);
+}
+
+function showThreatChoice(threat) {
+  const auto = G.role === 'security';
+  const label = {evasion:'Confidence Leakage & Evasion', injection:'Prompt Injection & Scope Violation', devleak:'Dev-Time Data Exposure'}[threat];
+  render(`
+    <div class="screen"><div class="screen-inner">
+      ${progress('threat_paths')}
+      <div class="eyebrow">Phase 2 · Threat Analysis</div>
+      <div class="path-chosen">📍 Investigating: ${label}</div>
+      <div class="story-text">
+        <h2>Assessing Severity</h2>
+        <p>The security practitioner guides the group through a key question: threat severity isn't fixed — it depends on what controls exist. For evasion, the critical question is whether there is real-time monitoring of CLEO's agent interactions including natural language inputs. For prompt injection, it's whether there is any mechanism to verify CLEO is acting within her intended lending scope. For the dev-time exposure, it's whether access to real applicant data is restricted or unrestricted.</p>
+        <p>In all three cases, the answer for CLEO is the same: <strong style="color:#f0f7e6">no controls are in place.</strong> All three threats are currently high severity.</p>
+      </div>
+      <p class="question-text">How should the team prioritise these threats?</p>
+      <div class="choices">
+        <div class="choice-card" id="thr-a" onclick="${auto ? '' : "answerThreat('a')"}">
+          <div class="choice-letter">A</div>
+          <div class="choice-text">Prioritise evasion and scope violation first — both are active runtime threats that could be exploited right now, and both depend on the same missing control: real-time monitoring of CLEO's agent interactions</div>
+        </div>
+        <div class="choice-card" id="thr-b" onclick="${auto ? '' : "answerThreat('b')"}">
+          <div class="choice-letter">B</div>
+          <div class="choice-text">Prioritise the dev-time data exposure first — it affects a larger dataset and should be remediated before any other changes are made to the system</div>
+        </div>
+      </div>
+      ${auto ? `<div class="auto-select-banner">⚡ As a Security Practitioner, you assess threats by exploitability and blast radius — runtime threats that are active right now take precedence.</div>` : ''}
+      <div id="thr-feedback"></div>
+    </div></div>
+  `);
+  if (auto) setTimeout(() => answerThreat('a', true), 1400);
+}
+
+function answerThreat(choice, auto = false) {
+  const aEl = document.getElementById('thr-a');
+  const bEl = document.getElementById('thr-b');
+  if (!aEl) return;
+  aEl.onclick = null; bEl.onclick = null;
+  aEl.classList.add('correct'); bEl.classList.add('wrong');
+  const msg = choice === 'a'
+    ? `<div class="feedback-box good">${auto ? '⚡ Auto-selected. ' : '✓ '}Correct. The evasion and prompt injection threats share a root cause — no real-time monitoring of CLEO's interactions. Fixing that single gap reduces severity across both threats simultaneously. Dev-time exposure is serious but not actively exploitable in production right now.</div>`
+    : `<div class="feedback-box bad">✗ Dev-time exposure is a real risk — but it requires insider access or a development environment breach. Evasion and prompt injection are exploitable through CLEO's normal interfaces right now, with no monitoring in place to detect them. Runtime threats that are currently active take priority.</div>`;
+  document.getElementById('thr-feedback').innerHTML = msg +
+    `<div class="continue-area"><button class="btn-primary" onclick="showControl1()">Begin Control Phase →</button></div>`;
+}
+
+// placeholder so old reference doesn't break
+function showDFDBranches() { showThreatPaths(); }
+
+
+function answerDecision1(choice) {
+  ['a','b','c'].forEach(l => {
+    const el = document.getElementById('d1' + l);
+    el.onclick = null;
+    el.classList.add(l === choice ? (choice === 'b' ? 'correct' : 'wrong') : 'wrong');
+  });
+  if (choice === 'b') {
+    document.getElementById('d1b').classList.add('correct');
+    if (!G.items.includes('evasion_report')) G.items.push('evasion_report');
+    document.getElementById('d1-feedback').innerHTML = `
+      <div class="feedback-box good">
+        ✓ Correct. This is a classic model probing evasion attack. The attackers are treating ARIA as a black box, systematically testing the decision boundary until they know exactly how to commit fraud below detection.
+        <div class="item-earned">🔍 Item Earned: Evasion Detection Report</div>
+      </div>`;
+  } else {
+    document.getElementById('d1-feedback').innerHTML = `
+      <div class="feedback-box bad">
+        ${choice === 'a'
+          ? '✗ Reviewer overload is a symptom, not the root business impact. The real issue is that ARIA\'s detection boundary has been learned and exploited — fraudulent money is moving through the bank undetected.'
+          : '✗ Auditability matters, but it\'s the wrong priority here. The critical impact is active fraud evasion — attackers are systematically exploiting a gap in ARIA\'s detection logic right now.'}
+      </div>`;
+  }
+  document.getElementById('d1-feedback').insertAdjacentHTML('beforeend',
+    `<div class="continue-area"><button class="btn-primary" onclick="showDecision2()">Continue →</button></div>`);
+  updateStatusBar();
+}
+
+function showDecision2() {
+  G.screen = 'decision2';
+  render(`
+    <div class="screen">
+      <div class="screen-inner">
+        ${progress('decision2')}
+        <div class="eyebrow">Phase 1 · Decision 2 of 3 — Business Impact</div>
+        <div class="story-text">
+          <h2>The Complaint</h2>
+          <p>Customer relations escalates an unusual pattern. ARIA is freezing accounts belonging to customers aged 65 and over at four times the rate of younger customers. Many of the frozen transactions are legitimate transfers — grocery payments, utility bills, pension transfers.</p>
+          <p>Three formal complaints have been filed in the last two weeks. One customer switched banks. Your legal counsel calls to ask how ARIA makes its decisions. You don't have a clean answer.</p>
+        </div>
+        <p class="question-text">What business impact must you address first?</p>
+        <div class="choices">
+          <div class="choice-card" id="d2a" onclick="answerDecision2('a')">
+            <div class="choice-letter">A</div>
+            <div class="choice-text">Missed fraud — ARIA should be catching more fraud before it reaches manual review, not less</div>
+          </div>
+          <div class="choice-card" id="d2b" onclick="answerDecision2('b')">
+            <div class="choice-letter">B</div>
+            <div class="choice-text">Targeted false positives with discrimination risk — ARIA's biased outputs are disproportionately impacting a protected group, creating compliance and reputational exposure</div>
+          </div>
+          <div class="choice-card" id="d2c" onclick="answerDecision2('c')">
+            <div class="choice-letter">C</div>
+            <div class="choice-text">Reviewer overload — the appeals from frozen legitimate accounts are creating a significant backlog in the manual review queue</div>
+          </div>
+        </div>
+        <div id="d2-feedback"></div>
+      </div>
+    </div>
+  `);
+}
+
+function answerDecision2(choice) {
+  ['a','b','c'].forEach(l => {
+    document.getElementById('d2' + l).onclick = null;
+    document.getElementById('d2' + l).classList.add(l === choice ? (choice === 'b' ? 'correct' : 'wrong') : 'wrong');
+  });
+  if (choice === 'b') {
+    if (!G.items.includes('compliance_shield')) G.items.push('compliance_shield');
+    document.getElementById('d2-feedback').innerHTML = `
+      <div class="feedback-box good">
+        ✓ Correct. Biased model outputs that disproportionately flag protected groups create discrimination risk, regulatory exposure under fair lending laws, and reputational damage — all simultaneously. This is the core business impact.
+        <div class="item-earned">⚖️ Item Earned: Compliance Shield</div>
+      </div>`;
+  } else {
+    document.getElementById('d2-feedback').innerHTML = `
+      <div class="feedback-box bad">
+        ${choice === 'a'
+          ? '✗ The scenario is about false positives — legitimate transactions being blocked — not missed fraud. Focusing on catch rates here misses the discrimination issue entirely.'
+          : '✗ The backlog is a symptom. The business impact is that ARIA is making discriminatory decisions at scale, which creates legal liability and customer harm far beyond a queue management problem.'}
+      </div>`;
+  }
+  document.getElementById('d2-feedback').insertAdjacentHTML('beforeend',
+    `<div class="continue-area"><button class="btn-primary" onclick="showDecision3()">Continue →</button></div>`);
+  updateStatusBar();
+}
+
+function showDecision3() {
+  G.screen = 'decision3';
+  render(`
+    <div class="screen">
+      <div class="screen-inner">
+        ${progress('decision3')}
+        <div class="eyebrow">Phase 1 · Decision 3 of 3 — Business Impact</div>
+        <div class="story-text">
+          <h2>The Courtroom</h2>
+          <p>A business customer has sued Synapse Bank after ARIA froze a £40,000 supplier payment, causing them to default on a contract. Their solicitor requests a complete record of how ARIA reached that decision: which inputs it weighed, what reasoning chain it followed, what threshold it applied, and what alternatives it considered.</p>
+          <p>Your engineering team finds there is no persistent decision log. ARIA processed the transaction in memory and left no trace. The model's internal reasoning chain is not captured anywhere.</p>
+        </div>
+        <p class="question-text">What is the core business impact your threat model must address?</p>
+        <div class="choices">
+          <div class="choice-card" id="d3a" onclick="answerDecision3('a')">
+            <div class="choice-letter">A</div>
+            <div class="choice-text">Missed fraud — ARIA incorrectly classified a legitimate payment as fraudulent, which is a false positive problem the model needs retraining to fix</div>
+          </div>
+          <div class="choice-card" id="d3b" onclick="answerDecision3('b')">
+            <div class="choice-letter">B</div>
+            <div class="choice-text">Lack of auditability — ARIA's decisions cannot be reconstructed, explained, or documented, preventing Synapse Bank from demonstrating due diligence or compliance in legal and regulatory proceedings</div>
+          </div>
+          <div class="choice-card" id="d3c" onclick="answerDecision3('c')">
+            <div class="choice-letter">C</div>
+            <div class="choice-text">Model IP theft — the court case is forcing public exposure of ARIA's decision logic, which competitors could reverse-engineer</div>
+          </div>
+        </div>
+        <div id="d3-feedback"></div>
+      </div>
+    </div>
+  `);
+}
+
+function answerDecision3(choice) {
+  ['a','b','c'].forEach(l => {
+    document.getElementById('d3' + l).onclick = null;
+    document.getElementById('d3' + l).classList.add(l === choice ? (choice === 'b' ? 'correct' : 'wrong') : 'wrong');
+  });
+  if (choice === 'b') {
+    if (!G.items.includes('audit_trail')) G.items.push('audit_trail');
+    document.getElementById('d3-feedback').innerHTML = `
+      <div class="feedback-box good">
+        ✓ Correct. Lack of auditability is an AI-specific business risk. An AI agent that cannot explain its decisions exposes the bank to legal liability, regulatory sanctions, and loss of customer trust — regardless of whether the decision was technically correct.
+        <div class="item-earned">📋 Item Earned: Audit Trail</div>
+      </div>`;
+  } else {
+    document.getElementById('d3-feedback').innerHTML = `
+      <div class="feedback-box bad">
+        ${choice === 'a'
+          ? '✗ The false positive is the symptom — a one-time event. The structural business impact is that ARIA\'s decisions are a black box. Even if this decision was correct, Synapse Bank cannot prove it, which is a systemic risk.'
+          : '✗ ARIA is not described as a key competitive advantage, so model IP theft has low severity here. The critical impact is that without decision logs, every regulatory inquiry and court case becomes unwinnable.'}
+      </div>`;
+  }
+  document.getElementById('d3-feedback').insertAdjacentHTML('beforeend',
+    `<div class="continue-area"><button class="btn-primary" onclick="showDFD()">Enter the Architecture →</button></div>`);
+  updateStatusBar();
+}
+
+function showDFD() {
+  G.screen = 'dfd_intro';
+  render(`
+    <div class="screen">
+      <div class="screen-inner">
+        ${progress('dfd_intro')}
+        <div class="eyebrow">Phase 2 · DFD Deep Dive — ARIA's Architecture</div>
+        <div class="story-text">
+          <h2>Inside ARIA: the Tool Integration Layer</h2>
+          <p>Your team zooms into the part of ARIA's architecture with the highest threat surface: the Tool Integration Layer — the APIs and services through which ARIA gathers evidence and takes action.</p>
+          <p>This is where external transaction data enters ARIA's reasoning chain, where fraud signature databases are referenced, and where ARIA exercises real authority — freezing accounts, approving payments, initiating chargebacks — through direct API calls to banking systems.</p>
+        </div>
+        <div class="dfd-wrap">
+          <svg viewBox="0 0 700 320" xmlns="http://www.w3.org/2000/svg" style="height:220px">
+            <defs>
+              <marker id="arr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+                <polygon points="0 0, 8 3, 0 6" fill="rgba(98,181,23,0.6)"/>
+              </marker>
+            </defs>
+            <!-- KC1 LLM Core -->
+            <rect x="270" y="120" width="160" height="60" rx="8" fill="rgba(209,219,36,0.12)" stroke="#d1db24" stroke-width="1.5"/>
+            <text x="350" y="146" fill="#d1db24" font-size="11" font-weight="800" text-anchor="middle" font-family="Nunito,sans-serif">KC1 · LLM Core</text>
+            <text x="350" y="163" fill="rgba(209,219,36,0.6)" font-size="10" text-anchor="middle" font-family="Nunito,sans-serif">ARIA's reasoning engine</text>
+            <!-- KC2 Orchestration -->
+            <rect x="270" y="20" width="160" height="50" rx="8" fill="rgba(98,181,23,0.1)" stroke="rgba(98,181,23,0.4)" stroke-width="1.5"/>
+            <text x="350" y="43" fill="#a8c96a" font-size="11" font-weight="800" text-anchor="middle" font-family="Nunito,sans-serif">KC2 · Orchestration</text>
+            <text x="350" y="60" fill="rgba(168,201,106,0.6)" font-size="10" text-anchor="middle" font-family="Nunito,sans-serif">Investigation planner</text>
+            <!-- KC4 Memory -->
+            <rect x="50" y="120" width="140" height="50" rx="8" fill="rgba(98,181,23,0.1)" stroke="rgba(98,181,23,0.4)" stroke-width="1.5"/>
+            <text x="120" y="143" fill="#a8c96a" font-size="11" font-weight="800" text-anchor="middle" font-family="Nunito,sans-serif">KC4 · Memory</text>
+            <text x="120" y="160" fill="rgba(168,201,106,0.6)" font-size="10" text-anchor="middle" font-family="Nunito,sans-serif">Transaction history</text>
+            <!-- KC5 Tool Integrations — HIGHLIGHTED -->
+            <rect x="50" y="230" width="600" height="60" rx="8" fill="rgba(209,219,36,0.07)" stroke="#d1db24" stroke-width="2" stroke-dasharray="5 3"/>
+            <text x="350" y="254" fill="#d1db24" font-size="11" font-weight="800" text-anchor="middle" font-family="Nunito,sans-serif">KC5 · Tool Integration Layer  ← INVESTIGATING</text>
+            <text x="350" y="275" fill="rgba(209,219,36,0.5)" font-size="9.5" text-anchor="middle" font-family="Nunito,sans-serif">Transaction API · Fraud Signature DB · Account Freeze Service · Chargeback System</text>
+            <!-- KC6 Operational -->
+            <rect x="510" y="120" width="140" height="50" rx="8" fill="rgba(98,181,23,0.1)" stroke="rgba(98,181,23,0.4)" stroke-width="1.5"/>
+            <text x="580" y="143" fill="#a8c96a" font-size="11" font-weight="800" text-anchor="middle" font-family="Nunito,sans-serif">KC6 · Environment</text>
+            <text x="580" y="160" fill="rgba(168,201,106,0.6)" font-size="10" text-anchor="middle" font-family="Nunito,sans-serif">Banking systems</text>
+            <!-- Arrows -->
+            <line x1="350" y1="70" x2="350" y2="120" stroke="rgba(98,181,23,0.5)" stroke-width="1.5" marker-end="url(#arr)"/>
+            <line x1="270" y1="150" x2="190" y2="150" stroke="rgba(98,181,23,0.5)" stroke-width="1.5" marker-end="url(#arr)"/>
+            <line x1="430" y1="150" x2="510" y2="150" stroke="rgba(98,181,23,0.5)" stroke-width="1.5" marker-end="url(#arr)"/>
+            <line x1="350" y1="180" x2="350" y2="230" stroke="#d1db24" stroke-width="1.5" stroke-dasharray="4 2" marker-end="url(#arr)"/>
+            <line x1="120" y1="170" x2="120" y2="230" stroke="#d1db24" stroke-width="1.5" stroke-dasharray="4 2" marker-end="url(#arr)"/>
+            <line x1="580" y1="170" x2="580" y2="230" stroke="#d1db24" stroke-width="1.5" stroke-dasharray="4 2" marker-end="url(#arr)"/>
+          </svg>
+        </div>
+        <p style="font-size:13px;color:rgba(240,247,230,0.5);text-align:center;margin-bottom:28px">Three threat events have been discovered in this layer. Your team is about to review them.</p>
+        <div class="continue-area">
+          <button class="btn-primary" onclick="showDFDBranches()">Review the Threat Events →</button>
+        </div>
+      </div>
+    </div>
+  `);
+}
+
+function showDFDBranches() {
+  G.screen = 'dfd_branch';
+  render(`
+    <div class="screen">
+      <div class="screen-inner">
+        ${progress('dfd_intro')}
+        <div class="eyebrow">Phase 2 · Three Threat Events Identified</div>
+        <div class="branch-event">
+          <div class="branch-num">Event 01 · Transaction Input API</div>
+          <h3>The Probe Pattern</h3>
+          <p>Log analysis shows a single IP address submitted 340 transactions over 72 hours, each varying by small amounts — £2,340, £2,428, £2,499, £2,501. All stayed just under or over ARIA's apparent approval boundary. ARIA approved 312 of them. None were flagged for human review. The pattern was invisible until a data analyst pulled the raw logs manually.</p>
+          <div class="threat-tag">⚠ Evasion — Model Probing via Repeated API Input</div>
+        </div>
+        <div class="branch-event">
+          <div class="branch-num">Event 02 · Fraud Signature Database</div>
+          <h3>The Poisoned Reference Set</h3>
+          <p>The fraud signature database was updated two weeks ago with a new external threat intelligence feed — sourced through a third-party supplier. Since that update, ARIA's false-negative rate on transactions involving specific merchant category codes has increased by 18%. The supplier's feed has not been audited. It was integrated without a validation step.</p>
+          <div class="threat-tag">⚠ Data Poisoning — Supply Chain Compromise</div>
+        </div>
+        <div class="branch-event">
+          <div class="branch-num">Event 03 · Banking API Response</div>
+          <h3>The Exposed Score</h3>
+          <p>A developer notices that ARIA's API response includes the fraud confidence score in a JSON response field — returned to the customer-facing payment platform. Any user with browser developer tools can see ARIA's exact confidence score for their own transaction. This is the information an attacker needs to calibrate the probing attack in Event 01 precisely.</p>
+          <div class="threat-tag">⚠ Confidence Leakage — Information Disclosure Enabling Evasion</div>
+        </div>
+        <p style="font-size:13px;color:rgba(240,247,230,0.5);margin-top:8px;line-height:1.7">Three threats. Three controls to apply. Whether you can apply them depends on who you are — and what evidence you've gathered.</p>
+        <div class="continue-area">
+          <button class="btn-primary" onclick="showControl1()">Begin Control Phase →</button>
+        </div>
+      </div>
+    </div>
+  `);
+}
+
+function evalControl(controlId) {
+  const has = item => G.items.includes(item);
+  if (controlId === 'control1') return has('evasion_report') || has('credit_risk_brief');
+  if (controlId === 'control2') return has('compliance_shield') || has('bias_analysis');
+  if (controlId === 'control3') return has('audit_trail') || has('lean_spec');
+  return false;
+}
+
+function reqItem(item, label) {
+  const have = G.items.includes(item);
+  return `<div class="req-item"><div class="req-check ${have?'pass':'fail'}">${have?'✓':'○'}</div><span style="color:${have?'rgba(240,247,230,0.8)':'rgba(240,247,230,0.35)'}">${label}</span></div>`;
+}
+function reqRole(role, label) {
+  const have = G.role === role;
+  return `<div class="req-item"><div class="req-check ${have?'pass':'fail'}">${have?'✓':'○'}</div><span style="color:${have?'rgba(240,247,230,0.8)':'rgba(240,247,230,0.35)'}">${label}</span></div>`;
+}
+
+function showControl1() {
+  G.screen = 'control1';
+  const pass = evalControl('control1');
+  render(`
+    <div class="screen">
+      <div class="screen-inner">
+        ${progress('control1')}
+        <div class="eyebrow">Phase 3 · Control 1 of 3 — What are we going to do about it?</div>
+        <div class="control-challenge">
+          <h3>#MONITOR USE — Real-Time Agent Interaction Monitoring</h3>
+          <p>To reduce the severity of both the evasion and prompt injection threats, CLEO needs real-time monitoring of all agent interactions — including natural language inputs. This means monitoring for application inputs that probe CLEO's approval boundary, detecting when CLEO's decisions deviate from her intended lending mandate, and alerting when behaviour patterns suggest adversarial input rather than genuine applications.</p>
+          <p>Unlike traditional security controls that detect consistent technical attack patterns, this control must detect changes in <em>data behaviour</em> relative to CLEO's credit decision logic. That requires someone who can translate what "normal" credit application behaviour looks like mathematically — and define when it has shifted.</p>
+          <div class="control-reqs">
+            <strong>You can apply this control if you have:</strong>
+            ${reqItem('evasion_report',    'Insight: Evasion — documented AI evasion attack via confidence signal probing')}
+            ${reqItem('credit_risk_brief', 'Insight: Credit Risk — documented financial exposure from the fraudulent approval cluster')}
+          </div>
+          ${pass
+            ? `<div class="control-result success"><span class="control-tag">✓ Control Applied</span>Real-time monitoring is live. Application input patterns, confidence score distributions, and proximity-to-threshold submissions are all tracked. The next probing campaign triggers an alert within hours. CLEO's lending mandate is now actively enforced — inputs attempting to direct her outside her authorised scope are flagged immediately.</div>`
+            : `<div class="control-result failure"><span class="control-tag">✗ Control Failed</span>Without the expertise to define what normal credit application behaviour looks like — and without documented evidence of the specific attack pattern — generic volume monitoring is configured. It counts requests. It doesn't detect behaviour. The fraud ring continues. The prompt injection risk remains open.</div>`
+          }
+        </div>
+        <div class="continue-area">
+          <button class="btn-primary" onclick="showControl2()">Next Control →</button>
+        </div>
+      </div>
+    </div>
+  `);
+  G.controls.push({ id: 'control1', pass });
+}
+
+function showControl2() {
+  G.screen = 'control2';
+  const pass = evalControl('control2');
+  render(`
+    <div class="screen">
+      <div class="screen-inner">
+        ${progress('control2')}
+        <div class="eyebrow">Phase 3 · Control 2 of 3 — What are we going to do about it?</div>
+        <div class="control-challenge">
+          <h3>#MONITOR BIAS — Fair Lending Outcome Monitoring</h3>
+          <p>To address CLEO's discriminatory approval patterns, outcome monitoring must track approval and rejection rates across protected characteristics — postcode, age, and any proxy variables that correlate with ethnicity or other protected groups. This means defining a mathematical fairness baseline: what distribution of lending decisions is acceptable under applicable law, and at what point of deviation should an alert fire?</p>
+          <p>This is not a generic technical control. It requires knowing what fairness means under fair lending regulation, and the authority to mandate that this monitoring is prioritised as a compliance requirement — not deferred as an optional model improvement. Without that mandate, it never gets built.</p>
+          <div class="control-reqs">
+            <strong>You can apply this control if you have:</strong>
+            ${reqItem('compliance_shield', 'Insight: Compliance — documented regulatory enforcement risk from discriminatory lending outcomes')}
+            ${reqItem('bias_analysis',     'Insight: Bias Analysis — documented statistical bias in CLEO\'s decision surface by postcode')}
+          </div>
+          ${pass
+            ? `<div class="control-result success"><span class="control-tag">✓ Control Applied</span>Demographic outcome monitoring is implemented. Approval rates are tracked by postcode band, age group, and declared income segment. An alert fires when any protected group's approval rate deviates beyond the defined fairness threshold. The pattern that triggered the FCA inquiry is now visible and measurable in real time.</div>`
+            : `<div class="control-result failure"><span class="control-tag">✗ Control Failed</span>Without the regulatory context to define fairness thresholds — and without documented evidence of the discriminatory pattern — the monitoring is deprioritised. CLEO continues approving loans. The approval gap widens. The FCA inquiry becomes a formal enforcement action.</div>`
+          }
+        </div>
+        <div class="continue-area">
+          <button class="btn-primary" onclick="showControl3()">Next Control →</button>
+        </div>
+      </div>
+    </div>
+  `);
+  G.controls.push({ id: 'control2', pass });
+}
+
+function showControl3() {
+  G.screen = 'control3';
+  const pass = evalControl('control3');
+  render(`
+    <div class="screen">
+      <div class="screen-inner">
+        ${progress('control3')}
+        <div class="eyebrow">Phase 3 · Control 3 of 3 — What are we going to do about it?</div>
+        <div class="control-challenge">
+          <h3>Decision Audit Logging + #OBSCURE CONFIDENCE</h3>
+          <p>Two problems must be solved together. First: implement decision audit logging so every CLEO decision can be fully reconstructed — inputs pulled, reasoning chain, confidence score, outcome — and stored securely for legal and regulatory review. The admin dashboard currently shows outcomes only; it provides no true explainability for CLEO's decisions. Second: remove the confidence score from CLEO's broker portal API response while preserving it internally in the audit log. The exposed score is the signal enabling the evasion attack.</p>
+          <p>This requires identifying where information leaks exist in the API surface and implementing structured logging at the model inference layer — without breaking the architecture CLEO already runs on.</p>
+          <div class="control-reqs">
+            <strong>You can apply this control if you have:</strong>
+            ${reqItem('audit_trail', 'Insight: Audit Trail — documented portfolio-level legal liability requiring inference-layer decision logging')}
+            ${reqItem('lean_spec',   'Insight: Lean Delivery — documented customer transparency gap scoped to point-of-rejection explanations')}
+          </div>
+          ${pass
+            ? `<div class="control-result success"><span class="control-tag">✓ Control Applied</span>Full decision audit logging is implemented. CLEO's reasoning chain, input features, confidence scores, and outcomes are stored securely for every application. The broker portal API response no longer exposes the confidence score. The Ombudsman can now inspect CLEO's reasoning. Fraud rings lose their calibration signal.</div>`
+            : `<div class="control-result failure"><span class="control-tag">✗ Control Failed</span>Logging is partial — it captures outcomes but not reasoning chains. The confidence score remains in the broker portal API response. The Ombudsman cannot get the explanation they need. The FCA opens a formal AI governance investigation. The fraud ring keeps iterating.</div>`
+          }
+        </div>
+        <div class="continue-area">
+          <button class="btn-primary" onclick="showEnding()">See Your Result →</button>
+        </div>
+      </div>
+    </div>
+  `);
+  G.controls.push({ id: 'control3', pass });
+}
+
+function showEnding() {
+  G.screen = 'ending';
+  const failures = G.controls.filter(c => !c.pass);
+  const passes = G.controls.filter(c => c.pass);
+  const failCount = failures.length;
+
+  const controlLabels = {
+    control1: 'Real-time monitoring — evasion and prompt injection remain active and undetected',
+    control2: 'Fair lending monitoring — the discriminatory approval pattern goes unmeasured',
+    control3: 'Audit logging & confidence obscuring — CLEO remains a legal black box'
+  };
+
+  let endingHTML = '';
+
+  if (failCount === 0) {
+    endingHTML = `
+      <div class="ending-icon">🛡️</div>
+      <div class="ending-verdict" style="color:#d1db24">Best Outcome — CLEO Secured</div>
+      <h2>The threat model is complete. CLEO is protected.</h2>
+      <p>Evasion campaigns are detected in real time before defaults accumulate. Fair lending monitoring catches the postcode bias before the FCA does. Every CLEO decision can be reconstructed for the Ombudsman, courts, and auditors. Synapse Bank's AI lending programme is defensible — and demonstrably so.</p>
+      <p>The regulatory review goes well. CLEO continues processing thousands of applications a day, and the team has the evidence to stand behind every decision she makes.</p>
+      <div class="failure-summary">
+        <div class="failure-summary-title">Controls Applied</div>
+        ${passes.map(c => `<div class="success-line"><span>✓</span><span>${
+          c.id === 'control1' ? '#MONITOR USE — evasion detection live' :
+          c.id === 'control2' ? '#ANOMALOUS INPUT HANDLING — fairness monitoring active' :
+          'Audit logging + #OBSCURE CONFIDENCE — decision trail secured'
+        }</span></div>`).join('')}
+      </div>`;
+  } else if (failCount <= 2) {
+    endingHTML = `
+      <div class="ending-icon">⚠️</div>
+      <div class="ending-verdict" style="color:#f0c050">Partial Outcome — Work Remains</div>
+      <h2>Some controls held. Some gaps remain open.</h2>
+      <p>Your threat model identified the right business impacts and surfaced real threats. But without the right role or evidence for every control, some mitigations couldn't be fully applied.</p>
+      <p>ARIA is better protected than before — but not completely. A determined attacker, a regulatory inquiry, or a court case could still find the gaps you left open.</p>
+      <div class="failure-summary">
+        <div class="failure-summary-title">Controls Applied</div>
+        ${passes.map(c => `<div class="success-line"><span>✓</span><span>${
+          c.id === 'control1' ? '#MONITOR USE — evasion detection live' :
+          c.id === 'control2' ? '#ANOMALOUS INPUT HANDLING — fairness monitoring active' :
+          'Audit logging + #OBSCURE CONFIDENCE — decision trail secured'
+        }</span></div>`).join('')}
+        <div class="failure-summary-title" style="margin-top:14px">Gaps Remaining</div>
+        ${failures.map(c => `<div class="failure-line"><span>✗</span><span>${controlLabels[c.id]}</span></div>`).join('')}
+      </div>`;
+  } else {
+    endingHTML = `
+      <div class="ending-icon">🔴</div>
+      <div class="ending-verdict" style="color:#ff8a8a">Threat Model Failed</div>
+      <h2>CLEO is unprotected. The consequences are already in motion.</h2>
+      <p>The fraud ring continues calibrating applications to CLEO's approval threshold — defaults accumulate quietly. The fair lending violation triggers a formal FCA enforcement action. The Ombudsman finds no decision logs and rules against the bank. Regulators suspend CLEO's lending authority pending a full AI governance audit.</p>
+      <p>The board has questions. The team has none of the answers. CLEO is taken offline.</p>
+      <div class="failure-summary">
+        <div class="failure-summary-title">All Controls Failed</div>
+        ${failures.map(c => `<div class="failure-line"><span>✗</span><span>${controlLabels[c.id]}</span></div>`).join('')}
+      </div>`;
+  }
+
+  render(`
+    <div class="screen">
+      <div class="screen-inner">
+        <div class="eyebrow">Mission Complete · ${failCount === 0 ? 'Secured' : failCount <= 2 ? 'Partial' : 'Failed'}</div>
+        <div class="ending-wrap">
+          ${endingHTML}
+          <div class="action-area">
+            <button class="btn-primary" onclick="restartGame()">Play Again</button>
+            <button class="btn-secondary" onclick="window.location.href='/'">Back to Games</button>
+          </div>
+          <p style="font-size:12px;color:rgba(240,247,230,0.3);margin-top:28px;line-height:1.8">
+            Based on the OWASP AI Exchange threat modeling framework.<br>
+            Controls referenced: #MONITOR USE · #MONITOR BIAS · #OBSCURE CONFIDENCE · Decision Audit Logging<br>
+            Threat types: Evasion · Prompt Injection · Confidence Leakage · Fair Lending Violation · Lack of Explainability
+          </p>
+        </div>
+      </div>
+    </div>
+  `);
+}
+
+function restartGame() {
+  G.started = false;
+  G.role = null;
+  G.items = [];
+  G.controls = [];
+  G.selectedImpact = null;
+  G.moods = { business: 3, engineer: 3, security: 3, datascientist: 3 };
+  G.lastChoice = null;
+  G.choiceHistory = [];
+  G.screen = 'cover';
+  document.getElementById('mood-bar').classList.remove('visible');
+  document.getElementById('status-bar').classList.remove('visible');
+  showCover();
+}
+
+// ===== DEBUG MODE =====
+let DEBUG = new URLSearchParams(window.location.search).get('debug') === '1';
+
+function dbgPill(text, style = '') {
+  if (!DEBUG) return '';
+  return `<div class="dbg-pill" style="${style}">${text}</div>`;
+}
+
+const AUTO_ROLE_LABELS = {
+  leakage:       '⚡ Auto: Data Scientist',
+  fairlending:   '⚡ Auto: Business Stakeholder',
+  explainability:'⚡ Auto: Security · Engineer'
+};
+
+function debugSetup() {
+  G.started = true;
+  if (!G.selectedImpact) G.selectedImpact = 'leakage';
+}
+
+function debugJump(fn) {
+  debugSetup();
+  fn();
+}
+
+function initDebug() {
+  const existing = document.getElementById('debug-bar');
+  if (existing) existing.remove();
+  if (!DEBUG) return;
+  const bar = document.createElement('div');
+  bar.id = 'debug-bar';
+  bar.innerHTML = `
+    <div class="dbg-label">🛠 Debug</div>
+    <div class="dbg-group">
+      <span class="dbg-section">Setup</span>
+      <button onclick="debugJump(showCover)">Cover</button>
+      <button onclick="debugJump(showRoleIntro)">Intro</button>
+      <button onclick="debugJump(showSetting)">Setting</button>
+    </div>
+    <div class="dbg-group">
+      <span class="dbg-section">Phase 1</span>
+      <button onclick="debugJump(showImpactSelection)">Impact Select</button>
+      <button onclick="debugJump(()=>showImpactScene('leakage'))">Leakage Path</button>
+      <button onclick="debugJump(()=>showImpactScene('fairlending'))">Fair Lending Path</button>
+      <button onclick="debugJump(()=>showImpactScene('explainability'))">Explainability Path</button>
+    </div>
+    <div class="dbg-group">
+      <span class="dbg-section">Phase 2</span>
+      <button onclick="debugJump(showDFD)">DFD</button>
+      <button onclick="debugJump(()=>showDFDChoice('kc5'))">DFD Choice</button>
+      <button onclick="debugJump(showThreatPaths)">Threats</button>
+      <button onclick="debugJump(()=>showThreatChoice('evasion'))">Threat Choice</button>
+    </div>
+    <div class="dbg-group">
+      <span class="dbg-section">Phase 3</span>
+      <button onclick="debugJump(()=>{G.controls=[];showControl1()})">Control 1</button>
+      <button onclick="debugJump(()=>{G.controls=[{id:'control1',pass:true}];showControl2()})">Control 2</button>
+      <button onclick="debugJump(()=>{G.controls=[{id:'control1',pass:true},{id:'control2',pass:true}];showControl3()})">Control 3</button>
+    </div>
+    <div class="dbg-group">
+      <span class="dbg-section">Endings</span>
+      <button onclick="debugJump(()=>{G.controls=[{id:'control1',pass:true},{id:'control2',pass:true},{id:'control3',pass:true}];showEnding()})">Best</button>
+      <button onclick="debugJump(()=>{G.controls=[{id:'control1',pass:true},{id:'control2',pass:false},{id:'control3',pass:false}];showEnding()})">Partial</button>
+      <button onclick="debugJump(()=>{G.controls=[{id:'control1',pass:false},{id:'control2',pass:false},{id:'control3',pass:false}];showEnding()})">Bad</button>
+    </div>
+  `;
+  document.body.appendChild(bar);
+}
+
+// ===== INIT =====
+showCover();
+initDebug();
+</script>
+
+<style>
+.dbg-pill {
+  display: inline-block; margin-top: 8px;
+  font-size: 10px; font-weight: 800; letter-spacing: 0.5px;
+  background: rgba(209,219,36,0.12); border: 1px solid rgba(209,219,36,0.3);
+  color: rgba(209,219,36,0.85); border-radius: 20px;
+  padding: 3px 10px; line-height: 1.6;
+}
+#debug-bar {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 9999;
+  background: rgba(0,0,0,0.92); border-top: 2px solid rgba(209,219,36,0.4);
+  padding: 10px 16px; display: flex; align-items: center; gap: 16px;
+  flex-wrap: wrap; font-family: 'Nunito', sans-serif;
+}
+.dbg-label {
+  font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 1.5px;
+  color: #d1db24; flex-shrink: 0;
+}
+.dbg-group {
+  display: flex; align-items: center; gap: 4px; flex-wrap: wrap;
+}
+.dbg-section {
+  font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
+  color: rgba(240,247,230,0.3); margin-right: 2px;
+}
+#debug-bar button {
+  font-family: inherit; font-size: 11px; font-weight: 700;
+  background: rgba(209,219,36,0.1); color: #d1db24;
+  border: 1px solid rgba(209,219,36,0.25); border-radius: 5px;
+  padding: 4px 9px; cursor: pointer; transition: all 0.15s;
+}
+#debug-bar button:hover {
+  background: rgba(209,219,36,0.25); border-color: rgba(209,219,36,0.6);
+}
+</style>
+</body>
+</html>
