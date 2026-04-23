@@ -375,48 +375,77 @@ body.obs-hands-hidden .opp-hand-label{display:none !important;}
 /* MIDDLE - open play field */
 .game-middle{flex:1;display:flex;flex-direction:row;min-height:0;overflow:hidden;}
 /* Two-column sections inside game-middle */
-.gm-section{display:flex;flex-direction:column;flex:1;min-height:0;overflow:hidden;border-right:1px solid #1e2d3d;}
+.gm-section{display:flex;flex-direction:column;min-height:0;overflow:hidden;border-right:1px solid #1e2d3d;}
 .gm-section:last-child{border-right:none;}
+.gm-actions-section{flex:3;}
+.gm-feed-section{flex:2;}
 .gm-section-header{padding:5px 14px;background:#050d02;border-bottom:1px solid #1e2d3d;flex-shrink:0;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:1.2px;color:#374151;}
 /* Active Actions body — no scroll, content must fit */
-.gm-actions-body{flex:1;overflow:hidden;display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;min-height:0;padding:10px 12px;gap:0;}
-/* Panels inside actions body fill available height, no inner scroll */
+.gm-actions-body{flex:1;overflow:hidden;display:flex;flex-direction:column;align-items:stretch;justify-content:center;min-height:0;padding:6px 10px;gap:0;}
+/* Panels inside actions body — full width, natural height, centered by parent */
 .gm-actions-body .effect-panel,.gm-actions-body .govern-panel{
-  max-height:none;max-width:none;width:100%;box-sizing:border-box;padding:10px 14px;
-  overflow:hidden;display:flex;flex-direction:column;flex:1;min-height:0;}
-.gm-actions-body .effect-panel h3,.gm-actions-body .govern-panel h3{flex-shrink:0;font-size:15px;margin-bottom:6px;}
-.gm-actions-body .effect-panel p,.gm-actions-body .govern-panel p{flex-shrink:0;margin-bottom:6px;}
+  max-height:none;max-width:none;width:100%;box-sizing:border-box;padding:8px 12px;
+  overflow:hidden;display:flex;flex-direction:column;min-height:0;}
+.gm-actions-body .effect-panel h3,.gm-actions-body .govern-panel h3{flex-shrink:0;font-size:13px;margin-bottom:4px;}
+.gm-actions-body .effect-panel p,.gm-actions-body .govern-panel p{flex-shrink:0;margin-bottom:4px;font-size:12px;}
 /* Compact cards inside actions panel — no desc, smaller footprint */
-.gm-actions-body .card{min-width:58px;max-width:66px;height:82px;flex-shrink:0;}
+.gm-actions-body .card{min-width:52px;max-width:60px;height:68px;flex-shrink:0;}
 .gm-actions-body .card .card-desc{display:none;}
-.gm-actions-body .card .card-name{font-size:10px;line-height:1.2;}
-.gm-actions-body .ds-card{min-width:52px;max-width:60px;height:72px;}
-.gm-actions-body .ds-card .ds-card-name{font-size:9px;}
+.gm-actions-body .card .card-name{font-size:9px;line-height:1.2;}
+.gm-actions-body .ds-card{min-width:46px;max-width:54px;height:60px;}
+.gm-actions-body .ds-card .ds-card-name{font-size:8px;}
+/* Tighter row/slot gaps inside actions body */
+.gm-actions-body .kc-row{gap:4px;margin-bottom:3px;}
+.gm-actions-body .kc-slots{gap:4px;}
+/* Compact player-select and choice buttons inside actions panel */
+.gm-actions-body .govern-player-btn{padding:7px 11px;font-size:12px;margin-bottom:4px;gap:8px;}
+.gm-actions-body .effect-choice-btn{padding:9px 12px;font-size:12px;margin-bottom:6px;}
+.gm-actions-body .effect-choice-btn .sub{font-size:10px;}
+.gm-actions-body .action-btn{padding:6px 12px;font-size:11px;}
 /* Delivery panel — fill without scroll */
 .gm-actions-body .delivery-swap-panel{
-  max-width:none;max-height:none;overflow:hidden;padding:10px 14px;
-  flex:1;width:100%;box-sizing:border-box;gap:8px;}
+  max-width:none;max-height:none;overflow:hidden;padding:8px 12px;
+  width:100%;box-sizing:border-box;gap:6px;}
 /* Two-column layout used for delivery sub-screens */
-.delivery-col-layout{display:flex;gap:8px;flex:1;min-height:0;overflow:hidden;}
-.delivery-col{display:flex;flex-direction:column;flex:1;min-width:0;overflow:hidden;}
-.delivery-col-label{font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:0.8px;padding:3px 0;flex-shrink:0;}
+.delivery-col-layout{display:flex;gap:6px;flex:1;min-height:0;overflow:hidden;}
+/* Delivery cols scroll internally so cards never clip out of view */
+.delivery-col{display:flex;flex-direction:column;flex:1;min-width:0;overflow-y:auto;overflow-x:hidden;}
+.delivery-col-label{font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:0.8px;padding:2px 0;flex-shrink:0;}
 .delivery-col-label.mine{color:#f59e0b;}
 .delivery-col-label.theirs{color:#62b517;}
-.delivery-col-divider{display:flex;align-items:center;font-size:18px;color:#f59e0b;flex-shrink:0;padding:0 2px;}
-.delivery-col .kc-row{margin-bottom:4px;}
-.delivery-col .kc-slots{flex-wrap:wrap;gap:4px;}
+.delivery-col-divider{display:flex;align-items:center;font-size:16px;color:#f59e0b;flex-shrink:0;padding:0 2px;}
+.delivery-col .kc-row{margin-bottom:3px;}
+.delivery-col .kc-slots{flex-wrap:wrap;gap:3px;}
 /* Idle placeholder */
 .gm-idle-state{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:#1a2d1a;width:100%;flex:1;}
 .gm-idle-icon{font-size:30px;opacity:0.6;}
 .gm-idle-text{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;}
-/* Activity Feed body */
-.gm-feed-body{flex:1;overflow:hidden;padding:6px 12px;display:flex;flex-direction:column;gap:0;min-height:0;}
-.gm-feed-entry{font-size:11px;line-height:1.6;color:#4b5563;padding:4px 0;border-bottom:1px solid #0d1a0a;flex-shrink:0;}
-/* Most recent entry — at top, larger and highlighted */
-.gm-feed-entry:first-child{font-size:14px;font-weight:600;color:#e2e8f0;line-height:1.5;padding:8px 10px;border-bottom:1px solid #1e2d3d;border-left:3px solid #62b517;background:rgba(98,181,23,0.07);border-radius:0 5px 5px 0;margin-bottom:4px;}
+/* Activity Feed body — max 5 entries, graduated sizing */
+.gm-feed-body{flex:1;overflow:hidden;padding:8px 12px;display:flex;flex-direction:column;gap:5px;min-height:0;}
+.gm-feed-entry{border-radius:0 7px 7px 0;flex-shrink:0;border-left:3px solid #1a2535;padding:5px 10px;color:#4b5563;font-size:10px;line-height:1.4;}
+/* #1 — newest, most prominent */
+.gm-feed-entry:nth-child(1){font-size:15px;font-weight:700;color:#e2e8f0;line-height:1.55;padding:11px 14px;border-left-color:#62b517;background:rgba(98,181,23,0.09);border-radius:0 8px 8px 0;}
+/* #2 */
+.gm-feed-entry:nth-child(2){font-size:12px;font-weight:600;color:#c1cdd9;line-height:1.45;padding:7px 12px;border-left-color:#374a5c;background:rgba(255,255,255,0.03);}
+/* #3 */
+.gm-feed-entry:nth-child(3){font-size:11px;color:#8a9ab0;line-height:1.4;padding:6px 11px;border-left-color:#253347;}
+/* #4–5 — oldest, most faded */
+.gm-feed-entry:nth-child(n+4){font-size:10px;color:#4b5563;border-left-color:#1a2535;}
 /* Targeted — another player is impacting YOU */
-.gm-feed-entry.gm-targeted{border-left:3px solid #ef4444;background:rgba(239,68,68,0.08);color:#fca5a5;padding-left:10px;border-radius:0 5px 5px 0;}
-.gm-feed-entry.gm-targeted:first-child{border-left-color:#ef4444;background:rgba(239,68,68,0.18);color:#fecaca;}
+.gm-feed-entry.gm-targeted{border-left-color:#ef4444 !important;background:rgba(239,68,68,0.09) !important;color:#fca5a5 !important;}
+.gm-feed-entry:nth-child(1).gm-targeted{background:rgba(239,68,68,0.18) !important;color:#fecaca !important;}
+
+/* ===== IMPACT ALERT (Active Actions panel — you were targeted) ===== */
+#gm-impact-alert{display:none;flex-direction:column;align-items:center;justify-content:center;gap:10px;width:100%;flex:1;padding:14px 16px;box-sizing:border-box;}
+#gm-impact-alert.visible{display:flex;}
+.impact-alert-eyebrow{font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:2px;color:#ef4444;opacity:0.85;display:flex;align-items:center;gap:5px;}
+.impact-alert-card{width:100%;background:rgba(239,68,68,0.1);border:2px solid rgba(239,68,68,0.3);border-left:5px solid #ef4444;border-radius:0 12px 12px 0;padding:14px 18px;box-sizing:border-box;font-size:15px;font-weight:700;color:#fecaca;line-height:1.6;animation:impact-slide-in 0.3s ease-out;}
+.impact-alert-bar-wrap{width:100%;height:3px;background:rgba(239,68,68,0.18);border-radius:2px;overflow:hidden;}
+.impact-alert-bar{height:100%;background:#ef4444;border-radius:2px;transform-origin:left center;animation:impact-drain 5s linear forwards;}
+.impact-alert-dismiss{font-size:10px;color:#4b5563;cursor:pointer;letter-spacing:0.5px;}
+.impact-alert-dismiss:hover{color:#9ca3af;}
+@keyframes impact-slide-in{from{opacity:0;transform:translateX(-8px);}to{opacity:1;transform:translateX(0);}}
+@keyframes impact-drain{from{transform:scaleX(1);}to{transform:scaleX(0);}}
 
 /* RIGHT SIDEBAR */
 .game-right-sidebar{width:220px;flex-shrink:0;background:#0a1200;border-left:1px solid #1e2d3d;display:flex;flex-direction:column;overflow:hidden;}
@@ -512,7 +541,40 @@ body.obs-hands-hidden .opp-hand-label{display:none !important;}
 .kc-slot-count{position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);background:#f59e0b;color:#111;font-size:11px;font-weight:900;border-radius:8px;padding:1px 6px;line-height:18px;border:2px solid #111;white-space:nowrap;}
 .hand-area{padding:4px 12px 6px;flex:1 1 0;min-width:0;overflow:hidden;transition:box-shadow 0.3s;}
 .hand-area.idle-glow{outline:2px solid #d1db24;outline-offset:3px;box-shadow:0 0 18px 5px rgba(209,219,36,0.35);animation:bc-tut-pulse 1.1s ease-in-out infinite;border-radius:6px;}
-.hand-title{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#4b5563;margin-bottom:4px;display:flex;align-items:center;justify-content:space-between;}
+/* Protect — static blue tint + subtle diagonal stripe texture */
+.hand-area.is-protected,.my-played-area.is-protected{
+  border-radius:8px;
+  background-color:rgba(59,130,246,0.18);
+  background-image:repeating-linear-gradient(
+    45deg,
+    transparent 0px,transparent 7px,
+    rgba(59,130,246,0.10) 7px,rgba(59,130,246,0.10) 9px
+  );
+}
+/* Install — static red tint + subtle diagonal stripe texture */
+.hand-area.is-install{
+  border-radius:8px;
+  background-color:rgba(239,68,68,0.18);
+  background-image:repeating-linear-gradient(
+    45deg,
+    transparent 0px,transparent 7px,
+    rgba(239,68,68,0.10) 7px,rgba(239,68,68,0.10) 9px
+  );
+}
+/* Both active on hand — purple tint + stripe overrides blue/red */
+.hand-area.is-protected.is-install{
+  background-color:rgba(124,58,237,0.20);
+  background-image:repeating-linear-gradient(
+    45deg,
+    transparent 0px,transparent 7px,
+    rgba(124,58,237,0.11) 7px,rgba(124,58,237,0.11) 9px
+  );
+}
+.hand-title{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#4b5563;margin-bottom:4px;display:flex;align-items:center;gap:6px;}
+/* Status tags in hand-title and opponent header */
+.hand-status-tag{font-size:8px;font-weight:900;text-transform:uppercase;letter-spacing:0.7px;padding:2px 6px;border-radius:20px;flex-shrink:0;white-space:nowrap;}
+.hand-status-tag.protect{color:#93c5fd;background:rgba(59,130,246,0.15);border:1px solid rgba(59,130,246,0.45);}
+.hand-status-tag.install{color:#f87171;background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.4);}
 .hand-cards{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;max-height:160px;}
 /* Stack vertically on narrow screens */
 @media(max-width:640px){
@@ -1235,6 +1297,13 @@ body.screen-idle-glow::after{
               <div class="gm-idle-icon">◈</div>
               <div class="gm-idle-text">No action required</div>
             </div>
+            <!-- Impact alert: opponent targeted you — auto-dismisses after 5s -->
+            <div id="gm-impact-alert">
+              <div class="impact-alert-eyebrow">⚠ You've been targeted</div>
+              <div class="impact-alert-card" id="gm-impact-alert-body"></div>
+              <div class="impact-alert-bar-wrap"><div class="impact-alert-bar" id="gm-impact-alert-bar"></div></div>
+              <div class="impact-alert-dismiss" onclick="hideImpactAlert()">Dismiss</div>
+            </div>
             <!-- Action overlay content renders here (was a floating overlay) -->
             <div id="govern-overlay-inner"></div>
           </div>
@@ -1286,7 +1355,7 @@ body.screen-idle-glow::after{
       <div class="hand-area" id="hand-area">
         <div class="hand-title">
           <span>Your Hand <span class="info-btn" onclick="">i<div class="info-popup wide">💡 <em>Hover over a card to zoom in and read it — or hold it down on mobile.</em><br><br><strong>Click</strong> a card to play it on your turn. You can play multiple cards per turn.<br><br><strong>Attack cards</strong> target opponents. <strong>Defend cards</strong> protect you or give special abilities.<br><br><em>Respond</em> and <em>Weaponize</em> can be played out of turn when prompted. Click <strong>End Turn</strong> when done.</div></span></span>
-          <span id="hand-count-label" style="color:#4b5563;font-size:11px;"></span>
+          <span id="hand-count-label" style="color:#4b5563;font-size:11px;margin-left:auto;"></span>
         </div>
         <div class="hand-cards" id="hand-cards"></div>
       </div>
@@ -1682,6 +1751,12 @@ function updateMyTurnIndicator(isMyTurn) {
 let _afLastPhase = null;
 let _afLastPlayer = -1;
 let _afLastPlayed = null; // { [playerIdx]: Set<cardId> } — tracks played card diffs
+let _afLastActionObjActive = false;
+let _afIdentifySwapSnapshot = null; // snapshot taken during identify_swap_their to reconstruct which cards moved
+let _afReconSwapSnapshot    = null; // snapshot taken during attack_recon_swap_their
+let _afExploitSnapshot      = null; // snapshot of local hand when entering exploit respond window
+let _afInstallSnapshot      = null; // snapshot of attacker when entering install respond window
+let _afDeliverySnapshot     = null; // snapshot of played cards during attack_delivery_pick
 
 function _pSpan(gs, idx) {
   const pl = gs.players[idx];
@@ -1693,6 +1768,44 @@ function _cSpan(name) {
   return `<span style="color:#d1db24;font-weight:700">${name}</span>`;
 }
 
+let _impactAlertTimer = null;
+
+function showImpactAlert(html, duration) {
+  duration = duration || 5000;
+  const el    = document.getElementById('gm-impact-alert');
+  const body  = document.getElementById('gm-impact-alert-body');
+  const bar   = document.getElementById('gm-impact-alert-bar');
+  if (!el || !body) return;
+  body.innerHTML = html;
+  // Restart drain animation
+  if (bar) {
+    bar.style.animation = 'none';
+    void bar.offsetWidth; // force reflow
+    bar.style.animation = 'impact-drain ' + duration + 'ms linear forwards';
+  }
+  // Hide idle placeholder, show alert
+  const idleState = document.getElementById('gm-idle-state');
+  if (idleState) idleState.style.display = 'none';
+  el.classList.add('visible');
+  clearTimeout(_impactAlertTimer);
+  _impactAlertTimer = setTimeout(hideImpactAlert, duration);
+}
+
+function hideImpactAlert(skipIdle) {
+  clearTimeout(_impactAlertTimer);
+  const el = document.getElementById('gm-impact-alert');
+  if (el) el.classList.remove('visible');
+  // skipIdle=true when called from renderEffectOverlay — that function manages
+  // idle state itself and inner.innerHTML hasn't been written yet at call time
+  if (skipIdle) return;
+  // Otherwise restore idle placeholder if no active content is present
+  const inner = document.getElementById('govern-overlay-inner');
+  if (!inner || !inner.innerHTML.trim()) {
+    const idleState = document.getElementById('gm-idle-state');
+    if (idleState) idleState.style.display = '';
+  }
+}
+
 function addActivityEntry(html, targeted = false) {
   const body = document.getElementById('gm-feed-body');
   if (!body) return;
@@ -1700,9 +1813,16 @@ function addActivityEntry(html, targeted = false) {
   entry.className = 'gm-feed-entry' + (targeted ? ' gm-targeted' : '');
   entry.innerHTML = html;
   body.prepend(entry);
-  // Drop entries that overflow the visible area (no scrolling)
+  // Drop oldest entries only when they would cause scrolling — no hard cap
   while (body.scrollHeight > body.clientHeight && body.children.length > 1) {
     body.removeChild(body.lastChild);
+  }
+  // Show a prominent impact alert in Active Actions when idle and you are targeted
+  if (targeted) {
+    const inner = document.getElementById('govern-overlay-inner');
+    if (!inner || !inner.innerHTML.trim()) {
+      showImpactAlert(html);
+    }
   }
 }
 
@@ -1808,6 +1928,184 @@ function trackActivityFeed(gs) {
       addActivityEntry(`&#127942; ${_pSpan(gs, gs.winner)} wins the game!`);
     }
   }
+
+  // ── Recon swap: keep snapshot fresh during attack_recon_swap_their ──
+  if (phase === 'attack_recon_swap_their' && gs.attackInfo) {
+    const ai = gs.attackInfo;
+    _afReconSwapSnapshot = {
+      attackerIdx: ai.attacker,
+      targetIdx: ai.target,
+      myCard: ai.reconSwapMyCard,
+      targetPlayedIds: gs.players[ai.target]?.played.map(c => c.id) || []
+    };
+  }
+
+  // ── Recon swap complete ──
+  if (_afLastPhase === 'attack_recon_swap_their' && phase !== 'attack_recon_swap_their' && _afReconSwapSnapshot) {
+    const snap = _afReconSwapSnapshot;
+    _afReconSwapSnapshot = null;
+    const tgtPlayer = gs.players[snap.targetIdx];
+    const attackerPlayer = gs.players[snap.attackerIdx];
+    const newTgtIds = new Set(tgtPlayer?.played?.map(c => c.id) || []);
+    const takenId = snap.targetPlayedIds.find(id => !newTgtIds.has(id));
+    let takenName = '?';
+    if (takenId) {
+      const takenCard = attackerPlayer?.played?.find(c => c.id === takenId);
+      if (takenCard) takenName = takenCard.name;
+    }
+    const reconMyCardName = snap.myCard?.name || '?';
+    const reconIsTargeted = snap.targetIdx === gs.myIndex;
+    const reconMsg = reconIsTargeted
+      ? `${_pSpan(gs, snap.attackerIdx)} (${_cSpan('Recon')}) swapped your <strong>${takenName}</strong> for their <strong>${reconMyCardName}</strong>`
+      : `${_pSpan(gs, snap.attackerIdx)} (${_cSpan('Recon')}) swapped their <strong>${reconMyCardName}</strong> for ${_pSpan(gs, snap.targetIdx)}'s <strong>${takenName}</strong>`;
+    addActivityEntry(reconMsg, reconIsTargeted);
+    if (reconIsTargeted) {
+      showImpactAlert(`${attackerPlayer?.name || '?'} used <strong>Recon</strong> and took your <strong>${takenName}</strong>, leaving their <strong>${reconMyCardName}</strong>`);
+    }
+  }
+
+  // ── Exploit / Install: snapshot on respond-window entry, fire on exit ──
+  if (phase === 'attack_respond_window' && _afLastPhase !== 'attack_respond_window') {
+    // Fresh respond window — clear old snapshots and set the relevant one
+    _afExploitSnapshot = null;
+    _afInstallSnapshot = null;
+    if (gs.attackInfo?.type === 'exploit' && gs.attackInfo?.iAmTarget) {
+      _afExploitSnapshot = {
+        attackerIdx: gs.attackInfo.attacker,
+        myHand: (gs.myHand || []).map(c => ({id: c.id, name: c.name}))
+      };
+    }
+    if (gs.attackInfo?.type === 'install' && gs.attackInfo?.iAmTarget) {
+      _afInstallSnapshot = { attackerIdx: gs.attackInfo.attacker };
+    }
+  }
+
+  // ── Exploit complete: detect stolen card ──
+  if (_afLastPhase === 'attack_respond_window' && phase !== 'attack_respond_window' && _afExploitSnapshot) {
+    const snap = _afExploitSnapshot;
+    _afExploitSnapshot = null;
+    const newHandIds = new Set((gs.myHand || []).map(c => c.id));
+    const stolenCard = snap.myHand.find(c => !newHandIds.has(c.id));
+    if (stolenCard) {
+      const exploitAttackerName = gs.players[snap.attackerIdx]?.name || '?';
+      addActivityEntry(`${_pSpan(gs, snap.attackerIdx)} (${_cSpan('Exploit')}) stole your <strong>${stolenCard.name}</strong> &mdash; it is now in their hand`, true);
+      showImpactAlert(`${exploitAttackerName} used <strong>Exploit</strong> and stole your <strong>${stolenCard.name}</strong> — it is now in their hand`);
+    }
+    // If no card was stolen, Respond cancelled the attack — no message needed
+  }
+
+  // ── Install complete: clarify the block if it landed ──
+  if (_afLastPhase === 'attack_respond_window' && phase !== 'attack_respond_window' && _afInstallSnapshot) {
+    const snap = _afInstallSnapshot;
+    _afInstallSnapshot = null;
+    if (gs.iAmInstallBlocked) {
+      addActivityEntry(`${_pSpan(gs, snap.attackerIdx)} (${_cSpan('Install')}) blocked your defenses &mdash; you cannot play defend cards until the <strong>end of your next turn</strong>`, true);
+      showImpactAlert(`${gs.players[snap.attackerIdx]?.name || '?'} used <strong>Install</strong> — you cannot play <strong>defend cards</strong> until the end of your next turn`);
+    }
+  }
+
+  // ── Delivery: keep snapshot of played cards + attacker swap data ──
+  if (phase === 'attack_delivery_pick' && gs.attackInfo) {
+    const ai = gs.attackInfo;
+    const playedSnapshot = {};
+    gs.players.forEach((pl, i) => { playedSnapshot[i] = pl.played.map(c => ({id: c.id, name: c.name})); });
+    _afDeliverySnapshot = {
+      attackerIdx: ai.attacker,
+      targetIdx: ai.target,
+      swaps: (ai.deliverySwaps || []).map(s => Object.assign({}, s)),
+      playedSnapshot
+    };
+  }
+
+  // ── Delivery complete ──
+  if (_afLastPhase === 'attack_delivery_pick' && phase !== 'attack_delivery_pick' && _afDeliverySnapshot) {
+    const snap = _afDeliverySnapshot;
+    _afDeliverySnapshot = null;
+    const deliveryAttackerName = gs.players[snap.attackerIdx]?.name || '?';
+    if (snap.swaps.length > 0) {
+      // Attacker had swap data — log each swap precisely
+      snap.swaps.forEach(s => {
+        const deliveryIsTargeted = s.theirIdx === gs.myIndex;
+        const deliveryMsg = deliveryIsTargeted
+          ? `${_pSpan(gs, snap.attackerIdx)} (${_cSpan('Delivery')}) swapped your <strong>${s.theirCard?.name || '?'}</strong> for their <strong>${s.myCard?.name || '?'}</strong>`
+          : `${_pSpan(gs, snap.attackerIdx)} (${_cSpan('Delivery')}) swapped their <strong>${s.myCard?.name || '?'}</strong> for ${_pSpan(gs, s.theirIdx)}'s <strong>${s.theirCard?.name || '?'}</strong>`;
+        addActivityEntry(deliveryMsg, deliveryIsTargeted);
+        if (deliveryIsTargeted) {
+          showImpactAlert(`${deliveryAttackerName} used <strong>Delivery</strong> and swapped your <strong>${s.theirCard?.name || '?'}</strong> for their <strong>${s.myCard?.name || '?'}</strong>`);
+        }
+      });
+    } else {
+      // Non-attacker view — diff own played cards to detect what moved
+      const myOld = snap.playedSnapshot[gs.myIndex] || [];
+      const myNew = gs.players[gs.myIndex]?.played || [];
+      const oldIds = new Set(myOld.map(c => c.id));
+      const newIds = new Set(myNew.map(c => c.id));
+      const lost = myOld.filter(c => !newIds.has(c.id));
+      const gained = myNew.filter(c => !oldIds.has(c.id));
+      if (lost.length > 0 || gained.length > 0) {
+        const lostStr   = lost.map(c => `<strong>${c.name}</strong>`).join(' and ');
+        const gainedStr = gained.map(c => `<strong>${c.name}</strong>`).join(' and ');
+        const deliveryDiffMsg = `${_pSpan(gs, snap.attackerIdx)} (${_cSpan('Delivery')}) swapped your ${lostStr} for their ${gainedStr}`;
+        addActivityEntry(deliveryDiffMsg, true);
+        showImpactAlert(`${deliveryAttackerName} used <strong>Delivery</strong> and swapped your ${lostStr} for their ${gainedStr}`);
+      }
+    }
+  }
+
+  // ── Identify swap: keep snapshot fresh while the swap is being set up ──
+  if (phase === 'identify_swap_their' && gs.identifyInfo) {
+    const ii = gs.identifyInfo;
+    const tgtIdx = ii.swapTargetIdx;
+    _afIdentifySwapSnapshot = {
+      chooserIdx: ii.chooser,
+      myCard: ii.swapMyCard,       // card the chooser is giving away
+      targetIdx: tgtIdx,
+      // snapshot the target's played card IDs so we can diff after completion
+      targetPlayedIds: (tgtIdx != null && gs.players[tgtIdx]) ? gs.players[tgtIdx].played.map(c => c.id) : []
+    };
+  }
+
+  // ── Identify swap complete: phase just left identify_swap_their ──
+  if (_afLastPhase === 'identify_swap_their' && phase !== 'identify_swap_their' && _afIdentifySwapSnapshot) {
+    const snap = _afIdentifySwapSnapshot;
+    _afIdentifySwapSnapshot = null;
+    const tgtPlayer = snap.targetIdx != null ? gs.players[snap.targetIdx] : null;
+    // Find which card is now gone from the target's played array (that's the one they lost)
+    const newTargetIds = new Set((tgtPlayer?.played || []).map(c => c.id));
+    const takenId = snap.targetPlayedIds.find(id => !newTargetIds.has(id));
+    // Find the card name — check old _afLastPlayed set or fall back to id
+    let takenName = '?';
+    if (takenId) {
+      // Try to look up the card name from the chooser's current played area (it moved there)
+      const chooserPlayer = gs.players[snap.chooserIdx];
+      const takenCard = chooserPlayer?.played?.find(c => c.id === takenId);
+      if (takenCard) takenName = takenCard.name;
+    }
+    const myCardName = snap.myCard?.name || '?';
+    const targetName = tgtPlayer?.name || '?';
+    const isTargeted = snap.targetIdx === gs.myIndex;
+    const chooserName = gs.players[snap.chooserIdx]?.name || '?';
+    let msg;
+    if (isTargeted) {
+      msg = `${_pSpan(gs, snap.chooserIdx)} (${_cSpan('Identify')}) swapped your <strong>${takenName}</strong> for their <strong>${myCardName}</strong>`;
+    } else {
+      msg = `${_pSpan(gs, snap.chooserIdx)} (${_cSpan('Identify')}) swapped their <strong>${myCardName}</strong> for ${_pSpan(gs, snap.targetIdx)}'s <strong>${takenName}</strong>`;
+    }
+    addActivityEntry(msg, isTargeted);
+    if (isTargeted) {
+      showImpactAlert(`${chooserName} used <strong>Identify</strong> and swapped your <strong>${takenName}</strong> for their <strong>${myCardName}</strong>`);
+    }
+  }
+
+  // ── Action Objectives played — impacts every player ──
+  if (gs.actionObjActive && !_afLastActionObjActive) {
+    const iHoldDataFlag = gs.myHand && gs.myHand.some(c => c.type === 'data_flag');
+    addActivityEntry(
+      `🎯 ${_pSpan(gs, gs.currentPlayer)} played ${_cSpan('Action Objectives')} &mdash; the Data Flag holder must give it up immediately!`,
+      iHoldDataFlag // targeted if YOU are holding the Data Flag
+    );
+  }
+  _afLastActionObjActive = !!gs.actionObjActive;
 
   _afLastPhase = phase;
 }
@@ -2775,6 +3073,8 @@ function renderOpponents(gs) {
           <div class="opp-color-dot" style="background:${COLOR_INFO[pl.color]?.hex||'#888'}"></div>
           <span class="opp-name">${pl.name}</span>
           <span class="self-you-label">YOU</span>
+          ${isProtected ? '<span class="opp-protected-badge"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L4 6v6c0 5.5 3.5 10.7 8 12 4.5-1.3 8-6.5 8-12V6L12 2z"/></svg> Protected</span>' : ''}
+          ${isInstallBlocked ? '<span class="opp-blocked-badge"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9"/><line x1="6" y1="6" x2="18" y2="18"/></svg> No Defend</span>' : ''}
         </div>
         <div class="opp-played" style="justify-content:center;">
           <div${turnCardIdAttr} class="${turnCardCls}">${turnCardTxt}</div>
@@ -2876,8 +3176,47 @@ function renderHand(gs) {
     const div = buildHandCard(card, clickable, false);
     el.appendChild(div);
   });
-  document.getElementById('hand-count-label').textContent = gs.myHand.length + ' card(s)'
-    + (gs.iAmInstallBlocked ? ' — Defend cards blocked this turn!' : '');
+  document.getElementById('hand-count-label').textContent = gs.myHand.length + ' card(s)';
+
+  // ── Status tags (Protect / Install) in hand-title ──
+  const handArea = document.getElementById('hand-area');
+  const handTitle = handArea ? handArea.querySelector('.hand-title') : null;
+  const countLabel = document.getElementById('hand-count-label');
+  const myPlayedArea = document.querySelector('.my-played-area');
+
+  // Remove any previous status tags and frame states
+  if (handTitle) handTitle.querySelectorAll('.hand-status-tag').forEach(t => t.remove());
+  if (handArea)     handArea.classList.remove('is-protected', 'is-install');
+  if (myPlayedArea) myPlayedArea.classList.remove('is-protected');
+
+  const iAmProtected = gs.protectedPlayers && gs.protectedPlayers.includes(gs.myIndex);
+
+  // Insert tags before the count label so layout is: [Your Hand] [tag] [tag] [count →]
+  function _insertTag(cls, text) {
+    const tag = document.createElement('span');
+    tag.className = 'hand-status-tag ' + cls;
+    tag.textContent = text;
+    if (handTitle) {
+      if (countLabel && countLabel.parentNode === handTitle) {
+        handTitle.insertBefore(tag, countLabel);
+      } else {
+        handTitle.appendChild(tag);
+      }
+    }
+  }
+
+  if (iAmProtected) {
+    _insertTag('protect', '🛡 Protect');
+    // Blue glowing frame on both sections (purple if install also active — handled by CSS)
+    if (handArea)     handArea.classList.add('is-protected');
+    if (myPlayedArea) myPlayedArea.classList.add('is-protected');
+  }
+
+  if (gs.iAmInstallBlocked) {
+    _insertTag('install', '⛔ No Defend');
+    // Red glowing frame on hand only (purple if protect also active — handled by CSS)
+    if (handArea) handArea.classList.add('is-install');
+  }
 }
 
 function selectCard(cardId) {
@@ -3079,6 +3418,15 @@ function renderEffectOverlay(gs) {
   // Hide idle placeholder — each phase block sets inner.innerHTML; default case restores it
   if (idleState) idleState.style.display = 'none';
   const myIdx = gs.myIndex;
+  // If an active required phase is about to show, dismiss any pending impact alert
+  // (active action always takes priority over the alert)
+  const _activePhases = ['govern_take','govern_give','identify_choosing','identify_dataflag',
+    'identify_swap_my','identify_swap_target','identify_swap_their','detect_view',
+    'attack_c2_target','attack_respond_window','attack_c2_give','weaponize_window',
+    'attack_recon_target','attack_recon_choose','attack_recon_look','attack_recon_swap_my',
+    'attack_recon_swap_their','attack_exploit_target','attack_install_target',
+    'attack_delivery_target','attack_delivery_pick'];
+  if (gs.phase && _activePhases.includes(gs.phase)) hideImpactAlert(true);
 
   // ── Govern: take one card from each player ──
   if (gs.phase === 'govern_take' && gs.governInfo) {
@@ -3089,9 +3437,9 @@ function renderEffectOverlay(gs) {
     const fromHand = gi.allHands.find(h => h.playerIdx === fromIdx)?.hand || [];
     const fromColor = COLOR_INFO[gs.players[fromIdx]?.color]?.hex || '#888';
     let html = `<div class="govern-panel" style="background:#1a2235;border:2px solid #7c3aed;border-radius:12px;width:100%">
-      <h3 style="font-size:15px;font-weight:800;color:#c4b5fd;margin-bottom:4px">Govern — Take a Card</h3>
-      <p style="font-size:12px;color:#9ca3af;margin-bottom:10px">Step ${gi.step + 1} of ${gi.totalTargets} — pick one from <span style="color:${fromColor};font-weight:700">${fromName}</span>'s hand</p>
-      <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center;flex:1;align-content:flex-start">`;
+      <h3 style="color:#c4b5fd;">Govern — Take a Card</h3>
+      <p style="color:#9ca3af;">Step ${gi.step + 1} of ${gi.totalTargets} — pick one from <span style="color:${fromColor};font-weight:700">${fromName}</span>'s hand</p>
+      <div style="display:flex;gap:5px;flex-wrap:wrap;justify-content:center;flex:1;align-content:flex-start">`;
     sortByOrder(fromHand).forEach(c => {
       html += vcCard(c, `send({type:'game_action',action:'govern_take_card',cardId:'${c.id}'})`);
     });
@@ -3108,9 +3456,9 @@ function renderEffectOverlay(gs) {
     const toName = gs.players[toIdx]?.name || '?';
     const toColor = COLOR_INFO[gs.players[toIdx]?.color]?.hex || '#888';
     let html = `<div class="govern-panel" style="background:#1a2235;border:2px solid #7c3aed;border-radius:12px;width:100%">
-      <h3 style="font-size:15px;font-weight:800;color:#c4b5fd;margin-bottom:4px">Govern — Give a Card</h3>
-      <p style="font-size:12px;color:#9ca3af;margin-bottom:10px">Step ${gi.step + 1} of ${gi.totalTargets} — give one to <span style="color:${toColor};font-weight:700">${toName}</span></p>
-      <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center;flex:1;align-content:flex-start">`;
+      <h3 style="color:#c4b5fd;">Govern — Give a Card</h3>
+      <p style="color:#9ca3af;">Step ${gi.step + 1} of ${gi.totalTargets} — give one to <span style="color:${toColor};font-weight:700">${toName}</span></p>
+      <div style="display:flex;gap:5px;flex-wrap:wrap;justify-content:center;flex:1;align-content:flex-start">`;
     sortByOrder(gs.myHand).forEach(c => {
       html += vcCard(c, `send({type:'game_action',action:'govern_give_card',cardId:'${c.id}'})`);
     });
@@ -3153,20 +3501,20 @@ function renderEffectOverlay(gs) {
     if (holder >= 0) {
       const hp = gs.players[holder];
       const isMe = holder === myIdx;
-      resultHtml = `<div style="text-align:center;margin:16px 0">
-        <div style="font-size:13px;font-weight:900;letter-spacing:1.5px;color:#ef4444;margin-bottom:8px;text-transform:uppercase">Data Flag</div>
-        <div style="font-size:18px;font-weight:800;color:#d1db24">${isMe ? 'YOU are' : `<span style="color:${COLOR_INFO[hp.color]?.hex||'#fff'}">${hp.name}</span> is`} holding the Data Flag!</div>
-        ${isMe ? '<div style="font-size:13px;color:#f87171;margin-top:6px">Everyone can see this — guard it carefully.</div>' : ''}
+      resultHtml = `<div style="text-align:center;margin:8px 0">
+        <div style="font-size:11px;font-weight:900;letter-spacing:1.5px;color:#ef4444;margin-bottom:5px;text-transform:uppercase">Data Flag</div>
+        <div style="font-size:15px;font-weight:800;color:#d1db24">${isMe ? 'YOU are' : `<span style="color:${COLOR_INFO[hp.color]?.hex||'#fff'}">${hp.name}</span> is`} holding the Data Flag!</div>
+        ${isMe ? '<div style="font-size:11px;color:#f87171;margin-top:4px">Everyone can see this — guard it carefully.</div>' : ''}
       </div>`;
     } else if (inDeck) {
-      resultHtml = `<div style="text-align:center;margin:16px 0">
-        <div style="font-size:13px;font-weight:900;letter-spacing:1.5px;color:#6b7280;margin-bottom:8px;text-transform:uppercase">Not Yet Drawn</div>
-        <div style="font-size:18px;font-weight:800;color:#6b7280">The Data Flag is still in the deck.</div>
+      resultHtml = `<div style="text-align:center;margin:8px 0">
+        <div style="font-size:11px;font-weight:900;letter-spacing:1.5px;color:#6b7280;margin-bottom:5px;text-transform:uppercase">Not Yet Drawn</div>
+        <div style="font-size:15px;font-weight:800;color:#6b7280">The Data Flag is still in the deck.</div>
       </div>`;
     } else {
-      resultHtml = `<div style="text-align:center;margin:16px 0">
-        <div style="font-size:48px;margin-bottom:8px">❓</div>
-        <div style="font-size:18px;font-weight:800;color:#6b7280">The Data Flag has not been drawn yet.</div>
+      resultHtml = `<div style="text-align:center;margin:8px 0">
+        <div style="font-size:32px;margin-bottom:5px">❓</div>
+        <div style="font-size:15px;font-weight:800;color:#6b7280">The Data Flag has not been drawn yet.</div>
       </div>`;
     }
     const isChooser = gs.identifyInfo.chooser === myIdx;
@@ -3188,12 +3536,12 @@ function renderEffectOverlay(gs) {
       html += `<p style="color:#9ca3af">You have no played defend cards to swap.</p>
         <button class="action-btn btn-cancel" onclick="send({type:'game_action',action:'identify_choice',choice:'dataflag'})" style="width:100%">Switch to Data Flag reveal instead</button>`;
     } else {
-      html += `<div style="margin-top:12px">` + dsRows(myDefendCards,
+      html += `<div style="margin-top:4px">` + dsRows(myDefendCards,
         () => 'ds-selectable',
         c => `send({type:'game_action',action:'identify_swap_my',cardId:'${c.id}'})`,
         false, true) + `</div>`;
     }
-    html += `<button class="action-btn btn-cancel" onclick="send({type:'game_action',action:'identify_go_back'})" style="margin-top:12px;width:100%">← Back</button></div>`;
+    html += `<button class="action-btn btn-cancel" onclick="send({type:'game_action',action:'identify_go_back'})" style="margin-top:5px;width:100%">← Back</button></div>`;
     inner.innerHTML = html;
     return;
   }
@@ -3217,7 +3565,7 @@ function renderEffectOverlay(gs) {
         ${theirDefend.length===0 ? ' (no defend cards)' : ''}
       </button>`;
     });
-    html += `<button class="action-btn btn-cancel" onclick="send({type:'game_action',action:'identify_go_back'})" style="margin-top:8px;width:100%">← Back</button></div>`;
+    html += `<button class="action-btn btn-cancel" onclick="send({type:'game_action',action:'identify_go_back'})" style="margin-top:4px;width:100%">← Back</button></div>`;
     inner.innerHTML = html;
     return;
   }
@@ -3230,7 +3578,7 @@ function renderEffectOverlay(gs) {
     const tgtProtected = gs.protectedPlayers?.includes(tgt);
     const theirDefend = tgtPlayer.played.filter(c => c.cat === 'defend');
     let html = `<div class="effect-panel" style="max-width:min(740px,94vw)"><h3>Identify Swap — Select ${tgtPlayer.name}'s defend card to take</h3>
-      <div style="margin-top:12px">` +
+      <div style="margin-top:4px">` +
       dsRows(theirDefend,
         c => (c.type === 'protect' && tgtProtected) ? 'ds-preview' : 'ds-selectable',
         c => (c.type === 'protect' && tgtProtected) ? null : `send({type:'game_action',action:'identify_swap_their',cardId:'${c.id}'})`,
@@ -3251,22 +3599,22 @@ function renderEffectOverlay(gs) {
     const last = detectOrderState.length - 1;
     let html = `<div class="effect-panel">
       <h3>Detect — Top 5 deck cards</h3>
-      <p style="color:#9ca3af;font-size:12px">Reorder — position 1 is drawn next. Swap with arrows, then confirm.</p>
-      <div style="display:flex;gap:6px;justify-content:center;align-items:flex-end;flex:1;min-height:0;overflow:hidden">`;
+      <p style="color:#9ca3af;">Reorder — position 1 is drawn next. Swap with arrows, then confirm.</p>
+      <div style="display:flex;gap:4px;justify-content:center;align-items:flex-end;flex:1;min-height:0;overflow:hidden">`;
     detectOrderState.forEach((c, i) => {
-      html += `<div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;min-width:0">
+      html += `<div style="display:flex;flex-direction:column;align-items:center;gap:2px;flex:1;min-width:0">
         <span style="font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#6b7280">Draw ${i+1}</span>
         ${vcCard(c, null)}
         <div style="display:flex;gap:2px">
           <button onclick="detectMove(${i},-1)" ${i===0?'disabled':''}
-            style="width:24px;height:22px;border-radius:4px;background:#374151;border:none;color:${i===0?'#4b5563':'#9ca3af'};cursor:${i===0?'not-allowed':'pointer'};font-size:12px">←</button>
+            style="width:22px;height:20px;border-radius:4px;background:#374151;border:none;color:${i===0?'#4b5563':'#9ca3af'};cursor:${i===0?'not-allowed':'pointer'};font-size:11px">←</button>
           <button onclick="detectMove(${i},1)" ${i===last?'disabled':''}
-            style="width:24px;height:22px;border-radius:4px;background:#374151;border:none;color:${i===last?'#4b5563':'#9ca3af'};cursor:${i===last?'not-allowed':'pointer'};font-size:12px">→</button>
+            style="width:22px;height:20px;border-radius:4px;background:#374151;border:none;color:${i===last?'#4b5563':'#9ca3af'};cursor:${i===last?'not-allowed':'pointer'};font-size:11px">→</button>
         </div>
       </div>`;
     });
     html += `</div>
-      <button class="action-btn btn-end-turn" onclick="detectConfirm()" style="width:100%;margin-top:8px;flex-shrink:0">Confirm Order</button>
+      <button class="action-btn btn-end-turn" onclick="detectConfirm()" style="width:100%;margin-top:5px;flex-shrink:0">Confirm Order</button>
     </div>`;
     inner.innerHTML = html;
     return;
@@ -3287,7 +3635,7 @@ function renderEffectOverlay(gs) {
         ${isProtected ? '<span style="color:#3b82f6;font-size:11px;font-weight:700">PROTECTED</span>' : ''}
       </button>`;
     });
-    html += `<button class="action-btn btn-cancel" onclick="send({type:'game_action',action:'cancel_attack'})" style="margin-top:10px;width:100%">✕ Cancel Attack</button></div>`;
+    html += `<button class="action-btn btn-cancel" onclick="send({type:'game_action',action:'cancel_attack'})" style="margin-top:4px;width:100%">✕ Cancel Attack</button></div>`;
     inner.innerHTML = html;
     return;
   }
@@ -3297,38 +3645,48 @@ function renderEffectOverlay(gs) {
     overlay.style.display = 'flex';
     const ai = gs.attackInfo;
     const attackerName = gs.players[ai.attacker]?.name || '?';
+    const attackerColor = COLOR_INFO[gs.players[ai.attacker]?.color]?.hex || '#fff';
     const cardName = ai.cardName;
     if (ai.iAmTarget) {
       const respondCards = ai.myRespondCards || [];
-      let html = `<div class="effect-panel">
-        <h3 style="color:#f87171">You're being attacked!</h3>
-        <p><strong style="color:${COLOR_INFO[gs.players[ai.attacker]?.color]?.hex||'#fff'}">${attackerName}</strong> played <strong>${cardName}</strong> targeting you.</p>
-        <p style="color:#9ca3af;font-size:13px">If you have the Data Flag you must give it to them. Otherwise they take a card of their choice.</p>
-        <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">`;
-      if (respondCards.length > 0) {
-        respondCards.forEach(c => {
-          html += `<button class="action-btn btn-govern" onclick="send({type:'game_action',action:'play_respond',cardId:'${c.id}'})" style="flex:1">Play Respond (${c.name})</button>`;
-        });
-      }
-      html += `<button class="action-btn btn-cancel" onclick="send({type:'game_action',action:'respond_skip'})" style="flex:1">Allow Effect</button>
-        </div>
-        <p style="color:#4b5563;font-size:11px;margin-top:8px">Auto-allows in 12 seconds if no action taken.</p>
-      </div>`;
-      // Fix the C2 description based on what type of attack it is
-      if (ai.type === 'c2') {
-        html = html.replace('<p style="color:#9ca3af;font-size:13px">If you have the Data Flag you must give it to them. Otherwise they take a card of their choice.</p>',
-          '<p style="color:#9ca3af;font-size:13px">If you hold the Data Flag you must give it to them. Otherwise you choose which card from your hand to give.</p>');
+      const hasRespond = respondCards.length > 0;
+      // C2-specific note about hand cards
+      const c2Note = ai.type === 'c2'
+        ? 'If you hold the Data Flag you must give it to them. Otherwise you choose which card from your hand to give.'
+        : 'If you have the Data Flag you must give it to them. Otherwise they take a card of their choice.';
+      let html;
+      if (hasRespond) {
+        // ── Opportunity panel: you CAN cancel this ──
+        html = `<div class="effect-panel" style="border:2px solid rgba(245,158,11,0.55);background:#1a1a0e">
+          <h3 style="color:#f59e0b;flex-shrink:0">🛡 You Can Cancel This!</h3>
+          <p style="flex-shrink:0"><strong style="color:${attackerColor}">${attackerName}</strong> played <strong>${cardName}</strong> targeting you — but you have a Respond card.</p>
+          <div style="display:flex;gap:5px;margin-top:6px;flex-wrap:wrap;flex-shrink:0">
+            ${respondCards.map(c => `<button class="action-btn btn-govern" onclick="send({type:'game_action',action:'play_respond',cardId:'${c.id}'})" style="flex:1;background:rgba(245,158,11,0.18);border-color:rgba(245,158,11,0.55);color:#fde68a">🛡 Play Respond (${c.name})</button>`).join('')}
+            <button class="action-btn btn-cancel" onclick="send({type:'game_action',action:'respond_skip'})" style="flex:1">Take the Hit</button>
+          </div>
+          <p style="color:#4b5563;margin-top:6px;font-size:11px;flex-shrink:0">Auto-allows in 12 seconds if no action taken.</p>
+        </div>`;
+      } else {
+        // ── Threat panel: no respond cards ──
+        html = `<div class="effect-panel">
+          <h3 style="color:#f87171;flex-shrink:0">⚠ You're being attacked!</h3>
+          <p style="flex-shrink:0"><strong style="color:${attackerColor}">${attackerName}</strong> played <strong>${cardName}</strong> targeting you.</p>
+          <p style="color:#9ca3af;font-size:12px;flex-shrink:0">${c2Note}</p>
+          <p style="color:#4b5563;font-size:12px;flex-shrink:0">You have no Respond cards to cancel this.</p>
+          <button class="action-btn btn-cancel" onclick="send({type:'game_action',action:'respond_skip'})" style="width:100%;margin-top:8px;flex-shrink:0">Allow Effect</button>
+          <p style="color:#4b5563;margin-top:4px;font-size:11px;flex-shrink:0">Auto-allows in 12 seconds if no action taken.</p>
+        </div>`;
       }
       inner.innerHTML = html;
     } else if (ai.iAmAttacker) {
       inner.innerHTML = `<div class="effect-panel">
-        <h3>C2 — Waiting…</h3>
-        <p style="color:#9ca3af">${gs.players[ai.target]?.name || '?'} can play Respond to cancel your attack.</p>
+        <h3>Waiting…</h3>
+        <p style="color:#9ca3af">${gs.players[ai.target]?.name || '?'} can play Respond to cancel your <strong>${cardName}</strong> attack.</p>
       </div>`;
     } else {
       inner.innerHTML = `<div class="effect-panel">
-        <h3>C2 — Attack in progress</h3>
-        <p style="color:#9ca3af">${attackerName} used ${cardName} — waiting for response.</p>
+        <h3>Attack in progress</h3>
+        <p style="color:#9ca3af">${attackerName} used <strong>${cardName}</strong> — waiting for response.</p>
       </div>`;
     }
     return;
@@ -3342,8 +3700,8 @@ function renderEffectOverlay(gs) {
     const giveable = myHand.filter(c => c.type !== 'data_flag');
     let html = `<div class="effect-panel">
       <h3>C2 — Choose a card to give to ${attackerName}</h3>
-      <p style="color:#9ca3af;font-size:12px;margin-bottom:8px">Pick any card from your hand (except the Data Flag).</p>
-      <div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;flex:1;align-content:flex-start">`;
+      <p style="color:#9ca3af;">Pick any card from your hand (except the Data Flag).</p>
+      <div style="display:flex;flex-wrap:wrap;gap:5px;justify-content:center;flex:1;align-content:flex-start">`;
     sortByOrder(giveable).forEach(c => {
       html += vcCard(c, `send({type:'game_action',action:'attack_c2_give_card',cardId:'${c.id}'})`);
     });
@@ -3379,23 +3737,39 @@ function renderEffectOverlay(gs) {
   if (gs.phase === 'weaponize_window' && gs.weaponizeInfo) {
     overlay.style.display = 'flex';
     const wi = gs.weaponizeInfo;
+    const defColor = COLOR_INFO[gs.players[wi.defender]?.color]?.hex || '#fff';
+    const isGovern = wi.cardType === 'govern' || wi.cardName === 'Govern';
     if (wi.iAmDefender) {
       inner.innerHTML = `<div class="effect-panel">
         <h3>Opponents can Weaponize</h3>
         <p style="color:#9ca3af">You played <strong>${wi.cardName}</strong>. Opponents have 8 seconds to play a Weaponize card to cancel the effect.</p>
         <p style="color:#4b5563;font-size:12px">Waiting…</p>
       </div>`;
-    } else {
+    } else if (!isGovern) {
       const wCards = wi.myWeaponizeCards || [];
+      if (wCards.length > 0) {
+        // ── Opportunity panel: you CAN cancel this ──
+        inner.innerHTML = `<div class="effect-panel" style="border:2px solid rgba(245,158,11,0.55);background:#1a1a0e">
+          <h3 style="color:#f59e0b;flex-shrink:0">⚡ You Can Cancel This!</h3>
+          <p style="flex-shrink:0">You can cancel <strong style="color:${defColor}">${wi.defenderName}</strong>'s <strong>${wi.cardName}</strong> action by playing a Weaponize card.</p>
+          <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;flex-shrink:0">
+            ${wCards.map(c => `<button class="action-btn btn-govern" onclick="send({type:'game_action',action:'play_weaponize',cardId:'${c.id}'})" style="flex:1;background:rgba(245,158,11,0.18);border-color:rgba(245,158,11,0.55);color:#fde68a">⚡ Play Weaponize (${c.name})</button>`).join('')}
+          </div>
+          <p style="color:#4b5563;font-size:11px;margin-top:8px;flex-shrink:0">Auto-resolves in 8 seconds if no action taken.</p>
+        </div>`;
+      } else {
+        // ── Passive panel: no weaponize cards ──
+        inner.innerHTML = `<div class="effect-panel">
+          <h3 style="color:#9ca3af">Weaponize Window</h3>
+          <p style="color:#6b7280;font-size:13px"><strong style="color:${defColor}">${wi.defenderName}</strong> played <strong>${wi.cardName}</strong> — auto-resolves in 8 seconds.</p>
+          <p style="color:#4b5563;font-size:12px">You have no Weaponize cards to play.</p>
+        </div>`;
+      }
+    } else {
+      // Govern — cannot be cancelled by Weaponize
       inner.innerHTML = `<div class="effect-panel">
-        <h3>Cancel Defend Card?</h3>
-        <p><strong style="color:${COLOR_INFO[gs.players[wi.defender]?.color]?.hex||'#fff'}">${wi.defenderName}</strong> played <strong>${wi.cardName}</strong>.</p>
-        <p style="color:#9ca3af;font-size:13px">Play a Weaponize card to cancel its effect before it resolves.</p>
-        <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
-          ${wCards.map(c => `<button class="action-btn btn-govern" onclick="send({type:'game_action',action:'play_weaponize',cardId:'${c.id}'})" style="flex:1">Play Weaponize (${c.name})</button>`).join('')}
-          ${wCards.length === 0 ? '<p style="color:#4b5563;font-size:12px">No Weaponize cards in hand.</p>' : ''}
-        </div>
-        <p style="color:#4b5563;font-size:11px;margin-top:8px">Auto-resolves in 8 seconds.</p>
+        <h3 style="color:#c4b5fd">Govern in progress</h3>
+        <p style="color:#6b7280;font-size:13px"><strong style="color:${defColor}">${wi.defenderName}</strong> played Govern. This card cannot be cancelled by Weaponize.</p>
       </div>`;
     }
     return;
@@ -3414,7 +3788,7 @@ function renderEffectOverlay(gs) {
         ${pl.name} — ${pl.handCount} cards ${isProtected ? '<span style="color:#3b82f6;font-size:10px;font-weight:700">PROTECTED</span>' : ''}
       </button>`;
     });
-    html += `<button class="action-btn btn-cancel" onclick="send({type:'game_action',action:'cancel_attack'})" style="margin-top:10px;width:100%">✕ Cancel Attack</button></div>`;
+    html += `<button class="action-btn btn-cancel" onclick="send({type:'game_action',action:'cancel_attack'})" style="margin-top:4px;width:100%">✕ Cancel Attack</button></div>`;
     inner.innerHTML = html; return;
   }
 
@@ -3429,7 +3803,7 @@ function renderEffectOverlay(gs) {
       <h3>Reconnaissance — Choose action vs ${tgtName}</h3>
       <button class="govern-player-btn" onclick="send({type:'game_action',action:'recon_choice',choice:'look'})">Look at ${tgtName}'s Hand<br><small style="color:#9ca3af">See all cards (read-only, no stealing)</small></button>
       ${canSwap ? `<button class="govern-player-btn" onclick="send({type:'game_action',action:'recon_choice',choice:'swap'})">Swap Attack Cards<br><small style="color:#9ca3af">Exchange one of your played attack cards with one of ${tgtName}'s</small></button>` : `<button class="govern-player-btn" style="opacity:0.4;cursor:not-allowed">Swap Attack Cards — unavailable<br><small style="color:#9ca3af">Both players need played attack cards</small></button>`}
-      <button class="action-btn btn-end-turn" style="margin-top:8px;width:100%" onclick="send({type:'game_action',action:'recon_go_back'})">← Go Back</button>
+      <button class="action-btn btn-end-turn" style="margin-top:4px;width:100%" onclick="send({type:'game_action',action:'recon_go_back'})">← Go Back</button>
     </div>`; return;
   }
 
@@ -3438,7 +3812,7 @@ function renderEffectOverlay(gs) {
     const tgtName = gs.players[gs.attackInfo.target]?.name || '?';
     const tgtHand = gs.attackInfo.targetHand || [];
     overlay.style.display = 'flex';
-    let html = `<div class="effect-panel"><h3>Recon — ${tgtName}'s Hand</h3><div style="display:flex;flex-wrap:wrap;gap:6px;margin:8px 0;justify-content:center;flex:1;align-content:flex-start">`;
+    let html = `<div class="effect-panel"><h3>Recon — ${tgtName}'s Hand</h3><div style="display:flex;flex-wrap:wrap;gap:5px;margin:4px 0;justify-content:center;flex:1;align-content:flex-start">`;
     sortByOrder(tgtHand).forEach(c => { html += vcCard(c, null); });
     if (tgtHand.length === 0) html += `<p style="color:#6b7280">Empty hand.</p>`;
     html += `</div><button class="action-btn btn-govern" onclick="send({type:'game_action',action:'recon_look_done'})" style="width:100%;flex-shrink:0">Done</button></div>`;
@@ -3459,8 +3833,8 @@ function renderEffectOverlay(gs) {
     overlay.style.display = 'flex';
     const myAttack = gs.players[myIdx].played.filter(c => c.cat === 'attack');
     let html = `<div class="effect-panel" style="max-width:min(740px,94vw)"><h3>Recon Swap — Select your attack card to give away</h3>`;
-    if (myAttack.length === 0) { html += `<p style="color:#9ca3af;margin-top:8px">No played attack cards to swap.</p>`; }
-    else { html += `<div style="margin-top:12px">` + dsRows(myAttack, () => 'ds-selectable', c => `send({type:'game_action',action:'recon_swap_my',cardId:'${c.id}'})`, true, false) + `</div>`; }
+    if (myAttack.length === 0) { html += `<p style="color:#9ca3af;">No played attack cards to swap.</p>`; }
+    else { html += `<div style="margin-top:4px">` + dsRows(myAttack, () => 'ds-selectable', c => `send({type:'game_action',action:'recon_swap_my',cardId:'${c.id}'})`, true, false) + `</div>`; }
     html += '</div>';
     inner.innerHTML = html; return;
   }
@@ -3474,9 +3848,9 @@ function renderEffectOverlay(gs) {
     const givingCard = gs.attackInfo.reconSwapMyCard;
     let html = `<div class="effect-panel" style="max-width:min(740px,94vw)"><h3>Recon Swap — Select ${tgtName}'s attack card to take</h3>`;
     if (givingCard) {
-      html += `<div style="margin-bottom:14px"><p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#9ca3af;margin-bottom:8px">Giving away:</p>
-        <div style="margin-bottom:8px">` + dsRows([givingCard], () => 'ds-giving', null, true, false) + `</div>
-        <p style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#9ca3af;margin-bottom:6px">Select ${tgtName}'s card to take:</p></div>`;
+      html += `<div style="margin-bottom:6px"><p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#9ca3af;margin-bottom:4px">Giving away:</p>
+        <div style="margin-bottom:4px">` + dsRows([givingCard], () => 'ds-giving', null, true, false) + `</div>
+        <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#9ca3af;margin-bottom:3px">Select ${tgtName}'s card to take:</p></div>`;
     }
     if (theirAttack.length === 0) { html += `<p style="color:#9ca3af">${tgtName} has no played attack cards.</p>`; }
     else { html += `<div style="margin-top:4px">` + dsRows(theirAttack, () => 'ds-selectable', c => `send({type:'game_action',action:'recon_swap_their',cardId:'${c.id}'})`, true, false) + `</div>`; }
@@ -3486,8 +3860,8 @@ function renderEffectOverlay(gs) {
 
   // ── Generic attack target overlays (Exploit, Install, Delivery) ──
   const genericTargetConfig = {
-    attack_exploit_target: { title: 'Exploitation — Choose a target', desc: 'Take one random card from their hand (blind draw). Respond cancels.' },
-    attack_install_target: { title: 'Installation — Choose a target', desc: 'They cannot play defend cards until the end of their next turn. Respond cancels.' },
+    attack_exploit_target: { title: 'Exploitation — Choose a target', desc: 'Steal one random card from their hand into yours (blind draw). Respond cancels.' },
+    attack_install_target: { title: 'Installation — Choose a target', desc: 'Target cannot play defend cards until the end of <strong>their next turn</strong>. Respond cancels.' },
     attack_delivery_target: { title: 'Delivery — Choose a target', desc: 'You may swap up to 2 of your played cards with theirs. Respond cancels.' },
   };
   if (genericTargetConfig[gs.phase] && gs.attackInfo?.iAmAttacker) {
@@ -3503,7 +3877,7 @@ function renderEffectOverlay(gs) {
         ${pl.name} — ${pl.handCount} cards ${isProtected ? '<span style="color:#3b82f6;font-size:10px;font-weight:700">PROTECTED</span>' : ''}
       </button>`;
     });
-    html += `<button class="action-btn btn-cancel" onclick="send({type:'game_action',action:'cancel_attack'})" style="margin-top:10px;width:100%">✕ Cancel Attack</button></div>`;
+    html += `<button class="action-btn btn-cancel" onclick="send({type:'game_action',action:'cancel_attack'})" style="margin-top:4px;width:100%">✕ Cancel Attack</button></div>`;
     inner.innerHTML = html; return;
   }
 
@@ -3623,10 +3997,33 @@ function renderEffectOverlay(gs) {
     return;
   }
 
-  // Default: no active phase — clear inner, show idle placeholder
+  // ── Action Objectives active — shown to ALL players ──
+  if (gs.actionObjActive) {
+    overlay.style.display = 'flex';
+    hideImpactAlert(true);
+    const aoPlayer = gs.players[gs.currentPlayer];
+    const aoColor = COLOR_INFO[aoPlayer?.color]?.hex || '#f59e0b';
+    const iHoldDataFlag = gs.myHand?.some(c => c.type === 'data_flag');
+    inner.innerHTML = `<div class="effect-panel" style="border:2px solid #f59e0b;border-radius:12px;background:#1a2015;width:100%">
+      <h3 style="color:#f59e0b;flex-shrink:0">🎯 Action Objectives Played!</h3>
+      <p style="flex-shrink:0"><span style="color:${aoColor};font-weight:700">${aoPlayer?.name || '?'}</span> completed the Kill Chain and played Action Objectives.</p>
+      <p style="color:#9ca3af;font-size:12px;flex-shrink:0">The Data Flag holder must surrender it immediately. <em>Respond</em> cannot cancel this effect.</p>
+      ${iHoldDataFlag ? `<p style="color:#ef4444;font-weight:800;font-size:13px;background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.35);border-radius:8px;padding:8px 12px;flex-shrink:0">⚠ You are holding the Data Flag — you must give it up!</p>` : `<p style="color:#6b7280;font-size:12px;flex-shrink:0">You are not holding the Data Flag.</p>`}
+    </div>`;
+    return;
+  }
+
+  // Default: no active phase — clear inner
   overlay.style.display = 'none';
   inner.innerHTML = '';
-  if (idleState) idleState.style.display = '';
+  // Show idle placeholder only if impact alert is not currently showing
+  const _alertEl = document.getElementById('gm-impact-alert');
+  if (_alertEl && _alertEl.classList.contains('visible')) {
+    // Impact alert is active — keep idle hidden so alert fills the space
+    if (idleState) idleState.style.display = 'none';
+  } else {
+    if (idleState) idleState.style.display = '';
+  }
 }
 
 function detectMove(idx, dir) {
