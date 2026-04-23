@@ -373,7 +373,50 @@ body.obs-hands-hidden .opp-hand-label{display:none !important;}
 .cat-spl{font-size:9px;font-weight:900;color:#fbbf24;letter-spacing:0.5px;}
 
 /* MIDDLE - open play field */
-.game-middle{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:0;}
+.game-middle{flex:1;display:flex;flex-direction:row;min-height:0;overflow:hidden;}
+/* Two-column sections inside game-middle */
+.gm-section{display:flex;flex-direction:column;flex:1;min-height:0;overflow:hidden;border-right:1px solid #1e2d3d;}
+.gm-section:last-child{border-right:none;}
+.gm-section-header{padding:5px 14px;background:#050d02;border-bottom:1px solid #1e2d3d;flex-shrink:0;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:1.2px;color:#374151;}
+/* Active Actions body — no scroll, content must fit */
+.gm-actions-body{flex:1;overflow:hidden;display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;min-height:0;padding:10px 12px;gap:0;}
+/* Panels inside actions body fill available height, no inner scroll */
+.gm-actions-body .effect-panel,.gm-actions-body .govern-panel{
+  max-height:none;max-width:none;width:100%;box-sizing:border-box;padding:10px 14px;
+  overflow:hidden;display:flex;flex-direction:column;flex:1;min-height:0;}
+.gm-actions-body .effect-panel h3,.gm-actions-body .govern-panel h3{flex-shrink:0;font-size:15px;margin-bottom:6px;}
+.gm-actions-body .effect-panel p,.gm-actions-body .govern-panel p{flex-shrink:0;margin-bottom:6px;}
+/* Compact cards inside actions panel — no desc, smaller footprint */
+.gm-actions-body .card{min-width:58px;max-width:66px;height:82px;flex-shrink:0;}
+.gm-actions-body .card .card-desc{display:none;}
+.gm-actions-body .card .card-name{font-size:10px;line-height:1.2;}
+.gm-actions-body .ds-card{min-width:52px;max-width:60px;height:72px;}
+.gm-actions-body .ds-card .ds-card-name{font-size:9px;}
+/* Delivery panel — fill without scroll */
+.gm-actions-body .delivery-swap-panel{
+  max-width:none;max-height:none;overflow:hidden;padding:10px 14px;
+  flex:1;width:100%;box-sizing:border-box;gap:8px;}
+/* Two-column layout used for delivery sub-screens */
+.delivery-col-layout{display:flex;gap:8px;flex:1;min-height:0;overflow:hidden;}
+.delivery-col{display:flex;flex-direction:column;flex:1;min-width:0;overflow:hidden;}
+.delivery-col-label{font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:0.8px;padding:3px 0;flex-shrink:0;}
+.delivery-col-label.mine{color:#f59e0b;}
+.delivery-col-label.theirs{color:#62b517;}
+.delivery-col-divider{display:flex;align-items:center;font-size:18px;color:#f59e0b;flex-shrink:0;padding:0 2px;}
+.delivery-col .kc-row{margin-bottom:4px;}
+.delivery-col .kc-slots{flex-wrap:wrap;gap:4px;}
+/* Idle placeholder */
+.gm-idle-state{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:#1a2d1a;width:100%;flex:1;}
+.gm-idle-icon{font-size:30px;opacity:0.6;}
+.gm-idle-text{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;}
+/* Activity Feed body */
+.gm-feed-body{flex:1;overflow:hidden;padding:6px 12px;display:flex;flex-direction:column;gap:0;min-height:0;}
+.gm-feed-entry{font-size:11px;line-height:1.6;color:#4b5563;padding:4px 0;border-bottom:1px solid #0d1a0a;flex-shrink:0;}
+/* Most recent entry — at top, larger and highlighted */
+.gm-feed-entry:first-child{font-size:14px;font-weight:600;color:#e2e8f0;line-height:1.5;padding:8px 10px;border-bottom:1px solid #1e2d3d;border-left:3px solid #62b517;background:rgba(98,181,23,0.07);border-radius:0 5px 5px 0;margin-bottom:4px;}
+/* Targeted — another player is impacting YOU */
+.gm-feed-entry.gm-targeted{border-left:3px solid #ef4444;background:rgba(239,68,68,0.08);color:#fca5a5;padding-left:10px;border-radius:0 5px 5px 0;}
+.gm-feed-entry.gm-targeted:first-child{border-left-color:#ef4444;background:rgba(239,68,68,0.18);color:#fecaca;}
 
 /* RIGHT SIDEBAR */
 .game-right-sidebar{width:220px;flex-shrink:0;background:#0a1200;border-left:1px solid #1e2d3d;display:flex;flex-direction:column;overflow:hidden;}
@@ -536,19 +579,19 @@ body.obs-hands-hidden .opp-hand-label{display:none !important;}
 /* GOVERN VIEW OVERLAY */
 .govern-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:200;display:flex;align-items:center;justify-content:center;}
 /* ===== DELIVERY SWAP OVERLAY ===== */
-.delivery-swap-panel{background:#0f1923;border:2px solid #f59e0b;border-radius:16px;padding:24px 28px;max-width:700px;width:95%;max-height:88vh;overflow-y:auto;display:flex;flex-direction:column;gap:16px;}
-.delivery-swap-header{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #1e2d3d;padding-bottom:12px;}
-.delivery-swap-title{font-size:18px;font-weight:800;color:#fbbf24;}
-.delivery-swap-progress{font-size:12px;color:#9ca3af;background:#1e2d3d;padding:4px 10px;border-radius:20px;}
-.delivery-swap-instruction{font-size:14px;font-weight:700;color:#e2e8f0;background:rgba(245,158,11,0.1);border-left:3px solid #f59e0b;padding:8px 12px;border-radius:0 8px 8px 0;}
-.delivery-swap-section{display:flex;flex-direction:column;gap:8px;}
-.delivery-swap-section-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:#6b7280;}
+.delivery-swap-panel{background:#0f1923;border:2px solid #f59e0b;border-radius:12px;padding:8px 12px;max-width:700px;width:95%;overflow:hidden;display:flex;flex-direction:column;gap:4px;}
+.delivery-swap-header{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #1e2d3d;padding-bottom:4px;}
+.delivery-swap-title{font-size:13px;font-weight:800;color:#fbbf24;}
+.delivery-swap-progress{font-size:10px;color:#9ca3af;background:#1e2d3d;padding:2px 8px;border-radius:20px;}
+.delivery-swap-instruction{font-size:11px;font-weight:700;color:#e2e8f0;background:rgba(245,158,11,0.1);border-left:3px solid #f59e0b;padding:4px 8px;border-radius:0 8px 8px 0;}
+.delivery-swap-section{display:flex;flex-direction:column;gap:4px;}
+.delivery-swap-section-label{font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#6b7280;}
 .delivery-swap-section-label.mine{color:#f87171;}
 .delivery-swap-section-label.theirs{color:#93c5fd;}
-.delivery-cards-grid{display:flex;flex-wrap:wrap;gap:8px;}
-.delivery-card-slot{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 10px;border-radius:8px;border:2px solid transparent;min-width:68px;max-width:80px;cursor:default;transition:all 0.15s;}
-.delivery-card-slot img{width:44px;height:44px;object-fit:contain;border-radius:4px;}
-.delivery-card-slot .dc-name{font-size:9px;font-weight:700;text-align:center;line-height:1.2;color:#9ca3af;}
+.delivery-cards-grid{display:flex;flex-wrap:wrap;gap:4px;}
+.delivery-card-slot{display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 6px;border-radius:8px;border:2px solid transparent;min-width:44px;max-width:56px;cursor:default;transition:all 0.15s;}
+.delivery-card-slot img{width:30px;height:30px;object-fit:contain;border-radius:4px;}
+.delivery-card-slot .dc-name{font-size:8px;font-weight:700;text-align:center;line-height:1.2;color:#9ca3af;}
 .delivery-card-slot.attack{background:rgba(239,68,68,0.12);border-color:rgba(239,68,68,0.3);}
 .delivery-card-slot.defend{background:rgba(59,130,246,0.12);border-color:rgba(59,130,246,0.3);}
 .delivery-card-slot.special{background:rgba(209,219,36,0.1);border-color:rgba(209,219,36,0.3);}
@@ -560,26 +603,26 @@ body.obs-hands-hidden .opp-hand-label{display:none !important;}
 .delivery-card-slot.giving .dc-name{color:#fca5a5;}
 .delivery-card-slot.preview{opacity:0.45;}
 .delivery-giving-tag{font-size:8px;font-weight:800;color:#f87171;text-transform:uppercase;letter-spacing:0.5px;}
-.delivery-opp-section{display:flex;flex-direction:column;gap:6px;background:#111827;border-radius:10px;padding:10px 12px;}
-.delivery-opp-name{font-size:12px;font-weight:800;color:#e2e8f0;display:flex;align-items:center;gap:6px;}
+.delivery-opp-section{display:flex;flex-direction:column;gap:4px;background:#111827;border-radius:10px;padding:6px 8px;}
+.delivery-opp-name{font-size:11px;font-weight:800;color:#e2e8f0;display:flex;align-items:center;gap:4px;}
 .delivery-opp-dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex-shrink:0;}
 .delivery-swap-done-list{display:flex;flex-direction:column;gap:4px;}
 .delivery-swap-done-item{font-size:11px;color:#62b517;background:rgba(98,181,23,0.1);border-radius:6px;padding:4px 10px;}
-.delivery-swap-footer{display:flex;gap:10px;align-items:center;justify-content:flex-end;border-top:1px solid #1e2d3d;padding-top:12px;margin-top:4px;}
+.delivery-swap-footer{display:flex;gap:8px;align-items:center;justify-content:flex-end;border-top:1px solid #1e2d3d;padding-top:5px;margin-top:2px;}
 /* Card-art tiles inside the delivery swap panel */
-.delivery-swap-panel .kc-row{margin-bottom:6px;flex-wrap:wrap;}
-.delivery-swap-panel .kc-row-label{width:38px;font-size:8px;line-height:1.3;}
-.delivery-swap-panel .kc-slots{flex-wrap:wrap;gap:6px;align-items:flex-end;}
-.delivery-swap-panel .ds-card{min-width:72px;max-width:80px;height:108px;padding:0;overflow:hidden;cursor:default;position:relative;border-width:2px;transition:transform 0.15s,box-shadow 0.15s,border-color 0.15s,opacity 0.15s;}
+.delivery-swap-panel .kc-row{margin-bottom:2px;flex-wrap:wrap;}
+.delivery-swap-panel .kc-row-label{width:26px;font-size:7px;line-height:1.2;}
+.delivery-swap-panel .kc-slots{flex-wrap:wrap;gap:3px;align-items:flex-end;}
+.delivery-swap-panel .ds-card{min-width:36px;max-width:44px;height:52px;padding:0;overflow:hidden;cursor:default;position:relative;border-width:2px;transition:transform 0.15s,box-shadow 0.15s,border-color 0.15s,opacity 0.15s;}
 .delivery-swap-panel .ds-card .card-art-img{width:100%;height:100%;object-fit:cover;border-radius:4px;display:block;pointer-events:none;}
-.delivery-swap-panel .ds-card .ds-card-text{padding:6px 6px 4px;display:flex;flex-direction:column;gap:3px;height:100%;box-sizing:border-box;}
-.delivery-swap-panel .ds-card .ds-card-cat{font-size:8px;text-transform:uppercase;font-weight:700;letter-spacing:0.5px;}
-.delivery-swap-panel .ds-card .ds-card-name{font-size:10px;font-weight:800;line-height:1.2;}
+.delivery-swap-panel .ds-card .ds-card-text{padding:3px 3px 2px;display:flex;flex-direction:column;gap:1px;height:100%;box-sizing:border-box;}
+.delivery-swap-panel .ds-card .ds-card-cat{font-size:6px;text-transform:uppercase;font-weight:700;letter-spacing:0.3px;}
+.delivery-swap-panel .ds-card .ds-card-name{font-size:7px;font-weight:800;line-height:1.2;}
 .delivery-swap-panel .ds-card.ds-selectable{cursor:pointer;}
 .delivery-swap-panel .ds-card.ds-selectable:hover{transform:translateY(-5px);box-shadow:0 10px 24px rgba(245,158,11,0.45);border-color:#f59e0b !important;}
 .delivery-swap-panel .ds-card.ds-giving{border-color:#f87171 !important;box-shadow:0 0 16px rgba(239,68,68,0.55);}
 .delivery-swap-panel .ds-card.ds-preview{opacity:0.32;pointer-events:none;}
-.delivery-swap-panel .ds-empty-slot{width:38px;min-height:54px;border-radius:5px;border:2px dashed;display:flex;align-items:center;justify-content:center;font-size:13px;opacity:0.22;flex-shrink:0;}
+.delivery-swap-panel .ds-empty-slot{width:24px;min-height:34px;border-radius:5px;border:2px dashed;display:flex;align-items:center;justify-content:center;font-size:9px;opacity:0.22;flex-shrink:0;}
 .govern-panel{background:#1a2235;border:2px solid #7c3aed;border-radius:16px;padding:24px;max-width:600px;width:90%;}
 .govern-panel h3{font-size:18px;font-weight:800;color:#c4b5fd;margin-bottom:16px;}
 .govern-panel .govern-hand{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;}
@@ -827,6 +870,18 @@ body.bc-tut-active .game-layout { height: calc(100vh - 44px); margin-right: 272p
   #bc-tut-exit, #bc-tut-next { width: auto; }
 }
 /* Unified tutorial glow — pulsing flash highlight, same style as FuzzNet */
+/* Full-screen idle glow — fires after 12s of inactivity on your turn */
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9997;border:3px solid transparent;box-shadow:inset 0 0 0 0 transparent;transition:border-color 0.4s,box-shadow 0.4s;}
+body.screen-idle-glow::after{
+  border-color:rgba(209,219,36,0.7);
+  box-shadow:inset 0 0 80px 30px rgba(209,219,36,0.25),0 0 40px 10px rgba(209,219,36,0.3);
+  animation:screen-glow-pulse 1.4s ease-in-out infinite;
+}
+@keyframes screen-glow-pulse{
+  0%,100%{box-shadow:inset 0 0 80px 30px rgba(209,219,36,0.25),0 0 40px 10px rgba(209,219,36,0.3);border-color:rgba(209,219,36,0.7);}
+  50%{box-shadow:inset 0 0 120px 50px rgba(209,219,36,0.45),0 0 60px 20px rgba(209,219,36,0.5);border-color:rgba(209,219,36,1);}
+}
+
 @keyframes bc-tut-pulse {
   0%, 100% {
     outline-color: #d1db24;
@@ -1169,8 +1224,29 @@ body.bc-tut-active .game-layout { height: calc(100vh - 44px); margin-right: 272p
     <!-- CENTER -->
     <div class="center-area">
 
-      <!-- OPEN FIELD — empty play space, action overlay renders here -->
-      <div class="game-middle" id="game-middle"></div>
+      <!-- CENTER PANELS: Active Actions + Activity Feed -->
+      <div class="game-middle" id="game-middle">
+
+        <!-- TOP: Active Actions -->
+        <div class="gm-section gm-actions-section">
+          <div class="gm-section-header">Active Actions</div>
+          <div class="gm-actions-body" id="gm-actions-body">
+            <div class="gm-idle-state" id="gm-idle-state">
+              <div class="gm-idle-icon">◈</div>
+              <div class="gm-idle-text">No action required</div>
+            </div>
+            <!-- Action overlay content renders here (was a floating overlay) -->
+            <div id="govern-overlay-inner"></div>
+          </div>
+        </div>
+
+        <!-- BOTTOM: Activity Feed -->
+        <div class="gm-section gm-feed-section">
+          <div class="gm-section-header">Activity</div>
+          <div class="gm-feed-body" id="gm-feed-body"></div>
+        </div>
+
+      </div>
 
       <!-- RIGHT SIDEBAR — table cards -->
       <div class="game-right-sidebar">
@@ -1328,10 +1404,8 @@ body.bc-tut-active .game-layout { height: calc(100vh - 44px); margin-right: 272p
   </div>
 </div>
 
-<!-- GOVERN OVERLAY -->
-<div class="govern-overlay" id="govern-overlay" style="display:none">
-  <div id="govern-overlay-inner"></div>
-</div>
+<!-- GOVERN OVERLAY — content now renders inline in #gm-actions-body above -->
+<div id="govern-overlay" style="display:none"></div>
 
 <!-- CARD ZOOM -->
 <div id="card-zoom-backdrop" style="display:none;position:fixed;inset:0;z-index:399;background:rgba(0,0,0,0.55);pointer-events:none;"></div>
@@ -1371,9 +1445,9 @@ document.addEventListener('pointermove', () => {
 const _isTouchDevice = () => window.matchMedia('(hover: none)').matches;
 
 function showCardZoom(card, el) {
-  // Never show while any action overlay is open
-  const overlay = document.getElementById('govern-overlay');
-  if (overlay && overlay.style.display !== 'none') return;
+  // Never show while an active action is displayed in the center panel
+  const inner = document.getElementById('govern-overlay-inner');
+  if (inner && inner.innerHTML.trim()) return;
 
   _zoomEl = el;
   const zoom = document.getElementById('card-zoom');
@@ -1538,8 +1612,9 @@ let gameState = null;
 let selectedHandCard = null;
 
 // ── Your Turn idle-glow ──────────────────────────────────────────────────────
-let _idleTimer = null;   // 3s  → YOUR TURN card glow
-let _idleTimer2 = null;  // 10s → hand area glow
+let _idleTimer = null;   //  3s → YOUR TURN card glow
+let _idleTimer2 = null;  // 8s → hand area glow
+let _idleTimer3 = null;  // 12s → full-screen glow
 let _idleWatching = false;
 let _wasMyTurn = false;
 
@@ -1551,11 +1626,16 @@ function _stopHandGlow() {
   const el = document.getElementById('hand-area');
   if (el) el.classList.remove('idle-glow');
 }
+function _stopScreenGlow() {
+  document.body.classList.remove('screen-idle-glow');
+}
 function _startIdleWatch() {
   clearTimeout(_idleTimer);
   clearTimeout(_idleTimer2);
+  clearTimeout(_idleTimer3);
   _stopIdleGlow();
   _stopHandGlow();
+  _stopScreenGlow();
   _idleWatching = true;
   _idleTimer = setTimeout(() => {
     const el = document.getElementById('my-turn-indicator');
@@ -1564,17 +1644,22 @@ function _startIdleWatch() {
   _idleTimer2 = setTimeout(() => {
     const el = document.getElementById('hand-area');
     if (el) el.classList.add('idle-glow');
-  }, 10000);
+  }, 8000);
+  _idleTimer3 = setTimeout(() => {
+    document.body.classList.add('screen-idle-glow');
+  }, 12000);
 }
 function _cancelIdleWatch() {
   if (!_idleWatching) return;
   _idleWatching = false;
   clearTimeout(_idleTimer);
   clearTimeout(_idleTimer2);
+  clearTimeout(_idleTimer3);
   _stopIdleGlow();
   _stopHandGlow();
+  _stopScreenGlow();
 }
-// Any user activity cancels both glows
+// Any user activity cancels all glows
 ['mousemove','mousedown','keydown','touchstart','wheel'].forEach(evt =>
   document.addEventListener(evt, _cancelIdleWatch, { passive: true })
 );
@@ -1591,6 +1676,140 @@ function updateMyTurnIndicator(isMyTurn) {
     _cancelIdleWatch();
   }
   _wasMyTurn = isMyTurn;
+}
+
+// ── Activity Feed ──────────────────────────────────────────────────────────
+let _afLastPhase = null;
+let _afLastPlayer = -1;
+let _afLastPlayed = null; // { [playerIdx]: Set<cardId> } — tracks played card diffs
+
+function _pSpan(gs, idx) {
+  const pl = gs.players[idx];
+  if (!pl) return '<span style="color:#9ca3af">Unknown</span>';
+  const col = COLOR_INFO[pl.color]?.hex || '#9ca3af';
+  return `<span style="color:${col};font-weight:800">${pl.name}</span>`;
+}
+function _cSpan(name) {
+  return `<span style="color:#d1db24;font-weight:700">${name}</span>`;
+}
+
+function addActivityEntry(html, targeted = false) {
+  const body = document.getElementById('gm-feed-body');
+  if (!body) return;
+  const entry = document.createElement('div');
+  entry.className = 'gm-feed-entry' + (targeted ? ' gm-targeted' : '');
+  entry.innerHTML = html;
+  body.prepend(entry);
+  // Drop entries that overflow the visible area (no scrolling)
+  while (body.scrollHeight > body.clientHeight && body.children.length > 1) {
+    body.removeChild(body.lastChild);
+  }
+}
+
+function trackActivityFeed(gs) {
+  const phase = gs.phase;
+  const prev = _afLastPhase;
+
+  // ── Played-card diff — log every newly played card for every player ──
+  const currPlayed = {};
+  gs.players.forEach((pl, i) => {
+    currPlayed[i] = new Set(pl.played.map(c => c.id));
+  });
+  if (_afLastPlayed === null) {
+    // First render — snapshot silently, don't log initial state
+    _afLastPlayed = currPlayed;
+  } else {
+    gs.players.forEach((pl, i) => {
+      const prev = _afLastPlayed[i] || new Set();
+      currPlayed[i].forEach(id => {
+        if (!prev.has(id)) {
+          const card = pl.played.find(c => c.id === id);
+          if (card) {
+            // Targeted if an opponent played an attack card that is currently aimed at us
+            const isAttackOnMe = i !== gs.myIndex
+              && gs.attackInfo
+              && gs.attackInfo.attacker === i
+              && gs.attackInfo.target === gs.myIndex;
+            addActivityEntry(`${_pSpan(gs, i)} played ${_cSpan(card.name || card.type)}`, isAttackOnMe);
+          }
+        }
+      });
+    });
+    _afLastPlayed = currPlayed;
+  }
+
+  // ── Turn start ──
+  if (phase === 'play' && gs.currentPlayer !== _afLastPlayer) {
+    const isSelf = gs.currentPlayer === gs.myIndex;
+    addActivityEntry(isSelf
+      ? `${_pSpan(gs, gs.currentPlayer)}'s turn &mdash; <span style="color:#62b517;font-weight:700">YOUR TURN</span>`
+      : `${_pSpan(gs, gs.currentPlayer)}'s turn`);
+    _afLastPlayer = gs.currentPlayer;
+  }
+
+  // ── Phase-change events (only fire once on entry into each phase) ──
+  if (phase !== prev) {
+
+    if (phase === 'attack_respond_window' && gs.attackInfo) {
+      const ai = gs.attackInfo;
+      const youAreTarget = ai.target === gs.myIndex;
+      addActivityEntry(
+        `${_pSpan(gs, ai.attacker)} played ${_cSpan(ai.cardName || 'attack card')} targeting ${_pSpan(gs, ai.target)}`,
+        youAreTarget
+      );
+    }
+
+    else if (phase === 'weaponize_window' && gs.weaponizeInfo) {
+      const wi = gs.weaponizeInfo;
+      const def = wi.defender !== undefined ? _pSpan(gs, wi.defender)
+        : `<span style="color:#9ca3af;font-weight:800">${wi.defenderName || '?'}</span>`;
+      // Targeted if someone is weaponizing YOUR defend card
+      const youAreDefender = wi.defender === gs.myIndex;
+      addActivityEntry(`${def} played ${_cSpan(wi.cardName || 'a defend card')} &mdash; Weaponize window open`, youAreDefender);
+    }
+
+    else if (phase === 'govern_take') {
+      // Govern takes from everyone — targeted if someone else is running it
+      const opponentGovern = gs.currentPlayer !== gs.myIndex;
+      addActivityEntry(`${_pSpan(gs, gs.currentPlayer)} played ${_cSpan('Govern')} &mdash; taking a card from each player`, opponentGovern);
+    }
+
+    else if (phase === 'identify_choosing') {
+      addActivityEntry(`${_pSpan(gs, gs.currentPlayer)} played ${_cSpan('Identify')}`);
+    }
+
+    else if (phase === 'identify_dataflag' && gs.identifyInfo) {
+      const ii = gs.identifyInfo;
+      if (ii.dataFlagInDeck) {
+        addActivityEntry(`${_cSpan('Data Flag')} is still in the deck`);
+      } else if (ii.dataFlagHolder !== undefined) {
+        // Targeted if YOU are revealed as the holder
+        addActivityEntry(`${_cSpan('Data Flag')} is held by ${_pSpan(gs, ii.dataFlagHolder)}`, ii.dataFlagHolder === gs.myIndex);
+      }
+    }
+
+    else if (phase === 'detect_view') {
+      addActivityEntry(`${_pSpan(gs, gs.currentPlayer)} played ${_cSpan('Detect')} &mdash; viewing the top 5 deck cards`);
+    }
+
+    else if (phase === 'attack_recon_look' && gs.attackInfo) {
+      const ai = gs.attackInfo;
+      // Targeted if they're looking at YOUR hand
+      addActivityEntry(`${_pSpan(gs, ai.attacker)} (Recon) is looking at ${_pSpan(gs, ai.target)}'s hand`, ai.target === gs.myIndex);
+    }
+
+    else if (phase === 'attack_c2_give' && gs.attackInfo) {
+      const ai = gs.attackInfo;
+      // Targeted if YOU must give the card
+      addActivityEntry(`${_pSpan(gs, ai.attacker)} used ${_cSpan('C2')} &mdash; ${_pSpan(gs, ai.target)} must give a card`, ai.target === gs.myIndex);
+    }
+
+    else if (phase === 'game_over' && gs.winner >= 0) {
+      addActivityEntry(`&#127942; ${_pSpan(gs, gs.winner)} wins the game!`);
+    }
+  }
+
+  _afLastPhase = phase;
 }
 
 const SESSION_KEY = 'techgames_byteclub_session';
@@ -2518,7 +2737,10 @@ function renderGame(gs) {
   // Action bar
   renderActionBar(gs, isMyTurn);
 
-  // Effect overlay (govern, identify, detect)
+  // Activity feed — track phase transitions and turn changes
+  trackActivityFeed(gs);
+
+  // Effect overlay (govern, identify, detect) — now renders inline in Active Actions panel
   renderEffectOverlay(gs);
   if (bcTutMode) applyBcTutHL();
 }
@@ -2769,6 +2991,8 @@ function mkBtn(label, cls, cb) {
 }
 
 let detectOrderState = []; // client-side card order for detect reorder
+let _deliveryOppFocus = null;  // wizard: which opponent is focused for this swap step
+let _deliverySwapsAtFocus = -1; // reset focus when a new swap begins
 
 // Render a card as an HTML string using the same .card CSS as hand cards.
 // onclickStr — inline onclick value (string), or null for view-only.
@@ -2851,6 +3075,9 @@ function renderEffectOverlay(gs) {
   hideCardZoom();
   const overlay = document.getElementById('govern-overlay');
   const inner = document.getElementById('govern-overlay-inner');
+  const idleState = document.getElementById('gm-idle-state');
+  // Hide idle placeholder — each phase block sets inner.innerHTML; default case restores it
+  if (idleState) idleState.style.display = 'none';
   const myIdx = gs.myIndex;
 
   // ── Govern: take one card from each player ──
@@ -2861,10 +3088,10 @@ function renderEffectOverlay(gs) {
     const fromName = gs.players[fromIdx]?.name || '?';
     const fromHand = gi.allHands.find(h => h.playerIdx === fromIdx)?.hand || [];
     const fromColor = COLOR_INFO[gs.players[fromIdx]?.color]?.hex || '#888';
-    let html = `<div class="govern-panel" style="background:#1a2235;border:2px solid #7c3aed;border-radius:16px;padding:24px;max-width:min(740px,94vw);width:90%">
-      <h3 style="font-size:18px;font-weight:800;color:#c4b5fd;margin-bottom:4px">Govern — Take a Card</h3>
-      <p style="font-size:13px;color:#9ca3af;margin-bottom:16px">Step ${gi.step + 1} of ${gi.totalTargets} — pick one card from <span style="color:${fromColor};font-weight:700">${fromName}</span>'s hand</p>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">`;
+    let html = `<div class="govern-panel" style="background:#1a2235;border:2px solid #7c3aed;border-radius:12px;width:100%">
+      <h3 style="font-size:15px;font-weight:800;color:#c4b5fd;margin-bottom:4px">Govern — Take a Card</h3>
+      <p style="font-size:12px;color:#9ca3af;margin-bottom:10px">Step ${gi.step + 1} of ${gi.totalTargets} — pick one from <span style="color:${fromColor};font-weight:700">${fromName}</span>'s hand</p>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center;flex:1;align-content:flex-start">`;
     sortByOrder(fromHand).forEach(c => {
       html += vcCard(c, `send({type:'game_action',action:'govern_take_card',cardId:'${c.id}'})`);
     });
@@ -2880,10 +3107,10 @@ function renderEffectOverlay(gs) {
     const toIdx = gi.currentTargetIdx;
     const toName = gs.players[toIdx]?.name || '?';
     const toColor = COLOR_INFO[gs.players[toIdx]?.color]?.hex || '#888';
-    let html = `<div class="govern-panel" style="background:#1a2235;border:2px solid #7c3aed;border-radius:16px;padding:24px;max-width:min(740px,94vw);width:90%">
-      <h3 style="font-size:18px;font-weight:800;color:#c4b5fd;margin-bottom:4px">Govern — Give a Card</h3>
-      <p style="font-size:13px;color:#9ca3af;margin-bottom:16px">Step ${gi.step + 1} of ${gi.totalTargets} — give one card from your hand to <span style="color:${toColor};font-weight:700">${toName}</span></p>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">`;
+    let html = `<div class="govern-panel" style="background:#1a2235;border:2px solid #7c3aed;border-radius:12px;width:100%">
+      <h3 style="font-size:15px;font-weight:800;color:#c4b5fd;margin-bottom:4px">Govern — Give a Card</h3>
+      <p style="font-size:12px;color:#9ca3af;margin-bottom:10px">Step ${gi.step + 1} of ${gi.totalTargets} — give one to <span style="color:${toColor};font-weight:700">${toName}</span></p>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center;flex:1;align-content:flex-start">`;
     sortByOrder(gs.myHand).forEach(c => {
       html += vcCard(c, `send({type:'game_action',action:'govern_give_card',cardId:'${c.id}'})`);
     });
@@ -3022,24 +3249,24 @@ function renderEffectOverlay(gs) {
       detectOrderState = gs.detectViewCards.map(c => ({...c}));
     }
     const last = detectOrderState.length - 1;
-    let html = `<div class="effect-panel" style="max-width:min(740px,94vw)">
-      <h3>Detect — Top 5 cards of the deck</h3>
-      <p style="color:#9ca3af;font-size:13px;margin-bottom:14px">Reorder these cards — position 1 is drawn next. Use the arrows to swap, then confirm.</p>
-      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;align-items:flex-end">`;
+    let html = `<div class="effect-panel">
+      <h3>Detect — Top 5 deck cards</h3>
+      <p style="color:#9ca3af;font-size:12px">Reorder — position 1 is drawn next. Swap with arrows, then confirm.</p>
+      <div style="display:flex;gap:6px;justify-content:center;align-items:flex-end;flex:1;min-height:0;overflow:hidden">`;
     detectOrderState.forEach((c, i) => {
-      html += `<div style="display:flex;flex-direction:column;align-items:center;gap:5px">
-        <span style="font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:#6b7280">Draw ${i+1}</span>
+      html += `<div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;min-width:0">
+        <span style="font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#6b7280">Draw ${i+1}</span>
         ${vcCard(c, null)}
-        <div style="display:flex;gap:4px">
-          <button class="dc-btn" onclick="detectMove(${i},-1)" ${i===0?'disabled':''}
-            style="width:32px;height:26px;border-radius:6px;background:#374151;border:none;color:${i===0?'#4b5563':'#9ca3af'};cursor:${i===0?'not-allowed':'pointer'};font-size:13px;transition:all 0.12s">←</button>
-          <button class="dc-btn" onclick="detectMove(${i},1)" ${i===last?'disabled':''}
-            style="width:32px;height:26px;border-radius:6px;background:#374151;border:none;color:${i===last?'#4b5563':'#9ca3af'};cursor:${i===last?'not-allowed':'pointer'};font-size:13px;transition:all 0.12s">→</button>
+        <div style="display:flex;gap:2px">
+          <button onclick="detectMove(${i},-1)" ${i===0?'disabled':''}
+            style="width:24px;height:22px;border-radius:4px;background:#374151;border:none;color:${i===0?'#4b5563':'#9ca3af'};cursor:${i===0?'not-allowed':'pointer'};font-size:12px">←</button>
+          <button onclick="detectMove(${i},1)" ${i===last?'disabled':''}
+            style="width:24px;height:22px;border-radius:4px;background:#374151;border:none;color:${i===last?'#4b5563':'#9ca3af'};cursor:${i===last?'not-allowed':'pointer'};font-size:12px">→</button>
         </div>
       </div>`;
     });
     html += `</div>
-      <button class="action-btn btn-end-turn" onclick="detectConfirm()" style="width:100%;margin-top:14px">Confirm Order</button>
+      <button class="action-btn btn-end-turn" onclick="detectConfirm()" style="width:100%;margin-top:8px;flex-shrink:0">Confirm Order</button>
     </div>`;
     inner.innerHTML = html;
     return;
@@ -3113,10 +3340,10 @@ function renderEffectOverlay(gs) {
     const attackerName = gs.players[gs.attackInfo.attacker]?.name || '?';
     const myHand = gs.attackInfo.targetHand || [];
     const giveable = myHand.filter(c => c.type !== 'data_flag');
-    let html = `<div class="effect-panel" style="max-width:min(740px,94vw)">
+    let html = `<div class="effect-panel">
       <h3>C2 — Choose a card to give to ${attackerName}</h3>
-      <p style="color:#9ca3af;font-size:13px;margin-bottom:12px">Pick any card from your hand (except the Data Flag) to give away.</p>
-      <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center">`;
+      <p style="color:#9ca3af;font-size:12px;margin-bottom:8px">Pick any card from your hand (except the Data Flag).</p>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;flex:1;align-content:flex-start">`;
     sortByOrder(giveable).forEach(c => {
       html += vcCard(c, `send({type:'game_action',action:'attack_c2_give_card',cardId:'${c.id}'})`);
     });
@@ -3211,10 +3438,10 @@ function renderEffectOverlay(gs) {
     const tgtName = gs.players[gs.attackInfo.target]?.name || '?';
     const tgtHand = gs.attackInfo.targetHand || [];
     overlay.style.display = 'flex';
-    let html = `<div class="effect-panel" style="max-width:min(740px,94vw)"><h3>Recon — ${tgtName}'s Hand</h3><div style="display:flex;flex-wrap:wrap;gap:8px;margin:12px 0;justify-content:center">`;
+    let html = `<div class="effect-panel"><h3>Recon — ${tgtName}'s Hand</h3><div style="display:flex;flex-wrap:wrap;gap:6px;margin:8px 0;justify-content:center;flex:1;align-content:flex-start">`;
     sortByOrder(tgtHand).forEach(c => { html += vcCard(c, null); });
     if (tgtHand.length === 0) html += `<p style="color:#6b7280">Empty hand.</p>`;
-    html += `</div><button class="action-btn btn-govern" onclick="send({type:'game_action',action:'recon_look_done'})" style="width:100%;margin-top:4px">Done</button></div>`;
+    html += `</div><button class="action-btn btn-govern" onclick="send({type:'game_action',action:'recon_look_done'})" style="width:100%;flex-shrink:0">Done</button></div>`;
     inner.innerHTML = html; return;
   }
 
@@ -3280,21 +3507,28 @@ function renderEffectOverlay(gs) {
     inner.innerHTML = html; return;
   }
 
-  // ── Delivery pick phase ──
+  // ── Delivery pick phase — wizard sub-screens ──
   if (gs.phase === 'attack_delivery_pick' && gs.attackInfo?.iAmAttacker) {
     overlay.style.display = 'flex';
     const swaps = gs.attackInfo.deliverySwaps || [];
     const pickStep = gs.attackInfo.deliveryPickStep;
     const swapsDone = swaps.length;
 
+    // Reset opponent focus when a new swap cycle starts
+    if (swapsDone !== _deliverySwapsAtFocus) {
+      _deliveryOppFocus = null;
+      _deliverySwapsAtFocus = swapsDone;
+    }
+
     let html = `<div class="delivery-swap-panel">
-      <div class="delivery-swap-header">
+      <div class="delivery-swap-header" style="flex-shrink:0">
         <span class="delivery-swap-title">Delivery</span>
         <span class="delivery-swap-progress">Swap ${swapsDone + (pickStep ? 1 : 0)} of 2</span>
       </div>`;
 
+    // Completed swaps (compact)
     if (swapsDone > 0) {
-      html += `<div class="delivery-swap-done-list">`;
+      html += `<div class="delivery-swap-done-list" style="flex-shrink:0">`;
       swaps.forEach((s,i) => {
         html += `<div class="delivery-swap-done-item">✓ Swap ${i+1}: your <strong>${s.myCard?.name}</strong> ↔ ${gs.players[s.theirIdx]?.name}'s <strong>${s.theirCard?.name}</strong></div>`;
       });
@@ -3302,53 +3536,81 @@ function renderEffectOverlay(gs) {
     }
 
     if (!pickStep) {
-      html += `<div class="delivery-swap-instruction">Step ${swapsDone + 1}a — Select one of <strong>your</strong> played cards to swap away</div>`;
-      html += `<div class="delivery-swap-section"><div class="delivery-swap-section-label mine" style="margin-bottom:8px">Your Played Cards</div>`;
-      const myPlayed = gs.players[myIdx].played;
-      if (myPlayed.length === 0) {
-        html += `<p style="color:#6b7280;font-size:13px">No played cards to swap.</p>`;
+      if (_deliveryOppFocus === null) {
+        // ── Sub-screen A: Pick which player to swap with ──
+        html += `<div class="delivery-swap-instruction" style="flex-shrink:0">Step ${swapsDone + 1} — Select a player to swap with</div>`;
+        gs.players.forEach((pl, i) => {
+          if (i === myIdx) return;
+          const dot = COLOR_INFO[pl.color]?.hex || '#888';
+          const hasCards = pl.played.length > 0;
+          html += `<button class="govern-player-btn" ${hasCards ? `onclick="_deliveryOppFocus=${i};renderEffectOverlay(gameState)"` : ''} style="${hasCards?'':'opacity:0.4;cursor:not-allowed'}">
+            <div style="width:10px;height:10px;border-radius:50%;background:${dot}"></div>
+            ${pl.name} — ${pl.played.length} played card${pl.played.length!==1?'s':''}
+            ${!hasCards ? '<span style="color:#4b5563;font-size:10px">(no cards to swap)</span>' : ''}
+          </button>`;
+        });
       } else {
-        html += dsRows(myPlayed, () => 'ds-selectable', c => `send({type:'game_action',action:'delivery_pick_mine',cardId:'${c.id}'})`);
+        // ── Sub-screen B: Pick MY card — two-column with their preview ──
+        const opp = gs.players[_deliveryOppFocus];
+        const dot = COLOR_INFO[opp?.color]?.hex || '#888';
+        html += `<div class="delivery-swap-instruction" style="flex-shrink:0">Step ${swapsDone + 1}a — Click <strong>your</strong> card to give away</div>
+        <div class="delivery-col-layout">
+          <div class="delivery-col">
+            <div class="delivery-col-label mine">Your Cards</div>
+            ${gs.players[myIdx].played.length
+              ? dsRows(gs.players[myIdx].played, () => 'ds-selectable', c => `send({type:'game_action',action:'delivery_pick_mine',cardId:'${c.id}'})`)
+              : '<p style="color:#6b7280;font-size:12px">No cards.</p>'}
+          </div>
+          <div class="delivery-col-divider">↔</div>
+          <div class="delivery-col">
+            <div class="delivery-col-label theirs"><span style="width:8px;height:8px;border-radius:50%;background:${dot};display:inline-block;margin-right:4px"></span>${opp?.name}</div>
+            ${opp?.played.length
+              ? dsRows(opp.played, () => 'ds-preview', null)
+              : '<p style="color:#6b7280;font-size:12px">No cards.</p>'}
+          </div>
+        </div>
+        <button class="action-btn btn-cancel" style="flex-shrink:0;margin-top:4px" onclick="_deliveryOppFocus=null;renderEffectOverlay(gameState)">← Different player</button>`;
       }
-      html += `</div>`;
-
-      // Preview opponents (dimmed)
-      gs.players.forEach((pl, i) => {
-        if (i === myIdx || pl.played.length === 0) return;
-        const dot = COLOR_INFO[pl.color]?.hex || '#888';
-        html += `<div class="delivery-opp-section"><div class="delivery-opp-name" style="margin-bottom:8px"><span class="delivery-opp-dot" style="background:${dot}"></span>${pl.name} <span style="font-size:10px;color:#4b5563">(preview)</span></div>`;
-        html += dsRows(pl.played, () => 'ds-preview', null);
-        html += `</div>`;
-      });
-
     } else {
-      html += `<div class="delivery-swap-instruction">Step ${swapsDone + 1}b — Select an <strong>opponent's</strong> card to take in exchange</div>`;
-
-      // My cards — giving one highlighted, rest dimmed
-      html += `<div class="delivery-swap-section"><div class="delivery-swap-section-label mine" style="margin-bottom:8px">Your Played Cards</div>`;
-      html += dsRows(gs.players[myIdx].played, c => c.id === pickStep.myCard?.id ? 'ds-giving' : 'ds-preview', null);
-      html += `</div>`;
-
-      // Opponents (clickable)
-      gs.players.forEach((pl, i) => {
-        if (i === myIdx || pl.played.length === 0) return;
-        const dot = COLOR_INFO[pl.color]?.hex || '#888';
-        html += `<div class="delivery-opp-section"><div class="delivery-opp-name" style="margin-bottom:8px"><span class="delivery-opp-dot" style="background:${dot}"></span>${pl.name} — click a card to take it</div>`;
-        html += dsRows(pl.played, () => 'ds-selectable', c => `send({type:'game_action',action:'delivery_pick_theirs',targetIdx:${i},cardId:'${c.id}'})`);
-        html += `</div>`;
-      });
-
-      html += `<div style="margin-top:4px"><button class="action-btn btn-cancel" onclick="send({type:'game_action',action:'delivery_go_back'})">← Back</button></div>`;
+      // ── Sub-screen C: Pick THEIR card — two-column ──
+      const opp = _deliveryOppFocus !== null ? gs.players[_deliveryOppFocus] : null;
+      const dot = opp ? (COLOR_INFO[opp.color]?.hex || '#888') : '#888';
+      html += `<div class="delivery-swap-instruction" style="flex-shrink:0">Step ${swapsDone + 1}b — Click <strong>${opp?.name || "opponent"}'s</strong> card to take</div>
+      <div class="delivery-col-layout">
+        <div class="delivery-col">
+          <div class="delivery-col-label mine">Giving Away</div>
+          ${dsRows([pickStep.myCard], () => 'ds-giving', null)}
+        </div>
+        <div class="delivery-col-divider">↔</div>
+        <div class="delivery-col">
+          <div class="delivery-col-label theirs">`;
+      if (opp) {
+        html += `<span style="width:8px;height:8px;border-radius:50%;background:${dot};display:inline-block;margin-right:4px"></span>${opp.name}</div>
+          ${opp.played.length
+            ? dsRows(opp.played, () => 'ds-selectable', c => `send({type:'game_action',action:'delivery_pick_theirs',targetIdx:${_deliveryOppFocus},cardId:'${c.id}'})`)
+            : '<p style="color:#6b7280;font-size:12px">No cards.</p>'}`;
+      } else {
+        // Fallback: no focus — show all opponents
+        html += `Any opponent</div>`;
+        gs.players.forEach((pl, i) => {
+          if (i === myIdx || !pl.played.length) return;
+          const d2 = COLOR_INFO[pl.color]?.hex || '#888';
+          html += `<div style="margin-bottom:4px;font-size:10px;font-weight:700;color:#9ca3af"><span style="width:7px;height:7px;border-radius:50%;background:${d2};display:inline-block;margin-right:3px"></span>${pl.name}</div>`;
+          html += dsRows(pl.played, () => 'ds-selectable', c => `send({type:'game_action',action:'delivery_pick_theirs',targetIdx:${i},cardId:'${c.id}'})` );
+        });
+      }
+      html += `</div></div>
+      <button class="action-btn btn-cancel" style="flex-shrink:0;margin-top:4px" onclick="send({type:'game_action',action:'delivery_go_back'})">← Back</button>`;
     }
 
-    html += `<div class="delivery-swap-footer">`;
+    html += `<div class="delivery-swap-footer" style="flex-shrink:0">`;
     if (swapsDone > 0) {
       html += `<button class="action-btn btn-end-turn" onclick="send({type:'game_action',action:'delivery_done'})">✓ Done — Execute ${swapsDone} Swap${swapsDone>1?'s':''}</button>`;
-    } else if (!pickStep) {
+    } else if (!pickStep && _deliveryOppFocus === null) {
       html += `<button class="action-btn btn-cancel" onclick="send({type:'game_action',action:'delivery_done'})">Skip (no swaps)</button>`;
     }
-    html += `</div>`;
-    html += `</div>`;
+    html += `<button class="action-btn btn-cancel" onclick="send({type:'game_action',action:'cancel_attack'})" style="margin-left:auto">✕ Cancel</button>`;
+    html += `</div></div>`;
     inner.innerHTML = html; return;
   }
 
@@ -3361,9 +3623,10 @@ function renderEffectOverlay(gs) {
     return;
   }
 
-  // Default: hide
+  // Default: no active phase — clear inner, show idle placeholder
   overlay.style.display = 'none';
   inner.innerHTML = '';
+  if (idleState) idleState.style.display = '';
 }
 
 function detectMove(idx, dir) {
