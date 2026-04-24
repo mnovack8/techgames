@@ -43,6 +43,8 @@ body{padding-top:44px;}
 /* ===== SCREENS ===== */
 .screen{display:none;}
 .screen.active{display:flex;}
+/* Suppress any screen paint while a rejoin (player or observer) is in flight */
+body.rejoin-pending .screen.active{visibility:hidden;}
 
 /* ===== GAME: lock to viewport on medium+ so end-turn bar & turn strip are always visible ===== */
 @media(min-width:641px){
@@ -211,77 +213,141 @@ body.observer-active #game .game-layout{height:calc(100vh - 44px - 36px - 10px);
 .opp-hand-row .card .card-name{font-size:10px;line-height:1.15;font-weight:700;}
 .opp-hand-row .card .card-desc{display:none;}
 .opp-hand-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#6b7280;margin-top:6px;display:flex;align-items:center;gap:6px;}
-/* Observer-wide layout: CSS grid — opponent panels on the left, vertical sidebar
-   on the right containing game log, current-turn status, and special cards. */
+/* Observer-wide layout: status strip + 2×2 player panels + activity sidebar */
 body.observer-active .game-layout{
   display:grid;
-  grid-template-columns:1fr 280px;
-  grid-template-rows:auto 1fr auto auto;
-  grid-template-areas:
-    "tstat tstat"
-    "opps  side"
-    "my    my"
-    "acts  acts";
+  grid-template-columns:1fr 300px;
+  grid-template-rows:auto 1fr;
   overflow:hidden;
 }
-body.observer-active .table-status-strip{grid-area:tstat;}
-body.observer-active .opponents-bar{grid-area:opps;flex-wrap:wrap;overflow-x:visible;overflow-y:auto;gap:8px;padding:6px 10px;align-items:stretch;align-content:flex-start;min-height:0;}
-body.observer-active .center-area{grid-area:side;flex-direction:column;overflow-y:auto;background:#0d1117;border-left:1px solid #1e2d3d;min-height:0;}
-body.observer-active .my-area{grid-area:my;}
-body.observer-active .action-bar{grid-area:acts;}
-/* Observer: keep sidebar visible but compact */
-body.observer-active .game-middle{flex:1;}
-/* On smaller screens (under ~1100px), collapse grid back to single column */
-@media (max-width: 1099px) {
-  body.observer-active .game-layout{
-    display:flex;flex-direction:column;
-  }
+/* Use explicit line numbers — the status strip only has an ID, not a class */
+body.observer-active #table-status-strip{grid-column:1/-1;grid-row:1;}
+body.observer-active .opponents-bar{grid-column:1;grid-row:2;}
+body.observer-active .center-area{grid-column:2;grid-row:2;}
+/* 2×2 grid of player panels */
+body.observer-active .opponents-bar{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  grid-auto-rows:minmax(0,1fr);
+  gap:0;
+  overflow:hidden;
+  padding:0;
+  align-items:stretch;
+  align-content:stretch;
+  max-height:none !important;
+  height:auto;
+  min-height:0;
+}
+/* Activity + Actions sidebar */
+body.observer-active .center-area{
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  background:#0d1117;
+  border-left:1px solid #1e2d3d;
+  min-height:0;
+}
+/* Hide the player-only areas entirely */
+body.observer-active .my-area{display:none !important;}
+body.observer-active .action-bar{display:none !important;}
+/* Sidebar inner layout: actions on top, feed below */
+body.observer-active .game-middle{flex:1;display:flex;flex-direction:column;min-height:0;overflow:hidden;}
+body.observer-active .gm-actions-section{flex:0 0 auto;min-width:0;border-bottom:1px solid #1e2d3d;}
+body.observer-active .gm-actions-body{overflow-y:auto;max-height:none;flex:0 0 auto;justify-content:flex-start;}
+body.observer-active .gm-feed-section{flex:1 1 0;min-width:0;min-height:0;display:flex;flex-direction:column;}
+body.observer-active .gm-feed-body{flex:1;overflow-y:auto;min-height:0;}
+/* Player panels: fill their grid cell, scroll internally */
+body.observer-active .opponent-panel{
+  min-width:0;max-width:none;flex:none;
+  padding:8px 12px;
+  overflow-y:auto;
+  border:1px solid #1e2d3d;
+  border-radius:0;
+}
+/* All panel highlights use inset shadows so overflow:hidden on the grid doesn't clip them */
+body.observer-active .opponent-panel.current-turn{
+  border-color:#d1db24;
+  box-shadow:inset 0 0 0 2px #d1db24;
+}
+body.observer-active .opponent-panel.protected{
+  border-color:#3b82f6;
+  box-shadow:inset 0 0 0 2px rgba(59,130,246,0.6);
+  background-color:rgba(59,130,246,0.08);
+  background-image:repeating-linear-gradient(
+    45deg,
+    transparent 0px,transparent 7px,
+    rgba(59,130,246,0.07) 7px,rgba(59,130,246,0.07) 9px
+  );
+}
+body.observer-active .opponent-panel.install-blocked{
+  border-color:#ef4444;
+  box-shadow:inset 0 0 0 2px rgba(239,68,68,0.6);
+  background-color:rgba(239,68,68,0.08);
+  background-image:repeating-linear-gradient(
+    45deg,
+    transparent 0px,transparent 7px,
+    rgba(239,68,68,0.07) 7px,rgba(239,68,68,0.07) 9px
+  );
+}
+body.observer-active .opponent-panel.protected.install-blocked{
+  border-color:#7c3aed;
+  box-shadow:inset 0 0 0 2px rgba(124,58,237,0.6);
+  background-color:rgba(124,58,237,0.10);
+  background-image:repeating-linear-gradient(
+    45deg,
+    transparent 0px,transparent 7px,
+    rgba(124,58,237,0.08) 7px,rgba(124,58,237,0.08) 9px
+  );
+}
+/* current-turn overrides: keep yellow border on top when also protected/blocked */
+body.observer-active .opponent-panel.current-turn.protected,
+body.observer-active .opponent-panel.current-turn.install-blocked,
+body.observer-active .opponent-panel.current-turn.protected.install-blocked{
+  border-color:#d1db24;
+  box-shadow:inset 0 0 0 2px #d1db24;
+}
+/* Observer: Active Actions is read-only — disable all buttons visually */
+body.observer-active .gm-actions-body button{
+  pointer-events:none !important;
+  opacity:0.55;
+  cursor:not-allowed !important;
+}
+body.observer-active .opp-header{margin-bottom:4px;}
+body.observer-active .opp-played{margin-top:4px;gap:4px;}
+body.observer-active .opp-hand-row{margin-top:6px;padding-top:6px;border-top:1px solid #1e2d3d;gap:4px;flex-wrap:wrap;}
+body.observer-active .opp-hand-label{margin-top:4px;}
+/* Observer phase-status block in actions sidebar */
+.obs-phase-status{display:flex;flex-direction:column;gap:6px;padding:4px 0;}
+.obs-phase-player{font-size:13px;font-weight:800;color:#e2e8f0;line-height:1.2;}
+.obs-phase-label{font-size:11px;color:#9ca3af;line-height:1.5;}
+/* Full-size played-card rows (keep right-aligned horizontal style in panels) */
+.obs-played-rows{margin-top:2px;}
+.obs-played-rows .kc-row{align-items:center;gap:6px;margin-bottom:2px;}
+.obs-played-rows .kc-row-label{width:50px;font-size:8px;line-height:1.2;text-align:center;flex-direction:column;justify-content:center;align-items:center;gap:2px;}
+.obs-played-rows .kc-slots{gap:3px;flex-wrap:wrap;}
+.obs-played-rows .kc-slot{width:42px;min-height:48px;}
+@media(min-width:1400px){
+  body.observer-active .obs-played-rows .kc-slot{width:46px;min-height:54px;}
+}
+/* Small screens: stack vertically */
+@media(max-width:1099px){
+  body.observer-active .game-layout{display:flex;flex-direction:column;}
+  body.observer-active .opponents-bar{grid-template-columns:1fr;grid-auto-rows:auto;}
   body.observer-active .center-area{flex:0 0 auto;max-height:220px;flex-direction:row;border-left:none;}
 }
-body.observer-active .opponent-panel{min-width:520px;max-width:none;flex:1 1 520px;padding:6px 12px;}
-body.observer-active .opp-kc-slot{width:30px;height:30px;}
-body.observer-active .opp-kc-label{font-size:8px;max-width:36px;}
-body.observer-active .opp-header{margin-bottom:2px;}
-body.observer-active .opp-played{margin-top:2px;gap:2px;}
-body.observer-active .opp-hand-row{margin-top:3px;padding-top:4px;padding-bottom:0;gap:4px;}
-body.observer-active .opp-hand-label{margin-top:3px;}
-/* On wider screens, panels scale up to fit 6+ cards comfortably without scroll */
-@media (min-width: 1200px) {
-  body.observer-active .opponent-panel{min-width:560px;flex:1 1 560px;}
-  body.observer-active .opp-hand-row .card{min-width:70px;max-width:70px;}
-  body.observer-active .opp-hand-row .card.card-has-img{min-width:70px;max-width:70px;height:92px;}
-}
-@media (min-width: 1600px) {
-  body.observer-active .opponent-panel{min-width:640px;flex:1 1 640px;}
-  body.observer-active .opp-hand-row .card{min-width:78px;max-width:78px;}
-  body.observer-active .opp-hand-row .card.card-has-img{min-width:78px;max-width:78px;height:104px;}
-}
-/* Observer: full-size played-cards rows (matches the player's "Cards in Front of You" style) */
-.obs-played-rows{margin-top:2px;}
-.obs-played-rows .kc-row{align-items:center;gap:6px;margin-bottom:1px;}
-.obs-played-rows .kc-row-label{width:56px;font-size:8px;line-height:1.1;text-align:right;}
-.obs-played-rows .kc-slots{gap:4px;flex-wrap:nowrap;}
-.obs-played-rows .kc-slot{width:48px;min-height:56px;}
-@media (min-width:1200px){
-  body.observer-active .obs-played-rows .kc-slot{width:52px;min-height:62px;}
-  body.observer-active .obs-played-rows .kc-row-label{width:60px;font-size:9px;}
-}
-@media (min-width:1600px){
-  body.observer-active .obs-played-rows .kc-slot{width:58px;min-height:70px;}
-  body.observer-active .obs-played-rows .kc-row-label{width:68px;font-size:10px;}
-}
-/* On tall screens, allow slightly more comfortable hand card size */
-@media (min-width: 1200px) and (min-height: 1000px) {
-  body.observer-active .opp-hand-row .card.card-has-img{height:108px;min-width:80px;max-width:80px;}
-  body.observer-active .opp-hand-row .card{min-width:80px;max-width:80px;}
-  body.observer-active .obs-played-rows .kc-slot{min-height:72px;}
-}
-/* Observer hands-hidden toggle — hides the in-panel hand rows */
+/* Observer hands-hidden toggle */
 body.obs-hands-hidden .opp-hand-row,
 body.obs-hands-hidden .opp-hand-label{display:none !important;}
-#obs-hide-hands-btn{background:#374151;color:#e2e8f0;border:1px solid #4b5563;border-radius:6px;padding:3px 10px;font-size:11px;font-weight:700;cursor:pointer;margin-left:auto;letter-spacing:0.3px;}
+#obs-hide-hands-btn{background:#374151;color:#e2e8f0;border:1px solid #4b5563;border-radius:6px;padding:3px 10px;font-size:11px;font-weight:700;cursor:pointer;letter-spacing:0.3px;}
 #obs-hide-hands-btn:hover{background:#4b5563;}
 #obs-hide-hands-btn.hands-hidden{background:#1a2235;color:#9ca3af;}
+/* Observer active-actions hidden toggle */
+body.obs-actions-hidden .gm-actions-section{display:none !important;}
+#obs-hide-actions-btn{background:#374151;color:#e2e8f0;border:1px solid #4b5563;border-radius:6px;padding:3px 10px;font-size:11px;font-weight:700;cursor:pointer;letter-spacing:0.3px;}
+#obs-hide-actions-btn:hover{background:#4b5563;}
+#obs-hide-actions-btn.actions-hidden{background:#1a2235;color:#9ca3af;}
+/* Group the two toggle buttons together on the right of the banner */
+.obs-banner-btns{display:flex;gap:6px;margin-left:auto;}
 .waiting-observer-section{width:100%;max-width:320px;margin-top:4px;}
 .waiting-observer-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:#67e8f9;margin-bottom:6px;display:flex;align-items:center;gap:6px;}
 .waiting-observer-row{display:flex;align-items:center;gap:10px;padding:7px 14px;background:#0a1e2a;border-radius:8px;border:1px solid rgba(34,211,238,0.25);margin-bottom:5px;}
@@ -699,6 +765,9 @@ body.obs-hands-hidden .opp-hand-label{display:none !important;}
 /* PROTECTED BADGE */
 .opp-protected-badge{font-size:10px;background:rgba(59,130,246,0.2);color:#93c5fd;padding:1px 6px;border-radius:4px;margin-left:4px;}
 .opponent-panel.protected{border-color:#3b82f6;box-shadow:0 0 0 1px rgba(59,130,246,0.3);}
+/* NO DEFEND (Install block) BADGE */
+.opp-blocked-badge{font-size:10px;background:rgba(239,68,68,0.18);color:#f87171;padding:1px 6px;border-radius:4px;margin-left:4px;display:inline-flex;align-items:center;gap:3px;}
+.opponent-panel.install-blocked{border-color:#ef4444;box-shadow:0 0 0 1px rgba(239,68,68,0.3);}
 
 /* EFFECT OVERLAY */
 .effect-panel{background:#1a2235;border:2px solid #62b517;border-radius:16px;padding:24px;max-width:560px;width:92%;max-height:80vh;overflow-y:auto;}
@@ -1389,7 +1458,10 @@ body.screen-idle-glow::after{
   <svg class="obs-eye-icon obs-eye-xl obs-eye-pulse"><use href="#icon-obs-eye"/></svg>
   <span>Observer Mode</span>
   <span class="obs-pill">Read Only — you can see all cards but cannot play</span>
-  <button id="obs-hide-hands-btn" onclick="toggleObserverHands()">Hide Hands</button>
+  <div class="obs-banner-btns">
+    <button id="obs-hide-hands-btn" onclick="toggleObserverHands()">Hide Hands</button>
+    <button id="obs-hide-actions-btn" onclick="toggleObserverActions()">Hide Active Actions</button>
+  </div>
 </div>
 
 <!-- Cancel confirmation modal -->
@@ -1425,19 +1497,25 @@ body.screen-idle-glow::after{
   <p>Win by one of two conditions:</p>
   <p><strong>1.</strong> Hold the 🚩 Data Flag when ⏰ Times Up is drawn from the deck.</p>
   <p><strong>2.</strong> Play one of every attack type (Kill Chain) AND every defend type (NIST) in front of you, including the earned Govern and Action Objectives cards.</p>
+  <h5><span style="color:#62b517">◆</span> Screen Layout</h5>
+  <p><strong>Opponents bar</strong> — top row shows each opponent's panel: hand size, played Kill Chain &amp; NIST slots, and whose turn it is.</p>
+  <p><strong>Status strip</strong> — the bar directly below opponents shows five game-wide indicators: Draw Deck count, Data Flag location, Times Up state, Govern availability, and Action Objective status. Click any <strong>ⓘ</strong> for details.</p>
+  <p><strong>Your Hand (left 2/3)</strong> — your cards are here. Click one to play it on your turn. Active action prompts also appear in this area.</p>
+  <p><strong>Cards in Front of You (right 1/3)</strong> — your played area. The <img src="images/cyber-kill-chain.svg" style="width:10px;height:10px;vertical-align:middle;"> <strong>Cyber Kill Chain</strong> row tracks attack cards; the <img src="images/nist-framework.svg" style="width:10px;height:10px;vertical-align:middle;"> <strong>NIST</strong> row tracks defend cards. Dotted slots show what you still need.</p>
+  <p><strong>Activity feed</strong> — the narrow column between your hand and played area logs every game event.</p>
   <h5><span style="color:#62b517">◆</span> Turn Flow</h5>
   <p><strong>1. Play cards</strong> — click cards from your hand to play them. You can play multiple cards per turn.</p>
   <p><strong>2. End turn</strong> — click End Turn when done.</p>
   <p><strong>3. Draw</strong> — you automatically draw 1 card.</p>
   <p><strong>4. Discard</strong> — if you have more than 6 cards, click one to discard.</p>
-  <h5><span style="color:#f87171">▸</span> Kill Chain — Attack Cards</h5>
+  <h5><span style="color:#f87171">▸</span> <img src="images/cyber-kill-chain.svg" style="width:10px;height:10px;vertical-align:middle;"> Kill Chain — Attack Cards</h5>
   <p><span style="color:#f87171;font-size:9px;font-weight:900">ATK</span> <strong>Recon</strong> — peek at a hand or swap played attack cards</p>
   <p><span style="color:#f87171;font-size:9px;font-weight:900">ATK</span> <strong>Weaponize</strong> — cancel an opponent's defend card (played out of turn)</p>
   <p><span style="color:#f87171;font-size:9px;font-weight:900">ATK</span> <strong>Delivery</strong> — swap up to 2 played cards with opponents</p>
   <p><span style="color:#f87171;font-size:9px;font-weight:900">ATK</span> <strong>Exploit</strong> — blindly steal 1 card from a target</p>
   <p><span style="color:#f87171;font-size:9px;font-weight:900">ATK</span> <strong>Install</strong> — block a target from playing defend cards</p>
   <p><span style="color:#f87171;font-size:9px;font-weight:900">ATK</span> <strong>C2</strong> — steal the Data Flag, or target gives you a card</p>
-  <h5><span style="color:#93c5fd">▸</span> NIST Framework — Defend Cards</h5>
+  <h5><span style="color:#93c5fd">▸</span> <img src="images/nist-framework.svg" style="width:10px;height:10px;vertical-align:middle;"> NIST Framework — Defend Cards</h5>
   <p><span style="color:#93c5fd;font-size:9px;font-weight:900">DEF</span> <strong>Identify</strong> — reveal who has the Data Flag or swap played defend cards</p>
   <p><span style="color:#93c5fd;font-size:9px;font-weight:900">DEF</span> <strong>Protect</strong> — block attacks until your next turn</p>
   <p><span style="color:#93c5fd;font-size:9px;font-weight:900">DEF</span> <strong>Detect</strong> — view and reorder the top 5 deck cards</p>
@@ -1448,8 +1526,9 @@ body.screen-idle-glow::after{
   <p><span style="color:#fbbf24;font-size:9px;font-weight:900">OBJ</span> <strong>Action Obj.</strong> — earned by playing all 6 Kill Chain types. The Data Flag holder must give it to you. Cannot be cancelled.</p>
   <h5><span style="color:#d1db24">◆</span> Tips</h5>
   <p>• Click the <strong>ⓘ</strong> icons throughout the game for quick help on any element.</p>
-  <p>• Dotted outlines in your played area show which cards you still need.</p>
-  <p>• Watch the game log for opponent actions.</p>
+  <p>• Dotted outlines in your <em>Cards in Front of You</em> show which slots you still need to fill.</p>
+  <p>• Watch the Activity feed for opponent actions and game events.</p>
+  <p>• The status strip updates live — keep an eye on the Data Flag location!</p>
 </div>
 
 <!-- BC TUTORIAL PANEL -->
@@ -2129,13 +2208,23 @@ function trackActivityFeed(gs) {
 }
 
 const SESSION_KEY = 'techgames_byteclub_session';
+const OBS_SESSION_KEY = 'techgames_byteclub_observer';
+let pendingObsName = '';
 
 function connectWS(cb) {
   ws = new WebSocket(WS_URL);
   ws.onopen = () => {
     const token = sessionStorage.getItem(SESSION_KEY);
-    if (token) { send({ type: 'rejoin_room', token }); }
-    else if (cb) cb();
+    if (token) { send({ type: 'rejoin_room', token }); return; }
+    const obsSession = sessionStorage.getItem(OBS_SESSION_KEY);
+    if (obsSession) {
+      try {
+        const { roomCode: rc, name: n } = JSON.parse(obsSession);
+        send({ type: 'join_as_observer', code: rc, name: n });
+      } catch(e) { sessionStorage.removeItem(OBS_SESSION_KEY); if (cb) cb(); }
+      return;
+    }
+    if (cb) cb();
   };
   ws.onmessage = e => handleMsg(JSON.parse(e.data));
   ws.onclose = () => setTimeout(() => connectWS(null), 2000);
@@ -2249,7 +2338,7 @@ function toggleJoinObserver() {
 }
 
 function onCodeInput(el) {
-  el.value = el.value.toUpperCase().replace(/[^A-Z]/g,'');
+  el.value = el.value.toUpperCase().replace(/[^A-Z0-9]/g,'');
   const code = el.value;
   // Reset observer selection when code changes
   joinObserverSelected = false;
@@ -2285,6 +2374,7 @@ function createRoom() {
   if (createObserverSelected) {
     const name = document.getElementById('create-name').value.trim();
     if (!name) return;
+    pendingObsName = name;
     connectWS(() => send({ type:'create_room_as_observer', gameType:'byteclub', name }));
     return;
   }
@@ -2299,6 +2389,8 @@ function joinRoom() {
   if (joinObserverSelected) {
     const name = document.getElementById('join-name').value.trim();
     if (!name) return;
+    pendingObsName = name;
+    sessionStorage.setItem(OBS_SESSION_KEY, JSON.stringify({ roomCode: code, name }));
     connectWS(() => send({ type:'join_as_observer', code, name }));
     return;
   }
@@ -2310,6 +2402,8 @@ function joinRoom() {
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
+  // Rejoin handshake resolved — drop the visibility guard so the screen paints
+  document.body.classList.remove('rejoin-pending');
 }
 
 // ==================== EVENT HUB ====================
@@ -2410,6 +2504,8 @@ function hideCancelModal() { document.getElementById('cancel-modal-overlay').cla
 function confirmCancelGame() {
   hideCancelModal();
   sessionStorage.removeItem(SESSION_KEY);
+  sessionStorage.removeItem(OBS_SESSION_KEY);
+  pendingObsName = '';
   send({ type: 'cancel_game' });
   // Navigate immediately — don't wait for server echo (prevents game screen flash
   // if game_cancelled is delayed or never arrives)
@@ -2552,6 +2648,7 @@ function handleMsg(msg) {
       break;
     case 'rejoin_failed':
       sessionStorage.removeItem(SESSION_KEY);
+      sessionStorage.removeItem(OBS_SESSION_KEY);
       history.replaceState({}, '', '/byteclub');
       showScreen('lobby');
       break;
@@ -2592,7 +2689,9 @@ function handleMsg(msg) {
       myObserverIdx = msg.observerIdx;
       roomCode = msg.code;
       document.getElementById('room-code-text').textContent = roomCode;
-      history.replaceState({}, '', '/byteclub?room=' + roomCode);
+      // Persist observer session so refresh stays in observer view
+      sessionStorage.setItem(OBS_SESSION_KEY, JSON.stringify({ roomCode: msg.code, name: pendingObsName || (JSON.parse(sessionStorage.getItem(OBS_SESSION_KEY)||'{}').name) || '' }));
+      history.replaceState({}, '', '/byteclub?room=' + msg.code);
       showScreen('waiting');
       if (msg.started) {
         // Game already in progress — go straight to game screen
@@ -2635,6 +2734,8 @@ function handleMsg(msg) {
     }
     case 'left_room':
       sessionStorage.removeItem(SESSION_KEY);
+      sessionStorage.removeItem(OBS_SESSION_KEY);
+      pendingObsName = '';
       roomCode = null; myId = null; myObserverIdx = -1; gameState = null; isObserver = false;
       document.getElementById('htp-btn').style.display = 'none';
       document.getElementById('btn-cancel-game').style.display = 'none';
@@ -2645,6 +2746,8 @@ function handleMsg(msg) {
       break;
     case 'game_cancelled':
       sessionStorage.removeItem(SESSION_KEY);
+      sessionStorage.removeItem(OBS_SESSION_KEY);
+      pendingObsName = '';
       roomCode = null; myId = null; myObserverIdx = -1; gameState = null; isHost = false; isObserver = false;
       document.getElementById('htp-btn').style.display = 'none';
       document.getElementById('btn-cancel-game').style.display = 'none';
@@ -2823,6 +2926,15 @@ function toggleObserverHands() {
   }
 }
 
+function toggleObserverActions() {
+  const hidden = document.body.classList.toggle('obs-actions-hidden');
+  const btn = document.getElementById('obs-hide-actions-btn');
+  if (btn) {
+    btn.textContent = hidden ? 'Show Active Actions' : 'Hide Active Actions';
+    btn.classList.toggle('actions-hidden', hidden);
+  }
+}
+
 function renderObserverGame(gs) {
   // Win screen
   if (gs.phase === 'game_over' || gs.winner >= 0) {
@@ -2885,7 +2997,8 @@ function renderObserverGame(gs) {
     div.className = 'opponent-panel'
       + (i === gs.currentPlayer ? ' current-turn' : '')
       + (pl.isBlocked ? ' blocked' : '')
-      + (isProtected ? ' protected' : '');
+      + (isProtected ? ' protected' : '')
+      + (isInstallBlocked ? ' install-blocked' : '');
 
     const oppCounts = {};
     pl.played.forEach(c => { oppCounts[c.type] = (oppCounts[c.type] || 0) + 1; });
@@ -2906,11 +3019,11 @@ function renderObserverGame(gs) {
     const defendSlots = DEFEND_TYPES.map(t => obsFullSlot(t, t.id==='govern'?'special':'defend')).join('');
     const oppPlayedHtml = `<div class="my-played-rows obs-played-rows">
       <div class="kc-row">
-        <span class="kc-row-label attack">Cyberkill Chain<span class="info-btn" onclick="">i<div class="info-popup wide"><strong>Cyber Kill Chain</strong> — the attack path. A player must play one of each attack type to unlock <em>Action Objectives</em>.<br><br><strong>Recon</strong> — look at a hand or swap played attack cards<br><strong>Weaponize</strong> — cancel an opponent's defend card (out of turn)<br><strong>Delivery</strong> — swap up to 2 played cards with opponents<br><strong>Exploit</strong> — blindly steal 1 card from a target<br><strong>Install</strong> — block a target from playing defend cards<br><strong>C2</strong> — steal the Data Flag, or target gives you a card</div></span></span>
+        <span class="kc-row-label attack"><img src="images/cyber-kill-chain.svg" style="width:14px;height:14px;object-fit:contain;flex-shrink:0;display:block;">Cyberkill Chain<span class="info-btn" onclick="">i<div class="info-popup wide"><strong>Cyber Kill Chain</strong> — the attack path. A player must play one of each attack type to unlock <em>Action Objectives</em>.<br><br><strong>Recon</strong> — look at a hand or swap played attack cards<br><strong>Weaponize</strong> — cancel an opponent's defend card (out of turn)<br><strong>Delivery</strong> — swap up to 2 played cards with opponents<br><strong>Exploit</strong> — blindly steal 1 card from a target<br><strong>Install</strong> — block a target from playing defend cards<br><strong>C2</strong> — steal the Data Flag, or target gives you a card</div></span></span>
         <div class="kc-slots">${attackSlots}</div>
       </div>
       <div class="kc-row">
-        <span class="kc-row-label defend">NIST<span class="info-btn" onclick="">i<div class="info-popup wide"><strong>NIST Cybersecurity Framework</strong> — the defense path. A player must play one of each defend type to unlock <em>Govern</em>.<br><br><strong>Identify</strong> — reveal Data Flag holder or swap played defend cards<br><strong>Protect</strong> — block attacks until your next turn<br><strong>Detect</strong> — view and reorder the top 5 deck cards<br><strong>Respond</strong> — cancel an attack targeting you (out of turn)<br><strong>Recover</strong> — draw until you have 5 cards</div></span></span>
+        <span class="kc-row-label defend"><img src="images/nist-framework.svg" style="width:14px;height:14px;object-fit:contain;flex-shrink:0;display:block;">NIST<span class="info-btn" onclick="">i<div class="info-popup wide"><strong>NIST Cybersecurity Framework</strong> — the defense path. A player must play one of each defend type to unlock <em>Govern</em>.<br><br><strong>Identify</strong> — reveal Data Flag holder or swap played defend cards<br><strong>Protect</strong> — block attacks until your next turn<br><strong>Detect</strong> — view and reorder the top 5 deck cards<br><strong>Respond</strong> — cancel an attack targeting you (out of turn)<br><strong>Recover</strong> — draw until you have 5 cards</div></span></span>
         <div class="kc-slots">${defendSlots}</div>
       </div>
     </div>`;
@@ -2948,18 +3061,57 @@ function renderObserverGame(gs) {
     }
   });
 
-  // Hide my-played-area (belongs to the local player, not meaningful for observers)
+  // Hide player-specific areas (CSS body.observer-active also handles this)
   const myPlayedEl = document.querySelector('.my-played-area');
   if (myPlayedEl) myPlayedEl.style.display = 'none';
-
-  // Hide both the normal hand-area AND the old bottom observer-hands section
-  // (hands now live inside each opponent panel, directly below the mini-map)
   document.getElementById('hand-area').style.display = 'none';
   document.getElementById('observer-hands').style.display = 'none';
 
-  // Action bar: read-only indicator
-  const actionBar = document.getElementById('action-bar');
-  actionBar.innerHTML = '<span class="action-bar-hint" style="color:#67e8f9;display:inline-flex;align-items:center;gap:6px;letter-spacing:1px"><svg class="obs-eye-icon obs-eye-sm"><use href="#icon-obs-eye"/></svg> Observer — read only</span>';
+  // Active Actions sidebar — full read-only view of what the current player sees
+  renderObserverActiveActions(gs);
+
+  // Activity feed — observers need the same turn/phase/card tracking as players
+  trackActivityFeed(gs);
+}
+
+function renderObserverActiveActions(gs) {
+  // Update header with current player name + colour
+  const actionsHeader = document.querySelector('.gm-actions-section .gm-section-header');
+  const curPlayer = gs.players[gs.currentPlayer];
+  const curColor  = COLOR_INFO[curPlayer?.color]?.hex || '#888';
+  const curName   = curPlayer?.name || '?';
+  if (actionsHeader) {
+    actionsHeader.innerHTML = `Active Actions <span style="color:${curColor};font-weight:800;font-size:9px;text-transform:none;letter-spacing:0">— ${curName}</span>`;
+  }
+
+  // Build a synthetic game state from the current player's point of view so
+  // renderEffectOverlay produces exactly what that player sees — but read-only.
+  const cp = gs.currentPlayer;
+  const synGs = Object.assign({}, gs, {
+    myIndex : cp,
+    myHand  : gs.players[cp]?.hand || [],
+  });
+
+  // Fix up iAm* flags so renderEffectOverlay branches correctly
+  if (synGs.attackInfo) {
+    synGs.attackInfo = Object.assign({}, synGs.attackInfo, {
+      iAmAttacker      : synGs.attackInfo.attacker === cp,
+      iAmTarget        : synGs.attackInfo.target   === cp,
+      myRespondCards   : [],   // observer cannot respond
+      // targetHand: use the target player's known hand for Recon-look / C2-give
+      targetHand       : gs.players[synGs.attackInfo.target]?.hand || synGs.attackInfo.targetHand || [],
+    });
+  }
+  if (synGs.weaponizeInfo) {
+    synGs.weaponizeInfo = Object.assign({}, synGs.weaponizeInfo, {
+      iAmDefender      : synGs.weaponizeInfo.defender === cp,
+      myWeaponizeCards : [],   // observer cannot weaponize
+    });
+  }
+  // identifyInfo.chooser is already an index — no flag change needed
+
+  // Render exactly as the current player would see it
+  renderEffectOverlay(synGs);
 }
 
 function renderGame(gs) {
@@ -2974,6 +3126,9 @@ function renderGame(gs) {
   document.getElementById('observer-hands').style.display = 'none';
   const myPlayedAreaEl = document.querySelector('.my-played-area');
   if (myPlayedAreaEl) myPlayedAreaEl.style.display = '';
+  // Reset Active Actions header back to default (observer mode changes it)
+  const actionsHdr = document.querySelector('.gm-actions-section .gm-section-header');
+  if (actionsHdr) actionsHdr.textContent = 'Active Actions';
 
   const me = gs.players[gs.myIndex];
   const isMyTurn = gs.currentPlayer === gs.myIndex;
@@ -3114,7 +3269,8 @@ function renderOpponents(gs) {
       div.className = 'opponent-panel'
         + (isNow ? ' current-turn' : '')
         + (pl.isBlocked ? ' blocked' : '')
-        + (isProtected ? ' protected' : '');
+        + (isProtected ? ' protected' : '')
+        + (isInstallBlocked ? ' install-blocked' : '');
 
       // Build opponent kill-chain slot grid
       const oppCounts = {};
@@ -4326,8 +4482,8 @@ There are <strong>two ways to win</strong> — this tutorial shows you both.`,
 
   // 1 — Play Recon
   { title: '⚔️ Your Turn — Play Recon',
-    body: `Your hand has 5 cards. <strong>Red/dark</strong> cards are ⚔️ <strong>Attack</strong>; <strong>blue/dark</strong> are 🛡️ <strong>Defend</strong>.<br>
-Playing a card places it face-up in your row below, filling a slot.<br>
+    body: `Your hand is in the <strong>left 2/3</strong> of the screen. <strong>Red/dark</strong> cards are ⚔️ <strong>Attack</strong>; <strong>blue/dark</strong> are 🛡️ <strong>Defend</strong>.<br>
+Playing a card places it face-up in <em>Cards in Front of You</em> (right column), filling a Kill Chain or NIST slot.<br>
 <em>Click Reconnaissance</em> in your hand to play it — it lets you peek at Mira's hand!`,
     makeG: () => makeBcTutG({ alexHand:[BTC.recon,BTC.c2,BTC.respond,BTC.identify,BTC.recover] }),
     forced: true,
@@ -4450,7 +4606,7 @@ Mira is holding the 🚩 <strong>Data Flag</strong>. Whoever holds it when ⏰ <
   // 4 — Data Flag in hand, end turn
   { title: '🚩 Data Flag Stolen — End Your Turn',
     body: `C2 hit! Mira held the 🚩 Data Flag so she <strong>must</strong> give it to you.<br>
-The status bar now shows <em>🚩 In your hand!</em> — that\'s Win Condition 1 ticking.<br>
+The <strong>status strip</strong> below the opponent panels now shows <em>🚩 In your hand!</em> — that\'s Win Condition 1 ticking.<br>
 Click <strong>End Turn (Draw 1)</strong> to draw and pass to Mira.`,
     makeG: () => makeBcTutG({
       alexPlayed: [{...BTC.recon}, {...BTC.c2}],
@@ -4527,8 +4683,8 @@ That\'s the first way to win Byte Club. Click <strong>Next</strong> to see the s
 
   // 8 — Win Condition 2: Exploit → steal Protect → earn Action Obj → earn Govern → win
   { title: '🎯 Win Condition 2 — Complete the Board',
-    body: `The <strong>second way</strong> to win: have one of <em>every</em> card type played in front of you — all 6 ⚔️ Kill Chain types <strong>+</strong> all 5 🛡️ NIST types (plus the earned 🎯 Action Obj. and 🏛️ Govern).<br><br>
-Your board is nearly there. You hold a single card: <strong>Exploitation</strong>. Play it — it fills your last Kill Chain slot <em>and</em> steals a random card from Mira.`,
+    body: `The <strong>second way</strong> to win: fill every slot in <em>Cards in Front of You</em> — all 6 ⚔️ Kill Chain types <strong>+</strong> all 5 🛡️ NIST types (plus the earned 🎯 Action Obj. and 🏛️ Govern).<br><br>
+Watch the <strong>status strip</strong> above — it shows when Govern and Action Obj. become available. Your board is nearly there. You hold a single card: <strong>Exploitation</strong>. Play it — it fills your last Kill Chain slot <em>and</em> steals a random card from Mira.`,
     makeG: () => makeBcTutG({
       alexPlayed: [...BTC8_PRE_ATTACK.map(c=>({...c})), ...BTC8_PRE_DEFEND.map(c=>({...c}))],
       alexHand: [{...TUT8_EXPLOIT}],
@@ -4566,6 +4722,7 @@ Your board is nearly there. You hold a single card: <strong>Exploitation</strong
         bcTutG.players[0].played.push({...TUT8_PROTECT});
         bcTutG.myHand = [{...TUT8_ACTION_OBJ}, {...TUT8_GOVERN}];
         bcTutG.players[0].handCount = 2;
+        bcTutG.protectedPlayers = [0]; // show Protect label + background on hand area
         BCTSTEPS[8]._subPhase = 2;
         BCTSTEPS[8].tutHL = TUT8_ACTION_OBJ.id;
         gameState = bcTutG;
@@ -4582,6 +4739,7 @@ Your board is nearly there. You hold a single card: <strong>Exploitation</strong
         bcTutG.players[0].played.push({...TUT8_ACTION_OBJ});
         bcTutG.myHand = [{...TUT8_GOVERN}];
         bcTutG.players[0].handCount = 1;
+        bcTutG.protectedPlayers = []; // Protect effect ends after one turn
         BCTSTEPS[8]._subPhase = 3;
         BCTSTEPS[8].tutHL = TUT8_GOVERN.id;
         gameState = bcTutG;
@@ -4815,7 +4973,15 @@ function applyBcTutHL() {
 
 // ==================== INIT ====================
 const urlRoom = new URLSearchParams(location.search).get('room');
-if (urlRoom) {
+// If we're mid-rejoin (player token or observer session), suppress lobby paint
+// so the user doesn't see a lobby flash before the WebSocket handshake finishes.
+const hasPendingRejoin = !!(sessionStorage.getItem(SESSION_KEY) || sessionStorage.getItem(OBS_SESSION_KEY));
+if (hasPendingRejoin) {
+  document.body.classList.add('rejoin-pending');
+  // Safety: if rejoin doesn't resolve in 3s, drop the guard so the lobby is reachable
+  setTimeout(() => document.body.classList.remove('rejoin-pending'), 3000);
+}
+if (urlRoom && !hasPendingRejoin) {
   const code = urlRoom.toUpperCase();
   document.getElementById('join-code').value = code;
   // Highlight Join card, dim Create card, show invitation banner
@@ -4839,7 +5005,8 @@ setupSpecialCardZoom();
 
 // On connect: try session rejoin first, then URL room check, then nothing
 connectWS(() => {
-  if (urlRoom) send({ type:'check_room', code: urlRoom.toUpperCase() });
+  // Skip the URL check_room path if a rejoin is already in flight
+  if (urlRoom && !hasPendingRejoin) send({ type:'check_room', code: urlRoom.toUpperCase() });
   // Restore event hub state from previous session
   const savedName = localStorage.getItem('byteclub_event_name');
   if (savedName) {
