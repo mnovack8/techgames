@@ -270,41 +270,41 @@ body.observer-active .opponent-panel.current-turn{
   box-shadow:inset 0 0 0 2px #d1db24;
 }
 body.observer-active .opponent-panel.protected{
-  border-color:#3b82f6;
-  box-shadow:inset 0 0 0 2px rgba(59,130,246,0.6);
-  background-color:rgba(59,130,246,0.08);
+  border-color:#3b82f6 !important;
+  box-shadow:inset 0 0 0 2px rgba(59,130,246,0.7) !important;
+  background-color:rgba(59,130,246,0.18) !important;
   background-image:repeating-linear-gradient(
     45deg,
     transparent 0px,transparent 7px,
-    rgba(59,130,246,0.07) 7px,rgba(59,130,246,0.07) 9px
-  );
+    rgba(59,130,246,0.10) 7px,rgba(59,130,246,0.10) 9px
+  ) !important;
 }
 body.observer-active .opponent-panel.install-blocked{
-  border-color:#ef4444;
-  box-shadow:inset 0 0 0 2px rgba(239,68,68,0.6);
-  background-color:rgba(239,68,68,0.08);
+  border-color:#ef4444 !important;
+  box-shadow:inset 0 0 0 2px rgba(239,68,68,0.7) !important;
+  background-color:rgba(239,68,68,0.18) !important;
   background-image:repeating-linear-gradient(
     45deg,
     transparent 0px,transparent 7px,
-    rgba(239,68,68,0.07) 7px,rgba(239,68,68,0.07) 9px
-  );
+    rgba(239,68,68,0.10) 7px,rgba(239,68,68,0.10) 9px
+  ) !important;
 }
 body.observer-active .opponent-panel.protected.install-blocked{
-  border-color:#7c3aed;
-  box-shadow:inset 0 0 0 2px rgba(124,58,237,0.6);
-  background-color:rgba(124,58,237,0.10);
+  border-color:#7c3aed !important;
+  box-shadow:inset 0 0 0 2px rgba(124,58,237,0.7) !important;
+  background-color:rgba(124,58,237,0.20) !important;
   background-image:repeating-linear-gradient(
     45deg,
     transparent 0px,transparent 7px,
-    rgba(124,58,237,0.08) 7px,rgba(124,58,237,0.08) 9px
-  );
+    rgba(124,58,237,0.11) 7px,rgba(124,58,237,0.11) 9px
+  ) !important;
 }
-/* current-turn overrides: keep yellow border on top when also protected/blocked */
+/* current-turn keeps yellow border on top when also protected/blocked */
 body.observer-active .opponent-panel.current-turn.protected,
 body.observer-active .opponent-panel.current-turn.install-blocked,
 body.observer-active .opponent-panel.current-turn.protected.install-blocked{
-  border-color:#d1db24;
-  box-shadow:inset 0 0 0 2px #d1db24;
+  border-color:#d1db24 !important;
+  box-shadow:inset 0 0 0 2px #d1db24 !important;
 }
 /* Observer: Active Actions is read-only — disable all buttons visually */
 body.observer-active .gm-actions-body button{
@@ -1557,7 +1557,7 @@ body.screen-idle-glow::after{
       <p>Loved it? The physical game is where Byte Club really shines.</p>
       <a class="win-buy-btn" href="https://cybersecgames.com/pages/byte-club-game" target="_blank" rel="noopener" onclick="trackClick('byteclub_physical_postgame')">Get the Physical Game →</a>
     </div>
-    <button class="win-btn" onclick="sessionStorage.removeItem('techgames_byteclub_session'); location.reload();">Play Again</button>
+    <button class="win-btn" onclick="handleWinBtn()">Play Again</button>
   </div>
 </div>
 
@@ -2917,6 +2917,19 @@ function buildHandCard(card, clickable, isSelected) {
 
 // ==================== OBSERVER RENDER ====================
 // Toggle: show/hide all player hands in observer mode
+function handleWinBtn() {
+  if (isObserver) {
+    // Observer: clear session and return to lobby
+    sessionStorage.removeItem(OBS_SESSION_KEY);
+    sessionStorage.removeItem(SESSION_KEY);
+    location.href = '/byteclub';
+  } else {
+    // Player: clear session and reload
+    sessionStorage.removeItem(SESSION_KEY);
+    location.reload();
+  }
+}
+
 function toggleObserverHands() {
   const hidden = document.body.classList.toggle('obs-hands-hidden');
   const btn = document.getElementById('obs-hide-hands-btn');
@@ -2943,7 +2956,7 @@ function renderObserverGame(gs) {
     document.getElementById('win-cond').textContent = gs.winCondition === 1 ? 'Flag Win' : 'Board Win';
     document.getElementById('win-screen').classList.add('show');
     const btn = document.querySelector('#win-screen .win-btn');
-    if (btn) { btn.textContent = 'Back to Lobby'; btn.onclick = () => send({ type: 'leave_room' }); }
+    if (btn) btn.textContent = 'Back to Lobby';
   }
 
   // Status bar (elements removed from UI — kept as no-ops)
