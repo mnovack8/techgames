@@ -150,7 +150,7 @@ body.rejoin-pending .screen.active{visibility:hidden;}
 /* ===== EVENT HUB ===== */
 .event-hub-card{width:100%;background:#0a1200;border:1px solid rgba(98,181,23,0.18);border-radius:14px;padding:20px 24px 22px;}
 .event-hub-card h3{font-size:13px;color:#62b517;margin-bottom:4px;text-transform:uppercase;letter-spacing:1px;}
-.event-hub-add{display:flex;gap:10px;margin-top:12px;align-items:center;}
+.event-hub-add{display:flex;gap:10px;margin-top:12px;align-items:center;flex-wrap:wrap;}
 .event-hub-add button{flex-shrink:0;padding:9px 18px;background:#111d04;border:1px solid rgba(98,181,23,0.45);border-radius:8px;color:#62b517;font-size:13px;font-weight:700;cursor:pointer;transition:all 0.15s;white-space:nowrap;}
 .event-hub-add button:hover{background:rgba(98,181,23,0.1);border-color:#62b517;}
 .event-hub-empty{font-size:12px;color:#374151;padding:16px 0 4px;text-align:center;font-style:italic;}
@@ -162,6 +162,8 @@ body.rejoin-pending .screen.active{visibility:hidden;}
 .ev-copy-btn{background:#111d04;border:1px solid #253347;border-radius:6px;padding:3px 10px;font-size:11px;font-weight:700;color:#62b517;cursor:pointer;transition:all 0.12s;white-space:nowrap;}
 .ev-copy-btn:hover{border-color:#62b517;background:rgba(98,181,23,0.08);}
 .ev-copy-btn.copied{color:#d1db24;border-color:rgba(209,219,36,0.5);}
+.ev-observe-btn{background:#0d1a26;border:1px solid rgba(56,189,248,0.35);border-radius:6px;padding:3px 10px;font-size:11px;font-weight:700;color:#38bdf8;cursor:pointer;transition:all 0.12s;white-space:nowrap;letter-spacing:0.2px;}
+.ev-observe-btn:hover{border-color:#38bdf8;background:rgba(56,189,248,0.1);color:#7dd3fc;}
 .ev-players{color:#9ca3af;font-size:13px;}
 .ev-status{display:inline-block;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;border-radius:3px;padding:2px 7px;}
 .ev-status.pending    {background:rgba(107,114,128,0.12);border:1px solid rgba(107,114,128,0.3);color:#6b7280;}
@@ -1311,6 +1313,7 @@ body.screen-idle-glow::after{
         <table class="event-table">
           <thead><tr>
             <th>Room</th>
+            <th>Join Room</th>
             <th>Invite Link</th>
             <th>Players</th>
             <th>Status</th>
@@ -2433,6 +2436,7 @@ function createEventRoom() {
   send({ type: 'create_event_room', name });
 }
 
+
 function renderEventTable() {
   const tbody = document.getElementById('event-table-body');
   const wrap  = document.getElementById('event-table-wrap');
@@ -2456,6 +2460,7 @@ function renderEventTable() {
     tr.id = 'ev-row-' + code;
     tr.innerHTML = `
       <td><span class="ev-code">${code}</span></td>
+      <td><button class="ev-observe-btn" onclick="openObserverTab('${code}')">Join Room</button></td>
       <td><button class="ev-copy-btn" id="ev-copy-${code}" onclick="copyEventLink('${code}')">Copy Link</button></td>
       <td class="ev-players">${room.playerCount}<span style="color:#253347"> / 4</span></td>
       <td><span class="ev-status ${statusClass}">${statusLabel}</span></td>
@@ -2463,6 +2468,12 @@ function renderEventTable() {
     tbody.appendChild(tr);
   }
   updateEventAddBtn();
+}
+
+function openObserverTab(code) {
+  const name = (localStorage.getItem('byteclub_event_name') || '').trim();
+  const nameParam = name ? '&name=' + encodeURIComponent(name) : '';
+  window.open(`${location.origin}/byteclub?room=${code}&obs=1${nameParam}`, '_blank');
 }
 
 function copyEventLink(code) {
@@ -4985,7 +4996,10 @@ function applyBcTutHL() {
 }
 
 // ==================== INIT ====================
-const urlRoom = new URLSearchParams(location.search).get('room');
+const urlParams  = new URLSearchParams(location.search);
+const urlRoom    = urlParams.get('room');
+const urlObs     = urlParams.get('obs');
+const urlObsName = urlParams.get('name');
 // If we're mid-rejoin (player token or observer session), suppress lobby paint
 // so the user doesn't see a lobby flash before the WebSocket handshake finishes.
 const hasPendingRejoin = !!(sessionStorage.getItem(SESSION_KEY) || sessionStorage.getItem(OBS_SESSION_KEY));
@@ -4994,7 +5008,18 @@ if (hasPendingRejoin) {
   // Safety: if rejoin doesn't resolve in 3s, drop the guard so the lobby is reachable
   setTimeout(() => document.body.classList.remove('rejoin-pending'), 3000);
 }
-if (urlRoom && !hasPendingRejoin) {
+// Event Hub "Join Room": ?room=CODE&obs=1[&name=NAME]
+// Name comes from URL param first, falls back to saved organizer name in localStorage
+const isAutoObserver = !!(urlRoom && urlObs === '1' && !hasPendingRejoin);
+if (isAutoObserver) {
+  const nameFromUrl = urlObsName ? decodeURIComponent(urlObsName) : '';
+  pendingObsName = nameFromUrl || (localStorage.getItem('byteclub_event_name') || '').trim();
+  if (pendingObsName) {
+    // Suppress lobby paint until joined — safety timeout drops guard if anything fails
+    document.body.classList.add('rejoin-pending');
+    setTimeout(() => document.body.classList.remove('rejoin-pending'), 4000);
+  }
+} else if (urlRoom && !hasPendingRejoin) {
   const code = urlRoom.toUpperCase();
   document.getElementById('join-code').value = code;
   // Highlight Join card, dim Create card, show invitation banner
@@ -5018,8 +5043,14 @@ setupSpecialCardZoom();
 
 // On connect: try session rejoin first, then URL room check, then nothing
 connectWS(() => {
-  // Skip the URL check_room path if a rejoin is already in flight
-  if (urlRoom && !hasPendingRejoin) send({ type:'check_room', code: urlRoom.toUpperCase() });
+  if (isAutoObserver && pendingObsName) {
+    // Event Hub Join Room — skip the lobby entirely, join directly as host observer
+    // Store session AFTER connect so onopen doesn't intercept and skip this callback
+    sessionStorage.setItem(OBS_SESSION_KEY, JSON.stringify({ roomCode: urlRoom.toUpperCase(), name: pendingObsName }));
+    send({ type: 'join_as_observer', code: urlRoom.toUpperCase(), name: pendingObsName });
+  } else if (urlRoom && !hasPendingRejoin) {
+    send({ type:'check_room', code: urlRoom.toUpperCase() });
+  }
   // Restore event hub state from previous session
   const savedName = localStorage.getItem('byteclub_event_name');
   if (savedName) {

@@ -925,10 +925,11 @@ function broadcastLobby(room) {
     players: room.players.map((p, i) => ({
       color: p.color, name: p.name, connected: p.connected, isHost: i === room.hostIdx, isBot: !!p.isBot,
     })),
-    observers: (room.observers || []).map((o, i) => ({
-      name: o.name, connected: o.connected, isHost: i === 0,
+    // Filter out the virtual organizer placeholder (ws:null) — it only shows once claimed
+    observers: (room.observers || []).filter(o => o.ws !== null).map((o) => ({
+      name: o.name, connected: o.connected, isHost: (room.observers || []).indexOf(o) === 0,
     })),
-    observerCount: (room.observers || []).length,
+    observerCount: (room.observers || []).filter(o => o.ws !== null).length,
   };
   for (const p of room.players) {
     if (p.connected && p.ws) send(p.ws, lobbyInfo);
