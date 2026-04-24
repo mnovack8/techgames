@@ -237,7 +237,6 @@ body.observer-active .game-middle{flex:1;}
     display:flex;flex-direction:column;
   }
   body.observer-active .center-area{flex:0 0 auto;max-height:220px;flex-direction:row;border-left:none;}
-  body.observer-active .game-right-sidebar{width:180px;}
 }
 body.observer-active .opponent-panel{min-width:520px;max-width:none;flex:1 1 520px;padding:6px 12px;}
 body.observer-active .opp-kc-slot{width:30px;height:30px;}
@@ -316,7 +315,7 @@ body.obs-hands-hidden .opp-hand-label{display:none !important;}
 .game-layout{display:flex;flex-direction:column;height:calc(100vh - 44px);overflow:hidden;}
 
 /* OPPONENTS BAR (merged with turn order) */
-.opponents-bar{display:flex;gap:10px;padding:5px 14px;background:#111827;border-bottom:1px solid #1e2d3d;overflow-x:auto;align-items:flex-start;flex-shrink:0;}
+.opponents-bar{display:flex;gap:10px;padding:5px 14px;background:#111827;border-bottom:1px solid #1e2d3d;overflow-x:auto;align-items:flex-start;flex-shrink:0;justify-content:center;}
 /* Turn-position card — appears as first card in every panel (self + opponents) */
 .turn-pos-card{display:flex;flex-direction:column;align-items:center;justify-content:center;width:40px;min-height:60px;border-radius:7px;border:2px dashed #253347;color:#4b5563;font-size:9px;font-weight:900;text-align:center;text-transform:uppercase;letter-spacing:0.5px;line-height:1.4;flex-shrink:0;transition:border-color 0.2s,color 0.2s,background 0.2s;user-select:none;}
 .turn-pos-card.now{border-color:#d1db24;color:#d1db24;background:rgba(209,219,36,0.1);}
@@ -377,15 +376,17 @@ body.obs-hands-hidden .opp-hand-label{display:none !important;}
 /* Two-column sections inside game-middle */
 .gm-section{display:flex;flex-direction:column;min-height:0;overflow:hidden;border-right:1px solid #1e2d3d;}
 .gm-section:last-child{border-right:none;}
-.gm-actions-section{flex:3;}
-.gm-feed-section{flex:2;}
+.gm-actions-section{flex:0 0 calc(200% / 3);min-width:0;}
+.gm-feed-section{flex:1 1 0;min-width:0;}
 .gm-section-header{padding:5px 14px;background:#050d02;border-bottom:1px solid #1e2d3d;flex-shrink:0;font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:1.2px;color:#374151;}
-/* Active Actions body — no scroll, content must fit */
-.gm-actions-body{flex:1;overflow:hidden;display:flex;flex-direction:column;align-items:stretch;justify-content:center;min-height:0;padding:6px 10px;gap:0;}
-/* Panels inside actions body — full width, natural height, centered by parent */
+/* Active Actions body — scrolls when content is taller than available space */
+.gm-actions-body{flex:1;overflow-y:auto;display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;min-height:0;padding:6px 10px;gap:0;}
+/* Idle state — vertically centered when there's nothing to show */
+.gm-actions-body .gm-idle-state{margin:auto;}
+/* Panels inside actions body — fill body height, scroll internally if content overflows */
 .gm-actions-body .effect-panel,.gm-actions-body .govern-panel{
   max-height:none;max-width:none;width:100%;box-sizing:border-box;padding:8px 12px;
-  overflow:hidden;display:flex;flex-direction:column;min-height:0;}
+  overflow-y:auto;display:flex;flex-direction:column;min-height:0;flex:1;}
 .gm-actions-body .effect-panel h3,.gm-actions-body .govern-panel h3{flex-shrink:0;font-size:13px;margin-bottom:4px;}
 .gm-actions-body .effect-panel p,.gm-actions-body .govern-panel p{flex-shrink:0;margin-bottom:4px;font-size:12px;}
 /* Compact cards inside actions panel — no desc, smaller footprint */
@@ -447,21 +448,23 @@ body.obs-hands-hidden .opp-hand-label{display:none !important;}
 @keyframes impact-slide-in{from{opacity:0;transform:translateX(-8px);}to{opacity:1;transform:translateX(0);}}
 @keyframes impact-drain{from{transform:scaleX(1);}to{transform:scaleX(0);}}
 
-/* RIGHT SIDEBAR */
-.game-right-sidebar{width:220px;flex-shrink:0;background:#0a1200;border-left:1px solid #1e2d3d;display:flex;flex-direction:column;overflow:hidden;}
-.game-right-sidebar .special-cards-row{flex-direction:column;gap:0;align-items:stretch;flex-wrap:nowrap;padding:0;flex:1;min-height:0;}
-.game-right-sidebar .special-card{min-width:0;width:100%;padding:0 14px;display:flex;flex-direction:row;align-items:center;gap:10px;text-align:left;border-radius:0;background:transparent;border:none;border-bottom:1px solid #1e2d3d;transition:background 0.15s;flex:1;min-height:0;}
-.game-right-sidebar .special-card.revealed,.game-right-sidebar .special-card.available,.game-right-sidebar .special-card.active{background:rgba(98,181,23,0.05);}
-.game-right-sidebar .special-card .sc-icon{flex-shrink:0;width:34px;height:44px;max-height:60%;font-size:0;margin:0;}
-.game-right-sidebar .special-card .sc-icon img{width:100%;height:100%;object-fit:contain;border-radius:4px;}
-.game-right-sidebar .special-card .sc-name{font-size:12px;font-weight:700;margin:0;flex:1;color:#9ca3af;line-height:1.3;}
-.game-right-sidebar .special-card .sc-status{font-size:10px;font-weight:700;margin:0;white-space:nowrap;color:#4b5563;}
-.game-right-sidebar .sc-dataflag.revealed .sc-status{color:#62b517;}
-.game-right-sidebar .sc-timesup.revealed .sc-status{color:#ef4444;}
-.game-right-sidebar .sc-govern.available .sc-status{color:#8b5cf6;}
-.game-right-sidebar .sc-actionobj.active .sc-status{color:#f59e0b;}
-
-/* Standalone status-banner / special-cards-row (kept for any fallback uses) */
+/* TABLE STATUS STRIP — compact horizontal bar below opponents-bar */
+#table-status-strip{display:flex;align-items:stretch;background:#0a1200;border-bottom:1px solid #1e2d3d;flex-shrink:0;overflow-x:auto;overflow-y:hidden;justify-content:center;}
+#table-status-strip .special-card{display:flex;flex-direction:row;align-items:center;gap:8px;padding:5px 16px 5px 10px;background:transparent;border:none;border-radius:0;border-right:1px solid #1e2d3d;min-width:0;text-align:left;flex-shrink:0;transition:background 0.15s;}
+#table-status-strip .special-card:last-child{border-right:none;}
+#table-status-strip .special-card.revealed,#table-status-strip .special-card.available,#table-status-strip .special-card.active{background:rgba(98,181,23,0.05);}
+#table-status-strip .special-card .sc-icon{flex-shrink:0;width:24px;height:30px;font-size:0;margin:0;display:flex;align-items:center;justify-content:center;}
+#table-status-strip .special-card .sc-icon img{width:100%;height:100%;object-fit:contain;border-radius:3px;}
+#table-status-strip .special-card .sc-icon svg{display:block;}
+#table-status-strip .special-card .sc-text{display:flex;flex-direction:column;gap:1px;}
+#table-status-strip .special-card .sc-name{font-size:10px;font-weight:700;color:#6b7280;margin:0;white-space:nowrap;line-height:1.2;}
+#table-status-strip .special-card .sc-status{font-size:10px;font-weight:800;color:#4b5563;margin:0;white-space:nowrap;}
+#table-status-strip .sc-dataflag.revealed .sc-status{color:#62b517;}
+#table-status-strip .sc-timesup.revealed .sc-status{color:#ef4444;}
+#table-status-strip .sc-govern.available .sc-status{color:#8b5cf6;}
+#table-status-strip .sc-actionobj.active .sc-status{color:#f59e0b;}
+#table-status-strip .sc-timesup.revealed{animation:pulse-red 2s infinite;}
+/* Standalone status-banner / special-cards-row (kept for fallback uses) */
 .status-banner{background:#1a2235;border:1px solid #253347;border-radius:10px;padding:8px 16px;text-align:center;width:100%;max-width:400px;}
 .status-banner .turn-label{font-size:12px;color:#6b7280;text-transform:uppercase;letter-spacing:1px;}
 .status-banner .turn-player{font-size:18px;font-weight:800;color:#62b517;}
@@ -471,16 +474,11 @@ body.obs-hands-hidden .opp-hand-label{display:none !important;}
 .special-card .sc-icon{font-size:20px;}
 .special-card .sc-name{font-size:10px;font-weight:700;margin-top:2px;}
 .special-card .sc-status{font-size:9px;margin-top:1px;opacity:0.8;}
-
-/* Collapse sidebar below 768px */
-@media(max-width:768px){
-  .game-right-sidebar{width:160px;}
-  .game-right-sidebar .special-card{padding:0 10px;gap:7px;}
-  .game-right-sidebar .special-card .sc-icon{width:26px;height:34px;}
-  .game-right-sidebar .special-card .sc-name{font-size:10px;}
-}
-@media(max-width:540px){
-  .game-right-sidebar{display:none;}
+@media(max-width:480px){
+  #table-status-strip .special-card{padding:4px 10px 4px 8px;gap:6px;}
+  #table-status-strip .special-card .sc-icon{width:18px;height:22px;}
+  #table-status-strip .special-card .sc-name{font-size:9px;}
+  #table-status-strip .special-card .sc-status{font-size:9px;}
 }
 .sc-deck{background:#1a2235;border:2px solid #374151;}
 .sc-dataflag{background:#1a2235;border:2px solid #374151;}
@@ -523,23 +521,23 @@ body.obs-hands-hidden .opp-hand-label{display:none !important;}
 
 /* MY AREA — side-by-side: played cards left, hand right */
 .my-area{background:#0f1923;border-top:2px solid #1e2d3d;display:flex;flex-direction:row;gap:0;align-items:stretch;overflow:hidden;}
-.my-played-area{padding:6px 14px 6px 12px;border-left:1px solid #1e2d3d;flex:0 0 auto;width:auto;max-width:58%;overflow-x:auto;box-sizing:border-box;}
+.my-played-area{padding:6px 14px 6px 12px;border-left:1px solid #1e2d3d;flex:1 1 0;min-width:0;overflow-x:auto;}
 .my-played-title{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#4b5563;margin-bottom:4px;white-space:nowrap;}
 .my-played-rows{display:flex;flex-direction:column;gap:4px;}
 /* My kill-chain slot grid */
-.kc-row{display:flex;align-items:center;gap:8px;}
-.kc-row-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#6b7280;width:72px;flex-shrink:0;text-align:right;display:flex;align-items:center;justify-content:flex-end;gap:5px;}
+.kc-row{display:flex;align-items:center;gap:6px;}
+.kc-row-label{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#6b7280;width:50px;flex-shrink:0;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;}
 .kc-row-label.attack{color:#f87171;}
 .kc-row-label.defend{color:#93c5fd;}
-.kc-slots{display:flex;gap:5px;flex-wrap:nowrap;}
-.kc-slot{display:flex;flex-direction:column;align-items:center;justify-content:center;width:56px;min-height:42px;padding:3px 2px;border-radius:7px;border:2px dashed #3d5570;color:#6b8aaa;position:relative;cursor:default;transition:all 0.2s;}
+.kc-slots{display:flex;gap:4px;flex-wrap:nowrap;}
+.kc-slot{display:flex;flex-direction:column;align-items:center;justify-content:center;width:44px;min-height:36px;padding:2px 2px;border-radius:6px;border:2px dashed #3d5570;color:#6b8aaa;position:relative;cursor:default;transition:all 0.2s;}
 .kc-slot.filled.attack{background:rgba(239,68,68,0.2);border:2px solid rgba(239,68,68,0.55);color:#fca5a5;}
 .kc-slot.filled.defend{background:rgba(59,130,246,0.2);border:2px solid rgba(59,130,246,0.55);color:#bfdbfe;}
 .kc-slot.filled.special{background:rgba(209,219,36,0.15);border:2px solid rgba(209,219,36,0.45);color:#d1db24;}
 .kc-slot-emoji{font-size:14px;line-height:1;}
-.kc-slot-name{font-size:8px;font-weight:700;text-align:center;margin-top:3px;white-space:nowrap;overflow:hidden;max-width:56px;text-overflow:ellipsis;}
+.kc-slot-name{font-size:7px;font-weight:700;text-align:center;margin-top:2px;white-space:nowrap;overflow:hidden;max-width:44px;text-overflow:ellipsis;}
 .kc-slot-count{position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);background:#f59e0b;color:#111;font-size:11px;font-weight:900;border-radius:8px;padding:1px 6px;line-height:18px;border:2px solid #111;white-space:nowrap;}
-.hand-area{padding:4px 12px 6px;flex:1 1 0;min-width:0;overflow:hidden;transition:box-shadow 0.3s;}
+.hand-area{padding:4px 12px 6px;flex:0 0 calc(200% / 3);min-width:0;overflow:hidden;transition:box-shadow 0.3s;}
 .hand-area.idle-glow{outline:2px solid #d1db24;outline-offset:3px;box-shadow:0 0 18px 5px rgba(209,219,36,0.35);animation:bc-tut-pulse 1.1s ease-in-out infinite;border-radius:6px;}
 /* Protect — static blue tint + subtle diagonal stripe texture */
 .hand-area.is-protected,.my-played-area.is-protected{
@@ -779,6 +777,8 @@ body.obs-hands-hidden .opp-hand-label{display:none !important;}
   border: 2px solid transparent;
   transform: translateX(-50%) translateY(-100%);
 }
+/* When anchor element is near the top of screen, flip zoom to show below it */
+#card-zoom.card-zoom-below{transform:translateX(-50%) translateY(0);}
 /* On touch screens (no hover), center the zoom in the viewport so it's
    easy to read regardless of where the held card sits */
 @media(hover:none){
@@ -1001,9 +1001,9 @@ body.screen-idle-glow::after{
   .special-card .sc-status{display:none;}
 
   /* KC slots: slightly smaller */
-  .kc-slot{width:46px;min-height:36px;}
-  .kc-slot-name{font-size:7px;max-width:46px;}
-  .kc-row-label{font-size:8px;width:52px;}
+  .kc-slot{width:40px;min-height:32px;}
+  .kc-slot-name{font-size:7px;max-width:40px;}
+  .kc-row-label{font-size:8px;width:48px;}
 
   /* Hand cards */
   .card{min-width:86px;max-width:104px;}
@@ -1031,7 +1031,7 @@ body.screen-idle-glow::after{
   .opp-kc-label{font-size:6px;max-width:19px;}
 
   /* KC slots: emoji only, no text */
-  .kc-slot{width:34px;min-height:28px;padding:2px;}
+  .kc-slot{width:30px;min-height:26px;padding:2px;}
   .kc-slot-name{display:none;}
   .kc-slot-emoji{font-size:12px;}
   .kc-row-label{font-size:7px;width:40px;}
@@ -1283,6 +1283,45 @@ body.screen-idle-glow::after{
     <!-- OPPONENTS -->
     <div class="opponents-bar" id="opponents-bar"></div>
 
+    <!-- TABLE STATUS STRIP — deck, special cards & objective status -->
+    <div id="table-status-strip">
+      <div class="special-card sc-deck">
+        <div class="sc-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="14" height="18" rx="2"/><rect x="6" y="2" width="14" height="18" rx="2" fill="#1a2235" stroke="#374151"/><line x1="9" y1="9" x2="17" y2="9"/><line x1="9" y1="13" x2="15" y2="13"/></svg></div>
+        <div class="sc-text">
+          <div class="sc-name">Draw Deck <span class="info-btn" onclick="">i<div class="info-popup below">At the end of each turn you <strong>draw 1 card</strong>. If you have more than 6 cards you must discard down to 6. The deck contains attack and defend cards.</div></span></div>
+          <div class="sc-status" id="deck-count">— cards</div>
+        </div>
+      </div>
+      <div class="special-card sc-dataflag" id="sc-dataflag">
+        <div class="sc-icon"><img src="images/special-data-flag.png" alt="Data Flag"></div>
+        <div class="sc-text">
+          <div class="sc-name">Data Flag <span class="info-btn" onclick="">i<div class="info-popup below"><strong>Win Condition 1:</strong> Hold the Data Flag in your hand when <em>Times Up</em> is revealed from the deck. You can steal it using <em>C2</em> or <em>Action Objectives</em>.</div></span></div>
+          <div class="sc-status" id="dataflag-status">In deck</div>
+        </div>
+      </div>
+      <div class="special-card sc-timesup" id="sc-timesup">
+        <div class="sc-icon"><img src="images/special-times-up.png" alt="Times Up"></div>
+        <div class="sc-text">
+          <div class="sc-name">Times Up <span class="info-btn" onclick="">i<div class="info-popup below">When drawn from the deck, the game <strong>immediately checks</strong> if any player holds the Data Flag. If so, that player wins! Times Up cannot be held in hand — it triggers instantly.</div></span></div>
+          <div class="sc-status" id="timesup-status">In deck</div>
+        </div>
+      </div>
+      <div class="special-card sc-govern" id="sc-govern">
+        <div class="sc-icon"><img src="images/defend-govern.png" alt="Govern"></div>
+        <div class="sc-text">
+          <div class="sc-name">Govern <span class="info-btn" onclick="">i<div class="info-popup wide below"><strong>How to unlock:</strong> Be the first to play all 5 NIST defend types (Identify, Protect, Detect, Respond, Recover) in front of you.<br><br><strong>Effect:</strong> Look at each player's hand privately, take 1 card from each, then give 1 card back to each. <em>Weaponize cannot cancel this card.</em></div></span></div>
+          <div class="sc-status" id="govern-status">Locked</div>
+        </div>
+      </div>
+      <div class="special-card sc-actionobj" id="sc-actionobj">
+        <div class="sc-icon"><img src="images/attack-action-obj.png" alt="Action Obj."></div>
+        <div class="sc-text">
+          <div class="sc-name">Action Obj. <span class="info-btn" onclick="">i<div class="info-popup wide below"><strong>How to unlock:</strong> Be the first to play all 6 Kill Chain attack types (Recon, Weaponize, Delivery, Exploit, Install, C2) in front of you.<br><br><strong>Effect:</strong> Play at any time — the player holding the Data Flag must give it to you. <em>Respond cannot cancel this card.</em></div></span></div>
+          <div class="sc-status" id="actionobj-status">Locked</div>
+        </div>
+      </div>
+    </div>
+
     <!-- CENTER -->
     <div class="center-area">
 
@@ -1317,36 +1356,6 @@ body.screen-idle-glow::after{
 
       </div>
 
-      <!-- RIGHT SIDEBAR — table cards -->
-      <div class="game-right-sidebar">
-        <div class="special-cards-row">
-          <div class="special-card sc-deck">
-            <div class="sc-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="14" height="18" rx="2"/><rect x="6" y="2" width="14" height="18" rx="2" fill="#1a2235" stroke="#374151"/><line x1="9" y1="9" x2="17" y2="9"/><line x1="9" y1="13" x2="15" y2="13"/></svg></div>
-            <div class="sc-name">Draw Deck <span class="info-btn" onclick="">i<div class="info-popup below">At the end of each turn you <strong>draw 1 card</strong>. If you have more than 6 cards you must discard down to 6. The deck contains attack and defend cards.</div></span></div>
-            <div class="sc-status" id="deck-count">— cards</div>
-          </div>
-          <div class="special-card sc-dataflag" id="sc-dataflag">
-            <div class="sc-icon"><img src="images/special-data-flag.png" alt="Data Flag"></div>
-            <div class="sc-name">Data Flag <span class="info-btn" onclick="">i<div class="info-popup below"><strong>Win Condition 1:</strong> Hold the Data Flag in your hand when <em>Times Up</em> is revealed from the deck. You can steal it using <em>C2</em> or <em>Action Objectives</em>.</div></span></div>
-            <div class="sc-status" id="dataflag-status">In deck</div>
-          </div>
-          <div class="special-card sc-timesup" id="sc-timesup">
-            <div class="sc-icon"><img src="images/special-times-up.png" alt="Times Up"></div>
-            <div class="sc-name">Times Up <span class="info-btn" onclick="">i<div class="info-popup below">When drawn from the deck, the game <strong>immediately checks</strong> if any player holds the Data Flag. If so, that player wins! Times Up cannot be held in hand — it triggers instantly.</div></span></div>
-            <div class="sc-status" id="timesup-status">In deck</div>
-          </div>
-          <div class="special-card sc-govern" id="sc-govern">
-            <div class="sc-icon"><img src="images/defend-govern.png" alt="Govern"></div>
-            <div class="sc-name">Govern <span class="info-btn" onclick="">i<div class="info-popup wide below"><strong>How to unlock:</strong> Be the first to play all 5 NIST defend types (Identify, Protect, Detect, Respond, Recover) in front of you.<br><br><strong>Effect:</strong> Look at each player's hand privately, take 1 card from each, then give 1 card back to each. <em>Weaponize cannot cancel this card.</em></div></span></div>
-            <div class="sc-status" id="govern-status">Locked</div>
-          </div>
-          <div class="special-card sc-actionobj" id="sc-actionobj">
-            <div class="sc-icon"><img src="images/attack-action-obj.png" alt="Action Obj."></div>
-            <div class="sc-name">Action Obj. <span class="info-btn" onclick="">i<div class="info-popup wide below"><strong>How to unlock:</strong> Be the first to play all 6 Kill Chain attack types (Recon, Weaponize, Delivery, Exploit, Install, C2) in front of you.<br><br><strong>Effect:</strong> Play at any time — the player holding the Data Flag must give it to you. <em>Respond cannot cancel this card.</em></div></span></div>
-            <div class="sc-status" id="actionobj-status">Locked</div>
-          </div>
-        </div>
-      </div>
 
     </div>
 
@@ -1541,20 +1550,26 @@ function showCardZoom(card, el) {
     zoom.style.display = 'block';
     if (backdrop) backdrop.style.display = 'block';
   } else {
-    // Desktop: anchor above the hovered element
+    // Desktop: anchor above the hovered element (flip below if near top of screen)
     const rect = el.getBoundingClientRect();
     const cx = rect.left + rect.width / 2;
-    const ty = rect.top - 10;
+    zoom.classList.remove('card-zoom-below');
     zoom.style.left = cx + 'px';
-    zoom.style.top  = ty + 'px';
+    zoom.style.top  = (rect.top - 10) + 'px';
     zoom.style.display = 'block';
+    // If the zoom clips above the viewport, flip it to show below the element
+    const zr = zoom.getBoundingClientRect();
+    if (zr.top < 10) {
+      zoom.classList.add('card-zoom-below');
+      zoom.style.top = (rect.bottom + 10) + 'px';
+    }
     // Clamp horizontally so the panel never overflows the viewport
     const pad = 10;
-    const zr = zoom.getBoundingClientRect();
-    if (zr.left < pad) {
-      zoom.style.left = (cx + (pad - zr.left)) + 'px';
-    } else if (zr.right > window.innerWidth - pad) {
-      zoom.style.left = (cx - (zr.right - (window.innerWidth - pad))) + 'px';
+    const zr2 = zoom.getBoundingClientRect();
+    if (zr2.left < pad) {
+      zoom.style.left = (cx + (pad - zr2.left)) + 'px';
+    } else if (zr2.right > window.innerWidth - pad) {
+      zoom.style.left = (cx - (zr2.right - (window.innerWidth - pad))) + 'px';
     }
   }
 }
@@ -3169,11 +3184,11 @@ function renderMyPlayed(played) {
 
   el.innerHTML = `
     <div class="kc-row">
-      <span class="kc-row-label attack">Cyberkill Chain<span class="info-btn" onclick="">i<div class="info-popup wide"><strong>Cyber Kill Chain</strong> — play one of each attack type to unlock <em>Action Objectives</em>.<br><br><strong>Recon</strong> — look at a hand or swap played attack cards<br><strong>Weaponize</strong> — cancel an opponent's defend card (out of turn)<br><strong>Delivery</strong> — swap up to 2 played cards with opponents<br><strong>Exploit</strong> — blindly steal 1 card from a target<br><strong>Install</strong> — block a target from playing defend cards<br><strong>C2</strong> — steal the Data Flag, or target gives you a card</div></span></span>
+      <span class="kc-row-label attack"><img src="images/cyber-kill-chain.svg" style="width:14px;height:14px;object-fit:contain;flex-shrink:0;display:block;">Cyberkill Chain<span class="info-btn" onclick="">i<div class="info-popup wide"><strong>Cyber Kill Chain</strong> — play one of each attack type to unlock <em>Action Objectives</em>.<br><br><strong>Recon</strong> — look at a hand or swap played attack cards<br><strong>Weaponize</strong> — cancel an opponent's defend card (out of turn)<br><strong>Delivery</strong> — swap up to 2 played cards with opponents<br><strong>Exploit</strong> — blindly steal 1 card from a target<br><strong>Install</strong> — block a target from playing defend cards<br><strong>C2</strong> — steal the Data Flag, or target gives you a card</div></span></span>
       <div class="kc-slots">${attackSlots}</div>
     </div>
     <div class="kc-row">
-      <span class="kc-row-label defend">NIST<span class="info-btn" onclick="">i<div class="info-popup wide"><strong>NIST Cybersecurity Framework</strong> — play one of each defend type to unlock <em>Govern</em>.<br><br><strong>Identify</strong> — reveal Data Flag holder or swap played defend cards<br><strong>Protect</strong> — block attacks until your next turn<br><strong>Detect</strong> — view and reorder the top 5 deck cards<br><strong>Respond</strong> — cancel an attack targeting you (out of turn)<br><strong>Recover</strong> — draw until you have 5 cards</div></span></span>
+      <span class="kc-row-label defend"><img src="images/nist-framework.svg" style="width:14px;height:14px;object-fit:contain;flex-shrink:0;display:block;">NIST<span class="info-btn" onclick="">i<div class="info-popup wide"><strong>NIST Cybersecurity Framework</strong> — play one of each defend type to unlock <em>Govern</em>.<br><br><strong>Identify</strong> — reveal Data Flag holder or swap played defend cards<br><strong>Protect</strong> — block attacks until your next turn<br><strong>Detect</strong> — view and reorder the top 5 deck cards<br><strong>Respond</strong> — cancel an attack targeting you (out of turn)<br><strong>Recover</strong> — draw until you have 5 cards</div></span></span>
       <div class="kc-slots">${defendSlots}</div>
     </div>`;
 }
