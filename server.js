@@ -1492,8 +1492,13 @@ function handleMessage(ws, raw) {
         const token = generateToken();
         sessions.set(token, { roomCode: code, playerIdx: rejoinIdx });
         send(ws, { type: 'room_rejoined', code, yourId: rejoinIdx, token, started: true, isHost: rejoinIdx === room.hostIdx });
-        if (room.gameType === 'byteclub') bcBroadcastState(room);
-        else broadcastState(room);
+        if (room.gameType === 'byteclub') {
+          // Notify all players (including the rejoiner) of the reconnect
+          const rjEvent = { type: 'bc_player_event', event: 'rejoined', playerIdx: rejoinIdx, playerName: room.players[rejoinIdx].name, playerColor: room.players[rejoinIdx].color };
+          for (const p of room.players) if (p.connected && p.ws) send(p.ws, rjEvent);
+          for (const o of (room.observers || [])) if (o.connected && o.ws) send(o.ws, rjEvent);
+          bcBroadcastState(room);
+        } else broadcastState(room);
         break;
       }
 
@@ -1568,8 +1573,13 @@ function handleMessage(ws, raw) {
         broadcastLobby(room);
       } else {
         send(ws, { type: 'room_rejoined', code: room.code, yourId: playerIdx, token: msg.token, started: true, isHost: playerIdx === room.hostIdx });
-        if (room.gameType === 'byteclub') bcBroadcastState(room);
-        else broadcastState(room);
+        if (room.gameType === 'byteclub') {
+          // Notify all players (including the rejoiner) of the reconnect
+          const rjEvent = { type: 'bc_player_event', event: 'rejoined', playerIdx, playerName: player.name, playerColor: player.color };
+          for (const p of room.players) if (p.connected && p.ws) send(p.ws, rjEvent);
+          for (const o of (room.observers || [])) if (o.connected && o.ws) send(o.ws, rjEvent);
+          bcBroadcastState(room);
+        } else broadcastState(room);
       }
       break;
     }
@@ -1759,6 +1769,12 @@ function leaveRoom(ws, explicit = false) {
       }
     }
     if (room.gameType === 'byteclub') {
+      // Notify all remaining connected players of the disconnect
+      const dcName = room.players[info.playerIdx].name;
+      const dcColor = room.players[info.playerIdx].color;
+      const dcEvent = { type: 'bc_player_event', event: 'disconnected', playerIdx: info.playerIdx, playerName: dcName, playerColor: dcColor };
+      for (const p of room.players) if (p.connected && p.ws) send(p.ws, dcEvent);
+      for (const o of (room.observers || [])) if (o.connected && o.ws) send(o.ws, dcEvent);
       if (room.bcState && room.bcState.currentPlayer === info.playerIdx && room.bcState.phase !== 'game_over') {
         bcEndTurn(room);
       } else if (room.bcState) {

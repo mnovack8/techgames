@@ -1758,6 +1758,9 @@ let _afExploitSnapshot      = null; // snapshot of local hand when entering expl
 let _afInstallSnapshot      = null; // snapshot of attacker when entering install respond window
 let _afDeliverySnapshot     = null; // snapshot of played cards during attack_delivery_pick
 
+let _cardsPlayedThisTurn  = 0;   // incremented each time a card is played on my turn
+let _lastSeenCurrentPlayer = -1; // used to detect when my turn starts so counter can reset
+
 function _pSpan(gs, idx) {
   const pl = gs.players[idx];
   if (!pl) return '<span style="color:#9ca3af">Unknown</span>';
@@ -2603,6 +2606,18 @@ function handleMsg(msg) {
       if (msg.pendingError && !isObserver) showToast(msg.pendingError, 4000);
       renderGame(msg);
       break;
+    case 'bc_player_event': {
+      const pColor = COLOR_INFO[msg.playerColor]?.hex || '#9ca3af';
+      const pSpan  = `<span style="color:${pColor};font-weight:800">${msg.playerName}</span>`;
+      if (msg.event === 'disconnected') {
+        addActivityEntry(`${pSpan} has <span style="color:#f87171;font-weight:700">disconnected</span> — their turn will be skipped until they return`, false);
+        showImpactAlert(`${msg.playerName} has <strong>disconnected</strong>. Their turn will be skipped until they rejoin.`, 6000);
+      } else if (msg.event === 'rejoined') {
+        addActivityEntry(`${pSpan} has <span style="color:#62b517;font-weight:700">rejoined</span> the game`, false);
+        showImpactAlert(`${msg.playerName} has <strong>rejoined</strong> the game.`, 5000);
+      }
+      break;
+    }
     case 'left_room':
       sessionStorage.removeItem(SESSION_KEY);
       roomCode = null; myId = null; myObserverIdx = -1; gameState = null; isObserver = false;
@@ -3173,7 +3188,13 @@ function renderHand(gs) {
   const clickable = isMyTurn && (gs.phase === 'play' || gs.phase === 'discard') && !gs.recoverActive;
 
   gs.myHand.forEach(card => {
-    const div = buildHandCard(card, clickable, false);
+    // Data Flag cannot be discarded — render it non-clickable during discard phase
+    const cardClickable = clickable && !(gs.phase === 'discard' && card.type === 'data_flag');
+    const div = buildHandCard(card, cardClickable, false);
+    if (gs.phase === 'discard' && card.type === 'data_flag') {
+      div.style.opacity = '0.45';
+      div.title = 'The Data Flag cannot be discarded';
+    }
     el.appendChild(div);
   });
   document.getElementById('hand-count-label').textContent = gs.myHand.length + ' card(s)';
@@ -3226,7 +3247,11 @@ function selectCard(cardId) {
   if (!isMyTurn) return;
 
   if (gs.phase === 'discard') {
-    // Single click discards immediately
+    const discardObj = gs.myHand?.find(c => c.id === cardId || c.id === Number(cardId));
+    if (discardObj?.type === 'data_flag') {
+      showToast('The Data Flag cannot be discarded — choose a different card.');
+      return;
+    }
     hideCardZoom();
     send({ type:'game_action', action:'discard_card', cardId });
     return;
@@ -3242,7 +3267,34 @@ function selectCard(cardId) {
       return;
     }
 
-    // No valid targets check for attack cards
+    // ── Protect duplication warning ──
+    if (cardObj?.type === 'protect') {
+      const iAmAlreadyProtected = gs.protectedPlayers?.includes(gs.myIndex);
+      if (iAmAlreadyProtected) {
+        showWarnModal(
+          WARN_ICON_HAND,
+          'Protect Already Active',
+          'You already have an active Protect card. Playing this replaces it — your current Protect is discarded without extra benefit. Consider saving this for later.',
+          'Replace Anyway',
+          () => { hideCardZoom(); send({ type:'game_action', action:'play_card', cardId }); }
+        );
+        return;
+      }
+    }
+
+    // ── Respond played on your own turn ──
+    if (cardObj?.type === 'respond') {
+      showWarnModal(
+        WARN_ICON_HAND,
+        'Playing Respond On Your Turn',
+        'Respond is designed to cancel attacks against you out of turn. Playing it now fills your NIST Respond slot but the cancel ability is unused — it cannot protect you retroactively.',
+        'Play Anyway',
+        () => { hideCardZoom(); send({ type:'game_action', action:'play_card', cardId }); }
+      );
+      return;
+    }
+
+    // ── No valid targets check for attack cards ──
     if (cardObj?.cat === 'attack') {
       const protected_ = gs.protectedPlayers || [];
       const validTargets = (gs.players || []).filter((_, idx) => idx !== gs.myIndex && !protected_.includes(idx));
@@ -3256,10 +3308,30 @@ function selectCard(cardId) {
         );
         return;
       }
+
+      // ── C2 / Exploit: warn if every valid target has an empty hand ──
+      if ((cardObj.type === 'c2' || cardObj.type === 'exploit') && validTargets.length > 0) {
+        const usefulTargets = validTargets.filter(pl => pl.handCount > 0);
+        if (usefulTargets.length === 0) {
+          const label = cardObj.type === 'c2' ? 'C2' : 'Exploit';
+          const detail = cardObj.type === 'c2'
+            ? 'C2 forces the target to give you a card from their hand — but every targetable opponent has an empty hand, so you would receive nothing.'
+            : 'Exploit steals a random card from the target\'s hand — but every targetable opponent has an empty hand, so nothing can be stolen.';
+          showWarnModal(
+            WARN_ICON_TARGET,
+            label + ' — No Cards to Take',
+            detail + ' Hold this card for a better moment, or play it anyway.',
+            'Play Anyway',
+            () => { hideCardZoom(); send({ type:'game_action', action:'play_card', cardId }); }
+          );
+          return;
+        }
+      }
     }
 
     hideCardZoom();
     send({ type:'game_action', action:'play_card', cardId });
+    _cardsPlayedThisTurn++;
   }
 }
 
@@ -3269,6 +3341,12 @@ function renderActionBar(gs, isMyTurn) {
   bar.innerHTML = '';
   bar.appendChild(hint);
   const myIdx = gs.myIndex;
+
+  // Reset card-played counter when it newly becomes my turn
+  if (isMyTurn && _lastSeenCurrentPlayer !== gs.myIndex) {
+    _cardsPlayedThisTurn = 0;
+  }
+  _lastSeenCurrentPlayer = gs.currentPlayer;
 
   // Out-of-turn buttons (always visible if applicable)
   const hasAO = gs.myHand.some(c => c.type === 'action_obj');
@@ -3293,21 +3371,41 @@ function renderActionBar(gs, isMyTurn) {
     } else {
       hint.textContent = 'Click a card to play it. You can play multiple cards per turn. Or end your turn.';
       bar.insertBefore(mkBtn('End Turn (Draw 1)', 'action-btn btn-end-turn', () => {
-        if (gs.myHand.length >= 6) {
+        const noCardsPlayed = _cardsPlayedThisTurn === 0;
+        const handFull      = gs.myHand.length >= 6;
+        const doEndTurn     = () => send({ type:'game_action', action:'end_play_phase' });
+        if (noCardsPlayed && handFull) {
+          showWarnModal(
+            WARN_ICON_HAND,
+            'No Card Played & Hand Full',
+            'You haven\'t played a card this turn, and drawing will bring you to ' + (gs.myHand.length + 1) + ' cards — you\'ll need to discard immediately after. Consider playing a card first.',
+            'End Turn Anyway',
+            doEndTurn
+          );
+        } else if (noCardsPlayed) {
+          showWarnModal(
+            WARN_ICON_HAND,
+            'No Card Played This Turn',
+            'You haven\'t played any cards this turn. Ending your turn now draws a card and passes to the next player.',
+            'End Turn Anyway',
+            doEndTurn
+          );
+        } else if (handFull) {
           showWarnModal(
             WARN_ICON_HAND,
             'Hand Full — You\'ll Have to Discard',
             'You have ' + gs.myHand.length + ' cards. Drawing will bring you to ' + (gs.myHand.length + 1) + ' — you\'ll need to discard one before your next turn. Play a card first, or draw and discard after.',
             'Draw Anyway',
-            () => send({ type:'game_action', action:'end_play_phase' })
+            doEndTurn
           );
         } else {
-          send({ type:'game_action', action:'end_play_phase' });
+          doEndTurn();
         }
       }), hint);
     }
   } else if (gs.phase === 'discard') {
-    hint.textContent = `${gs.myHand.length} cards in hand — click a card to discard it (down to 6).`;
+    const hasFlag = gs.myHand.some(c => c.type === 'data_flag');
+    hint.textContent = `${gs.myHand.length} cards in hand — click a card to discard it (down to 6).${hasFlag ? ' The Data Flag cannot be discarded.' : ''}`;
   } else if ((gs.phase === 'govern_take' || gs.phase === 'govern_give') && gs.governInfo) {
     hint.textContent = gs.governInfo.mode === 'take'
       ? 'Govern — take one card from each player (shown in the panel above).'
@@ -3478,16 +3576,40 @@ function renderEffectOverlay(gs) {
   // ── Identify choosing ──
   if (gs.phase === 'identify_choosing' && gs.identifyInfo?.chooser === myIdx) {
     overlay.style.display = 'flex';
+    // Pre-check swap viability so player doesn't commit to a dead-end
+    const myDefendPlayed = gs.players[myIdx]?.played.filter(c => c.cat === 'defend') || [];
+    const hasSwapTargets = gs.players.some((pl, i) => {
+      if (i === myIdx) return false;
+      const isProtected = gs.protectedPlayers?.includes(i);
+      const swappable = pl.played.filter(c => c.cat === 'defend' && !(c.type === 'protect' && isProtected));
+      return swappable.length > 0;
+    });
+    const canSwap = myDefendPlayed.length > 0 && hasSwapTargets;
+    let swapBlockReason = '';
+    if (!canSwap) {
+      if (myDefendPlayed.length === 0 && !hasSwapTargets)
+        swapBlockReason = 'Neither you nor any opponent has played defend cards to exchange.';
+      else if (myDefendPlayed.length === 0)
+        swapBlockReason = 'You have no played defend cards to offer in exchange.';
+      else
+        swapBlockReason = 'No opponents have any swappable played defend cards right now.';
+    }
     inner.innerHTML = `<div class="effect-panel">
       <h3>Identify — Choose an action</h3>
       <button class="effect-choice-btn" onclick="send({type:'game_action',action:'identify_choice',choice:'dataflag'})">
         Reveal Data Flag
         <div class="sub">Reveal to ALL players who is currently holding the Data Flag — or if it is still in the deck.</div>
       </button>
-      <button class="effect-choice-btn" onclick="send({type:'game_action',action:'identify_choice',choice:'swap'})">
-        Swap Defend Cards
-        <div class="sub">Exchange one of your played defend cards for another player's played defend card. You cannot swap a player's active Protect card, but other cards are fair game.</div>
-      </button>
+      ${canSwap
+        ? `<button class="effect-choice-btn" onclick="send({type:'game_action',action:'identify_choice',choice:'swap'})">
+            Swap Defend Cards
+            <div class="sub">Exchange one of your played defend cards for another player's played defend card. You cannot swap a player's active Protect card, but other cards are fair game.</div>
+          </button>`
+        : `<button class="effect-choice-btn" style="opacity:0.45;cursor:not-allowed" title="${swapBlockReason}">
+            Swap Defend Cards — Unavailable
+            <div class="sub" style="color:#f87171">${swapBlockReason}</div>
+          </button>`
+      }
     </div>`;
     return;
   }
@@ -3628,11 +3750,14 @@ function renderEffectOverlay(gs) {
     gs.players.forEach((pl, i) => {
       if (i === myIdx) return;
       const isProtected = gs.protectedPlayers?.includes(i);
-      const canTarget = !isProtected;
-      html += `<button class="govern-player-btn" ${canTarget ? `onclick="send({type:'game_action',action:'attack_select_target',targetIdx:${i}})"` : ''} style="${canTarget ? '' : 'opacity:0.4;cursor:not-allowed'}">
+      const hasNoCards  = pl.handCount === 0;
+      const disabled    = isProtected || hasNoCards;
+      let tag = '';
+      if (isProtected) tag = '<span style="color:#3b82f6;font-size:11px;font-weight:700">PROTECTED</span>';
+      else if (hasNoCards) tag = '<span style="color:#6b7280;font-size:11px;font-weight:700">NO CARDS TO GIVE</span>';
+      html += `<button class="govern-player-btn" ${!disabled ? `onclick="send({type:'game_action',action:'attack_select_target',targetIdx:${i}})"` : ''} style="${disabled ? 'opacity:0.4;cursor:not-allowed' : ''}">
         <div style="width:10px;height:10px;border-radius:50%;background:${COLOR_INFO[pl.color]?.hex||'#888'}"></div>
-        ${pl.name} — ${pl.handCount} cards
-        ${isProtected ? '<span style="color:#3b82f6;font-size:11px;font-weight:700">PROTECTED</span>' : ''}
+        ${pl.name} — ${pl.handCount} card${pl.handCount !== 1 ? 's' : ''} ${tag}
       </button>`;
     });
     html += `<button class="action-btn btn-cancel" onclick="send({type:'game_action',action:'cancel_attack'})" style="margin-top:4px;width:100%">✕ Cancel Attack</button></div>`;
@@ -3798,11 +3923,23 @@ function renderEffectOverlay(gs) {
     const myAttack = gs.players[myIdx].played.filter(c => c.cat === 'attack');
     const theirAttack = gs.players[gs.attackInfo.target]?.played.filter(c => c.cat === 'attack') || [];
     const canSwap = myAttack.length > 0 && theirAttack.length > 0;
+    let swapUnavailReason = '';
+    if (!canSwap) {
+      if (myAttack.length === 0 && theirAttack.length === 0)
+        swapUnavailReason = `Neither you nor ${tgtName} has played attack cards to swap`;
+      else if (myAttack.length === 0)
+        swapUnavailReason = 'You have no played attack cards to offer';
+      else
+        swapUnavailReason = `${tgtName} has no played attack cards to take`;
+    }
     overlay.style.display = 'flex';
     inner.innerHTML = `<div class="effect-panel">
       <h3>Reconnaissance — Choose action vs ${tgtName}</h3>
       <button class="govern-player-btn" onclick="send({type:'game_action',action:'recon_choice',choice:'look'})">Look at ${tgtName}'s Hand<br><small style="color:#9ca3af">See all cards (read-only, no stealing)</small></button>
-      ${canSwap ? `<button class="govern-player-btn" onclick="send({type:'game_action',action:'recon_choice',choice:'swap'})">Swap Attack Cards<br><small style="color:#9ca3af">Exchange one of your played attack cards with one of ${tgtName}'s</small></button>` : `<button class="govern-player-btn" style="opacity:0.4;cursor:not-allowed">Swap Attack Cards — unavailable<br><small style="color:#9ca3af">Both players need played attack cards</small></button>`}
+      ${canSwap
+        ? `<button class="govern-player-btn" onclick="send({type:'game_action',action:'recon_choice',choice:'swap'})">Swap Attack Cards<br><small style="color:#9ca3af">Exchange one of your played attack cards with one of ${tgtName}'s</small></button>`
+        : `<button class="govern-player-btn" style="opacity:0.4;cursor:not-allowed">Swap Attack Cards — Unavailable<br><small style="color:#f87171">${swapUnavailReason}</small></button>`
+      }
       <button class="action-btn btn-end-turn" style="margin-top:4px;width:100%" onclick="send({type:'game_action',action:'recon_go_back'})">← Go Back</button>
     </div>`; return;
   }
@@ -3871,10 +4008,38 @@ function renderEffectOverlay(gs) {
       <p style="color:#9ca3af;font-size:13px">${cfg.desc}</p>`;
     gs.players.forEach((pl, i) => {
       if (i === myIdx) return;
-      const isProtected = gs.protectedPlayers?.includes(i);
-      html += `<button class="govern-player-btn" ${!isProtected ? `onclick="send({type:'game_action',action:'attack_select_target',targetIdx:${i}})"` : ''} style="${isProtected?'opacity:0.4;cursor:not-allowed':''}">
+      const isProtected   = gs.protectedPlayers?.includes(i);
+      const isBlocked     = gs.installBlockedPlayers?.includes(i);
+      const hasNoHand     = pl.handCount === 0;
+      const hasNoPlayed   = pl.played.length === 0;
+
+      // Per-card disabled conditions and reason labels
+      let disabled = isProtected;
+      let tags = '';
+      if (isProtected) {
+        tags += '<span style="color:#3b82f6;font-size:10px;font-weight:700">PROTECTED</span>';
+      }
+      if (gs.phase === 'attack_exploit_target' && hasNoHand && !isProtected) {
+        disabled = true;
+        tags += '<span style="color:#6b7280;font-size:10px;font-weight:700">NO CARDS TO STEAL</span>';
+      }
+      if (gs.phase === 'attack_install_target' && isBlocked && !isProtected) {
+        disabled = true;
+        tags += '<span style="color:#f59e0b;font-size:10px;font-weight:700">ALREADY BLOCKED</span>';
+      }
+      if (gs.phase === 'attack_delivery_target' && hasNoPlayed && !isProtected) {
+        disabled = true;
+        tags += '<span style="color:#6b7280;font-size:10px;font-weight:700">NO PLAYED CARDS TO SWAP</span>';
+      }
+
+      // Show played-card count for Delivery (swaps played cards, not hand cards)
+      const countLabel = gs.phase === 'attack_delivery_target'
+        ? `${pl.played.length} played card${pl.played.length !== 1 ? 's' : ''}`
+        : `${pl.handCount} card${pl.handCount !== 1 ? 's' : ''}`;
+
+      html += `<button class="govern-player-btn" ${!disabled ? `onclick="send({type:'game_action',action:'attack_select_target',targetIdx:${i}})"` : ''} style="${disabled?'opacity:0.4;cursor:not-allowed':''}">
         <div style="width:10px;height:10px;border-radius:50%;background:${COLOR_INFO[pl.color]?.hex||'#888'}"></div>
-        ${pl.name} — ${pl.handCount} cards ${isProtected ? '<span style="color:#3b82f6;font-size:10px;font-weight:700">PROTECTED</span>' : ''}
+        ${pl.name} — ${countLabel} ${tags}
       </button>`;
     });
     html += `<button class="action-btn btn-cancel" onclick="send({type:'game_action',action:'cancel_attack'})" style="margin-top:4px;width:100%">✕ Cancel Attack</button></div>`;
