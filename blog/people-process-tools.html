@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Every business runs on three things: people, process, and tools. Board games make the hierarchy impossible to ignore — and reveal the mistake most organizations make when they buy technology first.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="People, Process, and Tools: What Board Games Teach Us About Running a Business">
+<meta property="og:description" content="Every business runs on three things: people, process, and tools. Board games reveal which one matters most — and why most organizations get the order wrong.">
+<meta property="og:image" content="https://cybersecgames.com/images/logo.png">
+<meta property="og:url" content="https://cybersecgames.com/blog/people-process-tools">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="People, Process, and Tools: What Board Games Teach Us About Running a Business">
+<meta name="twitter:description" content="Every business runs on three things: people, process, and tools. Board games reveal which one matters most.">
+<meta name="robots" content="index, follow">
+<meta name="author" content="Tech Board Games">
+<meta name="keywords" content="people process tools framework, business management, organizational change, technology adoption, change management, board game business lessons">
+<meta property="og:site_name" content="Tech Board Games">
+<meta property="og:locale" content="en_US">
+<meta name="theme-color" content="#62b517">
+<link rel="canonical" href="https://cybersecgames.com/blog/people-process-tools">
+<title>People, Process, and Tools: What Board Games Teach Us About Running a Business | Tech Board Games</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+  min-height: 100%;
+  font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif;
+  background: #e8edd8;
+  color: #2a2a2a;
+  overflow-y: auto;
+}
+
+/* ===== HEADER ===== */
+header {
+  background: #fff;
+  border-bottom: 3px solid #d1db24;
+  padding: 0 40px;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 16px rgba(98,181,23,0.12);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.header-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+.header-logo img { width: 36px; height: 36px; object-fit: contain; }
+.logo-text { font-size: 16px; font-weight: 800; color: #4a8c11; letter-spacing: 0.5px; display: block; }
+.logo-sub  { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; display: block; line-height: 1; color: #b0b800; }
+nav { display: flex; align-items: center; gap: 4px; }
+nav a { font-size: 15px; font-weight: 700; color: #4a4a4a; text-decoration: none; padding: 8px 18px; border-radius: 8px; transition: background 0.15s, color 0.15s; }
+nav a:hover { background: #f4fae8; color: #4a8c11; }
+nav a.active { color: #4a8c11; background: #f4fae8; }
+.nav-dropdown { position: relative; display: flex; align-items: center; }
+.nav-dropdown-trigger {
+  font-size: 15px; font-weight: 700; color: #4a4a4a;
+  background: none; border: none; padding: 8px 18px;
+  border-radius: 8px; cursor: pointer; font-family: inherit;
+  line-height: inherit; display: flex; align-items: center;
+  transition: background 0.15s, color 0.15s;
+}
+.nav-dropdown-trigger.open { background: #f4fae8; color: #4a8c11; }
+.nav-dropdown-menu {
+  position: absolute; top: calc(100% + 4px); left: 0;
+  background: #fff; border: 1.5px solid #dde8c8;
+  border-radius: 10px; box-shadow: 0 8px 24px rgba(98,181,23,0.15);
+  padding: 6px; min-width: 200px;
+  display: none; flex-direction: column; gap: 2px; z-index: 200;
+}
+.nav-dropdown-menu.open { display: flex; }
+.nav-dropdown-menu a { display: block; padding: 8px 14px; border-radius: 7px; font-size: 14px; font-weight: 700; color: #4a4a4a; text-decoration: none; transition: background 0.15s, color 0.15s; white-space: nowrap; }
+.nav-dropdown-menu a:hover { background: #f4fae8; color: #4a8c11; }
+@media (max-width: 600px) {
+  header { padding: 8px 16px 6px; height: auto; flex-direction: column; align-items: center; gap: 4px; }
+  .logo-text { font-size: 12px; }
+  nav { gap: 0; justify-content: center; flex-wrap: wrap; }
+  nav a { padding: 6px 5px; font-size: 12px; }
+  .nav-dropdown-trigger { padding: 6px 5px; font-size: 12px; }
+}
+
+/* ===== HERO ===== */
+.article-hero {
+  background: linear-gradient(160deg, #1a1a2e 0%, #16213e 55%, #1e2d4a 100%);
+  padding: 56px 24px 52px;
+  text-align: center;
+  border-bottom: 3px solid #d1db24;
+}
+.article-tag-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px; }
+.article-tag {
+  display: inline-block;
+  font-size: 10px; font-weight: 900; text-transform: uppercase;
+  letter-spacing: 2px; color: #fff;
+  padding: 4px 12px; border-radius: 6px;
+}
+.tag-business { background: #4a4a8c; }
+.tag-design   { background: #6a8c30; }
+.article-hero h1 {
+  font-size: clamp(26px, 4.5vw, 46px);
+  font-weight: 900; color: #fff; line-height: 1.12;
+  max-width: 800px; margin: 0 auto 18px;
+}
+.article-hero h1 em { font-style: normal; color: #d1db24; }
+.article-hero-sub {
+  font-size: 17px; color: #8eadc8;
+  max-width: 620px; margin: 0 auto 28px; line-height: 1.6;
+}
+.article-meta { display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap; }
+.article-meta-author { font-size: 13px; font-weight: 800; color: #d1db24; }
+.article-meta-date   { font-size: 13px; font-weight: 600; color: #6a8aaa; }
+.article-meta-read   { font-size: 13px; font-weight: 600; color: #6a8aaa; }
+.article-meta-sep    { color: #3a5a7a; }
+
+/* ===== BODY ===== */
+.article-wrap { max-width: 1100px; margin: 0 auto; padding: 60px 24px 80px; }
+.article-intro {
+  font-size: 19px; font-weight: 700; color: #2a3a10;
+  line-height: 1.65; margin-bottom: 36px;
+  padding: 24px 28px; background: #fff;
+  border-left: 5px solid #d1db24;
+  border-radius: 0 10px 10px 0;
+  box-shadow: 0 2px 12px rgba(98,181,23,0.1);
+}
+.article-body h2 {
+  font-size: 24px; font-weight: 900; color: #1a2a0a;
+  margin: 52px 0 16px; line-height: 1.2;
+}
+.article-body h2::before {
+  content: ''; display: block; width: 36px; height: 4px;
+  background: #d1db24; border-radius: 2px; margin-bottom: 12px;
+}
+.article-body h3 {
+  font-size: 16px; font-weight: 900; color: #2a4a10;
+  margin: 30px 0 8px; text-transform: uppercase; letter-spacing: 0.07em;
+}
+.article-body p { font-size: 16px; color: #333; line-height: 1.8; margin-bottom: 20px; }
+.article-body strong { color: #1a2a0a; font-weight: 800; }
+
+.back-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 13px; font-weight: 800; color: #4a8c11;
+  text-decoration: none; margin-bottom: 40px;
+  padding: 7px 14px; background: #fff;
+  border: 1.5px solid #a8c96a; border-radius: 8px;
+  transition: background 0.15s;
+}
+.back-link:hover { background: #f4fae8; }
+
+/* ===== THREE PILLARS ===== */
+.pillar-trio {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 2px solid #dde8c8;
+  margin: 36px 0;
+}
+.pillar {
+  padding: 28px 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+  border-right: 2px solid #dde8c8;
+  position: relative;
+}
+.pillar:last-child { border-right: none; }
+.pillar-num {
+  font-size: 10px; font-weight: 900; text-transform: uppercase;
+  letter-spacing: 2px; color: #aaa;
+}
+.pillar-icon { font-size: 32px; }
+.pillar-title { font-size: 18px; font-weight: 900; }
+.pillar-game-role {
+  font-size: 12px; font-weight: 700; color: #666;
+  line-height: 1.45; padding-top: 4px;
+}
+.pillar-tag {
+  font-size: 10px; font-weight: 900; text-transform: uppercase;
+  letter-spacing: 1.5px; color: #fff;
+  padding: 3px 10px; border-radius: 5px; margin-top: 4px;
+}
+.pillar.p-people  { background: #f4fae8; }
+.pillar.p-people  .pillar-title { color: #2a7a0a; }
+.pillar.p-people  .pillar-tag   { background: #62b517; }
+.pillar.p-process { background: #fafaf0; }
+.pillar.p-process .pillar-title { color: #6a7a00; }
+.pillar.p-process .pillar-tag   { background: #aaaa20; }
+.pillar.p-tools   { background: #f8f8ff; }
+.pillar.p-tools   .pillar-title { color: #3a3a8c; }
+.pillar.p-tools   .pillar-tag   { background: #5a5ab0; }
+@media (max-width: 600px) {
+  .pillar-trio { grid-template-columns: 1fr; }
+  .pillar { border-right: none; border-bottom: 2px solid #dde8c8; }
+  .pillar:last-child { border-bottom: none; }
+}
+
+/* ===== GAME PROOF BLOCKS ===== */
+.game-proof {
+  margin: 36px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.game-tier {
+  border-radius: 12px;
+  padding: 20px 24px;
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  border: 2px solid;
+}
+.game-tier.tier-people {
+  border-color: #a8c96a;
+  background: #f4fae8;
+}
+.game-tier.tier-process {
+  border-color: #c8c840;
+  background: #fafaf0;
+}
+.game-tier.tier-tools {
+  border-color: #a8a8d8;
+  background: #f4f4ff;
+}
+.game-tier.tier-none {
+  border-color: #e0a0a0;
+  background: #fff8f8;
+  opacity: 0.85;
+}
+.game-tier.tier-proc-tool {
+  border-color: #d0a840;
+  background: #fffbf0;
+  opacity: 0.9;
+}
+.game-tier.tier-proc-only {
+  border-color: #c8c880;
+  background: #fafaf4;
+  opacity: 0.88;
+}
+.tier-badge {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  min-width: 60px;
+}
+.tier-icons {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 18px;
+  line-height: 1;
+}
+.tier-label {
+  font-size: 9px; font-weight: 900; text-transform: uppercase;
+  letter-spacing: 1.5px; color: #888;
+  text-align: center;
+}
+.tier-body { flex: 1; }
+.tier-verdict {
+  font-size: 13px; font-weight: 900; text-transform: uppercase;
+  letter-spacing: 1.5px; margin-bottom: 6px;
+}
+.tier-people     .tier-verdict { color: #4a8c11; }
+.tier-process    .tier-verdict { color: #8a8a00; }
+.tier-tools      .tier-verdict { color: #4a4aaa; }
+.tier-none       .tier-verdict { color: #c04040; }
+.tier-proc-tool  .tier-verdict { color: #8a5a00; }
+.tier-proc-only  .tier-verdict { color: #6a6a00; }
+.tier-title { font-size: 15px; font-weight: 900; color: #1a1a1a; margin-bottom: 4px; }
+.tier-desc  { font-size: 13px; color: #555; line-height: 1.6; }
+.tier-examples {
+  display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px;
+}
+.tier-ex-tag {
+  font-size: 11px; font-weight: 800; color: #555;
+  padding: 3px 8px; border-radius: 5px; background: rgba(0,0,0,0.06);
+}
+
+/* ===== CALLOUT ===== */
+.callout {
+  background: #fff; border: 2px solid #a8c96a;
+  border-radius: 12px; padding: 20px 24px;
+  margin: 28px 0; display: flex; gap: 14px; align-items: flex-start;
+}
+.callout-icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+.callout-text { font-size: 15px; color: #2a4a10; line-height: 1.7; font-weight: 700; }
+.callout.warn { border-color: #e8b040; background: #fffbf0; }
+.callout.warn .callout-text { color: #6a4a00; }
+.callout.dark { background: #0c1829; border-color: #253347; }
+.callout.dark .callout-text { color: #8eadc8; }
+
+/* ===== BUSINESS FAILURE EXAMPLES ===== */
+.failure-list {
+  margin: 28px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.failure-card {
+  background: #fff;
+  border: 2px solid #dde8c8;
+  border-radius: 12px;
+  padding: 20px 22px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+.failure-icon { font-size: 22px; flex-shrink: 0; }
+.failure-title { font-size: 14px; font-weight: 900; color: #1a1a1a; margin-bottom: 5px; }
+.failure-desc  { font-size: 13px; color: #555; line-height: 1.65; }
+.failure-lesson {
+  font-size: 12px; font-weight: 800; color: #c04040;
+  margin-top: 8px; padding-top: 8px;
+  border-top: 1px solid #f0e0e0;
+}
+
+/* ===== PRIORITY PYRAMID ===== */
+.pyramid-wrap {
+  margin: 32px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  align-items: stretch;
+}
+.pyramid-tier {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border-radius: 0;
+  overflow: hidden;
+}
+.pyramid-tier:first-child .pyramid-band { border-radius: 12px 12px 0 0; }
+.pyramid-tier:last-child  .pyramid-band { border-radius: 0 0 12px 12px; }
+.pyramid-band {
+  flex: 1;
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.pyramid-band.band-people  { background: #2a7a0a; }
+.pyramid-band.band-process { background: #8a8a00; }
+.pyramid-band.band-tools   { background: #3a3a8c; }
+.pyramid-icon { font-size: 22px; flex-shrink: 0; }
+.pyramid-text { flex: 1; }
+.pyramid-name { font-size: 16px; font-weight: 900; color: #fff; }
+.pyramid-role { font-size: 13px; color: rgba(255,255,255,0.72); margin-top: 2px; line-height: 1.4; }
+.pyramid-pct {
+  font-size: 28px; font-weight: 900; color: rgba(255,255,255,0.35);
+  flex-shrink: 0;
+}
+
+/* ===== RIGHT ORDER TABLE ===== */
+.order-table {
+  width: 100%; border-collapse: collapse;
+  margin: 28px 0; font-size: 14px;
+}
+.order-table th {
+  background: #1a1a2e; color: #d1db24;
+  font-size: 10px; font-weight: 900;
+  text-transform: uppercase; letter-spacing: 2px;
+  padding: 12px 16px; text-align: left;
+}
+.order-table th:first-child { border-radius: 8px 0 0 0; }
+.order-table th:last-child  { border-radius: 0 8px 0 0; }
+.order-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #e8f0d8;
+  font-weight: 600; color: #333;
+  background: #fff; line-height: 1.5;
+  vertical-align: top;
+}
+.order-table tr:last-child td { border-bottom: none; }
+.order-table tr:last-child td:first-child { border-radius: 0 0 0 8px; }
+.order-table tr:last-child td:last-child  { border-radius: 0 0 8px 0; }
+.order-table td.wrong { color: #c04040; }
+.order-table td.right { color: #2a7a0a; }
+
+/* ===== CTA ===== */
+.article-cta {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  border-radius: 16px; padding: 36px 32px;
+  margin-top: 56px; text-align: center;
+  border: 2px solid #2a2a5a;
+}
+.article-cta h3 { font-size: 22px; font-weight: 900; color: #fff; margin-bottom: 12px; }
+.article-cta p  { font-size: 15px; color: #8eadc8; margin-bottom: 24px; line-height: 1.65; max-width: 480px; margin-left: auto; margin-right: auto; }
+.article-cta a {
+  display: inline-block; font-size: 14px; font-weight: 900;
+  text-decoration: none; padding: 13px 28px; border-radius: 9px;
+  background: #d1db24; color: #1a2a00;
+  transition: background 0.15s, transform 0.15s;
+}
+.article-cta a:hover { background: #c0ca10; transform: translateY(-2px); }
+
+footer { background: #2a2a2a; color: #777; text-align: center; padding: 12px 24px; font-size: 12px; }
+
+[data-reveal] { opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
+[data-reveal].is-visible { opacity: 1; transform: none; }
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "People, Process, and Tools: What Board Games Teach Us About Running a Business",
+  "description": "Every business runs on three things: people, process, and tools. Board games make the hierarchy impossible to ignore — and reveal the mistake most organizations make when they buy technology first.",
+  "author": { "@type": "Person", "name": "Michael Novack" },
+  "publisher": { "@type": "Organization", "name": "Tech Board Games", "logo": { "@type": "ImageObject", "url": "https://cybersecgames.com/images/logo.png" } },
+  "datePublished": "2026-04-24",
+  "dateModified": "2026-04-24",
+  "url": "https://cybersecgames.com/blog/people-process-tools",
+  "mainEntityOfPage": "https://cybersecgames.com/blog/people-process-tools",
+  "keywords": ["people process tools", "business framework", "organizational management", "technology adoption", "change management"],
+  "articleSection": "Business"
+}
+</script>
+</head>
+<body>
+
+<header>
+  <a class="header-logo" href="/">
+    <img src="/images/logo.png" alt="Tech Board Games logo">
+    <div>
+      <span class="logo-text">Tech Games</span>
+      <span class="logo-sub">Close the Tech Gap</span>
+    </div>
+  </a>
+  <nav>
+    <a href="/">Home</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-trigger">Games ▾</button>
+      <div class="nav-dropdown-menu">
+        <a href="/cybersecurity">Cybersecurity</a>
+        <a href="/ai">Artificial Intelligence</a>
+        <a href="/qubit-waitlist">Quantum Computing</a>
+      </div>
+    </div>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-trigger">Audience ▾</button>
+      <div class="nav-dropdown-menu">
+        <a href="/corporate-training">Technology Leaders + L&D</a>
+        <a href="/specialized-training">Tech Consultants &amp; Trainers</a>
+        <a href="/classrooms">Classrooms & Educators</a>
+        <a href="/curious-minds">Personal & Curious</a>
+      </div>
+    </div>
+    <a href="/blog" class="active">Blog</a>
+    <a href="/about">About</a>
+    <a href="/contact">Contact</a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="article-hero">
+  <div class="article-tag-row">
+    <span class="article-tag tag-business">Business</span>
+    <span class="article-tag tag-design">Game Design</span>
+  </div>
+  <h1>People, Process, and Tools:<br><em>What Board Games Teach Us</em><br>About Running a Business</h1>
+  <p class="article-hero-sub">Every organization runs on three things. Board games make the hierarchy between them impossible to ignore — and reveal the costly mistake most businesses make when they reach for technology first.</p>
+  <div class="article-meta">
+    <span class="article-meta-read">7 min read</span>
+  </div>
+</section>
+
+<!-- BODY -->
+<div class="article-wrap">
+
+  <a href="/blog" class="back-link">← Back to Blog</a>
+
+  <p class="article-intro">
+    A company purchases a $2 million enterprise software platform. Eighteen months later, adoption is at 34%, the vendor is on a performance improvement plan, and leadership is quietly shopping for a replacement. The software wasn't the problem. It never was.
+  </p>
+
+  <div class="article-body">
+
+    <p>The People, Process, Tools framework has been a management staple for decades. It appears in IT strategy decks, operations reviews, and organizational change literature in almost every industry. Everyone nods at it in meetings. And then, when the next initiative is greenlit, most organizations proceed to purchase the tools first, design the process second, and hope the people catch up on their own.</p>
+
+    <p>The framework's logic is simple enough to restate in a sentence: no tool works without a process to govern it, and no process works without people who understand it and care about its success. The reason organizations keep violating this sequence despite knowing it is that tools are the most visible, most measurable, most vendor-supported element of the three — so they become the default starting point. And that inversion is precisely where expensive transformation programs go quietly wrong.</p>
+
+    <p>The clearest proof of the hierarchy doesn't come from business literature. It comes from board game design.</p>
+
+    <h2>The Framework, Mapped to the Game Table</h2>
+
+    <p>Every organization — from a five-person startup to a Fortune 100 enterprise — is a system for coordinating human effort toward a shared goal. Board games are the same thing in miniature. They coordinate the effort of players toward a shared experience. And because games are small enough to hold in your hands, their structure is easy to see in a way that organizational dynamics rarely are.</p>
+
+    <div class="pillar-trio" data-reveal>
+      <div class="pillar p-people">
+        <div class="pillar-num">Element 01</div>
+        <div class="pillar-icon"><svg width="32" height="32" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="8" cy="7" r="3" fill="#62b517"/><path d="M2 19c0-3 2.5-5 6-5s6 2 6 5" stroke="#62b517" stroke-width="1.5" stroke-linecap="round"/><circle cx="16" cy="8" r="2.5" fill="#4a8c11" opacity="0.75"/><path d="M13.5 19c0-2.5 1-4 3.5-4s3.5 1.5 3.5 4" stroke="#4a8c11" stroke-width="1.5" stroke-linecap="round" opacity="0.75"/></svg></div>
+        <div class="pillar-title">People</div>
+        <div class="pillar-game-role">The players — the minds, motivations, decisions, and social energy at the table</div>
+        <div class="pillar-tag">The Purpose</div>
+      </div>
+      <div class="pillar p-process">
+        <div class="pillar-num">Element 02</div>
+        <div class="pillar-icon"><svg width="32" height="32" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="11" cy="11" r="3.5" stroke="#d1db24" stroke-width="2"/><circle cx="11" cy="11" r="1.5" fill="#d1db24"/><line x1="11" y1="2" x2="11" y2="6" stroke="#d1db24" stroke-width="2" stroke-linecap="round"/><line x1="11" y1="16" x2="11" y2="20" stroke="#d1db24" stroke-width="2" stroke-linecap="round"/><line x1="2" y1="11" x2="6" y2="11" stroke="#d1db24" stroke-width="2" stroke-linecap="round"/><line x1="16" y1="11" x2="20" y2="11" stroke="#d1db24" stroke-width="2" stroke-linecap="round"/><line x1="4.6" y1="4.6" x2="7.4" y2="7.4" stroke="#d1db24" stroke-width="2" stroke-linecap="round"/><line x1="14.6" y1="14.6" x2="17.4" y2="17.4" stroke="#d1db24" stroke-width="2" stroke-linecap="round"/><line x1="17.4" y1="4.6" x2="14.6" y2="7.4" stroke="#d1db24" stroke-width="2" stroke-linecap="round"/><line x1="7.4" y1="14.6" x2="4.6" y2="17.4" stroke="#d1db24" stroke-width="2" stroke-linecap="round"/></svg></div>
+        <div class="pillar-title">Process</div>
+        <div class="pillar-game-role">The mechanics and rules — the shared language that structures how people interact</div>
+        <div class="pillar-tag">The Bridge</div>
+      </div>
+      <div class="pillar p-tools">
+        <div class="pillar-num">Element 03</div>
+        <div class="pillar-icon"><svg width="32" height="32" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="18" height="18" rx="4" fill="#1a3a6a"/><circle cx="7" cy="7" r="1.5" fill="#d1db24"/><circle cx="15" cy="7" r="1.5" fill="#d1db24"/><circle cx="11" cy="11" r="1.5" fill="#d1db24"/><circle cx="7" cy="15" r="1.5" fill="#d1db24"/><circle cx="15" cy="15" r="1.5" fill="#d1db24"/></svg></div>
+        <div class="pillar-title">Tools</div>
+        <div class="pillar-game-role">The components — cards, boards, dice, tokens — the physical objects that extend what's possible</div>
+        <div class="pillar-tag">The Amplifier</div>
+      </div>
+    </div>
+
+    <p>The game analogy is useful not just because it's relatable. It's useful because it makes the hierarchy between these three elements testable. You can actually remove them one at a time and see what survives.</p>
+
+    <h2>The Proof: Remove Each Element and See What's Left</h2>
+
+    <p>The clearest way to understand the relative importance of people, process, and tools is to test what exists in their absence. The results of this test are not abstract — they're familiar from games most people have already played.</p>
+
+    <div class="game-proof" data-reveal>
+
+      <div class="game-tier tier-people">
+        <div class="tier-badge">
+          <div class="tier-icons"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="8" cy="7" r="3" fill="#62b517"/><path d="M2 19c0-3 2.5-5 6-5s6 2 6 5" stroke="#62b517" stroke-width="1.5" stroke-linecap="round"/><circle cx="16" cy="8" r="2.5" fill="#4a8c11" opacity="0.75"/><path d="M13.5 19c0-2.5 1-4 3.5-4s3.5 1.5 3.5 4" stroke="#4a8c11" stroke-width="1.5" stroke-linecap="round" opacity="0.75"/></svg></div>
+          <div class="tier-label">People only</div>
+        </div>
+        <div class="tier-body">
+          <div class="tier-verdict">Still a game.</div>
+          <div class="tier-title">Imagination, improv, and pure social play</div>
+          <div class="tier-desc">Give a group of children an empty room and no instructions and they will invent a game within minutes. Adults do the same — campfire storytelling, word association, "what would you rather." No rules written down. No physical components at all. Just people, and the intrinsic human drive to create shared experience. The game exists entirely in the social space between participants.</div>
+          <div class="tier-examples">
+            <span class="tier-ex-tag">Improv theatre</span>
+            <span class="tier-ex-tag">Storytelling circles</span>
+            <span class="tier-ex-tag">Word association games</span>
+            <span class="tier-ex-tag">Children's imaginative play</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="game-tier tier-process">
+        <div class="tier-badge">
+          <div class="tier-icons"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="8" cy="7" r="3" fill="#62b517"/><path d="M2 19c0-3 2.5-5 6-5s6 2 6 5" stroke="#62b517" stroke-width="1.5" stroke-linecap="round"/><circle cx="16" cy="8" r="2.5" fill="#4a8c11" opacity="0.75"/><path d="M13.5 19c0-2.5 1-4 3.5-4s3.5 1.5 3.5 4" stroke="#4a8c11" stroke-width="1.5" stroke-linecap="round" opacity="0.75"/></svg><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="11" cy="11" r="3.5" stroke="#d1db24" stroke-width="2"/><circle cx="11" cy="11" r="1.5" fill="#d1db24"/><line x1="11" y1="2" x2="11" y2="6" stroke="#d1db24" stroke-width="2" stroke-linecap="round"/><line x1="11" y1="16" x2="11" y2="20" stroke="#d1db24" stroke-width="2" stroke-linecap="round"/><line x1="2" y1="11" x2="6" y2="11" stroke="#d1db24" stroke-width="2" stroke-linecap="round"/><line x1="16" y1="11" x2="20" y2="11" stroke="#d1db24" stroke-width="2" stroke-linecap="round"/><line x1="4.6" y1="4.6" x2="7.4" y2="7.4" stroke="#d1db24" stroke-width="2" stroke-linecap="round"/><line x1="14.6" y1="14.6" x2="17.4" y2="17.4" stroke="#d1db24" stroke-width="2" stroke-linecap="round"/><line x1="17.4" y1="4.6" x2="14.6" y2="7.4" stroke="#d1db24" stroke-width="2" stroke-linecap="round"/><line x1="7.4" y1="14.6" x2="4.6" y2="17.4" stroke="#d1db24" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <div class="tier-label">People + Process</div>
+        </div>
+        <div class="tier-body">
+          <div class="tier-verdict">Still a real game.</div>
+          <div class="tier-title">Rules without components — and they work perfectly well</div>
+          <div class="tier-desc">Add structure — a shared set of rules — and the experience sharpens dramatically without a single physical object being introduced. Tag has one rule: don't get touched. Simon Says has a rule about whose commands to follow. Charades has rules about what you can and can't communicate. These are complete, functional, deeply engaging games that have lasted for generations. The rules give people a shared framework for interacting, and that's enough to create genuine play.</div>
+          <div class="tier-examples">
+            <span class="tier-ex-tag">Tag</span>
+            <span class="tier-ex-tag">Simon Says</span>
+            <span class="tier-ex-tag">Charades</span>
+            <span class="tier-ex-tag">Twenty Questions</span>
+            <span class="tier-ex-tag">Werewolf / Mafia</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="game-tier tier-none">
+        <div class="tier-badge">
+          <div class="tier-icons"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="11" cy="11" r="3.5" stroke="#d1db24" stroke-width="2"/><circle cx="11" cy="11" r="1.5" fill="#d1db24"/><line x1="11" y1="2" x2="11" y2="6" stroke="#d1db24" stroke-width="2" stroke-linecap="round"/><line x1="11" y1="16" x2="11" y2="20" stroke="#d1db24" stroke-width="2" stroke-linecap="round"/><line x1="2" y1="11" x2="6" y2="11" stroke="#d1db24" stroke-width="2" stroke-linecap="round"/><line x1="16" y1="11" x2="20" y2="11" stroke="#d1db24" stroke-width="2" stroke-linecap="round"/><line x1="4.6" y1="4.6" x2="7.4" y2="7.4" stroke="#d1db24" stroke-width="2" stroke-linecap="round"/><line x1="14.6" y1="14.6" x2="17.4" y2="17.4" stroke="#d1db24" stroke-width="2" stroke-linecap="round"/><line x1="17.4" y1="4.6" x2="14.6" y2="7.4" stroke="#d1db24" stroke-width="2" stroke-linecap="round"/><line x1="7.4" y1="14.6" x2="4.6" y2="17.4" stroke="#d1db24" stroke-width="2" stroke-linecap="round"/></svg><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="18" height="18" rx="4" fill="#1a3a6a"/><circle cx="7" cy="7" r="1.5" fill="#d1db24"/><circle cx="15" cy="7" r="1.5" fill="#d1db24"/><circle cx="11" cy="11" r="1.5" fill="#d1db24"/><circle cx="7" cy="15" r="1.5" fill="#d1db24"/><circle cx="15" cy="15" r="1.5" fill="#d1db24"/></svg></div>
+          <div class="tier-label">Process + Tools</div>
+        </div>
+        <div class="tier-body">
+          <div class="tier-verdict">Not a game. Not anything.</div>
+          <div class="tier-title">A board set up, a rulebook open, and no one at the table</div>
+          <div class="tier-desc">It doesn't matter how you arrange the pieces. Process alone — a rulebook no one reads, an SOP no one follows — describes a system that hasn't been built. Tools alone — a board, some dice, enterprise software at 12% utilisation — are inert objects waiting for function that never arrives. And Process + Tools together, without people, is simply a more elaborate version of the same problem: the board is set up, the rulebook is open, the pieces are laid out correctly, and the game will never be played. Because no one sat down. No amount of quality in the components — hand-painted miniatures, laser-cut wood, premium matte card stock — and no elegance in the mechanics changes this. Without people, nothing activates. The sophistication of what's been built is completely irrelevant to whether it produces any value at all.</div>
+          <div class="tier-examples">
+            <span class="tier-ex-tag">Tools with no users</span>
+            <span class="tier-ex-tag">SOPs nobody follows</span>
+            <span class="tier-ex-tag">Automated reports nobody reads</span>
+            <span class="tier-ex-tag">A game set up for players who never arrive</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="game-tier tier-tools">
+        <div class="tier-badge">
+          <div class="tier-icons"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="8" cy="7" r="3" fill="#62b517"/><path d="M2 19c0-3 2.5-5 6-5s6 2 6 5" stroke="#62b517" stroke-width="1.5" stroke-linecap="round"/><circle cx="16" cy="8" r="2.5" fill="#4a8c11" opacity="0.75"/><path d="M13.5 19c0-2.5 1-4 3.5-4s3.5 1.5 3.5 4" stroke="#4a8c11" stroke-width="1.5" stroke-linecap="round" opacity="0.75"/></svg><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="11" cy="11" r="3.5" stroke="#d1db24" stroke-width="2"/><circle cx="11" cy="11" r="1.5" fill="#d1db24"/><line x1="11" y1="2" x2="11" y2="6" stroke="#d1db24" stroke-width="2" stroke-linecap="round"/><line x1="11" y1="16" x2="11" y2="20" stroke="#d1db24" stroke-width="2" stroke-linecap="round"/><line x1="2" y1="11" x2="6" y2="11" stroke="#d1db24" stroke-width="2" stroke-linecap="round"/><line x1="16" y1="11" x2="20" y2="11" stroke="#d1db24" stroke-width="2" stroke-linecap="round"/><line x1="4.6" y1="4.6" x2="7.4" y2="7.4" stroke="#d1db24" stroke-width="2" stroke-linecap="round"/><line x1="14.6" y1="14.6" x2="17.4" y2="17.4" stroke="#d1db24" stroke-width="2" stroke-linecap="round"/><line x1="17.4" y1="4.6" x2="14.6" y2="7.4" stroke="#d1db24" stroke-width="2" stroke-linecap="round"/><line x1="7.4" y1="14.6" x2="4.6" y2="17.4" stroke="#d1db24" stroke-width="2" stroke-linecap="round"/></svg><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="18" height="18" rx="4" fill="#1a3a6a"/><circle cx="7" cy="7" r="1.5" fill="#d1db24"/><circle cx="15" cy="7" r="1.5" fill="#d1db24"/><circle cx="11" cy="11" r="1.5" fill="#d1db24"/><circle cx="7" cy="15" r="1.5" fill="#d1db24"/><circle cx="15" cy="15" r="1.5" fill="#d1db24"/></svg></div>
+          <div class="tier-label">All three</div>
+        </div>
+        <div class="tier-body">
+          <div class="tier-verdict">The full experience.</div>
+          <div class="tier-title">Components extend what people and process have already built</div>
+          <div class="tier-desc">When people and process are solid, tools amplify everything. Cards create memory, asymmetry, and surprise. Dice introduce probability that no mental simulation can replicate. A board creates shared spatial reference that makes complex state visible at a glance. The components don't replace the people or the rules — they extend what's already working. They are powerful precisely because they serve something that was already there.</div>
+          <div class="tier-examples">
+            <span class="tier-ex-tag">Byte Club</span>
+            <span class="tier-ex-tag">FuzzNet Labs</span>
+            <span class="tier-ex-tag">Chess</span>
+            <span class="tier-ex-tag">Pandemic</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <p>The test result is clear and it admits no exceptions: <strong>tools cannot exist without people and process, but people and process can exist without tools.</strong> The hierarchy isn't a preference or a philosophy. It's a structural fact about how these elements relate to each other.</p>
+
+    <h2>People Are the Purpose</h2>
+
+    <p>The reason a game exists is not the board. It's not the cards, the tokens, the rulebook, or the box art. A game exists because human beings want to think together, compete together, laugh together, and experience the particular pleasure of navigating shared uncertainty with other people. The game is a vehicle for human experience — and every design decision in a good game is made in service of the people sitting around the table.</p>
+
+    <p>The same is true of organizations. A business does not exist to run software. It does not exist to execute processes. It exists because people — employees, customers, communities — have needs worth serving. Every system, every tool, every workflow inside an organization is ultimately justified by its effect on people: the people doing the work, and the people the work is for.</p>
+
+    <div class="callout">
+      <div class="callout-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="8" cy="7" r="3" fill="#62b517"/><path d="M2 19c0-3 2.5-5 6-5s6 2 6 5" stroke="#62b517" stroke-width="1.5" stroke-linecap="round"/><circle cx="16" cy="8" r="2.5" fill="#4a8c11" opacity="0.75"/><path d="M13.5 19c0-2.5 1-4 3.5-4s3.5 1.5 3.5 4" stroke="#4a8c11" stroke-width="1.5" stroke-linecap="round" opacity="0.75"/></svg></div>
+      <div class="callout-text">In game design, a "player experience" problem is always a design problem — not a component problem. In organizations, a "people" problem is always a leadership and culture problem — not a software problem.</div>
+    </div>
+
+    <p>When game designers get this wrong — when they optimize for clever mechanics at the expense of how it feels to sit across the table — the game gets called "too fiddly," "too mechanical," or "it feels like doing homework." The components were fine. The rules were internally consistent. But the player experience — the people experience — was neglected. And no amount of premium components can rescue a game that doesn't serve the people playing it.</p>
+
+    <h2>Process Brings It Together</h2>
+
+    <p>Process is what converts a group of individuals into a coordinated system. Without shared rules, a table full of willing players produces chaos — everyone moves when they want to, interprets outcomes differently, and disputes every edge case. The rules of a game don't constrain the experience; they create the conditions under which genuine experience is possible.</p>
+
+    <p>A good game mechanic is elegant because it does the most coordination work with the least friction. It tells each player exactly what they can do, what they cannot do, when it's their turn, and how to interpret the state of play. The rules are not obstacles to fun — they are the architecture within which fun becomes possible.</p>
+
+    <p>In organizations, process works the same way. A well-designed process reduces decision fatigue, eliminates repeated negotiation over the same questions, creates predictable handoffs, and gives people a shared understanding of what "done" looks like. When a process is absent or poorly designed, the cost is paid in coordination overhead — the organizational equivalent of players arguing about the rules instead of playing the game.</p>
+
+    <div class="callout warn">
+      <div class="callout-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11 2L1 20h20L11 2z" fill="#e8a030" opacity="0.15"/><path d="M11 2L1 20h20L11 2z" stroke="#e8a030" stroke-width="1.5" stroke-linejoin="round"/><line x1="11" y1="9" x2="11" y2="13.5" stroke="#e8a030" stroke-width="2" stroke-linecap="round"/><circle cx="11" cy="17" r="1.2" fill="#e8a030"/></svg></div>
+      <div class="callout-text">The most common process failure is documentation without adoption. A rulebook no one reads doesn't govern a game. A documented process no one follows doesn't govern an organization. Process only works when people understand it, trust it, and use it.</div>
+    </div>
+
+    <h2>Tools Enhance — They Cannot Create</h2>
+
+    <p>Components matter. This is not an argument against technology or investment in tooling. The cards in Byte Club carry information, create asymmetry, and introduce uncertainty in ways that no purely verbal game mechanic could replicate. The neural network board in FuzzNet Labs makes an abstract concept physically visible and manipulable in a way that changes how players think about it. The tools genuinely extend what the game can do.</p>
+
+    <p>But they extend it. They do not originate it. A card cannot decide to play itself. Dice cannot determine who rolls them. A board cannot set up a game or care about its outcome. Every function a component serves is derived entirely from the people using it and the process governing its use. The tool is downstream of everything else.</p>
+
+    <p>This is the truth that the enterprise software industry has an incentive not to tell you: the ROI of any tool is a function of the people and process it serves. The same CRM platform deployed in two organizations of equal size will produce wildly different outcomes depending on the clarity of the sales process it's supposed to support and the willingness of the salespeople to adopt it. The tool didn't change. The people and process context did.</p>
+
+    <div class="failure-list" data-reveal>
+      <div class="failure-card">
+        <div class="failure-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="11" cy="11" r="8" stroke="#c04040" stroke-width="1.5"/><path d="M11 6v10M9 8h3.5a1.5 1.5 0 010 3H10a1.5 1.5 0 000 3H14" stroke="#c04040" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="failure-body">
+          <div class="failure-title">The Tools-First Technology Rollout</div>
+          <div class="failure-desc">A large organization deploys a new collaboration platform to "fix communication problems." The platform has every feature imaginable. Twelve months later, half the teams are still using email, a quarter adopted the tool but recreated the same siloed communication patterns inside it, and the original communication problems are unchanged.</div>
+          <div class="failure-lesson">The problem was never the tool. It was the norms around how people communicated and the absence of a process that required different behavior.</div>
+        </div>
+      </div>
+      <div class="failure-card">
+        <div class="failure-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="14" width="5" height="7" rx="1" fill="#1a3a6a" opacity="0.6"/><rect x="8.5" y="9" width="5" height="12" rx="1" fill="#62b517"/><rect x="15" y="4" width="5" height="17" rx="1" fill="#d1db24"/><line x1="1" y1="21" x2="21" y2="21" stroke="#1a3a6a" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+        <div class="failure-body">
+          <div class="failure-title">The Expensive Dashboard Nobody Looks At</div>
+          <div class="failure-desc">A data team spends six months building a real-time analytics dashboard for executive leadership. It's technically impressive. It sits unused because no one defined which decisions the dashboard was supposed to support, who was responsible for acting on the data, or how often reviews should happen.</div>
+          <div class="failure-lesson">The tool answered questions no one had. The process for using it was never defined. The people who needed it were never consulted in its design.</div>
+        </div>
+      </div>
+      <div class="failure-card">
+        <div class="failure-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="18" height="18" rx="4" fill="#1a3a6a"/><circle cx="7" cy="7" r="1.5" fill="#d1db24"/><circle cx="15" cy="7" r="1.5" fill="#d1db24"/><circle cx="11" cy="11" r="1.5" fill="#d1db24"/><circle cx="7" cy="15" r="1.5" fill="#d1db24"/><circle cx="15" cy="15" r="1.5" fill="#d1db24"/></svg></div>
+        <div class="failure-body">
+          <div class="failure-title">The Game With Great Components and No Players</div>
+          <div class="failure-desc">A beautifully produced board game — custom miniatures, linen-finish cards, a sculpted board — sits on a shelf because the rulebook is 48 pages long and the learning curve is so steep that no one can find four people willing to commit to learning it together.</div>
+          <div class="failure-lesson">The tools were exceptional. The people and process requirements were not considered in the design. The game doesn't get played.</div>
+        </div>
+      </div>
+    </div>
+
+    <h2>Getting the Order Right</h2>
+
+    <p>The right sequence — People, then Process, then Tools — isn't just a philosophical preference. It's a practical prescription for avoiding the most common failure mode in organizational change. It means asking different questions at the start of every initiative.</p>
+
+    <table class="order-table" data-reveal>
+      <thead>
+        <tr>
+          <th>Element</th>
+          <th>Wrong Question (Tools-First)</th>
+          <th>Right Question (People-First)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>People</strong></td>
+          <td class="wrong">"Who do we need to train on the new system?"</td>
+          <td class="right">"Who is affected by this? What do they need to succeed? Have we talked to them?"</td>
+        </tr>
+        <tr>
+          <td><strong>Process</strong></td>
+          <td class="wrong">"What workflows does this software support?"</td>
+          <td class="right">"What process needs to exist here? How should it work before we automate anything?"</td>
+        </tr>
+        <tr>
+          <td><strong>Tools</strong></td>
+          <td class="wrong">"Which vendor has the best feature set?"</td>
+          <td class="right">"Given what we know about our people and process, which tool creates the least friction?"</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>Notice that in the right column, tools are chosen last — after you understand who will use them and how. This is the opposite of how most procurement decisions are made. It's also the opposite of how bad games get designed: components first, experience of sitting across from another human and enjoying the game last.</p>
+
+    <h2>The Hierarchy in Practice</h2>
+
+    <div class="pyramid-wrap" data-reveal>
+      <div class="pyramid-tier">
+        <div class="pyramid-band band-people">
+          <div class="pyramid-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="8" cy="7" r="3" fill="#62b517"/><path d="M2 19c0-3 2.5-5 6-5s6 2 6 5" stroke="#62b517" stroke-width="1.5" stroke-linecap="round"/><circle cx="16" cy="8" r="2.5" fill="#4a8c11" opacity="0.75"/><path d="M13.5 19c0-2.5 1-4 3.5-4s3.5 1.5 3.5 4" stroke="#4a8c11" stroke-width="1.5" stroke-linecap="round" opacity="0.75"/></svg></div>
+          <div class="pyramid-text">
+            <div class="pyramid-name">People — The Purpose</div>
+            <div class="pyramid-role">The reason the system exists. Can function with process alone. Cannot be replaced by any tool.</div>
+          </div>
+          <div class="pyramid-pct">01</div>
+        </div>
+      </div>
+      <div class="pyramid-tier">
+        <div class="pyramid-band band-process">
+          <div class="pyramid-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="11" cy="11" r="3.5" stroke="#d1db24" stroke-width="2"/><circle cx="11" cy="11" r="1.5" fill="#d1db24"/><line x1="11" y1="2" x2="11" y2="6" stroke="#d1db24" stroke-width="2" stroke-linecap="round"/><line x1="11" y1="16" x2="11" y2="20" stroke="#d1db24" stroke-width="2" stroke-linecap="round"/><line x1="2" y1="11" x2="6" y2="11" stroke="#d1db24" stroke-width="2" stroke-linecap="round"/><line x1="16" y1="11" x2="20" y2="11" stroke="#d1db24" stroke-width="2" stroke-linecap="round"/><line x1="4.6" y1="4.6" x2="7.4" y2="7.4" stroke="#d1db24" stroke-width="2" stroke-linecap="round"/><line x1="14.6" y1="14.6" x2="17.4" y2="17.4" stroke="#d1db24" stroke-width="2" stroke-linecap="round"/><line x1="17.4" y1="4.6" x2="14.6" y2="7.4" stroke="#d1db24" stroke-width="2" stroke-linecap="round"/><line x1="7.4" y1="14.6" x2="4.6" y2="17.4" stroke="#d1db24" stroke-width="2" stroke-linecap="round"/></svg></div>
+          <div class="pyramid-text">
+            <div class="pyramid-name">Process — The Bridge</div>
+            <div class="pyramid-role">The shared structure that coordinates people. Works without tools. Fails without people who follow it.</div>
+          </div>
+          <div class="pyramid-pct">02</div>
+        </div>
+      </div>
+      <div class="pyramid-tier">
+        <div class="pyramid-band band-tools">
+          <div class="pyramid-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="18" height="18" rx="4" fill="#1a3a6a"/><circle cx="7" cy="7" r="1.5" fill="#d1db24"/><circle cx="15" cy="7" r="1.5" fill="#d1db24"/><circle cx="11" cy="11" r="1.5" fill="#d1db24"/><circle cx="7" cy="15" r="1.5" fill="#d1db24"/><circle cx="15" cy="15" r="1.5" fill="#d1db24"/></svg></div>
+          <div class="pyramid-text">
+            <div class="pyramid-name">Tools — The Amplifier</div>
+            <div class="pyramid-role">Powerful extensions of what's already working. Entirely dependent on the two above. Selected last, always.</div>
+          </div>
+          <div class="pyramid-pct">03</div>
+        </div>
+      </div>
+    </div>
+
+    <p>The most capable organizations — and the best games — make this hierarchy visible in how they operate. They invest first in understanding the people: their capabilities, their motivations, the friction they experience. They design the process with those people in the room, not for them after the fact. And then, only then, do they ask which tools would make that process faster, clearer, or more enjoyable.</p>
+
+    <p>A deck of cards on a table is just a deck of cards. Put people around it with a shared set of rules, and it becomes an experience worth showing up for — something that teaches, connects, and sticks. That transformation isn't achieved by the cards. It's achieved by everything the cards are in service of.</p>
+
+    <div class="article-cta">
+      <h3>Build the Full Picture Across Your Organisation</h3>
+      <p>Byte Club and FuzzNet Labs were designed people-first — because without the right people at the table, no framework holds. See how technology leaders and L&amp;D teams are using them to build real fluency across the whole organisation.</p>
+      <a href="/corporate-training">See How Teams Use It →</a>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <p>© 2025 Tech Board Games. All rights reserved.</p>
+</footer>
+
+<script>
+(function() {
+  var els = document.querySelectorAll('[data-reveal]');
+  if (!els.length || !('IntersectionObserver' in window)) {
+    els.forEach(function(el) { el.classList.add('is-visible'); });
+    return;
+  }
+  var io = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  els.forEach(function(el) { io.observe(el); });
+})();
+
+(function() {
+  var dropdowns = document.querySelectorAll('.nav-dropdown');
+  dropdowns.forEach(function(dd) {
+    var trigger = dd.querySelector('.nav-dropdown-trigger');
+    var menu    = dd.querySelector('.nav-dropdown-menu');
+    if (!trigger || !menu) return;
+    trigger.addEventListener('click', function(e) {
+      e.stopPropagation();
+      dropdowns.forEach(function(other) {
+        if (other !== dd) {
+          other.querySelector('.nav-dropdown-menu').classList.remove('open');
+          other.querySelector('.nav-dropdown-trigger').classList.remove('open');
+        }
+      });
+      menu.classList.toggle('open');
+      trigger.classList.toggle('open');
+    });
+  });
+  document.addEventListener('click', function() {
+    dropdowns.forEach(function(dd) {
+      dd.querySelector('.nav-dropdown-menu').classList.remove('open');
+      dd.querySelector('.nav-dropdown-trigger').classList.remove('open');
+    });
+  });
+})();
+</script>
+</body>
+</html>

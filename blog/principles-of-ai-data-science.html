@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="What the AI revolution actually runs on — from data science fundamentals to neural networks, agentic AI, the AI-DLC, and why data is both the raw material and the attack surface.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="The Principles of AI: It is not Magic, it is (Data) Science">
+<meta property="og:description" content="What the AI revolution actually runs on — from data science fundamentals to neural networks, overfitting, and the Design-Train-Test cycle.">
+<meta property="og:image" content="https://cybersecgames.com/images/logo.png">
+<meta property="og:url" content="https://cybersecgames.com/blog/principles-of-ai-data-science">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The Principles of AI: It is not Magic, it is (Data) Science">
+<meta name="twitter:description" content="What the AI revolution actually runs on — from data science fundamentals to neural networks, overfitting, and the Design-Train-Test cycle.">
+<meta name="robots" content="index, follow">
+<meta name="author" content="Tech Board Games">
+<meta name="keywords" content="AI principles, data science, neural networks, machine learning basics, agentic AI, LLM explained, AI literacy, how AI works">
+<meta property="og:site_name" content="Tech Board Games">
+<meta property="og:locale" content="en_US">
+<meta name="theme-color" content="#62b517">
+<link rel="canonical" href="https://cybersecgames.com/blog/principles-of-ai-data-science">
+<title>The Principles of AI: It is not Magic, it is (Data) Science | Tech Board Games</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  min-height: 100%;
+  font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif;
+  background: #e8edd8;
+  color: #2a2a2a;
+  overflow-y: auto;
+}
+
+/* ===== HEADER ===== */
+header {
+  background: #fff;
+  border-bottom: 3px solid #d1db24;
+  padding: 0 40px;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 16px rgba(98,181,23,0.12);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.header-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+.header-logo img { width: 36px; height: 36px; object-fit: contain; }
+.logo-text { font-size: 16px; font-weight: 800; color: #4a8c11; letter-spacing: 0.5px; display: block; }
+.logo-sub  { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; display: block; line-height: 1; color: #b0b800; }
+nav { display: flex; align-items: center; gap: 4px; }
+nav a { font-size: 15px; font-weight: 700; color: #4a4a4a; text-decoration: none; padding: 8px 18px; border-radius: 8px; transition: background 0.15s, color 0.15s; }
+nav a:hover { background: #f4fae8; color: #4a8c11; }
+nav a.active { color: #4a8c11; background: #f4fae8; }
+.nav-dropdown { position: relative; display: flex; align-items: center; }
+.nav-dropdown-trigger {
+  font-size: 15px; font-weight: 700; color: #4a4a4a;
+  background: none; border: none; padding: 8px 18px;
+  border-radius: 8px; cursor: pointer; font-family: inherit;
+  line-height: inherit; display: flex; align-items: center;
+  transition: background 0.15s, color 0.15s;
+}
+.nav-dropdown-trigger.open { background: #f4fae8; color: #4a8c11; }
+.nav-dropdown-menu {
+  position: absolute; top: calc(100% + 4px); left: 0;
+  background: #fff; border: 1.5px solid #dde8c8;
+  border-radius: 10px; box-shadow: 0 8px 24px rgba(98,181,23,0.15);
+  padding: 6px; min-width: 200px;
+  display: none; flex-direction: column; gap: 2px; z-index: 200;
+}
+.nav-dropdown-menu.open { display: flex; }
+.nav-dropdown-menu a { display: block; padding: 8px 14px; border-radius: 7px; font-size: 14px; font-weight: 700; color: #4a4a4a; text-decoration: none; transition: background 0.15s, color 0.15s; white-space: nowrap; }
+.nav-dropdown-menu a:hover { background: #f4fae8; color: #4a8c11; }
+@media (max-width: 600px) {
+  header { padding: 8px 16px 6px; height: auto; flex-direction: column; align-items: center; gap: 4px; }
+  .logo-text { font-size: 12px; }
+  nav { gap: 0; justify-content: center; flex-wrap: wrap; }
+  nav a { padding: 6px 5px; font-size: 12px; }
+  .nav-dropdown-trigger { padding: 6px 5px; font-size: 12px; }
+}
+
+/* ===== ARTICLE HERO ===== */
+.article-hero {
+  background: linear-gradient(160deg, #0d1f3c 0%, #122a4a 55%, #173560 100%);
+  padding: 56px 24px 52px;
+  text-align: center;
+  border-bottom: 3px solid #d1db24;
+}
+.article-tag {
+  display: inline-block;
+  font-size: 10px; font-weight: 900; text-transform: uppercase;
+  letter-spacing: 2px; color: #fff;
+  background: #4a6a20;
+  padding: 4px 12px; border-radius: 6px;
+  margin-bottom: 20px;
+}
+.article-tag-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px; }
+.article-tag-ai  { background: #4a6a20; }
+.article-tag-ds  { background: #1a5a8a; }
+.article-hero h1 {
+  font-size: clamp(26px, 4.5vw, 46px);
+  font-weight: 900;
+  color: #fff;
+  line-height: 1.15;
+  max-width: 820px;
+  margin: 0 auto 18px;
+}
+.article-hero h1 em { font-style: normal; color: #d1db24; }
+.article-hero-sub {
+  font-size: 17px;
+  color: #8eadc8;
+  max-width: 600px;
+  margin: 0 auto 28px;
+  line-height: 1.6;
+}
+.article-meta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.article-meta-author { font-size: 13px; font-weight: 800; color: #d1db24; }
+.article-meta-date   { font-size: 13px; font-weight: 600; color: #6a8aaa; }
+.article-meta-read   { font-size: 13px; font-weight: 600; color: #6a8aaa; }
+.article-meta-sep    { color: #3a5a7a; }
+
+/* ===== ARTICLE BODY ===== */
+.article-wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 60px 24px 80px;
+}
+
+.article-intro {
+  font-size: 19px;
+  font-weight: 700;
+  color: #2a3a10;
+  line-height: 1.65;
+  margin-bottom: 36px;
+  padding: 24px 28px;
+  background: #fff;
+  border-left: 5px solid #d1db24;
+  border-radius: 0 10px 10px 0;
+  box-shadow: 0 2px 12px rgba(98,181,23,0.1);
+}
+
+.article-body h2 {
+  font-size: 24px;
+  font-weight: 900;
+  color: #1a2a0a;
+  margin: 52px 0 16px;
+  line-height: 1.2;
+}
+.article-body h2::before {
+  content: '';
+  display: block;
+  width: 36px;
+  height: 4px;
+  background: #d1db24;
+  border-radius: 2px;
+  margin-bottom: 12px;
+}
+.article-body h3 {
+  font-size: 16px;
+  font-weight: 900;
+  color: #2a4a10;
+  margin: 30px 0 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+.article-body p {
+  font-size: 16px;
+  color: #333;
+  line-height: 1.8;
+  margin-bottom: 20px;
+}
+.article-body strong { color: #1a2a0a; font-weight: 800; }
+.article-body em { font-style: italic; color: #2a4a0a; }
+
+/* Learning objective callout */
+.lo-callout {
+  background: #0c1829;
+  border-radius: 14px;
+  padding: 6px 8px;
+  margin: 36px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  overflow: hidden;
+}
+.lo-callout-label {
+  font-size: 9px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  color: #d1db24;
+  padding: 14px 20px 0;
+}
+.lo-callout-source {
+  font-size: 11px;
+  font-weight: 700;
+  color: #4a7aaa;
+  padding: 2px 20px 12px;
+}
+.lo-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px 20px;
+  border-top: 1px solid #1e3250;
+}
+.lo-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: #162640;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 18px;
+}
+.lo-text strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 900;
+  color: #fff;
+  margin-bottom: 3px;
+}
+.lo-text span {
+  font-size: 13px;
+  color: #6a9ac0;
+  line-height: 1.5;
+}
+
+/* Callout box */
+.callout {
+  background: #fff;
+  border: 2px solid #a8c96a;
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin: 28px 0;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+.callout-icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+.callout-text { font-size: 15px; color: #2a4a10; line-height: 1.7; font-weight: 700; }
+.callout.blue  { border-color: #4a8aaa; background: #f0f6ff; }
+.callout.blue .callout-text { color: #1a3a5a; }
+
+/* Data pipeline visual */
+.pipeline {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin: 28px 0;
+  flex-wrap: wrap;
+}
+.pipeline-step {
+  flex: 1;
+  min-width: 110px;
+  background: #fff;
+  border: 2px solid #a8c96a;
+  border-radius: 10px;
+  padding: 16px 12px;
+  text-align: center;
+}
+.pipeline-step-num {
+  font-size: 9px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #888;
+  margin-bottom: 4px;
+}
+.pipeline-step-name {
+  font-size: 14px;
+  font-weight: 900;
+  color: #1a2a0a;
+  margin-bottom: 4px;
+}
+.pipeline-step-desc {
+  font-size: 11px;
+  color: #666;
+  line-height: 1.4;
+}
+.pipeline-arrow {
+  font-size: 20px;
+  color: #a8c96a;
+  padding: 0 4px;
+  flex-shrink: 0;
+}
+@media (max-width: 600px) {
+  .pipeline { flex-direction: column; }
+  .pipeline-arrow { transform: rotate(90deg); }
+}
+
+/* Neural net diagram */
+.nn-diagram {
+  background: #0c1829;
+  border-radius: 14px;
+  padding: 28px;
+  margin: 28px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+.nn-diagram-title {
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #4a7aaa;
+}
+.nn-diagram svg { width: 100%; max-width: 500px; }
+
+/* Overfitting illustration */
+.overfit-block {
+  background: #fff;
+  border: 2px solid #dde8c8;
+  border-radius: 12px;
+  overflow: hidden;
+  margin: 28px 0;
+}
+.overfit-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-bottom: 2px solid #dde8c8;
+}
+.overfit-row:last-child { border-bottom: none; }
+.overfit-cell {
+  padding: 18px 20px;
+}
+.overfit-cell:first-child { border-right: 2px solid #dde8c8; }
+.overfit-cell-label {
+  font-size: 9px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 6px;
+}
+.overfit-cell-label.bad  { color: #c04040; }
+.overfit-cell-label.good { color: #2a7a2a; }
+.overfit-cell p { font-size: 13px; color: #444; line-height: 1.6; font-weight: 600; }
+
+/* Profession grid */
+.profession-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin: 24px 0;
+}
+.profession-card {
+  background: #fff;
+  border: 2px solid #dde8c8;
+  border-radius: 10px;
+  padding: 16px 18px;
+}
+.profession-card-role {
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #62b517;
+  margin-bottom: 6px;
+}
+.profession-card-question {
+  font-size: 13px;
+  font-weight: 700;
+  color: #333;
+  line-height: 1.55;
+}
+@media (max-width: 560px) { .profession-grid { grid-template-columns: 1fr; } }
+
+/* LLM formula */
+.llm-formula {
+  background: #0c1829;
+  border-radius: 14px;
+  padding: 24px 28px;
+  margin: 28px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.llm-formula-title {
+  font-size: 9px; font-weight: 900; text-transform: uppercase;
+  letter-spacing: 2.5px; color: #4a7aaa; margin-bottom: 4px;
+}
+.llm-formula-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.llm-formula-term {
+  font-size: 14px; font-weight: 900;
+  padding: 8px 14px; border-radius: 8px;
+}
+.llm-formula-term.t1 { background: #1a3a1a; color: #62b517; border: 1.5px solid #62b517; }
+.llm-formula-term.t2 { background: #1a2a3a; color: #6aaad0; border: 1.5px solid #3a7aaa; }
+.llm-formula-term.t3 { background: #2a2a1a; color: #d1db24; border: 1.5px solid #d1db24; }
+.llm-formula-plus { font-size: 18px; color: #4a6a8a; font-weight: 900; }
+.llm-formula-eq   { font-size: 18px; color: #4a6a8a; font-weight: 900; }
+
+/* Agentic vs Non-Agentic */
+.agent-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 28px 0;
+}
+.agent-card {
+  border-radius: 12px;
+  padding: 22px 20px;
+  border: 2px solid;
+}
+.agent-card.non-agentic { border-color: #3a7aaa; background: #f0f6ff; }
+.agent-card.agentic     { border-color: #8a3aaa; background: #f8f0ff; }
+.agent-card-label {
+  font-size: 9px; font-weight: 900; text-transform: uppercase;
+  letter-spacing: 2px; margin-bottom: 8px;
+}
+.non-agentic .agent-card-label { color: #3a7aaa; }
+.agentic     .agent-card-label { color: #8a3aaa; }
+.agent-card-title { font-size: 15px; font-weight: 900; color: #1a1a1a; margin-bottom: 8px; }
+.agent-card-def   { font-size: 12px; color: #444; line-height: 1.6; margin-bottom: 12px; }
+.agent-card-flow  {
+  font-size: 11px; font-weight: 800; color: #fff;
+  padding: 7px 10px; border-radius: 7px; line-height: 1.6;
+}
+.non-agentic .agent-card-flow { background: #2a5a8a; }
+.agentic     .agent-card-flow { background: #6a2a9a; }
+.agent-card-examples { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 5px; }
+.agent-ex {
+  font-size: 10px; font-weight: 800; color: #555;
+  padding: 2px 7px; border-radius: 4px; background: rgba(0,0,0,0.07);
+}
+@media (max-width: 600px) { .agent-grid { grid-template-columns: 1fr; } }
+
+/* AI history timeline */
+.ai-timeline {
+  margin: 28px 0;
+  position: relative;
+  padding-left: 28px;
+}
+.ai-timeline::before {
+  content: '';
+  position: absolute; left: 7px; top: 8px; bottom: 8px;
+  width: 2px; background: linear-gradient(to bottom, #62b517, #4a7aaa, #d1db24);
+  border-radius: 2px;
+}
+.timeline-item {
+  position: relative;
+  padding: 0 0 18px 20px;
+}
+.timeline-item:last-child { padding-bottom: 0; }
+.timeline-dot {
+  position: absolute; left: -21px; top: 5px;
+  width: 10px; height: 10px; border-radius: 50%;
+  border: 2px solid #fff;
+}
+.timeline-year { font-size: 10px; font-weight: 900; color: #888; margin-bottom: 2px; letter-spacing: 1px; }
+.timeline-event { font-size: 14px; font-weight: 900; color: #1a2a0a; margin-bottom: 2px; }
+.timeline-desc  { font-size: 13px; color: #555; line-height: 1.5; }
+
+/* AI threat cards */
+.threat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 28px 0;
+}
+.threat-card {
+  background: #0c1829;
+  border-radius: 10px;
+  padding: 16px 18px;
+  border-left: 3px solid;
+}
+.threat-card.tc-input   { border-color: #c04040; }
+.threat-card.tc-dev     { border-color: #d1db24; }
+.threat-card-label {
+  font-size: 8px; font-weight: 900; text-transform: uppercase;
+  letter-spacing: 2px; margin-bottom: 5px;
+}
+.tc-input .threat-card-label { color: #c04040; }
+.tc-dev   .threat-card-label { color: #d1db24; }
+.threat-card-name { font-size: 13px; font-weight: 900; color: #fff; margin-bottom: 4px; }
+.threat-card-desc { font-size: 12px; color: #6a9ac0; line-height: 1.5; }
+@media (max-width: 560px) { .threat-grid { grid-template-columns: 1fr; } }
+
+/* Shift comparison */
+.shift-compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 2px solid #dde8c8;
+  margin: 28px 0;
+}
+.shift-col { padding: 20px; }
+.shift-col.classical { background: #f4fae8; }
+.shift-col.ai-sys    { background: #0c1829; }
+.shift-col-label {
+  font-size: 9px; font-weight: 900; text-transform: uppercase;
+  letter-spacing: 2px; margin-bottom: 10px;
+}
+.classical .shift-col-label { color: #4a8c11; }
+.ai-sys    .shift-col-label { color: #4a7aaa; }
+.shift-item {
+  font-size: 12px; font-weight: 700; line-height: 1.5;
+  padding: 5px 0; border-bottom: 1px solid;
+}
+.classical .shift-item { color: #333; border-color: #dde8c8; }
+.ai-sys    .shift-item { color: #8eadc8; border-color: #1e3250; }
+.shift-item:last-child { border-bottom: none; }
+@media (max-width: 560px) { .shift-compare { grid-template-columns: 1fr; } }
+
+/* CTA */
+.article-cta {
+  background: linear-gradient(135deg, #0c1829 0%, #162640 100%);
+  border-radius: 16px;
+  padding: 36px 32px;
+  margin-top: 56px;
+  text-align: center;
+  border: 2px solid #253347;
+}
+.article-cta h3 { font-size: 22px; font-weight: 900; color: #fff; margin-bottom: 12px; }
+.article-cta p { font-size: 15px; color: #8eadc8; margin-bottom: 24px; line-height: 1.65; max-width: 480px; margin-left: auto; margin-right: auto; }
+.article-cta a {
+  display: inline-block;
+  background: #d1db24; color: #1a2a00;
+  font-size: 14px; font-weight: 900;
+  text-decoration: none; padding: 13px 28px; border-radius: 9px;
+  transition: background 0.15s, transform 0.15s;
+}
+.article-cta a:hover { background: #c0ca10; transform: translateY(-2px); }
+
+/* Back link */
+.back-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 13px; font-weight: 800; color: #4a8c11;
+  text-decoration: none; margin-bottom: 40px;
+  padding: 7px 14px; background: #fff;
+  border: 1.5px solid #a8c96a; border-radius: 8px;
+  transition: background 0.15s, color 0.15s;
+}
+.back-link:hover { background: #f4fae8; }
+
+footer { background: #2a2a2a; color: #777; text-align: center; padding: 12px 24px; font-size: 12px; }
+
+[data-reveal] { opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
+[data-reveal].is-visible { opacity: 1; transform: none; }
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "The Principles of AI: It is not Magic, it is (Data) Science",
+  "description": "What AI actually runs on — from data science fundamentals to neural networks, overfitting, agentic systems, and the Design-Train-Test cycle.",
+  "author": { "@type": "Person", "name": "Michael Novack" },
+  "publisher": { "@type": "Organization", "name": "Tech Board Games", "logo": { "@type": "ImageObject", "url": "https://cybersecgames.com/images/logo.png" } },
+  "datePublished": "2026-04-24",
+  "dateModified": "2026-04-24",
+  "url": "https://cybersecgames.com/blog/principles-of-ai-data-science",
+  "mainEntityOfPage": "https://cybersecgames.com/blog/principles-of-ai-data-science",
+  "keywords": ["AI principles", "data science", "neural networks", "machine learning", "agentic AI", "LLM", "AI literacy"],
+  "articleSection": "Artificial Intelligence"
+}
+</script>
+</head>
+<body>
+
+<header>
+  <a class="header-logo" href="/">
+    <img src="/images/logo.png" alt="Tech Board Games logo">
+    <div>
+      <span class="logo-text">Tech Games</span>
+      <span class="logo-sub">Close the Tech Gap</span>
+    </div>
+  </a>
+  <nav>
+    <a href="/">Home</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-trigger">Games ▾</button>
+      <div class="nav-dropdown-menu">
+        <a href="/cybersecurity">Cybersecurity</a>
+        <a href="/ai">Artificial Intelligence</a>
+        <a href="/qubit-waitlist">Quantum Computing</a>
+      </div>
+    </div>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-trigger">Audience ▾</button>
+      <div class="nav-dropdown-menu">
+        <a href="/corporate-training">Technology Leaders + L&D</a>
+        <a href="/specialized-training">Tech Consultants &amp; Trainers</a>
+        <a href="/classrooms">Classrooms & Educators</a>
+        <a href="/curious-minds">Personal & Curious</a>
+      </div>
+    </div>
+    <a href="/blog" class="active">Blog</a>
+    <a href="/about">About</a>
+    <a href="/contact">Contact</a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="article-hero">
+  <div class="article-tag-row">
+    <span class="article-tag article-tag-ai">AI</span>
+    <span class="article-tag article-tag-ds">Data Science</span>
+  </div>
+  <h1>The Principles of AI:<br><em>It is not Magic, it is (Data) Science</em></h1>
+  <p class="article-hero-sub">Most people use AI every day and understand almost none of it. Here's what the technology actually runs on — from neural networks to agentic systems — and why that knowledge changes how you work and how you stay secure.</p>
+  <div class="article-meta">
+    <span class="article-meta-read">14 min read</span>
+  </div>
+</section>
+
+<!-- BODY -->
+<div class="article-wrap">
+
+  <a href="/blog" class="back-link">← Back to Blog</a>
+
+  <p class="article-intro">
+    Somewhere between "AI will take all our jobs" and "just ask ChatGPT" lies the actual subject — a field called machine learning, built on a discipline called data science, running on mathematical structures called neural networks. Most people in the workforce never get the middle part. This is the middle part.
+  </p>
+
+  <div class="article-body">
+
+    <p>The AI revolution is real. But most of its participants — executives who fund it, managers who deploy it, employees who interact with its outputs daily — are operating on vibes and vendor marketing rather than any genuine understanding of how the technology works. That gap is not just uncomfortable; it's operationally dangerous. Decisions get made based on misplaced confidence. Outputs get trusted that shouldn't be. Red flags get missed because nobody knew what to look for.</p>
+
+    <p>Understanding AI doesn't require a computer science degree. It requires four durable mental models — each one grounded in data science principles, each one directly teachable, and each one that FuzzNet Labs was specifically designed to build.</p>
+
+    <!-- LO BLOCK -->
+    <div class="lo-callout">
+      <div class="lo-callout-label">Learning Objectives</div>
+      <div class="lo-callout-source">FuzzNet Labs — AI &amp; Machine Learning Board Game</div>
+      <div class="lo-item">
+        <div class="lo-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="4" cy="6" r="2" fill="#4a8c11"/><circle cx="18" cy="6" r="2" fill="#4a8c11"/><circle cx="11" cy="11" r="2.5" fill="#62b517"/><circle cx="4" cy="16" r="2" fill="#4a8c11"/><circle cx="18" cy="16" r="2" fill="#4a8c11"/><line x1="6" y1="7" x2="9" y2="10" stroke="#a8c96a" stroke-width="1.5"/><line x1="16" y1="7" x2="13" y2="10" stroke="#a8c96a" stroke-width="1.5"/><line x1="6" y1="15" x2="9" y2="12" stroke="#a8c96a" stroke-width="1.5"/><line x1="16" y1="15" x2="13" y2="12" stroke="#a8c96a" stroke-width="1.5"/></svg></div>
+        <div class="lo-text">
+          <strong>Open the Black Box</strong>
+          <span>See inside the neural network architecture powering modern AI — the same structure behind ChatGPT.</span>
+        </div>
+      </div>
+      <div class="lo-item">
+        <div class="lo-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="18" height="18" rx="4" fill="#1a3a6a"/><circle cx="7" cy="7" r="1.5" fill="#d1db24"/><circle cx="15" cy="7" r="1.5" fill="#d1db24"/><circle cx="11" cy="11" r="1.5" fill="#d1db24"/><circle cx="7" cy="15" r="1.5" fill="#d1db24"/><circle cx="15" cy="15" r="1.5" fill="#d1db24"/></svg></div>
+        <div class="lo-text">
+          <strong>AI is a Probability Machine</strong>
+          <span>Why 100% accuracy is impossible and every model navigates tradeoffs between error types.</span>
+        </div>
+      </div>
+      <div class="lo-item">
+        <div class="lo-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 12a7 7 0 0011.7-5" stroke="#62b517" stroke-width="2" stroke-linecap="round"/><path d="M18 10a7 7 0 01-11.7 5" stroke="#62b517" stroke-width="2" stroke-linecap="round"/><polyline points="15.5,4 19.5,7 15.5,10" fill="none" stroke="#62b517" stroke-width="1.5" stroke-linejoin="round"/><polyline points="6.5,12 2.5,15 6.5,18" fill="none" stroke="#62b517" stroke-width="1.5" stroke-linejoin="round"/></svg></div>
+        <div class="lo-text">
+          <strong>How AI Gets Built</strong>
+          <span>The Design-Train-Test cycle that drives every real machine learning project.</span>
+        </div>
+      </div>
+      <div class="lo-item">
+        <div class="lo-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 4h16a2 2 0 012 2v8a2 2 0 01-2 2H7.5L3 19v-3a2 2 0 01-2-2V6a2 2 0 012-2z" fill="#62b517" opacity="0.15"/><path d="M3 4h16a2 2 0 012 2v8a2 2 0 01-2 2H7.5L3 19v-3a2 2 0 01-2-2V6a2 2 0 012-2z" stroke="#62b517" stroke-width="1.5" stroke-linejoin="round"/></svg></div>
+        <div class="lo-text">
+          <strong>You are AI-Fluent</strong>
+          <span>Ask the right questions and push back when "the AI said so" isn't good enough.</span>
+        </div>
+      </div>
+    </div>
+
+    <h2>It Starts With Data Science</h2>
+
+    <p>Before there was "AI," there was data science — the discipline of extracting meaning from large collections of information. Data science sits at the intersection of statistics, programming, and domain expertise. Its core promise is simple: if you have enough good data and the right methods, you can find patterns that are invisible to the human eye and use them to make predictions.</p>
+
+    <p>Machine learning is the branch of data science where those patterns are discovered not by human analysis, but by algorithms that learn from examples. Instead of a programmer writing rules — "if the email contains the word 'urgent' and an attachment, flag it as suspicious" — a machine learning model observes thousands of examples of real emails and learns to classify them on its own. The rules emerge from the data rather than from human instruction.</p>
+
+    <div class="callout">
+      <div class="callout-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="11" cy="8" r="5" fill="#4a4aaa" opacity="0.2"/><circle cx="11" cy="8" r="5" stroke="#4a4aaa" stroke-width="1.5"/><circle cx="11" cy="8" r="2" fill="#4a4aaa"/><line x1="11" y1="13" x2="11" y2="20" stroke="#4a4aaa" stroke-width="2" stroke-linecap="round"/></svg></div>
+      <div class="callout-text">Data science is the discipline. Machine learning is one of its most powerful tools. AI is the umbrella term that most people mean when they say either of those things.</div>
+    </div>
+
+    <p>This distinction matters because it reframes what AI fundamentally is: not magic, not intuition, not creativity in any human sense. It is applied statistics, running on data, optimized by repeated iteration. Every insight a model produces is a sophisticated reflection of the patterns that existed in its training data. Nothing more — and often, importantly, something less.</p>
+
+    <h3>The First Law: Garbage In, Garbage Out</h3>
+
+    <p>In data science, the quality of a model's output is bounded by the quality of its input data. This principle is so foundational that practitioners treat it as the first law of the field. A brilliant algorithm fed incomplete, biased, or misrepresented data will produce confident, authoritative, wrong answers. The confidence is not a sign of quality — it's a property of the math, independent of whether the underlying data deserved it.</p>
+
+    <p>This is why understanding AI is inseparable from understanding data. Every AI deployment is, at its core, a data management problem. Who collected this data? What was it selected to represent? What was left out? What labels were applied to it, and who applied them? These are not technical questions — they are judgment questions, the kind that should be asked by managers, analysts, legal teams, and executives, not just engineers.</p>
+
+    <h2>Open the Black Box: Neural Network Architecture</h2>
+
+    <p>The dominant architecture behind modern AI — the one powering image recognition, language models, fraud detection, medical diagnosis, and virtually every other high-profile AI application — is the neural network. Understanding its basic structure demystifies roughly 80% of what people find mysterious about AI.</p>
+
+    <p>A neural network is organized into layers. Data enters through an <strong>input layer</strong>, gets processed through one or more <strong>hidden layers</strong>, and produces an output through an <strong>output layer</strong>. Each layer contains nodes — mathematical units that receive signals, apply a calculation, and pass results forward. The connections between nodes have weights that determine how strongly each signal influences the next node.</p>
+
+    <div class="nn-diagram">
+      <div class="nn-diagram-title">Neural Network — Three-Layer Architecture</div>
+      <svg viewBox="0 0 500 200" xmlns="http://www.w3.org/2000/svg">
+        <!-- Layer labels -->
+        <text x="65" y="18" text-anchor="middle" font-family="sans-serif" font-size="9" font-weight="900" fill="#4a7aaa" letter-spacing="1">INPUT</text>
+        <text x="185" y="18" text-anchor="middle" font-family="sans-serif" font-size="9" font-weight="900" fill="#4a7aaa" letter-spacing="1">HIDDEN</text>
+        <text x="305" y="18" text-anchor="middle" font-family="sans-serif" font-size="9" font-weight="900" fill="#4a7aaa" letter-spacing="1">HIDDEN</text>
+        <text x="425" y="18" text-anchor="middle" font-family="sans-serif" font-size="9" font-weight="900" fill="#4a7aaa" letter-spacing="1">OUTPUT</text>
+        <!-- Connections input→h1 -->
+        <g stroke="#253347" stroke-width="1.2" opacity="0.7">
+          <line x1="90" y1="55"  x2="160" y2="55"/>
+          <line x1="90" y1="55"  x2="160" y2="100"/>
+          <line x1="90" y1="55"  x2="160" y2="145"/>
+          <line x1="90" y1="100" x2="160" y2="55"/>
+          <line x1="90" y1="100" x2="160" y2="100"/>
+          <line x1="90" y1="100" x2="160" y2="145"/>
+          <line x1="90" y1="145" x2="160" y2="55"/>
+          <line x1="90" y1="145" x2="160" y2="100"/>
+          <line x1="90" y1="145" x2="160" y2="145"/>
+        </g>
+        <!-- Connections h1→h2 -->
+        <g stroke="#253347" stroke-width="1.2" opacity="0.7">
+          <line x1="210" y1="55"  x2="280" y2="55"/>
+          <line x1="210" y1="55"  x2="280" y2="100"/>
+          <line x1="210" y1="55"  x2="280" y2="145"/>
+          <line x1="210" y1="100" x2="280" y2="55"/>
+          <line x1="210" y1="100" x2="280" y2="100"/>
+          <line x1="210" y1="100" x2="280" y2="145"/>
+          <line x1="210" y1="145" x2="280" y2="55"/>
+          <line x1="210" y1="145" x2="280" y2="100"/>
+          <line x1="210" y1="145" x2="280" y2="145"/>
+        </g>
+        <!-- Connections h2→output -->
+        <g stroke="#62b517" stroke-width="1.4" opacity="0.6">
+          <line x1="330" y1="55"  x2="400" y2="77"/>
+          <line x1="330" y1="55"  x2="400" y2="123"/>
+          <line x1="330" y1="100" x2="400" y2="77"/>
+          <line x1="330" y1="100" x2="400" y2="123"/>
+          <line x1="330" y1="145" x2="400" y2="77"/>
+          <line x1="330" y1="145" x2="400" y2="123"/>
+        </g>
+        <!-- Input nodes -->
+        <circle cx="90" cy="55"  r="18" fill="#162640" stroke="#4a7aaa" stroke-width="2"/>
+        <circle cx="90" cy="100" r="18" fill="#162640" stroke="#4a7aaa" stroke-width="2"/>
+        <circle cx="90" cy="145" r="18" fill="#162640" stroke="#4a7aaa" stroke-width="2"/>
+        <!-- Hidden layer 1 -->
+        <circle cx="185" cy="55"  r="18" fill="#162640" stroke="#2a5a3a" stroke-width="2"/>
+        <circle cx="185" cy="100" r="18" fill="#162640" stroke="#2a5a3a" stroke-width="2"/>
+        <circle cx="185" cy="145" r="18" fill="#162640" stroke="#2a5a3a" stroke-width="2"/>
+        <!-- Hidden layer 2 -->
+        <circle cx="305" cy="55"  r="18" fill="#162640" stroke="#2a5a3a" stroke-width="2"/>
+        <circle cx="305" cy="100" r="18" fill="#162640" stroke="#2a5a3a" stroke-width="2"/>
+        <circle cx="305" cy="145" r="18" fill="#162640" stroke="#2a5a3a" stroke-width="2"/>
+        <!-- Output nodes -->
+        <circle cx="425" cy="77"  r="20" fill="#1a3a1a" stroke="#62b517" stroke-width="2.5"/>
+        <circle cx="425" cy="123" r="20" fill="#1a3a1a" stroke="#62b517" stroke-width="2.5"/>
+        <!-- Active path highlight -->
+        <line x1="90" y1="55" x2="185" y2="100" stroke="#d1db24" stroke-width="2.5" opacity="0.8"/>
+        <line x1="185" y1="100" x2="305" y2="55" stroke="#d1db24" stroke-width="2.5" opacity="0.8"/>
+        <line x1="305" y1="55" x2="425" y2="77" stroke="#d1db24" stroke-width="2.5" opacity="0.8"/>
+        <circle cx="90"  cy="55"  r="9" fill="#d1db24" opacity="0.9"/>
+        <circle cx="185" cy="100" r="9" fill="#d1db24" opacity="0.9"/>
+        <circle cx="305" cy="55"  r="9" fill="#d1db24" opacity="0.9"/>
+        <circle cx="425" cy="77"  r="11" fill="#62b517"/>
+        <!-- Labels -->
+        <text x="90"  y="185" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#4a7aaa">Pixels</text>
+        <text x="245" y="185" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#4a7aaa">Pattern Detection</text>
+        <text x="425" y="185" text-anchor="middle" font-family="sans-serif" font-size="10" fill="#62b517">Classification</text>
+      </svg>
+    </div>
+
+    <p>Training a neural network means adjusting those connection weights until the network reliably produces correct outputs for the inputs it's given. The process involves feeding the network thousands — sometimes millions — of labeled examples, measuring how wrong its outputs are, and nudging the weights in the direction that reduces the error. Repeat this enough times and the weights settle into a configuration that captures the underlying patterns in the data.</p>
+
+    <p>In <strong>FuzzNet Labs</strong>, players physically manage this structure. Each player's board represents a neural network: input nodes on the left, hidden layers in the center, output nodes on the right. Data tokens placed on nodes represent training data flowing through the network. The architecture you choose — how many nodes, which paths are open — directly affects your model's ability to classify animal photos correctly. It's the same logic that governs how a real ML engineer decides the shape of their network.</p>
+
+    <div class="callout blue">
+      <div class="callout-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="8" y="2" width="6" height="11" rx="3" fill="#1a3a6a" opacity="0.15"/><rect x="8" y="2" width="6" height="11" rx="3" stroke="#1a3a6a" stroke-width="1.5"/><rect x="7" y="11" width="8" height="3" rx="1" fill="#1a3a6a"/><line x1="11" y1="14" x2="11" y2="18" stroke="#1a3a6a" stroke-width="2" stroke-linecap="round"/><line x1="6" y1="20" x2="16" y2="20" stroke="#1a3a6a" stroke-width="2" stroke-linecap="round"/><circle cx="11" cy="6.5" r="2" fill="none" stroke="#d1db24" stroke-width="1"/></svg></div>
+      <div class="callout-text">Large language models like ChatGPT use the same input-hidden-output architecture, scaled to billions of nodes and trained on virtually the entire written internet. The principles are identical — the compute is just incomprehensibly larger.</div>
+    </div>
+
+    <h3>From Neural Network to LLM: The Progression</h3>
+
+    <p>One of the most clarifying insights in AI literacy is understanding that large language models are not a fundamentally different technology — they are an evolution of the same neural network architecture, with two additional innovations stacked on top.</p>
+
+    <div class="llm-formula">
+      <div class="llm-formula-title">The LLM Stack — Each Level Builds on the Last</div>
+      <div class="llm-formula-row">
+        <span class="llm-formula-term t1">Neural Network</span>
+        <span class="llm-formula-eq">=</span>
+        <span style="font-size:13px;color:#6a9ac0;">FuzzNet Labs — layers of nodes, weights, data flow</span>
+      </div>
+      <div class="llm-formula-row">
+        <span class="llm-formula-term t2">Transformer</span>
+        <span class="llm-formula-eq">=</span>
+        <span class="llm-formula-term t1" style="font-size:12px;">Neural Network</span>
+        <span class="llm-formula-plus">+</span>
+        <span style="font-size:13px;color:#6a9ac0;">Attention Mechanism + Sequence Encoding</span>
+      </div>
+      <div class="llm-formula-row">
+        <span class="llm-formula-term t3">LLM</span>
+        <span class="llm-formula-eq">=</span>
+        <span class="llm-formula-term t2" style="font-size:12px;">Transformer</span>
+        <span class="llm-formula-plus">+</span>
+        <span style="font-size:13px;color:#6a9ac0;">Trained on the Internet</span>
+      </div>
+    </div>
+
+    <p>The Transformer architecture, introduced in 2017, added the ability to weigh the relevance of different parts of an input sequence against each other — called "attention." This made it possible to model language at scale in ways previous architectures couldn't. ChatGPT's arrival in 2022 brought this technology to the public and sparked global awareness, but the underlying mechanics had been developing for 80 years — from McCulloch and Pitts' first neuron model in 1943, through backpropagation in 1986, deep learning in 2006, and ImageNet in 2012. The history matters because it shows that AI is a cumulative engineering discipline, not a sudden emergence of something new.</p>
+
+    <h2>AI is Much Bigger Than LLMs: Agentic vs. Non-Agentic Systems</h2>
+
+    <p>A common mistake in discussions about AI is treating "AI" and "LLM" as synonyms. Large language models are one category of AI. Predictive models, recommendation systems, image classifiers, fraud detectors, and anomaly detection systems are all AI — and many of them have nothing to do with language or generation. Understanding the full landscape requires one more distinction that is becoming increasingly important: the difference between non-agentic and agentic AI.</p>
+
+    <div class="agent-grid" data-reveal>
+      <div class="agent-card non-agentic">
+        <div class="agent-card-label">Type 01</div>
+        <div class="agent-card-title">Non-Agentic AI</div>
+        <div class="agent-card-def">AI that passively responds to inputs without independently setting goals or taking autonomous actions. Deterministic code drives the application logic; the AI provides supporting capability.</div>
+        <div class="agent-card-flow">Code → Input → Model → Output → Code<br>Deterministic code decides what happens next</div>
+        <div class="agent-card-examples">
+          <span class="agent-ex">Chatbots</span>
+          <span class="agent-ex">RAG Applications</span>
+          <span class="agent-ex">Fraud Detection</span>
+          <span class="agent-ex">Image Classification</span>
+        </div>
+      </div>
+      <div class="agent-card agentic">
+        <div class="agent-card-label">Type 02</div>
+        <div class="agent-card-title">Agentic AI</div>
+        <div class="agent-card-def">Goal-driven systems built around LLMs that plan and take autonomous actions across multiple steps. Probabilistic AI drives the execution logic; code provides supporting capability.</div>
+        <div class="agent-card-flow">Goal → Model → Act → Repeat<br>Probabilistic AI drives execution logic</div>
+        <div class="agent-card-examples">
+          <span class="agent-ex">IT Remediation Agents</span>
+          <span class="agent-ex">Customer Support Agents</span>
+          <span class="agent-ex">Finance Automation</span>
+        </div>
+      </div>
+    </div>
+
+    <p>The distinction matters because these two types of systems carry fundamentally different risk profiles. A non-agentic system can be treated like a sophisticated web service — it takes input, runs a model, returns output, and deterministic code decides what happens next. An agentic system's behavior is driven by probabilistic AI at every step, which means the output space is effectively infinite and cannot be pre-enumerated or exhaustively tested the way traditional software can. This is not a temporary engineering limitation. It is a structural property of probabilistic systems.</p>
+
+    <h2>AI is a Probability Machine, Not an Oracle</h2>
+
+    <p>Here is perhaps the most important thing to understand about AI, and the one most consistently misrepresented in mainstream coverage: <strong>no model achieves 100% accuracy, and this is not a flaw to be engineered away.</strong> It is a mathematical property of learning from data in a world where the future doesn't perfectly resemble the past. In fact, among data scientists, a model that claims 100% accuracy on its training data is treated as a warning sign — it almost certainly means the model has memorized examples rather than learned from them.</p>
+
+    <p>Accuracy is also task-dependent in ways that most non-technical stakeholders don't appreciate. Narrow, well-defined tasks — classifying an animal photo, detecting a specific network packet pattern, flagging a duplicate transaction — can be optimized and measured with precision. Broad or subjective tasks — "write a good proposal," "identify concerning behavior," "summarize this document helpfully" — have inherently fuzzier outcomes where correctness cannot be defined by a single metric. Deploying an AI system on a narrow task and a broad task with the same expectations about accuracy is a category error.</p>
+
+    <p>Every AI model navigates a fundamental tension between two types of error:</p>
+
+    <div class="overfit-block">
+      <div class="overfit-row">
+        <div class="overfit-cell">
+          <div class="overfit-cell-label bad">False Positives</div>
+          <p>The model flags something as true when it isn't. A fraud detection system that blocks legitimate transactions. A medical screening that identifies healthy patients as at-risk.</p>
+        </div>
+        <div class="overfit-cell">
+          <div class="overfit-cell-label good">False Negatives</div>
+          <p>The model misses something true. A fraud detection system that clears fraudulent transactions. A medical screening that misses a real diagnosis.</p>
+        </div>
+      </div>
+      <div class="overfit-row">
+        <div class="overfit-cell" style="grid-column:1/-1;background:#fffbf0;border-top:2px solid #dde8c8;">
+          <div class="overfit-cell-label" style="color:#8a6a00;">The Tradeoff</div>
+          <p>Reducing one type of error almost always increases the other. The model's threshold — how confident it must be before making a positive prediction — determines where on that spectrum it sits. That threshold is a human decision, not a technical one.</p>
+        </div>
+      </div>
+    </div>
+
+    <h3>Overfitting: The Memorization Trap</h3>
+
+    <p>The other core accuracy problem is overfitting. When a model is trained too aggressively on its training data, it stops learning generalizable patterns and starts memorizing the specific examples it's seen. It becomes extraordinarily accurate on data it's already encountered and strikingly bad on anything new.</p>
+
+    <p>In FuzzNet Labs, overfitting is a real game mechanic. Push data tokens into the same nodes too aggressively — trying to maximize your training advantage — and those nodes become overfit. The model has memorized those paths rather than learned from them, and you're penalized when test time comes. This mechanic encodes one of the most important lessons in all of machine learning: the model that performs best on training data is not necessarily the model that performs best in production.</p>
+
+    <div class="callout">
+      <div class="callout-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><line x1="11" y1="2" x2="11" y2="20" stroke="#8a8a00" stroke-width="1.5" stroke-linecap="round"/><line x1="3" y1="5" x2="19" y2="5" stroke="#8a8a00" stroke-width="1.5" stroke-linecap="round"/><path d="M3 5L1 11a2 2 0 004 0L3 5z" fill="#d1db24" opacity="0.5"/><path d="M3 5L1 11a2 2 0 004 0L3 5z" stroke="#8a8a00" stroke-width="1"/><path d="M19 5l2 6a2 2 0 01-4 0L19 5z" fill="#d1db24" opacity="0.5"/><path d="M19 5l2 6a2 2 0 01-4 0L19 5z" stroke="#8a8a00" stroke-width="1"/><line x1="8" y1="20" x2="14" y2="20" stroke="#8a8a00" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+      <div class="callout-text">Every AI system deployed in the real world is operating at a chosen point on the accuracy-error tradeoff curve. Understanding where that point is — and who chose it — is a decision that belongs to the humans using the system, not the algorithm itself.</div>
+    </div>
+
+    <h2>How AI Gets Built: The Design-Train-Test Cycle</h2>
+
+    <p>AI is not conjured. It is engineered through a repeating cycle that data scientists run dozens of times before a model is ready for deployment. The cycle has three phases — and understanding them transforms how you engage with any AI project:</p>
+
+    <div class="pipeline">
+      <div class="pipeline-step">
+        <div class="pipeline-step-num">Phase 01</div>
+        <div class="pipeline-step-name">Design</div>
+        <div class="pipeline-step-desc">Choose architecture, features, and data sources. What is the model trying to predict? What inputs does it get?</div>
+      </div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-step">
+        <div class="pipeline-step-num">Phase 02</div>
+        <div class="pipeline-step-name">Train</div>
+        <div class="pipeline-step-desc">Feed labeled examples. Adjust weights. Let the model update its internal configuration based on what it gets wrong.</div>
+      </div>
+      <div class="pipeline-arrow">→</div>
+      <div class="pipeline-step">
+        <div class="pipeline-step-num">Phase 03</div>
+        <div class="pipeline-step-name">Test</div>
+        <div class="pipeline-step-desc">Evaluate on held-out data the model hasn't seen. Measure real-world accuracy. Identify where it fails.</div>
+      </div>
+      <div class="pipeline-arrow">↺</div>
+      <div class="pipeline-step" style="border-color:#d1db24;background:#fffef0;">
+        <div class="pipeline-step-num" style="color:#8a7a00;">Iterate</div>
+        <div class="pipeline-step-name">Adjust</div>
+        <div class="pipeline-step-desc">Revisit the design. Add data. Change architecture. Retrain. The cycle repeats until performance is acceptable.</div>
+      </div>
+    </div>
+
+    <p>The critical insight this cycle reveals: <strong>data is destiny.</strong> What you feed the model in the training phase determines everything it can possibly learn. A sophisticated architecture with flawed or incomplete training data will produce sophisticated-sounding wrong answers. The most consequential decisions in any AI project — what data to collect, how to label it, what to exclude — happen before the model sees a single example.</p>
+
+    <p>This is why meaningful AI oversight is not a job for engineers alone. Understanding whether training data represents the full range of real-world conditions, whether labels reflect informed judgment, and whether the test set accurately reflects the deployment environment are questions that require business knowledge, legal judgment, and domain expertise — not just technical skill.</p>
+
+    <h3>The AI-DLC: Why This Cycle Is Riskier Than Software Development</h3>
+
+    <p>The Design-Train-Test cycle maps onto what security and engineering professionals call the AI Development Lifecycle (AI-DLC) — and it carries risks that its software equivalent, the SDLC, does not. The fundamental difference: traditional software development keeps production data in production environments. AI development pulls production data into development environments where controls are weakest, because that data is the raw material the model needs to learn from.</p>
+
+    <p>This means that even organizations who don't build their own models from scratch need to understand the AI-DLC. If your organization fine-tunes a model, uses retrieval-augmented generation (RAG) to inject data into a model's context, configures model parameters, or builds agents — you are responsible for managing the full lifecycle, even if your involvement is partial. And if you only use off-the-shelf models, you are still accountable for how data preparation, training, and testing choices made by your vendor impact your business. That accountability doesn't disappear just because someone else made the technical decisions.</p>
+
+    <div class="callout">
+      <div class="callout-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="7.5" cy="9" r="4.5" fill="none" stroke="#d1db24" stroke-width="1.5"/><line x1="11.5" y1="11.5" x2="20" y2="20" stroke="#d1db24" stroke-width="1.5" stroke-linecap="round"/><line x1="17" y1="17" x2="17" y2="20" stroke="#d1db24" stroke-width="1.5" stroke-linecap="round"/><line x1="14" y1="19" x2="14" y2="21" stroke="#d1db24" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+      <div class="callout-text">Unlike code, AI depends on production data — and that dependency forces a fundamentally different mindset. The data is not just an input to be cleaned. It is the source of everything the model can and cannot do.</div>
+    </div>
+
+    <h2>What AI Fluency Actually Looks Like</h2>
+
+    <p>The fourth learning objective of FuzzNet Labs is not about building AI — it's about working with it effectively. AI fluency, in practice, is the ability to ask better questions than "did the AI recommend it?"</p>
+
+    <p>Across every profession, the questions look different. But the underlying structure is the same: what data trained this model, what was it optimized to predict, and where does its confidence break down?</p>
+
+    <div class="profession-grid">
+      <div class="profession-card">
+        <div class="profession-card-role">Manager / Executive</div>
+        <div class="profession-card-question">"What population was this model trained on? Does it represent the customers we're applying it to?"</div>
+      </div>
+      <div class="profession-card">
+        <div class="profession-card-role">HR / People Ops</div>
+        <div class="profession-card-question">"Is this hiring tool's training data drawn from historical decisions that encoded existing biases?"</div>
+      </div>
+      <div class="profession-card">
+        <div class="profession-card-role">Legal / Compliance</div>
+        <div class="profession-card-question">"When the model is wrong, who bears liability — and do we have a human override process?"</div>
+      </div>
+      <div class="profession-card">
+        <div class="profession-card-role">Product / UX</div>
+        <div class="profession-card-question">"What is the model's false negative rate, and what does a user experience when it gets it wrong?"</div>
+      </div>
+    </div>
+
+    <p>These questions don't require knowing how backpropagation works. They require knowing that models are trained on data, that data has gaps, that error rates are real, and that confidence scores are not the same as correctness. That is the level of fluency that changes outcomes — not for AI engineers, but for the far larger population of people who will work alongside AI systems for the rest of their careers.</p>
+
+    <p>The faster that population develops genuine intuition about how these systems work — rather than a reflexive deference to whatever the model outputs — the better the decisions that get made with AI will be. That intuition is not built through slide decks. It's built through experience: making the decisions, seeing the consequences, adjusting, and going again.</p>
+
+    <p>That's exactly what FuzzNet Labs is built to create.</p>
+
+    <div class="article-cta">
+      <h3>Build the Intuition Through Play</h3>
+      <p>FuzzNet Labs puts you in the seat of a data scientist — designing a neural network, curating training data, and testing your model against real classification challenges. No prior knowledge required.</p>
+      <a href="/ai">Explore FuzzNet Labs →</a>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <p>© 2025 Tech Board Games. All rights reserved.</p>
+</footer>
+
+<script>
+(function() {
+  var els = document.querySelectorAll('[data-reveal]');
+  if (!els.length || !('IntersectionObserver' in window)) {
+    els.forEach(function(el) { el.classList.add('is-visible'); });
+    return;
+  }
+  var io = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  els.forEach(function(el) { io.observe(el); });
+})();
+
+(function() {
+  var dropdowns = document.querySelectorAll('.nav-dropdown');
+  dropdowns.forEach(function(dd) {
+    var trigger = dd.querySelector('.nav-dropdown-trigger');
+    var menu    = dd.querySelector('.nav-dropdown-menu');
+    if (!trigger || !menu) return;
+    trigger.addEventListener('click', function(e) {
+      e.stopPropagation();
+      dropdowns.forEach(function(other) {
+        if (other !== dd) {
+          other.querySelector('.nav-dropdown-menu').classList.remove('open');
+          other.querySelector('.nav-dropdown-trigger').classList.remove('open');
+        }
+      });
+      menu.classList.toggle('open');
+      trigger.classList.toggle('open');
+    });
+  });
+  document.addEventListener('click', function() {
+    dropdowns.forEach(function(dd) {
+      dd.querySelector('.nav-dropdown-menu').classList.remove('open');
+      dd.querySelector('.nav-dropdown-trigger').classList.remove('open');
+    });
+  });
+})();
+</script>
+</body>
+</html>

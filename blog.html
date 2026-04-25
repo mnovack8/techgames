@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Insights on game-based learning, cybersecurity education, AI literacy, and bringing tech concepts to life in classrooms and workplaces.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Blog | Tech Board Games">
+<meta property="og:description" content="Insights on game-based learning, cybersecurity education, AI literacy, and bringing tech concepts to life in classrooms and workplaces.">
+<meta property="og:image" content="https://cybersecgames.com/images/logo.png">
+<meta property="og:url" content="https://cybersecgames.com/blog">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Blog | Tech Board Games">
+<meta name="twitter:description" content="Insights on game-based learning, cybersecurity education, AI literacy, and bringing tech concepts to life in classrooms and workplaces.">
+<meta name="twitter:image" content="https://cybersecgames.com/images/logo.png">
+<meta name="robots" content="index, follow">
+<meta name="author" content="Tech Board Games">
+<meta name="keywords" content="tech learning blog, cybersecurity blog, AI blog, quantum computing blog, game-based learning blog, technology education articles">
+<meta property="og:site_name" content="Tech Board Games">
+<meta property="og:locale" content="en_US">
+<meta name="theme-color" content="#62b517">
+<link rel="canonical" href="https://cybersecgames.com/blog">
+<title>Blog | Tech Board Games</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  min-height: 100%;
+  font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif;
+  background: #e8edd8;
+  color: #2a2a2a;
+  overflow-y: auto;
+}
+
+/* ===== HEADER ===== */
+header {
+  background: #fff;
+  border-bottom: 3px solid #d1db24;
+  padding: 0 40px;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 16px rgba(98,181,23,0.12);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+.header-logo img { width: 36px; height: 36px; object-fit: contain; }
+.logo-text { font-size: 16px; font-weight: 800; color: #4a8c11; letter-spacing: 0.5px; display: block; }
+.logo-sub  { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; display: block; line-height: 1; color: #b0b800; }
+nav { display: flex; align-items: center; gap: 4px; }
+nav a { font-size: 15px; font-weight: 700; color: #4a4a4a; text-decoration: none; padding: 8px 18px; border-radius: 8px; transition: background 0.15s, color 0.15s; }
+nav a:hover { background: #f4fae8; color: #4a8c11; }
+nav a.active { color: #4a8c11; background: #f4fae8; }
+.nav-dropdown { position: relative; display: flex; align-items: center; }
+.nav-dropdown-trigger {
+  font-size: 15px; font-weight: 700; color: #4a4a4a;
+  background: none; border: none; padding: 8px 18px;
+  border-radius: 8px; cursor: pointer; font-family: inherit;
+  line-height: inherit; display: flex; align-items: center;
+  transition: background 0.15s, color 0.15s;
+}
+.nav-dropdown-trigger.open { background: #f4fae8; color: #4a8c11; }
+.nav-dropdown-menu {
+  position: absolute; top: calc(100% + 4px); left: 0;
+  background: #fff; border: 1.5px solid #dde8c8;
+  border-radius: 10px; box-shadow: 0 8px 24px rgba(98,181,23,0.15);
+  padding: 6px; min-width: 200px;
+  display: none; flex-direction: column; gap: 2px; z-index: 200;
+}
+.nav-dropdown-menu.open { display: flex; }
+.nav-dropdown-menu a { display: block; padding: 8px 14px; border-radius: 7px; font-size: 14px; font-weight: 700; color: #4a4a4a; text-decoration: none; transition: background 0.15s, color 0.15s; white-space: nowrap; }
+.nav-dropdown-menu a:hover { background: #f4fae8; color: #4a8c11; }
+@media (max-width: 600px) {
+  header { padding: 8px 16px 6px; height: auto; flex-direction: column; align-items: center; gap: 4px; }
+  .logo-text { font-size: 12px; }
+  nav { gap: 0; justify-content: center; flex-wrap: wrap; }
+  nav a { padding: 6px 5px; font-size: 12px; }
+  .nav-dropdown-trigger { padding: 6px 5px; font-size: 12px; }
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+[data-reveal] { opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
+[data-reveal].is-visible { opacity: 1; transform: none; }
+[data-reveal][data-delay="1"] { transition-delay: 0.1s; }
+[data-reveal][data-delay="2"] { transition-delay: 0.2s; }
+[data-reveal][data-delay="3"] { transition-delay: 0.3s; }
+
+/* ===== HERO ===== */
+.hero {
+  text-align: center;
+  padding: 56px 24px 48px;
+  background: linear-gradient(160deg, #f8faf2 0%, #edf2e0 100%);
+  border-bottom: 1px solid #dde8c8;
+}
+.hero h1 { font-size: clamp(32px, 5vw, 52px); font-weight: 900; color: #2a2a2a; line-height: 1.1; margin-bottom: 14px; animation: fade-up 0.45s ease both; }
+.hero h1 em { font-style: normal; color: #62b517; }
+.hero p { font-size: 17px; color: #555; line-height: 1.6; max-width: 520px; margin: 0 auto; animation: fade-up 0.45s 0.12s ease both; }
+
+
+/* ===== BLOG GRID ===== */
+.blog-main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 56px 24px 80px;
+}
+.blog-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+.blog-card {
+  background: #fff;
+  border: 2px solid #a8c96a;
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+.blog-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 32px rgba(98,181,23,0.18);
+  border-color: #62b517;
+}
+.blog-card-img {
+  width: 100%;
+  height: 170px;
+  background: #f0f5e8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.blog-card-img svg { width: 100%; height: 100%; display: block; }
+.blog-card-body {
+  padding: 22px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 10px;
+}
+.blog-card-meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.blog-card-tag {
+  font-size: 9px; font-weight: 900; text-transform: uppercase;
+  letter-spacing: 1.8px; color: #fff;
+  padding: 3px 8px; border-radius: 5px;
+}
+.blog-card-tag.tag-cyber { background: #2a5c0a; }
+.blog-card-tag.tag-ai    { background: #4a6a20; }
+.blog-card-tag.tag-learn { background: #6a8c30; }
+.blog-card-tag.tag-train { background: #3a7010; }
+.blog-card-date { font-size: 11px; font-weight: 600; color: #888; }
+.blog-card-title { font-size: 18px; font-weight: 900; color: #1a1a1a; line-height: 1.3; }
+.blog-card-excerpt { font-size: 13px; color: #555; line-height: 1.65; flex: 1; }
+.blog-card-read {
+  font-size: 12px; font-weight: 800; color: #62b517;
+  letter-spacing: 0.04em; text-transform: uppercase;
+  padding-top: 10px; border-top: 1px solid #e8f0d8;
+}
+
+/* ===== FEATURED (first post wider) ===== */
+.blog-card.featured {
+  grid-column: 1 / -1;
+  flex-direction: row;
+}
+.blog-card.featured .blog-card-img {
+  width: 380px;
+  height: auto;
+  min-height: 240px;
+  flex-shrink: 0;
+  border-radius: 0;
+}
+.blog-card.featured .blog-card-title { font-size: 22px; }
+.blog-card.featured .blog-card-excerpt { font-size: 14px; }
+
+@media (max-width: 960px) {
+  .blog-grid { grid-template-columns: 1fr 1fr; }
+  .blog-card.featured { flex-direction: column; grid-column: auto; }
+  .blog-card.featured .blog-card-img { width: 100%; height: 180px; }
+}
+@media (max-width: 600px) {
+  .blog-grid { grid-template-columns: 1fr; }
+}
+
+/* ===== SECTION HEADERS ===== */
+.blog-section { margin-bottom: 64px; }
+.blog-section:last-child { margin-bottom: 0; }
+.blog-section-header {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 28px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #dde8c8;
+  flex-wrap: wrap;
+}
+.blog-section-label {
+  font-size: 11px; font-weight: 900; text-transform: uppercase;
+  letter-spacing: 2.5px; color: #fff;
+  background: #4a8c11;
+  padding: 5px 14px; border-radius: 6px;
+  white-space: nowrap;
+}
+.blog-section-label.label-tech {
+  background: #1a3a6a;
+}
+.blog-section-desc {
+  font-size: 14px; font-weight: 700; color: #666;
+  line-height: 1.5;
+}
+
+/* ===== FOOTER ===== */
+footer { background: #2a2a2a; color: #777; text-align: center; padding: 12px 24px; font-size: 12px; }
+</style>
+</head>
+<body>
+
+<header>
+  <a class="header-logo" href="/">
+    <img src="/images/logo.png" alt="Tech Board Games logo">
+    <div>
+      <span class="logo-text">Tech Games</span>
+      <span class="logo-sub">Close the Tech Gap</span>
+    </div>
+  </a>
+  <nav>
+    <a href="/">Home</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-trigger">Games ▾</button>
+      <div class="nav-dropdown-menu">
+        <a href="/cybersecurity">Cybersecurity</a>
+        <a href="/ai">Artificial Intelligence</a>
+        <a href="/qubit-waitlist">Quantum Computing</a>
+      </div>
+    </div>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-trigger">Audience ▾</button>
+      <div class="nav-dropdown-menu">
+        <a href="/corporate-training">Technology Leaders + L&D</a>
+        <a href="/specialized-training">Tech Consultants &amp; Trainers</a>
+        <a href="/classrooms">Classrooms & Educators</a>
+        <a href="/curious-minds">Personal & Curious</a>
+      </div>
+    </div>
+    <a href="/blog" class="active">Blog</a>
+    <a href="/about">About</a>
+    <a href="/contact">Contact</a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <h1>Learning <em>in the wild</em></h1>
+  <p>Insights on game-based learning, cybersecurity education, AI literacy, and bringing tech to life.</p>
+</section>
+
+
+<!-- POSTS -->
+<main class="blog-main">
+
+  <!-- ===== SECTION 1: Game-Based Learning & Business Value ===== -->
+  <div class="blog-section">
+    <div class="blog-section-header">
+      <span class="blog-section-label">Game-Based Learning &amp; Business Value</span>
+      <span class="blog-section-desc">How play, experience, and unconventional methods drive real organizational outcomes.</span>
+    </div>
+    <div class="blog-grid">
+
+    <!-- Post: Having Fun -->
+    <a href="/blog/why-we-learn-better-through-play" class="blog-card" data-reveal>
+      <div class="blog-card-img">
+        <svg viewBox="0 0 400 170" xmlns="http://www.w3.org/2000/svg">
+          <rect width="400" height="170" fill="#f0f5e8"/>
+          <!-- Card 1 — left, tilted -->
+          <g transform="rotate(-12, 95, 85)">
+            <rect x="55" y="18" width="66" height="94" rx="7" fill="#d1db24" opacity="0.85"/>
+            <rect x="65" y="30" width="46" height="7" rx="3" fill="#2a3a00" opacity="0.45"/>
+            <rect x="65" y="43" width="34" height="4" rx="2" fill="#2a3a00" opacity="0.3"/>
+            <rect x="65" y="52" width="40" height="4" rx="2" fill="#2a3a00" opacity="0.3"/>
+            <circle cx="78" cy="90" r="8" fill="#fff" opacity="0.5"/>
+            <circle cx="95" cy="90" r="8" fill="#fff" opacity="0.5"/>
+          </g>
+          <!-- Card 2 — center, straight -->
+          <rect x="164" y="10" width="66" height="94" rx="7" fill="#62b517" opacity="0.9"/>
+          <rect x="174" y="22" width="46" height="7" rx="3" fill="#fff" opacity="0.6"/>
+          <rect x="174" y="35" width="34" height="4" rx="2" fill="#fff" opacity="0.4"/>
+          <rect x="174" y="44" width="40" height="4" rx="2" fill="#fff" opacity="0.4"/>
+          <!-- smiley on center card -->
+          <circle cx="197" cy="82" r="12" fill="#fff" opacity="0.55"/>
+          <circle cx="193" cy="79" r="1.5" fill="#2a5a0a"/>
+          <circle cx="201" cy="79" r="1.5" fill="#2a5a0a"/>
+          <path d="M192 85 Q197 90 202 85" fill="none" stroke="#2a5a0a" stroke-width="1.5" stroke-linecap="round"/>
+          <!-- Card 3 — right, tilted -->
+          <g transform="rotate(10, 305, 85)">
+            <rect x="272" y="18" width="66" height="94" rx="7" fill="#4a8c11" opacity="0.75"/>
+            <rect x="282" y="30" width="46" height="7" rx="3" fill="#fff" opacity="0.5"/>
+            <rect x="282" y="43" width="34" height="4" rx="2" fill="#fff" opacity="0.3"/>
+            <rect x="282" y="52" width="40" height="4" rx="2" fill="#fff" opacity="0.3"/>
+            <circle cx="295" cy="90" r="8" fill="#fff" opacity="0.4"/>
+            <circle cx="313" cy="90" r="8" fill="#fff" opacity="0.4"/>
+          </g>
+          <!-- sparkles -->
+          <text x="148" y="28" font-family="sans-serif" font-size="16" opacity="0.7">✦</text>
+          <text x="250" y="20" font-family="sans-serif" font-size="12" opacity="0.6">✦</text>
+          <text x="36"  y="60" font-family="sans-serif" font-size="10" opacity="0.5">✦</text>
+          <text x="358" y="55" font-family="sans-serif" font-size="11" opacity="0.55">✦</text>
+          <!-- label -->
+          <rect x="138" y="124" width="118" height="18" rx="6" fill="#62b517" opacity="0.2"/>
+          <text x="197" y="137" text-anchor="middle" font-family="sans-serif" font-size="9" font-weight="900" fill="#2a7a0a" letter-spacing="1">HAVING FUN</text>
+        </svg>
+      </div>
+      <div class="blog-card-body">
+        <div class="blog-card-meta">
+          <span class="blog-card-tag tag-learn">Learning Science</span>
+        </div>
+        <div class="blog-card-title">Why We Learn Better by Having Fun</div>
+        <div class="blog-card-excerpt">Decades of research confirm that experiential, game-based learning outperforms passive instruction. When learners are active participants rather than passive receivers, retention rates jump dramatically. Here's the science behind why fun is the most powerful learning tool we have.</div>
+        <div class="blog-card-read">Read more →</div>
+      </div>
+    </a>
+
+    <!-- Post: People Process Tools -->
+    <a href="/blog/people-process-tools" class="blog-card" data-reveal data-delay="1">
+      <div class="blog-card-img">
+        <svg viewBox="0 0 400 170" xmlns="http://www.w3.org/2000/svg">
+          <rect width="400" height="170" fill="#f0f5e8"/>
+
+          <!-- People column -->
+          <circle cx="80" cy="54" r="16" fill="#62b517" opacity="0.85"/>
+          <ellipse cx="80" cy="88" rx="22" ry="14" fill="#62b517" opacity="0.55"/>
+          <!-- second person -->
+          <circle cx="118" cy="58" r="13" fill="#4a8c11" opacity="0.7"/>
+          <ellipse cx="118" cy="89" rx="18" ry="12" fill="#4a8c11" opacity="0.4"/>
+          <!-- label -->
+          <rect x="56" y="108" width="84" height="16" rx="5" fill="#62b517" opacity="0.18"/>
+          <text x="98" y="120" text-anchor="middle" font-family="sans-serif" font-size="9" font-weight="900" fill="#2a7a0a" letter-spacing="1">PEOPLE</text>
+
+          <!-- divider -->
+          <line x1="168" y1="24" x2="168" y2="146" stroke="#dde8c8" stroke-width="1.5"/>
+
+          <!-- Process column - gear / cog -->
+          <circle cx="230" cy="72" r="28" fill="none" stroke="#b0b820" stroke-width="3" opacity="0.5"/>
+          <circle cx="230" cy="72" r="16" fill="#fafaf0" stroke="#b0b820" stroke-width="2" opacity="0.7"/>
+          <circle cx="230" cy="72" r="6"  fill="#d1db24" opacity="0.9"/>
+          <!-- gear teeth -->
+          <rect x="224" y="36" width="12" height="10" rx="3" fill="#d1db24" opacity="0.6"/>
+          <rect x="224" y="98" width="12" height="10" rx="3" fill="#d1db24" opacity="0.6"/>
+          <rect x="194" y="66" width="10" height="12" rx="3" fill="#d1db24" opacity="0.6"/>
+          <rect x="256" y="66" width="10" height="12" rx="3" fill="#d1db24" opacity="0.6"/>
+          <rect x="202" y="43" width="10" height="10" rx="3" fill="#d1db24" opacity="0.5" transform="rotate(45,207,48)"/>
+          <rect x="248" y="43" width="10" height="10" rx="3" fill="#d1db24" opacity="0.5" transform="rotate(45,253,48)"/>
+          <rect x="202" y="91" width="10" height="10" rx="3" fill="#d1db24" opacity="0.5" transform="rotate(45,207,96)"/>
+          <rect x="248" y="91" width="10" height="10" rx="3" fill="#d1db24" opacity="0.5" transform="rotate(45,253,96)"/>
+          <!-- label -->
+          <rect x="194" y="108" width="72" height="16" rx="5" fill="#d1db24" opacity="0.2"/>
+          <text x="230" y="120" text-anchor="middle" font-family="sans-serif" font-size="9" font-weight="900" fill="#7a7a00" letter-spacing="1">PROCESS</text>
+
+          <!-- divider -->
+          <line x1="294" y1="24" x2="294" y2="146" stroke="#dde8c8" stroke-width="1.5"/>
+
+          <!-- Tools column - card + dice -->
+          <rect x="310" y="36" width="42" height="58" rx="5" fill="#fff" stroke="#8080c0" stroke-width="2" opacity="0.8"/>
+          <rect x="316" y="44" width="30" height="5" rx="2" fill="#8080c0" opacity="0.4"/>
+          <rect x="316" y="54" width="22" height="4" rx="2" fill="#8080c0" opacity="0.25"/>
+          <rect x="316" y="63" width="26" height="4" rx="2" fill="#8080c0" opacity="0.25"/>
+          <!-- dice -->
+          <rect x="318" y="100" width="26" height="26" rx="5" fill="#5a5aaa" opacity="0.75"/>
+          <circle cx="326" cy="108" r="2.5" fill="#fff" opacity="0.9"/>
+          <circle cx="334" cy="108" r="2.5" fill="#fff" opacity="0.9"/>
+          <circle cx="330" cy="116" r="2.5" fill="#fff" opacity="0.9"/>
+          <circle cx="326" cy="124" r="2.5" fill="#fff" opacity="0.9"/>
+          <circle cx="334" cy="124" r="2.5" fill="#fff" opacity="0.9"/>
+          <!-- label -->
+          <rect x="304" y="133" width="58" height="16" rx="5" fill="#5a5aaa" opacity="0.15"/>
+          <text x="333" y="145" text-anchor="middle" font-family="sans-serif" font-size="9" font-weight="900" fill="#3a3a8c" letter-spacing="1">TOOLS</text>
+        </svg>
+      </div>
+      <div class="blog-card-body">
+        <div class="blog-card-meta">
+          <span class="blog-card-tag tag-learn">Business</span>
+        </div>
+        <div class="blog-card-title">People, Process, and Tools: What Board Games Teach Us About Running a Business</div>
+        <div class="blog-card-excerpt">A deck of cards on an empty table is just furniture. But put people around it with shared rules and it becomes something worth showing up for. The same hierarchy governs every organization that has ever succeeded or failed.</div>
+        <div class="blog-card-read">Read more →</div>
+      </div>
+    </a>
+
+    <!-- Post: Culture Is Already Showing -->
+    <a href="/blog/culture-is-already-showing" class="blog-card" data-reveal data-delay="2">
+      <div class="blog-card-img">
+        <svg viewBox="0 0 400 170" xmlns="http://www.w3.org/2000/svg">
+          <rect width="400" height="170" fill="#f0f5e8"/>
+          <!-- Wall / framed values on left -->
+          <rect x="24" y="28" width="110" height="114" rx="6" fill="#fff" stroke="#dde8c8" stroke-width="1.5"/>
+          <rect x="34" y="38" width="90" height="12" rx="3" fill="#d1db24" opacity="0.7"/>
+          <rect x="34" y="56" width="66" height="6" rx="2" fill="#4a8c11" opacity="0.35"/>
+          <rect x="34" y="67" width="80" height="6" rx="2" fill="#4a8c11" opacity="0.35"/>
+          <rect x="34" y="78" width="58" height="6" rx="2" fill="#4a8c11" opacity="0.35"/>
+          <rect x="34" y="92" width="72" height="6" rx="2" fill="#4a8c11" opacity="0.35"/>
+          <rect x="34" y="103" width="52" height="6" rx="2" fill="#4a8c11" opacity="0.35"/>
+          <text x="79" y="46" text-anchor="middle" font-family="sans-serif" font-size="8" font-weight="900" fill="#2a5a0a" letter-spacing="0.5">OUR VALUES</text>
+          <!-- shadow frame -->
+          <rect x="27" y="31" width="110" height="114" rx="6" fill="none" stroke="#c8d8a0" stroke-width="1" opacity="0.5"/>
+          <!-- divider arrow -->
+          <line x1="148" y1="85" x2="168" y2="85" stroke="#aaa" stroke-width="1.5" opacity="0.6"/>
+          <polygon points="168,81 176,85 168,89" fill="#aaa" opacity="0.6"/>
+          <!-- Game table on right - people around table -->
+          <!-- table -->
+          <ellipse cx="284" cy="90" rx="76" ry="46" fill="#fff" stroke="#a8c96a" stroke-width="2" opacity="0.8"/>
+          <!-- cards on table -->
+          <rect x="264" y="78" width="22" height="30" rx="3" fill="#d1db24" opacity="0.7" transform="rotate(-8,275,93)"/>
+          <rect x="280" y="74" width="22" height="30" rx="3" fill="#62b517" opacity="0.6" transform="rotate(5,291,89)"/>
+          <!-- people: top -->
+          <circle cx="284" cy="46" r="11" fill="#4a8c11" opacity="0.75"/>
+          <ellipse cx="284" cy="67" rx="14" ry="8" fill="#4a8c11" opacity="0.4"/>
+          <!-- people: bottom -->
+          <circle cx="284" cy="134" r="11" fill="#2a5c8a" opacity="0.75"/>
+          <ellipse cx="284" cy="120" rx="14" ry="8" fill="#2a5c8a" opacity="0.35"/>
+          <!-- people: left -->
+          <circle cx="212" cy="90" r="11" fill="#8a5c2a" opacity="0.75"/>
+          <ellipse cx="225" cy="90" rx="8" ry="14" fill="#8a5c2a" opacity="0.35"/>
+          <!-- people: right -->
+          <circle cx="356" cy="90" r="11" fill="#7a2a7a" opacity="0.75"/>
+          <ellipse cx="343" cy="90" rx="8" ry="14" fill="#7a2a7a" opacity="0.35"/>
+          <!-- label -->
+          <text x="200" y="162" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#888" font-weight="900" opacity="0.7">STATED  →  ACTUAL</text>
+        </svg>
+      </div>
+      <div class="blog-card-body">
+        <div class="blog-card-meta">
+          <span class="blog-card-tag tag-train">Culture</span>
+        </div>
+        <div class="blog-card-title">Your Culture Is Already Showing: Why the Realest Team-Building Happens When Nobody's Trying</div>
+        <div class="blog-card-excerpt">Most organizations have two cultures: the one on the wall and the one that runs the building. The gap between them isn't hypocrisy — it's the result of trying to declare something into existence that can only be grown through shared experience.</div>
+        <div class="blog-card-read">Read more →</div>
+      </div>
+    </a>
+
+    </div><!-- /blog-grid -->
+  </div><!-- /blog-section: Game-Based Learning -->
+
+  <!-- ===== SECTION 2: Technical Domains ===== -->
+  <div class="blog-section">
+    <div class="blog-section-header">
+      <span class="blog-section-label label-tech">Technical Domains</span>
+      <span class="blog-section-desc">Plain-English guides to the technologies reshaping how we work, communicate, and defend.</span>
+    </div>
+    <div class="blog-grid">
+
+    <!-- Post: Principles of AI -->
+    <a href="/blog/principles-of-ai-data-science" class="blog-card" data-reveal data-delay="1">
+      <div class="blog-card-img">
+        <svg viewBox="0 0 400 170" xmlns="http://www.w3.org/2000/svg">
+          <rect width="400" height="170" fill="#f0f5e8"/>
+          <!-- Input layer -->
+          <circle cx="70"  cy="50"  r="14" fill="#fff" stroke="#4a7aaa" stroke-width="2"/>
+          <circle cx="70"  cy="85"  r="14" fill="#fff" stroke="#4a7aaa" stroke-width="2"/>
+          <circle cx="70"  cy="120" r="14" fill="#fff" stroke="#4a7aaa" stroke-width="2"/>
+          <!-- Hidden layer 1 -->
+          <circle cx="175" cy="50"  r="14" fill="#fff" stroke="#2a5a3a" stroke-width="2"/>
+          <circle cx="175" cy="85"  r="14" fill="#fff" stroke="#2a5a3a" stroke-width="2"/>
+          <circle cx="175" cy="120" r="14" fill="#fff" stroke="#2a5a3a" stroke-width="2"/>
+          <!-- Hidden layer 2 -->
+          <circle cx="280" cy="50"  r="14" fill="#fff" stroke="#2a5a3a" stroke-width="2"/>
+          <circle cx="280" cy="85"  r="14" fill="#fff" stroke="#2a5a3a" stroke-width="2"/>
+          <circle cx="280" cy="120" r="14" fill="#fff" stroke="#2a5a3a" stroke-width="2"/>
+          <!-- Output layer -->
+          <circle cx="370" cy="67"  r="16" fill="#edfde8" stroke="#62b517" stroke-width="2.5"/>
+          <circle cx="370" cy="110" r="16" fill="#edfde8" stroke="#62b517" stroke-width="2.5"/>
+          <!-- Connections -->
+          <g stroke="#c8ddb0" stroke-width="1" opacity="0.7">
+            <line x1="84" y1="50"  x2="161" y2="50"/>  <line x1="84" y1="50"  x2="161" y2="85"/>  <line x1="84" y1="50"  x2="161" y2="120"/>
+            <line x1="84" y1="85"  x2="161" y2="50"/>  <line x1="84" y1="85"  x2="161" y2="85"/>  <line x1="84" y1="85"  x2="161" y2="120"/>
+            <line x1="84" y1="120" x2="161" y2="50"/>  <line x1="84" y1="120" x2="161" y2="85"/>  <line x1="84" y1="120" x2="161" y2="120"/>
+            <line x1="189" y1="50"  x2="266" y2="50"/>  <line x1="189" y1="50"  x2="266" y2="85"/>  <line x1="189" y1="50"  x2="266" y2="120"/>
+            <line x1="189" y1="85"  x2="266" y2="50"/>  <line x1="189" y1="85"  x2="266" y2="85"/>  <line x1="189" y1="85"  x2="266" y2="120"/>
+            <line x1="189" y1="120" x2="266" y2="50"/>  <line x1="189" y1="120" x2="266" y2="85"/>  <line x1="189" y1="120" x2="266" y2="120"/>
+            <line x1="294" y1="50"  x2="354" y2="67"/>  <line x1="294" y1="85"  x2="354" y2="67"/>  <line x1="294" y1="120" x2="354" y2="67"/>
+            <line x1="294" y1="50"  x2="354" y2="110"/> <line x1="294" y1="85"  x2="354" y2="110"/> <line x1="294" y1="120" x2="354" y2="110"/>
+          </g>
+          <!-- Active path -->
+          <line x1="84" y1="50" x2="161" y2="85" stroke="#d1db24" stroke-width="2.5" opacity="0.9"/>
+          <line x1="189" y1="85" x2="266" y2="50" stroke="#d1db24" stroke-width="2.5" opacity="0.9"/>
+          <line x1="294" y1="50" x2="354" y2="67" stroke="#62b517" stroke-width="2.5" opacity="0.9"/>
+          <circle cx="70"  cy="50"  r="7" fill="#d1db24"/>
+          <circle cx="175" cy="85"  r="7" fill="#d1db24"/>
+          <circle cx="280" cy="50"  r="7" fill="#d1db24"/>
+          <circle cx="370" cy="67"  r="8" fill="#62b517"/>
+          <rect x="10" y="148" width="88" height="16" rx="5" fill="#1a5a8a" opacity="0.85"/>
+          <text x="54" y="159" text-anchor="middle" font-family="sans-serif" font-size="8" font-weight="900" fill="#fff" letter-spacing="0.5">DATA SCIENCE</text>
+        </svg>
+      </div>
+      <div class="blog-card-body">
+        <div class="blog-card-meta">
+          <span class="blog-card-tag tag-ai">AI</span>
+        </div>
+        <div class="blog-card-title">The Principles of AI: It is not Magic, it is (Data) Science</div>
+        <div class="blog-card-excerpt">Most people use AI every day and understand almost none of it. Here's what the technology actually runs on — from data science fundamentals to neural networks, overfitting, and the Design-Train-Test cycle.</div>
+        <div class="blog-card-read">Read more →</div>
+      </div>
+    </a>
+
+    <!-- Post: Quantum Computing Basics -->
+    <a href="/blog/quantum-computing-basics" class="blog-card" data-reveal data-delay="2">
+      <div class="blog-card-img">
+        <svg viewBox="0 0 400 170" xmlns="http://www.w3.org/2000/svg">
+          <rect width="400" height="170" fill="#0d1535"/>
+          <!-- Bloch sphere -->
+          <ellipse cx="120" cy="85" rx="58" ry="58" fill="none" stroke="#7030c0" stroke-width="1.5" opacity="0.6"/>
+          <ellipse cx="120" cy="85" rx="58" ry="18" fill="none" stroke="#7030c0" stroke-width="1" stroke-dasharray="4,3" opacity="0.35"/>
+          <line x1="120" y1="25" x2="120" y2="145" stroke="#9060d0" stroke-width="1" stroke-dasharray="3,3" opacity="0.4"/>
+          <!-- glow -->
+          <circle cx="120" cy="85" r="42" fill="radial-gradient" opacity="0.06"/>
+          <!-- state vector -->
+          <line x1="120" y1="85" x2="155" y2="50" stroke="#d1db24" stroke-width="2.5"/>
+          <polygon points="155,50 148,60 160,58" fill="#d1db24"/>
+          <!-- poles -->
+          <circle cx="120" cy="27" r="6" fill="#c090ff"/>
+          <circle cx="120" cy="143" r="6" fill="#c090ff" opacity="0.4"/>
+          <text x="120" y="22" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#c090ff" font-weight="700">|0⟩</text>
+          <text x="120" y="158" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#c090ff" opacity="0.5">|1⟩</text>
+          <!-- entanglement line to right qubit -->
+          <line x1="180" y1="85" x2="244" y2="85" stroke="#d1db24" stroke-width="1.5" stroke-dasharray="5,3" opacity="0.7"/>
+          <!-- right qubit sphere -->
+          <ellipse cx="290" cy="85" rx="44" ry="44" fill="none" stroke="#3a7aaa" stroke-width="1.5" opacity="0.5"/>
+          <ellipse cx="290" cy="85" rx="44" ry="14" fill="none" stroke="#3a7aaa" stroke-width="1" stroke-dasharray="4,3" opacity="0.3"/>
+          <circle cx="290" cy="43" r="5" fill="#6aaddd" opacity="0.7"/>
+          <circle cx="290" cy="127" r="5" fill="#6aaddd" opacity="0.3"/>
+          <line x1="290" y1="85" x2="318" y2="60" stroke="#6aaddd" stroke-width="2" opacity="0.8"/>
+          <polygon points="318,60 313,68 322,66" fill="#6aaddd" opacity="0.8"/>
+          <!-- labels -->
+          <text x="120" y="165" text-anchor="middle" font-family="sans-serif" font-size="8" fill="#9060d0" font-weight="900" opacity="0.8">QUBIT A</text>
+          <text x="290" y="155" text-anchor="middle" font-family="sans-serif" font-size="8" fill="#3a7aaa" font-weight="900" opacity="0.8">QUBIT B</text>
+          <text x="212" y="78" text-anchor="middle" font-family="sans-serif" font-size="8" fill="#d1db24" font-weight="700" opacity="0.9">entangled</text>
+        </svg>
+      </div>
+      <div class="blog-card-body">
+        <div class="blog-card-meta">
+          <span class="blog-card-tag" style="background:#5a20a0;">Quantum</span>
+        </div>
+        <div class="blog-card-title">Quantum Computing Basics: A Plain-English Guide to the Next Computing Revolution</div>
+        <div class="blog-card-excerpt">Classical computers think in ones and zeros. Quantum computers think in both at once — and that changes everything about what's computationally possible. Here's what superposition, entanglement, and interference actually mean, and why the world is racing to get there first.</div>
+        <div class="blog-card-read">Read more →</div>
+      </div>
+    </a>
+
+    <!-- Post: Cybersecurity Mindset -->
+    <a href="/blog/cybersecurity-mindset-critical-thinking" class="blog-card" data-reveal data-delay="1">
+      <div class="blog-card-img">
+        <svg viewBox="0 0 400 170" xmlns="http://www.w3.org/2000/svg">
+          <rect width="400" height="170" fill="#f0f5e8"/>
+          <!-- brain / checklist split -->
+          <rect x="48" y="36" width="130" height="100" rx="8" fill="#fff" stroke="#c04040" stroke-width="1.5" opacity="0.6"/>
+          <rect x="64" y="52" width="20" height="20" rx="4" fill="#c04040" opacity="0.18"/>
+          <rect x="64" y="52" width="20" height="20" rx="4" fill="none" stroke="#c04040" stroke-width="1.5" opacity="0.7"/>
+          <rect x="92" y="57" width="68" height="8" rx="4" fill="#c04040" opacity="0.3"/>
+          <rect x="64" y="82" width="20" height="20" rx="4" fill="#c04040" opacity="0.18"/>
+          <rect x="64" y="82" width="20" height="20" rx="4" fill="none" stroke="#c04040" stroke-width="1.5" opacity="0.7"/>
+          <rect x="92" y="87" width="52" height="8" rx="4" fill="#c04040" opacity="0.3"/>
+          <rect x="64" y="112" width="20" height="20" rx="4" fill="#c04040" opacity="0.18"/>
+          <rect x="64" y="112" width="20" height="20" rx="4" fill="none" stroke="#c04040" stroke-width="1.5" opacity="0.7"/>
+          <rect x="92" y="117" width="62" height="8" rx="4" fill="#c04040" opacity="0.3"/>
+          <!-- arrow -->
+          <line x1="192" y1="85" x2="214" y2="85" stroke="#888" stroke-width="2" opacity="0.5"/>
+          <polygon points="214,80 224,85 214,90" fill="#888" opacity="0.5"/>
+          <!-- brain shape -->
+          <ellipse cx="296" cy="72" rx="48" ry="36" fill="#62b517" opacity="0.18"/>
+          <ellipse cx="296" cy="72" rx="36" ry="27" fill="#62b517" opacity="0.2"/>
+          <path d="M268 72 Q280 48 296 52 Q312 48 324 72 Q332 90 314 102 Q304 110 296 108 Q288 110 278 102 Q260 90 268 72Z" fill="none" stroke="#62b517" stroke-width="2" opacity="0.65"/>
+          <line x1="296" y1="52" x2="296" y2="108" stroke="#62b517" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.5"/>
+          <circle cx="280" cy="72" r="5" fill="#d1db24" opacity="0.8"/>
+          <circle cx="312" cy="72" r="5" fill="#d1db24" opacity="0.8"/>
+          <circle cx="296" cy="90" r="4" fill="#4a8c11" opacity="0.7"/>
+          <!-- "vs" label -->
+          <text x="200" y="155" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="900" fill="#888" opacity="0.6">COMPLIANCE  vs  MINDSET</text>
+        </svg>
+      </div>
+      <div class="blog-card-body">
+        <div class="blog-card-meta">
+          <span class="blog-card-tag tag-cyber">Cybersecurity</span>
+        </div>
+        <div class="blog-card-title">A Cybersecurity Mindset: Critical Thinking Over Checklists</div>
+        <div class="blog-card-excerpt">Passing a compliance audit doesn't make you secure. Here's why checklists create a false sense of safety — and how adversarial thinking, the Kill Chain, and NIST together build the mindset that actually stops attacks.</div>
+        <div class="blog-card-read">Read more →</div>
+      </div>
+    </a>
+
+    </div><!-- /blog-grid -->
+  </div><!-- /blog-section: Technical Domains -->
+
+</main>
+
+<footer>
+  <p>© 2025 Tech Board Games. All rights reserved.</p>
+</footer>
+
+<script>
+// Scroll reveal
+(function() {
+  var els = document.querySelectorAll('[data-reveal]');
+  if (!els.length || !('IntersectionObserver' in window)) {
+    els.forEach(function(el) { el.classList.add('is-visible'); });
+    return;
+  }
+  var io = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  els.forEach(function(el) { io.observe(el); });
+})();
+
+// Nav dropdown toggle
+(function() {
+  var dropdowns = document.querySelectorAll('.nav-dropdown');
+  dropdowns.forEach(function(dd) {
+    var trigger = dd.querySelector('.nav-dropdown-trigger');
+    var menu    = dd.querySelector('.nav-dropdown-menu');
+    if (!trigger || !menu) return;
+    trigger.addEventListener('click', function(e) {
+      e.stopPropagation();
+      dropdowns.forEach(function(other) {
+        if (other !== dd) {
+          other.querySelector('.nav-dropdown-menu').classList.remove('open');
+          other.querySelector('.nav-dropdown-trigger').classList.remove('open');
+        }
+      });
+      menu.classList.toggle('open');
+      trigger.classList.toggle('open');
+    });
+  });
+  document.addEventListener('click', function() {
+    dropdowns.forEach(function(dd) {
+      dd.querySelector('.nav-dropdown-menu').classList.remove('open');
+      dd.querySelector('.nav-dropdown-trigger').classList.remove('open');
+    });
+  });
+})();
+
+</script>
+</body>
+</html>

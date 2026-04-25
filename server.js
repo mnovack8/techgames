@@ -3376,6 +3376,8 @@ const server = http.createServer((req, res) => {
   else if (pathname === '/classrooms' || pathname === '/classrooms.html') pathname = '/classrooms.html';
   else if (pathname === '/curious-minds' || pathname === '/curious-minds.html') pathname = '/curious-minds.html';
   else if (pathname === '/admin' || pathname === '/admin.html') pathname = '/admin.html';
+  else if (pathname === '/blog'  || pathname === '/blog.html')  pathname = '/blog.html';
+  else if (pathname.startsWith('/blog/') && !path.extname(pathname)) pathname = pathname + '.html';
   else if (pathname === '/') pathname = '/index.html';
   const filePath = path.join(__dirname, pathname);
   // Only serve files under __dirname (prevent path traversal)

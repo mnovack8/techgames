@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Decades of research confirm that game-based, experiential learning outperforms passive instruction. Here's the science behind why play is the most powerful learning tool we have.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Why We Learn Better Through Play">
+<meta property="og:description" content="Decades of research confirm that game-based, experiential learning outperforms passive instruction. Here's the science behind why play is the most powerful learning tool we have.">
+<meta property="og:image" content="https://cybersecgames.com/images/logo.png">
+<meta property="og:url" content="https://cybersecgames.com/blog/why-we-learn-better-through-play">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Why We Learn Better Through Play">
+<meta name="twitter:description" content="Decades of research confirm that game-based, experiential learning outperforms passive instruction. Here's the science behind why play is the most powerful learning tool we have.">
+<meta name="robots" content="index, follow">
+<meta name="author" content="Tech Board Games">
+<meta name="keywords" content="game-based learning, experiential learning, learning science, Ebbinghaus forgetting curve, play-based education, retention rates, active learning">
+<meta property="og:site_name" content="Tech Board Games">
+<meta property="og:locale" content="en_US">
+<meta name="theme-color" content="#62b517">
+<link rel="canonical" href="https://cybersecgames.com/blog/why-we-learn-better-through-play">
+<title>Why We Learn Better Through Play | Tech Board Games</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+  min-height: 100%;
+  font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif;
+  background: #e8edd8;
+  color: #2a2a2a;
+  overflow-y: auto;
+}
+
+/* ===== HEADER ===== */
+header {
+  background: #fff;
+  border-bottom: 3px solid #d1db24;
+  padding: 0 40px;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 16px rgba(98,181,23,0.12);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.header-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+.header-logo img { width: 36px; height: 36px; object-fit: contain; }
+.logo-text { font-size: 16px; font-weight: 800; color: #4a8c11; letter-spacing: 0.5px; display: block; }
+.logo-sub  { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; display: block; line-height: 1; color: #b0b800; }
+nav { display: flex; align-items: center; gap: 4px; }
+nav a { font-size: 15px; font-weight: 700; color: #4a4a4a; text-decoration: none; padding: 8px 18px; border-radius: 8px; transition: background 0.15s, color 0.15s; }
+nav a:hover { background: #f4fae8; color: #4a8c11; }
+nav a.active { color: #4a8c11; background: #f4fae8; }
+.nav-dropdown { position: relative; display: flex; align-items: center; }
+.nav-dropdown-trigger {
+  font-size: 15px; font-weight: 700; color: #4a4a4a;
+  background: none; border: none; padding: 8px 18px;
+  border-radius: 8px; cursor: pointer; font-family: inherit;
+  line-height: inherit; display: flex; align-items: center;
+  transition: background 0.15s, color 0.15s;
+}
+.nav-dropdown-trigger.open { background: #f4fae8; color: #4a8c11; }
+.nav-dropdown-menu {
+  position: absolute; top: calc(100% + 4px); left: 0;
+  background: #fff; border: 1.5px solid #dde8c8;
+  border-radius: 10px; box-shadow: 0 8px 24px rgba(98,181,23,0.15);
+  padding: 6px; min-width: 200px;
+  display: none; flex-direction: column; gap: 2px; z-index: 200;
+}
+.nav-dropdown-menu.open { display: flex; }
+.nav-dropdown-menu a { display: block; padding: 8px 14px; border-radius: 7px; font-size: 14px; font-weight: 700; color: #4a4a4a; text-decoration: none; transition: background 0.15s, color 0.15s; white-space: nowrap; }
+.nav-dropdown-menu a:hover { background: #f4fae8; color: #4a8c11; }
+@media (max-width: 600px) {
+  header { padding: 8px 16px 6px; height: auto; flex-direction: column; align-items: center; gap: 4px; }
+  .logo-text { font-size: 12px; }
+  nav { gap: 0; justify-content: center; flex-wrap: wrap; }
+  nav a { padding: 6px 5px; font-size: 12px; }
+  .nav-dropdown-trigger { padding: 6px 5px; font-size: 12px; }
+}
+
+/* ===== HERO ===== */
+.article-hero {
+  background: linear-gradient(160deg, #1a2a0a 0%, #2a4010 55%, #344d14 100%);
+  padding: 56px 24px 52px;
+  text-align: center;
+  border-bottom: 3px solid #d1db24;
+}
+.article-tag {
+  display: inline-block;
+  font-size: 10px; font-weight: 900; text-transform: uppercase;
+  letter-spacing: 2px; color: #fff;
+  background: #6a8c30;
+  padding: 4px 12px; border-radius: 6px;
+  margin-bottom: 20px;
+}
+.article-hero h1 {
+  font-size: clamp(28px, 5vw, 50px);
+  font-weight: 900; color: #fff; line-height: 1.12;
+  max-width: 760px; margin: 0 auto 18px;
+}
+.article-hero h1 em { font-style: normal; color: #d1db24; }
+.article-hero-sub {
+  font-size: 17px; color: #a8c870;
+  max-width: 580px; margin: 0 auto 28px; line-height: 1.6;
+}
+.article-meta { display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap; }
+.article-meta-author { font-size: 13px; font-weight: 800; color: #d1db24; }
+.article-meta-date   { font-size: 13px; font-weight: 600; color: #7a9a50; }
+.article-meta-read   { font-size: 13px; font-weight: 600; color: #7a9a50; }
+.article-meta-sep    { color: #4a6a20; }
+
+/* ===== BODY ===== */
+.article-wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 60px 24px 80px;
+}
+.article-intro {
+  font-size: 19px; font-weight: 700; color: #2a3a10;
+  line-height: 1.65; margin-bottom: 36px;
+  padding: 24px 28px; background: #fff;
+  border-left: 5px solid #d1db24;
+  border-radius: 0 10px 10px 0;
+  box-shadow: 0 2px 12px rgba(98,181,23,0.1);
+}
+.article-body h2 {
+  font-size: 24px; font-weight: 900; color: #1a2a0a;
+  margin: 52px 0 16px; line-height: 1.2;
+}
+.article-body h2::before {
+  content: ''; display: block; width: 36px; height: 4px;
+  background: #d1db24; border-radius: 2px; margin-bottom: 12px;
+}
+.article-body h3 {
+  font-size: 16px; font-weight: 900; color: #2a4a10;
+  margin: 30px 0 8px; text-transform: uppercase; letter-spacing: 0.07em;
+}
+.article-body p {
+  font-size: 16px; color: #333; line-height: 1.8; margin-bottom: 20px;
+}
+.article-body strong { color: #1a2a0a; font-weight: 800; }
+
+/* Back link */
+.back-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 13px; font-weight: 800; color: #4a8c11;
+  text-decoration: none; margin-bottom: 40px;
+  padding: 7px 14px; background: #fff;
+  border: 1.5px solid #a8c96a; border-radius: 8px;
+  transition: background 0.15s;
+}
+.back-link:hover { background: #f4fae8; }
+
+/* Callout */
+.callout {
+  background: #fff; border: 2px solid #a8c96a;
+  border-radius: 12px; padding: 20px 24px;
+  margin: 28px 0; display: flex; gap: 14px; align-items: flex-start;
+}
+.callout-icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+.callout-text { font-size: 15px; color: #2a4a10; line-height: 1.7; font-weight: 700; }
+.callout.dark { background: #0c1829; border-color: #253347; }
+.callout.dark .callout-text { color: #8eadc8; }
+
+/* Big stat */
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin: 32px 0;
+}
+.stat-card {
+  background: #fff;
+  border: 2px solid #dde8c8;
+  border-radius: 12px;
+  padding: 22px 18px;
+  text-align: center;
+}
+.stat-num {
+  font-size: 42px;
+  font-weight: 900;
+  color: #62b517;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.stat-num span { font-size: 24px; }
+.stat-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #555;
+  line-height: 1.45;
+}
+.stat-source {
+  font-size: 10px;
+  color: #aaa;
+  font-weight: 600;
+  margin-top: 6px;
+}
+@media (max-width: 560px) { .stat-row { grid-template-columns: 1fr; } }
+
+/* Forgetting curve visual */
+.curve-block {
+  background: #fff;
+  border: 2px solid #dde8c8;
+  border-radius: 14px;
+  padding: 28px 24px;
+  margin: 32px 0;
+}
+.curve-block-title {
+  font-size: 11px; font-weight: 900; text-transform: uppercase;
+  letter-spacing: 2px; color: #888; margin-bottom: 16px;
+}
+.curve-block svg { width: 100%; }
+
+/* Learning ladder */
+.ladder {
+  margin: 32px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 2px solid #dde8c8;
+}
+.ladder-row {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border-bottom: 1px solid #dde8c8;
+}
+.ladder-row:last-child { border-bottom: none; }
+.ladder-pct {
+  width: 64px;
+  flex-shrink: 0;
+  font-size: 16px;
+  font-weight: 900;
+  text-align: center;
+  padding: 14px 0;
+  color: #fff;
+}
+.ladder-bar-wrap {
+  flex: 1;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: #fafcf6;
+}
+.ladder-method { font-size: 13px; font-weight: 800; color: #2a2a2a; }
+.ladder-bar {
+  height: 8px;
+  border-radius: 4px;
+  background: #e0e0e0;
+  overflow: hidden;
+}
+.ladder-bar-fill { height: 100%; border-radius: 4px; }
+
+/* Kolb cycle */
+.kolb {
+  background: #0c1829;
+  border-radius: 14px;
+  padding: 28px 24px;
+  margin: 32px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+.kolb-title {
+  font-size: 10px; font-weight: 900; text-transform: uppercase;
+  letter-spacing: 2.5px; color: #4a7aaa;
+}
+.kolb-ring {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 12px;
+  width: 100%;
+  max-width: 440px;
+}
+.kolb-quadrant {
+  border-radius: 12px;
+  padding: 16px 18px;
+  position: relative;
+}
+.kolb-quadrant.q1 { background: #1a3a1a; border: 2px solid #62b517; }
+.kolb-quadrant.q2 { background: #1a2a3a; border: 2px solid #4a8aaa; }
+.kolb-quadrant.q3 { background: #2a2a1a; border: 2px solid #d1db24; }
+.kolb-quadrant.q4 { background: #2a1a1a; border: 2px solid #aa6a4a; }
+.kolb-q-num {
+  font-size: 9px; font-weight: 900; text-transform: uppercase;
+  letter-spacing: 2px; margin-bottom: 6px;
+}
+.q1 .kolb-q-num { color: #62b517; }
+.q2 .kolb-q-num { color: #4a8aaa; }
+.q3 .kolb-q-num { color: #d1db24; }
+.q4 .kolb-q-num { color: #aa8a6a; }
+.kolb-q-title { font-size: 14px; font-weight: 900; color: #fff; margin-bottom: 4px; }
+.kolb-q-desc  { font-size: 12px; color: #8a9aaa; line-height: 1.5; }
+.kolb-game-tag {
+  font-size: 11px; font-weight: 800; color: #a8c96a; margin-top: 8px;
+  padding: 3px 8px; background: rgba(98,181,23,0.12);
+  border-radius: 5px; display: inline-block;
+}
+
+/* Conditions grid */
+.conditions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin: 28px 0;
+}
+.condition-card {
+  background: #fff;
+  border: 2px solid #dde8c8;
+  border-radius: 12px;
+  padding: 20px 18px;
+}
+.condition-icon { font-size: 24px; margin-bottom: 8px; }
+.condition-title { font-size: 14px; font-weight: 900; color: #1a2a0a; margin-bottom: 6px; }
+.condition-desc  { font-size: 13px; color: #555; line-height: 1.6; }
+@media (max-width: 560px) { .conditions { grid-template-columns: 1fr; } }
+
+/* Compare table */
+.compare-table {
+  width: 100%; border-collapse: collapse;
+  margin: 28px 0; font-size: 14px;
+}
+.compare-table th {
+  background: #2a4010; color: #d1db24;
+  font-size: 10px; font-weight: 900;
+  text-transform: uppercase; letter-spacing: 2px;
+  padding: 12px 16px; text-align: left;
+}
+.compare-table th:first-child { border-radius: 8px 0 0 0; }
+.compare-table th:last-child  { border-radius: 0 8px 0 0; }
+.compare-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #e8f0d8;
+  font-weight: 600; color: #333;
+  background: #fff; line-height: 1.5;
+  vertical-align: top;
+}
+.compare-table tr:last-child td { border-bottom: none; }
+.compare-table tr:last-child td:first-child { border-radius: 0 0 0 8px; }
+.compare-table tr:last-child td:last-child  { border-radius: 0 0 8px 0; }
+.compare-table td.passive { color: #7a3030; }
+.compare-table td.active  { color: #2a6a2a; }
+
+/* CTA */
+.article-cta {
+  background: linear-gradient(135deg, #1a2a0a 0%, #2a4010 100%);
+  border-radius: 16px; padding: 36px 32px;
+  margin-top: 56px; text-align: center;
+  border: 2px solid #3a5a14;
+}
+.article-cta h3 { font-size: 22px; font-weight: 900; color: #fff; margin-bottom: 12px; }
+.article-cta p  { font-size: 15px; color: #a8c870; margin-bottom: 24px; line-height: 1.65; max-width: 480px; margin-left: auto; margin-right: auto; }
+.article-cta-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.article-cta a {
+  display: inline-block; font-size: 14px; font-weight: 900;
+  text-decoration: none; padding: 13px 24px; border-radius: 9px;
+  transition: background 0.15s, transform 0.15s;
+}
+.article-cta a.primary { background: #d1db24; color: #1a2a00; }
+.article-cta a.primary:hover { background: #c0ca10; transform: translateY(-2px); }
+.article-cta a.secondary { background: transparent; color: #a8c870; border: 2px solid #4a7a20; }
+.article-cta a.secondary:hover { background: rgba(168,200,112,0.1); transform: translateY(-2px); }
+
+footer { background: #2a2a2a; color: #777; text-align: center; padding: 12px 24px; font-size: 12px; }
+
+[data-reveal] { opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
+[data-reveal].is-visible { opacity: 1; transform: none; }
+
+/* ===== SOURCES ===== */
+.sources-block {
+  margin-top: 56px;
+  padding: 32px 36px;
+  background: #fff;
+  border-radius: 14px;
+  border-left: 5px solid #4a8c11;
+  box-shadow: 0 2px 12px rgba(98,181,23,0.08);
+}
+.sources-title {
+  font-size: 13px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #4a8c11;
+  margin-bottom: 20px;
+}
+.sources-list {
+  list-style: decimal;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.sources-list li {
+  font-size: 13px;
+  color: #555;
+  line-height: 1.55;
+}
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Why We Learn Better Through Play",
+  "description": "Decades of research confirm that experiential, game-based learning dramatically outperforms passive instruction. Here's the science behind why play is the most powerful learning tool we have.",
+  "author": { "@type": "Person", "name": "Michael Novack" },
+  "publisher": { "@type": "Organization", "name": "Tech Board Games", "logo": { "@type": "ImageObject", "url": "https://cybersecgames.com/images/logo.png" } },
+  "datePublished": "2025-06-03",
+  "dateModified": "2026-04-24",
+  "url": "https://cybersecgames.com/blog/why-we-learn-better-through-play",
+  "mainEntityOfPage": "https://cybersecgames.com/blog/why-we-learn-better-through-play",
+  "keywords": ["game-based learning", "experiential learning", "learning science", "Ebbinghaus forgetting curve", "play-based education", "retention"],
+  "articleSection": "Learning Science"
+}
+</script>
+</head>
+<body>
+
+<header>
+  <a class="header-logo" href="/">
+    <img src="/images/logo.png" alt="Tech Board Games logo">
+    <div>
+      <span class="logo-text">Tech Games</span>
+      <span class="logo-sub">Close the Tech Gap</span>
+    </div>
+  </a>
+  <nav>
+    <a href="/">Home</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-trigger">Games ▾</button>
+      <div class="nav-dropdown-menu">
+        <a href="/cybersecurity">Cybersecurity</a>
+        <a href="/ai">Artificial Intelligence</a>
+        <a href="/qubit-waitlist">Quantum Computing</a>
+      </div>
+    </div>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-trigger">Audience ▾</button>
+      <div class="nav-dropdown-menu">
+        <a href="/corporate-training">Technology Leaders + L&D</a>
+        <a href="/specialized-training">Tech Consultants &amp; Trainers</a>
+        <a href="/classrooms">Classrooms & Educators</a>
+        <a href="/curious-minds">Personal & Curious</a>
+      </div>
+    </div>
+    <a href="/blog" class="active">Blog</a>
+    <a href="/about">About</a>
+    <a href="/contact">Contact</a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="article-hero">
+  <div class="article-tag">Learning Science</div>
+  <h1>Why We Learn <em>Better</em><br>Through Play</h1>
+  <p class="article-hero-sub">Decades of research confirm that experiential, game-based learning outperforms passive instruction — especially for complex technical concepts. Here's the science.</p>
+  <div class="article-meta">
+    <span class="article-meta-read">10 min read</span>
+  </div>
+</section>
+
+<!-- BODY -->
+<div class="article-wrap">
+
+  <a href="/blog" class="back-link">← Back to Blog</a>
+
+  <p class="article-intro">
+    The average corporate training session costs hundreds of dollars per employee and is forgotten by most of them within a week. This isn't a content problem. It's a delivery problem — and the research has known the solution for decades.
+  </p>
+
+  <div class="article-body">
+
+    <p>Every year, organizations worldwide spend over $350 billion on employee training and development. A substantial portion of that investment goes toward slide decks, recorded video modules, and compliance e-learning courses that learners click through at 1.5x speed while checking email. The knowledge that does land doesn't stay. Studies consistently show that without active reinforcement, people forget roughly 70% of new information within 24 hours and up to 90% within a week.</p>
+
+    <p>This is not a new discovery. Hermann Ebbinghaus documented the mechanics of forgetting in the 1880s. His research gave us the forgetting curve — a precise, measurable account of how rapidly information decays when it isn't reinforced. The curve has been replicated and extended repeatedly over the past 140 years. We have always known this happens. We keep designing training as if it doesn't.</p>
+
+    <h2>The Forgetting Curve</h2>
+
+    <p>Ebbinghaus's findings are stark: without any reinforcement, the average learner retains roughly 58% of new information after 20 minutes, 44% after an hour, 33% after a day, and around 21% after a month. The curve drops steeply in the first hours after learning and then flattens — but not before most of the content has already gone.</p>
+
+    <div class="curve-block" data-reveal>
+      <div class="curve-block-title">The Ebbinghaus Forgetting Curve — Memory Retention Over Time (No Reinforcement)</div>
+      <svg viewBox="0 0 620 220" xmlns="http://www.w3.org/2000/svg">
+        <!-- Grid -->
+        <line x1="60" y1="20" x2="60" y2="180" stroke="#e0e8d0" stroke-width="1"/>
+        <line x1="60" y1="180" x2="590" y2="180" stroke="#e0e8d0" stroke-width="1"/>
+        <!-- Horizontal grid lines -->
+        <line x1="60" y1="44"  x2="590" y2="44"  stroke="#e8f0d8" stroke-width="1" stroke-dasharray="4,3"/>
+        <line x1="60" y1="68"  x2="590" y2="68"  stroke="#e8f0d8" stroke-width="1" stroke-dasharray="4,3"/>
+        <line x1="60" y1="92"  x2="590" y2="92"  stroke="#e8f0d8" stroke-width="1" stroke-dasharray="4,3"/>
+        <line x1="60" y1="116" x2="590" y2="116" stroke="#e8f0d8" stroke-width="1" stroke-dasharray="4,3"/>
+        <line x1="60" y1="140" x2="590" y2="140" stroke="#e8f0d8" stroke-width="1" stroke-dasharray="4,3"/>
+        <line x1="60" y1="164" x2="590" y2="164" stroke="#e8f0d8" stroke-width="1" stroke-dasharray="4,3"/>
+        <!-- Y labels -->
+        <text x="52" y="24"  text-anchor="end" font-family="sans-serif" font-size="9" fill="#aaa">100%</text>
+        <text x="52" y="72"  text-anchor="end" font-family="sans-serif" font-size="9" fill="#aaa">75%</text>
+        <text x="52" y="120" text-anchor="end" font-family="sans-serif" font-size="9" fill="#aaa">50%</text>
+        <text x="52" y="168" text-anchor="end" font-family="sans-serif" font-size="9" fill="#aaa">25%</text>
+        <!-- X labels -->
+        <text x="60"  y="196" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#aaa">Now</text>
+        <text x="148" y="196" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#aaa">20 min</text>
+        <text x="236" y="196" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#aaa">1 hr</text>
+        <text x="324" y="196" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#aaa">1 day</text>
+        <text x="412" y="196" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#aaa">1 week</text>
+        <text x="500" y="196" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#aaa">1 month</text>
+        <text x="588" y="196" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#aaa">6 months</text>
+        <!-- Forgetting curve (no reinforcement) — red -->
+        <path d="M60,20 C90,20 110,44 148,78 C186,112 210,126 236,135 C262,144 290,151 324,155 C358,159 385,162 412,163 C440,164 470,165 500,166 C530,166 560,167 588,167"
+              fill="none" stroke="#c04040" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
+        <!-- Area under forgetting curve -->
+        <path d="M60,20 C90,20 110,44 148,78 C186,112 210,126 236,135 C262,144 290,151 324,155 C358,159 385,162 412,163 C440,164 470,165 500,166 C530,166 560,167 588,167 L588,180 L60,180 Z"
+              fill="#c04040" opacity="0.07"/>
+        <!-- With reinforcement curve — green -->
+        <path d="M60,20 C80,20 100,22 148,40 C196,58 220,55 280,52 C340,49 380,48 440,47 C500,46 545,46 588,45"
+              fill="none" stroke="#62b517" stroke-width="3" stroke-linecap="round" stroke-dasharray="8,4" opacity="0.9"/>
+        <!-- Dot annotations -->
+        <circle cx="148" cy="78"  r="4" fill="#c04040"/>
+        <text x="152" y="73"  font-family="sans-serif" font-size="9" fill="#c04040" font-weight="800">58%</text>
+        <circle cx="236" cy="135" r="4" fill="#c04040"/>
+        <text x="240" y="130" font-family="sans-serif" font-size="9" fill="#c04040" font-weight="800">44%</text>
+        <circle cx="324" cy="155" r="4" fill="#c04040"/>
+        <text x="328" y="150" font-family="sans-serif" font-size="9" fill="#c04040" font-weight="800">33%</text>
+        <circle cx="500" cy="166" r="4" fill="#c04040"/>
+        <text x="504" y="161" font-family="sans-serif" font-size="9" fill="#c04040" font-weight="800">21%</text>
+        <!-- Legend -->
+        <line x1="64" y1="213" x2="92" y2="213" stroke="#c04040" stroke-width="3"/>
+        <text x="96" y="217" font-family="sans-serif" font-size="10" fill="#666">Passive instruction (no reinforcement)</text>
+        <line x1="300" y1="213" x2="328" y2="213" stroke="#62b517" stroke-width="3" stroke-dasharray="6,3"/>
+        <text x="332" y="217" font-family="sans-serif" font-size="10" fill="#666">Active, reinforced learning</text>
+      </svg>
+    </div>
+
+    <p>The antidote Ebbinghaus himself identified was <strong>active retrieval and spaced repetition</strong> — revisiting material at intervals, each time forcing the brain to reconstruct the memory from scratch rather than just re-reading it. Every time you successfully recall something under a degree of challenge, the memory trace strengthens. Every round of a game in which you apply a concept is, in neuroscientific terms, a spaced retrieval event. The brain cannot distinguish between a training scenario and a real one when the stakes feel real.</p>
+
+    <div class="stat-row" data-reveal>
+      <div class="stat-card">
+        <div class="stat-num">70<span>%</span></div>
+        <div class="stat-label">of new information forgotten within 24 hours without reinforcement</div>
+        <div class="stat-source">Ebbinghaus, 1885 / replicated by Murre &amp; Dros, 2015</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">75<span>%</span></div>
+        <div class="stat-label">higher retention from active learning vs. passive lecture</div>
+        <div class="stat-source">Freeman et al., PNAS, 2014</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">2<span>×</span></div>
+        <div class="stat-label">the exam performance gain for students in active vs. traditional classrooms</div>
+        <div class="stat-source">Prince, Journal of Engineering Education, 2004</div>
+      </div>
+    </div>
+
+    <h2>The Retention Ladder: Not All Learning Is Equal</h2>
+
+    <p>Research on how different instructional methods affect long-term knowledge retention consistently shows the same pattern: passive methods anchor to the bottom, active methods cluster at the top, and the gap between them is not marginal — it's dramatic.</p>
+
+    <p>The hierarchy below, synthesized from research by the National Training Laboratories and subsequent replication studies, reflects average retention rates two weeks after instruction across different delivery formats:</p>
+
+    <!-- Retention ladder -->
+    <div class="ladder" data-reveal>
+      <div class="ladder-row">
+        <div class="ladder-pct" style="background:#c04040;">5%</div>
+        <div class="ladder-bar-wrap">
+          <div class="ladder-method">Lecture</div>
+          <div class="ladder-bar"><div class="ladder-bar-fill" style="width:5%;background:#c04040;"></div></div>
+        </div>
+      </div>
+      <div class="ladder-row">
+        <div class="ladder-pct" style="background:#c05530;">10%</div>
+        <div class="ladder-bar-wrap">
+          <div class="ladder-method">Reading</div>
+          <div class="ladder-bar"><div class="ladder-bar-fill" style="width:10%;background:#c05530;"></div></div>
+        </div>
+      </div>
+      <div class="ladder-row">
+        <div class="ladder-pct" style="background:#c07020;">20%</div>
+        <div class="ladder-bar-wrap">
+          <div class="ladder-method">Audiovisual</div>
+          <div class="ladder-bar"><div class="ladder-bar-fill" style="width:20%;background:#c07020;"></div></div>
+        </div>
+      </div>
+      <div class="ladder-row">
+        <div class="ladder-pct" style="background:#b09010;">30%</div>
+        <div class="ladder-bar-wrap">
+          <div class="ladder-method">Demonstration</div>
+          <div class="ladder-bar"><div class="ladder-bar-fill" style="width:30%;background:#b09010;"></div></div>
+        </div>
+      </div>
+      <div class="ladder-row">
+        <div class="ladder-pct" style="background:#8aaa10;">50%</div>
+        <div class="ladder-bar-wrap">
+          <div class="ladder-method">Discussion Group</div>
+          <div class="ladder-bar"><div class="ladder-bar-fill" style="width:50%;background:#8aaa10;"></div></div>
+        </div>
+      </div>
+      <div class="ladder-row">
+        <div class="ladder-pct" style="background:#62b517;">75%</div>
+        <div class="ladder-bar-wrap">
+          <div class="ladder-method">Practice by Doing</div>
+          <div class="ladder-bar"><div class="ladder-bar-fill" style="width:75%;background:#62b517;"></div></div>
+        </div>
+      </div>
+      <div class="ladder-row">
+        <div class="ladder-pct" style="background:#4a8c11;">90%</div>
+        <div class="ladder-bar-wrap">
+          <div class="ladder-method">Teaching Others / Immediate Application</div>
+          <div class="ladder-bar"><div class="ladder-bar-fill" style="width:90%;background:#4a8c11;"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <p>A well-designed game session doesn't just hit one rung on that ladder. It runs participants through several simultaneously — they practice by doing, they discuss with other players, and they explain their reasoning aloud when they make moves. That compound effect is why experiential learning isn't marginally better than lecture. It's categorically better.</p>
+
+    <h2>The Four Conditions That Make Learning Stick</h2>
+
+    <p>Decades of cognitive science research, from Jean Piaget's constructivist theory to more recent work in educational neuroscience, has converged on a consistent set of conditions that dramatically improve how well new knowledge is encoded and retained. Games create all four naturally.</p>
+
+    <div class="conditions" data-reveal>
+      <div class="condition-card">
+        <div class="condition-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13 2L4 12h7l-2 8 9-10h-7l2-8z" fill="#d1db24"/></svg></div>
+        <div class="condition-title">Immediate Feedback</div>
+        <div class="condition-desc">The brain encodes information more durably when it receives fast feedback on whether its actions produced the expected result. Games provide this on every move — no waiting for the next quiz or the annual review.</div>
+      </div>
+      <div class="condition-card">
+        <div class="condition-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11 2L3 6v5c0 5 4 8 8 9 4-1 8-4 8-9V6L11 2z" fill="#62b517" opacity="0.2"/><path d="M11 2L3 6v5c0 5 4 8 8 9 4-1 8-4 8-9V6L11 2z" stroke="#62b517" stroke-width="1.5"/><path d="M8 11l2 2 4-4" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="condition-title">Safe Failure</div>
+        <div class="condition-desc">Psychologist Amy Edmondson's research on psychological safety shows that people learn significantly more in environments where mistakes carry no lasting penalty. Games make failure a feature, not a consequence — losing a round is data, not judgment.</div>
+      </div>
+      <div class="condition-card">
+        <div class="condition-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="11" cy="11" r="9" stroke="#d1db24" stroke-width="1.5"/><circle cx="11" cy="11" r="5.5" stroke="#d1db24" stroke-width="1.5"/><circle cx="11" cy="11" r="2" fill="#d1db24"/></svg></div>
+        <div class="condition-title">Challenge-Skill Balance</div>
+        <div class="condition-desc">Mihaly Csikszentmihalyi's flow research shows that optimal learning occurs at the edge of current ability — challenging enough to demand full attention, achievable enough not to cause panic. Game mechanics are designed to hold learners precisely in that zone.</div>
+      </div>
+      <div class="condition-card">
+        <div class="condition-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="8" cy="7" r="3" fill="#62b517"/><path d="M2 19c0-3 2.5-5 6-5s6 2 6 5" stroke="#62b517" stroke-width="1.5" stroke-linecap="round"/><circle cx="16" cy="8" r="2.5" fill="#4a8c11" opacity="0.75"/><path d="M13.5 19c0-2.5 1-4 3.5-4s3.5 1.5 3.5 4" stroke="#4a8c11" stroke-width="1.5" stroke-linecap="round" opacity="0.75"/></svg></div>
+        <div class="condition-title">Social Learning</div>
+        <div class="condition-desc">Albert Bandura's social learning theory established that humans learn powerfully by observing others' actions and outcomes. In multiplayer games, every other player's decision is a live case study — the learning happens even when it isn't your turn.</div>
+      </div>
+    </div>
+
+    <p>This is not coincidence. Good game design and good pedagogy are solving for the same human cognitive architecture. When researchers study why certain learning experiences produce durable knowledge and others don't, they keep arriving at the same variables — the ones that games naturally instantiate and passive instruction systematically lacks.</p>
+
+    <h2>Kolb's Cycle: Why Experience Is the Unit of Learning</h2>
+
+    <p>David Kolb's experiential learning theory, developed in the 1970s and validated extensively since, argues that learning is not a moment — it's a cycle. Durable knowledge requires moving through four stages: having a concrete experience, reflecting on what happened, forming abstract concepts from that reflection, and then experimenting with those concepts to generate new experiences.</p>
+
+    <p>Passive instruction — a lecture, a video, a slide deck — delivers abstract concepts directly, skipping the concrete experience that gives those abstractions meaning. The learner receives a conclusion without the experience that earned it. The knowledge has nowhere to attach. A game reverses the order: it starts with experience and lets the concepts emerge from reflection on that experience.</p>
+
+    <div class="kolb" data-reveal>
+      <div class="kolb-title">Kolb's Experiential Learning Cycle — Mapped to Game-Based Learning</div>
+      <div class="kolb-ring">
+        <div class="kolb-quadrant q1">
+          <div class="kolb-q-num">Stage 1</div>
+          <div class="kolb-q-title">Concrete Experience</div>
+          <div class="kolb-q-desc">Something happens. You make a move. The game responds.</div>
+          <div class="kolb-game-tag">Playing the round</div>
+        </div>
+        <div class="kolb-quadrant q2">
+          <div class="kolb-q-num">Stage 2</div>
+          <div class="kolb-q-title">Reflective Observation</div>
+          <div class="kolb-q-desc">You watch what happened. You see how others responded.</div>
+          <div class="kolb-game-tag">Post-round debrief</div>
+        </div>
+        <div class="kolb-quadrant q3">
+          <div class="kolb-q-num">Stage 3</div>
+          <div class="kolb-q-title">Abstract Conceptualization</div>
+          <div class="kolb-q-desc">You draw a conclusion. "That's why the Kill Chain works that way."</div>
+          <div class="kolb-game-tag">The insight moment</div>
+        </div>
+        <div class="kolb-quadrant q4">
+          <div class="kolb-q-num">Stage 4</div>
+          <div class="kolb-q-title">Active Experimentation</div>
+          <div class="kolb-q-desc">You try a different approach in the next round, testing your theory.</div>
+          <div class="kolb-game-tag">The next game</div>
+        </div>
+      </div>
+    </div>
+
+    <p>A single game session typically runs learners through this cycle multiple times — once per round, across every decision point. Where a lecture might trigger the cycle once (if the content resonates), a 90-minute game session can produce a dozen or more complete learning loops on the same concepts. The accumulated texture of experience is exactly what builds the intuition that abstract knowledge alone never can.</p>
+
+    <h2>Why Technical Concepts Especially Need Play</h2>
+
+    <p>The argument for game-based learning applies to many subjects. But it applies with particular force to complex technical concepts — cybersecurity, artificial intelligence, machine learning — precisely because these subjects resist the kind of analogical shorthand that makes other topics teachable through language alone.</p>
+
+    <p>When a subject is genuinely novel to the learner — when it has no real-world equivalent they already understand, when the vocabulary is unfamiliar and the logic non-intuitive — passive instruction creates the illusion of understanding without the substance. Learners can repeat definitions they don't own. They can answer quiz questions by pattern-matching without grasping the underlying mechanisms. They leave with confidence they haven't earned, which is arguably more dangerous than leaving confused.</p>
+
+    <div class="callout">
+      <div class="callout-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11 3a6 6 0 014 10.5V15H7v-1.5A6 6 0 0111 3z" fill="#d1db24" opacity="0.25"/><path d="M11 3a6 6 0 014 10.5V15H7v-1.5A6 6 0 0111 3z" stroke="#d1db24" stroke-width="1.5"/><line x1="9" y1="18" x2="13" y2="18" stroke="#d1db24" stroke-width="1.5" stroke-linecap="round"/><line x1="10" y1="20.5" x2="12" y2="20.5" stroke="#d1db24" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+      <div class="callout-text">Genuine understanding of a complex system requires having operated it — having made decisions, seen consequences, and adjusted. No other path to durable technical intuition exists.</div>
+    </div>
+
+    <p>Consider what it means to actually understand overfitting in machine learning. You can read a definition: "overfitting occurs when a model learns the training data too well and fails to generalize to new inputs." That sentence is accurate. It is not the same as the intuition you develop after building a FuzzNet Labs neural network, loading it with data tokens, winning the round — and then watching your model fail spectacularly on the test phase because you over-trained the same nodes. That experience encodes something no definition can reach.</p>
+
+    <p>The same holds for cybersecurity. Understanding the Kill Chain as a sequence of steps is cognitive. Understanding why an attacker waits until they've established Command and Control before moving to Actions on Objective — feeling the strategic tension of that timing decision as a game player — is intuition. And intuition is what generalization requires. It's what you use when you face a situation the training didn't explicitly cover.</p>
+
+    <h2>What Passive vs. Active Looks Like in Practice</h2>
+
+    <table class="compare-table" data-reveal>
+      <thead>
+        <tr>
+          <th>Learning Scenario</th>
+          <th>Passive (Slide Deck)</th>
+          <th>Active (Game-Based)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Concept introduced</td>
+          <td class="passive">Instructor defines "lateral movement" in a cyberattack</td>
+          <td class="active">Player decides whether to move laterally or establish persistence — and lives with the consequence</td>
+        </tr>
+        <tr>
+          <td>Error and feedback</td>
+          <td class="passive">Wrong answer on quiz → correct answer revealed → quiz closed</td>
+          <td class="active">Wrong move → game state changes visibly → player reflects, adjusts strategy for next round</td>
+        </tr>
+        <tr>
+          <td>Peer learning</td>
+          <td class="passive">Passive observation of instructor, minimal peer interaction</td>
+          <td class="active">Every player's move is a live case study observed by all others at the table</td>
+        </tr>
+        <tr>
+          <td>Retention at 1 week</td>
+          <td class="passive">~10–20% of concepts recalled without cue</td>
+          <td class="active">~60–75% recall with additional transfer to novel scenarios</td>
+        </tr>
+        <tr>
+          <td>Transfer to real situations</td>
+          <td class="passive">Low — knowledge stays attached to the specific content of the training</td>
+          <td class="active">High — intuition built through play generalizes to unfamiliar but structurally similar situations</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>The Debrief: Where the Learning Consolidates</h2>
+
+    <p>Research on experiential learning consistently identifies the post-experience debrief as the moment where the largest gains happen. Without structured reflection after a game, players retain the emotional texture of the experience — the wins and losses — but may not extract the transferable concepts those experiences encoded. With a structured debrief, the concrete experience and the abstract principle become consciously linked.</p>
+
+    <p>This is why the facilitation of a game-based learning session matters as much as the game itself. The game creates the experience. The debrief converts it into knowledge the player can carry back to their real job. A skilled facilitator asks: "What decision did you make in round three, and why? What would you do differently now that you've seen how the defender responded?" Those questions are the bridge between the game world and the work world.</p>
+
+    <div class="callout dark">
+      <div class="callout-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="4" cy="6" r="2" fill="#4a8c11"/><circle cx="18" cy="6" r="2" fill="#4a8c11"/><circle cx="11" cy="11" r="2.5" fill="#62b517"/><circle cx="4" cy="16" r="2" fill="#4a8c11"/><circle cx="18" cy="16" r="2" fill="#4a8c11"/><line x1="6" y1="7" x2="9" y2="10" stroke="#a8c96a" stroke-width="1.5"/><line x1="16" y1="7" x2="13" y2="10" stroke="#a8c96a" stroke-width="1.5"/><line x1="6" y1="15" x2="9" y2="12" stroke="#a8c96a" stroke-width="1.5"/><line x1="16" y1="15" x2="13" y2="12" stroke="#a8c96a" stroke-width="1.5"/></svg></div>
+      <div class="callout-text">The debrief after a game session is not wrap-up — it's the actual learning event. The game creates raw experience; the debrief is where that experience becomes transferable knowledge.</div>
+    </div>
+
+    <p>This is a feature of well-designed game-based training that pure simulation cannot replicate. A flight simulator provides experience. But the debrief with an experienced instructor — connecting the decisions made in the simulator to the principles that govern real flight — is what closes the loop. The game is the clay. The debrief is the kiln.</p>
+
+    <h2>The Case for Play in Professional Contexts</h2>
+
+    <p>There is sometimes resistance to the idea of "games" in professional development settings — a sense that play is somehow less serious than work. This resistance deserves to be directly addressed, because it reflects a misunderstanding about what makes a learning experience rigorous.</p>
+
+    <p>Rigorous learning is not learning that feels uncomfortable or formal. It's learning that produces durable, transferable knowledge. By that measure, play is often more rigorous than lecture — not despite its engagement, but because of it. The cognitive load of making decisions under time pressure, adapting to an opponent, explaining your reasoning to teammates, and then watching the consequences unfold is enormous. That cognitive load is what drives encoding.</p>
+
+    <p>The learners who sit through a compliance training module are not having an easy time because the content is light. They're bored because their brains aren't required to do anything. The learners running the Kill Chain against a defender in Byte Club are not having an easy time either — they're challenged, focused, and processing everything they can observe. That engagement isn't incidental to the learning. It is the learning.</p>
+
+    <div class="article-cta">
+      <h3>See It in Practice</h3>
+      <p>Byte Club and FuzzNet Labs are built on exactly this research — experiential, multiplayer, debrief-ready. Most teams are up and playing in under 10 minutes.</p>
+      <div class="article-cta-btns">
+        <a href="/cybersecurity" class="primary">Explore Byte Club</a>
+        <a href="/ai" class="secondary">Explore FuzzNet Labs</a>
+      </div>
+    </div>
+
+    <!-- SOURCES -->
+    <div class="sources-block">
+      <div class="sources-title">Research &amp; Sources</div>
+      <ol class="sources-list">
+        <li>Ebbinghaus, H. (1885). <em>Über das Gedächtnis: Untersuchungen zur experimentellen Psychologie</em> [Memory: A Contribution to Experimental Psychology]. Duncker &amp; Humblot. The foundational study establishing the forgetting curve — demonstrating that without reinforcement, up to 70% of new information is lost within 24 hours.</li>
+        <li>National Training Laboratories Institute. (1990s). <em>The Learning Pyramid</em>. NTL Institute for Applied Behavioral Science. The widely cited retention rate model showing lecture at ~5%, reading at ~10%, and practice by doing at ~75% — with teaching others reaching ~90%.</li>
+        <li>Kolb, D. A. (1984). <em>Experiential Learning: Experience as the Source of Learning and Development</em>. Prentice Hall. Establishes the four-stage Experiential Learning Cycle — Concrete Experience, Reflective Observation, Abstract Conceptualisation, Active Experimentation — as the basis for durable knowledge transfer.</li>
+        <li>Csikszentmihalyi, M. (1990). <em>Flow: The Psychology of Optimal Experience</em>. Harper &amp; Row. Defines the flow state — the condition of deep engagement achieved when challenge matches skill — and its relationship to peak performance and intrinsic motivation.</li>
+        <li>Mayer, R. E. (2001). <em>Multimedia Learning</em>. Cambridge University Press. Presents cognitive load theory in the context of instructional design, demonstrating that active processing of information in meaningful contexts dramatically improves encoding and retention.</li>
+        <li>Roediger, H. L., &amp; Karpicke, J. D. (2006). The power of testing memory: Basic research and implications for educational practice. <em>Perspectives on Psychological Science, 1</em>(3), 181–210. The "testing effect" — demonstrating that retrieval practice produces stronger long-term retention than repeated passive study.</li>
+        <li>Vygotsky, L. S. (1978). <em>Mind in Society: The Development of Higher Psychological Processes</em>. Harvard University Press. Introduces the Zone of Proximal Development and the role of social interaction in learning — the theoretical foundation for why collaborative, socially embedded learning outperforms solitary study.</li>
+        <li>Wouters, P., van Nimwegen, C., van Oostendorp, H., &amp; van der Spek, E. D. (2013). A meta-analysis of the cognitive and motivational effects of serious games. <em>Journal of Educational Psychology, 105</em>(2), 249–265. Meta-analysis across 77 studies finding that serious games produce significantly higher learning outcomes and motivational engagement than conventional instruction.</li>
+        <li>Prince, M. (2004). Does active learning work? A review of the research. <em>Journal of Engineering Education, 93</em>(3), 223–231. Systematic review confirming that active learning approaches consistently produce higher retention, transfer, and student engagement compared to passive lecture formats.</li>
+        <li>Dede, C. (2009). Immersive interfaces for engagement and learning. <em>Science, 323</em>(5910), 66–69. Examines how immersive, simulation-based environments produce deeper engagement and higher knowledge transfer — particularly for complex, systemic concepts that are difficult to convey through abstract instruction.</li>
+      </ol>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <p>© 2025 Tech Board Games. All rights reserved.</p>
+</footer>
+
+<script>
+(function() {
+  var els = document.querySelectorAll('[data-reveal]');
+  if (!els.length || !('IntersectionObserver' in window)) {
+    els.forEach(function(el) { el.classList.add('is-visible'); });
+    return;
+  }
+  var io = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  els.forEach(function(el) { io.observe(el); });
+})();
+
+(function() {
+  var dropdowns = document.querySelectorAll('.nav-dropdown');
+  dropdowns.forEach(function(dd) {
+    var trigger = dd.querySelector('.nav-dropdown-trigger');
+    var menu    = dd.querySelector('.nav-dropdown-menu');
+    if (!trigger || !menu) return;
+    trigger.addEventListener('click', function(e) {
+      e.stopPropagation();
+      dropdowns.forEach(function(other) {
+        if (other !== dd) {
+          other.querySelector('.nav-dropdown-menu').classList.remove('open');
+          other.querySelector('.nav-dropdown-trigger').classList.remove('open');
+        }
+      });
+      menu.classList.toggle('open');
+      trigger.classList.toggle('open');
+    });
+  });
+  document.addEventListener('click', function() {
+    dropdowns.forEach(function(dd) {
+      dd.querySelector('.nav-dropdown-menu').classList.remove('open');
+      dd.querySelector('.nav-dropdown-trigger').classList.remove('open');
+    });
+  });
+})();
+</script>
+</body>
+</html>
