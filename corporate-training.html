@@ -5,12 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Build tech literacy across your whole organisation. One session, any team lead can run it. Built for Technology Leaders who need informed teams and L&D professionals who need to deliver fluency at scale.">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Tech Fluency for Technology Leaders &amp; L&D Teams — Tech Board Games">
+<meta property="og:title" content="Build a Tech-Fluent Culture — Tech Board Games">
 <meta property="og:description" content="Technology decisions only land well when the whole organisation understands them. One session, any team lead can run it, scales to every department.">
 <meta property="og:image" content="https://cybersecgames.com/images/cover.png">
 <meta property="og:url" content="https://cybersecgames.com/corporate-training">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Tech Fluency for Technology Leaders &amp; L&D Teams — Tech Board Games">
+<meta name="twitter:title" content="Build a Tech-Fluent Culture — Tech Board Games">
 <meta name="twitter:description" content="Build tech literacy across your whole organisation. One session, any team lead can run it, scales to every department.">
 <meta name="twitter:image" content="https://cybersecgames.com/images/cover.png">
 <meta name="robots" content="index, follow">
@@ -20,7 +20,7 @@
 <meta property="og:locale" content="en_US">
 <meta name="theme-color" content="#62b517">
 <link rel="canonical" href="https://cybersecgames.com/corporate-training">
-<title>Tech Fluency for Technology Leaders &amp; L&D Teams — Tech Board Games</title>
+<title>Build a Tech-Fluent Culture — Tech Board Games</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
 
@@ -155,6 +155,7 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
 }
 
 .story-section.bg-cool { background: #f0f4f8; }
+.story-section.bg-tint { background: #dff0c8; }
 .story-section.bg-cool .approach-pillar {
   background: #fff;
   border-color: #c8d8e8;
@@ -542,10 +543,64 @@ footer a:hover { text-decoration: underline; }
   .line-inner { transform: none !important; transition: none !important; }
 }
 
+/* ===== TWO PERSPECTIVES ===== */
+.two-perspectives {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin: 32px 0 8px;
+}
+.perspective-card {
+  background: #f4fae8;
+  border: 2px solid #c8e0a0;
+  border-radius: 16px;
+  padding: 28px 26px;
+}
+.perspective-label {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #62b517;
+  border-left: 3px solid #d1db24;
+  padding-left: 8px;
+  margin-bottom: 16px;
+}
+@media (max-width: 700px) {
+  .two-perspectives { grid-template-columns: 1fr; }
+}
+
+/* ===== AUDIENCE GRID ===== */
+.audience-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-top: 32px;
+}
+.audience-card {
+  background: #fff;
+  border: 1.5px solid rgba(98,181,23,0.3);
+  border-radius: 12px;
+  padding: 20px 22px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+.audience-icon {
+  width: 32px; height: 32px; flex-shrink: 0;
+  background: rgba(98,181,23,0.1);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+}
+.audience-icon svg { width: 18px; height: 18px; }
+.audience-card strong { display: block; font-size: 13px; font-weight: 800; color: #1a3a00; margin-bottom: 4px; }
+.audience-card p { font-size: 12px; color: #4a5a3a; line-height: 1.5; margin: 0; }
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 900px) {
   .approach-pillars { grid-template-columns: 1fr; }
   .who-grid { grid-template-columns: 1fr; }
+  .audience-grid { grid-template-columns: 1fr; }
 }
 @media (max-width: 600px) {
   .story-section { padding: 48px 20px; }
@@ -579,12 +634,10 @@ footer a:hover { text-decoration: underline; }
       </div>
     </div>
     <div class="nav-dropdown">
-      <button class="nav-dropdown-trigger open-indicator">Audience ▾</button>
+      <button class="nav-dropdown-trigger open-indicator">Use Cases ▾</button>
       <div class="nav-dropdown-menu">
-        <a href="/corporate-training" class="active">Technology Leaders + L&D</a>
-        <a href="/specialized-training">Tech Consultants &amp; Trainers</a>
-        <a href="/classrooms">Classrooms & Educators</a>
-        <a href="/curious-minds">Personal & Curious</a>
+        <a href="/corporate-training" class="active">Build a Tech-Fluent Culture</a>
+        <a href="/specialized-training">Earn the Room Before You Start</a>
       </div>
     </div>
     <a href="/blog">Blog</a>
@@ -598,7 +651,7 @@ footer a:hover { text-decoration: underline; }
   <div class="story-container">
     <div class="hero-layout">
       <div>
-        <div class="story-eyebrow" data-reveal>Audience · Technology Leaders + Learning &amp; Development</div>
+        <div class="story-eyebrow" data-reveal>Build a Tech-Fluent Culture</div>
         <h1 class="story-headline" data-reveal="lines">
           <span class="line-wrap"><span class="line-inner">The decisions are already happening.</span></span>
           <span class="line-wrap"><span class="line-inner">Does everyone understand them?</span></span>
@@ -681,6 +734,79 @@ footer a:hover { text-decoration: underline; }
   </div>
 </section>
 
+<!-- WHO THIS IS FOR -->
+<section class="story-section bg-cool">
+  <div class="story-container">
+    <div class="story-eyebrow" data-reveal>Who This Is For</div>
+    <h2 class="story-headline" data-reveal data-delay="1">One session. Every seat at the table.</h2>
+    <div class="audience-grid" data-reveal data-delay="2">
+      <div class="audience-card">
+        <div class="audience-icon">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="8" r="4" stroke="#4a8c11" stroke-width="1.5"/>
+            <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="#4a8c11" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="17" y1="3" x2="19" y2="1" stroke="#4a8c11" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="19" y1="5" x2="21" y2="5" stroke="#4a8c11" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="17" y1="7" x2="19" y2="9" stroke="#4a8c11" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <strong>Tech Thought Leader</strong>
+          <p>You're driving decisions about AI, security, and infrastructure — but only some of the org has the context to engage with them. When they do, your decisions get sharper, faster, and land better.</p>
+        </div>
+      </div>
+      <div class="audience-card">
+        <div class="audience-icon">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="8" r="4" stroke="#4a8c11" stroke-width="1.5"/>
+            <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="#4a8c11" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="16" y1="14" x2="22" y2="14" stroke="#4a8c11" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="16" y1="17" x2="22" y2="17" stroke="#4a8c11" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <strong>Non-Tech Leader</strong>
+          <p>You're involved in technology decisions whether you asked to be or not. This gives you the foundation to contribute — ask the right questions, push back when it matters, and stop deferring on things that affect your team.</p>
+        </div>
+      </div>
+      <div class="audience-card">
+        <div class="audience-icon">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="3" y="4" width="18" height="13" rx="2" stroke="#4a8c11" stroke-width="1.5"/>
+            <line x1="8" y1="21" x2="16" y2="21" stroke="#4a8c11" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="12" y1="17" x2="12" y2="21" stroke="#4a8c11" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="7" y1="10" x2="17" y2="10" stroke="#4a8c11" stroke-width="1.2" stroke-linecap="round"/>
+            <line x1="7" y1="13" x2="13" y2="13" stroke="#4a8c11" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <strong>Learning &amp; Development</strong>
+          <p>You need training that builds real fluency, not just awareness. No external facilitator required. Runs in a single session, scales to every department, and can be repeated quarterly without adding overhead.</p>
+        </div>
+      </div>
+      <div class="audience-card">
+        <div class="audience-icon">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="3" stroke="#4a8c11" stroke-width="1.5"/>
+            <line x1="12" y1="5" x2="12" y2="3" stroke="#4a8c11" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="12" y1="21" x2="12" y2="19" stroke="#4a8c11" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="5" y1="12" x2="3" y2="12" stroke="#4a8c11" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="21" y1="12" x2="19" y2="12" stroke="#4a8c11" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="7.05" y1="7.05" x2="5.64" y2="5.64" stroke="#4a8c11" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="18.36" y1="18.36" x2="16.95" y2="16.95" stroke="#4a8c11" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="16.95" y1="7.05" x2="18.36" y2="5.64" stroke="#4a8c11" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="5.64" y1="18.36" x2="7.05" y2="16.95" stroke="#4a8c11" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <strong>Tech Curious</strong>
+          <p>You want to understand the technology shaping how your organisation works — not to become technical, but to feel genuinely informed in the conversations that affect you. One session is enough to change that.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- THE PROBLEM -->
 <section class="story-section">
   <div class="story-container">
@@ -692,6 +818,26 @@ footer a:hover { text-decoration: underline; }
     <p class="story-body" data-reveal data-delay="2">Every week, decisions get made about technology — AI tools, security policy, digital infrastructure — by people who don't fully understand their consequences. Not because they're not capable, but because no one has ever given them the foundation to engage. Technology leaders end up making unilateral calls because no one else in the room has the context to contribute. The conversation stays narrow. The risks stay invisible. The organisation keeps deferring on the things that matter most.<br><br>The off-the-shelf e-learning doesn't fix this — it's completed on a Friday and forgotten by Monday. What builds real understanding is experience: making decisions, seeing consequences, and doing it again. A game gives your whole organisation that experience in a single session — and L&amp;D teams can run it across every department, repeatedly, without external facilitators or months of scheduling overhead.</p>
     <div class="pull-quote" data-reveal="right" data-delay="3">
       <p>"We stopped having conversations where half the room went quiet. Now everyone has enough context to push back — and that changes the quality of every decision we make."</p>
+    </div>
+  </div>
+</section>
+
+<!-- SOUND FAMILIAR? -->
+<section class="story-section bg-tint">
+  <div class="story-container">
+    <div class="story-eyebrow" data-reveal>Sound Familiar?</div>
+
+    <div class="two-perspectives">
+      <div class="perspective-card" data-reveal data-delay="1">
+        <div class="perspective-label">If you're the technology leader</div>
+        <h2 class="story-headline" style="font-size: clamp(20px,3vw,28px); margin-bottom:16px;">You've explained it in every meeting. It still doesn't land.</h2>
+        <p class="story-body" style="margin-bottom:0;">You go in ready to collaborate. You start with the simple version, build up carefully — and somewhere between the context-setting and the recommendation, the room shifts from engaged to deferring. They don't push back. They just agree. You end up making the call alone because no one else has the frame to challenge you.<br><br>The decisions would be better if they could. Byte Club and FuzzNet Labs give everyone in the room a shared reference point before strategy even begins — so the next time you need real input, you actually get it.</p>
+      </div>
+      <div class="perspective-card" data-reveal data-delay="2">
+        <div class="perspective-label">If you're everyone else in that meeting</div>
+        <h2 class="story-headline" style="font-size: clamp(20px,3vw,28px); margin-bottom:16px;">The decisions keep happening. You don't know what to ask.</h2>
+        <p class="story-body" style="margin-bottom:0;">Someone walks through the AI strategy, the security posture, the infrastructure plan — and you follow along, mostly. But you can tell there are things you're not quite tracking, and asking feels like it would slow the whole thing down. So you nod.<br><br>The problem isn't capability. It's context. One session gives you the foundation to engage — so next time the conversation comes around, you're not nodding along. You're in it.</p>
+      </div>
     </div>
   </div>
 </section>

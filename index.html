@@ -804,6 +804,32 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
   padding-left: 8px;
   margin-bottom: 18px;
 }
+.scenario-use-case {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #62b517;
+  border-left: 4px solid #d1db24;
+  padding-left: 8px;
+  margin-bottom: 10px;
+}
+.scenario-audience-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+.audience-tag {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  background: rgba(98,181,23,0.10);
+  color: #3a6e0e;
+  border: 1px solid rgba(98,181,23,0.28);
+  border-radius: 20px;
+  padding: 3px 10px;
+}
 .scenario-icon { margin-bottom: 14px; }
 .scenario-icon svg { width: 40px; height: 40px; display: block; }
 .scenario-card strong {
@@ -835,7 +861,8 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
 /* ===== WHO IT'S FOR ===== */
 .who-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
+  max-width: 480px;
   gap: 20px;
   margin-top: 20px;
 }
@@ -1382,12 +1409,10 @@ footer {
       </div>
     </div>
     <div class="nav-dropdown">
-      <button class="nav-dropdown-trigger">Audience ▾</button>
+      <button class="nav-dropdown-trigger">Use Cases ▾</button>
       <div class="nav-dropdown-menu">
-        <a href="/corporate-training">Technology Leaders + L&D</a>
-        <a href="/specialized-training">Tech Consultants &amp; Trainers</a>
-        <a href="/classrooms">Classrooms & Educators</a>
-        <a href="/curious-minds">Personal & Curious</a>
+        <a href="/corporate-training">Build a Tech-Fluent Culture</a>
+        <a href="/specialized-training">Earn the Room Before You Start</a>
       </div>
     </div>
     <a href="/blog">Blog</a>
@@ -1534,48 +1559,26 @@ footer {
     <p class="story-body" data-reveal data-delay="2" style="max-width:700px;margin-bottom:0">Whether you're building tech fluency across a large organisation or running sharp, targeted client engagements — there's a path built for exactly what you do.</p>
 
     <div class="scenario-grid">
-      <!-- Scenario 1 -->
+      <!-- Scenario 1 — Combined use case -->
       <a class="scenario-card" href="/corporate-training" data-reveal="scale" data-delay="1">
-        <div class="scenario-tag">For Technology Leaders + L&amp;D</div>
-        <div class="scenario-icon">
-          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <!-- Building -->
-            <rect x="6" y="14" width="36" height="30" rx="2" fill="#2a5a06"/>
-            <rect x="4" y="10" width="40" height="7" rx="2" fill="#62b517"/>
-            <rect x="11" y="21" width="7" height="6" rx="1" fill="#d1db24"/>
-            <rect x="21" y="21" width="7" height="6" rx="1" fill="#d1db24"/>
-            <rect x="31" y="21" width="7" height="6" rx="1" fill="#d1db24"/>
-            <rect x="11" y="31" width="7" height="6" rx="1" fill="#a8c96a"/>
-            <rect x="31" y="31" width="7" height="6" rx="1" fill="#a8c96a"/>
-            <rect x="19" y="31" width="10" height="13" rx="1" fill="#1a3a00"/>
-            <!-- Checkmark badge -->
-            <circle cx="38" cy="12" r="8" fill="#d1db24"/>
-            <path d="M34 12 L37 15 L42 9" stroke="#1a3a00" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
+        <div class="scenario-use-case">Build a Tech-Fluent Culture</div>
+        <div class="scenario-audience-tags">
+          <span class="audience-tag">Tech Thought Leader</span>
+          <span class="audience-tag">Non-Tech Leader</span>
+          <span class="audience-tag">Learning &amp; Development</span>
+          <span class="audience-tag">Tech Curious</span>
         </div>
-        <strong>Tech Literacy Across Your Whole Organisation</strong>
-        <p>Technology decisions get made every week — about AI, security, and digital infrastructure. Those decisions only land well when the whole organisation has the context to engage with them. Any team lead can run a session. Real fluency builds across every department, efficiently and repeatably — so the people shaping strategy and the people delivering it are speaking the same language.</p>
-        <span class="scenario-cta">For Technology Leaders + L&amp;D professionals →</span>
+        <strong>One Language for the Whole Team</strong>
+        <p>Real collaboration breaks down when the people setting strategy and the teams delivering it aren't speaking the same language. Whether you're a tech leader driving org-wide fluency, an L&amp;D team building it into your programmes, or someone who simply wants to understand the technology shaping their work — this closes the gap. Any team lead can run a session. Everyone gains the context to engage, contribute, and move faster together.</p>
+        <span class="scenario-cta">For Tech Leaders, L&amp;D, and every team they serve →</span>
       </a>
       <!-- Scenario 2 -->
       <a class="scenario-card" href="/specialized-training" data-reveal="scale" data-delay="2">
-        <div class="scenario-tag">For Tech Consultants &amp; Boutique Trainers</div>
-        <div class="scenario-icon">
-          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <!-- Laptop / consulting surface -->
-            <rect x="6" y="28" width="36" height="2" rx="1" fill="#62b517"/>
-            <rect x="10" y="14" width="28" height="18" rx="3" fill="#2a5a06"/>
-            <rect x="12" y="16" width="24" height="14" rx="2" fill="#0d2200"/>
-            <!-- AI node pattern on screen -->
-            <circle cx="24" cy="23" r="2.5" fill="#d1db24"/>
-            <circle cx="17" cy="20" r="1.8" fill="#62b517"/>
-            <circle cx="31" cy="20" r="1.8" fill="#62b517"/>
-            <line x1="17" y1="20" x2="24" y2="23" stroke="#a8c96a" stroke-width="1"/>
-            <line x1="31" y1="20" x2="24" y2="23" stroke="#a8c96a" stroke-width="1"/>
-            <!-- Consultant figure -->
-            <circle cx="24" cy="8" r="4.5" fill="#62b517"/>
-            <path d="M15,26 C15,18 33,18 33,26" fill="#62b517"/>
-          </svg>
+        <div class="scenario-use-case">Earn the Room Before You Start</div>
+        <div class="scenario-audience-tags">
+          <span class="audience-tag">Tech Consultant</span>
+          <span class="audience-tag">Trainer</span>
+          <span class="audience-tag">Educator</span>
         </div>
         <strong>A standalone session your clients will remember.</strong>
         <p>You run boutique workshops and consulting engagements — on AI fluency, cybersecurity, or digital transformation. You don't need a programme. You need one high-impact session that earns the room before the real work begins. Drop the game in, surface the gaps your clients don't know they have, then deliver the expertise only you can bring.</p>
@@ -1583,48 +1586,6 @@ footer {
       </a>
     </div>
 
-    <!-- Secondary audience cards -->
-    <div class="who-grid">
-      <a class="who-item who-item--secondary" href="/classrooms" data-reveal="scale" data-delay="3">
-        <div class="who-item-header">
-          <div class="who-icon">
-            <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-              <polygon points="24,7 46,19 24,31 2,19" fill="#62b517"/>
-              <path d="M34 24.5v9l-10 5-10-5v-9l10 5z" fill="#2a5a06"/>
-              <line x1="46" y1="19" x2="46" y2="31" stroke="#d1db24" stroke-width="2.5" stroke-linecap="round"/>
-              <circle cx="46" cy="33" r="3" fill="#d1db24"/>
-              <rect x="20" y="35" width="8" height="2.5" rx="1.25" fill="#a8c96a"/>
-            </svg>
-          </div>
-          <strong>Classrooms</strong>
-        </div>
-        <p>Make abstract concepts concrete for students who've never worked with the technology before.</p>
-      </a>
-      <a class="who-item who-item--secondary" href="/curious-minds" data-reveal="scale" data-delay="4">
-        <div class="who-item-header">
-          <div class="who-icon">
-            <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="12" cy="10" r="5.5" fill="#3a7a0a"/>
-              <ellipse cx="12" cy="8.5" rx="2.5" ry="3.5" fill="#d1db24" opacity="0.65"/>
-              <circle cx="36" cy="10" r="5.5" fill="#2a6008"/>
-              <ellipse cx="36" cy="8.5" rx="2.5" ry="3.5" fill="#a8c96a" opacity="0.7"/>
-              <rect x="3" y="17" width="42" height="9" rx="5" fill="#1e4a04"/>
-              <rect x="5" y="24" width="38" height="11" rx="4" fill="#2a5a06"/>
-              <rect x="2" y="20" width="7" height="13" rx="4" fill="#1e4a04"/>
-              <rect x="39" y="20" width="7" height="13" rx="4" fill="#1e4a04"/>
-              <line x1="24" y1="24" x2="24" y2="35" stroke="rgba(0,0,0,0.2)" stroke-width="1"/>
-              <rect x="13" y="36" width="22" height="3.5" rx="2" fill="#2a5a06"/>
-              <rect x="15" y="39.5" width="2.5" height="5" rx="1" fill="#1a3a00"/>
-              <rect x="30.5" y="39.5" width="2.5" height="5" rx="1" fill="#1a3a00"/>
-              <g transform="rotate(-7 21 37)"><rect x="14" y="33" width="9" height="5.5" rx="1.5" fill="#d1db24"/></g>
-              <g transform="rotate(6 28 37)"><rect x="25" y="33" width="9" height="5.5" rx="1.5" fill="#62b517"/></g>
-            </svg>
-          </div>
-          <strong>Bring Them Along</strong>
-        </div>
-        <p>For anyone who wants to understand the technology running their world — on their own terms.</p>
-      </a>
-    </div>
   </div>
 </section>
 
