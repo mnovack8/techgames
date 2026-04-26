@@ -5,22 +5,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Build tech literacy across your whole organisation. One session, any team lead can run it. Built for Technology Leaders who need informed teams and L&D professionals who need to deliver fluency at scale.">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Build a Tech-Fluent Culture — Tech Board Games">
+<meta property="og:title" content="Build a Tech-Fluent Culture — Tech CoLab">
 <meta property="og:description" content="Technology decisions only land well when the whole organisation understands them. One session, any team lead can run it, scales to every department.">
 <meta property="og:image" content="https://cybersecgames.com/images/cover.png">
 <meta property="og:url" content="https://cybersecgames.com/corporate-training">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Build a Tech-Fluent Culture — Tech Board Games">
+<meta name="twitter:title" content="Build a Tech-Fluent Culture — Tech CoLab">
 <meta name="twitter:description" content="Build tech literacy across your whole organisation. One session, any team lead can run it, scales to every department.">
 <meta name="twitter:image" content="https://cybersecgames.com/images/cover.png">
 <meta name="robots" content="index, follow">
-<meta name="author" content="Tech Board Games">
+<meta name="author" content="Tech CoLab">
 <meta name="keywords" content="tech literacy for business leaders, corporate technology training, L&D technology games, game-based corporate training, cybersecurity awareness training, AI literacy training, technology decision-making training">
-<meta property="og:site_name" content="Tech Board Games">
+<meta property="og:site_name" content="Tech CoLab">
 <meta property="og:locale" content="en_US">
 <meta name="theme-color" content="#62b517">
 <link rel="canonical" href="https://cybersecgames.com/corporate-training">
-<title>Build a Tech-Fluent Culture — Tech Board Games</title>
+<title>Build a Tech-Fluent Culture — Tech CoLab</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
 
@@ -54,7 +54,7 @@ header {
   gap: 12px;
   text-decoration: none;
 }
-.header-logo .logo-mark img { width: 36px; height: 36px; object-fit: contain; }
+.header-logo img { height: 48px; width: auto; object-fit: contain; }
 .header-logo .logo-text {
   font-size: 16px;
   font-weight: 800;
@@ -116,7 +116,7 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
 @media (max-width: 600px) {
   header { padding: 8px 16px 6px; height: auto; flex-direction: column; align-items: center; gap: 4px; }
   .header-logo { gap: 8px; }
-  .header-logo .logo-mark img { width: 28px; height: 28px; }
+  .header-logo img { height: 28px; width: auto; }
   .header-logo .logo-text { font-size: 12px; }
   .header-logo .logo-sub { font-size: 8px; letter-spacing: 1px; }
   nav { gap: 0; justify-content: center; flex-wrap: wrap; }
@@ -127,9 +127,6 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
 @keyframes logo-roll {
   from { transform: translateX(-140px) rotate(-400deg); opacity: 0; }
   to   { transform: translateX(0)      rotate(0deg);    opacity: 1; }
-}
-.header-logo .logo-mark img {
-  animation: logo-roll 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 /* ===== STORY SECTIONS ===== */
@@ -470,6 +467,14 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
   gap: 48px;
   align-items: center;
 }
+.hero-headline-full {
+  font-size: clamp(36px, 5.8vw, 70px);
+  font-weight: 900;
+  color: #f0f7e6;
+  line-height: 1.1;
+  margin-bottom: 36px;
+}
+.hero-headline-full em { font-style: normal; color: #62b517; }
 .hero-visual-wrap {
   display: flex;
   justify-content: center;
@@ -529,7 +534,7 @@ footer a:hover { text-decoration: underline; }
 .line-wrap { overflow: hidden; display: block; }
 .line-inner {
   display: block;
-  transform: translateY(110%);
+  transform: translateY(0);
   transition: transform 0.78s cubic-bezier(0.65,0,0.35,1);
 }
 .line-wrap:nth-child(2) .line-inner { transition-delay: 0.14s; }
@@ -615,12 +620,10 @@ footer a:hover { text-decoration: underline; }
 
 <header>
   <a class="header-logo" href="/">
-    <div class="logo-mark">
-      <img src="/images/logo.png" alt="Tech Board Games logo">
-    </div>
+    <img src="/images/logo.png" alt="Tech CoLab logo">
     <div>
-      <span class="logo-text">Tech Games</span>
-      <span class="logo-sub">Close the Tech Gap</span>
+      <span class="logo-text">Tech CoLab</span>
+      <span class="logo-sub">Tech Fluency. Better Decisions.</span>
     </div>
   </a>
   <nav>
@@ -649,14 +652,14 @@ footer a:hover { text-decoration: underline; }
 <!-- HERO -->
 <section class="story-section bg-problem">
   <div class="story-container">
+    <div class="story-eyebrow" data-reveal>Build a Tech-Fluent Culture</div>
+    <h1 class="hero-headline-full" data-reveal="lines">
+      <span class="line-wrap"><span class="line-inner">The decisions are already happening.</span></span>
+      <span class="line-wrap"><span class="line-inner">Does everyone understand them?</span></span>
+    </h1>
     <div class="hero-layout">
       <div>
-        <div class="story-eyebrow" data-reveal>Build a Tech-Fluent Culture</div>
-        <h1 class="story-headline" data-reveal="lines">
-          <span class="line-wrap"><span class="line-inner">The decisions are already happening.</span></span>
-          <span class="line-wrap"><span class="line-inner">Does everyone understand them?</span></span>
-        </h1>
-        <p class="story-body" data-reveal data-delay="2">Technology leaders push for AI adoption, strengthen security posture, and drive digital change — but every decision lands differently when the rest of the organisation doesn't have the context to engage with it. Finance directors can't challenge the assumptions. Ops leads can't flag the operational risk. HR managers don't know what question to ask. Byte Club builds security fluency. FuzzNet Labs builds AI fluency. Each in a single session, ready to run by any team lead, so the whole organisation can keep up with the decisions that affect them.</p>
+        <p class="story-body" data-reveal data-delay="2">Technology leaders push for AI adoption, strengthen security posture, and drive digital change. But every decision lands differently when the rest of the organisation doesn't have the context to engage with it. Finance directors can't challenge the assumptions. Ops leads can't flag the operational risk. HR managers don't know what question to ask. Byte Club builds security fluency. FuzzNet Labs builds AI fluency. Each in a single session, ready to run by any team lead, so the whole organisation can keep up with the decisions that affect them.</p>
       </div>
       <div class="hero-visual-wrap" data-reveal data-delay="3">
       <div class="hero-visual-block">
@@ -697,26 +700,26 @@ footer a:hover { text-decoration: underline; }
           <rect x="153" y="118" width="22" height="16" rx="2.5" fill="#060d03" stroke="#62b517" stroke-width="0.8"/>
           <rect x="154.5" y="119.5" width="19" height="10" rx="1.5" fill="#62b517" opacity="0.32"/>
           <rect x="150" y="134" width="28" height="3" rx="1.5" fill="#1a3a00"/>
-          <!-- Person — Top centre -->
+          <!-- Person. Top centre -->
           <circle cx="160" cy="52" r="15" fill="#2a5a06"/>
           <ellipse cx="160" cy="47" rx="7" ry="9" fill="#d1db24" opacity="0.7"/>
           <rect x="148" y="67" width="24" height="10" rx="5" fill="#2a5a06"/>
-          <!-- Person — Bottom centre -->
+          <!-- Person. Bottom centre -->
           <circle cx="160" cy="198" r="14" fill="#2a5a06"/>
           <ellipse cx="160" cy="193" rx="6.5" ry="8.5" fill="#a8c96a" opacity="0.65"/>
           <rect x="148" y="184" width="24" height="10" rx="5" fill="#2a5a06"/>
-          <!-- Person — Left -->
+          <!-- Person. Left -->
           <circle cx="52" cy="126" r="13" fill="#2a5a06"/>
           <ellipse cx="52" cy="121.5" rx="6" ry="7.5" fill="#d1db24" opacity="0.62"/>
           <rect x="65" y="118" width="10" height="18" rx="5" fill="#2a5a06"/>
-          <!-- Person — Right -->
+          <!-- Person. Right -->
           <circle cx="268" cy="126" r="13" fill="#2a5a06"/>
           <ellipse cx="268" cy="121.5" rx="6" ry="7.5" fill="#a8c96a" opacity="0.62"/>
           <rect x="245" y="118" width="10" height="18" rx="5" fill="#2a5a06"/>
-          <!-- Person — Top-left -->
+          <!-- Person. Top-left -->
           <circle cx="88" cy="72" r="11" fill="#1e4a04" stroke="#4a8c11" stroke-width="1"/>
           <ellipse cx="88" cy="68" rx="5" ry="6.5" fill="#d1db24" opacity="0.55"/>
-          <!-- Person — Top-right -->
+          <!-- Person. Top-right -->
           <circle cx="232" cy="72" r="11" fill="#1e4a04" stroke="#4a8c11" stroke-width="1"/>
           <ellipse cx="232" cy="68" rx="5" ry="6.5" fill="#a8c96a" opacity="0.55"/>
           <!-- Subtle engagement dashes -->
@@ -731,7 +734,7 @@ footer a:hover { text-decoration: underline; }
       </div>
     </div>
     </div><!-- end hero-layout -->
-  </div>
+  </div><!-- end story-container -->
 </section>
 
 <!-- WHO THIS IS FOR -->
@@ -752,7 +755,7 @@ footer a:hover { text-decoration: underline; }
         </div>
         <div>
           <strong>Tech Thought Leader</strong>
-          <p>You're driving decisions about AI, security, and infrastructure — but only some of the org has the context to engage with them. When they do, your decisions get sharper, faster, and land better.</p>
+          <p>You're driving decisions about AI, security, and infrastructure. But only some of the org has the context to engage with them. When they do, your decisions get sharper, faster, and land better.</p>
         </div>
       </div>
       <div class="audience-card">
@@ -766,7 +769,7 @@ footer a:hover { text-decoration: underline; }
         </div>
         <div>
           <strong>Non-Tech Leader</strong>
-          <p>You're involved in technology decisions whether you asked to be or not. This gives you the foundation to contribute — ask the right questions, push back when it matters, and stop deferring on things that affect your team.</p>
+          <p>You're involved in technology decisions whether you asked to be or not. This gives you the foundation to contribute. Ask the right questions, push back when it matters, and stop deferring on things that affect your team.</p>
         </div>
       </div>
       <div class="audience-card">
@@ -800,7 +803,7 @@ footer a:hover { text-decoration: underline; }
         </div>
         <div>
           <strong>Tech Curious</strong>
-          <p>You want to understand the technology shaping how your organisation works — not to become technical, but to feel genuinely informed in the conversations that affect you. One session is enough to change that.</p>
+          <p>You want to understand the technology shaping how your organisation works. Not to become technical, but to feel genuinely informed in the conversations that affect you. One session is enough to change that.</p>
         </div>
       </div>
     </div>
@@ -815,9 +818,9 @@ footer a:hover { text-decoration: underline; }
       <span class="line-wrap"><span class="line-inner">Technology moves fast.</span></span>
       <span class="line-wrap"><span class="line-inner">Decisions outpace understanding.</span></span>
     </h2>
-    <p class="story-body" data-reveal data-delay="2">Every week, decisions get made about technology — AI tools, security policy, digital infrastructure — by people who don't fully understand their consequences. Not because they're not capable, but because no one has ever given them the foundation to engage. Technology leaders end up making unilateral calls because no one else in the room has the context to contribute. The conversation stays narrow. The risks stay invisible. The organisation keeps deferring on the things that matter most.<br><br>The off-the-shelf e-learning doesn't fix this — it's completed on a Friday and forgotten by Monday. What builds real understanding is experience: making decisions, seeing consequences, and doing it again. A game gives your whole organisation that experience in a single session — and L&amp;D teams can run it across every department, repeatedly, without external facilitators or months of scheduling overhead.</p>
+    <p class="story-body" data-reveal data-delay="2">Every week, decisions get made about technology. AI tools, security policy, digital infrastructure. By people who don't fully understand their consequences. Not because they're not capable, but because no one has ever given them the foundation to engage. Technology leaders end up making unilateral calls because no one else in the room has the context to contribute. The conversation stays narrow. The risks stay invisible. The organisation keeps deferring on the things that matter most.<br><br>The off-the-shelf e-learning doesn't fix this. It's completed on a Friday and forgotten by Monday. What builds real understanding is experience: making decisions, seeing consequences, and doing it again. A game gives your whole organisation that experience in a single session. And L&amp;D teams can run it across every department, repeatedly, without external facilitators or months of scheduling overhead.</p>
     <div class="pull-quote" data-reveal="right" data-delay="3">
-      <p>"We stopped having conversations where half the room went quiet. Now everyone has enough context to push back — and that changes the quality of every decision we make."</p>
+      <p>"We stopped having conversations where half the room went quiet. Now everyone has enough context to push back. And that changes the quality of every decision we make."</p>
     </div>
   </div>
 </section>
@@ -826,17 +829,18 @@ footer a:hover { text-decoration: underline; }
 <section class="story-section bg-tint">
   <div class="story-container">
     <div class="story-eyebrow" data-reveal>Sound Familiar?</div>
+    <p class="story-body" data-reveal data-delay="1" style="margin-bottom:36px;">We know how hard it is to get complex technology topics to land across a whole organisation. These two moments come up more than any others.</p>
 
     <div class="two-perspectives">
       <div class="perspective-card" data-reveal data-delay="1">
         <div class="perspective-label">If you're the technology leader</div>
         <h2 class="story-headline" style="font-size: clamp(20px,3vw,28px); margin-bottom:16px;">You've explained it in every meeting. It still doesn't land.</h2>
-        <p class="story-body" style="margin-bottom:0;">You go in ready to collaborate. You start with the simple version, build up carefully — and somewhere between the context-setting and the recommendation, the room shifts from engaged to deferring. They don't push back. They just agree. You end up making the call alone because no one else has the frame to challenge you.<br><br>The decisions would be better if they could. Byte Club and FuzzNet Labs give everyone in the room a shared reference point before strategy even begins — so the next time you need real input, you actually get it.</p>
+        <p class="story-body" style="margin-bottom:0;">You go in ready to collaborate. You start with the simple version, build up carefully. And somewhere between the context-setting and the recommendation, the room shifts from engaged to deferring. They don't push back. They just agree. You end up making the call alone because no one else has the frame to challenge you.<br><br>The decisions would be better if they could. Byte Club and FuzzNet Labs give everyone in the room a shared reference point before strategy even begins. So the next time you need real input, you actually get it.</p>
       </div>
       <div class="perspective-card" data-reveal data-delay="2">
         <div class="perspective-label">If you're everyone else in that meeting</div>
         <h2 class="story-headline" style="font-size: clamp(20px,3vw,28px); margin-bottom:16px;">The decisions keep happening. You don't know what to ask.</h2>
-        <p class="story-body" style="margin-bottom:0;">Someone walks through the AI strategy, the security posture, the infrastructure plan — and you follow along, mostly. But you can tell there are things you're not quite tracking, and asking feels like it would slow the whole thing down. So you nod.<br><br>The problem isn't capability. It's context. One session gives you the foundation to engage — so next time the conversation comes around, you're not nodding along. You're in it.</p>
+        <p class="story-body" style="margin-bottom:0;">Someone walks through the AI strategy, the security posture, the infrastructure plan. And you follow along, mostly. But you can tell there are things you're not quite tracking, and asking feels like it would slow the whole thing down. So you nod.<br><br>The problem isn't capability. It's context. One session gives you the foundation to engage. So next time the conversation comes around, you're not nodding along. You're in it.</p>
       </div>
     </div>
   </div>
@@ -846,16 +850,16 @@ footer a:hover { text-decoration: underline; }
 <section class="story-section bg-warm">
   <div class="story-container">
     <div class="story-eyebrow" data-reveal>The Solution</div>
-    <h2 class="story-headline" data-reveal data-delay="1">Closing the tech gap — <em>one game at a time.</em></h2>
-    <p class="story-body" data-reveal data-delay="2">Technology leaders want the organisation to keep pace with the decisions being made. L&amp;D teams want learning that actually sticks. We design board games built on proven learning principles that give your whole team the context to contribute — not just follow. One session. Any team lead can run it. Scales to every department.</p>
+    <h2 class="story-headline" data-reveal data-delay="1">Closing the tech gap. <em>one game at a time.</em></h2>
+    <p class="story-body" data-reveal data-delay="2">Technology leaders want the organisation to keep pace with the decisions being made. L&amp;D teams want learning that actually sticks. We design board games built on proven learning principles that give your whole team the context to contribute. Not just follow. One session. Any team lead can run it. Scales to every department.</p>
     <div class="approach-pillars" style="margin-top:32px;">
       <div class="approach-pillar" data-reveal data-delay="1">
         <strong>Built for L&amp;D to Deliver at Scale</strong>
-        <p>No external facilitator. No specialist booked weeks in advance. The rulebook is clear, the game teaches itself, and your L&amp;D team stays in control. Run it across departments, scale it across sites, repeat it quarterly — without the overhead of traditional training delivery.</p>
+        <p>No external facilitator. No specialist booked weeks in advance. The rulebook is clear, the game teaches itself, and your L&amp;D team stays in control. Run it across departments, scale it across sites, repeat it quarterly. Without the overhead of traditional training delivery.</p>
       </div>
       <div class="approach-pillar" data-reveal data-delay="2">
-        <strong>Real Fluency — Not Compliance Ticking</strong>
-        <p>Standard training leaves people with checklists they've forgotten by Monday. This builds the mental models that let people reason through what they're hearing in a strategy session — ask the right questions, push back when something doesn't add up, and actually contribute to decisions they'd previously defer on.</p>
+        <strong>Real Fluency. Not Compliance Ticking</strong>
+        <p>Standard training leaves people with checklists they've forgotten by Monday. This builds the mental models that let people reason through what they're hearing in a strategy session. Ask the right questions, push back when something doesn't add up, and actually contribute to decisions they'd previously defer on.</p>
       </div>
       <div class="approach-pillar" data-reveal data-delay="3">
         <strong>A Shared Language Across the Organisation</strong>
@@ -909,10 +913,10 @@ footer a:hover { text-decoration: underline; }
         </a>
         <div class="game-outcomes-col">
           <ul class="game-outcomes-list">
-            <li><span class="outcome-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8" cy="12" r="1.5" fill="#d1db24" stroke="none"/><circle cx="12" cy="7" r="1.5" fill="#d1db24" stroke="none"/><circle cx="16" cy="12" r="1.5" fill="#d1db24" stroke="none"/><circle cx="12" cy="17" r="1.5" fill="#62b517" stroke="none"/><line x1="8" y1="12" x2="12" y2="7" stroke="#62b517" stroke-width="1.5"/><line x1="12" y1="7" x2="16" y2="12" stroke="#62b517" stroke-width="1.5"/><line x1="16" y1="12" x2="12" y2="17" stroke="#62b517" stroke-width="1.5"/><line x1="12" y1="17" x2="8" y2="12" stroke="#62b517" stroke-width="1.5"/></svg></span><span class="outcome-text"><strong>Open the Black Box</strong> — See inside the neural network architecture powering modern AI</span></li>
-            <li><span class="outcome-icon"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><line x1="3" y1="21" x2="21" y2="21" stroke="#62b517" stroke-width="2" stroke-linecap="round"/><rect x="5" y="12" width="4" height="9" fill="#62b517" rx="1"/><rect x="10" y="7" width="4" height="14" fill="#d1db24" rx="1"/><rect x="15" y="15" width="4" height="6" fill="#62b517" rx="1" opacity="0.6"/></svg></span><span class="outcome-text"><strong>AI is a Probability Machine</strong> — Why 100% accuracy is impossible and every model navigates tradeoffs</span></li>
-            <li><span class="outcome-icon"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><!-- Brain: bumpy two-hemisphere silhouette with brainstem --><path d="M2,9 C2,7 2.5,5.5 4,5 C4.3,4 5,3 6,3 C6.5,2 7.5,2 8,3 C8.5,2 9.5,2 10,3 C11,3 11.7,4 12,5 C13.5,5.5 14,7 14,9 C14,11 12.5,13 11,13 L11,14.5 L5,14.5 L5,13 C3.5,13 2,11 2,9 Z" fill="#f0fae8" stroke="#62b517" stroke-width="1.2" stroke-linejoin="round"/><!-- Central fissure --><line x1="8" y1="2.5" x2="8" y2="14.5" stroke="#a8c96a" stroke-width="0.8" stroke-dasharray="1.3 1"/><!-- Left hemisphere gyri --><path d="M4,7 Q5.5,8 4,9" stroke="#a8c96a" stroke-width="0.7" fill="none" stroke-linecap="round"/><path d="M4,10.5 Q5.5,11.5 4,12.5" stroke="#a8c96a" stroke-width="0.7" fill="none" stroke-linecap="round"/><!-- Right hemisphere gyri --><path d="M12,7 Q10.5,8 12,9" stroke="#a8c96a" stroke-width="0.7" fill="none" stroke-linecap="round"/><path d="M12,10.5 Q10.5,11.5 12,12.5" stroke="#a8c96a" stroke-width="0.7" fill="none" stroke-linecap="round"/><!-- Wrench (open-end head upper-left, handle to lower-right) --><g transform="translate(18 17.5) rotate(45)"><path d="M-5,-1.5 L-2.5,-1.5 L-2.5,-0.5 L-3.7,-0.5 L-3.7,0.5 L-2.5,0.5 L-2.5,1.5 L-5,1.5 Z" fill="#d1db24" stroke="#62b517" stroke-width="0.6" stroke-linejoin="round"/><rect x="-2.8" y="-0.65" width="6.8" height="1.3" rx="0.3" fill="#d1db24" stroke="#62b517" stroke-width="0.6"/></g><!-- Hammer crossed over wrench (head upper-right, handle to lower-left) --><g transform="translate(18 17.5) rotate(-45)"><rect x="-4" y="-0.5" width="6.2" height="1" rx="0.2" fill="#8b6f3a" stroke="#62b517" stroke-width="0.5"/><path d="M1,-2 L1,2 L1.8,1.6 L1.8,-1.6 Z" fill="#3a6a0a"/><rect x="1.8" y="-1.6" width="3" height="3.2" rx="0.2" fill="#62b517" stroke="#3a6a0a" stroke-width="0.4"/></g></svg></span><span class="outcome-text"><strong>How AI Gets Built</strong> — The Design-Train-Test cycle and why data is destiny</span></li>
-            <li><span class="outcome-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><line x1="8" y1="10" x2="16" y2="10" stroke="#d1db24"/><line x1="8" y1="14" x2="12" y2="14" stroke="#d1db24"/></svg></span><span class="outcome-text"><strong>You are AI-Fluent</strong> — Ask the right questions and push back when "the AI said so" isn't good enough</span></li>
+            <li><span class="outcome-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8" cy="12" r="1.5" fill="#d1db24" stroke="none"/><circle cx="12" cy="7" r="1.5" fill="#d1db24" stroke="none"/><circle cx="16" cy="12" r="1.5" fill="#d1db24" stroke="none"/><circle cx="12" cy="17" r="1.5" fill="#62b517" stroke="none"/><line x1="8" y1="12" x2="12" y2="7" stroke="#62b517" stroke-width="1.5"/><line x1="12" y1="7" x2="16" y2="12" stroke="#62b517" stroke-width="1.5"/><line x1="16" y1="12" x2="12" y2="17" stroke="#62b517" stroke-width="1.5"/><line x1="12" y1="17" x2="8" y2="12" stroke="#62b517" stroke-width="1.5"/></svg></span><span class="outcome-text"><strong>Open the Black Box</strong>: See inside the neural network architecture powering modern AI</span></li>
+            <li><span class="outcome-icon"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><line x1="3" y1="21" x2="21" y2="21" stroke="#62b517" stroke-width="2" stroke-linecap="round"/><rect x="5" y="12" width="4" height="9" fill="#62b517" rx="1"/><rect x="10" y="7" width="4" height="14" fill="#d1db24" rx="1"/><rect x="15" y="15" width="4" height="6" fill="#62b517" rx="1" opacity="0.6"/></svg></span><span class="outcome-text"><strong>AI is a Probability Machine</strong>: Why 100% accuracy is impossible and every model navigates tradeoffs</span></li>
+            <li><span class="outcome-icon"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><!-- Brain: bumpy two-hemisphere silhouette with brainstem --><path d="M2,9 C2,7 2.5,5.5 4,5 C4.3,4 5,3 6,3 C6.5,2 7.5,2 8,3 C8.5,2 9.5,2 10,3 C11,3 11.7,4 12,5 C13.5,5.5 14,7 14,9 C14,11 12.5,13 11,13 L11,14.5 L5,14.5 L5,13 C3.5,13 2,11 2,9 Z" fill="#f0fae8" stroke="#62b517" stroke-width="1.2" stroke-linejoin="round"/><!-- Central fissure --><line x1="8" y1="2.5" x2="8" y2="14.5" stroke="#a8c96a" stroke-width="0.8" stroke-dasharray="1.3 1"/><!-- Left hemisphere gyri --><path d="M4,7 Q5.5,8 4,9" stroke="#a8c96a" stroke-width="0.7" fill="none" stroke-linecap="round"/><path d="M4,10.5 Q5.5,11.5 4,12.5" stroke="#a8c96a" stroke-width="0.7" fill="none" stroke-linecap="round"/><!-- Right hemisphere gyri --><path d="M12,7 Q10.5,8 12,9" stroke="#a8c96a" stroke-width="0.7" fill="none" stroke-linecap="round"/><path d="M12,10.5 Q10.5,11.5 12,12.5" stroke="#a8c96a" stroke-width="0.7" fill="none" stroke-linecap="round"/><!-- Wrench (open-end head upper-left, handle to lower-right) --><g transform="translate(18 17.5) rotate(45)"><path d="M-5,-1.5 L-2.5,-1.5 L-2.5,-0.5 L-3.7,-0.5 L-3.7,0.5 L-2.5,0.5 L-2.5,1.5 L-5,1.5 Z" fill="#d1db24" stroke="#62b517" stroke-width="0.6" stroke-linejoin="round"/><rect x="-2.8" y="-0.65" width="6.8" height="1.3" rx="0.3" fill="#d1db24" stroke="#62b517" stroke-width="0.6"/></g><!-- Hammer crossed over wrench (head upper-right, handle to lower-left) --><g transform="translate(18 17.5) rotate(-45)"><rect x="-4" y="-0.5" width="6.2" height="1" rx="0.2" fill="#8b6f3a" stroke="#62b517" stroke-width="0.5"/><path d="M1,-2 L1,2 L1.8,1.6 L1.8,-1.6 Z" fill="#3a6a0a"/><rect x="1.8" y="-1.6" width="3" height="3.2" rx="0.2" fill="#62b517" stroke="#3a6a0a" stroke-width="0.4"/></g></svg></span><span class="outcome-text"><strong>How AI Gets Built</strong>: The Design-Train-Test cycle and why data is destiny</span></li>
+            <li><span class="outcome-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><line x1="8" y1="10" x2="16" y2="10" stroke="#d1db24"/><line x1="8" y1="14" x2="12" y2="14" stroke="#d1db24"/></svg></span><span class="outcome-text"><strong>You are AI-Fluent</strong>: Ask the right questions and push back when "the AI said so" isn't good enough</span></li>
           </ul>
         </div>
       </div>
@@ -957,10 +961,10 @@ footer a:hover { text-decoration: underline; }
         </a>
         <div class="game-outcomes-col">
           <ul class="game-outcomes-list">
-            <li><span class="outcome-icon"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22,11 L17,13 L19,18 L14,16 L12,22 L10,16 L5,18 L7,13 L2,11 L7,9 L5,4 L10,6 L12,1 L14,6 L19,4 L17,9 Z" fill="#d1db24"/><circle cx="12" cy="11" r="3.5" fill="#62b517"/><circle cx="12" cy="11" r="1.5" fill="#d1db24"/></svg></span><span class="outcome-text"><strong>Attacker Mindset</strong> — How hackers plan and execute attacks, stage by stage</span></li>
-            <li><span class="outcome-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L4 6v6c0 5.5 3.5 10.7 8 12 4.5-1.3 8-6.5 8-12V6L12 2z"/><path d="M9 12l2 2 4-4" stroke="#d1db24" stroke-width="2"/></svg></span><span class="outcome-text"><strong>Defender Mindset</strong> — How security teams protect, detect, and respond to threats</span></li>
-            <li><span class="outcome-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10"/><path d="M23 14l-4.64 4.36A9 9 0 0 1 3.51 15" stroke="#d1db24"/></svg></span><span class="outcome-text"><strong>The Cycle of Cyberwarfare</strong> — Why attack and defence never stop evolving against each other</span></li>
-            <li><span class="outcome-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><line x1="8" y1="10" x2="16" y2="10" stroke="#d1db24"/><line x1="8" y1="14" x2="12" y2="14" stroke="#d1db24"/></svg></span><span class="outcome-text"><strong>You are CyberFluent</strong> — Break down any incident and challenge anyone who can't explain it</span></li>
+            <li><span class="outcome-icon"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22,11 L17,13 L19,18 L14,16 L12,22 L10,16 L5,18 L7,13 L2,11 L7,9 L5,4 L10,6 L12,1 L14,6 L19,4 L17,9 Z" fill="#d1db24"/><circle cx="12" cy="11" r="3.5" fill="#62b517"/><circle cx="12" cy="11" r="1.5" fill="#d1db24"/></svg></span><span class="outcome-text"><strong>Attacker Mindset</strong>: How hackers plan and execute attacks, stage by stage</span></li>
+            <li><span class="outcome-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L4 6v6c0 5.5 3.5 10.7 8 12 4.5-1.3 8-6.5 8-12V6L12 2z"/><path d="M9 12l2 2 4-4" stroke="#d1db24" stroke-width="2"/></svg></span><span class="outcome-text"><strong>Defender Mindset</strong>: How security teams protect, detect, and respond to threats</span></li>
+            <li><span class="outcome-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10"/><path d="M23 14l-4.64 4.36A9 9 0 0 1 3.51 15" stroke="#d1db24"/></svg></span><span class="outcome-text"><strong>The Cycle of Cyberwarfare</strong>: Why attack and defence never stop evolving against each other</span></li>
+            <li><span class="outcome-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><line x1="8" y1="10" x2="16" y2="10" stroke="#d1db24"/><line x1="8" y1="14" x2="12" y2="14" stroke="#d1db24"/></svg></span><span class="outcome-text"><strong>You are CyberFluent</strong>: Break down any incident and challenge anyone who can't explain it</span></li>
           </ul>
         </div>
       </div>
@@ -974,17 +978,17 @@ footer a:hover { text-decoration: underline; }
   <div class="story-container">
     <div class="pull-quote" data-reveal>
       <p>"I have customer service reps and accountants actually getting cybersecurity."</p>
-      <cite>— Security Champions Community Lead</cite>
+      <cite>Security Champions Community Lead</cite>
     </div>
     <div class="section-cta-buttons" data-reveal data-delay="2">
-      <a class="btn-play-now" href="/byteclub">&#9658; Play Byte Club — Cybersecurity</a>
-      <a class="btn-play-alt" href="/fuzznet">&#9658; Play FuzzNet Labs — AI</a>
+      <a class="btn-play-now" href="/byteclub">&#9658; Play Byte Club. Cybersecurity</a>
+      <a class="btn-play-alt" href="/fuzznet">&#9658; Play FuzzNet Labs. AI</a>
     </div>
   </div>
 </section>
 
 <footer>
-  <p>© 2025 Tech Board Games. All rights reserved.</p>
+  <p>© 2025 Tech CoLab. All rights reserved.</p>
 </footer>
 
 <script>

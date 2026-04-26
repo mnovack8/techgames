@@ -3,23 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Quantum computing explained from the ground up — qubits, superposition, entanglement, interference, and why it matters for the future of technology.">
+<meta name="description" content="Quantum computing explained from the ground up. Qubits, superposition, entanglement, interference, and why it matters for the future of technology.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Quantum Computing Basics: A Plain-English Guide to the Next Computing Revolution">
-<meta property="og:description" content="Qubits, superposition, entanglement, and interference — explained without the physics degree.">
-<meta property="og:image" content="https://cybersecgames.com/images/logo.png">
+<meta property="og:description" content="Qubits, superposition, entanglement, and interference. Explained without the physics degree.">
+<meta property="og:image" content="https://cybersecgames.com/images/logo.svg">
 <meta property="og:url" content="https://cybersecgames.com/blog/quantum-computing-basics">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Quantum Computing Basics | Tech Board Games">
-<meta name="twitter:description" content="Qubits, superposition, entanglement — explained without a physics degree.">
+<meta name="twitter:title" content="Quantum Computing Basics | Tech CoLab">
+<meta name="twitter:description" content="Qubits, superposition, entanglement. Explained without a physics degree.">
 <meta name="robots" content="index, follow">
-<meta name="author" content="Tech Board Games">
+<meta name="author" content="Tech CoLab">
 <meta name="keywords" content="quantum computing basics, qubits explained, superposition entanglement, quantum advantage, post-quantum cryptography, quantum vs classical computing">
-<meta property="og:site_name" content="Tech Board Games">
+<meta property="og:site_name" content="Tech CoLab">
 <meta property="og:locale" content="en_US">
 <meta name="theme-color" content="#62b517">
 <link rel="canonical" href="https://cybersecgames.com/blog/quantum-computing-basics">
-<title>Quantum Computing Basics: A Plain-English Guide | Tech Board Games</title>
+<title>Quantum Computing Basics: A Plain-English Guide | Tech CoLab</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
 
@@ -47,7 +47,7 @@ header {
   z-index: 100;
 }
 .header-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
-.header-logo img { width: 36px; height: 36px; object-fit: contain; }
+.header-logo img { height: 48px; width: auto; object-fit: contain; }
 .logo-text { font-size: 16px; font-weight: 800; color: #4a8c11; letter-spacing: 0.5px; display: block; }
 .logo-sub  { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; display: block; line-height: 1; color: #b0b800; }
 nav { display: flex; align-items: center; gap: 4px; }
@@ -433,9 +433,9 @@ footer { background: #2a2a2a; color: #777; text-align: center; padding: 12px 24p
   "@context": "https://schema.org",
   "@type": "Article",
   "headline": "Quantum Computing Basics: A Plain-English Guide to the Next Computing Revolution",
-  "description": "Qubits, superposition, entanglement, and interference explained without a physics degree — plus where quantum wins, its current limitations, and what it means for you.",
+  "description": "Qubits, superposition, entanglement, and interference explained without a physics degree. Plus where quantum wins, its current limitations, and what it means for you.",
   "author": { "@type": "Person", "name": "Michael Novack" },
-  "publisher": { "@type": "Organization", "name": "Tech Board Games", "logo": { "@type": "ImageObject", "url": "https://cybersecgames.com/images/logo.png" } },
+  "publisher": { "@type": "Organization", "name": "Tech CoLab", "logo": { "@type": "ImageObject", "url": "https://cybersecgames.com/images/logo.svg" } },
   "datePublished": "2026-04-24",
   "dateModified": "2026-04-24",
   "url": "https://cybersecgames.com/blog/quantum-computing-basics",
@@ -449,10 +449,10 @@ footer { background: #2a2a2a; color: #777; text-align: center; padding: 12px 24p
 
 <header>
   <a class="header-logo" href="/">
-    <img src="/images/logo.png" alt="Tech Board Games logo">
+    <img src="/images/logo.png" alt="Tech CoLab logo">
     <div>
-      <span class="logo-text">Tech Games</span>
-      <span class="logo-sub">Close the Tech Gap</span>
+      <span class="logo-text">Tech CoLab</span>
+      <span class="logo-sub">Tech Fluency. Better Decisions.</span>
     </div>
   </a>
   <nav>
@@ -485,7 +485,7 @@ footer { background: #2a2a2a; color: #777; text-align: center; padding: 12px 24p
     <span class="article-tag tag-tech">Technology</span>
   </div>
   <h1>Quantum Computing Basics:<br><em>A Plain-English Guide</em><br>to the Next Computing Revolution</h1>
-  <p class="article-hero-sub">Classical computers think in ones and zeros. Quantum computers think in both at the same time — and that changes everything about what's possible. Here's what you actually need to know.</p>
+  <p class="article-hero-sub">Classical computers think in ones and zeros. Quantum computers think in both at the same time. And that changes everything about what's possible. Here's what you actually need to know.</p>
   <div class="article-meta">
     <span class="article-meta-read">11 min read</span>
   </div>
@@ -502,13 +502,13 @@ footer { background: #2a2a2a; color: #777; text-align: center; padding: 12px 24p
 
   <div class="article-body">
 
-    <p>Every computer you have ever used — your phone, your laptop, every server behind every website you've visited — operates on the same fundamental principle. Information is stored and processed as <strong>bits</strong>: discrete units that are either a 0 or a 1. Every calculation, every video rendered, every message encrypted, every AI model trained is ultimately a manipulation of enormous sequences of those two values.</p>
+    <p>Every computer you have ever used. Your phone, your laptop, every server behind every website you've visited. Operates on the same fundamental principle. Information is stored and processed as <strong>bits</strong>: discrete units that are either a 0 or a 1. Every calculation, every video rendered, every message encrypted, every AI model trained is ultimately a manipulation of enormous sequences of those two values.</p>
 
-    <p>Quantum computers do not work this way. And that difference, while it sounds small in description, produces consequences that are genuinely difficult to overstate — for cryptography, for drug discovery, for artificial intelligence, and for the nature of what's computationally possible at all.</p>
+    <p>Quantum computers do not work this way. And that difference, while it sounds small in description, produces consequences that are genuinely difficult to overstate. For cryptography, for drug discovery, for artificial intelligence, and for the nature of what's computationally possible at all.</p>
 
     <h2>The Bit vs. The Qubit</h2>
 
-    <p>The fundamental unit of quantum computing is the <strong>qubit</strong> (quantum bit). On the surface, a qubit sounds like a bit — it can represent 0 or 1. But the mechanics of how it gets to that value, and what it can do before it gets there, are entirely different.</p>
+    <p>The fundamental unit of quantum computing is the <strong>qubit</strong> (quantum bit). On the surface, a qubit sounds like a bit. It can represent 0 or 1. But the mechanics of how it gets to that value, and what it can do before it gets there, are entirely different.</p>
 
     <div class="compare-grid" data-reveal>
       <div class="compare-col col-classic">
@@ -520,7 +520,7 @@ footer { background: #2a2a2a; color: #777; text-align: center; padding: 12px 24p
           <div class="bit-box off">0</div>
         </div>
         <ul class="compare-list">
-          <li>Always either 0 or 1 — never both</li>
+          <li>Always either 0 or 1. Never both</li>
           <li>State is definite and readable at any time</li>
           <li>Stored in transistors (on/off switches)</li>
           <li>Billions on a chip; stable at room temperature</li>
@@ -532,7 +532,7 @@ footer { background: #2a2a2a; color: #777; text-align: center; padding: 12px 24p
         <div class="compare-title">The Qubit</div>
         <div class="compare-visual">
           <div class="qubit-sphere"></div>
-          <div style="font-size:13px;font-weight:700;color:#8040c0;max-width:120px;line-height:1.4;">0 and 1 simultaneously — until measured</div>
+          <div style="font-size:13px;font-weight:700;color:#8040c0;max-width:120px;line-height:1.4;">0 and 1 simultaneously. Until measured</div>
         </div>
         <ul class="compare-list">
           <li>Can be 0, 1, or a combination of both at once</li>
@@ -544,7 +544,7 @@ footer { background: #2a2a2a; color: #777; text-align: center; padding: 12px 24p
       </div>
     </div>
 
-    <p>The qubit's ability to exist in a combination of 0 and 1 simultaneously is called <strong>superposition</strong>. It's the first of three quantum phenomena that give quantum computers their extraordinary potential — and it's worth understanding all three properly before we talk about what they make possible.</p>
+    <p>The qubit's ability to exist in a combination of 0 and 1 simultaneously is called <strong>superposition</strong>. It's the first of three quantum phenomena that give quantum computers their extraordinary potential. And it's worth understanding all three properly before we talk about what they make possible.</p>
 
     <h2>The Three Phenomena That Make Quantum Computing Powerful</h2>
 
@@ -577,7 +577,7 @@ footer { background: #2a2a2a; color: #777; text-align: center; padding: 12px 24p
           <div class="concept-number">Phenomenon 01</div>
           <div class="concept-name">Superposition</div>
           <div class="concept-tagline">Being in multiple states at once</div>
-          <div class="concept-desc">A qubit in superposition isn't "secretly" either 0 or 1 — it genuinely exists as a combination of both until it is measured. The best analogy is a spinning coin: while it's spinning it is neither heads nor tails. Only when it lands does it become one or the other. The power of superposition is that it lets a quantum computer work on many possible inputs simultaneously. A system of just 300 qubits in superposition can represent more states at once than there are atoms in the observable universe.</div>
+          <div class="concept-desc">A qubit in superposition isn't "secretly" either 0 or 1. It genuinely exists as a combination of both until it is measured. The best analogy is a spinning coin: while it's spinning it is neither heads nor tails. Only when it lands does it become one or the other. The power of superposition is that it lets a quantum computer work on many possible inputs simultaneously. A system of just 300 qubits in superposition can represent more states at once than there are atoms in the observable universe.</div>
         </div>
       </div>
 
@@ -605,7 +605,7 @@ footer { background: #2a2a2a; color: #777; text-align: center; padding: 12px 24p
           <div class="concept-number">Phenomenon 02</div>
           <div class="concept-name">Entanglement</div>
           <div class="concept-tagline">Correlated states across any distance</div>
-          <div class="concept-desc">When two qubits are entangled, their states become linked — measuring one instantly determines the state of the other, regardless of how far apart they are. Einstein called this "spooky action at a distance" and spent years trying to disprove it. He was wrong. Entanglement allows quantum computers to coordinate information across many qubits simultaneously, creating correlations that classical computers would have to laboriously calculate one step at a time. It's one of the key reasons quantum algorithms can be exponentially more efficient for certain problems.</div>
+          <div class="concept-desc">When two qubits are entangled, their states become linked. Measuring one instantly determines the state of the other, regardless of how far apart they are. Einstein called this "spooky action at a distance" and spent years trying to disprove it. He was wrong. Entanglement allows quantum computers to coordinate information across many qubits simultaneously, creating correlations that classical computers would have to laboriously calculate one step at a time. It's one of the key reasons quantum algorithms can be exponentially more efficient for certain problems.</div>
         </div>
       </div>
 
@@ -632,7 +632,7 @@ footer { background: #2a2a2a; color: #777; text-align: center; padding: 12px 24p
           <div class="concept-number">Phenomenon 03</div>
           <div class="concept-name">Interference</div>
           <div class="concept-tagline">Amplifying right answers, canceling wrong ones</div>
-          <div class="concept-desc">Qubits behave like waves — and waves can interfere with each other. When two waves meet in phase, they amplify (constructive interference). When they meet out of phase, they cancel (destructive interference). Quantum algorithms are essentially designed choreography for interference: they guide the quantum system so that wrong answers cancel themselves out and correct answers amplify. The algorithm doesn't evaluate all possibilities and pick the best one — it structures the problem so that the right answer rises naturally to the top when measured.</div>
+          <div class="concept-desc">Qubits behave like waves. And waves can interfere with each other. When two waves meet in phase, they amplify (constructive interference). When they meet out of phase, they cancel (destructive interference). Quantum algorithms are essentially designed choreography for interference: they guide the quantum system so that wrong answers cancel themselves out and correct answers amplify. The algorithm doesn't evaluate all possibilities and pick the best one. It structures the problem so that the right answer rises naturally to the top when measured.</div>
         </div>
       </div>
 
@@ -645,7 +645,7 @@ footer { background: #2a2a2a; color: #777; text-align: center; padding: 12px 24p
 
     <h2>Why This Creates Exponential Power</h2>
 
-    <p>Here's the concrete implication of superposition. A classical computer with <strong>n bits</strong> can represent exactly one number at a time — one specific sequence of 0s and 1s. A quantum computer with <strong>n qubits</strong> in superposition can represent all 2<sup>n</sup> possible numbers simultaneously.</p>
+    <p>Here's the concrete implication of superposition. A classical computer with <strong>n bits</strong> can represent exactly one number at a time. One specific sequence of 0s and 1s. A quantum computer with <strong>n qubits</strong> in superposition can represent all 2<sup>n</sup> possible numbers simultaneously.</p>
 
     <div class="stat-trio" data-reveal>
       <div class="stat-card">
@@ -662,11 +662,11 @@ footer { background: #2a2a2a; color: #777; text-align: center; padding: 12px 24p
       </div>
     </div>
 
-    <p>This isn't just a lot of parallel computation. It's a qualitatively different relationship between the size of a problem and the time required to solve it. For certain classes of problems — ones that classical computers can only solve by checking possibilities one at a time — quantum algorithms can find the answer in time that grows far more slowly than the problem size. The technical term is <strong>quantum speedup</strong>, and for the right problems, it's not a marginal improvement. It's the difference between feasible and impossible.</p>
+    <p>This isn't just a lot of parallel computation. It's a qualitatively different relationship between the size of a problem and the time required to solve it. For certain classes of problems. Ones that classical computers can only solve by checking possibilities one at a time. Quantum algorithms can find the answer in time that grows far more slowly than the problem size. The technical term is <strong>quantum speedup</strong>, and for the right problems, it's not a marginal improvement. It's the difference between feasible and impossible.</p>
 
     <h2>Where Quantum Computing Actually Wins</h2>
 
-    <p>Quantum computing is not a universal upgrade. It will not make your email load faster. Classical computers are already optimal for most of what computers do. Quantum advantage appears in a specific and identifiable set of problem types — and those problem types happen to include some of the most important challenges in science and industry.</p>
+    <p>Quantum computing is not a universal upgrade. It will not make your email load faster. Classical computers are already optimal for most of what computers do. Quantum advantage appears in a specific and identifiable set of problem types. And those problem types happen to include some of the most important challenges in science and industry.</p>
 
     <div class="wins-grid" data-reveal>
 
@@ -674,7 +674,7 @@ footer { background: #2a2a2a; color: #777; text-align: center; padding: 12px 24p
         <div class="win-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="5" y="10" width="12" height="10" rx="2" fill="#1a3a6a" opacity="0.2"/><rect x="5" y="10" width="12" height="10" rx="2" stroke="#1a3a6a" stroke-width="1.5"/><path d="M8 10V7.5a3 3 0 016 0V10" stroke="#1a3a6a" stroke-width="1.5" stroke-linecap="round"/><circle cx="11" cy="15" r="1.5" fill="#d1db24"/></svg></div>
         <div>
           <div class="win-title">Cryptography and Cybersecurity</div>
-          <div class="win-desc">Most internet encryption (RSA, ECC) relies on the fact that factoring very large numbers is computationally infeasible for classical computers. Shor's Algorithm, running on a sufficiently powerful quantum computer, could factor those numbers efficiently — breaking much of today's encryption infrastructure. This is why post-quantum cryptography standards are being developed now.</div>
+          <div class="win-desc">Most internet encryption (RSA, ECC) relies on the fact that factoring very large numbers is computationally infeasible for classical computers. Shor's Algorithm, running on a sufficiently powerful quantum computer, could factor those numbers efficiently. Breaking much of today's encryption infrastructure. This is why post-quantum cryptography standards are being developed now.</div>
           <span class="win-horizon horizon-mid">5–15 year horizon</span>
         </div>
       </div>
@@ -683,7 +683,7 @@ footer { background: #2a2a2a; color: #777; text-align: center; padding: 12px 24p
         <div class="win-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="11" cy="11" r="3" fill="#62b517"/><circle cx="4" cy="7" r="2" fill="#4a8c11" opacity="0.8"/><circle cx="18" cy="7" r="2" fill="#4a8c11" opacity="0.8"/><circle cx="7" cy="18" r="2" fill="#4a8c11" opacity="0.8"/><circle cx="15" cy="18" r="2" fill="#4a8c11" opacity="0.8"/><line x1="6" y1="8" x2="9" y2="10" stroke="#a8c96a" stroke-width="1.5"/><line x1="16" y1="8" x2="13" y2="10" stroke="#a8c96a" stroke-width="1.5"/><line x1="8.5" y1="16.5" x2="9.5" y2="13" stroke="#a8c96a" stroke-width="1.5"/><line x1="13.5" y1="16.5" x2="12.5" y2="13" stroke="#a8c96a" stroke-width="1.5"/></svg></div>
         <div>
           <div class="win-title">Drug Discovery and Molecular Simulation</div>
-          <div class="win-desc">Simulating the behavior of molecules at the quantum level is an exponentially hard problem for classical computers — even simulating a single protein fold can take enormous resources. Quantum computers can model quantum systems naturally, because they are quantum systems. This could radically accelerate drug discovery, materials science, and chemistry research.</div>
+          <div class="win-desc">Simulating the behavior of molecules at the quantum level is an exponentially hard problem for classical computers. Even simulating a single protein fold can take enormous resources. Quantum computers can model quantum systems naturally, because they are quantum systems. This could radically accelerate drug discovery, materials science, and chemistry research.</div>
           <span class="win-horizon horizon-mid">10–20 year horizon</span>
         </div>
       </div>
@@ -692,7 +692,7 @@ footer { background: #2a2a2a; color: #777; text-align: center; padding: 12px 24p
         <div class="win-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8l8-5 8 5v9l-8 4-8-4V8z" fill="#1a3a6a" opacity="0.1"/><path d="M3 8l8-5 8 5v9l-8 4-8-4V8z" stroke="#1a3a6a" stroke-width="1.5" stroke-linejoin="round"/><line x1="11" y1="3" x2="11" y2="21" stroke="#1a3a6a" stroke-width="1" opacity="0.4"/><line x1="3" y1="8" x2="19" y2="8" stroke="#1a3a6a" stroke-width="1" opacity="0.4"/></svg></div>
         <div>
           <div class="win-title">Optimization Problems</div>
-          <div class="win-desc">Logistics, supply chain, financial portfolio balancing, traffic routing — these are problems where the number of possible configurations grows faster than any classical computer can search. Quantum annealing and variational quantum algorithms offer approaches to finding near-optimal solutions dramatically faster than classical methods for problems of this structure.</div>
+          <div class="win-desc">Logistics, supply chain, financial portfolio balancing, traffic routing. These are problems where the number of possible configurations grows faster than any classical computer can search. Quantum annealing and variational quantum algorithms offer approaches to finding near-optimal solutions dramatically faster than classical methods for problems of this structure.</div>
           <span class="win-horizon horizon-near">3–10 year horizon</span>
         </div>
       </div>
@@ -701,7 +701,7 @@ footer { background: #2a2a2a; color: #777; text-align: center; padding: 12px 24p
         <div class="win-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="4" cy="6" r="2" fill="#4a8c11"/><circle cx="18" cy="6" r="2" fill="#4a8c11"/><circle cx="11" cy="11" r="2.5" fill="#62b517"/><circle cx="4" cy="16" r="2" fill="#4a8c11"/><circle cx="18" cy="16" r="2" fill="#4a8c11"/><line x1="6" y1="7" x2="9" y2="10" stroke="#a8c96a" stroke-width="1.5"/><line x1="16" y1="7" x2="13" y2="10" stroke="#a8c96a" stroke-width="1.5"/><line x1="6" y1="15" x2="9" y2="12" stroke="#a8c96a" stroke-width="1.5"/><line x1="16" y1="15" x2="13" y2="12" stroke="#a8c96a" stroke-width="1.5"/></svg></div>
         <div>
           <div class="win-title">Artificial Intelligence and Machine Learning</div>
-          <div class="win-desc">Some quantum algorithms offer speedups for the linear algebra operations at the core of machine learning — matrix multiplication, sampling from high-dimensional distributions, searching through large datasets. Quantum ML is still early, but the theoretical speedups for certain training and inference tasks are significant, especially as model sizes continue to grow.</div>
+          <div class="win-desc">Some quantum algorithms offer speedups for the linear algebra operations at the core of machine learning. Matrix multiplication, sampling from high-dimensional distributions, searching through large datasets. Quantum ML is still early, but the theoretical speedups for certain training and inference tasks are significant, especially as model sizes continue to grow.</div>
           <span class="win-horizon horizon-far">15+ year horizon</span>
         </div>
       </div>
@@ -710,7 +710,7 @@ footer { background: #2a2a2a; color: #777; text-align: center; padding: 12px 24p
 
     <div class="callout warn">
       <div class="callout-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11 2L1 20h20L11 2z" fill="#e8a030" opacity="0.15"/><path d="M11 2L1 20h20L11 2z" stroke="#e8a030" stroke-width="1.5" stroke-linejoin="round"/><line x1="11" y1="9" x2="11" y2="13.5" stroke="#e8a030" stroke-width="2" stroke-linecap="round"/><circle cx="11" cy="17" r="1.2" fill="#e8a030"/></svg></div>
-      <div class="callout-text">Quantum advantage is real — but it's problem-specific. For a quantum computer to beat a classical one, the problem has to match the structure that quantum algorithms exploit. "Quantum is faster" is not a general statement. "Quantum is faster for factoring, certain optimization problems, and molecular simulation" is accurate.</div>
+      <div class="callout-text">Quantum advantage is real. But it's problem-specific. For a quantum computer to beat a classical one, the problem has to match the structure that quantum algorithms exploit. "Quantum is faster" is not a general statement. "Quantum is faster for factoring, certain optimization problems, and molecular simulation" is accurate.</div>
     </div>
 
     <h2>The Catch: Why We Don't Have Quantum Laptops</h2>
@@ -723,7 +723,7 @@ footer { background: #2a2a2a; color: #777; text-align: center; padding: 12px 24p
         <div class="barrier-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="11" cy="17" r="3.5" fill="#5a9acd" opacity="0.35"/><circle cx="11" cy="17" r="3.5" stroke="#5a9acd" stroke-width="1.5"/><rect x="9.5" y="4" width="3" height="13" rx="1.5" fill="none" stroke="#5a9acd" stroke-width="1.5"/><rect x="10.5" y="10" width="1" height="7" rx="0.5" fill="#5a9acd"/></svg></div>
         <div>
           <div class="barrier-title">Extreme Temperature Requirements</div>
-          <div class="barrier-desc">The most advanced quantum processors (superconducting qubits, used by IBM and Google) must operate at temperatures close to absolute zero — around −273°C, colder than outer space. This requires enormous, expensive dilution refrigerators and makes quantum computers the opposite of portable. Trapped-ion and photonic quantum computers operate at higher temperatures, but bring their own engineering challenges.</div>
+          <div class="barrier-desc">The most advanced quantum processors (superconducting qubits, used by IBM and Google) must operate at temperatures close to absolute zero. Around −273°C, colder than outer space. This requires enormous, expensive dilution refrigerators and makes quantum computers the opposite of portable. Trapped-ion and photonic quantum computers operate at higher temperatures, but bring their own engineering challenges.</div>
         </div>
       </div>
 
@@ -731,7 +731,7 @@ footer { background: #2a2a2a; color: #777; text-align: center; padding: 12px 24p
         <div class="barrier-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="11" cy="11" r="3" fill="#c04040" opacity="0.2"/><line x1="11" y1="2" x2="11" y2="6" stroke="#c04040" stroke-width="2" stroke-linecap="round"/><line x1="11" y1="16" x2="11" y2="20" stroke="#c04040" stroke-width="2" stroke-linecap="round"/><line x1="2" y1="11" x2="6" y2="11" stroke="#c04040" stroke-width="2" stroke-linecap="round"/><line x1="16" y1="11" x2="20" y2="11" stroke="#c04040" stroke-width="2" stroke-linecap="round"/><line x1="4.6" y1="4.6" x2="7.4" y2="7.4" stroke="#c04040" stroke-width="2" stroke-linecap="round"/><line x1="14.6" y1="14.6" x2="17.4" y2="17.4" stroke="#c04040" stroke-width="2" stroke-linecap="round"/><line x1="17.4" y1="4.6" x2="14.6" y2="7.4" stroke="#c04040" stroke-width="2" stroke-linecap="round"/><line x1="7.4" y1="14.6" x2="4.6" y2="17.4" stroke="#c04040" stroke-width="2" stroke-linecap="round"/></svg></div>
         <div>
           <div class="barrier-title">Decoherence</div>
-          <div class="barrier-desc">Qubits are extraordinarily fragile. Any interaction with the outside environment — a stray electromagnetic field, a vibration, a thermal fluctuation — can collapse a qubit's superposition prematurely, destroying the quantum information it was carrying. This is called decoherence. Current quantum processors have coherence times measured in microseconds to milliseconds. Longer, more complex calculations require keeping qubits coherent longer than current hardware allows.</div>
+          <div class="barrier-desc">Qubits are extraordinarily fragile. Any interaction with the outside environment. A stray electromagnetic field, a vibration, a thermal fluctuation. Can collapse a qubit's superposition prematurely, destroying the quantum information it was carrying. This is called decoherence. Current quantum processors have coherence times measured in microseconds to milliseconds. Longer, more complex calculations require keeping qubits coherent longer than current hardware allows.</div>
         </div>
       </div>
 
@@ -739,7 +739,7 @@ footer { background: #2a2a2a; color: #777; text-align: center; padding: 12px 24p
         <div class="barrier-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 3a4 4 0 00-3.9 4.8L3.8 15a2 2 0 002.8 2.8l7.2-7.1A4 4 0 1015 3z" fill="#5a7aaa" opacity="0.25"/><path d="M15 3a4 4 0 00-3.9 4.8L3.8 15a2 2 0 002.8 2.8l7.2-7.1A4 4 0 1015 3z" stroke="#5a7aaa" stroke-width="1.2"/><circle cx="15" cy="7" r="1.5" fill="#5a7aaa"/></svg></div>
         <div>
           <div class="barrier-title">Error Rates and Quantum Error Correction</div>
-          <div class="barrier-desc">Classical computer transistors have error rates measured in the quintillionths. Current qubits have error rates closer to 0.1–1% per operation — staggeringly high by comparison. Quantum error correction can fix this, but requires many physical qubits (sometimes thousands) to represent a single reliable "logical qubit." Today's quantum processors don't yet have enough physical qubits to implement full error correction while also running meaningful algorithms.</div>
+          <div class="barrier-desc">Classical computer transistors have error rates measured in the quintillionths. Current qubits have error rates closer to 0.1–1% per operation. Staggeringly high by comparison. Quantum error correction can fix this, but requires many physical qubits (sometimes thousands) to represent a single reliable "logical qubit." Today's quantum processors don't yet have enough physical qubits to implement full error correction while also running meaningful algorithms.</div>
         </div>
       </div>
 
@@ -747,7 +747,7 @@ footer { background: #2a2a2a; color: #777; text-align: center; padding: 12px 24p
         <div class="barrier-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="14" width="18" height="6" rx="1.5" fill="#5a7aaa" opacity="0.15"/><rect x="2" y="14" width="18" height="6" rx="1.5" stroke="#5a7aaa" stroke-width="1.5"/><line x1="5" y1="14" x2="5" y2="17" stroke="#5a7aaa" stroke-width="1.5" stroke-linecap="round"/><line x1="8" y1="14" x2="8" y2="16" stroke="#5a7aaa" stroke-width="1.5" stroke-linecap="round"/><line x1="11" y1="14" x2="11" y2="17" stroke="#5a7aaa" stroke-width="1.5" stroke-linecap="round"/><line x1="14" y1="14" x2="14" y2="16" stroke="#5a7aaa" stroke-width="1.5" stroke-linecap="round"/><line x1="17" y1="14" x2="17" y2="17" stroke="#5a7aaa" stroke-width="1.5" stroke-linecap="round"/></svg></div>
         <div>
           <div class="barrier-title">Scale</div>
-          <div class="barrier-desc">The most powerful quantum computers in the world as of 2026 have hundreds to a few thousand physical qubits. Breaking RSA-2048 encryption with Shor's Algorithm would require millions of stable, error-corrected logical qubits. The gap between where we are and where we need to be for cryptographically relevant quantum computing is still large — though it's closing faster than most predicted a decade ago.</div>
+          <div class="barrier-desc">The most powerful quantum computers in the world as of 2026 have hundreds to a few thousand physical qubits. Breaking RSA-2048 encryption with Shor's Algorithm would require millions of stable, error-corrected logical qubits. The gap between where we are and where we need to be for cryptographically relevant quantum computing is still large. Though it's closing faster than most predicted a decade ago.</div>
         </div>
       </div>
 
@@ -755,7 +755,7 @@ footer { background: #2a2a2a; color: #777; text-align: center; padding: 12px 24p
 
     <h2>Where Quantum Computing Stands Today</h2>
 
-    <p>We are in what researchers call the <strong>NISQ era</strong> — Noisy Intermediate-Scale Quantum. NISQ devices have enough qubits to be interesting, but too much noise (error) to run the full fault-tolerant algorithms that would produce the most dramatic quantum speedups. Think of it as the equivalent of early 1950s classical computing: powerful enough to demonstrate the concept and solve narrow problems, not yet powerful enough for general-purpose deployment.</p>
+    <p>We are in what researchers call the <strong>NISQ era</strong>: Noisy Intermediate-Scale Quantum. NISQ devices have enough qubits to be interesting, but too much noise (error) to run the full fault-tolerant algorithms that would produce the most dramatic quantum speedups. Think of it as the equivalent of early 1950s classical computing: powerful enough to demonstrate the concept and solve narrow problems, not yet powerful enough for general-purpose deployment.</p>
 
     <div class="timeline" data-reveal>
 
@@ -763,52 +763,52 @@ footer { background: #2a2a2a; color: #777; text-align: center; padding: 12px 24p
         <div class="tl-dot" style="background:#7030c0;"></div>
         <div class="tl-year" style="color:#7030c0;">2019</div>
         <div class="tl-title">Google Claims Quantum Supremacy</div>
-        <div class="tl-desc">Google's 53-qubit Sycamore processor completed a specific sampling task in 200 seconds that the company estimated would take the world's fastest classical supercomputer 10,000 years. IBM disputed the estimate — but the milestone marked the first time a quantum computer demonstrably outperformed classical hardware on any task.</div>
+        <div class="tl-desc">Google's 53-qubit Sycamore processor completed a specific sampling task in 200 seconds that the company estimated would take the world's fastest classical supercomputer 10,000 years. IBM disputed the estimate. But the milestone marked the first time a quantum computer demonstrably outperformed classical hardware on any task.</div>
       </div>
 
       <div class="tl-item">
         <div class="tl-dot" style="background:#1a5a8a;"></div>
         <div class="tl-year" style="color:#1a5a8a;">2021–2023</div>
         <div class="tl-title">The Race to 1,000+ Qubits</div>
-        <div class="tl-desc">IBM, Google, IonQ, and Quantinuum all pushed qubit counts past the hundreds into the low thousands. IBM's Osprey processor reached 433 qubits in 2022; Condor reached 1,121 physical qubits in 2023. The focus increasingly shifted from qubit count to qubit quality — error rates, connectivity, and coherence times.</div>
+        <div class="tl-desc">IBM, Google, IonQ, and Quantinuum all pushed qubit counts past the hundreds into the low thousands. IBM's Osprey processor reached 433 qubits in 2022; Condor reached 1,121 physical qubits in 2023. The focus increasingly shifted from qubit count to qubit quality. Error rates, connectivity, and coherence times.</div>
       </div>
 
       <div class="tl-item">
         <div class="tl-dot" style="background:#2a7a0a;"></div>
         <div class="tl-year" style="color:#2a7a0a;">2025–2026</div>
         <div class="tl-title">Early Fault-Tolerant Demonstrations</div>
-        <div class="tl-desc">Microsoft and Google both demonstrated early logical qubit implementations — multiple physical qubits working together to represent one highly reliable logical qubit. These are the building blocks of fault-tolerant quantum computing. Practical, general-purpose fault-tolerant systems remain years away, but the foundational techniques are being validated in hardware for the first time.</div>
+        <div class="tl-desc">Microsoft and Google both demonstrated early logical qubit implementations. Multiple physical qubits working together to represent one highly reliable logical qubit. These are the building blocks of fault-tolerant quantum computing. Practical, general-purpose fault-tolerant systems remain years away, but the foundational techniques are being validated in hardware for the first time.</div>
       </div>
 
       <div class="tl-item">
         <div class="tl-dot" style="background:#d1db24;border-color:#1a1a1a;box-shadow:0 0 0 2px #d1db24;"></div>
-        <div class="tl-year" style="color:#b0b800;">2030s — Projected</div>
+        <div class="tl-year" style="color:#b0b800;">2030s. Projected</div>
         <div class="tl-title">Cryptographically Relevant Quantum Computing</div>
-        <div class="tl-desc">Most experts place the first systems capable of running cryptographically significant algorithms (like Shor's at RSA scale) somewhere in the 2030s — though estimates vary widely. Post-quantum cryptography standards published by NIST in 2024 are designed to ensure that when this threshold is crossed, the internet is already protected against it.</div>
+        <div class="tl-desc">Most experts place the first systems capable of running cryptographically significant algorithms (like Shor's at RSA scale) somewhere in the 2030s. Though estimates vary widely. Post-quantum cryptography standards published by NIST in 2024 are designed to ensure that when this threshold is crossed, the internet is already protected against it.</div>
       </div>
 
     </div>
 
     <h2>What Quantum Computing Means for You</h2>
 
-    <p>You don't need to understand the physics of superposition to be affected by what quantum computing makes possible. The decisions being made right now — by governments, by standards bodies, by cybersecurity teams — are being made in anticipation of a quantum-capable future. Here's what matters in practical terms.</p>
+    <p>You don't need to understand the physics of superposition to be affected by what quantum computing makes possible. The decisions being made right now. By governments, by standards bodies, by cybersecurity teams. Are being made in anticipation of a quantum-capable future. Here's what matters in practical terms.</p>
 
-    <p><strong>Post-quantum cryptography is already being deployed.</strong> NIST finalized the first quantum-resistant encryption standards in 2024. Organizations that handle sensitive long-term data — governments, healthcare systems, financial institutions — are beginning to migrate to these standards now, because data encrypted today can be harvested and decrypted later by a future quantum computer ("harvest now, decrypt later" attacks).</p>
+    <p><strong>Post-quantum cryptography is already being deployed.</strong> NIST finalized the first quantum-resistant encryption standards in 2024. Organizations that handle sensitive long-term data. Governments, healthcare systems, financial institutions. Are beginning to migrate to these standards now, because data encrypted today can be harvested and decrypted later by a future quantum computer ("harvest now, decrypt later" attacks).</p>
 
     <p><strong>Quantum literacy is becoming a professional differentiator.</strong> You don't need to build a quantum computer. But understanding what kinds of problems quantum computers solve, what their current limitations are, and how they interact with fields like cryptography, AI, and drug discovery is increasingly the kind of knowledge that separates generalists from specialists in technology strategy, policy, and security roles.</p>
 
-    <p><strong>The competitive landscape is already forming.</strong> The US, China, EU, Canada, and Australia are all running national quantum initiatives measured in billions of dollars. The companies building quantum hardware today — IBM, Google, IonQ, Quantinuum, PsiQuantum — are competing for a market that most analysts expect to be worth hundreds of billions before the end of the decade. Understanding the technology is understanding where significant economic and strategic power is being built.</p>
+    <p><strong>The competitive landscape is already forming.</strong> The US, China, EU, Canada, and Australia are all running national quantum initiatives measured in billions of dollars. The companies building quantum hardware today. IBM, Google, IonQ, Quantinuum, PsiQuantum. Are competing for a market that most analysts expect to be worth hundreds of billions before the end of the decade. Understanding the technology is understanding where significant economic and strategic power is being built.</p>
 
     <div class="callout">
       <div class="callout-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="11" cy="11" r="9" stroke="#d1db24" stroke-width="1.5"/><circle cx="11" cy="11" r="5.5" stroke="#d1db24" stroke-width="1.5"/><circle cx="11" cy="11" r="2" fill="#d1db24"/></svg></div>
-      <div class="callout-text">The best time to understand quantum computing is before it's everywhere — while there's still space to build intuition without urgency. The physics is genuinely strange, but the principles are learnable, and the implications are concrete. You don't need a physics degree. You need a good mental model and curiosity about what it means.</div>
+      <div class="callout-text">The best time to understand quantum computing is before it's everywhere. While there's still space to build intuition without urgency. The physics is genuinely strange, but the principles are learnable, and the implications are concrete. You don't need a physics degree. You need a good mental model and curiosity about what it means.</div>
     </div>
 
-    <p>Quantum computing is not science fiction. It's not yet the general-purpose revolution its most enthusiastic advocates sometimes describe. It's an emerging capability — built on real physics, advancing faster than most predicted, with clear near-term applications and profound long-term consequences. The people who understand it now will be the ones in the room when the decisions that matter get made.</p>
+    <p>Quantum computing is not science fiction. It's not yet the general-purpose revolution its most enthusiastic advocates sometimes describe. It's an emerging capability. Built on real physics, advancing faster than most predicted, with clear near-term applications and profound long-term consequences. The people who understand it now will be the ones in the room when the decisions that matter get made.</p>
 
     <div class="article-cta">
       <h3>Learn Quantum Computing the Way Your Brain Actually Retains It</h3>
-      <p>Qubit is a board game that teaches quantum computing concepts through hands-on play — superposition, entanglement, and quantum gates made tangible at the game table. Join the waitlist for early access.</p>
+      <p>Qubit is a board game that teaches quantum computing concepts through hands-on play. Superposition, entanglement, and quantum gates made tangible at the game table. Join the waitlist for early access.</p>
       <a href="/qubit-waitlist">Join the Qubit Waitlist →</a>
     </div>
 
@@ -816,7 +816,7 @@ footer { background: #2a2a2a; color: #777; text-align: center; padding: 12px 24p
 </div>
 
 <footer>
-  <p>© 2025 Tech Board Games. All rights reserved.</p>
+  <p>© 2025 Tech CoLab. All rights reserved.</p>
 </footer>
 
 <script>
