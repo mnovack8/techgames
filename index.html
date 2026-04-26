@@ -51,10 +51,11 @@ header {
 .header-logo {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 4px;
   text-decoration: none;
 }
-.header-logo img { height: 48px; width: auto; object-fit: contain; }
+.header-logo img { height: 64px; width: auto; object-fit: contain; object-position: left center; display: block; margin: 0 -14px 0 -10px; }
+.header-logo > div { margin-top: -12px; }
 .header-logo .logo-text {
   font-size: 16px;
   font-weight: 800;
@@ -116,7 +117,7 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
 @media (max-width: 600px) {
   header { padding: 8px 16px 6px; height: auto; flex-direction: column; align-items: center; gap: 4px; }
   .header-logo { gap: 8px; }
-  .header-logo img { height: 28px; width: auto; }
+  .header-logo img { height: 40px; width: auto; margin: 0 -10px 0 -6px; }
   .header-logo .logo-text { font-size: 12px; }
   .header-logo .logo-sub { font-size: 8px; letter-spacing: 1px; }
   nav { gap: 0; justify-content: center; flex-wrap: wrap; }
