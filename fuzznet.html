@@ -2798,6 +2798,11 @@ if (urlRoom) {
     if (joinCard) joinCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, 250);
 }
+
+// Auto-start tutorial via ?tutorial=1
+if (new URLSearchParams(location.search).get('tutorial') === '1') {
+  setTimeout(() => { try { startTutorial(); } catch (e) {} }, 300);
+}
 </script>
 </body>
 </html>

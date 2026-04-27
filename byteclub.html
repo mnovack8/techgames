@@ -5248,6 +5248,11 @@ connectWS(() => {
     send({ type: 'query_event_rooms', codes: savedCodes });
   }
 });
+
+// Auto-start tutorial via ?tutorial=1
+if (urlParams.get('tutorial') === '1') {
+  setTimeout(() => { try { startBcTutorial(); } catch (e) {} }, 300);
+}
 </script>
 </body>
 </html>
