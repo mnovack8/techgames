@@ -19,6 +19,8 @@
 <meta property="og:site_name" content="Tech CoLab">
 <meta property="og:locale" content="en_US">
 <meta name="theme-color" content="#62b517">
+<link rel="icon" type="image/png" href="/images/logo.png">
+<link rel="apple-touch-icon" href="/images/logo.png">
 <link rel="canonical" href="https://cybersecgames.com/fuzznet">
 <title>FuzzNet Labs. AI & Machine Learning Board Game</title>
 <style>
@@ -2060,7 +2062,7 @@ function showGameOver() {
         const pl=G.players[e.player];
         const tied=roundCounts[e.round]>1;
         h += `<td class="go-sb-entry"><span style="color:${pl.hex}">●&nbsp;${pl.name}</span>${tied?'<span class="tie-mark">=</span>':''}</td>`;
-      } else h += `<td class="go-sb-entry" style="color:#ddd">—</td>`;
+      } else h += `<td class="go-sb-entry" style="color:#ddd">-</td>`;
     }
     h += '</tr>';
   }

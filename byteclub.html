@@ -19,6 +19,8 @@
 <meta property="og:site_name" content="Tech CoLab">
 <meta property="og:locale" content="en_US">
 <meta name="theme-color" content="#62b517">
+<link rel="icon" type="image/png" href="/images/logo.png">
+<link rel="apple-touch-icon" href="/images/logo.png">
 <link rel="canonical" href="https://cybersecgames.com/byteclub">
 <title>Byte Club. Cybersecurity Card Game</title>
 <style>
@@ -1424,7 +1426,7 @@ body.screen-idle-glow::after{
         <div class="sc-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="4" width="14" height="18" rx="2"/><rect x="6" y="2" width="14" height="18" rx="2" fill="#1a2235" stroke="#374151"/><line x1="9" y1="9" x2="17" y2="9"/><line x1="9" y1="13" x2="15" y2="13"/></svg></div>
         <div class="sc-text">
           <div class="sc-name">Draw Deck <span class="info-btn" onclick="">i<div class="info-popup below">At the end of each turn you <strong>draw 1 card</strong>. If you have more than 6 cards you must discard down to 6. The deck contains attack and defend cards.</div></span></div>
-          <div class="sc-status" id="deck-count">— cards</div>
+          <div class="sc-status" id="deck-count">0 cards</div>
         </div>
       </div>
       <div class="special-card sc-dataflag" id="sc-dataflag">
@@ -3200,7 +3202,7 @@ function renderObserverActiveActions(gs) {
   const curColor  = COLOR_INFO[curPlayer?.color]?.hex || '#888';
   const curName   = curPlayer?.name || '?';
   if (actionsHeader) {
-    actionsHeader.innerHTML = `Active Actions <span style="color:${curColor};font-weight:800;font-size:9px;text-transform:none;letter-spacing:0">— ${curName}</span>`;
+    actionsHeader.innerHTML = `Active Actions <span style="color:${curColor};font-weight:800;font-size:9px;text-transform:none;letter-spacing:0">${curName}</span>`;
   }
 
   // Build a synthetic game state from the current player's point of view so

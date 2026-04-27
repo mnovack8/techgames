@@ -3373,6 +3373,7 @@ const server = http.createServer((req, res) => {
   else if (pathname === '/about' || pathname === '/about.html') pathname = '/about.html';
   else if (pathname === '/corporate-training' || pathname === '/corporate-training.html') pathname = '/corporate-training.html';
   else if (pathname === '/specialized-training' || pathname === '/specialized-training.html') pathname = '/specialized-training.html';
+  else if (pathname === '/buy-now' || pathname === '/buy-now.html') pathname = '/buy-now.html';
   else if (pathname === '/admin' || pathname === '/admin.html') pathname = '/admin.html';
   else if (pathname === '/blog'  || pathname === '/blog.html')  pathname = '/blog.html';
   else if (pathname.startsWith('/blog/') && !path.extname(pathname)) pathname = pathname + '.html';
