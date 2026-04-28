@@ -3370,7 +3370,6 @@ const server = http.createServer((req, res) => {
   else if (pathname === '/ai' || pathname === '/ai.html') pathname = '/ai.html';
   else if (pathname === '/qubit-waitlist' || pathname === '/qubit-waitlist.html') pathname = '/qubit-waitlist.html';
   else if (pathname === '/contact' || pathname === '/contact.html') pathname = '/contact.html';
-  else if (pathname === '/about' || pathname === '/about.html') pathname = '/about.html';
   else if (pathname === '/corporate-training' || pathname === '/corporate-training.html') pathname = '/corporate-training.html';
   else if (pathname === '/specialized-training' || pathname === '/specialized-training.html') pathname = '/specialized-training.html';
   else if (pathname === '/buy-now' || pathname === '/buy-now.html') pathname = '/buy-now.html';
