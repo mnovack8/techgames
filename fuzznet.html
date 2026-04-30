@@ -2344,6 +2344,36 @@ const TSTEPS = [
   { title:'Concept 1: Data is Destiny',
     body:`<p>An AI model learns entirely from the data it was trained on. It has no instincts, no common sense, and no ability to reason beyond what it has seen. <b>The data is the model.</b></p>
 <p>If the training data is incomplete, biased, or mislabeled, those flaws get baked directly into every prediction the model makes, often invisibly. Garbage in, garbage out.</p>
+<div style="margin:10px 0 8px;display:flex;flex-direction:column;gap:5px">
+  <div style="display:flex;align-items:center;gap:5px">
+    <div style="flex:0 0 auto;background:#e6f3cf;border:1.5px solid #62b517;border-radius:8px;padding:4px 7px;min-width:110px;text-align:center">
+      <div style="font-size:7px;font-weight:800;color:#3a6a0a;text-transform:uppercase;letter-spacing:0.6px">Balanced Data</div>
+      <div style="font-size:13px;margin-top:1px">🐕 🐇 🐸 🐿 🐟</div>
+    </div>
+    <div style="color:#4a8c11;font-size:16px;font-weight:900;flex-shrink:0">→</div>
+    <div style="background:#f4fae8;border:1.5px solid #a8c96a;border-radius:8px;padding:4px 9px;text-align:center;flex-shrink:0">
+      <div style="font-size:8px;font-weight:800;color:#4a8c11;text-transform:uppercase;letter-spacing:0.5px">Model</div>
+    </div>
+    <div style="color:#4a8c11;font-size:16px;font-weight:900;flex-shrink:0">→</div>
+    <div style="background:#e6f3cf;border:1.5px solid #62b517;border-radius:8px;padding:4px 8px;flex:1">
+      <div style="font-size:8.5px;font-weight:800;color:#3a6a0a">✓ Learns all animals accurately</div>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:5px">
+    <div style="flex:0 0 auto;background:#fde8d8;border:1.5px solid #d06010;border-radius:8px;padding:4px 7px;min-width:110px;text-align:center">
+      <div style="font-size:7px;font-weight:800;color:#b04000;text-transform:uppercase;letter-spacing:0.6px">Biased Data</div>
+      <div style="font-size:13px;margin-top:1px">🐕 🐕 🐕 🐕 🐇</div>
+    </div>
+    <div style="color:#d06010;font-size:16px;font-weight:900;flex-shrink:0">→</div>
+    <div style="background:#fff8f4;border:1.5px solid #e09060;border-radius:8px;padding:4px 9px;text-align:center;flex-shrink:0">
+      <div style="font-size:8px;font-weight:800;color:#d06010;text-transform:uppercase;letter-spacing:0.5px">Model</div>
+    </div>
+    <div style="color:#d06010;font-size:16px;font-weight:900;flex-shrink:0">→</div>
+    <div style="background:#fde8d8;border:1.5px solid #d06010;border-radius:8px;padding:4px 8px;flex:1">
+      <div style="font-size:8.5px;font-weight:800;color:#b04000">✗ Thinks everything is a dog</div>
+    </div>
+  </div>
+</div>
 <p>In FuzzNet Labs, the data tokens on the board represent your training data. Which animals you train on, and how many times, directly shapes what your network can classify. You'll feel this play out in real time.</p>`,
     makeG:()=>tutMakeG(),
     next:'Concept 2: 100% Is Not Possible →' },
@@ -2354,7 +2384,37 @@ const TSTEPS = [
 <p><b>False negatives</b> - the model misses something it should have caught.<br>
 <b>False positives</b> - the model flags something it shouldn't have.</p>
 <p>Here's the hard truth: <b>if you tune a model to guarantee zero false negatives, your false positives go up. Lower your false positives, and your false negatives rise.</b> You can shift the balance, but you cannot eliminate both at once. That tension is why 100% accuracy is not a realistic target for any real-world AI system.</p>
+<div style="background:#f4fae8;border:1.5px solid #a8c96a;border-radius:10px;padding:8px 10px;margin:8px 0 6px">
+  <div style="font-size:8px;font-weight:800;color:#4a8c11;text-transform:uppercase;letter-spacing:1px;text-align:center;margin-bottom:7px">The Unavoidable Trade-off</div>
+  <div style="display:flex;align-items:center;gap:5px;margin-bottom:5px">
+    <div style="background:#e6f3cf;border:1.5px solid #62b517;border-radius:6px;padding:4px 7px;font-size:8px;font-weight:800;color:#3a6a0a;flex:1;text-align:center">Fewer False Negatives ↓</div>
+    <div style="font-size:13px;color:#888;font-weight:900;flex-shrink:0">⇒</div>
+    <div style="background:#fde8d8;border:1.5px solid #d06010;border-radius:6px;padding:4px 7px;font-size:8px;font-weight:800;color:#b04000;flex:1;text-align:center">False Positives Rise ↑</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:5px">
+    <div style="background:#e6f3cf;border:1.5px solid #62b517;border-radius:6px;padding:4px 7px;font-size:8px;font-weight:800;color:#3a6a0a;flex:1;text-align:center">Fewer False Positives ↓</div>
+    <div style="font-size:13px;color:#888;font-weight:900;flex-shrink:0">⇒</div>
+    <div style="background:#fde8d8;border:1.5px solid #d06010;border-radius:6px;padding:4px 7px;font-size:8px;font-weight:800;color:#b04000;flex:1;text-align:center">False Negatives Rise ↑</div>
+  </div>
+</div>
 <p>A related trap is <b>overfitting</b> - when a model is trained so heavily on one type of data that it stops learning general patterns and just assumes everything looks like what it has seen the most. Imagine 80% of your training photos are dogs. Now you show the model a squirrel. It sees fur, four legs, and thinks: dog. That's the only world it knows. It hasn't learned "squirrel" - it has learned "fur plus legs equals dog" because that was almost always true in its training data. The model isn't broken. It's doing exactly what it was taught. The data was the problem.</p>
+<div style="background:#f4fae8;border:1.5px solid #a8c96a;border-radius:10px;padding:8px 12px;margin:8px 0 6px">
+  <div style="font-size:8px;font-weight:800;color:#4a8c11;text-transform:uppercase;letter-spacing:1px;text-align:center;margin-bottom:7px">Overfitting: Memorised vs. Generalised</div>
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px">
+    <div style="font-size:8px;color:#555;width:76px;text-align:right;flex-shrink:0">Training data</div>
+    <div style="flex:1;background:#dde8c8;border-radius:4px;height:13px;overflow:hidden">
+      <div style="width:98%;height:100%;background:#62b517;border-radius:4px"></div>
+    </div>
+    <div style="font-size:8.5px;font-weight:800;color:#4a8c11;width:28px;flex-shrink:0">98%</div>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px">
+    <div style="font-size:8px;color:#555;width:76px;text-align:right;flex-shrink:0">New real data</div>
+    <div style="flex:1;background:#dde8c8;border-radius:4px;height:13px;overflow:hidden">
+      <div style="width:52%;height:100%;background:#d06010;border-radius:4px"></div>
+    </div>
+    <div style="font-size:8.5px;font-weight:800;color:#d06010;width:28px;flex-shrink:0">52%</div>
+  </div>
+</div>
 <p>In the game, when you overtrain a path by stacking too many data tokens on it, you are forced to block one of your own edges. Your own network becomes too rigid, too certain, and loses the flexibility to generalize. That cost is intentional.</p>
 <p>In the game, you'll see this when you test animals. Even a fully trained path can still fail on a roll. That's not a bug. It's the point.</p>`,
     makeG:()=>tutMakeG(),
@@ -2403,6 +2463,56 @@ const TSTEPS = [
     body:`<p>A <b>neural network</b> takes data in on one side, passes it through layers of connected nodes, and produces an output on the other side. Each node detects a pattern. Each layer builds on the last. The connections get stronger or weaker during training until the network gets better at its task.</p>
 <p>That is the foundation of how <b>Large Language Models (LLMs)</b> like ChatGPT work. LLMs are built on a specific neural network architecture called a <b>transformer</b>, a major advancement over earlier designs, with additional techniques layered on top for alignment, safety, and instruction-following. But the core structure is neural network all the way down: data in, layers of pattern detection, output out.</p>
 <p>The scale is what's different. LLMs were trained on <b>a massive amount of text, essentially the internet</b>, which is why they can write, reason, and converse across almost any topic. But Concepts 1 and 2 still apply fully: the internet's biases are inside the model, and they still get things wrong.</p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0 6px">
+  <div style="background:#e6f3cf;border:1.5px solid #62b517;border-radius:10px;padding:8px 6px;text-align:center">
+    <div style="font-size:9px;font-weight:800;color:#3a6a0a;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:6px">FuzzNet Labs</div>
+    <svg viewBox="0 0 140 96" style="width:100%;max-width:140px;display:block;margin:0 auto" aria-hidden="true">
+      <line x1="22" y1="16" x2="58" y2="16" stroke="#a8c96a" stroke-width="0.8" opacity="0.7"/>
+      <line x1="22" y1="16" x2="58" y2="48" stroke="#a8c96a" stroke-width="0.8" opacity="0.7"/>
+      <line x1="22" y1="16" x2="58" y2="80" stroke="#a8c96a" stroke-width="0.8" opacity="0.7"/>
+      <line x1="22" y1="48" x2="58" y2="16" stroke="#a8c96a" stroke-width="0.8" opacity="0.7"/>
+      <line x1="22" y1="48" x2="58" y2="48" stroke="#a8c96a" stroke-width="0.8" opacity="0.7"/>
+      <line x1="22" y1="48" x2="58" y2="80" stroke="#a8c96a" stroke-width="0.8" opacity="0.7"/>
+      <line x1="22" y1="80" x2="58" y2="16" stroke="#a8c96a" stroke-width="0.8" opacity="0.7"/>
+      <line x1="22" y1="80" x2="58" y2="48" stroke="#a8c96a" stroke-width="0.8" opacity="0.7"/>
+      <line x1="22" y1="80" x2="58" y2="80" stroke="#a8c96a" stroke-width="0.8" opacity="0.7"/>
+      <line x1="70" y1="16" x2="106" y2="16" stroke="#a8c96a" stroke-width="0.8" opacity="0.7"/>
+      <line x1="70" y1="16" x2="106" y2="48" stroke="#a8c96a" stroke-width="0.8" opacity="0.7"/>
+      <line x1="70" y1="16" x2="106" y2="80" stroke="#a8c96a" stroke-width="0.8" opacity="0.7"/>
+      <line x1="70" y1="48" x2="106" y2="16" stroke="#a8c96a" stroke-width="0.8" opacity="0.7"/>
+      <line x1="70" y1="48" x2="106" y2="48" stroke="#a8c96a" stroke-width="0.8" opacity="0.7"/>
+      <line x1="70" y1="48" x2="106" y2="80" stroke="#a8c96a" stroke-width="0.8" opacity="0.7"/>
+      <line x1="70" y1="80" x2="106" y2="16" stroke="#a8c96a" stroke-width="0.8" opacity="0.7"/>
+      <line x1="70" y1="80" x2="106" y2="48" stroke="#a8c96a" stroke-width="0.8" opacity="0.7"/>
+      <line x1="70" y1="80" x2="106" y2="80" stroke="#a8c96a" stroke-width="0.8" opacity="0.7"/>
+      <circle cx="22" cy="16" r="10" fill="#e6f3cf" stroke="#62b517" stroke-width="1.5"/>
+      <circle cx="22" cy="48" r="10" fill="#e6f3cf" stroke="#62b517" stroke-width="1.5"/>
+      <circle cx="22" cy="80" r="10" fill="#e6f3cf" stroke="#62b517" stroke-width="1.5"/>
+      <circle cx="64" cy="16" r="10" fill="#e6f3cf" stroke="#62b517" stroke-width="1.5"/>
+      <circle cx="64" cy="48" r="10" fill="#e6f3cf" stroke="#62b517" stroke-width="1.5"/>
+      <circle cx="64" cy="80" r="10" fill="#e6f3cf" stroke="#62b517" stroke-width="1.5"/>
+      <circle cx="106" cy="16" r="10" fill="#e6f3cf" stroke="#62b517" stroke-width="1.5"/>
+      <circle cx="106" cy="48" r="10" fill="#e6f3cf" stroke="#62b517" stroke-width="1.5"/>
+      <circle cx="106" cy="80" r="10" fill="#e6f3cf" stroke="#62b517" stroke-width="1.5"/>
+      <text x="22" y="96" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#4a8c11" font-weight="700">L1</text>
+      <text x="64" y="96" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#4a8c11" font-weight="700">L2</text>
+      <text x="106" y="96" text-anchor="middle" font-family="Nunito,sans-serif" font-size="7" fill="#4a8c11" font-weight="700">L3</text>
+    </svg>
+    <div style="font-size:7.5px;color:#555;line-height:1.7;margin-top:4px">3 layers · 9 nodes<br>Trained on: animal photos<br>Task: classify 5 animals</div>
+  </div>
+  <div style="background:#fff8f4;border:1.5px solid #d06010;border-radius:10px;padding:8px 6px;text-align:center">
+    <div style="font-size:9px;font-weight:800;color:#b04000;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:6px">LLM / ChatGPT</div>
+    <svg viewBox="0 0 140 96" style="width:100%;max-width:140px;display:block;margin:0 auto" aria-hidden="true">
+      <circle cx="10" cy="8"  r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="30" cy="8"  r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="50" cy="8"  r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="70" cy="8"  r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="90" cy="8"  r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="110" cy="8"  r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="130" cy="8"  r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/>
+      <circle cx="10" cy="24" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="30" cy="24" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="50" cy="24" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="70" cy="24" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="90" cy="24" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="110" cy="24" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="130" cy="24" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/>
+      <circle cx="10" cy="40" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="30" cy="40" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="50" cy="40" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="70" cy="40" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="90" cy="40" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="110" cy="40" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="130" cy="40" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/>
+      <circle cx="10" cy="56" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="30" cy="56" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="50" cy="56" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="70" cy="56" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="90" cy="56" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="110" cy="56" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="130" cy="56" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/>
+      <circle cx="10" cy="72" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="30" cy="72" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="50" cy="72" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="70" cy="72" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="90" cy="72" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="110" cy="72" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="130" cy="72" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/>
+      <text x="70" y="88" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" fill="#d06010" font-weight="800">· · · ×billions more</text>
+    </svg>
+    <div style="font-size:7.5px;color:#555;line-height:1.7;margin-top:4px">100+ layers · billions of params<br>Trained on: the internet<br>Task: almost anything</div>
+  </div>
+</div>
 <p>The 3-layer network you're about to build is the same underlying idea, just miniaturized.</p>`,
     makeG:()=>tutMakeG(),
     next:'Got it - Start the Tutorial →' },
