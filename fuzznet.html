@@ -2317,23 +2317,43 @@ const TSTEPS = [
 <p>Before the tutorial walks you through the mechanics, here are <b>two concepts</b> worth carrying into every AI conversation you'll ever have, and a quick explanation of how this game connects to tools like <b>ChatGPT</b>.</p>
 <div style="display:flex;gap:5px;flex-wrap:wrap;margin:10px 0 2px">
   <div style="flex:1;min-width:72px;background:#e6f3cf;border:1.5px solid #62b517;border-radius:8px;padding:6px 6px;text-align:center">
-    <div style="font-size:15px">📊</div>
+    <svg width="20" height="20" viewBox="0 0 20 20" style="display:block;margin:0 auto" fill="none">
+      <rect x="2" y="12" width="4" height="6" rx="1" fill="#62b517"/>
+      <rect x="8" y="7" width="4" height="11" rx="1" fill="#62b517"/>
+      <rect x="14" y="3" width="4" height="15" rx="1" fill="#3a6a0a"/>
+    </svg>
     <div style="font-size:9px;font-weight:800;color:#3a6a0a;margin-top:2px">Data is Destiny</div>
   </div>
   <div style="flex:1;min-width:72px;background:#e6f3cf;border:1.5px solid #62b517;border-radius:8px;padding:6px 6px;text-align:center">
-    <div style="font-size:15px">🎯</div>
+    <svg width="20" height="20" viewBox="0 0 20 20" style="display:block;margin:0 auto" fill="none">
+      <circle cx="6" cy="6" r="2.8" stroke="#62b517" stroke-width="1.8"/>
+      <circle cx="14" cy="14" r="2.8" stroke="#62b517" stroke-width="1.8"/>
+      <line x1="3" y1="17" x2="17" y2="3" stroke="#3a6a0a" stroke-width="1.8" stroke-linecap="round"/>
+    </svg>
     <div style="font-size:9px;font-weight:800;color:#3a6a0a;margin-top:2px">100% Not Possible</div>
   </div>
   <div style="flex:1;min-width:72px;background:#e6f3cf;border:1.5px solid #62b517;border-radius:8px;padding:6px 6px;text-align:center">
-    <div style="font-size:15px">🔁</div>
+    <svg width="20" height="20" viewBox="0 0 20 20" style="display:block;margin:0 auto" fill="none">
+      <path d="M10 2 A8 8 0 1 1 3.5 13.5" stroke="#62b517" stroke-width="1.8" stroke-linecap="round"/>
+      <polygon points="10,0 14.5,5 5.5,5" fill="#3a6a0a"/>
+    </svg>
     <div style="font-size:9px;font-weight:800;color:#3a6a0a;margin-top:2px">How AI Learns</div>
   </div>
   <div style="flex:1;min-width:72px;background:#e6f3cf;border:1.5px solid #62b517;border-radius:8px;padding:6px 6px;text-align:center">
-    <div style="font-size:15px">🧠</div>
+    <svg width="20" height="20" viewBox="0 0 20 20" style="display:block;margin:0 auto" fill="none">
+      <line x1="5" y1="10" x2="15" y2="5" stroke="#a8c96a" stroke-width="1.4"/>
+      <line x1="5" y1="10" x2="15" y2="15" stroke="#a8c96a" stroke-width="1.4"/>
+      <line x1="15" y1="5" x2="15" y2="15" stroke="#a8c96a" stroke-width="1.4"/>
+      <circle cx="5" cy="10" r="3" fill="#62b517"/>
+      <circle cx="15" cy="5" r="3" fill="#62b517"/>
+      <circle cx="15" cy="15" r="3" fill="#3a6a0a"/>
+    </svg>
     <div style="font-size:9px;font-weight:800;color:#3a6a0a;margin-top:2px">Nets + LLMs</div>
   </div>
   <div style="flex:1;min-width:72px;background:#4a8c11;border:1.5px solid #3a6a0a;border-radius:8px;padding:6px 6px;text-align:center">
-    <div style="font-size:15px">▶</div>
+    <svg width="20" height="20" viewBox="0 0 20 20" style="display:block;margin:0 auto" fill="none">
+      <polygon points="5,3 17,10 5,17" fill="#d4f0a0"/>
+    </svg>
     <div style="font-size:9px;font-weight:800;color:#d4f0a0;margin-top:2px">Play FuzzNet</div>
   </div>
 </div>`,
@@ -2346,9 +2366,15 @@ const TSTEPS = [
 <p>If the training data is incomplete, biased, or mislabeled, those flaws get baked directly into every prediction the model makes, often invisibly. Garbage in, garbage out.</p>
 <div style="margin:10px 0 8px;display:flex;flex-direction:column;gap:5px">
   <div style="display:flex;align-items:center;gap:5px">
-    <div style="flex:0 0 auto;background:#e6f3cf;border:1.5px solid #62b517;border-radius:8px;padding:4px 7px;min-width:110px;text-align:center">
+    <div style="flex:0 0 auto;background:#e6f3cf;border:1.5px solid #62b517;border-radius:8px;padding:4px 7px;min-width:122px;text-align:center">
       <div style="font-size:7px;font-weight:800;color:#3a6a0a;text-transform:uppercase;letter-spacing:0.6px">Balanced Data</div>
-      <div style="font-size:13px;margin-top:1px">🐕 🐇 🐸 🐿 🐟</div>
+      <div style="display:flex;gap:2px;justify-content:center;margin-top:3px">
+        <svg width="20" height="20" viewBox="0 0 20 20" style="display:block;flex-shrink:0"><circle cx="10" cy="10" r="10" fill="#3a6a0a"/><ellipse cx="3.5" cy="13.5" rx="3" ry="5.5" fill="white"/><ellipse cx="16.5" cy="13.5" rx="3" ry="5.5" fill="white"/><circle cx="10" cy="9" r="5.5" fill="white"/><ellipse cx="10" cy="12.5" rx="3.5" ry="2.5" fill="#e8e8d8"/><circle cx="7.5" cy="7.5" r="1.2" fill="#3a6a0a"/><circle cx="12.5" cy="7.5" r="1.2" fill="#3a6a0a"/><ellipse cx="10" cy="11.5" rx="1.5" ry="1" fill="#3a6a0a"/></svg>
+        <svg width="20" height="20" viewBox="0 0 20 20" style="display:block;flex-shrink:0"><circle cx="10" cy="10" r="10" fill="#d1db24"/><ellipse cx="7.5" cy="6" rx="2" ry="5.5" fill="#2a2a2a"/><ellipse cx="12.5" cy="6" rx="2" ry="5.5" fill="#2a2a2a"/><circle cx="10" cy="13.5" r="5" fill="#2a2a2a"/><circle cx="8.3" cy="12.8" r="0.9" fill="#d1db24"/><circle cx="11.7" cy="12.8" r="0.9" fill="#d1db24"/></svg>
+        <svg width="20" height="20" viewBox="0 0 20 20" style="display:block;flex-shrink:0"><circle cx="10" cy="10" r="10" fill="#62b517"/><ellipse cx="10" cy="13.5" rx="7.5" ry="5" fill="#a8c96a"/><circle cx="6" cy="7.5" r="3.5" fill="white"/><circle cx="14" cy="7.5" r="3.5" fill="white"/><circle cx="6" cy="7.5" r="2" fill="#1a3a00"/><circle cx="14" cy="7.5" r="2" fill="#1a3a00"/><path d="M5.5 14.5 Q10 18 14.5 14.5" stroke="#3a6a0a" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+        <svg width="20" height="20" viewBox="0 0 20 20" style="display:block;flex-shrink:0"><circle cx="10" cy="10" r="10" fill="#a8c96a"/><polygon points="6,6 4,1 9,5" fill="#3a6a0a"/><polygon points="14,6 16,1 11,5" fill="#3a6a0a"/><circle cx="10" cy="10" r="5" fill="#3a6a0a"/><circle cx="8.3" cy="9" r="1" fill="#a8c96a"/><circle cx="11.7" cy="9" r="1" fill="#a8c96a"/><ellipse cx="14.5" cy="14.5" rx="2.5" ry="1.2" fill="#5a3a0a"/><line x1="14.5" y1="13.3" x2="14.5" y2="14" stroke="#5a3a0a" stroke-width="1" stroke-linecap="round"/><ellipse cx="14.5" cy="16.2" rx="1.8" ry="1.8" fill="#c87820"/></svg>
+        <svg width="20" height="20" viewBox="0 0 20 20" style="display:block;flex-shrink:0"><circle cx="10" cy="10" r="10" fill="#e6f3cf"/><polygon points="15,7 19,10 15,13" fill="#4a8c11"/><ellipse cx="9" cy="10" rx="6.5" ry="4" fill="#4a8c11"/><circle cx="5" cy="9.2" r="1.4" fill="white"/><circle cx="5" cy="9.2" r="0.7" fill="#1a3a00"/></svg>
+      </div>
     </div>
     <div style="color:#4a8c11;font-size:16px;font-weight:900;flex-shrink:0">→</div>
     <div style="background:#f4fae8;border:1.5px solid #a8c96a;border-radius:8px;padding:4px 9px;text-align:center;flex-shrink:0">
@@ -2360,9 +2386,15 @@ const TSTEPS = [
     </div>
   </div>
   <div style="display:flex;align-items:center;gap:5px">
-    <div style="flex:0 0 auto;background:#fde8d8;border:1.5px solid #d06010;border-radius:8px;padding:4px 7px;min-width:110px;text-align:center">
+    <div style="flex:0 0 auto;background:#fde8d8;border:1.5px solid #d06010;border-radius:8px;padding:4px 7px;min-width:122px;text-align:center">
       <div style="font-size:7px;font-weight:800;color:#b04000;text-transform:uppercase;letter-spacing:0.6px">Biased Data</div>
-      <div style="font-size:13px;margin-top:1px">🐕 🐕 🐕 🐕 🐇</div>
+      <div style="display:flex;gap:2px;justify-content:center;margin-top:3px">
+        <svg width="20" height="20" viewBox="0 0 20 20" style="display:block;flex-shrink:0"><circle cx="10" cy="10" r="10" fill="#3a6a0a"/><ellipse cx="3.5" cy="13.5" rx="3" ry="5.5" fill="white"/><ellipse cx="16.5" cy="13.5" rx="3" ry="5.5" fill="white"/><circle cx="10" cy="9" r="5.5" fill="white"/><ellipse cx="10" cy="12.5" rx="3.5" ry="2.5" fill="#e8e8d8"/><circle cx="7.5" cy="7.5" r="1.2" fill="#3a6a0a"/><circle cx="12.5" cy="7.5" r="1.2" fill="#3a6a0a"/><ellipse cx="10" cy="11.5" rx="1.5" ry="1" fill="#3a6a0a"/></svg>
+        <svg width="20" height="20" viewBox="0 0 20 20" style="display:block;flex-shrink:0"><circle cx="10" cy="10" r="10" fill="#3a6a0a"/><ellipse cx="3.5" cy="13.5" rx="3" ry="5.5" fill="white"/><ellipse cx="16.5" cy="13.5" rx="3" ry="5.5" fill="white"/><circle cx="10" cy="9" r="5.5" fill="white"/><ellipse cx="10" cy="12.5" rx="3.5" ry="2.5" fill="#e8e8d8"/><circle cx="7.5" cy="7.5" r="1.2" fill="#3a6a0a"/><circle cx="12.5" cy="7.5" r="1.2" fill="#3a6a0a"/><ellipse cx="10" cy="11.5" rx="1.5" ry="1" fill="#3a6a0a"/></svg>
+        <svg width="20" height="20" viewBox="0 0 20 20" style="display:block;flex-shrink:0"><circle cx="10" cy="10" r="10" fill="#3a6a0a"/><ellipse cx="3.5" cy="13.5" rx="3" ry="5.5" fill="white"/><ellipse cx="16.5" cy="13.5" rx="3" ry="5.5" fill="white"/><circle cx="10" cy="9" r="5.5" fill="white"/><ellipse cx="10" cy="12.5" rx="3.5" ry="2.5" fill="#e8e8d8"/><circle cx="7.5" cy="7.5" r="1.2" fill="#3a6a0a"/><circle cx="12.5" cy="7.5" r="1.2" fill="#3a6a0a"/><ellipse cx="10" cy="11.5" rx="1.5" ry="1" fill="#3a6a0a"/></svg>
+        <svg width="20" height="20" viewBox="0 0 20 20" style="display:block;flex-shrink:0"><circle cx="10" cy="10" r="10" fill="#3a6a0a"/><ellipse cx="3.5" cy="13.5" rx="3" ry="5.5" fill="white"/><ellipse cx="16.5" cy="13.5" rx="3" ry="5.5" fill="white"/><circle cx="10" cy="9" r="5.5" fill="white"/><ellipse cx="10" cy="12.5" rx="3.5" ry="2.5" fill="#e8e8d8"/><circle cx="7.5" cy="7.5" r="1.2" fill="#3a6a0a"/><circle cx="12.5" cy="7.5" r="1.2" fill="#3a6a0a"/><ellipse cx="10" cy="11.5" rx="1.5" ry="1" fill="#3a6a0a"/></svg>
+        <svg width="20" height="20" viewBox="0 0 20 20" style="display:block;flex-shrink:0"><circle cx="10" cy="10" r="10" fill="#d1db24"/><ellipse cx="7.5" cy="6" rx="2" ry="5.5" fill="#2a2a2a"/><ellipse cx="12.5" cy="6" rx="2" ry="5.5" fill="#2a2a2a"/><circle cx="10" cy="13.5" r="5" fill="#2a2a2a"/><circle cx="8.3" cy="12.8" r="0.9" fill="#d1db24"/><circle cx="11.7" cy="12.8" r="0.9" fill="#d1db24"/></svg>
+      </div>
     </div>
     <div style="color:#d06010;font-size:16px;font-weight:900;flex-shrink:0">→</div>
     <div style="background:#fff8f4;border:1.5px solid #e09060;border-radius:8px;padding:4px 9px;text-align:center;flex-shrink:0">
@@ -2500,15 +2532,15 @@ const TSTEPS = [
     </svg>
     <div style="font-size:7.5px;color:#555;line-height:1.7;margin-top:4px">3 layers · 9 nodes<br>Trained on: animal photos<br>Task: classify 5 animals</div>
   </div>
-  <div style="background:#fff8f4;border:1.5px solid #d06010;border-radius:10px;padding:8px 6px;text-align:center">
-    <div style="font-size:9px;font-weight:800;color:#b04000;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:6px">LLM / ChatGPT</div>
+  <div style="background:#eef2ff;border:1.5px solid #4472ca;border-radius:10px;padding:8px 6px;text-align:center">
+    <div style="font-size:9px;font-weight:800;color:#1e3a8a;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:6px">LLM / ChatGPT</div>
     <svg viewBox="0 0 140 96" style="width:100%;max-width:140px;display:block;margin:0 auto" aria-hidden="true">
-      <circle cx="10" cy="8"  r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="30" cy="8"  r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="50" cy="8"  r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="70" cy="8"  r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="90" cy="8"  r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="110" cy="8"  r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="130" cy="8"  r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/>
-      <circle cx="10" cy="24" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="30" cy="24" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="50" cy="24" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="70" cy="24" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="90" cy="24" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="110" cy="24" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="130" cy="24" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/>
-      <circle cx="10" cy="40" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="30" cy="40" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="50" cy="40" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="70" cy="40" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="90" cy="40" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="110" cy="40" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="130" cy="40" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/>
-      <circle cx="10" cy="56" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="30" cy="56" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="50" cy="56" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="70" cy="56" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="90" cy="56" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="110" cy="56" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="130" cy="56" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/>
-      <circle cx="10" cy="72" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="30" cy="72" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="50" cy="72" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="70" cy="72" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="90" cy="72" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="110" cy="72" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/><circle cx="130" cy="72" r="4" fill="#fde8d8" stroke="#d06010" stroke-width="1"/>
-      <text x="70" y="88" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" fill="#d06010" font-weight="800">· · · ×billions more</text>
+      <circle cx="10" cy="8"  r="4" fill="#dbeafe" stroke="#4472ca" stroke-width="1"/><circle cx="30" cy="8"  r="4" fill="#dbeafe" stroke="#4472ca" stroke-width="1"/><circle cx="50" cy="8"  r="4" fill="#dbeafe" stroke="#4472ca" stroke-width="1"/><circle cx="70" cy="8"  r="4" fill="#dbeafe" stroke="#4472ca" stroke-width="1"/><circle cx="90" cy="8"  r="4" fill="#dbeafe" stroke="#4472ca" stroke-width="1"/><circle cx="110" cy="8"  r="4" fill="#dbeafe" stroke="#4472ca" stroke-width="1"/><circle cx="130" cy="8"  r="4" fill="#dbeafe" stroke="#4472ca" stroke-width="1"/>
+      <circle cx="10" cy="24" r="4" fill="#dbeafe" stroke="#4472ca" stroke-width="1"/><circle cx="30" cy="24" r="4" fill="#dbeafe" stroke="#4472ca" stroke-width="1"/><circle cx="50" cy="24" r="4" fill="#dbeafe" stroke="#4472ca" stroke-width="1"/><circle cx="70" cy="24" r="4" fill="#dbeafe" stroke="#4472ca" stroke-width="1"/><circle cx="90" cy="24" r="4" fill="#dbeafe" stroke="#4472ca" stroke-width="1"/><circle cx="110" cy="24" r="4" fill="#dbeafe" stroke="#4472ca" stroke-width="1"/><circle cx="130" cy="24" r="4" fill="#dbeafe" stroke="#4472ca" stroke-width="1"/>
+      <circle cx="10" cy="40" r="4" fill="#dbeafe" stroke="#4472ca" stroke-width="1"/><circle cx="30" cy="40" r="4" fill="#dbeafe" stroke="#4472ca" stroke-width="1"/><circle cx="50" cy="40" r="4" fill="#dbeafe" stroke="#4472ca" stroke-width="1"/><circle cx="70" cy="40" r="4" fill="#dbeafe" stroke="#4472ca" stroke-width="1"/><circle cx="90" cy="40" r="4" fill="#dbeafe" stroke="#4472ca" stroke-width="1"/><circle cx="110" cy="40" r="4" fill="#dbeafe" stroke="#4472ca" stroke-width="1"/><circle cx="130" cy="40" r="4" fill="#dbeafe" stroke="#4472ca" stroke-width="1"/>
+      <circle cx="10" cy="56" r="4" fill="#dbeafe" stroke="#4472ca" stroke-width="1"/><circle cx="30" cy="56" r="4" fill="#dbeafe" stroke="#4472ca" stroke-width="1"/><circle cx="50" cy="56" r="4" fill="#dbeafe" stroke="#4472ca" stroke-width="1"/><circle cx="70" cy="56" r="4" fill="#dbeafe" stroke="#4472ca" stroke-width="1"/><circle cx="90" cy="56" r="4" fill="#dbeafe" stroke="#4472ca" stroke-width="1"/><circle cx="110" cy="56" r="4" fill="#dbeafe" stroke="#4472ca" stroke-width="1"/><circle cx="130" cy="56" r="4" fill="#dbeafe" stroke="#4472ca" stroke-width="1"/>
+      <circle cx="10" cy="72" r="4" fill="#dbeafe" stroke="#4472ca" stroke-width="1"/><circle cx="30" cy="72" r="4" fill="#dbeafe" stroke="#4472ca" stroke-width="1"/><circle cx="50" cy="72" r="4" fill="#dbeafe" stroke="#4472ca" stroke-width="1"/><circle cx="70" cy="72" r="4" fill="#dbeafe" stroke="#4472ca" stroke-width="1"/><circle cx="90" cy="72" r="4" fill="#dbeafe" stroke="#4472ca" stroke-width="1"/><circle cx="110" cy="72" r="4" fill="#dbeafe" stroke="#4472ca" stroke-width="1"/><circle cx="130" cy="72" r="4" fill="#dbeafe" stroke="#4472ca" stroke-width="1"/>
+      <text x="70" y="88" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8" fill="#4472ca" font-weight="800">· · · ×billions more</text>
     </svg>
     <div style="font-size:7.5px;color:#555;line-height:1.7;margin-top:4px">100+ layers · billions of params<br>Trained on: the internet<br>Task: almost anything</div>
   </div>
