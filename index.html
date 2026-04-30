@@ -1428,10 +1428,87 @@ a.who-item:hover { border-color: #62b517; background: #f0fae0; transform: transl
 
 footer {
   background: #2a2a2a;
-  color: #777;
-  text-align: center;
-  padding: 12px 24px;
+  color: #aaa;
+  padding: 48px 24px 20px;
+  font-size: 13px;
+}
+.footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1.6fr;
+  gap: 48px;
+  align-items: start;
+}
+.footer-col h4 {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1.6px;
+  color: #d1db24;
+  margin-bottom: 14px;
+}
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.footer-brand img { height: 44px; width: auto; }
+.footer-brand .footer-brand-text {
+  font-size: 17px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 0.5px;
+}
+.footer-tag {
   font-size: 12px;
+  color: #888;
+  line-height: 1.55;
+  margin: 0;
+}
+.footer-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.footer-links a {
+  color: #ccc;
+  text-decoration: none;
+  font-weight: 700;
+  transition: color 0.15s;
+}
+.footer-links a:hover { color: #d1db24; }
+.footer-privacy {
+  color: #aaa;
+  line-height: 1.65;
+  font-size: 12px;
+}
+.footer-privacy a {
+  color: #d1db24;
+  text-decoration: none;
+  font-weight: 700;
+}
+.footer-privacy a:hover { text-decoration: underline; }
+.footer-bottom {
+  max-width: 1200px;
+  margin: 36px auto 0;
+  padding-top: 18px;
+  border-top: 1px solid #3a3a3a;
+  text-align: center;
+  color: #777;
+  font-size: 12px;
+}
+@media (max-width: 800px) {
+  footer { padding: 36px 20px 16px; }
+  .footer-inner {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .footer-bottom { margin-top: 24px; }
 }
 
 /* ===== RESPONSIVE ===== */
@@ -1586,8 +1663,8 @@ footer {
     <div class="nav-dropdown">
       <button class="nav-dropdown-trigger">Use Cases ▾</button>
       <div class="nav-dropdown-menu">
-        <a href="/corporate-training">Broad Culture Change</a>
-        <a href="/specialized-training">Focused, Deep Work</a>
+        <a href="/board-culture-change">Broad Culture Change</a>
+        <a href="/focused-deep-work">Focused, Deep Work</a>
       </div>
     </div>
     <a href="/blog">Blog</a>
@@ -1757,7 +1834,7 @@ footer {
 
     <div class="scenario-grid">
       <!-- Scenario 1. Combined use case -->
-      <a class="scenario-card" href="/corporate-training" data-reveal="scale" data-delay="1">
+      <a class="scenario-card" href="/board-culture-change" data-reveal="scale" data-delay="1">
         <div class="scenario-use-case">Broad Culture Change</div>
         <div class="scenario-audience-tags">
           <span class="audience-tag">Tech Leader</span>
@@ -1766,7 +1843,7 @@ footer {
         <span class="scenario-cta">Learn More →</span>
       </a>
       <!-- Scenario 2 -->
-      <a class="scenario-card" href="/specialized-training" data-reveal="scale" data-delay="2">
+      <a class="scenario-card" href="/focused-deep-work" data-reveal="scale" data-delay="2">
         <div class="scenario-use-case">Focused, Deep Work</div>
         <div class="scenario-audience-tags">
           <span class="audience-tag">Engineer</span>
@@ -2464,7 +2541,35 @@ footer {
 </div>
 
 <footer>
-  <p>© 2026 Tech CoLab. All rights reserved.</p>
+  <div class="footer-inner">
+
+    <div class="footer-col">
+      <div class="footer-brand">
+        <img src="/images/logo.png" alt="Tech CoLab logo">
+        <span class="footer-brand-text">Tech CoLab</span>
+      </div>
+      <p class="footer-tag">Tech Fluency. Better Decisions. Purpose-built games that help your team get it, and help you communicate it.</p>
+    </div>
+
+    <div class="footer-col">
+      <h4>Explore</h4>
+      <ul class="footer-links">
+        <li><a href="/about">About</a></li>
+        <li><a href="/buy-now">Buy Now</a></li>
+        <li><a href="/blog">Blog</a></li>
+        <li><a href="/contact">Contact</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Your Privacy</h4>
+      <p class="footer-privacy">We don't share your information with anyone. If you give us your email or contact details, we'll only use them to reply to you or send updates you've asked for. To remove your information at any time, <a href="/contact">contact us</a>.</p>
+    </div>
+
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 Tech CoLab. All rights reserved.</p>
+  </div>
 </footer>
 
 <script>
