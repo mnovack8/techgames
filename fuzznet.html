@@ -2310,7 +2310,104 @@ function tutFindPath(animalIdx) {
 }
 
 const TSTEPS = [
-  // 0. Welcome
+
+  // 0. Before You Play
+  { title:'Before You Play',
+    body:`<p>FuzzNet Labs is a game about building an AI model, but it's also a window into how AI actually works in the real world.</p>
+<p>Before the tutorial walks you through the mechanics, here are <b>two concepts</b> worth carrying into every AI conversation you'll ever have, and a quick explanation of how this game connects to tools like <b>ChatGPT</b>.</p>
+<div style="display:flex;gap:5px;flex-wrap:wrap;margin:10px 0 2px">
+  <div style="flex:1;min-width:72px;background:#e6f3cf;border:1.5px solid #62b517;border-radius:8px;padding:6px 6px;text-align:center">
+    <div style="font-size:15px">📊</div>
+    <div style="font-size:9px;font-weight:800;color:#3a6a0a;margin-top:2px">Data is Destiny</div>
+  </div>
+  <div style="flex:1;min-width:72px;background:#e6f3cf;border:1.5px solid #62b517;border-radius:8px;padding:6px 6px;text-align:center">
+    <div style="font-size:15px">🎯</div>
+    <div style="font-size:9px;font-weight:800;color:#3a6a0a;margin-top:2px">100% Not Possible</div>
+  </div>
+  <div style="flex:1;min-width:72px;background:#e6f3cf;border:1.5px solid #62b517;border-radius:8px;padding:6px 6px;text-align:center">
+    <div style="font-size:15px">🔁</div>
+    <div style="font-size:9px;font-weight:800;color:#3a6a0a;margin-top:2px">How AI Learns</div>
+  </div>
+  <div style="flex:1;min-width:72px;background:#e6f3cf;border:1.5px solid #62b517;border-radius:8px;padding:6px 6px;text-align:center">
+    <div style="font-size:15px">🧠</div>
+    <div style="font-size:9px;font-weight:800;color:#3a6a0a;margin-top:2px">Nets + LLMs</div>
+  </div>
+  <div style="flex:1;min-width:72px;background:#4a8c11;border:1.5px solid #3a6a0a;border-radius:8px;padding:6px 6px;text-align:center">
+    <div style="font-size:15px">▶</div>
+    <div style="font-size:9px;font-weight:800;color:#d4f0a0;margin-top:2px">Play FuzzNet</div>
+  </div>
+</div>`,
+    makeG:()=>tutMakeG(),
+    next:'Concept 1: Data is Destiny →' },
+
+  // 1. Concept: Data is Destiny
+  { title:'Concept 1: Data is Destiny',
+    body:`<p>An AI model learns entirely from the data it was trained on. It has no instincts, no common sense, and no ability to reason beyond what it has seen. <b>The data is the model.</b></p>
+<p>If the training data is incomplete, biased, or mislabeled, those flaws get baked directly into every prediction the model makes, often invisibly. Garbage in, garbage out.</p>
+<p>In FuzzNet Labs, the data tokens on the board represent your training data. Which animals you train on, and how many times, directly shapes what your network can classify. You'll feel this play out in real time.</p>`,
+    makeG:()=>tutMakeG(),
+    next:'Concept 2: 100% Is Not Possible →' },
+
+  // 2. Concept: 100% is not possible
+  { title:'Concept 2: 100% Is Not Possible',
+    body:`<p>No AI model, no matter how well designed, achieves perfect accuracy on any significantly complex problem. There is always a trade-off between two types of errors:</p>
+<p><b>False negatives</b> - the model misses something it should have caught.<br>
+<b>False positives</b> - the model flags something it shouldn't have.</p>
+<p>Here's the hard truth: <b>if you tune a model to guarantee zero false negatives, your false positives go up. Lower your false positives, and your false negatives rise.</b> You can shift the balance, but you cannot eliminate both at once. That tension is why 100% accuracy is not a realistic target for any real-world AI system.</p>
+<p>A related trap is <b>overfitting</b> - when a model is trained so heavily on one type of data that it stops learning general patterns and just assumes everything looks like what it has seen the most. Imagine 80% of your training photos are dogs. Now you show the model a squirrel. It sees fur, four legs, and thinks: dog. That's the only world it knows. It hasn't learned "squirrel" - it has learned "fur plus legs equals dog" because that was almost always true in its training data. The model isn't broken. It's doing exactly what it was taught. The data was the problem.</p>
+<p>In the game, when you overtrain a path by stacking too many data tokens on it, you are forced to block one of your own edges. Your own network becomes too rigid, too certain, and loses the flexibility to generalize. That cost is intentional.</p>
+<p>In the game, you'll see this when you test animals. Even a fully trained path can still fail on a roll. That's not a bug. It's the point.</p>`,
+    makeG:()=>tutMakeG(),
+    next:'Neural Networks & LLMs →' },
+
+  // 3. Concept: Backpropagation
+  { title:'How Neural Networks Learn: Backpropagation',
+    body:`<p>A neural network starts out making random guesses. It gets better through a process called <b>backpropagation</b>, one of the most important ideas in all of modern AI.</p>
+<p>Here's how it works: after the network makes a prediction, it compares that prediction to the correct answer and measures the error. It then works <b>backwards through the layers</b>, calculating how much each connection contributed to that error. Connections that led to wrong answers get weakened. Connections that helped get the right answer get strengthened. This is called updating the <b>weights</b>.</p>
+<div style="background:#f4fae8;border-radius:10px;padding:12px 8px 8px;margin:8px 0 4px">
+<svg viewBox="0 0 500 115" style="width:100%;max-width:480px;display:block;margin:0 auto" aria-hidden="true">
+  <defs>
+    <marker id="bp-arr-g" markerWidth="7" markerHeight="6" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#4a8c11"/></marker>
+    <marker id="bp-arr-o" markerWidth="7" markerHeight="6" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="#d06010"/></marker>
+  </defs>
+  <text x="250" y="12" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9.5" font-weight="700" fill="#4a8c11">PREDICTION (forward pass)</text>
+  <line x1="76" y1="44" x2="124" y2="44" stroke="#4a8c11" stroke-width="1.8" marker-end="url(#bp-arr-g)"/>
+  <line x1="176" y1="44" x2="224" y2="44" stroke="#4a8c11" stroke-width="1.8" marker-end="url(#bp-arr-g)"/>
+  <line x1="276" y1="44" x2="324" y2="44" stroke="#4a8c11" stroke-width="1.8" marker-end="url(#bp-arr-g)"/>
+  <line x1="376" y1="44" x2="424" y2="44" stroke="#4a8c11" stroke-width="1.8" marker-end="url(#bp-arr-g)"/>
+  <line x1="124" y1="76" x2="76" y2="76" stroke="#d06010" stroke-width="1.8" marker-end="url(#bp-arr-o)"/>
+  <line x1="224" y1="76" x2="176" y2="76" stroke="#d06010" stroke-width="1.8" marker-end="url(#bp-arr-o)"/>
+  <line x1="324" y1="76" x2="276" y2="76" stroke="#d06010" stroke-width="1.8" marker-end="url(#bp-arr-o)"/>
+  <line x1="424" y1="76" x2="376" y2="76" stroke="#d06010" stroke-width="1.8" marker-end="url(#bp-arr-o)"/>
+  <circle cx="50" cy="60" r="23" fill="#e6f3cf" stroke="#62b517" stroke-width="2"/>
+  <text x="50" y="64" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8.5" font-weight="800" fill="#3a6a0a">INPUT</text>
+  <circle cx="150" cy="60" r="23" fill="#e6f3cf" stroke="#62b517" stroke-width="2"/>
+  <text x="150" y="64" text-anchor="middle" font-family="Nunito,sans-serif" font-size="11" font-weight="800" fill="#3a6a0a">L1</text>
+  <circle cx="250" cy="60" r="23" fill="#e6f3cf" stroke="#62b517" stroke-width="2"/>
+  <text x="250" y="64" text-anchor="middle" font-family="Nunito,sans-serif" font-size="11" font-weight="800" fill="#3a6a0a">L2</text>
+  <circle cx="350" cy="60" r="23" fill="#e6f3cf" stroke="#62b517" stroke-width="2"/>
+  <text x="350" y="64" text-anchor="middle" font-family="Nunito,sans-serif" font-size="11" font-weight="800" fill="#3a6a0a">L3</text>
+  <circle cx="450" cy="60" r="23" fill="#fde8d8" stroke="#d06010" stroke-width="2"/>
+  <text x="450" y="55" text-anchor="middle" font-family="Nunito,sans-serif" font-size="8.5" font-weight="800" fill="#b04000">OUTPUT</text>
+  <text x="450" y="71" text-anchor="middle" font-family="Nunito,sans-serif" font-size="14" font-weight="800" fill="#b04000">✗</text>
+  <text x="250" y="108" text-anchor="middle" font-family="Nunito,sans-serif" font-size="9.5" font-weight="700" fill="#d06010">ERROR CORRECTION (backward pass)</text>
+</svg>
+</div>
+<p>Repeat that process thousands, or in the case of LLMs billions, of times across a massive dataset, and the weights gradually settle into values that produce accurate predictions. That whole cycle is what "training" means.</p>
+<p>In FuzzNet Labs, backpropagation is represented by what happens when you <b>fail a test</b>. The failure is the signal. You then adjust your data tokens in response, redistributing the training weight across your paths. That adjustment is the network correcting itself based on what went wrong, which is exactly what backpropagation does.</p>`,
+    makeG:()=>tutMakeG(),
+    next:'Neural Networks & LLMs →' },
+
+  // 4. Concept: Neural networks and LLMs
+  { title:'Neural Networks and How They Connect to ChatGPT',
+    body:`<p>A <b>neural network</b> takes data in on one side, passes it through layers of connected nodes, and produces an output on the other side. Each node detects a pattern. Each layer builds on the last. The connections get stronger or weaker during training until the network gets better at its task.</p>
+<p>That is the foundation of how <b>Large Language Models (LLMs)</b> like ChatGPT work. LLMs are built on a specific neural network architecture called a <b>transformer</b>, a major advancement over earlier designs, with additional techniques layered on top for alignment, safety, and instruction-following. But the core structure is neural network all the way down: data in, layers of pattern detection, output out.</p>
+<p>The scale is what's different. LLMs were trained on <b>a massive amount of text, essentially the internet</b>, which is why they can write, reason, and converse across almost any topic. But Concepts 1 and 2 still apply fully: the internet's biases are inside the model, and they still get things wrong.</p>
+<p>The 3-layer network you're about to build is the same underlying idea, just miniaturized.</p>`,
+    makeG:()=>tutMakeG(),
+    next:'Got it - Start the Tutorial →' },
+
+  // 5. Welcome (was 0)
   { title:'Welcome to FuzzNet Labs!',
     body:`<p>You're a data scientist building a <b>neural network</b> to classify animal photos. Compete with other startups to score the most points!</p>
 <p>On your <b>first turn</b> you get <b>3 actions</b>. Every turn after that, <b>1 action</b>. Three types: <b>Design</b>, <b>Train</b>, and <b>Test</b>.</p>
