@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="The story behind Tech CoLab and the four values that guide how we design every experience.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="About | Tech CoLab">
+<meta property="og:description" content="The story behind Tech CoLab and the four values that guide how we design every experience.">
+<meta property="og:image" content="https://cybersecgames.com/images/cover.png">
+<meta property="og:url" content="https://cybersecgames.com/about">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="About | Tech CoLab">
+<meta name="twitter:description" content="The story behind Tech CoLab and the four values that guide how we design every experience.">
+<meta name="twitter:image" content="https://cybersecgames.com/images/cover.png">
+<meta name="robots" content="index, follow">
+<meta name="author" content="Tech CoLab">
+<meta name="keywords" content="about Tech CoLab, founder story, tech fluency, board games for technology learning, our values">
+<meta property="og:site_name" content="Tech CoLab">
+<meta property="og:locale" content="en_US">
+<meta name="theme-color" content="#62b517">
+<link rel="icon" type="image/png" href="/images/logo.png">
+<link rel="apple-touch-icon" href="/images/logo.png">
+<link rel="canonical" href="https://cybersecgames.com/about">
+<title>About | Tech CoLab</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  min-height: 100%;
+  font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif;
+  background: #e8edd8;
+  color: #2a2a2a;
+  overflow-y: auto;
+}
+
+/* ===== HEADER ===== */
+header {
+  background: #fff;
+  border-bottom: 3px solid #d1db24;
+  padding: 0 40px;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 16px rgba(98,181,23,0.12);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.header-logo { display: flex; align-items: center; gap: 4px; text-decoration: none; }
+.header-logo img { height: 56px; width: auto; object-fit: contain; display: block; }
+.header-logo > div { margin-top: 0; }
+.logo-text { font-size: 16px; font-weight: 800; color: #4a8c11; letter-spacing: 0.5px; }
+.logo-sub { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; display: block; line-height: 1; color: #b0b800; }
+nav { display: flex; align-items: center; gap: 4px; }
+nav a { font-size: 15px; font-weight: 700; color: #4a4a4a; text-decoration: none; padding: 8px 18px; border-radius: 8px; transition: background 0.15s, color 0.15s; }
+nav a:hover { background: #f4fae8; color: #4a8c11; }
+nav a.active { color: #4a8c11; background: #f4fae8; }
+nav a.nav-cta-buy { background: #62b517; color: #fff; margin-left: 4px; box-shadow: 0 2px 6px rgba(98,181,23,0.3); }
+nav a.nav-cta-buy:hover { background: #4a8c11; color: #fff; }
+.nav-dropdown { position: relative; display: flex; align-items: center; }
+.nav-dropdown-trigger { font-size: 15px; font-weight: 700; color: #4a4a4a; background: none; border: none; padding: 8px 18px; border-radius: 8px; cursor: pointer; font-family: inherit; transition: background 0.15s, color 0.15s; }
+.nav-dropdown-trigger.open { background: #f4fae8; color: #4a8c11; }
+.nav-dropdown-menu { position: absolute; top: calc(100% + 4px); left: 0; background: #fff; border: 1.5px solid #dde8c8; border-radius: 10px; box-shadow: 0 8px 24px rgba(98,181,23,0.15); padding: 6px; min-width: 200px; display: none; flex-direction: column; gap: 2px; z-index: 200; }
+.nav-dropdown-menu.open { display: flex; }
+.nav-dropdown-menu a { display: block; padding: 8px 14px; border-radius: 7px; font-size: 14px; font-weight: 700; color: #4a4a4a; text-decoration: none; transition: background 0.15s, color 0.15s; white-space: nowrap; }
+.nav-dropdown-menu a:hover, .nav-dropdown-menu a.active { background: #f4fae8; color: #4a8c11; }
+@media (max-width: 600px) {
+  header { padding: 8px 16px 6px; height: auto; flex-direction: column; align-items: center; gap: 4px; }
+  .logo-text { font-size: 12px; }
+  .logo-sub { font-size: 8px; letter-spacing: 1px; }
+  nav { gap: 0; justify-content: center; flex-wrap: wrap; }
+  nav a { padding: 6px 5px; font-size: 12px; }
+  .nav-dropdown-trigger { padding: 6px 5px; font-size: 12px; }
+}
+
+/* ===== HERO ===== */
+@keyframes hero-drift { from { transform: translate(0,0); } to { transform: translate(30px,30px); } }
+@keyframes fade-up { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes underline-grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+.hero {
+  background: linear-gradient(160deg, #f8faf2 0%, #edf2e0 100%);
+  border-bottom: 1px solid #dde8c8;
+  padding: 56px 24px 48px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; inset: -56px;
+  background-image: radial-gradient(circle, rgba(98,181,23,0.13) 1.5px, transparent 1.5px);
+  background-size: 30px 30px;
+  animation: hero-drift 22s linear infinite;
+  pointer-events: none; z-index: 0;
+}
+.hero h1 {
+  font-size: clamp(28px, 5vw, 42px); font-weight: 900;
+  color: #1a1a1a; line-height: 1.1; margin-bottom: 12px;
+  position: relative; z-index: 1;
+  animation: fade-up 0.45s ease both;
+}
+.hero h1 em { font-style: normal; color: #62b517; position: relative; }
+.hero h1 em::after {
+  content: ''; position: absolute;
+  left: 0; right: 0; bottom: -2px; height: 4px;
+  background: #d1db24; border-radius: 3px;
+  transform: scaleX(0); transform-origin: left center;
+  animation: underline-grow 0.4s 0.5s ease forwards;
+}
+.hero p {
+  font-size: 16px; color: #666; line-height: 1.65;
+  max-width: 640px; margin: 0 auto;
+  position: relative; z-index: 1;
+  animation: fade-up 0.45s 0.15s ease both;
+}
+
+/* ===== STORY SECTION ===== */
+.about-section { padding: 72px 24px; }
+.about-container { max-width: 720px; margin: 0 auto; }
+.section-label {
+  font-size: 10px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 2.5px;
+  color: #62b517;
+  border-left: 4px solid #d1db24; padding-left: 10px;
+  margin-bottom: 18px;
+}
+.about-headline {
+  font-size: clamp(24px, 3.5vw, 32px);
+  font-weight: 900; color: #1a1a1a;
+  line-height: 1.2; margin-bottom: 28px;
+}
+.about-headline em { font-style: normal; color: #62b517; }
+.about-body p {
+  font-size: 16px; color: #444;
+  line-height: 1.8; margin-bottom: 18px;
+}
+.about-body p strong { color: #1a3a00; font-weight: 800; }
+.about-body p:last-child { margin-bottom: 0; }
+
+.about-section.bg-white { background: #fff; }
+.about-section.bg-cool { background: #f0f4f8; }
+
+/* ===== VALUES ===== */
+.values-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  margin-top: 32px;
+}
+.value-card {
+  background: #fff;
+  border: 2px solid #c8d8b0;
+  border-radius: 16px;
+  padding: 28px 30px;
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  gap: 22px;
+  align-items: start;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.value-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(98,181,23,0.14);
+  border-color: #62b517;
+}
+.value-icon {
+  width: 56px; height: 56px;
+  display: flex; align-items: center; justify-content: center;
+  background: #f4fae8;
+  border-radius: 12px;
+}
+.value-icon svg { width: 36px; height: 36px; }
+.value-content h3 {
+  font-size: 20px;
+  font-weight: 900;
+  color: #1a3a00;
+  margin-bottom: 10px;
+}
+.value-content p {
+  font-size: 15px;
+  color: #444;
+  line-height: 1.75;
+}
+@media (max-width: 600px) {
+  .value-card { padding: 22px; grid-template-columns: 1fr; gap: 14px; }
+}
+
+/* ===== CTA ===== */
+.about-cta { background: #1a3a00; padding: 56px 24px; text-align: center; }
+.about-cta h2 { font-size: 26px; font-weight: 900; color: #fff; margin-bottom: 12px; line-height: 1.2; }
+.about-cta p { font-size: 15px; color: rgba(255,255,255,0.7); max-width: 540px; margin: 0 auto 28px; line-height: 1.6; }
+.cta-btn-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.btn-about {
+  display: inline-flex; align-items: center;
+  background: #d1db24; color: #1a3a00;
+  font-size: 16px; font-weight: 800;
+  padding: 13px 32px; border-radius: 10px;
+  text-decoration: none; letter-spacing: 0.5px;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+.btn-about:hover { background: #c4cc1e; transform: scale(1.02); }
+.btn-about--secondary {
+  background: transparent; color: #d1db24;
+  border: 2px solid #d1db24;
+}
+.btn-about--secondary:hover { background: rgba(209,219,36,0.12); transform: scale(1.02); }
+
+/* ===== FOOTER ===== */
+footer { background: #2a2a2a; color: #aaa; padding: 48px 24px 20px; font-size: 13px; }
+.footer-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1.2fr 1fr 1.6fr; gap: 48px; align-items: start; }
+.footer-col h4 { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.6px; color: #d1db24; margin-bottom: 14px; }
+.footer-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.footer-brand img { height: 44px; width: auto; }
+.footer-brand .footer-brand-text { font-size: 17px; font-weight: 800; color: #fff; letter-spacing: 0.5px; }
+.footer-tag { font-size: 12px; color: #888; line-height: 1.55; margin: 0; }
+.footer-links { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.footer-links a { color: #ccc; text-decoration: none; font-weight: 700; transition: color 0.15s; }
+.footer-links a:hover { color: #d1db24; }
+.footer-privacy { color: #aaa; line-height: 1.65; font-size: 12px; }
+.footer-privacy a { color: #d1db24; text-decoration: none; font-weight: 700; }
+.footer-privacy a:hover { text-decoration: underline; }
+.footer-bottom { max-width: 1200px; margin: 36px auto 0; padding-top: 18px; border-top: 1px solid #3a3a3a; text-align: center; color: #777; font-size: 12px; }
+@media (max-width: 800px) {
+  footer { padding: 36px 20px 16px; }
+  .footer-inner { grid-template-columns: 1fr; gap: 28px; }
+  .footer-bottom { margin-top: 24px; }
+}
+
+/* ===== REVEAL ===== */
+[data-reveal] { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+[data-reveal].is-visible { opacity: 1; transform: translateY(0); }
+
+@media (max-width: 600px) {
+  .about-section { padding: 56px 20px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="header-logo" href="/">
+    <img src="/images/logo.png" alt="Tech CoLab logo">
+    <div>
+      <span class="logo-text">Tech CoLab</span>
+      <span class="logo-sub">Bridge the Gap.<br>Empower their Decisions.</span>
+    </div>
+  </a>
+  <nav>
+    <a href="/">Home</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-trigger">Games ▾</button>
+      <div class="nav-dropdown-menu">
+        <a href="/cybersecurity">Cybersecurity</a>
+        <a href="/ai">Artificial Intelligence</a>
+        <a href="/qubit-waitlist">Quantum Computing</a>
+      </div>
+    </div>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-trigger">Use Cases ▾</button>
+      <div class="nav-dropdown-menu">
+        <a href="/board-culture-change">Build a Tech-Fluent Culture</a>
+        <a href="/focused-deep-work">Focused, Deep Work</a>
+      </div>
+    </div>
+    <a href="/blog">Blog</a>
+    <a href="/about" class="active">About</a>
+    <a href="/contact">Contact</a>
+    <a href="/buy-now" class="nav-cta-buy">Buy Now</a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <h1>Why <em>Tech CoLab</em> exists.</h1>
+  <p>The story behind the games, and the four values that guide everything we build.</p>
+</section>
+
+<!-- STORY -->
+<section class="about-section bg-white">
+  <div class="about-container">
+    <div class="section-label" data-reveal>Our Story</div>
+    <h2 class="about-headline" data-reveal data-delay="1">Smart, capable people kept telling themselves <em>this isn't for me</em>.</h2>
+    <div class="about-body">
+      <p data-reveal data-delay="2">I spent years working in and around technology and watched something that genuinely bothered me. Smart, capable people who were experts in their own fields would shut down the moment a conversation turned to cybersecurity or technology. Not because they lacked the ability to understand it, but because they had been made to feel it was too complex, too technical, and not for them.</p>
+      <p data-reveal data-delay="3">What made it harder to watch was that I did not believe the level of understanding they actually needed was anywhere near as deep as they feared. They did not need to configure a firewall or write a line of code. They needed enough context to ask good questions, spot risks, and make confident decisions. That bar is far more reachable than most people think.</p>
+      <p data-reveal data-delay="4">That frustration led to <strong>Byte Club</strong>, my first game, built around cybersecurity. When I ran workshops, the most engaged people in the room were not the security professionals. They were the accountants, the operations managers, the customer support teams who had never touched a security tool in their lives. The game gave them a way in, and it changed how they showed up in every conversation after that.</p>
+      <p data-reveal data-delay="5">That insight became <strong>Tech CoLab</strong>. What started as one cybersecurity card game became a model. AI is the next frontier of decisions everyone is being asked to make and few feel prepared for, so <strong>FuzzNet Labs</strong> followed. Quantum is on the way after that. The medium stays the same. A purpose-built game, designed to give non-technical people the experience they need to engage, and to give technical experts a way to communicate that finally lands.</p>
+      <p data-reveal data-delay="6">Tech CoLab exists for everyone in those rooms. The non-technical leader who wants to contribute. The L&amp;D professional trying to deliver real fluency at scale. The consultant whose expertise deserves an audience that is ready for it. The curious person who just wants to feel like they belong in the conversation. The four values below are how we build for all of them.</p>
+    </div>
+  </div>
+</section>
+
+<!-- VALUES -->
+<section class="about-section bg-cool">
+  <div class="about-container">
+    <div class="section-label" data-reveal>Our Values</div>
+    <h2 class="about-headline" data-reveal data-delay="1">Four principles that shape every experience we build.</h2>
+    <div class="values-grid">
+
+      <!-- Principles over checklists -->
+      <div class="value-card" data-reveal data-delay="1">
+        <div class="value-icon">
+          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M24 6 C15 6 9 13 9 21 C9 27 13 32 18 35 L18 40 L30 40 L30 35 C35 32 39 27 39 21 C39 13 33 6 24 6 Z" fill="#d1db24"/>
+            <rect x="18" y="40" width="12" height="3" rx="1.5" fill="#a8c96a"/>
+            <rect x="19" y="43" width="10" height="3" rx="1.5" fill="#62b517"/>
+            <path d="M24 13 C19 13 16 17 16 21 C16 25 19 29 22 31 L26 31 C29 29 32 25 32 21 C32 17 29 13 24 13 Z" fill="#62b517"/>
+            <circle cx="24" cy="22" r="4" fill="#d1db24" opacity="0.7"/>
+          </svg>
+        </div>
+        <div class="value-content">
+          <h3>Principles over checklists.</h3>
+          <p>Most tech training tries to hand people a checklist. A list of acronyms, a list of frameworks, a list of dos and don'ts. The problem is that real decisions never look like the list. A vendor pitch goes off-script. An incident takes a shape no slide deck described. An AI tool gets pitched and someone has to evaluate whether it fits. Checklists fail in those moments. Principles do not. We design every experience to give people the underlying judgment, the why behind the what, so they can think for themselves when the situation changes. Because it always does.</p>
+        </div>
+      </div>
+
+      <!-- Active over passive -->
+      <div class="value-card" data-reveal data-delay="2">
+        <div class="value-icon">
+          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="30" cy="10" r="6" fill="#d1db24"/>
+            <path d="M30,16 L26,28 L18,34" stroke="#62b517" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            <path d="M26,28 L32,36" stroke="#62b517" stroke-width="3" stroke-linecap="round" fill="none"/>
+            <path d="M28,20 L18,24" stroke="#62b517" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+            <path d="M30,22 L38,18" stroke="#d1db24" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+            <line x1="10" y1="22" x2="16" y2="22" stroke="#a8c96a" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="2 2"/>
+            <line x1="8" y1="27" x2="14" y2="27" stroke="#a8c96a" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="2 2"/>
+          </svg>
+        </div>
+        <div class="value-content">
+          <h3>Active over passive.</h3>
+          <p>You cannot lecture someone into competence. You can give them every fact, every diagram, every well-rehearsed analogy, and most of it will slide right off if they have nothing to attach it to. The brain holds onto experience. When you build a neural network out of cardboard, when you make the call that opens a breach, when you watch your own decision unfold, you are not consuming information anymore. You are constructing understanding. The board, the cards, the dice are scaffolding for an experience the player builds in their own head. No slide can give you that.</p>
+        </div>
+      </div>
+
+      <!-- Community over solo -->
+      <div class="value-card" data-reveal data-delay="3">
+        <div class="value-icon">
+          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="13" cy="15" r="6" fill="#a8c96a"/>
+            <path d="M2,37 C2,23 24,23 24,37 Z" fill="#a8c96a"/>
+            <circle cx="35" cy="15" r="6" fill="#62b517"/>
+            <path d="M24,37 C24,23 46,23 46,37 Z" fill="#62b517"/>
+            <circle cx="24" cy="23" r="4" fill="#d1db24"/>
+            <line x1="24" y1="17" x2="24" y2="13" stroke="#d1db24" stroke-width="2" stroke-linecap="round"/>
+            <line x1="28" y1="19" x2="31" y2="16" stroke="#d1db24" stroke-width="2" stroke-linecap="round"/>
+            <line x1="20" y1="19" x2="17" y2="16" stroke="#d1db24" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="value-content">
+          <h3>Community over solo.</h3>
+          <p>Tech fluency is not an individual skill. It is an organisational one. The decisions that matter happen in conversations, in meetings, in handoffs between people who need to understand each other. When only one person in the room can read the technology, you have a translator problem and a single point of failure. When the whole room can read it, you have something different. Alignment, real challenge, better outcomes. Our games are designed to be played around a table, on purpose. Shared experience creates shared language, and shared language is what makes a team actually able to act together on technology decisions.</p>
+        </div>
+      </div>
+
+      <!-- Fun over formal -->
+      <div class="value-card" data-reveal data-delay="4">
+        <div class="value-icon">
+          <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="24" cy="24" r="18" fill="#d1db24"/>
+            <circle cx="17" cy="20" r="2.5" fill="#1a3a00"/>
+            <circle cx="31" cy="20" r="2.5" fill="#1a3a00"/>
+            <path d="M15,28 Q24,37 33,28" stroke="#1a3a00" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+            <line x1="38" y1="7" x2="38" y2="12" stroke="#62b517" stroke-width="2" stroke-linecap="round"/>
+            <line x1="35.5" y1="9.5" x2="40.5" y2="9.5" stroke="#62b517" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="value-content">
+          <h3>Fun over formal.</h3>
+          <p>The moment engagement drops, learning stops. We have all sat through training that was technically thorough and emotionally dead, and we all know how much of it actually stuck. Almost none. Fun is not a marketing veneer for us. It is a working principle. If a game is genuinely entertaining, players come back for the next round, ask better questions, debate harder, and remember more. Formality kills curiosity. Play protects it. So we always pick the version that is more playful, more competitive, more memorable, because that is the version people will actually engage with long enough to learn.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="about-cta">
+  <h2 data-reveal>Ready to bring it to your team?</h2>
+  <p data-reveal data-delay="1">Whether you are buying for a workshop, a classroom, or a client engagement — every copy ships through our distribution partner, Cybersec Games.</p>
+  <div class="cta-btn-row" data-reveal data-delay="2">
+    <a class="btn-about" href="/buy-now">Buy Now</a>
+    <a class="btn-about btn-about--secondary" href="/contact">Get in Touch</a>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+
+    <div class="footer-col">
+      <div class="footer-brand">
+        <img src="/images/logo-light.png" alt="Tech CoLab logo">
+        <span class="footer-brand-text">Tech CoLab</span>
+      </div>
+      <p class="footer-tag">Bridge the Gap. Empower their Decisions. Purpose-built games that help your team get it, and help you communicate it.</p>
+    </div>
+
+    <div class="footer-col">
+      <h4>Explore</h4>
+      <ul class="footer-links">
+        <li><a href="/about">About</a></li>
+        <li><a href="/buy-now">Buy Now</a></li>
+        <li><a href="/blog">Blog</a></li>
+        <li><a href="/contact">Contact</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Your Privacy</h4>
+      <p class="footer-privacy">We don't share your information with anyone. If you give us your email or contact details, we'll only use them to reply to you or send updates you've asked for. To remove your information at any time, <a href="/contact">contact us</a>.</p>
+    </div>
+
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 Tech CoLab. All rights reserved.</p>
+  </div>
+</footer>
+
+<script>
+// Scroll reveal
+(function() {
+  var els = document.querySelectorAll('[data-reveal]');
+  if (!els.length || !('IntersectionObserver' in window)) {
+    els.forEach(function(el) { el.classList.add('is-visible'); });
+    return;
+  }
+  var io = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  els.forEach(function(el) { io.observe(el); });
+})();
+// Nav dropdown toggle
+(function() {
+  var dropdowns = document.querySelectorAll('.nav-dropdown');
+  dropdowns.forEach(function(dd) {
+    var trigger = dd.querySelector('.nav-dropdown-trigger');
+    var menu    = dd.querySelector('.nav-dropdown-menu');
+    if (!trigger || !menu) return;
+    trigger.addEventListener('click', function(e) {
+      e.stopPropagation();
+      dropdowns.forEach(function(other) {
+        if (other !== dd) {
+          var om = other.querySelector('.nav-dropdown-menu');
+          var ot = other.querySelector('.nav-dropdown-trigger');
+          if (om) om.classList.remove('open');
+          if (ot) ot.classList.remove('open');
+        }
+      });
+      var isOpen = menu.classList.toggle('open');
+      trigger.classList.toggle('open', isOpen);
+    });
+  });
+  document.addEventListener('click', function() {
+    dropdowns.forEach(function(dd) {
+      var om = dd.querySelector('.nav-dropdown-menu');
+      var ot = dd.querySelector('.nav-dropdown-trigger');
+      if (om) om.classList.remove('open');
+      if (ot) ot.classList.remove('open');
+    });
+  });
+})();
+</script>
+</body>
+</html>

@@ -54,6 +54,11 @@ body{padding-top:44px;}
 .screen.active{display:flex;}
 /* Suppress any screen paint while a rejoin (player or observer) is in flight */
 body.rejoin-pending .screen.active{visibility:hidden;}
+/* Hide everything while auto-loading the tutorial so the lobby never flashes */
+html.tutorial-loading body{visibility:hidden;}
+html.tutorial-loading #bc-tut-intro,
+html.tutorial-loading #bc-tut-intro *{visibility:visible;}
+html.tutorial-loading{background:#060d03;}
 
 /* ===== GAME: lock to viewport on medium+ so end-turn bar & turn strip are always visible ===== */
 @media(min-width:641px){
@@ -1204,6 +1209,16 @@ body.screen-idle-glow::after{
   .win-btn{padding:10px 24px;font-size:14px;}
 }
 </style>
+<script>
+// Run before body parses: if ?tutorial=1, hide everything until tutorial mounts.
+(function(){
+  try {
+    if (new URLSearchParams(location.search).get('tutorial') === '1') {
+      document.documentElement.classList.add('tutorial-loading');
+    }
+  } catch(e){}
+})();
+</script>
 </head>
 <body>
 
@@ -5249,9 +5264,20 @@ connectWS(() => {
   }
 });
 
-// Auto-start tutorial via ?tutorial=1
+// Auto-start tutorial via ?tutorial=1 — start ASAP, hide page until ready
 if (urlParams.get('tutorial') === '1') {
-  setTimeout(() => { try { startBcTutorial(); } catch (e) {} }, 300);
+  var __startTut = function(){
+    try { startBcTutorial(); } catch (e) {}
+    // Reveal the page now that the tutorial overlay is mounted on top.
+    requestAnimationFrame(function(){
+      document.documentElement.classList.remove('tutorial-loading');
+    });
+  };
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', __startTut, { once: true });
+  } else {
+    __startTut();
+  }
 }
 </script>
 </body>

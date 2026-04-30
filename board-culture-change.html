@@ -134,6 +134,23 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
   to   { transform: translateX(0)      rotate(0deg);    opacity: 1; }
 }
 
+/* ===== HERO JOURNEY BAR ===== */
+.hero-journey { background: #fff; padding: 28px 24px; border-bottom: 1px solid #dde8c8; }
+.journey-track { max-width: 1200px; margin: 0 auto; display: flex; align-items: stretch; justify-content: space-between; gap: 4px; flex-wrap: nowrap; }
+.journey-step { flex: 1 1 0; min-width: 0; display: flex; align-items: center; justify-content: center; text-align: center; padding: 18px 14px; border-radius: 12px; border: 2px solid; font-size: 14px; font-weight: 800; line-height: 1.35; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+.journey-step:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.08); }
+.journey-step--1 { background: #fdf3e7; border-color: #e88c3a; color: #7a3d05; }
+.journey-step--2 { background: #fffbe5; border-color: #d1db24; color: #5a5a00; }
+.journey-step--3 { background: #eff8d8; border-color: #a8c96a; color: #4a8c11; }
+.journey-step--4 { background: #62b517; border-color: #4a8c11; color: #fff; }
+.journey-arrow { display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 900; color: #62b517; flex-shrink: 0; width: 14px; line-height: 1; }
+@media (max-width: 800px) {
+  .hero-journey { padding: 20px 16px; }
+  .journey-track { flex-direction: column; align-items: stretch; gap: 4px; }
+  .journey-step { width: 100%; padding: 14px 16px; font-size: 13px; }
+  .journey-arrow { transform: rotate(90deg); align-self: center; width: auto; padding: 2px 0; }
+}
+
 /* ===== STORY SECTIONS ===== */
 .story-section {
   padding: 72px 24px;
@@ -164,7 +181,7 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
 }
 
 .story-container {
-  max-width: 1200px;
+  max-width: 1320px;
   margin: 0 auto;
 }
 .story-eyebrow {
@@ -503,12 +520,24 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
 }
 
 /* ===== FOOTER ===== */
-footer {
-  background: #2a2a2a;
-  padding: 12px 24px;
-  text-align: center;
-  font-size: 12px;
-  color: #777;
+footer { background: #2a2a2a; color: #aaa; padding: 48px 24px 20px; font-size: 13px; }
+.footer-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1.2fr 1fr 1.6fr; gap: 48px; align-items: start; }
+.footer-col h4 { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.6px; color: #d1db24; margin-bottom: 14px; }
+.footer-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.footer-brand img { height: 44px; width: auto; }
+.footer-brand .footer-brand-text { font-size: 17px; font-weight: 800; color: #fff; letter-spacing: 0.5px; }
+.footer-tag { font-size: 12px; color: #888; line-height: 1.55; margin: 0; }
+.footer-links { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.footer-links a { color: #ccc; text-decoration: none; font-weight: 700; transition: color 0.15s; }
+.footer-links a:hover { color: #d1db24; }
+.footer-privacy { color: #aaa; line-height: 1.65; font-size: 12px; }
+.footer-privacy a { color: #d1db24; text-decoration: none; font-weight: 700; }
+.footer-privacy a:hover { text-decoration: underline; }
+.footer-bottom { max-width: 1200px; margin: 36px auto 0; padding-top: 18px; border-top: 1px solid #3a3a3a; text-align: center; color: #777; font-size: 12px; }
+@media (max-width: 800px) {
+  footer { padding: 36px 20px 16px; }
+  .footer-inner { grid-template-columns: 1fr; gap: 28px; }
+  .footer-bottom { margin-top: 24px; }
 }
 footer a { color: #d1db24; text-decoration: none; font-weight: 700; }
 footer a:hover { text-decoration: underline; }
@@ -657,7 +686,7 @@ footer a:hover { text-decoration: underline; }
 <!-- HERO -->
 <section class="story-section bg-problem">
   <div class="story-container">
-    <div class="story-eyebrow" data-reveal>Broad Culture Change</div>
+    <div class="story-eyebrow" data-reveal>Build a Tech-Fluent Culture</div>
     <h1 class="hero-headline-full" data-reveal="lines">
       <span class="line-wrap"><span class="line-inner">The decisions are already happening.</span></span>
       <span class="line-wrap"><span class="line-inner">Does everyone understand them?</span></span>
@@ -740,6 +769,19 @@ footer a:hover { text-decoration: underline; }
     </div>
     </div><!-- end hero-layout -->
   </div><!-- end story-container -->
+</section>
+
+<!-- HERO JOURNEY -->
+<section class="hero-journey">
+  <div class="journey-track">
+    <div class="journey-step journey-step--1" data-reveal data-delay="1">Critical decisions must be made</div>
+    <div class="journey-arrow" aria-hidden="true">›</div>
+    <div class="journey-step journey-step--2" data-reveal data-delay="2">Misaligned language and quiet confusion in the room</div>
+    <div class="journey-arrow" aria-hidden="true">›</div>
+    <div class="journey-step journey-step--3" data-reveal data-delay="3">Be the bridge</div>
+    <div class="journey-arrow" aria-hidden="true">›</div>
+    <div class="journey-step journey-step--4" data-reveal data-delay="4">We'll help you get there</div>
+  </div>
 </section>
 
 <!-- WHO THIS IS FOR -->
@@ -953,14 +995,43 @@ footer a:hover { text-decoration: underline; }
       <cite>Security Champions Community Lead</cite>
     </div>
     <div class="section-cta-buttons" data-reveal data-delay="2">
-      <a class="btn-play-now" href="/byteclub">&#9658; Play Byte Club. Cybersecurity</a>
-      <a class="btn-play-alt" href="/fuzznet">&#9658; Play FuzzNet Labs. AI</a>
+      <a class="btn-play-now" href="/buy-now">Buy Now</a>
+      <a class="btn-play-alt" href="/byteclub">&#9658; Try Byte Club</a>
+      <a class="btn-play-alt" href="/fuzznet">&#9658; Try FuzzNet Labs</a>
     </div>
   </div>
 </section>
 
 <footer>
-  <p>© 2026 Tech CoLab. All rights reserved.</p>
+  <div class="footer-inner">
+
+    <div class="footer-col">
+      <div class="footer-brand">
+        <img src="/images/logo-light.png" alt="Tech CoLab logo">
+        <span class="footer-brand-text">Tech CoLab</span>
+      </div>
+      <p class="footer-tag">Bridge the Gap. Empower their Decisions. Purpose-built games that help your team get it, and help you communicate it.</p>
+    </div>
+
+    <div class="footer-col">
+      <h4>Explore</h4>
+      <ul class="footer-links">
+        <li><a href="/about">About</a></li>
+        <li><a href="/buy-now">Buy Now</a></li>
+        <li><a href="/blog">Blog</a></li>
+        <li><a href="/contact">Contact</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-col">
+      <h4>Your Privacy</h4>
+      <p class="footer-privacy">We don't share your information with anyone. If you give us your email or contact details, we'll only use them to reply to you or send updates you've asked for. To remove your information at any time, <a href="/contact">contact us</a>.</p>
+    </div>
+
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 Tech CoLab. All rights reserved.</p>
+  </div>
 </footer>
 
 <script>

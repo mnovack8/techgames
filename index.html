@@ -222,6 +222,86 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
   .hero-empathy { font-size: 15px; margin-top: 18px; }
 }
 
+/* ===== HERO BUY BUTTON + DEMO ROW ===== */
+.hero-buy-btn {
+  position: relative; z-index: 1;
+  display: inline-flex;
+  align-items: center; justify-content: center;
+  background: #62b517; color: #fff;
+  font-size: 17px; font-weight: 800;
+  padding: 14px 36px;
+  margin-top: 24px;
+  border-radius: 10px;
+  text-decoration: none;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 14px rgba(98,181,23,0.32);
+  transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+  animation: fade-up 0.45s 0.25s ease both;
+}
+.hero-buy-btn:hover {
+  background: #4a8c11;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(98,181,23,0.4);
+}
+.hero-demos {
+  position: relative; z-index: 1;
+  margin: 24px auto 0;
+  max-width: 480px;
+  animation: fade-up 0.45s 0.4s ease both;
+}
+.hero-demos-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.6px;
+  color: #888;
+  margin-bottom: 10px;
+}
+.hero-demos-row {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.hero-demo-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,0.7);
+  color: #4a8c11;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid #c8d8b0;
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.hero-demo-btn:hover {
+  background: #62b517;
+  color: #fff;
+  border-color: #62b517;
+}
+.hero-demo-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #62b517;
+  flex-shrink: 0;
+}
+.hero-demo-dot--cy {
+  background: #d1db24;
+}
+.hero-demo-btn:hover .hero-demo-dot,
+.hero-demo-btn:hover .hero-demo-dot--cy {
+  background: #fff;
+}
+@media (max-width: 600px) {
+  .hero-buy-btn { font-size: 15px; padding: 12px 28px; margin-top: 18px; }
+  .hero-demos { margin-top: 18px; }
+  .hero-demo-btn { font-size: 12px; padding: 7px 14px; }
+}
+
 /* ===== HERO JOURNEY BAR ===== */
 .hero-journey {
   background: #fff;
@@ -1676,6 +1756,20 @@ footer {
 <!-- HERO -->
 <section class="hero">
   <h1>Bad Tech Decisions<br><em>Are Expensive.</em></h1>
+  <a class="hero-buy-btn" href="/buy-now">Buy Now</a>
+  <div class="hero-demos">
+    <span class="hero-demos-label">Or try a demo</span>
+    <div class="hero-demos-row">
+      <a class="hero-demo-btn" href="/fuzznet?tutorial=1">
+        <span class="hero-demo-dot"></span>
+        Artificial Intelligence
+      </a>
+      <a class="hero-demo-btn" href="/byteclub?tutorial=1">
+        <span class="hero-demo-dot hero-demo-dot--cy"></span>
+        Cybersecurity
+      </a>
+    </div>
+  </div>
 </section>
 
 <!-- HERO JOURNEY -->
@@ -2545,10 +2639,10 @@ footer {
 
     <div class="footer-col">
       <div class="footer-brand">
-        <img src="/images/logo.png" alt="Tech CoLab logo">
+        <img src="/images/logo-light.png" alt="Tech CoLab logo">
         <span class="footer-brand-text">Tech CoLab</span>
       </div>
-      <p class="footer-tag">Tech Fluency. Better Decisions. Purpose-built games that help your team get it, and help you communicate it.</p>
+      <p class="footer-tag">Bridge the Gap. Empower their Decisions. Purpose-built games that help your team get it, and help you communicate it.</p>
     </div>
 
     <div class="footer-col">
