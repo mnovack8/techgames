@@ -221,6 +221,91 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
 @media (max-width: 600px) {
   .hero-empathy { font-size: 15px; margin-top: 18px; }
 }
+
+/* ===== HERO JOURNEY BAR ===== */
+.hero-journey {
+  background: #fff;
+  padding: 28px 24px;
+  border-bottom: 1px solid #dde8c8;
+}
+.journey-track {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 4px;
+  flex-wrap: nowrap;
+}
+.journey-step {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 18px 14px;
+  border-radius: 12px;
+  border: 2px solid;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.35;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.journey-step:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+}
+.journey-step--1 {
+  background: #fdf3e7;
+  border-color: #e88c3a;
+  color: #7a3d05;
+}
+.journey-step--2 {
+  background: #fffbe5;
+  border-color: #d1db24;
+  color: #5a5a00;
+}
+.journey-step--3 {
+  background: #eff8d8;
+  border-color: #a8c96a;
+  color: #4a8c11;
+}
+.journey-step--4 {
+  background: #62b517;
+  border-color: #4a8c11;
+  color: #fff;
+}
+.journey-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  font-weight: 900;
+  color: #62b517;
+  flex-shrink: 0;
+  width: 14px;
+  line-height: 1;
+}
+@media (max-width: 800px) {
+  .hero-journey { padding: 20px 16px; }
+  .journey-track {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+  }
+  .journey-step {
+    width: 100%;
+    padding: 14px 16px;
+    font-size: 13px;
+  }
+  .journey-arrow {
+    transform: rotate(90deg);
+    align-self: center;
+    width: auto;
+    padding: 2px 0;
+  }
+}
 .hero-cta-row {
   position: relative; z-index: 1;
   margin-top: 28px;
@@ -484,6 +569,53 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
   margin-top: 36px;
+}
+
+/* ===== COMMUNITY PHOTO STRIP (infinite scroll) ===== */
+.community-strip {
+  margin-top: 56px;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  width: 100vw;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 80px, #000 calc(100% - 80px), transparent 100%);
+          mask-image: linear-gradient(to right, transparent 0, #000 80px, #000 calc(100% - 80px), transparent 100%);
+}
+.community-track {
+  display: flex;
+  gap: 18px;
+  width: max-content;
+  animation: community-scroll 90s linear infinite;
+}
+.community-strip:hover .community-track {
+  animation-play-state: paused;
+}
+.community-photo {
+  flex: 0 0 auto;
+  width: 320px;
+  height: 220px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #1a3a00;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+}
+.community-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+@keyframes community-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+@media (max-width: 600px) {
+  .community-strip { margin-top: 40px; }
+  .community-photo { width: 240px; height: 170px; }
+  .community-track { gap: 12px; animation-duration: 70s; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .community-track { animation: none; }
 }
 .approach-pillar {
   background: #fff;
@@ -1467,7 +1599,19 @@ footer {
 <!-- HERO -->
 <section class="hero">
   <h1>Bad Tech Decisions<br><em>Are Expensive.</em></h1>
-  <p class="hero-empathy"><strong>We’ve all been there</strong>, decisions moving fast, language misaligned, and quiet confusion in the room.<br><br><strong>Be the bridge.</strong> We’ll help you get there.</p>
+</section>
+
+<!-- HERO JOURNEY -->
+<section class="hero-journey">
+  <div class="journey-track">
+    <div class="journey-step journey-step--1" data-reveal data-delay="1">Critical decisions must be made</div>
+    <div class="journey-arrow" aria-hidden="true">›</div>
+    <div class="journey-step journey-step--2" data-reveal data-delay="2">Misaligned language and quiet confusion in the room</div>
+    <div class="journey-arrow" aria-hidden="true">›</div>
+    <div class="journey-step journey-step--3" data-reveal data-delay="3">Be the bridge</div>
+    <div class="journey-arrow" aria-hidden="true">›</div>
+    <div class="journey-step journey-step--4" data-reveal data-delay="4">We'll help you get there</div>
+  </div>
 </section>
 
 <!-- THE PROBLEM -->
@@ -1574,6 +1718,33 @@ footer {
         <p>The moment engagement drops, learning stops.</p>
       </div>
     </div>
+
+    <!-- COMMUNITY PHOTO STRIP. Infinite scroll -->
+    <div class="community-strip" data-reveal>
+      <div class="community-track">
+        <!-- Set A -->
+        <div class="community-photo"><img src="/images/community/community-1.jpeg" alt="Tech CoLab session" loading="lazy"></div>
+        <div class="community-photo"><img src="/images/community/community-2.jpeg" alt="Tech CoLab session" loading="lazy"></div>
+        <div class="community-photo"><img src="/images/community/community-3.jpeg" alt="Tech CoLab session" loading="lazy"></div>
+        <div class="community-photo"><img src="/images/community/community-4.jpeg" alt="Tech CoLab session" loading="lazy"></div>
+        <div class="community-photo"><img src="/images/community/community-5.jpeg" alt="Tech CoLab session" loading="lazy"></div>
+        <div class="community-photo"><img src="/images/community/community-6.jpeg" alt="Tech CoLab session" loading="lazy"></div>
+        <div class="community-photo"><img src="/images/community/community-7.jpeg" alt="Tech CoLab session" loading="lazy"></div>
+        <div class="community-photo"><img src="/images/community/community-8.jpeg" alt="Tech CoLab session" loading="lazy"></div>
+        <div class="community-photo"><img src="/images/community/community-9.jpg" alt="Tech CoLab session" loading="lazy"></div>
+        <!-- Set B (duplicate for seamless loop) -->
+        <div class="community-photo" aria-hidden="true"><img src="/images/community/community-1.jpeg" alt="" loading="lazy"></div>
+        <div class="community-photo" aria-hidden="true"><img src="/images/community/community-2.jpeg" alt="" loading="lazy"></div>
+        <div class="community-photo" aria-hidden="true"><img src="/images/community/community-3.jpeg" alt="" loading="lazy"></div>
+        <div class="community-photo" aria-hidden="true"><img src="/images/community/community-4.jpeg" alt="" loading="lazy"></div>
+        <div class="community-photo" aria-hidden="true"><img src="/images/community/community-5.jpeg" alt="" loading="lazy"></div>
+        <div class="community-photo" aria-hidden="true"><img src="/images/community/community-6.jpeg" alt="" loading="lazy"></div>
+        <div class="community-photo" aria-hidden="true"><img src="/images/community/community-7.jpeg" alt="" loading="lazy"></div>
+        <div class="community-photo" aria-hidden="true"><img src="/images/community/community-8.jpeg" alt="" loading="lazy"></div>
+        <div class="community-photo" aria-hidden="true"><img src="/images/community/community-9.jpg" alt="" loading="lazy"></div>
+      </div>
+    </div>
+
   </div>
 </section>
 
@@ -2377,6 +2548,32 @@ function trackClick(button) {
       if (om) om.classList.remove('open');
       if (ot) ot.classList.remove('open');
     });
+  });
+})();
+
+// Shuffle community photos on every page load
+(function() {
+  var track = document.querySelector('.community-track');
+  if (!track) return;
+  var photos = Array.from(track.querySelectorAll('.community-photo'));
+  if (photos.length < 2) return;
+  // The track contains Set A + Set B (duplicate). Halve to get unique set.
+  var half = photos.length / 2;
+  var unique = photos.slice(0, half);
+  // Fisher-Yates shuffle
+  for (var i = unique.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = unique[i]; unique[i] = unique[j]; unique[j] = tmp;
+  }
+  // Clear track and re-append: shuffled set, then a duplicate for the seamless loop
+  track.innerHTML = '';
+  unique.forEach(function(el) { track.appendChild(el); });
+  unique.forEach(function(el) {
+    var clone = el.cloneNode(true);
+    clone.setAttribute('aria-hidden', 'true');
+    var img = clone.querySelector('img');
+    if (img) img.setAttribute('alt', '');
+    track.appendChild(clone);
   });
 })();
 </script>
