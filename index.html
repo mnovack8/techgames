@@ -178,7 +178,7 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
   font-size: clamp(38px, 6vw, 62px);
   font-weight: 900;
   color: #2a2a2a;
-  line-height: 1.1;
+  line-height: 1.25;
   margin-bottom: 16px;
   position: relative;
   z-index: 1;
@@ -186,7 +186,7 @@ nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
 }
 .hero h1 em {
   font-style: normal;
-  color: #62b517;
+  color: #2a2a2a;
   text-decoration: underline;
   text-decoration-color: transparent;
   text-decoration-thickness: 4px;
@@ -1719,6 +1719,33 @@ footer {
   .line-inner { transform: none !important; transition: none !important; }
 }
 .logo-text-accent { background: #4a8c11; color: #fff; padding: 0 4px; border-radius: 3px; line-height: 1.1; vertical-align: middle; font-size: 0.75em; font-weight: 800; }
+.hero-word-box {
+  display: inline-grid;
+  background: #fefce8;
+  padding: 2px 12px 4px;
+  border-radius: 8px;
+  border: 2px solid #c8a800;
+  vertical-align: baseline;
+  overflow: hidden;
+}
+.hero-word-item {
+  grid-column: 1;
+  grid-row: 1;
+  color: #62b517;
+  opacity: 0;
+  text-align: center;
+  white-space: nowrap;
+}
+@keyframes hero-word-enter {
+  from { opacity: 0; transform: translateY(70%); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes hero-word-leave {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-70%); }
+}
+.hero-word-item.active  { animation: hero-word-enter 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+.hero-word-item.leaving { animation: hero-word-leave 0.4s ease-in forwards; }
 </style>
 <script type="application/ld+json">
 {
@@ -1792,7 +1819,7 @@ footer {
 
 <!-- HERO -->
 <section class="hero">
-  <h1>Bad Tech Decisions<br><em>Are Expensive.</em></h1>
+  <h1>Bad Decisions About<br><span class="hero-word-box"><span class="hero-word-item active">Cybersecurity</span><span class="hero-word-item">Artificial Intelligence</span><span class="hero-word-item">Quantum Computing</span></span><br><em>Are Expensive.</em></h1>
   <a class="hero-buy-btn" href="/buy-now">Buy Now</a>
   <div class="hero-demos">
     <span class="hero-demos-label">Or try a demo</span>
@@ -2825,6 +2852,21 @@ function trackClick(button) {
     if (img) img.setAttribute('alt', '');
     track.appendChild(clone);
   });
+})();
+</script>
+<script>
+(function() {
+  var items = document.querySelectorAll('.hero-word-item');
+  if (!items.length) return;
+  var idx = 0;
+  setInterval(function() {
+    var prev = items[idx];
+    prev.classList.remove('active');
+    prev.classList.add('leaving');
+    setTimeout(function() { prev.classList.remove('leaving'); }, 450);
+    idx = (idx + 1) % items.length;
+    items[idx].classList.add('active');
+  }, 3400);
 })();
 </script>
 </body>
