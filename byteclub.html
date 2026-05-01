@@ -4670,6 +4670,137 @@ In Byte Club you play <strong>both sides simultaneously</strong>: attacking your
     makeG: () => makeBcTutG({ alexHand:[BTC.recon,BTC.c2,BTC.respond,BTC.identify,BTC.recover] }),
     forced: false, next: 'Next →' },
 
+  // 4. Physical Set Up — What's in the Deck
+  { title: 'What\'s in the Deck',
+    body: `<div style="display:flex;flex-direction:column;gap:16px">
+<p style="margin:0;font-size:13px;color:#9ca3af">The deck contains three types of cards. Knowing what each looks like helps you set up fast.</p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+  <div style="background:#0a1520;border:1px solid rgba(248,113,113,0.35);border-radius:10px;padding:12px 14px">
+    <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.7px;color:#f87171;margin-bottom:10px"><img src="images/cyber-kill-chain.svg" style="width:11px;height:11px;vertical-align:middle;margin-right:5px">Attack Cards (×5 each)</div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center">
+      <img src="images/attack-recon.png" style="width:44px;height:61px;object-fit:contain;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.6)">
+      <img src="images/attack-weaponize.png" style="width:44px;height:61px;object-fit:contain;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.6)">
+      <img src="images/attack-delivery.png" style="width:44px;height:61px;object-fit:contain;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.6)">
+      <img src="images/attack-exploit.png" style="width:44px;height:61px;object-fit:contain;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.6)">
+      <img src="images/attack-install.png" style="width:44px;height:61px;object-fit:contain;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.6)">
+      <img src="images/attack-c2.png" style="width:44px;height:61px;object-fit:contain;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.6)">
+    </div>
+  </div>
+  <div style="background:#0a1520;border:1px solid rgba(96,165,250,0.35);border-radius:10px;padding:12px 14px">
+    <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.7px;color:#60a5fa;margin-bottom:10px"><img src="images/nist-framework.svg" style="width:11px;height:11px;vertical-align:middle;margin-right:5px">Defend Cards (×5 each)</div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center">
+      <img src="images/defend-identify.png" style="width:44px;height:61px;object-fit:contain;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.6)">
+      <img src="images/defend-protect.png" style="width:44px;height:61px;object-fit:contain;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.6)">
+      <img src="images/defend-detect.png" style="width:44px;height:61px;object-fit:contain;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.6)">
+      <img src="images/defend-respond.png" style="width:44px;height:61px;object-fit:contain;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.6)">
+      <img src="images/defend-recover.png" style="width:44px;height:61px;object-fit:contain;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.6)">
+    </div>
+  </div>
+  <div style="background:#0a1520;border:1px solid rgba(209,219,36,0.35);border-radius:10px;padding:12px 14px">
+    <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.7px;color:#d1db24;margin-bottom:10px">Special Cards — shuffle into deck</div>
+    <div style="display:flex;gap:10px;align-items:center">
+      <img src="images/special-data-flag.png" style="width:44px;height:61px;object-fit:contain;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.6)">
+      <div style="font-size:11px;color:#9ca3af;line-height:1.4">Data Flag + Times Up go into the <strong style="color:#e2e8f0">main deck</strong> before dealing.</div>
+      <img src="images/special-times-up.png" style="width:44px;height:61px;object-fit:contain;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.6)">
+    </div>
+  </div>
+  <div style="background:#0a1520;border:1px solid rgba(74,140,17,0.5);border-radius:10px;padding:12px 14px">
+    <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.7px;color:#62b517;margin-bottom:10px">Action Deck — kept separate</div>
+    <div style="display:flex;gap:10px;align-items:center">
+      <img src="images/attack-action-obj.png" style="width:44px;height:61px;object-fit:contain;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.6)">
+      <div style="font-size:11px;color:#9ca3af;line-height:1.4">Action Objective + Govern form the <strong style="color:#e2e8f0">Action Deck</strong>. Keep these face-down separate from the main deck.</div>
+      <img src="images/defend-govern.png" style="width:44px;height:61px;object-fit:contain;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.6)">
+    </div>
+  </div>
+</div></div>`,
+    makeG: () => makeBcTutG({ alexHand:[BTC.recon,BTC.c2,BTC.respond,BTC.identify,BTC.recover] }),
+    forced: false, next: 'Next →' },
+
+  // 5. Physical Set Up — Setting Up the Table
+  { title: 'Setting Up the Table',
+    body: `<div style="background:rgba(255,243,205,0.07);border:1.5px solid rgba(200,150,10,0.4);border-radius:10px;padding:8px 13px;margin-bottom:14px;font-size:11px;color:#d1a044"><strong>Physical game only.</strong> The online version handles setup automatically.</div>
+<div style="display:flex;flex-direction:column;gap:10px">
+  <div style="display:flex;gap:12px;align-items:flex-start;background:#0a1520;border:1px solid #1e3a5f;border-radius:10px;padding:11px 14px">
+    <div style="flex-shrink:0;width:24px;height:24px;border-radius:50%;background:#62b517;color:#0a1200;font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center">1</div>
+    <div>
+      <div style="font-size:12px;font-weight:800;color:#e2e8f0;margin-bottom:3px">Build the Action Deck</div>
+      <div style="font-size:11px;color:#9ca3af;line-height:1.45">Place <img src="images/attack-action-obj.png" style="width:14px;height:19px;vertical-align:middle;border-radius:2px"> Action Objective and <img src="images/defend-govern.png" style="width:14px;height:19px;vertical-align:middle;border-radius:2px"> Govern face-down in a small separate pile in the centre of the table. This is the <strong style="color:#e2e8f0">Action Deck</strong> — players earn these cards by completing their boards.</div>
+    </div>
+  </div>
+  <div style="background:#0a1520;border:1px solid #1e3a5f;border-radius:10px;padding:11px 14px">
+    <div style="display:flex;gap:12px;align-items:flex-start">
+      <div style="flex-shrink:0;width:24px;height:24px;border-radius:50%;background:#62b517;color:#0a1200;font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center">2</div>
+      <div>
+        <div style="font-size:12px;font-weight:800;color:#e2e8f0;margin-bottom:3px">Shuffle the Main Deck</div>
+        <div style="font-size:11px;color:#9ca3af;line-height:1.5">Shuffle all attack and defend cards, then divide into <strong style="color:#e2e8f0">3 roughly equal piles</strong>. Shuffle <img src="images/special-data-flag.png" style="width:12px;height:17px;vertical-align:middle;border-radius:2px"> <strong style="color:#4ade80">Data Flag</strong> into one pile and <img src="images/special-times-up.png" style="width:12px;height:17px;vertical-align:middle;border-radius:2px"> <strong style="color:#d1db24">Times Up</strong> into another. Stack them: <strong style="color:#4ade80">Data Flag pile on top</strong>, middle pile in the centre, <strong style="color:#d1db24">Times Up pile on the bottom</strong>.</div>
+      </div>
+    </div>
+    <!-- Visual: 3 piles diagram -->
+    <div style="margin-top:12px;display:flex;align-items:center;justify-content:center;gap:6px">
+      <svg viewBox="0 0 300 110" style="width:100%;max-width:360px" xmlns="http://www.w3.org/2000/svg">
+        <!-- Pile 1 — Data Flag (TOP) -->
+        <rect x="4"  y="20" width="76" height="52" rx="4" fill="#0d1e10" stroke="#2a4a2a" stroke-width="1"/>
+        <rect x="7"  y="17" width="70" height="48" rx="3" fill="#112011" stroke="#2a4a2a" stroke-width="1"/>
+        <rect x="10" y="14" width="64" height="44" rx="3" fill="#152514" stroke="#3a6a3a" stroke-width="1"/>
+        <!-- Data Flag card face -->
+        <rect x="22" y="6" width="40" height="56" rx="4" fill="#1a3a1a" stroke="#4ade80" stroke-width="1.5"/>
+        <image href="images/special-data-flag.png" x="27" y="10" width="30" height="44"/>
+        <!-- Label -->
+        <text x="42" y="74" text-anchor="middle" font-family="sans-serif" font-size="8.5" font-weight="700" fill="#4ade80">Data Flag pile</text>
+        <text x="42" y="84" text-anchor="middle" font-family="sans-serif" font-size="7.5" fill="#6b7280">goes on TOP</text>
+
+        <!-- Arrow 1 -->
+        <text x="104" y="42" text-anchor="middle" font-family="sans-serif" font-size="18" fill="#374151">+</text>
+
+        <!-- Pile 2 — Plain middle -->
+        <rect x="116" y="20" width="68" height="52" rx="4" fill="#0d1420" stroke="#1e2d3d" stroke-width="1"/>
+        <rect x="119" y="17" width="62" height="48" rx="3" fill="#0f1825" stroke="#1e2d3d" stroke-width="1"/>
+        <rect x="122" y="14" width="56" height="44" rx="3" fill="#111c2a" stroke="#253347" stroke-width="1"/>
+        <!-- Card back -->
+        <rect x="128" y="6" width="44" height="56" rx="4" fill="#0d1829" stroke="#253347" stroke-width="1.5"/>
+        <rect x="133" y="11" width="34" height="46" rx="2" fill="#0a1520" stroke="#1e3a5f" stroke-width="1"/>
+        <text x="150" y="38" text-anchor="middle" font-family="sans-serif" font-size="16" fill="#253347">?</text>
+        <!-- Label -->
+        <text x="150" y="74" text-anchor="middle" font-family="sans-serif" font-size="8.5" font-weight="700" fill="#9ca3af">Middle pile</text>
+        <text x="150" y="84" text-anchor="middle" font-family="sans-serif" font-size="7.5" fill="#6b7280">centre</text>
+
+        <!-- Arrow 2 -->
+        <text x="212" y="42" text-anchor="middle" font-family="sans-serif" font-size="18" fill="#374151">+</text>
+
+        <!-- Pile 3 — Times Up (BOTTOM) -->
+        <rect x="222" y="20" width="74" height="52" rx="4" fill="#1a1a08" stroke="#3a3a10" stroke-width="1"/>
+        <rect x="225" y="17" width="68" height="48" rx="3" fill="#1e1e0a" stroke="#3a3a10" stroke-width="1"/>
+        <rect x="228" y="14" width="62" height="44" rx="3" fill="#222210" stroke="#4a4a18" stroke-width="1"/>
+        <!-- Times Up card face -->
+        <rect x="238" y="6" width="40" height="56" rx="4" fill="#2a2a08" stroke="#d1db24" stroke-width="1.5"/>
+        <image href="images/special-times-up.png" x="243" y="10" width="30" height="44"/>
+        <!-- Label -->
+        <text x="258" y="74" text-anchor="middle" font-family="sans-serif" font-size="8.5" font-weight="700" fill="#d1db24">Times Up pile</text>
+        <text x="258" y="84" text-anchor="middle" font-family="sans-serif" font-size="7.5" fill="#6b7280">goes on BOTTOM</text>
+
+        <!-- Stack order arrow -->
+        <text x="150" y="100" text-anchor="middle" font-family="sans-serif" font-size="7.5" fill="#4b5563">Stack order: 🟢 top → middle → 🟡 bottom</text>
+      </svg>
+    </div>
+  </div>
+  <div style="display:flex;gap:12px;align-items:flex-start;background:#0a1520;border:1px solid #1e3a5f;border-radius:10px;padding:11px 14px">
+    <div style="flex-shrink:0;width:24px;height:24px;border-radius:50%;background:#62b517;color:#0a1200;font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center">3</div>
+    <div>
+      <div style="font-size:12px;font-weight:800;color:#e2e8f0;margin-bottom:3px">Deal Starting Hands</div>
+      <div style="font-size:11px;color:#9ca3af;line-height:1.45">Deal <strong style="color:#e2e8f0">4 cards</strong> to each player. All players start with the same hand size.</div>
+    </div>
+  </div>
+  <div style="display:flex;gap:12px;align-items:flex-start;background:#0a1520;border:1px solid #1e3a5f;border-radius:10px;padding:11px 14px">
+    <div style="flex-shrink:0;width:24px;height:24px;border-radius:50%;background:#62b517;color:#0a1200;font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center">4</div>
+    <div>
+      <div style="font-size:12px;font-weight:800;color:#e2e8f0;margin-bottom:3px">Place Reference Cards</div>
+      <div style="font-size:11px;color:#9ca3af;line-height:1.45">Set the <strong style="color:#e2e8f0">On Your Turn</strong>, <strong style="color:#e2e8f0">Cyber Kill Chain</strong>, and <strong style="color:#e2e8f0">NIST Framework</strong> reference cards in the centre where all players can see them throughout the game.</div>
+    </div>
+  </div>
+</div>`,
+    makeG: () => makeBcTutG({ alexHand:[BTC.recon,BTC.c2,BTC.respond,BTC.identify,BTC.recover] }),
+    forced: false, next: 'Next →' },
+
   // 4. Cards & Rules — How to Play
   { title: 'How to Play — On Your Turn',
     body: `<div class="bcti-two-col" style="gap:28px">
@@ -4678,14 +4809,14 @@ Each turn has two simple steps:<br><br>
 <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px">
   <div style="background:rgba(98,181,23,0.08);border:1px solid rgba(98,181,23,0.25);border-radius:8px;padding:10px 14px">
     <div style="font-size:12px;font-weight:800;color:#62b517;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:3px">Step 1</div>
-    <div style="font-size:13px;color:#e2e8f0;line-height:1.5"><strong>Play any number of cards</strong> from your hand, face-up into <em>Cards in Front of You</em>. Each card fills one Kill Chain or NIST slot.</div>
+    <div style="font-size:13px;color:#e2e8f0;line-height:1.5"><strong>Play any number of cards</strong> from your hand and do what the card says. Then place the card face-up into <em>Cards in Front of You</em>. Each card fills one Kill Chain or NIST slot.</div>
   </div>
   <div style="background:rgba(98,181,23,0.08);border:1px solid rgba(98,181,23,0.25);border-radius:8px;padding:10px 14px">
     <div style="font-size:12px;font-weight:800;color:#62b517;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:3px">Step 2</div>
     <div style="font-size:13px;color:#e2e8f0;line-height:1.5"><strong>Draw 1 card</strong> from the deck to refill your hand. Maximum 6 cards at any time.</div>
   </div>
 </div>
-Play continues <strong>clockwise</strong> until a player achieves either win condition. On their <strong>first turn only</strong>, the starting player draws extra cards to reach 5.
+Play continues <strong>clockwise</strong> until a player achieves either win condition.
 </div>
 <div style="flex:1;min-width:0">
   <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;color:#4b5563;margin-bottom:10px">Two Ways to Win</div>
@@ -4698,7 +4829,7 @@ Play continues <strong>clockwise</strong> until a player achieves either win con
     <div style="background:#0a1520;border:1px solid #1e3a5f;border-radius:8px;padding:12px 14px">
       <div style="font-size:10px;font-weight:800;color:#4b5563;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:4px"><img src="images/nist-framework.svg" style="width:11px;height:11px;vertical-align:middle;margin-right:4px"> Win Condition 2</div>
       <div style="font-size:12px;color:#e2e8f0;font-weight:700;margin-bottom:3px">Complete the full Kill Chain + NIST board</div>
-      <div style="font-size:11px;color:#6b7280;line-height:1.4">Play all 6 Kill Chain types (including Action Obj.) and all 5 NIST types (including Govern). Win without waiting for Times Up.</div>
+      <div style="font-size:11px;color:#6b7280;line-height:1.4">Play all 7 Kill Chain types (including Action Obj.) and all 6 NIST types (including Govern). Win without waiting for Times Up.</div>
     </div>
   </div>
 </div></div>`,
@@ -4809,7 +4940,7 @@ Playing a card places it face-up in <em>Cards in Front of You</em> (right column
         };
         gameState = bcTutG;
         selectedHandCard = null;
-        BCTSTEPS[8].tutHL = 'recon_done';
+        BCTSTEPS[10].tutHL = 'recon_done';
         document.getElementById('bc-tut-body').innerHTML =
           `Recon reveals <strong>Mira's hand</strong>! You can see all her cards. Useful for planning your next move.<br>Click <em>Done</em> to close the view.`;
         renderGame(bcTutG);
@@ -4820,8 +4951,8 @@ Playing a card places it face-up in <em>Cards in Front of You</em> (right column
         bcTutG.phase = 'play';
         bcTutG.attackInfo = null;
         gameState = bcTutG;
-        BCTSTEPS[8].tutHL = 'end_turn';
-        BCTSTEPS[8].nextAction = () => bcTutAdvanceTo(9);
+        BCTSTEPS[10].tutHL = 'end_turn';
+        BCTSTEPS[10].nextAction = () => bcTutAdvanceTo(11);
         document.getElementById('bc-tut-body').innerHTML =
           `Recon is in your <img src="images/cyber-kill-chain.svg" style="width:13px;height:13px;vertical-align:middle;"> Kill Chain row! Mira\'s hand is back face-down.<br>Click <strong>End Turn (Draw 1)</strong> to pass the turn to Mira.`;
         const nextBtn = document.getElementById('bc-tut-next');
@@ -4830,7 +4961,7 @@ Playing a card places it face-up in <em>Cards in Front of You</em> (right column
         renderGame(bcTutG);
         return true;
       }
-      if (msg.action === 'end_play_phase') { bcTutAdvanceTo(9); return true; }
+      if (msg.action === 'end_play_phase') { bcTutAdvanceTo(11); return true; }
       return false;
     } },
 
@@ -4859,7 +4990,7 @@ Click the glowing <em>Play Respond</em> button to block it.`,
     interact(msg) {
       if (msg.type !== 'game_action') return false;
       if (msg.action === 'play_respond' || msg.action === 'respond_skip') {
-        bcTutAdvanceTo(10); return true;
+        bcTutAdvanceTo(12); return true;
       }
       return false;
     } },
@@ -4891,14 +5022,14 @@ Mira is holding the ${TUT_FLAG} <strong>Data Flag</strong>. Whoever holds it whe
         };
         gameState = bcTutG;
         selectedHandCard = null;
-        BCTSTEPS[10].tutHL = 'mira_target';
+        BCTSTEPS[12].tutHL = 'mira_target';
         document.getElementById('bc-tut-body').innerHTML =
           `C2 is in play! Now <strong>click Mira</strong> in the target panel. She holds the Data Flag.`;
         renderGame(bcTutG);
         return true;
       }
       if (msg.action === 'attack_select_target' && msg.targetIdx === 1) {
-        bcTutAdvanceTo(11); return true;
+        bcTutAdvanceTo(13); return true;
       }
       if (msg.action === 'cancel_attack') return true; // block cancel
       return false;
@@ -4922,7 +5053,7 @@ Click <strong>End Turn (Draw 1)</strong> to draw and pass to Mira.`,
     tutHL: 'end_turn',
     interact(msg) {
       if (msg.type !== 'game_action') return false;
-      if (msg.action === 'end_play_phase') { bcTutAdvanceTo(12); return true; }
+      if (msg.action === 'end_play_phase') { bcTutAdvanceTo(14); return true; }
       return false;
     } },
 
@@ -4999,15 +5130,15 @@ Watch the <strong>status strip</strong> above. It shows when Govern and Action O
     _subPhase: 0,
     interact(msg) {
       if (msg.type !== 'game_action') return;
-      const sp = BCTSTEPS[15]._subPhase;
+      const sp = BCTSTEPS[17]._subPhase;
 
       // ── Sub-phase 0: play Exploit ──
       if (sp === 0 && msg.action === 'play_card' && msg.cardId == TUT8_EXPLOIT.id) {
         bcTutG.players[0].played.push({...TUT8_EXPLOIT});
         bcTutG.myHand = [{...TUT8_PROTECT}, {...TUT8_ACTION_OBJ}];
         bcTutG.players[0].handCount = 2;
-        BCTSTEPS[15]._subPhase = 1;
-        BCTSTEPS[15].tutHL = TUT8_PROTECT.id;
+        BCTSTEPS[17]._subPhase = 1;
+        BCTSTEPS[17].tutHL = TUT8_PROTECT.id;
         gameState = bcTutG;
         selectedHandCard = null;
         document.getElementById('bc-tut-body').innerHTML =
@@ -5024,8 +5155,8 @@ Watch the <strong>status strip</strong> above. It shows when Govern and Action O
         bcTutG.myHand = [{...TUT8_ACTION_OBJ}, {...TUT8_GOVERN}];
         bcTutG.players[0].handCount = 2;
         bcTutG.protectedPlayers = [0]; // show Protect label + background on hand area
-        BCTSTEPS[15]._subPhase = 2;
-        BCTSTEPS[15].tutHL = TUT8_ACTION_OBJ.id;
+        BCTSTEPS[17]._subPhase = 2;
+        BCTSTEPS[17].tutHL = TUT8_ACTION_OBJ.id;
         gameState = bcTutG;
         selectedHandCard = null;
         document.getElementById('bc-tut-body').innerHTML =
@@ -5041,8 +5172,8 @@ Watch the <strong>status strip</strong> above. It shows when Govern and Action O
         bcTutG.myHand = [{...TUT8_GOVERN}];
         bcTutG.players[0].handCount = 1;
         bcTutG.protectedPlayers = []; // Protect effect ends after one turn
-        BCTSTEPS[15]._subPhase = 3;
-        BCTSTEPS[15].tutHL = TUT8_GOVERN.id;
+        BCTSTEPS[17]._subPhase = 3;
+        BCTSTEPS[17].tutHL = TUT8_GOVERN.id;
         gameState = bcTutG;
         selectedHandCard = null;
         document.getElementById('bc-tut-body').innerHTML =
@@ -5060,7 +5191,7 @@ Watch the <strong>status strip</strong> above. It shows when Govern and Action O
         gameState = bcTutG;
         selectedHandCard = null;
         renderGame(bcTutG);                    // show completed board briefly
-        setTimeout(() => bcTutAdvanceTo(16), 500); // then win screen
+        setTimeout(() => bcTutAdvanceTo(18), 500); // then win screen
         return;
       }
     } },
@@ -5088,12 +5219,13 @@ You\'re ready to play. Click below to head back to the lobby!`,
 ];
 
 // ── Section selection for "Before You Play" ─────────────────────────────────
-let bcTutSections = { context: true, howto: true };
+let bcTutSections = { context: true, setup: false, howto: true };
 let bcTutSectionError = false;
 
 function bcTutSectionForIdx(idx) {
   if (idx >= 1 && idx <= 3) return 'context';
-  if (idx >= 4) return 'howto';
+  if (idx >= 4 && idx <= 5) return 'setup';
+  if (idx >= 6) return 'howto';
   return null; // step 0 always shows
 }
 
@@ -5123,6 +5255,7 @@ function bcTutSectionsBody() {
   return `<p style="margin-bottom:12px;font-size:13px;color:#9ca3af">Choose which sections to include in your tutorial:</p>
 <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px">
   ${row('context','Context for Learning Objectives','The Cycle of Cyberwarfare, the Cyber Kill Chain, and the NIST Framework — the real-world concepts behind the game.')}
+  ${row('setup','Physical Game Set Up','How to sort the decks, build the Action Deck, deal starting hands, and arrange the table. Recommended to skip if playing online.')}
   ${row('howto','How to Play','Card types, turn structure, special cards, and two interactive win-condition walkthroughs.')}
 </div>${bcTutSectionError?`<div style="background:rgba(220,38,38,0.1);border:1.5px solid #dc2626;border-radius:8px;padding:8px 12px;font-size:12px;color:#f87171;font-weight:700;display:flex;align-items:center;gap:7px"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="#f87171" stroke-width="1.5"/><line x1="8" y1="4.5" x2="8" y2="8.5" stroke="#f87171" stroke-width="2" stroke-linecap="round"/><circle cx="8" cy="11" r="1" fill="#f87171"/></svg>At least one section must be selected.</div>`:''}`;
 }
@@ -5181,7 +5314,7 @@ function applyBcTutStep(idx) {
   const s = BCTSTEPS[idx];
 
   // ── Route intro overlay (steps 0-3) vs sidebar (steps 4+) ──────────────
-  const isIntro = idx < 8;
+  const isIntro = idx < 10;
   if (isIntro) {
     document.body.classList.remove('bc-tut-active');
     document.body.classList.add('bc-tut-intro-active');
