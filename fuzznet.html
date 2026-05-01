@@ -524,6 +524,45 @@ body.observer-active #game { height: calc(100vh - 44px - 36px - 4px); }
 #tut-next { padding: 8px 20px; background: #62b517; color: #fff; border: none; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; }
 #tut-next:hover { background: #235438; }
 
+/* ===== FULLSCREEN MODE (intro / context / setup steps) ===== */
+#tutorial-overlay.fullscreen {
+  position: fixed;
+  inset: 0;
+  z-index: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(8, 22, 4, 0.95);
+  border-top: none;
+  box-shadow: none;
+  padding: 24px;
+}
+#tutorial-overlay.fullscreen #tutorial-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 28px 32px 24px;
+  max-width: 740px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.55);
+  border-top: 4px solid #62b517;
+  pointer-events: all;
+}
+#tutorial-overlay.fullscreen #tutorial-card h3 { font-size: 18px; margin-bottom: 10px; }
+#tutorial-overlay.fullscreen #tutorial-card p { font-size: 14px; line-height: 1.6; }
+@media (max-width: 768px) {
+  #tutorial-overlay.fullscreen {
+    align-items: flex-end;
+    padding: 0;
+  }
+  #tutorial-overlay.fullscreen #tutorial-card {
+    border-radius: 16px 16px 0 0;
+    max-height: 88vh;
+    padding: 20px 18px 18px;
+  }
+}
+
 /* Lobby tutorial button */
 .btn-tutorial { background: #f4fae8; color: #4a8c11; border: 2px solid #a8c96a; max-width: 360px; }
 .btn-tutorial:hover:not(:disabled) { background: #e8f5d0; border-color: #62b517; }
@@ -2547,9 +2586,163 @@ const TSTEPS = [
 </div>
 <p>The 3-layer network you're about to build is the same underlying idea, just miniaturized.</p>`,
     makeG:()=>tutMakeG(),
-    next:'Got it - Start the Tutorial →' },
+    next:'Got it - Set Up the Board →' },
 
-  // 5. Welcome (was 0)
+  // 5. Physical setup: Components
+  { title:'Components — What\'s in the Box',
+    body:`<div style="background:#fff3cd;border:1.5px solid #c8960a;border-radius:10px;padding:9px 13px;margin-bottom:12px;display:flex;align-items:center;gap:9px">
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="flex-shrink:0"><rect x="2" y="2" width="16" height="16" rx="3" fill="#c8960a"/><text x="10" y="14" text-anchor="middle" font-family="Nunito,sans-serif" font-size="12" font-weight="900" fill="#fff">i</text></svg>
+  <div style="font-size:11px;color:#7a5500;line-height:1.5"><b>Physical board game only.</b> If you're playing the online version, setup is handled automatically — skip ahead to Start the Tutorial.</div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:7px">
+
+  <div style="display:flex;align-items:center;gap:8px;background:#f4fae8;border:1.5px solid #a8c96a;border-radius:10px;padding:8px 10px">
+    <img src="/images/player-board.png" width="54" height="54" style="flex-shrink:0;object-fit:cover;border-radius:6px;border:1px solid #ccc" alt="player board"/>
+    <div><div style="font-size:11px;font-weight:800;color:#1a3a00">4 Player Boards</div><div style="font-size:10px;color:#555;line-height:1.4">Your personal neural network grid. 5 animal inputs, 9 node spaces across 3 hidden layers, 5 outputs</div></div>
+  </div>
+
+  <div style="display:flex;align-items:center;gap:8px;background:#f4fae8;border:1.5px solid #a8c96a;border-radius:10px;padding:8px 10px">
+    <img src="/images/score-board.png" width="54" height="54" style="flex-shrink:0;object-fit:contain;border-radius:6px;border:1px solid #ccc;background:#fff" alt="score board"/>
+    <div><div style="font-size:11px;font-weight:800;color:#1a3a00">1 Score Board</div><div style="font-size:10px;color:#555;line-height:1.4">Shared in the centre. Columns 5, 4, 3, 2 show point values. Players place Animal Figures here when they pass a test</div></div>
+  </div>
+
+  <div style="display:flex;align-items:center;gap:8px;background:#f4fae8;border:1.5px solid #a8c96a;border-radius:10px;padding:8px 10px">
+    <div style="display:flex;gap:3px;flex-shrink:0;align-items:center">
+      <img src="/images/dog.png" width="18" height="18" style="object-fit:contain" alt="dog"/>
+      <img src="/images/bunny.png" width="18" height="18" style="object-fit:contain" alt="bunny"/>
+      <img src="/images/frog.png" width="18" height="18" style="object-fit:contain" alt="frog"/>
+      <img src="/images/squirrel.png" width="18" height="18" style="object-fit:contain" alt="squirrel"/>
+      <img src="/images/fish.png" width="18" height="18" style="object-fit:contain" alt="fish"/>
+    </div>
+    <div><div style="font-size:11px;font-weight:800;color:#1a3a00">Animal Figures (per player)</div><div style="font-size:10px;color:#555;line-height:1.4">Dog, Bunny, Frog, Squirrel, Fish — each player gets a full set in their colour. Used on Player Board and Score Board</div></div>
+  </div>
+
+  <div style="display:flex;align-items:center;gap:8px;background:#f4fae8;border:1.5px solid #a8c96a;border-radius:10px;padding:8px 10px">
+    <svg width="38" height="20" viewBox="0 0 57 20" fill="none" style="flex-shrink:0">
+      <rect x="0" y="2" width="16" height="16" rx="2.5" fill="#fff" stroke="#333" stroke-width="1.2"/>
+      <circle cx="5" cy="7" r="1.5" fill="#333"/><circle cx="11" cy="13" r="1.5" fill="#333"/>
+      <rect x="20" y="2" width="16" height="16" rx="2.5" fill="#fff" stroke="#333" stroke-width="1.2"/>
+      <circle cx="25" cy="7" r="1.5" fill="#333"/><circle cx="33" cy="7" r="1.5" fill="#333"/><circle cx="29" cy="13" r="1.5" fill="#333"/>
+      <rect x="40" y="2" width="16" height="16" rx="2.5" fill="#fff" stroke="#333" stroke-width="1.2"/>
+      <circle cx="44" cy="7" r="1.5" fill="#333"/><circle cx="52" cy="7" r="1.5" fill="#333"/><circle cx="44" cy="13" r="1.5" fill="#333"/><circle cx="52" cy="13" r="1.5" fill="#333"/>
+    </svg>
+    <div><div style="font-size:11px;font-weight:800;color:#1a3a00">3 Dice (shared pool)</div><div style="font-size:10px;color:#555;line-height:1.4">Roll all 3 when testing. Add the total to your Data Tokens on the test path. Need <b>18 or more</b> to pass</div></div>
+  </div>
+
+  <div style="display:flex;align-items:center;gap:8px;background:#f4fae8;border:1.5px solid #a8c96a;border-radius:10px;padding:8px 10px">
+    <img src="/images/token-design-node.png" width="36" height="36" style="flex-shrink:0;object-fit:contain" alt="node token"/>
+    <div><div style="font-size:11px;font-weight:800;color:#1a3a00">44 Node Tokens</div><div style="font-size:10px;color:#555;line-height:1.4">Placed on your Player Board to build network paths. Cannot be moved or removed once placed</div></div>
+  </div>
+
+  <div style="display:flex;align-items:center;gap:8px;background:#f4fae8;border:1.5px solid #a8c96a;border-radius:10px;padding:8px 10px">
+    <img src="/images/token-train.png" width="36" height="36" style="flex-shrink:0;object-fit:contain" alt="data token"/>
+    <div><div style="font-size:11px;font-weight:800;color:#1a3a00">100 Data Tokens</div><div style="font-size:10px;color:#555;line-height:1.4">Added to Node Tokens when training. Each adds +1 to your test roll. Max 3 per node</div></div>
+  </div>
+
+  <div style="display:flex;align-items:center;gap:8px;background:#f4fae8;border:1.5px solid #a8c96a;border-radius:10px;padding:8px 10px">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" style="flex-shrink:0">
+      <line x1="7" y1="7" x2="29" y2="29" stroke="#111" stroke-width="6" stroke-linecap="round"/>
+      <line x1="29" y1="7" x2="7" y2="29" stroke="#111" stroke-width="6" stroke-linecap="round"/>
+    </svg>
+    <div><div style="font-size:11px;font-weight:800;color:#1a3a00">15 Overfitting Tokens (X)</div><div style="font-size:10px;color:#555;line-height:1.4">Placed on an edge when a node hits max 3 Data Tokens. Blocks that path permanently. Score +1 pt per maxed node</div></div>
+  </div>
+
+  <div style="display:flex;align-items:center;gap:8px;background:#f4fae8;border:1.5px solid #a8c96a;border-radius:10px;padding:8px 10px">
+    <svg width="36" height="36" viewBox="0 0 36 36" fill="none" style="flex-shrink:0">
+      <rect x="4" y="4" width="16" height="16" rx="2" fill="#e8d8a0" stroke="#b0942a" stroke-width="1.5"/>
+      <text x="12" y="16" text-anchor="middle" font-family="Nunito,sans-serif" font-size="10" font-weight="900" fill="#7a5800">0</text>
+      <rect x="23" y="2" width="11" height="32" rx="2" fill="#fff" stroke="#a8c96a" stroke-width="1"/>
+      <text x="28.5" y="11" text-anchor="middle" font-family="Nunito,sans-serif" font-size="6" font-weight="800" fill="#1a3a00">0</text>
+      <line x1="23" y1="14" x2="34" y2="14" stroke="#d4e8a8" stroke-width="0.8"/>
+      <text x="28.5" y="20" text-anchor="middle" font-family="Nunito,sans-serif" font-size="6" font-weight="700" fill="#555">-1</text>
+      <line x1="23" y1="22" x2="34" y2="22" stroke="#d4e8a8" stroke-width="0.8"/>
+      <text x="28.5" y="28" text-anchor="middle" font-family="Nunito,sans-serif" font-size="6" font-weight="700" fill="#e44">-2</text>
+    </svg>
+    <div><div style="font-size:11px;font-weight:800;color:#1a3a00">4 Data Clean Tokens</div><div style="font-size:10px;color:#555;line-height:1.4">One per player. Starts at 0. Each use of the Clean Data action slides it down — costs points at game end</div></div>
+  </div>
+
+  <div style="grid-column:1/-1;display:flex;align-items:center;gap:9px;background:#e6f3cf;border:1.5px solid #62b517;border-radius:10px;padding:9px 11px">
+    <img src="/images/icon-brain.png" width="38" height="38" style="flex-shrink:0;object-fit:contain;border-radius:50%" alt="first player marker"/>
+    <div><div style="font-size:11px;font-weight:800;color:#1a3a00">1 First Player Marker</div><div style="font-size:10px;color:#555;line-height:1.4">The brain token. Given to whoever goes first. Passes clockwise each round</div></div>
+  </div>
+
+</div>`,
+    makeG:()=>tutMakeG(),
+    next:'Center of Table Set Up →' },
+
+  // 6. Physical setup: Center of Table
+  { title:'Set Up — Center of Table',
+    body:`<div style="background:#fff3cd;border:1.5px solid #c8960a;border-radius:10px;padding:7px 12px;margin-bottom:12px;font-size:11px;color:#7a5500"><b>Physical board game only.</b> The online version handles this automatically.</div>
+<p style="margin-bottom:10px;font-size:13px">Place these items in the middle of the table so every player can reach them.</p>
+
+<div style="display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap;margin-bottom:12px">
+  <!-- Score Board diagram -->
+  <div style="flex:1;min-width:200px">
+    <img src="/images/score-board.png" alt="Score Board" style="width:100%;border-radius:8px;border:1.5px solid #a8c96a"/>
+    <div style="text-align:center;font-size:10px;font-weight:700;color:#3a6a0a;margin-top:5px">Score Board — centre of table</div>
+  </div>
+  <!-- Tokens pile diagram -->
+  <div style="flex:1;min-width:160px;display:flex;flex-direction:column;gap:8px">
+    <div style="background:#f4fae8;border:1.5px solid #a8c96a;border-radius:8px;padding:8px 10px;display:flex;align-items:center;gap:8px">
+      <svg width="28" height="20" viewBox="0 0 42 20" fill="none"><rect x="0" y="2" width="11" height="11" rx="2" fill="#fff" stroke="#333" stroke-width="1.2"/><circle cx="4" cy="5.5" r="1.2" fill="#333"/><circle cx="8" cy="9.5" r="1.2" fill="#333"/><rect x="15" y="2" width="11" height="11" rx="2" fill="#fff" stroke="#333" stroke-width="1.2"/><circle cx="19" cy="5.5" r="1.2" fill="#333"/><circle cx="23" cy="5.5" r="1.2" fill="#333"/><circle cx="21" cy="9.5" r="1.2" fill="#333"/><rect x="30" y="2" width="11" height="11" rx="2" fill="#fff" stroke="#333" stroke-width="1.2"/><circle cx="34" cy="5.5" r="1.2" fill="#333"/><circle cx="38" cy="5.5" r="1.2" fill="#333"/><circle cx="34" cy="9.5" r="1.2" fill="#333"/><circle cx="38" cy="9.5" r="1.2" fill="#333"/></svg>
+      <div style="font-size:11px;color:#1a3a00;font-weight:700">3 Dice — within reach</div>
+    </div>
+    <div style="background:#f4fae8;border:1.5px solid #a8c96a;border-radius:8px;padding:8px 10px;display:flex;align-items:center;gap:8px">
+      <img src="/images/token-design-node.png" width="28" height="28" style="object-fit:contain" alt="node token"/>
+      <div style="font-size:11px;color:#1a3a00;font-weight:700">Node Tokens — shared pile</div>
+    </div>
+    <div style="background:#f4fae8;border:1.5px solid #a8c96a;border-radius:8px;padding:8px 10px;display:flex;align-items:center;gap:8px">
+      <img src="/images/token-train.png" width="28" height="28" style="object-fit:contain" alt="data token"/>
+      <div style="font-size:11px;color:#1a3a00;font-weight:700">Data Tokens — shared pile</div>
+    </div>
+    <div style="background:#f4fae8;border:1.5px solid #a8c96a;border-radius:8px;padding:8px 10px;display:flex;align-items:center;gap:8px">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><line x1="5" y1="5" x2="23" y2="23" stroke="#111" stroke-width="5" stroke-linecap="round"/><line x1="23" y1="5" x2="5" y2="23" stroke="#111" stroke-width="5" stroke-linecap="round"/></svg>
+      <div style="font-size:11px;color:#1a3a00;font-weight:700">Overfitting Tokens — shared pile</div>
+    </div>
+  </div>
+</div>
+<div style="background:#f4fae8;border-left:3px solid #62b517;border-radius:0 8px 8px 0;padding:8px 12px;font-size:11px;color:#3a6a0a">The Score Board shows two sides — one for 2-3 players, one for 4 players. Make sure the correct side is face up.</div>`,
+    makeG:()=>tutMakeG(),
+    next:'Player Set Up →' },
+
+  // 7. Physical setup: Player Set Up
+  { title:'Set Up — Player Set Up',
+    body:`<div style="background:#fff3cd;border:1.5px solid #c8960a;border-radius:10px;padding:7px 12px;margin-bottom:12px;font-size:11px;color:#7a5500"><b>Physical board game only.</b> The online version handles this automatically.</div>
+
+<div style="display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap">
+  <!-- Player board actual image -->
+  <div style="flex:1;min-width:220px">
+    <img src="/images/player-setup.png" alt="Player Set Up diagram" style="width:100%;border-radius:8px;border:1.5px solid #a8c96a"/>
+  </div>
+
+  <!-- Steps -->
+  <div style="flex:1;min-width:180px;display:flex;flex-direction:column;gap:7px">
+    <div style="display:flex;gap:8px;align-items:flex-start">
+      <div style="flex-shrink:0;width:22px;height:22px;border-radius:50%;background:#62b517;color:#fff;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center">1</div>
+      <div style="font-size:11px;color:#1a3a00;line-height:1.5;padding-top:2px">Each player takes a <b>Player Board</b> and a set of <b>Animal Figures</b> in a single matching colour</div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:flex-start">
+      <div style="flex-shrink:0;width:22px;height:22px;border-radius:50%;background:#62b517;color:#fff;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center">2</div>
+      <div style="font-size:11px;color:#1a3a00;line-height:1.5;padding-top:2px">Determine who goes first by the method of your choice. Give that player the <b>First Player Marker</b> <img src="/images/icon-brain.png" width="16" height="16" style="vertical-align:middle;border-radius:50%" alt="brain"/></div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:flex-start">
+      <div style="flex-shrink:0;width:22px;height:22px;border-radius:50%;background:#62b517;color:#fff;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center">3</div>
+      <div style="font-size:11px;color:#1a3a00;line-height:1.5;padding-top:2px">The first player places <b>all 5 Animal Figures</b> on the <b>rightmost column</b> of their board in any order they like</div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:flex-start">
+      <div style="flex-shrink:0;width:22px;height:22px;border-radius:50%;background:#62b517;color:#fff;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center">4</div>
+      <div style="font-size:11px;color:#1a3a00;line-height:1.5;padding-top:2px">All other players <b>match the first player's animal order exactly</b> on their own boards</div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:flex-start">
+      <div style="flex-shrink:0;width:22px;height:22px;border-radius:50%;background:#62b517;color:#fff;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center">5</div>
+      <div style="font-size:11px;color:#1a3a00;line-height:1.5;padding-top:2px">Each player places their <b>Data Clean Token</b> at the <b>0 space</b> on the clean data tracker on their board</div>
+    </div>
+  </div>
+</div>`,
+    makeG:()=>tutMakeG(),
+    next:'Start the Interactive Tutorial →' },
+
+  // 8. Welcome
   { title:'Welcome to FuzzNet Labs!',
     body:`<p>You're a data scientist building a <b>neural network</b> to classify animal photos. Compete with other startups to score the most points!</p>
 <p>On your <b>first turn</b> you get <b>3 actions</b>. Every turn after that, <b>1 action</b>. Three types: <b>Design</b>, <b>Train</b>, and <b>Test</b>.</p>
@@ -2938,6 +3131,9 @@ function startTutorial() {
   document.getElementById('room-badge').textContent = 'DEMO';
 }
 
+// Steps 0–7 are concept/setup slides — show fullscreen so the play area is hidden
+const TUT_FULLSCREEN_UNTIL = 8;
+
 function applyTutStep(idx) {
   tutorialStep = idx;
   const s = TSTEPS[idx];
@@ -2945,6 +3141,8 @@ function applyTutStep(idx) {
   tutHighlightNodes = s.hl || [];
   tutHighlightAction = s.tutAction || '';
   tutHighlightStatus = s.tutStatusHL || '';
+  // Toggle fullscreen overlay for intro / context / setup slides
+  document.getElementById('tutorial-overlay').classList.toggle('fullscreen', idx < TUT_FULLSCREEN_UNTIL);
   updateTutOverlay(idx);
   if (s.isGameOver) {
     showGameOver();
