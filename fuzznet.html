@@ -2352,52 +2352,9 @@ const TSTEPS = [
 
   // 0. Before You Play
   { title:'Before You Play',
-    body:`<p>FuzzNet Labs is a game about building an AI model, but it's also a window into how AI actually works in the real world.</p>
-<p>Before the tutorial walks you through the mechanics, here are <b>two concepts</b> worth carrying into every AI conversation you'll ever have, and a quick explanation of how this game connects to tools like <b>ChatGPT</b>.</p>
-<div style="display:flex;gap:5px;flex-wrap:wrap;margin:10px 0 2px">
-  <div style="flex:1;min-width:72px;background:#e6f3cf;border:1.5px solid #62b517;border-radius:8px;padding:6px 6px;text-align:center">
-    <svg width="20" height="20" viewBox="0 0 20 20" style="display:block;margin:0 auto" fill="none">
-      <rect x="2" y="12" width="4" height="6" rx="1" fill="#62b517"/>
-      <rect x="8" y="7" width="4" height="11" rx="1" fill="#62b517"/>
-      <rect x="14" y="3" width="4" height="15" rx="1" fill="#3a6a0a"/>
-    </svg>
-    <div style="font-size:9px;font-weight:800;color:#3a6a0a;margin-top:2px">Data is Destiny</div>
-  </div>
-  <div style="flex:1;min-width:72px;background:#e6f3cf;border:1.5px solid #62b517;border-radius:8px;padding:6px 6px;text-align:center">
-    <svg width="20" height="20" viewBox="0 0 20 20" style="display:block;margin:0 auto" fill="none">
-      <circle cx="6" cy="6" r="2.8" stroke="#62b517" stroke-width="1.8"/>
-      <circle cx="14" cy="14" r="2.8" stroke="#62b517" stroke-width="1.8"/>
-      <line x1="3" y1="17" x2="17" y2="3" stroke="#3a6a0a" stroke-width="1.8" stroke-linecap="round"/>
-    </svg>
-    <div style="font-size:9px;font-weight:800;color:#3a6a0a;margin-top:2px">100% Not Possible</div>
-  </div>
-  <div style="flex:1;min-width:72px;background:#e6f3cf;border:1.5px solid #62b517;border-radius:8px;padding:6px 6px;text-align:center">
-    <svg width="20" height="20" viewBox="0 0 20 20" style="display:block;margin:0 auto" fill="none">
-      <path d="M10 2 A8 8 0 1 1 3.5 13.5" stroke="#62b517" stroke-width="1.8" stroke-linecap="round"/>
-      <polygon points="10,0 14.5,5 5.5,5" fill="#3a6a0a"/>
-    </svg>
-    <div style="font-size:9px;font-weight:800;color:#3a6a0a;margin-top:2px">How AI Learns</div>
-  </div>
-  <div style="flex:1;min-width:72px;background:#e6f3cf;border:1.5px solid #62b517;border-radius:8px;padding:6px 6px;text-align:center">
-    <svg width="20" height="20" viewBox="0 0 20 20" style="display:block;margin:0 auto" fill="none">
-      <line x1="5" y1="10" x2="15" y2="5" stroke="#a8c96a" stroke-width="1.4"/>
-      <line x1="5" y1="10" x2="15" y2="15" stroke="#a8c96a" stroke-width="1.4"/>
-      <line x1="15" y1="5" x2="15" y2="15" stroke="#a8c96a" stroke-width="1.4"/>
-      <circle cx="5" cy="10" r="3" fill="#62b517"/>
-      <circle cx="15" cy="5" r="3" fill="#62b517"/>
-      <circle cx="15" cy="15" r="3" fill="#3a6a0a"/>
-    </svg>
-    <div style="font-size:9px;font-weight:800;color:#3a6a0a;margin-top:2px">Nets + LLMs</div>
-  </div>
-  <div style="flex:1;min-width:72px;background:#4a8c11;border:1.5px solid #3a6a0a;border-radius:8px;padding:6px 6px;text-align:center">
-    <svg width="20" height="20" viewBox="0 0 20 20" style="display:block;margin:0 auto" fill="none">
-      <polygon points="5,3 17,10 5,17" fill="#d4f0a0"/>
-    </svg>
-    <div style="font-size:9px;font-weight:800;color:#d4f0a0;margin-top:2px">Play FuzzNet</div>
-  </div>
-</div>`,
+    body: tutSectionsBody,
     makeG:()=>tutMakeG(),
-    next:'Concept 1: Data is Destiny →' },
+    next:'Start →' },
 
   // 1. Concept: Data is Destiny
   { title:'Concept 1: Data is Destiny',
@@ -3134,6 +3091,66 @@ function startTutorial() {
 // Steps 0–7 are concept/setup slides — show fullscreen so the play area is hidden
 const TUT_FULLSCREEN_UNTIL = 8;
 
+// Section selection state (persists across the session)
+let tutSections = { context: true, setup: false, howto: true };
+let tutSectionError = false;
+
+// Which section does a given step index belong to?
+function tutSectionForIdx(idx) {
+  if (idx >= 1 && idx <= 4) return 'context';
+  if (idx >= 5 && idx <= 7) return 'setup';
+  if (idx >= 8) return 'howto';
+  return null; // step 0 always shows
+}
+
+// Next step index, skipping over any disabled sections
+function tutNextEnabled(from) {
+  let next = from + 1;
+  while (next < TSTEPS.length) {
+    const sec = tutSectionForIdx(next);
+    if (!sec || tutSections[sec]) break;
+    next++;
+  }
+  return next;
+}
+
+// Generate HTML for the Before You Play checkbox screen
+function tutSectionsBody() {
+  function row(key, label, sublabel) {
+    const on = tutSections[key];
+    return `<label style="display:flex;align-items:flex-start;gap:12px;background:${on?'#e6f3cf':'#f8f8f8'};border:1.5px solid ${on?'#62b517':'#d0d0d0'};border-radius:10px;padding:11px 14px;cursor:pointer;user-select:none;transition:background 0.15s,border-color 0.15s" onclick="tutToggleSection('${key}')">
+      <div style="flex-shrink:0;width:20px;height:20px;border-radius:5px;border:2px solid ${on?'#62b517':'#bbb'};background:${on?'#62b517':'#fff'};display:flex;align-items:center;justify-content:center;margin-top:2px;pointer-events:none">
+        ${on?'<svg width="11" height="11" viewBox="0 0 11 11" fill="none"><polyline points="1.5,5.5 4.5,8.5 9.5,2.5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>':''}
+      </div>
+      <div style="pointer-events:none">
+        <div style="font-size:13px;font-weight:800;color:#1a1a1a;line-height:1.3">${label}</div>
+        ${sublabel?`<div style="font-size:11px;color:#666;margin-top:3px;line-height:1.4">${sublabel}</div>`:''}
+      </div>
+    </label>`;
+  }
+  return `<p style="margin-bottom:12px;font-size:13px;color:#333">Choose which sections to include in your tutorial:</p>
+<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px">
+  ${row('context','Context for Learning Objectives','Key AI concepts that explain why the game works the way it does.')}
+  ${row('setup','Physical Game Set Up','Step-by-step board setup instructions. <span style="color:#b06000;font-weight:700">Recommended to skip if playing online</span> — this is handled automatically.')}
+  ${row('howto','How to Play Instructions','An interactive walkthrough of every action in the game.')}
+</div>${tutSectionError?`<div style="background:#fff0f0;border:1.5px solid #e44444;border-radius:8px;padding:8px 12px;font-size:12px;color:#c00000;font-weight:700;display:flex;align-items:center;gap:7px"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="#e44444" stroke-width="1.5"/><line x1="8" y1="4.5" x2="8" y2="8.5" stroke="#e44444" stroke-width="2" stroke-linecap="round"/><circle cx="8" cy="11" r="1" fill="#e44444"/></svg>At least one section must be selected.</div>`:''}`;
+}
+
+// Toggle a section on/off, enforcing the minimum-1 rule
+function tutToggleSection(key) {
+  if (tutSections[key]) {
+    const count = Object.values(tutSections).filter(Boolean).length;
+    if (count <= 1) {
+      tutSectionError = true;
+      document.getElementById('tut-body').innerHTML = tutSectionsBody();
+      return;
+    }
+  }
+  tutSectionError = false;
+  tutSections[key] = !tutSections[key];
+  document.getElementById('tut-body').innerHTML = tutSectionsBody();
+}
+
 function applyTutStep(idx) {
   tutorialStep = idx;
   const s = TSTEPS[idx];
@@ -3164,20 +3181,20 @@ function tutNext() {
   if (s.onNext) {
     s.onNext();
     setTimeout(() => {
-      const next = tutorialStep + 1;
+      const next = tutNextEnabled(tutorialStep);
       if (next >= TSTEPS.length) { endTutorial(); return; }
       applyTutStep(next);
     }, 400);
   } else {
-    const next = tutorialStep + 1;
+    const next = tutNextEnabled(tutorialStep);
     if (next >= TSTEPS.length) { endTutorial(); return; }
     applyTutStep(next);
   }
 }
 
 function tutSkip() {
-  const next = tutorialStep + 1;
   tutorialDataPlaced = 0;
+  const next = tutNextEnabled(tutorialStep);
   if (next >= TSTEPS.length) { endTutorial(); return; }
   applyTutStep(next);
 }
@@ -3203,7 +3220,7 @@ function updateTutOverlay(idx) {
   document.getElementById('tut-step').textContent = `Step ${idx + 1} of ${total}`;
   document.getElementById('tut-progress-fill').style.width = pct + '%';
   document.getElementById('tut-title').textContent = s.title;
-  document.getElementById('tut-body').innerHTML = s.body;
+  document.getElementById('tut-body').innerHTML = typeof s.body === 'function' ? s.body() : s.body;
   const nextBtn = document.getElementById('tut-next');
   const exitBtn = document.getElementById('tut-exit');
   const hint = document.getElementById('tut-hint');
