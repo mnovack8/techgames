@@ -2731,7 +2731,7 @@ const TSTEPS = [
       if(action==='place_node'&&extra.nodeId===0){
         tutorialG.players[0].nodes[0]=true;
         tutorialG.phase='idle'; tutorialG.actionsLeft=2;
-        renderGame(); setTimeout(()=>tutAdvanceTo(3),350); return true;
+        renderGame(); setTimeout(()=>tutAdvanceTo(11),350); return true;
       }
       return false;
     }
@@ -2754,7 +2754,7 @@ const TSTEPS = [
       if(action==='place_node'&&extra.nodeId===4){
         tutorialG.players[0].nodes[4]=true;
         tutorialG.phase='idle'; tutorialG.actionsLeft=1;
-        renderGame(); setTimeout(()=>tutAdvanceTo(4),350); return true;
+        renderGame(); setTimeout(()=>tutAdvanceTo(12),350); return true;
       }
       return false;
     }
@@ -2777,7 +2777,7 @@ const TSTEPS = [
       if(action==='place_node'&&extra.nodeId===8){
         tutorialG.players[0].nodes[8]=true;
         tutorialG.phase='idle'; tutorialG.actionsLeft=0;
-        renderGame(); setTimeout(()=>tutAdvanceTo(5),350); return true;
+        renderGame(); setTimeout(()=>tutAdvanceTo(13),350); return true;
       }
       return false;
     }
@@ -2812,7 +2812,7 @@ const TSTEPS = [
           tutorialDataPlaced++;
           if(tutorialDataPlaced>=2){
             tutorialG.phase='idle'; tutorialDataPlaced=0;
-            renderGame(); setTimeout(()=>tutAdvanceTo(7),350);
+            renderGame(); setTimeout(()=>tutAdvanceTo(15),350);
           } else { tutorialG.phase='train2'; renderGame(); }
           return true;
         }
@@ -2834,7 +2834,7 @@ const TSTEPS = [
       if(action==='select_overfit_edge'){
         tutorialG.players[0].blocked.push(extra.edgeKey);
         tutorialG.phase='idle'; tutorialG.overfitEdges=[];
-        renderGame(); setTimeout(()=>tutAdvanceTo(8),350); return true;
+        renderGame(); setTimeout(()=>tutAdvanceTo(16),350); return true;
       }
       return false;
     }
@@ -2861,7 +2861,7 @@ const TSTEPS = [
           tutHighlightAnimal=-1;
           tutorialG.testAnimal=extra.animalIdx; tutorialG.testPath=path;
           tutorialG.phase='test_roll'; renderGame();
-          setTimeout(()=>tutAdvanceTo(9),350); return true;
+          setTimeout(()=>tutAdvanceTo(17),350); return true;
         }
       }
       return false;
@@ -2887,7 +2887,7 @@ const TSTEPS = [
     interact:(action,extra)=>{
       if(action==='roll_dice'){
         tutorialG.dice=[6,5,4]; tutorialG.phase='test_eval';
-        renderGame(); setTimeout(()=>tutAdvanceTo(10),350); return true;
+        renderGame(); setTimeout(()=>tutAdvanceTo(18),350); return true;
       }
       return false;
     }
@@ -2919,7 +2919,7 @@ const TSTEPS = [
         document.getElementById('tut-body').innerHTML=
           `<p>You scored <b>3 points</b> for Dog (2nd place)! Jordan had 1st. Check the scoreboard on the right. The race is on for the remaining animals.</p>`;
         renderGame();
-        setTimeout(()=>tutAdvanceTo(11),2000); return true;
+        setTimeout(()=>tutAdvanceTo(19),2000); return true;
       }
       return false;
     }
@@ -3004,7 +3004,7 @@ const TSTEPS = [
         tutHighlightNodes=[];
         document.getElementById('tut-body').innerHTML=
           `<p>✅ N0 is at <b>2 tokens</b>. The blocked edge is <b>gone</b>! Backpropagation complete. Your model has adjusted.</p>`;
-        renderGame(); setTimeout(()=>tutAdvanceTo(12),1500); return true;
+        renderGame(); setTimeout(()=>tutAdvanceTo(20),1500); return true;
       }
       return false;
     }
