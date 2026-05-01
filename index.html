@@ -2709,6 +2709,11 @@ footer {
         </div>
       </a>
 
+    </div><!-- /page 2 -->
+
+    <!-- Page 3 -->
+    <div class="blog-grid blog-page" id="blog-page-2">
+
       <!-- Post 6: Quantum Computing -->
       <a href="/blog/quantum-computing-basics" class="blog-card">
         <div class="blog-card-img">
@@ -2744,11 +2749,6 @@ footer {
           <div class="blog-card-read">Read more →</div>
         </div>
       </a>
-
-    </div><!-- /page 2 -->
-
-    <!-- Page 3 -->
-    <div class="blog-grid blog-page" id="blog-page-2">
 
       <!-- Post: Cybersecurity Awareness Workshop Guide -->
       <a href="/blog/cybersecurity-awareness-workshop" class="blog-card">
@@ -2809,11 +2809,6 @@ footer {
         </div>
       </a>
 
-    </div><!-- /page 3 -->
-
-    <!-- Page 4 -->
-    <div class="blog-grid blog-page" id="blog-page-3">
-
       <!-- Post: AI Security Workshop (2-hour combined) -->
       <a href="/blog/ai-security-workshop" class="blog-card">
         <div class="blog-card-img">
@@ -2871,7 +2866,7 @@ footer {
         </div>
       </a>
 
-    </div><!-- /page 4 -->
+    </div><!-- /page 3 -->
 
     <!-- Carousel controls -->
     <div class="blog-carousel-controls">
@@ -2880,7 +2875,6 @@ footer {
         <span class="blog-dot active" data-page="0"></span>
         <span class="blog-dot" data-page="1"></span>
         <span class="blog-dot" data-page="2"></span>
-        <span class="blog-dot" data-page="3"></span>
       </div>
       <button class="blog-carousel-btn" id="blog-next" aria-label="Next posts">&#8594;</button>
     </div>
@@ -2951,6 +2945,26 @@ function trackClick(button) {
     });
   }, { threshold: 0.12, rootMargin: '0px 0px -48px 0px' });
   els.forEach(function(el) { io.observe(el); });
+})();
+
+// Blog carousel — shuffle cards into random order on each load
+(function() {
+  var pages = document.querySelectorAll('.blog-page');
+  // Collect all cards, shuffle, redistribute 3-per-page
+  var allCards = [];
+  pages.forEach(function(p) {
+    p.querySelectorAll('.blog-card').forEach(function(c) { allCards.push(c); });
+  });
+  for (var i = allCards.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = allCards[i]; allCards[i] = allCards[j]; allCards[j] = tmp;
+  }
+  pages.forEach(function(p, pi) {
+    while (p.firstChild) p.removeChild(p.firstChild);
+    for (var k = pi * 3; k < pi * 3 + 3 && k < allCards.length; k++) {
+      p.appendChild(allCards[k]);
+    }
+  });
 })();
 
 // Blog carousel
