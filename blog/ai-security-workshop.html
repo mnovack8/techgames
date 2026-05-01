@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="A 2-hour combined workshop guide: run the AI Literacy workshop with FuzzNet Labs, then the Cybersecurity Awareness workshop with Byte Club, and close with a real AI-powered breach analysis.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="How to Run an AI Security Workshop Online - 2-Hour Combined Guide">
+<meta property="og:description" content="Combine AI literacy and cybersecurity awareness into a single 2-hour experience. FuzzNet Labs + Byte Club, closing with a real deepfake-driven breach analysis.">
+<meta property="og:image" content="https://cybersecgames.com/images/logo.svg">
+<meta property="og:url" content="https://cybersecgames.com/blog/ai-security-workshop">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="How to Run an AI Security Workshop Online - 2-Hour Combined Guide">
+<meta name="twitter:description" content="2-hour combined AI literacy + cybersecurity workshop. FuzzNet Labs, Byte Club, and a real deepfake breach analysis showing how AI becomes the weapon.">
+<meta name="robots" content="index, follow">
+<meta name="author" content="Tech CoLab">
+<meta name="keywords" content="AI security workshop, AI literacy cybersecurity, deepfake breach, FuzzNet Labs Byte Club workshop, combined AI security training, facilitator guide">
+<meta property="og:site_name" content="Tech CoLab">
+<meta property="og:locale" content="en_US">
+<meta name="theme-color" content="#62b517">
+<link rel="icon" type="image/png" href="/images/logo.png">
+<link rel="apple-touch-icon" href="/images/logo.png">
+<link rel="canonical" href="https://cybersecgames.com/blog/ai-security-workshop">
+<title>How to Run an AI Security Workshop Online | Tech CoLab</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+  min-height: 100%;
+  font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif;
+  background: #e8edd8;
+  color: #2a2a2a;
+  overflow-y: auto;
+}
+
+/* ===== HEADER ===== */
+header {
+  background: #fff;
+  border-bottom: 3px solid #d1db24;
+  padding: 0 40px;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 2px 16px rgba(98,181,23,0.12);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.header-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.header-logo img { height: 56px; width: auto; object-fit: contain; display: block; }
+.header-logo > div { margin-top: 0; }
+.logo-text { font-size: 16px; font-weight: 800; color: #4a8c11; letter-spacing: 0.5px; display: block; }
+.logo-sub  { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; display: block; line-height: 1; color: #b0b800; }
+nav { display: flex; align-items: center; gap: 4px; }
+nav a { font-size: 15px; font-weight: 700; color: #4a4a4a; text-decoration: none; padding: 8px 18px; border-radius: 8px; transition: background 0.15s, color 0.15s; }
+nav a:hover { background: #f4fae8; color: #4a8c11; }
+nav a.active { color: #4a8c11; background: #f4fae8; }
+nav a.nav-cta-buy { background: #62b517; color: #fff; margin-left: 4px; box-shadow: 0 2px 6px rgba(98,181,23,0.3); }
+nav a.nav-cta-buy:hover { background: #4a8c11; color: #fff; }
+.nav-dropdown { position: relative; display: flex; align-items: center; }
+.nav-dropdown-trigger {
+  font-size: 15px; font-weight: 700; color: #4a4a4a;
+  background: none; border: none; padding: 8px 18px;
+  border-radius: 8px; cursor: pointer; font-family: inherit;
+  line-height: inherit; display: flex; align-items: center;
+  transition: background 0.15s, color 0.15s;
+}
+.nav-dropdown-trigger.open { background: #f4fae8; color: #4a8c11; }
+.nav-dropdown-menu {
+  position: absolute; top: calc(100% + 4px); left: 0;
+  background: #fff; border: 1.5px solid #dde8c8;
+  border-radius: 10px; box-shadow: 0 8px 24px rgba(98,181,23,0.15);
+  padding: 6px; min-width: 200px;
+  display: none; flex-direction: column; gap: 2px; z-index: 200;
+}
+.nav-dropdown-menu.open { display: flex; }
+.nav-dropdown-menu a { display: block; padding: 8px 14px; border-radius: 7px; font-size: 14px; font-weight: 700; color: #4a4a4a; text-decoration: none; transition: background 0.15s, color 0.15s; white-space: nowrap; }
+.nav-dropdown-menu a:hover { background: #f4fae8; color: #4a8c11; }
+@media (max-width: 600px) {
+  header { padding: 8px 16px 6px; height: auto; flex-direction: column; align-items: center; gap: 4px; }
+  .logo-text { font-size: 12px; }
+  nav { gap: 0; justify-content: center; flex-wrap: wrap; }
+  nav a { padding: 6px 5px; font-size: 12px; }
+  .nav-dropdown-trigger { padding: 6px 5px; font-size: 12px; }
+}
+
+/* ===== HERO ===== */
+.article-hero {
+  background: linear-gradient(160deg, #0a1a2a 0%, #1a2a40 55%, #1a3440 100%);
+  padding: 56px 24px 52px;
+  text-align: center;
+  border-bottom: 3px solid #d1db24;
+}
+.article-tag {
+  display: inline-block;
+  font-size: 10px; font-weight: 900; text-transform: uppercase;
+  letter-spacing: 2px; color: #fff;
+  background: #1a6a5a;
+  padding: 4px 12px; border-radius: 6px;
+  margin-bottom: 20px;
+}
+.article-hero h1 {
+  font-size: clamp(28px, 5vw, 50px);
+  font-weight: 900; color: #fff; line-height: 1.12;
+  max-width: 800px; margin: 0 auto 18px;
+}
+.article-hero h1 em { font-style: normal; color: #d1db24; }
+.article-hero-sub {
+  font-size: 17px; color: #80b0c0;
+  max-width: 640px; margin: 0 auto 28px; line-height: 1.6;
+}
+.article-meta { display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap; }
+.article-meta-read { font-size: 13px; font-weight: 600; color: #6a9aaa; }
+
+/* ===== BODY ===== */
+.article-wrap {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 60px 24px 80px;
+}
+.article-intro {
+  font-size: 19px; font-weight: 700; color: #2a3a10;
+  line-height: 1.65; margin-bottom: 36px;
+  padding: 24px 28px; background: #fff;
+  border-left: 5px solid #d1db24;
+  border-radius: 0 10px 10px 0;
+  box-shadow: 0 2px 12px rgba(98,181,23,0.1);
+}
+.article-body h2 {
+  font-size: 24px; font-weight: 900; color: #1a2a0a;
+  margin: 52px 0 16px; line-height: 1.2;
+}
+.article-body h2::before {
+  content: ''; display: block; width: 36px; height: 4px;
+  background: #d1db24; border-radius: 2px; margin-bottom: 12px;
+}
+.article-body h3 {
+  font-size: 16px; font-weight: 900; color: #2a4a10;
+  margin: 30px 0 8px; text-transform: uppercase; letter-spacing: 0.07em;
+}
+.article-body p {
+  font-size: 16px; color: #333; line-height: 1.8; margin-bottom: 20px;
+}
+.article-body strong { color: #1a2a0a; font-weight: 800; }
+
+.back-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 13px; font-weight: 800; color: #4a8c11;
+  text-decoration: none; margin-bottom: 40px;
+  padding: 7px 14px; background: #fff;
+  border: 1.5px solid #a8c96a; border-radius: 8px;
+  transition: background 0.15s;
+}
+.back-link:hover { background: #f4fae8; }
+
+.callout {
+  background: #fff; border: 2px solid #a8c96a;
+  border-radius: 12px; padding: 20px 24px;
+  margin: 28px 0; display: flex; gap: 14px; align-items: flex-start;
+}
+.callout-icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+.callout-text { font-size: 15px; color: #2a4a10; line-height: 1.7; font-weight: 700; }
+
+/* ===== HOUR FLOW ===== */
+.ws-flow {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin: 36px 0 48px;
+  position: relative;
+}
+.ws-flow::before {
+  content: '';
+  position: absolute;
+  top: 40px;
+  left: calc(25% + 10px);
+  right: calc(25% + 10px);
+  height: 2px;
+  background: linear-gradient(90deg, #62b517, #d1db24);
+  z-index: 0;
+}
+.ws-step {
+  background: #f8faf2;
+  border: 2px solid #d4e8a8;
+  border-radius: 16px;
+  padding: 28px 20px 24px;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+.ws-num {
+  width: 52px; height: 52px;
+  background: #62b517; color: #fff;
+  font-size: 22px; font-weight: 900; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 18px;
+  box-shadow: 0 4px 16px rgba(98,181,23,0.3);
+}
+.ws-step-title { font-size: 15px; font-weight: 900; color: #1a1a1a; margin-bottom: 8px; }
+.ws-step-desc  { font-size: 13px; color: #555; line-height: 1.6; }
+@media (max-width: 560px) {
+  .ws-flow { grid-template-columns: 1fr; }
+  .ws-flow::before { display: none; }
+}
+
+/* ===== WORKSHOP REFERENCE CARDS ===== */
+.ws-ref-card {
+  background: #fff;
+  border: 2px solid #d4e8a8;
+  border-radius: 16px;
+  padding: 28px 28px 24px;
+  margin: 28px 0;
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+.ws-ref-card.hour-two { border-color: #c04040; }
+.ws-ref-icon {
+  flex-shrink: 0;
+  width: 52px; height: 52px;
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+}
+.ws-ref-body { flex: 1; }
+.ws-ref-hour {
+  font-size: 9px; font-weight: 900; text-transform: uppercase;
+  letter-spacing: 2px; margin-bottom: 6px;
+}
+.ws-ref-title { font-size: 18px; font-weight: 900; color: #1a2a0a; margin-bottom: 8px; line-height: 1.3; }
+.ws-ref-desc { font-size: 14px; color: #555; line-height: 1.7; margin-bottom: 16px; }
+.ws-ref-timing {
+  display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px;
+}
+.ws-ref-timing-pill {
+  font-size: 11px; font-weight: 900;
+  padding: 4px 12px; border-radius: 20px;
+  background: #e6f7d8; color: #2a7a10;
+  letter-spacing: 0.3px;
+}
+.ws-ref-link {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-size: 13px; font-weight: 900;
+  text-decoration: none; padding: 10px 18px; border-radius: 8px;
+  transition: background 0.15s, transform 0.15s;
+  background: #62b517; color: #fff;
+  box-shadow: 0 2px 8px rgba(98,181,23,0.25);
+}
+.ws-ref-link:hover { background: #4a8c11; transform: translateY(-1px); }
+.ws-ref-link.red { background: #c04040; box-shadow: 0 2px 8px rgba(192,64,64,0.25); }
+.ws-ref-link.red:hover { background: #9a2a2a; }
+@media (max-width: 560px) {
+  .ws-ref-card { flex-direction: column; }
+}
+
+/* ===== KILL CHAIN ===== */
+.killchain {
+  background: #1a2a0a;
+  border-radius: 14px;
+  padding: 28px 24px;
+  margin: 28px 0;
+}
+.killchain-title {
+  font-size: 10px; font-weight: 900; text-transform: uppercase;
+  letter-spacing: 2.5px; color: #62b517; margin-bottom: 20px;
+}
+.killchain-stages {
+  display: flex; gap: 0; overflow-x: auto;
+  margin-bottom: 24px;
+}
+.kc-stage {
+  flex: 1; min-width: 80px;
+  text-align: center; padding: 10px 6px;
+  background: rgba(98,181,23,0.1);
+  border: 1px solid rgba(98,181,23,0.2);
+}
+.kc-stage:first-child { border-radius: 8px 0 0 8px; }
+.kc-stage:last-child  { border-radius: 0 8px 8px 0; }
+.kc-stage + .kc-stage { border-left: none; }
+.kc-num  { font-size: 9px; font-weight: 900; color: #62b517; opacity: 0.7; margin-bottom: 4px; }
+.kc-name { font-size: 10px; font-weight: 900; color: #d1db24; line-height: 1.3; }
+.kc-example-label {
+  font-size: 9px; font-weight: 900; text-transform: uppercase;
+  letter-spacing: 2px; color: #a8c96a; margin-bottom: 14px;
+  display: flex; align-items: center; gap: 8px;
+}
+.kc-example-label span {
+  background: rgba(209,219,36,0.15); color: #d1db24;
+  padding: 2px 8px; border-radius: 4px; font-size: 9px;
+}
+.kc-rows { display: flex; flex-direction: column; gap: 10px; }
+.kc-row {
+  display: flex; gap: 14px; align-items: flex-start;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px; padding: 12px 14px;
+}
+.kc-row-badge {
+  flex-shrink: 0; min-width: 100px;
+  padding: 4px 10px; border-radius: 6px;
+  font-size: 9px; font-weight: 900; text-transform: uppercase;
+  letter-spacing: 1.2px; text-align: center; line-height: 1.5;
+  margin-top: 1px;
+}
+.kc-row-text {
+  font-size: 13px; color: #d8e8c0; line-height: 1.7; font-weight: 600;
+}
+
+/* ===== NIST TABLE ===== */
+.nist-table {
+  width: 100%; border-collapse: collapse;
+  margin: 24px 0; font-size: 14px;
+  border-radius: 12px; overflow: hidden;
+}
+.nist-table th {
+  background: #2a4010; color: #d1db24;
+  font-size: 10px; font-weight: 900;
+  text-transform: uppercase; letter-spacing: 2px;
+  padding: 12px 16px; text-align: left;
+}
+.nist-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid #e8f0d8;
+  background: #fff; vertical-align: top;
+}
+.nist-table tr:last-child td { border-bottom: none; }
+.nist-fn { font-size: 13px; font-weight: 900; color: #1a2a0a; margin-bottom: 3px; }
+.nist-q  { font-size: 12px; color: #444; line-height: 1.55; font-weight: 600; }
+.nist-badge {
+  display: inline-block; padding: 3px 8px;
+  border-radius: 5px; font-size: 9px; font-weight: 900;
+  text-transform: uppercase; letter-spacing: 1.5px;
+  margin-right: 6px; white-space: nowrap;
+}
+.nb-gv  { background: #e8eaf4; color: #2a3560; }
+.nb-id  { background: #dbeafe; color: #1e3a8a; }
+.nb-pr  { background: #e6f7d8; color: #2a7a10; }
+.nb-de  { background: #fef9c3; color: #7a6000; }
+.nb-rs  { background: #fde8d8; color: #a04010; }
+.nb-rc  { background: #f3e8ff; color: #5a1a9a; }
+
+/* ===== CTA ===== */
+.article-cta {
+  background: linear-gradient(135deg, #0a1a2a 0%, #1a2a40 100%);
+  border-radius: 16px; padding: 36px 32px;
+  margin-top: 56px; text-align: center;
+  border: 2px solid #2a4a60;
+}
+.article-cta h3 { font-size: 22px; font-weight: 900; color: #fff; margin-bottom: 12px; }
+.article-cta p  { font-size: 15px; color: #80b0c0; margin-bottom: 24px; line-height: 1.65; max-width: 480px; margin-left: auto; margin-right: auto; }
+.article-cta-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.article-cta a {
+  display: inline-block; font-size: 14px; font-weight: 900;
+  text-decoration: none; padding: 13px 24px; border-radius: 9px;
+  transition: background 0.15s, transform 0.15s;
+}
+.article-cta a.primary { background: #d1db24; color: #1a2a00; }
+.article-cta a.primary:hover { background: #c0ca10; transform: translateY(-2px); }
+.article-cta a.secondary { background: transparent; color: #80b0c0; border: 2px solid #2a5a7a; }
+.article-cta a.secondary:hover { background: rgba(128,176,192,0.1); transform: translateY(-2px); }
+
+footer { background: #2a2a2a; color: #777; text-align: center; padding: 12px 24px; font-size: 12px; }
+
+[data-reveal] { opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
+[data-reveal].is-visible { opacity: 1; transform: none; }
+
+.logo-text-accent {}
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "How to Run an AI Security Workshop Online",
+  "description": "A 2-hour combined facilitator guide: AI literacy with FuzzNet Labs, cybersecurity awareness with Byte Club, and a real-world AI-powered breach analysis using the Kill Chain and NIST CSF 2.0.",
+  "author": { "@type": "Person", "name": "Tech CoLab" },
+  "publisher": { "@type": "Organization", "name": "Tech CoLab", "logo": { "@type": "ImageObject", "url": "https://cybersecgames.com/images/logo.svg" } },
+  "datePublished": "2026-04-30",
+  "dateModified": "2026-04-30",
+  "url": "https://cybersecgames.com/blog/ai-security-workshop",
+  "mainEntityOfPage": "https://cybersecgames.com/blog/ai-security-workshop",
+  "keywords": ["AI security workshop", "deepfake breach", "FuzzNet Labs", "Byte Club", "Kill Chain", "NIST CSF 2.0", "AI literacy", "cybersecurity awareness"],
+  "articleSection": "Workshop Guide"
+}
+</script>
+</head>
+<body>
+
+<header>
+  <a class="header-logo" href="/">
+    <img src="/images/logo.png" alt="Tech CoLab logo" width="56" height="56" fetchpriority="high" decoding="async">
+    <div>
+      <span class="logo-text">Tech Co<span class="logo-text-accent">Lab</span></span>
+      <span class="logo-sub">Bridge the Gap.<br>Empower their Decisions.</span>
+    </div>
+  </a>
+  <nav>
+    <a href="/">Home</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-trigger">Games ▾</button>
+      <div class="nav-dropdown-menu">
+        <a href="/cybersecurity">Cybersecurity</a>
+        <a href="/ai">Artificial Intelligence</a>
+        <a href="/qubit-waitlist">Quantum Computing</a>
+      </div>
+    </div>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-trigger">Use Cases ▾</button>
+      <div class="nav-dropdown-menu">
+        <a href="/board-culture-change">Build a Tech-Fluent Culture</a>
+        <a href="/focused-deep-work">Earn the Room Before You Start</a>
+      </div>
+    </div>
+    <a href="/blog" class="active">Blog</a>
+    <a href="/about">About</a>
+    <a href="/contact">Contact</a>
+    <a href="/buy-now" class="nav-cta-buy">Buy Now</a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="article-hero">
+  <div class="article-tag">Workshop Guide</div>
+  <h1>How to Run an <em>AI Security</em> Workshop Online</h1>
+  <p class="article-hero-sub">A 2-hour combined experience. Build AI literacy with FuzzNet Labs, defend a network with Byte Club, then discuss a real incident where AI was part of the attack.</p>
+  <div class="article-meta">
+    <span class="article-meta-read">2-hour experience &nbsp;·&nbsp; 5 min read</span>
+  </div>
+</section>
+
+<!-- BODY -->
+<div class="article-wrap">
+
+  <a href="/blog" class="back-link">← Back to Blog</a>
+
+  <p class="article-intro">
+    Most security awareness training treats AI and cybersecurity as separate topics. This workshop puts them in the same room. Participants first build a working understanding of how AI thinks and learns, then step into the role of network defenders, and close by examining a real incident where AI played a role in the attack. The connection between the two hours is the point.
+  </p>
+
+  <div class="article-body">
+
+    <!-- 2-PART FLOW VISUAL -->
+    <div class="ws-flow" data-reveal>
+
+      <div class="ws-step">
+        <div class="ws-num">1</div>
+        <div class="ws-step-icon" style="display:flex;justify-content:center;margin-bottom:14px">
+          <svg viewBox="0 0 80 60" width="80" height="60" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="20" cy="30" r="10" fill="#f4fae8" stroke="#62b517" stroke-width="1.8"/>
+            <circle cx="40" cy="20" r="10" fill="#f4fae8" stroke="#62b517" stroke-width="1.8"/>
+            <circle cx="60" cy="30" r="10" fill="#f4fae8" stroke="#62b517" stroke-width="1.8"/>
+            <circle cx="40" cy="42" r="10" fill="#f4fae8" stroke="#62b517" stroke-width="1.8"/>
+            <line x1="28" y1="26" x2="32" y2="22" stroke="#a8c96a" stroke-width="1.2"/>
+            <line x1="48" y1="22" x2="52" y2="26" stroke="#a8c96a" stroke-width="1.2"/>
+            <line x1="28" y1="34" x2="32" y2="38" stroke="#a8c96a" stroke-width="1.2"/>
+            <line x1="52" y1="34" x2="48" y2="38" stroke="#a8c96a" stroke-width="1.2"/>
+            <circle cx="20" cy="30" r="4" fill="#62b517"/>
+            <circle cx="40" cy="20" r="4" fill="#d1db24"/>
+            <circle cx="60" cy="30" r="4" fill="#62b517"/>
+            <circle cx="40" cy="42" r="4" fill="#4a8c11"/>
+          </svg>
+        </div>
+        <div class="ws-step-title">Hour 1 AI Literacy</div>
+        <div class="ws-step-desc" style="margin-bottom:8px">How AI works + play FuzzNet Labs.</div>
+        <div style="display:inline-block;background:#e6f7d8;color:#2a7a10;font-size:11px;font-weight:900;padding:3px 10px;border-radius:20px;letter-spacing:0.3px">60 min</div>
+      </div>
+
+      <div class="ws-step">
+        <div class="ws-num">2</div>
+        <div class="ws-step-icon" style="display:flex;justify-content:center;margin-bottom:14px">
+          <svg viewBox="0 0 80 60" width="80" height="60" xmlns="http://www.w3.org/2000/svg">
+            <path d="M40,6 L58,14 L58,30 Q58,46 40,52 Q22,46 22,30 L22,14 Z" fill="#f0f5e8" stroke="#c04040" stroke-width="2"/>
+            <path d="M40,12 L52,18 L52,30 Q52,42 40,47 Q28,42 28,30 L28,18 Z" fill="#2a1010" opacity="0.5"/>
+            <circle cx="40" cy="28" r="5" fill="#d1db24"/>
+            <line x1="40" y1="33" x2="40" y2="39" stroke="#d1db24" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="ws-step-title">Hour 2 AI Security</div>
+        <div class="ws-step-desc" style="margin-bottom:8px">Network defense + play Byte Club + AI breach analysis.</div>
+        <div style="display:inline-block;background:#fde8e8;color:#9a2a2a;font-size:11px;font-weight:900;padding:3px 10px;border-radius:20px;letter-spacing:0.3px">60 min</div>
+      </div>
+
+    </div><!-- /ws-flow -->
+
+    <div style="background:#f4fae8;border:1.5px solid #a8c96a;border-radius:10px;padding:12px 18px;text-align:center;font-size:13px;font-weight:800;color:#2a5a10;margin-bottom:48px">
+      Total: <strong>~2 hours</strong>
+    </div>
+
+    <!-- ===== HOUR 1 ===== -->
+    <h2>Hour 1 AI Literacy Workshop</h2>
+
+    <p>Run the AI Literacy workshop in full. Everything you need tutorial setup, game hosting, and reflection questions is in the guide below.</p>
+
+    <div class="ws-ref-card" data-reveal>
+      <div class="ws-ref-icon" style="background:#f4fae8;border:2px solid #a8c96a;">
+        <svg viewBox="0 0 52 52" width="52" height="52" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="16" cy="26" r="8" fill="none" stroke="#62b517" stroke-width="1.8"/>
+          <circle cx="30" cy="18" r="8" fill="none" stroke="#62b517" stroke-width="1.8"/>
+          <circle cx="44" cy="26" r="8" fill="none" stroke="#62b517" stroke-width="1.8"/>
+          <circle cx="30" cy="36" r="8" fill="none" stroke="#62b517" stroke-width="1.8"/>
+          <circle cx="16" cy="26" r="3.5" fill="#62b517"/>
+          <circle cx="30" cy="18" r="3.5" fill="#d1db24"/>
+          <circle cx="44" cy="26" r="3.5" fill="#62b517"/>
+          <circle cx="30" cy="36" r="3.5" fill="#4a8c11"/>
+        </svg>
+      </div>
+      <div class="ws-ref-body">
+        <div class="ws-ref-hour" style="color:#62b517">Hour 1 · Full Guide</div>
+        <div class="ws-ref-title">How to Run an AI Literacy Workshop Online</div>
+        <div class="ws-ref-desc">FuzzNet Labs tutorial, live game hosting, and three structured reflection questions with model answers and common misunderstandings to listen for.</div>
+        <div class="ws-ref-timing">
+          <span class="ws-ref-timing-pill">10 min · Set the Stage</span>
+          <span class="ws-ref-timing-pill">30 min · FuzzNet Labs</span>
+          <span class="ws-ref-timing-pill">20 min · Reflection</span>
+        </div>
+        <a href="/blog/how-to-run-an-online-workshop" class="ws-ref-link">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7 H12 M8 3 L12 7 L8 11" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Open the AI Literacy Workshop Guide
+        </a>
+      </div>
+    </div>
+
+    <!-- ===== HOUR 2 ===== -->
+    <h2>Hour 2 Cybersecurity Awareness Workshop</h2>
+
+    <p>Run the Cybersecurity Awareness workshop in full. For Step 3 the breach analysis find a recent cyber incident with an AI angle. That could mean an attacker using AI to carry out the attack more effectively, or an attacker targeting an AI system itself. Either direction connects directly back to what participants learned in Hour 1.</p>
+
+    <div class="ws-ref-card hour-two" data-reveal>
+      <div class="ws-ref-icon" style="background:#fff0f0;border:2px solid #c04040;">
+        <svg viewBox="0 0 52 52" width="52" height="52" xmlns="http://www.w3.org/2000/svg">
+          <path d="M26,6 L42,13 L42,28 Q42,42 26,48 Q10,42 10,28 L10,13 Z" fill="#fff0f0" stroke="#c04040" stroke-width="2"/>
+          <path d="M26,12 L36,17 L36,28 Q36,38 26,43 Q16,38 16,28 L16,17 Z" fill="#2a1010" opacity="0.4"/>
+          <circle cx="26" cy="27" r="5" fill="#d1db24"/>
+          <line x1="26" y1="32" x2="26" y2="37" stroke="#d1db24" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="ws-ref-body">
+        <div class="ws-ref-hour" style="color:#c04040">Hour 2 · Full Guide</div>
+        <div class="ws-ref-title">How to Run a Cybersecurity Awareness Workshop Online</div>
+        <div class="ws-ref-desc">Byte Club tutorial, live game hosting, and the Kill Chain + NIST CSF breach analysis framework. For Step 3, pick a recent incident where AI played a role in the attack the guide shows you what to look for and how to frame it.</div>
+        <div class="ws-ref-timing">
+          <span class="ws-ref-timing-pill" style="background:#fde8e8;color:#9a2a2a;">10 min · Set the Stage</span>
+          <span class="ws-ref-timing-pill" style="background:#fde8e8;color:#9a2a2a;">30 min · Byte Club</span>
+          <span class="ws-ref-timing-pill" style="background:#fde8e8;color:#9a2a2a;">20–30 min · Breach Analysis</span>
+        </div>
+        <a href="/blog/cybersecurity-awareness-workshop" class="ws-ref-link red">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7 H12 M8 3 L12 7 L8 11" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Open the Cybersecurity Awareness Workshop Guide
+        </a>
+      </div>
+    </div>
+
+    <div class="callout" data-reveal>
+      <div class="callout-icon">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="9" stroke="#62b517" stroke-width="1.8"/><path d="M7 11 L10 14 L15 8" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="callout-text">
+        <strong>Finding the right breach:</strong> Look for a recent incident with an AI angle either an attacker using AI as part of the attack, or an attacker compromising an AI system itself. Both work. Sites like <a href="https://thehackernews.com/" target="_blank" rel="noopener" style="color:#4a8c11;font-weight:800">The Hacker News</a> cover both regularly. The best pick for this combined session is one where participants can draw a direct line back to what they learned about AI in Hour 1 whether that's how a model learns, what it trusts, or what happens when it's manipulated.
+      </div>
+    </div>
+
+    <div class="article-cta">
+      <h3>Ready to Run Both Workshops?</h3>
+      <p>FuzzNet Labs and Byte Club are both available now. Each is up and running in under 10 minutes, and no technical background is required to facilitate either.</p>
+      <div class="article-cta-btns">
+        <a href="/buy-now" class="primary">Get Both Games</a>
+        <a href="/blog/how-to-run-an-online-workshop" class="secondary">AI Literacy Guide</a>
+        <a href="/blog/cybersecurity-awareness-workshop" class="secondary">Cyber Awareness Guide</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <p>© 2026 Tech CoLab. All rights reserved.</p>
+</footer>
+
+<script>
+(function() {
+  var els = document.querySelectorAll('[data-reveal]');
+  if (!els.length || !('IntersectionObserver' in window)) {
+    els.forEach(function(el) { el.classList.add('is-visible'); });
+    return;
+  }
+  var io = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) { entry.target.classList.add('is-visible'); io.unobserve(entry.target); }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  els.forEach(function(el) { io.observe(el); });
+})();
+
+(function() {
+  var dropdowns = document.querySelectorAll('.nav-dropdown');
+  dropdowns.forEach(function(dd) {
+    var trigger = dd.querySelector('.nav-dropdown-trigger');
+    var menu    = dd.querySelector('.nav-dropdown-menu');
+    if (!trigger || !menu) return;
+    trigger.addEventListener('click', function(e) {
+      e.stopPropagation();
+      dropdowns.forEach(function(other) {
+        if (other !== dd) {
+          other.querySelector('.nav-dropdown-menu').classList.remove('open');
+          other.querySelector('.nav-dropdown-trigger').classList.remove('open');
+        }
+      });
+      menu.classList.toggle('open');
+      trigger.classList.toggle('open');
+    });
+  });
+  document.addEventListener('click', function() {
+    dropdowns.forEach(function(dd) {
+      dd.querySelector('.nav-dropdown-menu').classList.remove('open');
+      dd.querySelector('.nav-dropdown-trigger').classList.remove('open');
+    });
+  });
+})();
+</script>
+</body>
+</html>
