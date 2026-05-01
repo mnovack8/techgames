@@ -3284,7 +3284,7 @@ function renderGame(gs) {
       btn.textContent = s?.next || 'Next →';
       btn.onclick = () => {
         document.getElementById('win-screen').classList.remove('show');
-        const nextIdx = bcTutStep + 1;
+        const nextIdx = bcTutNextEnabled(bcTutStep);
         if (nextIdx >= BCTSTEPS.length) endBcTutorial();
         else bcTutAdvanceTo(nextIdx);
       };
@@ -4613,6 +4613,12 @@ const TUT_CLOCK = `<svg width="13" height="13" viewBox="0 0 13 13" fill="none" x
 // ── Tutorial step definitions ────────────────────────────────────────────────
 const BCTSTEPS = [
 
+  // 0. Before You Play — section selector
+  { title: 'Before You Play',
+    body: bcTutSectionsBody,
+    makeG: () => makeBcTutG({ alexHand:[BTC.recon,BTC.c2,BTC.respond,BTC.identify,BTC.recover] }),
+    forced: false, next: 'Start →' },
+
   // 0. Cycle of Cyberwarfare  (intro overlay)
   { title: 'The Cycle of Cyberwarfare',
     body: `Cybersecurity is a <strong>never-ending arms race</strong> between two sides. Both competing for control over <em>access to data</em>.
@@ -4664,6 +4670,106 @@ In Byte Club you play <strong>both sides simultaneously</strong>: attacking your
     makeG: () => makeBcTutG({ alexHand:[BTC.recon,BTC.c2,BTC.respond,BTC.identify,BTC.recover] }),
     forced: false, next: 'Next →' },
 
+  // 4. Cards & Rules — How to Play
+  { title: 'How to Play — On Your Turn',
+    body: `<div class="bcti-two-col" style="gap:28px">
+<div class="bcti-left" style="flex:0 0 44%">
+Each turn has two simple steps:<br><br>
+<div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px">
+  <div style="background:rgba(98,181,23,0.08);border:1px solid rgba(98,181,23,0.25);border-radius:8px;padding:10px 14px">
+    <div style="font-size:12px;font-weight:800;color:#62b517;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:3px">Step 1</div>
+    <div style="font-size:13px;color:#e2e8f0;line-height:1.5"><strong>Play any number of cards</strong> from your hand, face-up into <em>Cards in Front of You</em>. Each card fills one Kill Chain or NIST slot.</div>
+  </div>
+  <div style="background:rgba(98,181,23,0.08);border:1px solid rgba(98,181,23,0.25);border-radius:8px;padding:10px 14px">
+    <div style="font-size:12px;font-weight:800;color:#62b517;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:3px">Step 2</div>
+    <div style="font-size:13px;color:#e2e8f0;line-height:1.5"><strong>Draw 1 card</strong> from the deck to refill your hand. Maximum 6 cards at any time.</div>
+  </div>
+</div>
+Play continues <strong>clockwise</strong> until a player achieves either win condition. On their <strong>first turn only</strong>, the starting player draws extra cards to reach 5.
+</div>
+<div style="flex:1;min-width:0">
+  <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;color:#4b5563;margin-bottom:10px">Two Ways to Win</div>
+  <div style="display:flex;flex-direction:column;gap:10px">
+    <div style="background:#0a1520;border:1px solid #1e3a5f;border-radius:8px;padding:12px 14px">
+      <div style="font-size:10px;font-weight:800;color:#4b5563;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:4px"><img src="images/cyber-kill-chain.svg" style="width:11px;height:11px;vertical-align:middle;margin-right:4px"> Win Condition 1</div>
+      <div style="font-size:12px;color:#e2e8f0;font-weight:700;margin-bottom:3px">Hold the Data Flag when Times Up appears</div>
+      <div style="font-size:11px;color:#6b7280;line-height:1.4">The <img src="images/special-data-flag.png" style="width:13px;height:18px;vertical-align:middle;"> Data Flag is a special card hidden in the deck. Whoever holds it when <img src="images/special-times-up.png" style="width:13px;height:18px;vertical-align:middle;"> Times Up is drawn wins instantly.</div>
+    </div>
+    <div style="background:#0a1520;border:1px solid #1e3a5f;border-radius:8px;padding:12px 14px">
+      <div style="font-size:10px;font-weight:800;color:#4b5563;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:4px"><img src="images/nist-framework.svg" style="width:11px;height:11px;vertical-align:middle;margin-right:4px"> Win Condition 2</div>
+      <div style="font-size:12px;color:#e2e8f0;font-weight:700;margin-bottom:3px">Complete the full Kill Chain + NIST board</div>
+      <div style="font-size:11px;color:#6b7280;line-height:1.4">Play all 6 Kill Chain types (including Action Obj.) and all 5 NIST types (including Govern). Win without waiting for Times Up.</div>
+    </div>
+  </div>
+</div></div>`,
+    makeG: () => makeBcTutG({ alexHand:[BTC.recon,BTC.c2,BTC.respond,BTC.identify,BTC.recover] }),
+    forced: false, next: 'Next →' },
+
+  // 5. Cards & Rules — Attack & Defend Cards
+  { title: 'Your Two Card Types',
+    body: `<div class="bcti-two-col" style="gap:32px;align-items:flex-start">
+<div style="flex:1;min-width:0">
+  <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;color:#f87171;margin-bottom:10px"><img src="images/cyber-kill-chain.svg" style="width:12px;height:12px;vertical-align:middle;margin-right:5px">Attack Cards — Cyber Kill Chain</div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><img src="images/attack-recon.png" style="width:56px;height:78px;object-fit:contain;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,0.6)"><div style="font-size:9px;font-weight:700;color:#e2e8f0;text-align:center">Recon</div></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><img src="images/attack-weaponize.png" style="width:56px;height:78px;object-fit:contain;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,0.6)"><div style="font-size:9px;font-weight:700;color:#e2e8f0;text-align:center">Weaponize</div></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><img src="images/attack-delivery.png" style="width:56px;height:78px;object-fit:contain;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,0.6)"><div style="font-size:9px;font-weight:700;color:#e2e8f0;text-align:center">Delivery</div></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><img src="images/attack-exploit.png" style="width:56px;height:78px;object-fit:contain;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,0.6)"><div style="font-size:9px;font-weight:700;color:#e2e8f0;text-align:center">Exploit</div></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><img src="images/attack-install.png" style="width:56px;height:78px;object-fit:contain;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,0.6)"><div style="font-size:9px;font-weight:700;color:#e2e8f0;text-align:center">Install</div></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><img src="images/attack-c2.png" style="width:56px;height:78px;object-fit:contain;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,0.6)"><div style="font-size:9px;font-weight:700;color:#e2e8f0;text-align:center">C2 Control</div></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><img src="images/attack-action-obj.png" style="width:56px;height:78px;object-fit:contain;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,0.6)"><div style="font-size:9px;font-weight:700;color:#e2e8f0;text-align:center;line-height:1.2">Action Obj.</div></div>
+  </div>
+</div>
+<div style="flex:1;min-width:0">
+  <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;color:#60a5fa;margin-bottom:10px"><img src="images/nist-framework.svg" style="width:12px;height:12px;vertical-align:middle;margin-right:5px">Defend Cards — NIST Framework</div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><img src="images/defend-identify.png" style="width:56px;height:78px;object-fit:contain;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,0.6)"><div style="font-size:9px;font-weight:700;color:#e2e8f0;text-align:center">Identify</div></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><img src="images/defend-protect.png" style="width:56px;height:78px;object-fit:contain;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,0.6)"><div style="font-size:9px;font-weight:700;color:#e2e8f0;text-align:center">Protect</div></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><img src="images/defend-detect.png" style="width:56px;height:78px;object-fit:contain;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,0.6)"><div style="font-size:9px;font-weight:700;color:#e2e8f0;text-align:center">Detect</div></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><img src="images/defend-respond.png" style="width:56px;height:78px;object-fit:contain;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,0.6)"><div style="font-size:9px;font-weight:700;color:#e2e8f0;text-align:center">Respond</div></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><img src="images/defend-recover.png" style="width:56px;height:78px;object-fit:contain;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,0.6)"><div style="font-size:9px;font-weight:700;color:#e2e8f0;text-align:center">Recover</div></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><img src="images/defend-govern.png" style="width:56px;height:78px;object-fit:contain;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,0.6)"><div style="font-size:9px;font-weight:700;color:#e2e8f0;text-align:center">Govern</div></div>
+  </div>
+</div></div>`,
+    makeG: () => makeBcTutG({ alexHand:[BTC.recon,BTC.c2,BTC.respond,BTC.identify,BTC.recover] }),
+    forced: false, next: 'Next →' },
+
+  // 6. Cards & Rules — Special Cards
+  { title: 'The Four Special Cards',
+    body: `These four cards are not part of the Kill Chain or NIST Framework. They shape the whole game.<br><br>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+  <div style="display:flex;gap:12px;align-items:flex-start;background:#0a1520;border:1px solid #1e3a5f;border-radius:10px;padding:12px 14px">
+    <img src="images/special-data-flag.png" style="width:52px;height:73px;object-fit:contain;border-radius:5px;box-shadow:0 3px 10px rgba(0,0,0,0.65);flex-shrink:0">
+    <div>
+      <div style="font-size:12px;font-weight:800;color:#4ade80;margin-bottom:4px">Data Flag</div>
+      <div style="font-size:11px;color:#9ca3af;line-height:1.45"><strong style="color:#e2e8f0">Cannot be played, discarded or removed.</strong> Hold this card when Times Up is revealed and you win instantly.</div>
+    </div>
+  </div>
+  <div style="display:flex;gap:12px;align-items:flex-start;background:#0a1520;border:1px solid #1e3a5f;border-radius:10px;padding:12px 14px">
+    <img src="images/special-times-up.png" style="width:52px;height:73px;object-fit:contain;border-radius:5px;box-shadow:0 3px 10px rgba(0,0,0,0.65);flex-shrink:0">
+    <div>
+      <div style="font-size:12px;font-weight:800;color:#d1db24;margin-bottom:4px">Times Up</div>
+      <div style="font-size:11px;color:#9ca3af;line-height:1.45"><strong style="color:#e2e8f0">Game Over — reveal to all players.</strong> The player holding the Data Flag wins. If no one holds it, the player with the most complete board wins.</div>
+    </div>
+  </div>
+  <div style="display:flex;gap:12px;align-items:flex-start;background:#0a1520;border:1px solid #1e3a5f;border-radius:10px;padding:12px 14px">
+    <img src="images/attack-action-obj.png" style="width:52px;height:73px;object-fit:contain;border-radius:5px;box-shadow:0 3px 10px rgba(0,0,0,0.65);flex-shrink:0">
+    <div>
+      <div style="font-size:12px;font-weight:800;color:#f87171;margin-bottom:4px">Action Objective</div>
+      <div style="font-size:11px;color:#9ca3af;line-height:1.45"><strong style="color:#e2e8f0">Play at any time.</strong> Earned by completing the Kill Chain. Forces the Data Flag holder to give it to you. Cannot be cancelled.</div>
+    </div>
+  </div>
+  <div style="display:flex;gap:12px;align-items:flex-start;background:#0a1520;border:1px solid #1e3a5f;border-radius:10px;padding:12px 14px">
+    <img src="images/defend-govern.png" style="width:52px;height:73px;object-fit:contain;border-radius:5px;box-shadow:0 3px 10px rgba(0,0,0,0.65);flex-shrink:0">
+    <div>
+      <div style="font-size:12px;font-weight:800;color:#60a5fa;margin-bottom:4px">Govern</div>
+      <div style="font-size:11px;color:#9ca3af;line-height:1.45"><strong style="color:#e2e8f0">Earned by completing the NIST Framework.</strong> Privately look at all players' hands, take one card from each, then give any card to each player.</div>
+    </div>
+  </div>
+</div>`,
+    makeG: () => makeBcTutG({ alexHand:[BTC.recon,BTC.c2,BTC.respond,BTC.identify,BTC.recover] }),
+    forced: false, next: 'Next →' },
+
   // 3. Welcome  (intro overlay)
   { title: 'Welcome to Byte Club',
     body: `<strong>Byte Club</strong> is a cybersecurity card game where you race to complete your attack chain and defense framework. While fighting your opponent for the ${TUT_FLAG} <strong>Data Flag</strong>.
@@ -4703,7 +4809,7 @@ Playing a card places it face-up in <em>Cards in Front of You</em> (right column
         };
         gameState = bcTutG;
         selectedHandCard = null;
-        BCTSTEPS[4].tutHL = 'recon_done';
+        BCTSTEPS[8].tutHL = 'recon_done';
         document.getElementById('bc-tut-body').innerHTML =
           `Recon reveals <strong>Mira's hand</strong>! You can see all her cards. Useful for planning your next move.<br>Click <em>Done</em> to close the view.`;
         renderGame(bcTutG);
@@ -4714,8 +4820,8 @@ Playing a card places it face-up in <em>Cards in Front of You</em> (right column
         bcTutG.phase = 'play';
         bcTutG.attackInfo = null;
         gameState = bcTutG;
-        BCTSTEPS[4].tutHL = 'end_turn';
-        BCTSTEPS[4].nextAction = () => bcTutAdvanceTo(5);
+        BCTSTEPS[8].tutHL = 'end_turn';
+        BCTSTEPS[8].nextAction = () => bcTutAdvanceTo(9);
         document.getElementById('bc-tut-body').innerHTML =
           `Recon is in your <img src="images/cyber-kill-chain.svg" style="width:13px;height:13px;vertical-align:middle;"> Kill Chain row! Mira\'s hand is back face-down.<br>Click <strong>End Turn (Draw 1)</strong> to pass the turn to Mira.`;
         const nextBtn = document.getElementById('bc-tut-next');
@@ -4724,7 +4830,7 @@ Playing a card places it face-up in <em>Cards in Front of You</em> (right column
         renderGame(bcTutG);
         return true;
       }
-      if (msg.action === 'end_play_phase') { bcTutAdvanceTo(5); return true; }
+      if (msg.action === 'end_play_phase') { bcTutAdvanceTo(9); return true; }
       return false;
     } },
 
@@ -4753,7 +4859,7 @@ Click the glowing <em>Play Respond</em> button to block it.`,
     interact(msg) {
       if (msg.type !== 'game_action') return false;
       if (msg.action === 'play_respond' || msg.action === 'respond_skip') {
-        bcTutAdvanceTo(6); return true;
+        bcTutAdvanceTo(10); return true;
       }
       return false;
     } },
@@ -4785,14 +4891,14 @@ Mira is holding the ${TUT_FLAG} <strong>Data Flag</strong>. Whoever holds it whe
         };
         gameState = bcTutG;
         selectedHandCard = null;
-        BCTSTEPS[6].tutHL = 'mira_target';
+        BCTSTEPS[10].tutHL = 'mira_target';
         document.getElementById('bc-tut-body').innerHTML =
           `C2 is in play! Now <strong>click Mira</strong> in the target panel. She holds the Data Flag.`;
         renderGame(bcTutG);
         return true;
       }
       if (msg.action === 'attack_select_target' && msg.targetIdx === 1) {
-        bcTutAdvanceTo(7); return true;
+        bcTutAdvanceTo(11); return true;
       }
       if (msg.action === 'cancel_attack') return true; // block cancel
       return false;
@@ -4816,7 +4922,7 @@ Click <strong>End Turn (Draw 1)</strong> to draw and pass to Mira.`,
     tutHL: 'end_turn',
     interact(msg) {
       if (msg.type !== 'game_action') return false;
-      if (msg.action === 'end_play_phase') { bcTutAdvanceTo(8); return true; }
+      if (msg.action === 'end_play_phase') { bcTutAdvanceTo(12); return true; }
       return false;
     } },
 
@@ -4893,15 +4999,15 @@ Watch the <strong>status strip</strong> above. It shows when Govern and Action O
     _subPhase: 0,
     interact(msg) {
       if (msg.type !== 'game_action') return;
-      const sp = BCTSTEPS[11]._subPhase;
+      const sp = BCTSTEPS[15]._subPhase;
 
       // ── Sub-phase 0: play Exploit ──
       if (sp === 0 && msg.action === 'play_card' && msg.cardId == TUT8_EXPLOIT.id) {
         bcTutG.players[0].played.push({...TUT8_EXPLOIT});
         bcTutG.myHand = [{...TUT8_PROTECT}, {...TUT8_ACTION_OBJ}];
         bcTutG.players[0].handCount = 2;
-        BCTSTEPS[11]._subPhase = 1;
-        BCTSTEPS[11].tutHL = TUT8_PROTECT.id;
+        BCTSTEPS[15]._subPhase = 1;
+        BCTSTEPS[15].tutHL = TUT8_PROTECT.id;
         gameState = bcTutG;
         selectedHandCard = null;
         document.getElementById('bc-tut-body').innerHTML =
@@ -4918,8 +5024,8 @@ Watch the <strong>status strip</strong> above. It shows when Govern and Action O
         bcTutG.myHand = [{...TUT8_ACTION_OBJ}, {...TUT8_GOVERN}];
         bcTutG.players[0].handCount = 2;
         bcTutG.protectedPlayers = [0]; // show Protect label + background on hand area
-        BCTSTEPS[11]._subPhase = 2;
-        BCTSTEPS[11].tutHL = TUT8_ACTION_OBJ.id;
+        BCTSTEPS[15]._subPhase = 2;
+        BCTSTEPS[15].tutHL = TUT8_ACTION_OBJ.id;
         gameState = bcTutG;
         selectedHandCard = null;
         document.getElementById('bc-tut-body').innerHTML =
@@ -4935,8 +5041,8 @@ Watch the <strong>status strip</strong> above. It shows when Govern and Action O
         bcTutG.myHand = [{...TUT8_GOVERN}];
         bcTutG.players[0].handCount = 1;
         bcTutG.protectedPlayers = []; // Protect effect ends after one turn
-        BCTSTEPS[11]._subPhase = 3;
-        BCTSTEPS[11].tutHL = TUT8_GOVERN.id;
+        BCTSTEPS[15]._subPhase = 3;
+        BCTSTEPS[15].tutHL = TUT8_GOVERN.id;
         gameState = bcTutG;
         selectedHandCard = null;
         document.getElementById('bc-tut-body').innerHTML =
@@ -4954,7 +5060,7 @@ Watch the <strong>status strip</strong> above. It shows when Govern and Action O
         gameState = bcTutG;
         selectedHandCard = null;
         renderGame(bcTutG);                    // show completed board briefly
-        setTimeout(() => bcTutAdvanceTo(12), 500); // then win screen
+        setTimeout(() => bcTutAdvanceTo(16), 500); // then win screen
         return;
       }
     } },
@@ -4980,6 +5086,60 @@ You\'re ready to play. Click below to head back to the lobby!`,
     isWinScreen: true,
     next: '← Back to Lobby' },
 ];
+
+// ── Section selection for "Before You Play" ─────────────────────────────────
+let bcTutSections = { context: true, howto: true };
+let bcTutSectionError = false;
+
+function bcTutSectionForIdx(idx) {
+  if (idx >= 1 && idx <= 3) return 'context';
+  if (idx >= 4) return 'howto';
+  return null; // step 0 always shows
+}
+
+function bcTutNextEnabled(from) {
+  let next = from + 1;
+  while (next < BCTSTEPS.length) {
+    const sec = bcTutSectionForIdx(next);
+    if (!sec || bcTutSections[sec]) break;
+    next++;
+  }
+  return next;
+}
+
+function bcTutSectionsBody() {
+  function row(key, label, sublabel) {
+    const on = bcTutSections[key];
+    return `<label style="display:flex;align-items:flex-start;gap:12px;background:${on?'rgba(98,181,23,0.08)':'rgba(255,255,255,0.03)'};border:1.5px solid ${on?'#62b517':'#2a3a2a'};border-radius:10px;padding:11px 14px;cursor:pointer;user-select:none;transition:background 0.15s,border-color 0.15s" onclick="bcTutToggleSection('${key}')">
+      <div style="flex-shrink:0;width:20px;height:20px;border-radius:5px;border:2px solid ${on?'#62b517':'#3a4a3a'};background:${on?'#62b517':'transparent'};display:flex;align-items:center;justify-content:center;margin-top:2px;pointer-events:none">
+        ${on?'<svg width="11" height="11" viewBox="0 0 11 11" fill="none"><polyline points="1.5,5.5 4.5,8.5 9.5,2.5" stroke="#0a1200" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>':''}
+      </div>
+      <div style="pointer-events:none">
+        <div style="font-size:13px;font-weight:800;color:#e2e8f0;line-height:1.3">${label}</div>
+        ${sublabel?`<div style="font-size:11px;color:#6b7280;margin-top:3px;line-height:1.4">${sublabel}</div>`:''}
+      </div>
+    </label>`;
+  }
+  return `<p style="margin-bottom:12px;font-size:13px;color:#9ca3af">Choose which sections to include in your tutorial:</p>
+<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px">
+  ${row('context','Context for Learning Objectives','The Cycle of Cyberwarfare, the Cyber Kill Chain, and the NIST Framework — the real-world concepts behind the game.')}
+  ${row('howto','How to Play','Card types, turn structure, special cards, and two interactive win-condition walkthroughs.')}
+</div>${bcTutSectionError?`<div style="background:rgba(220,38,38,0.1);border:1.5px solid #dc2626;border-radius:8px;padding:8px 12px;font-size:12px;color:#f87171;font-weight:700;display:flex;align-items:center;gap:7px"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="#f87171" stroke-width="1.5"/><line x1="8" y1="4.5" x2="8" y2="8.5" stroke="#f87171" stroke-width="2" stroke-linecap="round"/><circle cx="8" cy="11" r="1" fill="#f87171"/></svg>At least one section must be selected.</div>`:''}`;
+}
+
+function bcTutToggleSection(key) {
+  if (bcTutSections[key]) {
+    const count = Object.values(bcTutSections).filter(Boolean).length;
+    if (count <= 1) {
+      bcTutSectionError = true;
+      document.getElementById('bcti-body').innerHTML = bcTutSectionsBody();
+      return;
+    }
+  }
+  bcTutSectionError = false;
+  bcTutSections[key] = !bcTutSections[key];
+  document.getElementById('bcti-body').innerHTML = bcTutSectionsBody();
+}
 
 // ── Tutorial engine ──────────────────────────────────────────────────────────
 
@@ -5021,7 +5181,7 @@ function applyBcTutStep(idx) {
   const s = BCTSTEPS[idx];
 
   // ── Route intro overlay (steps 0-3) vs sidebar (steps 4+) ──────────────
-  const isIntro = idx < 4;
+  const isIntro = idx < 8;
   if (isIntro) {
     document.body.classList.remove('bc-tut-active');
     document.body.classList.add('bc-tut-intro-active');
@@ -5051,7 +5211,7 @@ function applyBcTutStep(idx) {
       btn.textContent = s.next || 'Next →';
       btn.onclick = () => {
         document.getElementById('win-screen').classList.remove('show');
-        const next = idx + 1;
+        const next = bcTutNextEnabled(idx);
         if (next >= BCTSTEPS.length) endBcTutorial();
         else bcTutAdvanceTo(next);
       };
@@ -5070,7 +5230,9 @@ function bcTutNext() {
   if (s.nextAction) { s.nextAction(); return; } // mid-step override (e.g. after Recon)
   if (s.forced) return;
   if (s.next === '← Back to Lobby') { endBcTutorial(); return; }
-  bcTutAdvanceTo(bcTutStep + 1);
+  const next = bcTutNextEnabled(bcTutStep);
+  if (next >= BCTSTEPS.length) { endBcTutorial(); return; }
+  bcTutAdvanceTo(next);
 }
 
 function renderBcTutPanel(idx) {
@@ -5104,7 +5266,7 @@ function renderBcTutIntro(idx) {
   document.getElementById('bcti-label').textContent      = `Step ${idx + 1} of ${total}`;
   document.getElementById('bcti-prog-fill').style.width  = pct + '%';
   document.getElementById('bcti-title').innerHTML        = s.title;
-  document.getElementById('bcti-body').innerHTML         = s.body;
+  document.getElementById('bcti-body').innerHTML         = typeof s.body === 'function' ? s.body() : s.body;
   document.getElementById('bcti-next').textContent       = s.next || 'Next →';
 }
 
