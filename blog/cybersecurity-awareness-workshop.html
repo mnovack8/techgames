@@ -5,12 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="A step-by-step facilitator guide for running an online cybersecurity awareness workshop with Byte Club. Includes demo setup, live game hosting, and a real breach exercise using the Cyber Kill Chain and NIST CSF.">
 <meta property="og:type" content="article">
-<meta property="og:title" content="How to Run a Cybersecurity Awareness Workshop Online - Byte Club Guide">
+<meta property="og:title" content="How to Facilitate a Cybersecurity Awareness Workshop - Byte Club Guide">
 <meta property="og:description" content="A step-by-step facilitator guide for running an online cybersecurity awareness workshop with Byte Club. Demo setup, live game, and a real breach analysis exercise included.">
 <meta property="og:image" content="https://cybersecgames.com/images/logo.svg">
 <meta property="og:url" content="https://cybersecgames.com/blog/cybersecurity-awareness-workshop">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="How to Run a Cybersecurity Awareness Workshop Online - Byte Club Guide">
+<meta name="twitter:title" content="How to Facilitate a Cybersecurity Awareness Workshop - Byte Club Guide">
 <meta name="twitter:description" content="Step-by-step facilitator guide for a Byte Club cybersecurity workshop. Set the stage, host the game, then analyze a real breach through the Kill Chain and NIST CSF.">
 <meta name="robots" content="index, follow">
 <meta name="author" content="Tech CoLab">
@@ -21,7 +21,7 @@
 <link rel="icon" type="image/png" href="/images/logo.png">
 <link rel="apple-touch-icon" href="/images/logo.png">
 <link rel="canonical" href="https://cybersecgames.com/blog/cybersecurity-awareness-workshop">
-<title>How to Run a Cybersecurity Awareness Workshop Online | Tech CoLab</title>
+<title>How to Facilitate a Cybersecurity Awareness Workshop | Tech CoLab</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
 
@@ -409,7 +409,7 @@ footer { background: #2a2a2a; color: #777; text-align: center; padding: 12px 24p
 {
   "@context": "https://schema.org",
   "@type": "Article",
-  "headline": "How to Run a Cybersecurity Awareness Workshop Online",
+  "headline": "How to Facilitate a Cybersecurity Awareness Workshop",
   "description": "A step-by-step facilitator guide for running an online cybersecurity awareness workshop with Byte Club, including demo setup, live game hosting, and a real breach analysis exercise using the Cyber Kill Chain and NIST CSF.",
   "author": { "@type": "Person", "name": "Tech CoLab" },
   "publisher": { "@type": "Organization", "name": "Tech CoLab", "logo": { "@type": "ImageObject", "url": "https://cybersecgames.com/images/logo.svg" } },
@@ -459,7 +459,7 @@ footer { background: #2a2a2a; color: #777; text-align: center; padding: 12px 24p
 <!-- HERO -->
 <section class="article-hero">
   <div class="article-tag">Workshop Guide</div>
-  <h1>How to Run a <em>Cybersecurity Awareness</em><br>Workshop Online</h1>
+  <h1>How to Facilitate a <em>Cybersecurity Awareness</em><br>Workshop</h1>
   <p class="article-hero-sub">A step-by-step facilitator guide for Byte Club. From the interactive demo to a real-world breach analysis your team will actually remember.</p>
   <div class="article-meta">
     <span class="article-meta-read">8 min read</span>
@@ -581,17 +581,27 @@ footer { background: #2a2a2a; color: #777; text-align: center; padding: 12px 24p
     <!-- ===== STEP 2 ===== -->
     <h2>Step 2 - Host the Game <span style="font-size:14px;font-weight:700;color:#62b517;vertical-align:middle">&nbsp;30 min</span></h2>
 
-    <p>The game room is created live, during the session. Each room generates a unique code that connects everyone to your specific session. How you set it up depends on group size.</p>
+    <p>How you run this step depends on whether you are in person or online.</p>
+
+    <div style="background:#f4fae8;border:2px solid #62b517;border-radius:14px;padding:22px 24px;margin:24px 0" data-reveal>
+      <div style="font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:2px;color:#62b517;margin-bottom:8px">In Person</div>
+      <div style="font-size:15px;font-weight:900;color:#1a2a0a;margin-bottom:10px">Hand Out the Game and Set Up Together</div>
+      <div style="font-size:13px;color:#444;line-height:1.7;margin-bottom:14px">Distribute a Byte Club deck to each table and get participants into groups of 2–4. Then display the <strong>Physical Game Setup</strong> section of the interactive demo — either projected for the room or opened on a device at each table. Walk through the setup steps together so every group is ready before the first card is played.</div>
+      <a href="/byteclub?tutorial=1" target="_blank" style="display:inline-flex;align-items:center;gap:7px;background:#62b517;color:#fff;font-size:13px;font-weight:900;text-decoration:none;padding:10px 18px;border-radius:8px;transition:background 0.15s" onmouseover="this.style.background='#4a8c11'" onmouseout="this.style.background='#62b517'">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7 H12 M8 3 L12 7 L8 11" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Open the Byte Club Setup Instructions
+      </a>
+    </div>
 
     <div class="option-cards" data-reveal>
       <div class="option-card primary">
-        <div class="option-label">Up to 4 Players</div>
+        <div class="option-label">Online · Up to 4 Players</div>
         <div class="option-title">Single Room</div>
         <div class="option-desc">The host creates a room directly in the Byte Club lobby. A unique room code appears on screen. Share that code in your video call chat and players enter it to join. Everyone plays in one session together.</div>
         <div class="option-tip">Passive observers can watch over a player's shoulder or via screenshare. The attacker-vs-defender format is easy to follow as a spectator and often sparks the best debrief moments.</div>
       </div>
       <div class="option-card secondary">
-        <div class="option-label">5+ People / Multiple Tables</div>
+        <div class="option-label">Online · 5+ People / Multiple Tables</div>
         <div class="option-title">Event Hub - Multiple Rooms</div>
         <div class="option-desc">Use the Event Hub to create multiple rooms at once. Each room gets its own unique code. Assign players into groups of 2-4 and distribute each group's code via breakout room chat or a shared doc. Groups play simultaneously then reconvene.</div>
         <div class="option-tip">Mixing experience levels in each room usually produces stronger conversations than separating them. The IT person and the HR manager at the same table learn more from each other than they would apart.</div>
@@ -821,7 +831,7 @@ footer { background: #2a2a2a; color: #777; text-align: center; padding: 12px 24p
     <p>The most powerful moment in this workshop is usually when someone maps a decision they made in the game - waiting to respond, missing a lateral movement, leaving a path open - directly onto the breach they are analyzing. When that connection lands, you do not need to explain anything. The room does it for you.</p>
 
     <div class="article-cta">
-      <h3>Ready to Run Your Workshop?</h3>
+      <h3>Ready to Facilitate Your Workshop?</h3>
       <p>Byte Club is available now. Setup takes under 10 minutes and no technical background is required to facilitate.</p>
       <div class="article-cta-btns">
         <a href="/buy-now" class="primary">Get Byte Club</a>
