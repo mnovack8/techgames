@@ -3384,7 +3384,17 @@ const server = http.createServer((req, res) => {
   const ext = path.extname(filePath);
   const contentType = MIME[ext] || 'application/octet-stream';
   fs.readFile(filePath, (err, data) => {
-    if (err) { res.writeHead(err.code === 'ENOENT' ? 404 : 500); res.end('Not Found'); return; }
+    if (err) {
+      if (err.code === 'ENOENT') {
+        fs.readFile(path.join(__dirname, '/404.html'), (e2, d2) => {
+          res.writeHead(404, { 'Content-Type': 'text/html; charset=utf-8' });
+          res.end(e2 ? 'Not Found' : d2);
+        });
+      } else {
+        res.writeHead(500); res.end('Server Error');
+      }
+      return;
+    }
     res.writeHead(200, { 'Content-Type': contentType });
     res.end(data);
   });
