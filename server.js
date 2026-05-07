@@ -1021,8 +1021,10 @@ function cfScoreRound(room) {
   if(s.round>CF_ROUNDS){cfEndGame(room);return;}
   s.roundDoubledAnimal=s.doubledAnimals[s.round-1];
   for(const pl of s.players){pl.flicksThisRound=0;}
-  s.currentPlayer=0;s.flicksLeft=CF_FLICKS_PER_PLAYER;s.phase='flicking';
-  if(room.players[0].isBot)setTimeout(()=>executeCFBotTurn(room),800);
+  // First player rotates clockwise each round: round 1→player 0, round 2→player 1, etc.
+  const firstOfRound=(s.round-1)%s.players.length;
+  s.currentPlayer=firstOfRound;s.flicksLeft=CF_FLICKS_PER_PLAYER;s.phase='flicking';
+  if(room.players[firstOfRound].isBot)setTimeout(()=>executeCFBotTurn(room),800);
 }
 
 function cfEndGame(room) {
