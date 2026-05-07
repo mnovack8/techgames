@@ -513,30 +513,42 @@ const CF_ANIMALS = ['Frog','Fish','Rabbit','Dog','Bird','Squirrel'];
 const CF_ROUNDS = 6;
 const CF_FLICKS_PER_PLAYER = 5;
 const CF_WIN_THRESHOLD = 8;
-const CF_CX = 350, CF_CY = 350;
-const CF_BOARD_R = 290;
-const CF_UNCLASSIFIED_R = 75;
-const CF_BANDS = [75,135,180,225,260,290]; // outer radius for confidence bands 1-5
+const CF_CX = 500, CF_CY = 500;
+const CF_BOARD_R = 414;
+const CF_UNCLASSIFIED_R = 107;
+const CF_ANIMAL_CR = 258;
+const CF_CR5 = 31, CF_CR3 = 66, CF_CR2 = 103;
+const CF_ZONE_CIRCLES = (function(){
+  const z=[];
+  for(let a=0;a<6;a++){
+    const ang=(a*60+30)*Math.PI/180;
+    const cx=CF_CX+CF_ANIMAL_CR*Math.cos(ang), cy=CF_CY+CF_ANIMAL_CR*Math.sin(ang);
+    z.push({x:cx,y:cy,r:CF_CR5,animalIdx:a,confidence:5});
+    z.push({x:cx,y:cy,r:CF_CR3,animalIdx:a,confidence:3});
+    z.push({x:cx,y:cy,r:CF_CR2,animalIdx:a,confidence:2});
+  }
+  return z;
+})();
 const CF_TOKEN_R = 18;
-const CF_DICE_R = 10;
+const CF_DICE_R = 14;
 const CF_FRICTION = 0.955;
 const CF_BOUNCE = 0.60;
-const CF_MAX_SPEED = 34;
+const CF_MAX_SPEED = 49;
 const CF_FLICK_ZONES = [
-  {x:85,  y:640}, // Player 0 (bottom-left)
-  {x:615, y:640}, // Player 1 (bottom-right)
-  {x:615, y:60},  // Player 2 (top-right)
-  {x:85,  y:60},  // Player 3 (top-left)
+  {x:175, y:825}, // Player 0 (bottom-left)
+  {x:825, y:825}, // Player 1 (bottom-right)
+  {x:825, y:175}, // Player 2 (top-right)
+  {x:175, y:175}, // Player 3 (top-left)
 ];
 
 function cfGetZone(x,y) {
-  const dx=x-CF_CX, dy=y-CF_CY, d=Math.hypot(dx,dy);
+  const dx=x-CF_CX,dy=y-CF_CY,d=Math.hypot(dx,dy);
   if(d>CF_BOARD_R) return null;
   if(d<=CF_UNCLASSIFIED_R) return {animalIdx:-1,confidence:0};
-  let conf=5;
-  for(let i=0;i<CF_BANDS.length;i++){if(d<=CF_BANDS[i]){conf=i+1;break;}}
-  let ang=Math.atan2(dy,dx)*180/Math.PI; if(ang<0)ang+=360;
-  return {animalIdx:Math.floor(ang/60)%6, confidence:conf};
+  for(const z of CF_ZONE_CIRCLES){if(Math.hypot(x-z.x,y-z.y)<=z.r)return{animalIdx:z.animalIdx,confidence:z.confidence};}
+  // On board but outside all target circles = 1pt, sector angle determines animal
+  let ang=Math.atan2(dy,dx)*180/Math.PI;if(ang<0)ang+=360;
+  return{animalIdx:Math.floor(ang/60)%6,confidence:1};
 }
 
 function cfSimulatePhysics(tokens, dice, sx, sy, vx, vy) {
@@ -963,22 +975,15 @@ function createCFGameState(numPlayers) {
     round:1,
     currentPlayer:0,
     flicksLeft:CF_FLICKS_PER_PLAYER,
-    roundPlayerOrder:Array.from({length:numPlayers},(_,i)=>i),
-    roundPlayerIdx:0,
     tokens:[],
-    dice:[],
     players:Array.from({length:numPlayers},(_,i)=>({
       _idx:i,
       confidence:[0,0,0,0,0,0],
       flicksThisRound:0,
-      reflickUsed:false,
-      hasFlickedUnidentified:false,
-      unclassifiedTokenIds:[],
     })),
     doubledAnimals:da,
     roundDoubledAnimal:da[0],
     nextTokenId:0,
-    nextDiceId:0,
     gameOver:false,
     winner:-1,
   };
@@ -987,13 +992,14 @@ function createCFGameState(numPlayers) {
 function cfAdvanceTurn(room) {
   const s=room.cfState;
   s.phase='flicking';
-  s.roundPlayerIdx++;
-  if(s.roundPlayerIdx>=room.players.length){cfScoreRound(room);return;}
-  s.currentPlayer=s.roundPlayerOrder[s.roundPlayerIdx];
-  s.flicksLeft=CF_FLICKS_PER_PLAYER;
-  const pl=s.players[s.currentPlayer];
-  pl.flicksThisRound=0;pl.reflickUsed=false;pl.hasFlickedUnidentified=false;pl.unclassifiedTokenIds=[];
-  if(room.players[s.currentPlayer].isBot) setTimeout(()=>executeCFBotTurn(room),800);
+  // If every player has used all their flicks, end the round
+  if(s.players.every(pl=>pl.flicksThisRound>=CF_FLICKS_PER_PLAYER)){cfScoreRound(room);return;}
+  // Cycle to the next player who still has flicks remaining
+  const n=room.players.length;
+  do{s.currentPlayer=(s.currentPlayer+1)%n;}
+  while(s.players[s.currentPlayer].flicksThisRound>=CF_FLICKS_PER_PLAYER);
+  s.flicksLeft=CF_FLICKS_PER_PLAYER-s.players[s.currentPlayer].flicksThisRound;
+  if(room.players[s.currentPlayer].isBot)setTimeout(()=>executeCFBotTurn(room),800);
 }
 
 function cfScoreRound(room) {
@@ -1002,10 +1008,6 @@ function cfScoreRound(room) {
   for(const tok of s.tokens){
     if(tok.animalIdx<0)continue;
     let conf=tok.confidence;
-    // Sample dice boost: +1 if any matching die is close
-    for(const die of s.dice){
-      if(die.animalIdx===tok.animalIdx&&Math.hypot(tok.x-die.x,tok.y-die.y)<CF_TOKEN_R+CF_DICE_R+22){conf+=1;break;}
-    }
     if(tok.animalIdx===da)conf*=2;
     s.players[tok.playerIdx].confidence[tok.animalIdx]+=conf;
   }
@@ -1013,16 +1015,14 @@ function cfScoreRound(room) {
   for(let i=0;i<s.players.length;i++){
     if(s.players[i].confidence.every(c=>c>=CF_WIN_THRESHOLD)){s.gameOver=true;s.winner=i;cfEndGame(room);return;}
   }
-  // Clear board
-  s.tokens=[];s.dice=[];
+  // Clear board for next round
+  s.tokens=[];
   s.round++;
   if(s.round>CF_ROUNDS){cfEndGame(room);return;}
-  // Reset for next round
   s.roundDoubledAnimal=s.doubledAnimals[s.round-1];
-  for(const pl of s.players){pl.flicksThisRound=0;pl.reflickUsed=false;pl.hasFlickedUnidentified=false;pl.unclassifiedTokenIds=[];}
-  s.roundPlayerOrder=Array.from({length:s.players.length},(_,i)=>i);
-  s.roundPlayerIdx=0;s.currentPlayer=s.roundPlayerOrder[0];s.flicksLeft=CF_FLICKS_PER_PLAYER;s.phase='flicking';
-  if(room.players[s.currentPlayer].isBot)setTimeout(()=>executeCFBotTurn(room),800);
+  for(const pl of s.players){pl.flicksThisRound=0;}
+  s.currentPlayer=0;s.flicksLeft=CF_FLICKS_PER_PLAYER;s.phase='flicking';
+  if(room.players[0].isBot)setTimeout(()=>executeCFBotTurn(room),800);
 }
 
 function cfEndGame(room) {
@@ -1045,10 +1045,10 @@ function cfBroadcastState(room) {
   const s=room.cfState;
   const base={type:'state_update',code:room.code,state:{
     phase:s.phase,round:s.round,currentPlayer:s.currentPlayer,flicksLeft:s.flicksLeft,
-    tokens:s.tokens,dice:s.dice,
+    tokens:s.tokens,
     players:s.players.map((pl,i)=>({...pl,color:room.players[i].color,name:room.players[i].name,
       hex:COLOR_INFO[room.players[i].color].hex,connected:room.players[i].connected,isBot:!!room.players[i].isBot})),
-    roundDoubledAnimal:s.roundDoubledAnimal,gameOver:s.gameOver,winner:s.winner,
+    roundDoubledAnimal:s.roundDoubledAnimal,doubledAnimals:s.doubledAnimals,gameOver:s.gameOver,winner:s.winner,
   }};
   for(let i=0;i<room.players.length;i++){const p=room.players[i];if(p.connected&&p.ws)send(p.ws,{...base,yourId:i});}
   for(const o of(room.observers||[])){if(o.connected&&o.ws)send(o.ws,{...base,yourId:-1,isObserver:true});}
@@ -1064,68 +1064,21 @@ function processCFAction(room, playerIdx, msg) {
     case 'flick_token':{
       if(s.phase!=='flicking')return'Wrong phase';
       if(pl.flicksThisRound>=CF_FLICKS_PER_PLAYER)return'No flicks left';
-      const{angle,power,side}=msg;
+      const{angle,power}=msg;
       if(typeof angle!=='number'||typeof power!=='number')return'Invalid params';
-      if(!['sample','unidentified'].includes(side))return'Invalid side';
       const pw=Math.max(0.05,Math.min(1.05,power));
       const fz=CF_FLICK_ZONES[playerIdx%4];
       const vx=Math.cos(angle)*pw*CF_MAX_SPEED,vy=Math.sin(angle)*pw*CF_MAX_SPEED;
-      const objs=cfSimulatePhysics(s.tokens.filter(t=>t.active),s.dice,fz.x,fz.y,vx,vy);
+      const objs=cfSimulatePhysics(s.tokens.filter(t=>t.active),[],fz.x,fz.y,vx,vy);
       const nObj=objs[0];
-      // Update only objects that were part of the collision chain
-      const actToks=s.tokens.filter(t=>t.active);
-      for(let i=0;i<actToks.length;i++){const o=objs[i+1];if(!o||!o.moved)continue;actToks[i].x=o.x;actToks[i].y=o.y;actToks[i].knockOrder=o.knockOrder||0;const z=cfGetZone(o.x,o.y);if(z){actToks[i].animalIdx=z.animalIdx;actToks[i].confidence=z.confidence;}}
-      for(let i=0;i<s.dice.length;i++){const o=objs[actToks.length+1+i];if(!o||!o.moved)continue;s.dice[i].x=o.x;s.dice[i].y=o.y;}
-      const zone=cfGetZone(nObj.x,nObj.y)||{animalIdx:-1,confidence:0};
-      if(side==='sample'){
-        if(zone.animalIdx>=0){
-          const dc=zone.confidence;
-          const animalAngle=(zone.animalIdx*60+30)*Math.PI/180;
-          const bandR=(CF_BANDS[Math.max(0,zone.confidence-2)]+CF_BANDS[zone.confidence-1])/2;
-          const bx=CF_CX+Math.cos(animalAngle)*bandR,by=CF_CY+Math.sin(animalAngle)*bandR;
-          for(let d=0;d<dc;d++){
-            const da=(Math.PI*2*d)/Math.max(1,dc),dr=30;
-            let px=bx+Math.cos(da)*dr,py=by+Math.sin(da)*dr;
-            const pd=Math.hypot(px-CF_CX,py-CF_CY);
-            if(pd+CF_DICE_R>CF_BOARD_R){px=CF_CX+(px-CF_CX)/pd*(CF_BOARD_R-CF_DICE_R);py=CF_CY+(py-CF_CY)/pd*(CF_BOARD_R-CF_DICE_R);}
-            s.dice.push({id:s.nextDiceId++,animalIdx:zone.animalIdx,x:px,y:py});
-          }
-        }
-      } else {
-        const tokenId=s.nextTokenId++;
-        s.tokens.push({id:tokenId,playerIdx,x:nObj.x,y:nObj.y,side:'unidentified',animalIdx:zone.animalIdx,confidence:zone.confidence,active:true});
-        if(zone.animalIdx<0){pl.hasFlickedUnidentified=true;pl.unclassifiedTokenIds.push(tokenId);}
-      }
-      pl.flicksThisRound++;s.flicksLeft--;
-      if(pl.flicksThisRound>=CF_FLICKS_PER_PLAYER){
-        const hasUnc=s.tokens.some(t=>t.playerIdx===playerIdx&&t.animalIdx<0&&t.active);
-        if(!pl.reflickUsed&&pl.hasFlickedUnidentified&&hasUnc){s.phase='reflick_pending';s.flicksLeft=1;}
-        else cfAdvanceTurn(room);
-      }
-      return null;
-    }
-    case 'reflick_token':{
-      if(s.phase!=='reflick_pending')return'Wrong phase';
-      const{tokenId,angle,power}=msg;
-      const tokIdx=s.tokens.findIndex(t=>t.id===tokenId&&t.playerIdx===playerIdx&&t.animalIdx<0&&t.active);
-      if(tokIdx<0)return'Invalid token';
-      const pw=Math.max(0.05,Math.min(1.05,power));
-      const fz=CF_FLICK_ZONES[playerIdx%4];
-      s.tokens.splice(tokIdx,1);
-      const objs=cfSimulatePhysics(s.tokens.filter(t=>t.active),s.dice,fz.x,fz.y,Math.cos(angle)*pw*CF_MAX_SPEED,Math.sin(angle)*pw*CF_MAX_SPEED);
-      const nObj=objs[0];
+      // Update tokens that were part of the collision chain
       const actToks=s.tokens.filter(t=>t.active);
       for(let i=0;i<actToks.length;i++){const o=objs[i+1];if(!o||!o.moved)continue;actToks[i].x=o.x;actToks[i].y=o.y;const z=cfGetZone(o.x,o.y);if(z){actToks[i].animalIdx=z.animalIdx;actToks[i].confidence=z.confidence;}}
-      for(let i=0;i<s.dice.length;i++){const o=objs[actToks.length+1+i];if(!o||!o.moved)continue;s.dice[i].x=o.x;s.dice[i].y=o.y;}
       const zone=cfGetZone(nObj.x,nObj.y)||{animalIdx:-1,confidence:0};
-      s.tokens.push({id:tokenId,playerIdx,x:nObj.x,y:nObj.y,side:'unidentified',animalIdx:zone.animalIdx,confidence:zone.confidence,active:true});
-      pl.reflickUsed=true;
+      s.tokens.push({id:s.nextTokenId++,playerIdx,x:nObj.x,y:nObj.y,animalIdx:zone.animalIdx,confidence:zone.confidence,active:true});
+      pl.flicksThisRound++;
       cfAdvanceTurn(room);
       return null;
-    }
-    case 'skip_reflick':{
-      if(s.phase!=='reflick_pending')return'Wrong phase';
-      cfAdvanceTurn(room);return null;
     }
     default:return'Unknown action';
   }
@@ -1135,40 +1088,34 @@ function processCFAction(room, playerIdx, msg) {
 function cfBotDecideFlick(room) {
   const s=room.cfState,botIdx=s.currentPlayer,pl=s.players[botIdx];
   const fz=CF_FLICK_ZONES[botIdx%4];
-  let tgtAnimal=0,minC=pl.confidence[0];
-  for(let a=1;a<6;a++){if(pl.confidence[a]<minC){minC=pl.confidence[a];tgtAnimal=a;}}
-  const diceForAnimal=s.dice.filter(d=>d.animalIdx===tgtAnimal).length;
-  const side=(diceForAnimal<2&&Math.random()>0.35)?'sample':'unidentified';
-  const tgtConf=Math.floor(2+Math.random()*3);
-  const innerR=tgtConf>0?CF_BANDS[tgtConf-1]:CF_UNCLASSIFIED_R;
-  const outerR=CF_BANDS[tgtConf];
-  const zoneR=(innerR+outerR)/2;
+  // Only target animals not yet at the win threshold; fall back to any lowest if all done
+  const needsWork=Array.from({length:6},(_,a)=>a).filter(a=>pl.confidence[a]<CF_WIN_THRESHOLD);
+  const pool=needsWork.length>0?needsWork:Array.from({length:6},(_,a)=>a);
+  let tgtAnimal=pool[0],minC=pl.confidence[pool[0]];
+  for(const a of pool){if(pl.confidence[a]<minC){minC=pl.confidence[a];tgtAnimal=a;}}
+  const confOpts=[5,3,2];
+  const tgtConf=confOpts[Math.floor(Math.random()*3)];
+  const confToOffset={5:0,3:(CF_CR3+CF_CR5)/2,2:(CF_CR2+CF_CR3)/2};
+  const zoneR=CF_ANIMAL_CR+(confToOffset[tgtConf]||0);
   const animalAng=(tgtAnimal*60+30)*Math.PI/180;
   const tx=CF_CX+Math.cos(animalAng)*zoneR,ty=CF_CY+Math.sin(animalAng)*zoneR;
   const baseAng=Math.atan2(ty-fz.y,tx-fz.x);
-  return{angle:baseAng+(Math.random()-0.5)*0.45,power:0.45+Math.random()*0.45,side};
+  return{angle:baseAng+(Math.random()-0.5)*0.45,power:0.45+Math.random()*0.45};
 }
 
 async function executeCFBotTurn(room) {
   const s=room.cfState;
   const botIdx=s.currentPlayer;
-  if(!room.players[botIdx]?.isBot||s.gameOver)return;
+  if(!room.players[botIdx]?.isBot||s.gameOver||s.phase!=='flicking')return;
   if(room._cfBotRunning)return;
   room._cfBotRunning=true;
-  while(s.phase==='flicking'&&s.currentPlayer===botIdx&&s.players[botIdx].flicksThisRound<CF_FLICKS_PER_PLAYER&&!s.gameOver){
-    await delay(900+Math.random()*700);
-    if(s.currentPlayer!==botIdx||s.phase!=='flicking')break;
-    const{angle,power,side}=cfBotDecideFlick(room);
-    processCFAction(room,botIdx,{action:'flick_token',angle,power,side});
-    cfBroadcastState(room);
-  }
-  await delay(700);
-  if(s.phase==='reflick_pending'&&s.currentPlayer===botIdx){
-    processCFAction(room,botIdx,{action:'skip_reflick'});
+  await delay(800+Math.random()*600);
+  if(s.currentPlayer===botIdx&&s.phase==='flicking'&&!s.gameOver){
+    const{angle,power}=cfBotDecideFlick(room);
+    processCFAction(room,botIdx,{action:'flick_token',angle,power});
     cfBroadcastState(room);
   }
   room._cfBotRunning=false;
-  if(!s.gameOver&&s.phase==='flicking'&&room.players[s.currentPlayer]?.isBot)executeCFBotTurn(room);
 }
 
 // ==================== ROOM MANAGEMENT ====================
