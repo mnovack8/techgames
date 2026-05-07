@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 190 190">
+  <!-- Light cream body — plump rounded oval -->
+  <ellipse cx="92" cy="115" rx="55" ry="58" fill="#ede4b0"/>
+
+  <!-- Head merged into top-left of body — same cream tone, slightly extending up -->
+  <circle cx="68" cy="62" r="26" fill="#ede4b0"/>
+
+  <!-- Dark folded wing — large teardrop shape covering body's right/back side -->
+  <path d="M 78,66
+           Q 130,58 156,92
+           Q 168,130 145,158
+           Q 118,170 95,150
+           Q 80,128 75,100
+           Q 72,80 78,66 Z" fill="#a07818"/>
+
+  <!-- Wing-tip darker accent (tail end) -->
+  <ellipse cx="138" cy="148" rx="16" ry="11" fill="#7a5810" transform="rotate(-30,138,148)"/>
+
+  <!-- Beak (pointing left) -->
+  <polygon points="46,60 28,64 46,68" fill="#c9a227"/>
+
+  <!-- Eye -->
+  <circle cx="62" cy="58" r="4.5" fill="#2a1a08"/>
+  <circle cx="63.2" cy="56.8" r="1.6" fill="#ede4b0"/>
+
+  <!-- Left leg -->
+  <line x1="80"  y1="168" x2="76"  y2="183" stroke="#5a3a08" stroke-width="4.5" stroke-linecap="round"/>
+  <line x1="76"  y1="183" x2="64"  y2="186" stroke="#5a3a08" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="76"  y1="183" x2="74"  y2="190" stroke="#5a3a08" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="76"  y1="183" x2="86"  y2="188" stroke="#5a3a08" stroke-width="3.5" stroke-linecap="round"/>
+
+  <!-- Right leg -->
+  <line x1="108" y1="168" x2="112" y2="183" stroke="#5a3a08" stroke-width="4.5" stroke-linecap="round"/>
+  <line x1="112" y1="183" x2="100" y2="188" stroke="#5a3a08" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="112" y1="183" x2="111" y2="190" stroke="#5a3a08" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="112" y1="183" x2="124" y2="186" stroke="#5a3a08" stroke-width="3.5" stroke-linecap="round"/>
+</svg>

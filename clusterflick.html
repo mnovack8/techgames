@@ -168,7 +168,8 @@ body{padding-top:44px;}
 .psr-badge{font-size:10px;color:#a78bfa;font-weight:700;}
 .animal-bars{display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;}
 .animal-bar-wrap{display:flex;flex-direction:column;align-items:center;gap:2px;}
-.animal-label{font-size:9px;color:#6b5ea8;font-weight:700;letter-spacing:0.3px;}
+.animal-label{font-size:9px;color:#6b5ea8;font-weight:700;letter-spacing:0.3px;line-height:1;}
+.animal-icon-img{width:14px;height:14px;object-fit:contain;display:block;}
 .animal-bar-bg{width:100%;height:8px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden;position:relative;}
 .animal-bar-fill{height:100%;border-radius:4px;transition:width 0.4s;min-width:0;}
 .animal-val{font-size:9px;color:#9d8ec4;font-weight:700;}
@@ -585,7 +586,32 @@ body.observer-active #side-panel .action-btns{pointer-events:none;opacity:0.5;}
 const CF_ANIMALS = ['Frog','Fish','Rabbit','Dog','Bird','Squirrel'];
 const CF_ANIMAL_COLORS = ['#4caf50','#2196f3','#9c27b0','#f44336','#ff9800','#f5c300'];
 const CF_ANIMAL_DARK  = ['#1b5e20','#0d47a1','#4a148c','#b71c1c','#e65100','#c69a00'];
-const CF_ANIMAL_EMOJI = ['🐸','🐟','🐰','🐕','🐦','🐿️'];
+const CF_ANIMAL_EMOJI = ['🐸','🐟','🐰','🐕','🐦','🐿️']; // fallback only
+// Custom flat icons — same golden base so hue-rotate maps to each animal's color
+const CF_ANIMAL_IMG_SRC = [
+  'images/frog.png',
+  'images/fish.png',
+  'images/bunny.png',
+  'images/dog.png',
+  'images/bird.svg',
+  'images/squirrel.png',
+];
+// Hue rotation (degrees) to shift the golden base image to each animal's color
+const CF_ANIMAL_HUE = [78, 163, 247, -40, -8, 4];
+// Loaded Image objects (null until loaded)
+const animalImgs = new Array(6).fill(null);
+let animalImgsReady = 0;
+function cfLoadAnimalImages(){
+  CF_ANIMAL_IMG_SRC.forEach((src,i)=>{
+    const img=new Image();
+    img.onload=()=>{
+      animalImgs[i]=img;
+      animalImgsReady++;
+      if(animalImgsReady===6){boardImageData=null;drawLobbyPreview();if(G)renderGame();}
+    };
+    img.src=src;
+  });
+}
 const CF_ROUNDS = 6;
 const CF_FLICKS_PER_PLAYER = 5;
 const CF_WIN_THRESHOLD = 8;
@@ -764,16 +790,27 @@ function drawBoard(ctx) {
   ctx.textAlign='center';ctx.textBaseline='middle';
   ctx.fillText('Unclassified',CF_CX,CF_CY-8);ctx.fillText('(0 pts)',CF_CX,CF_CY+12);
 
-  // Animal emoji and name labels — both anchored at the same radial point,
-  // offset in screen-space so name always sits below the emoji
+  // Animal icons and name labels
   ctx.textAlign='center';
   for(let a=0;a<6;a++){
     const midAng=((a*60+30)*Math.PI/180);
-    const anchorR=CF_BOARD_R+46;
+    const anchorR=CF_BOARD_R+50;
     const ax=CF_CX+anchorR*Math.cos(midAng);
     const ay=CF_CY+anchorR*Math.sin(midAng);
-    ctx.font='22px sans-serif';ctx.fillStyle='white';
-    ctx.textBaseline='bottom';ctx.fillText(CF_ANIMAL_EMOJI[a],ax,ay);
+    const img=animalImgs[a];
+    if(img){
+      // Draw custom icon tinted to animal's color via canvas hue-rotate filter
+      const s=34;
+      ctx.save();
+      ctx.filter=`hue-rotate(${CF_ANIMAL_HUE[a]}deg) saturate(160%) brightness(1.05)`;
+      ctx.drawImage(img, ax-s/2, ay-s-2, s, s);
+      ctx.filter='none';
+      ctx.restore();
+    } else {
+      // Fallback to emoji while image loads
+      ctx.font='22px sans-serif';ctx.fillStyle='white';
+      ctx.textBaseline='bottom';ctx.fillText(CF_ANIMAL_EMOJI[a],ax,ay);
+    }
     ctx.font='bold 12px Nunito,sans-serif';ctx.fillStyle=CF_ANIMAL_COLORS[a];
     ctx.textBaseline='top';ctx.fillText(CF_ANIMALS[a],ax,ay+2);
   }
@@ -1142,7 +1179,7 @@ function renderSidePanel(){
     schHtml+=`<div class="rs-row ${state}">`;
     schHtml+=`<span class="rs-round-num">R${r+1}</span>`;
     if(animalIdx!=null){
-      schHtml+=`<span>${CF_ANIMAL_EMOJI[animalIdx]}</span>`;
+      schHtml+=`<img src="${CF_ANIMAL_IMG_SRC[animalIdx]}" class="animal-icon-img" style="filter:hue-rotate(${CF_ANIMAL_HUE[animalIdx]}deg) saturate(160%) brightness(1.05)" alt="${CF_ANIMALS[animalIdx]}">`;
       schHtml+=`<span>${CF_ANIMALS[animalIdx]}</span>`;
       schHtml+=`<span class="rs-x2">${prefix||'×2'}</span>`;
     }
@@ -1187,7 +1224,7 @@ function renderSidePanel(){
     for(let a=0;a<6;a++){
       const val=pl.confidence[a];const pct=Math.min(val/CF_WIN_THRESHOLD*100,100);const complete=val>=CF_WIN_THRESHOLD;
       html+=`<div id="cf-barwrap-${i}-${a}" class="animal-bar-wrap${complete?' complete':''}">`;
-      html+=`<span class="animal-label">${CF_ANIMAL_EMOJI[a]}</span>`;
+      html+=`<span class="animal-label"><img src="${CF_ANIMAL_IMG_SRC[a]}" class="animal-icon-img" style="filter:hue-rotate(${CF_ANIMAL_HUE[a]}deg) saturate(160%) brightness(1.05)" alt="${CF_ANIMALS[a]}"></span>`;
       html+=`<div class="animal-bar-bg" id="cf-bar-${i}-${a}"><div class="animal-bar-fill" style="width:${pct}%;background:${CF_ANIMAL_COLORS[a]}"></div></div>`;
       html+=`<span class="animal-val">${val}${complete?'✓':''}</span>`;
       html+=`</div>`;
@@ -1363,7 +1400,7 @@ function showGameOver(){
     html+=`<div class="fsr-animals">`;
     for(let a=0;a<6;a++){
       const v=pl.confidence[a];const c=v>=CF_WIN_THRESHOLD;
-      html+=`<span class="fsr-animal${c?' complete':' partial'}">${CF_ANIMAL_EMOJI[a]} ${v}${c?' ✓':''}</span>`;
+      html+=`<span class="fsr-animal${c?' complete':' partial'}"><img src="${CF_ANIMAL_IMG_SRC[a]}" class="animal-icon-img" style="filter:hue-rotate(${CF_ANIMAL_HUE[a]}deg) saturate(160%) brightness(1.05)" alt="${CF_ANIMALS[a]}"> ${v}${c?' ✓':''}</span>`;
     }
     html+=`</div></div>`;
   }
@@ -1584,6 +1621,7 @@ function escHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').
 
 // ==================== INIT ====================
 window.addEventListener('DOMContentLoaded',()=>{
+  cfLoadAnimalImages();
   drawLobbyPreview();
   connectWS(()=>{
     const token=sessionStorage.getItem(SESSION_KEY);
