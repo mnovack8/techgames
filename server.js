@@ -508,6 +508,101 @@ const CLEAN_PENALTIES = [0, -1, -2, -4, -6];
 const SCORE_VALUES = { 2: [5, 3], 3: [5, 3, 2], 4: [5, 4, 3, 2] };
 const TEST_THRESHOLD = 18;
 
+// ==================== CLUSTERFLICK CONSTANTS ====================
+const CF_ANIMALS = ['Frog','Fish','Rabbit','Dog','Bird','Squirrel'];
+const CF_ROUNDS = 6;
+const CF_FLICKS_PER_PLAYER = 5;
+const CF_WIN_THRESHOLD = 8;
+const CF_CX = 350, CF_CY = 350;
+const CF_BOARD_R = 290;
+const CF_UNCLASSIFIED_R = 75;
+const CF_BANDS = [75,135,180,225,260,290]; // outer radius for confidence bands 1-5
+const CF_TOKEN_R = 18;
+const CF_DICE_R = 10;
+const CF_FRICTION = 0.955;
+const CF_BOUNCE = 0.60;
+const CF_MAX_SPEED = 34;
+const CF_FLICK_ZONES = [
+  {x:85,  y:640}, // Player 0 (bottom-left)
+  {x:615, y:640}, // Player 1 (bottom-right)
+  {x:615, y:60},  // Player 2 (top-right)
+  {x:85,  y:60},  // Player 3 (top-left)
+];
+
+function cfGetZone(x,y) {
+  const dx=x-CF_CX, dy=y-CF_CY, d=Math.hypot(dx,dy);
+  if(d>CF_BOARD_R) return null;
+  if(d<=CF_UNCLASSIFIED_R) return {animalIdx:-1,confidence:0};
+  let conf=5;
+  for(let i=0;i<CF_BANDS.length;i++){if(d<=CF_BANDS[i]){conf=i+1;break;}}
+  let ang=Math.atan2(dy,dx)*180/Math.PI; if(ang<0)ang+=360;
+  return {animalIdx:Math.floor(ang/60)%6, confidence:conf};
+}
+
+function cfSimulatePhysics(tokens, dice, sx, sy, vx, vy) {
+  // moved=true means this object is part of the active chain (flicked or hit by it)
+  const objs=[
+    {x:sx,y:sy,vx,vy,r:CF_TOKEN_R,moved:true},
+    ...tokens.map(t=>({x:t.x,y:t.y,vx:0,vy:0,r:CF_TOKEN_R,moved:false})),
+    ...dice.map(d=>({x:d.x,y:d.y,vx:0,vy:0,r:CF_DICE_R,moved:false})),
+  ];
+  for(let f=0;f<600;f++){
+    let mv=false;
+    for(const o of objs){
+      const sp=Math.hypot(o.vx,o.vy);
+      if(sp<0.08){o.vx=0;o.vy=0;continue;}
+      mv=true; o.x+=o.vx; o.y+=o.vy; o.vx*=CF_FRICTION; o.vy*=CF_FRICTION;
+    }
+    if(!mv)break;
+    for(const o of objs){
+      if(!o.moved)continue;
+      const dx=o.x-CF_CX,dy=o.y-CF_CY,d=Math.hypot(dx,dy);
+      if(d+o.r>CF_BOARD_R){
+        const nx=dx/d,ny=dy/d;
+        o.x=CF_CX+nx*(CF_BOARD_R-o.r); o.y=CF_CY+ny*(CF_BOARD_R-o.r);
+        const dot=o.vx*nx+o.vy*ny;
+        if(dot>0){o.vx-=(1+CF_BOUNCE)*dot*nx; o.vy-=(1+CF_BOUNCE)*dot*ny;
+        o.vx*=CF_BOUNCE; o.vy*=CF_BOUNCE;}
+      }
+    }
+    // Flicked token stops at contact and transfers its velocity to the hit token
+    const f0=objs[0];
+    if(Math.hypot(f0.vx,f0.vy)>0.01){
+      for(let j=1;j<objs.length;j++){
+        const b=objs[j];
+        if(Math.hypot(b.vx,b.vy)>0.01)continue;
+        const dx=f0.x-b.x,dy=f0.y-b.y,d=Math.hypot(dx,dy),minD=f0.r+b.r;
+        if(d>=minD||d<0.001)continue;
+        b.vx=f0.vx;b.vy=f0.vy;b.moved=true;
+        f0.x=b.x+(dx/d)*minD;f0.y=b.y+(dy/d)*minD;
+        f0.vx=0;f0.vy=0;
+        break;
+      }
+    }
+    // Knocked tokens hard-stop on contact — no further transfer
+    for(let i=1;i<objs.length;i++){
+      const m=objs[i];
+      if(!m.moved||Math.hypot(m.vx,m.vy)<0.01)continue;
+      for(let j=1;j<objs.length;j++){
+        if(i===j)continue;
+        const s=objs[j];
+        const dx=m.x-s.x,dy=m.y-s.y,d=Math.hypot(dx,dy),minD=m.r+s.r;
+        if(d>=minD||d<0.001)continue;
+        m.x=s.x+(dx/d)*minD;m.y=s.y+(dy/d)*minD;
+        m.vx=0;m.vy=0;
+        break;
+      }
+    }
+  }
+  for(const o of objs){
+    o.vx=0;o.vy=0;
+    if(!o.moved)continue;
+    const dx=o.x-CF_CX,dy=o.y-CF_CY,d=Math.hypot(dx,dy);
+    if(d+o.r>CF_BOARD_R){o.x=CF_CX+(dx/d)*(CF_BOARD_R-o.r);o.y=CF_CY+(dy/d)*(CF_BOARD_R-o.r);}
+  }
+  return objs;
+}
+
 const INPUT_TO_L1 = { 0:[0], 1:[0,1], 2:[1,2], 3:[2,3], 4:[3] };
 const L1_TO_L2 = { 0:[4,6], 1:[4,5], 2:[5,6], 3:[4,6] };
 const L2_TO_L3 = { 4:[7,8], 5:[8,9], 6:[9,10] };
@@ -859,6 +954,223 @@ function decideBotAction(ps, s) {
   return 'end_turn';
 }
 
+// ==================== CLUSTERFLICK GAME LOGIC ====================
+function createCFGameState(numPlayers) {
+  const da=[0,1,2,3,4,5];
+  for(let i=da.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[da[i],da[j]]=[da[j],da[i]];}
+  return {
+    phase:'flicking',
+    round:1,
+    currentPlayer:0,
+    flicksLeft:CF_FLICKS_PER_PLAYER,
+    roundPlayerOrder:Array.from({length:numPlayers},(_,i)=>i),
+    roundPlayerIdx:0,
+    tokens:[],
+    dice:[],
+    players:Array.from({length:numPlayers},(_,i)=>({
+      _idx:i,
+      confidence:[0,0,0,0,0,0],
+      flicksThisRound:0,
+      reflickUsed:false,
+      hasFlickedUnidentified:false,
+      unclassifiedTokenIds:[],
+    })),
+    doubledAnimals:da,
+    roundDoubledAnimal:da[0],
+    nextTokenId:0,
+    nextDiceId:0,
+    gameOver:false,
+    winner:-1,
+  };
+}
+
+function cfAdvanceTurn(room) {
+  const s=room.cfState;
+  s.phase='flicking';
+  s.roundPlayerIdx++;
+  if(s.roundPlayerIdx>=room.players.length){cfScoreRound(room);return;}
+  s.currentPlayer=s.roundPlayerOrder[s.roundPlayerIdx];
+  s.flicksLeft=CF_FLICKS_PER_PLAYER;
+  const pl=s.players[s.currentPlayer];
+  pl.flicksThisRound=0;pl.reflickUsed=false;pl.hasFlickedUnidentified=false;pl.unclassifiedTokenIds=[];
+  if(room.players[s.currentPlayer].isBot) setTimeout(()=>executeCFBotTurn(room),800);
+}
+
+function cfScoreRound(room) {
+  const s=room.cfState;
+  const da=s.roundDoubledAnimal;
+  for(const tok of s.tokens){
+    if(tok.animalIdx<0)continue;
+    let conf=tok.confidence;
+    // Sample dice boost: +1 if any matching die is close
+    for(const die of s.dice){
+      if(die.animalIdx===tok.animalIdx&&Math.hypot(tok.x-die.x,tok.y-die.y)<CF_TOKEN_R+CF_DICE_R+22){conf+=1;break;}
+    }
+    if(tok.animalIdx===da)conf*=2;
+    s.players[tok.playerIdx].confidence[tok.animalIdx]+=conf;
+  }
+  // Check instant win
+  for(let i=0;i<s.players.length;i++){
+    if(s.players[i].confidence.every(c=>c>=CF_WIN_THRESHOLD)){s.gameOver=true;s.winner=i;cfEndGame(room);return;}
+  }
+  // Clear board
+  s.tokens=[];s.dice=[];
+  s.round++;
+  if(s.round>CF_ROUNDS){cfEndGame(room);return;}
+  // Reset for next round
+  s.roundDoubledAnimal=s.doubledAnimals[s.round-1];
+  for(const pl of s.players){pl.flicksThisRound=0;pl.reflickUsed=false;pl.hasFlickedUnidentified=false;pl.unclassifiedTokenIds=[];}
+  s.roundPlayerOrder=Array.from({length:s.players.length},(_,i)=>i);
+  s.roundPlayerIdx=0;s.currentPlayer=s.roundPlayerOrder[0];s.flicksLeft=CF_FLICKS_PER_PLAYER;s.phase='flicking';
+  if(room.players[s.currentPlayer].isBot)setTimeout(()=>executeCFBotTurn(room),800);
+}
+
+function cfEndGame(room) {
+  const s=room.cfState;
+  s.gameOver=true;s.phase='game_over';
+  if(s.winner<0){
+    let best=-1,bestC=-1,bestT=-1;
+    for(let i=0;i<s.players.length;i++){
+      const pl=s.players[i],completed=pl.confidence.filter(c=>c>=CF_WIN_THRESHOLD).length,total=pl.confidence.reduce((a,b)=>a+b,0);
+      if(completed>bestC||(completed===bestC&&total>bestT)){best=i;bestC=completed;bestT=total;}
+    }
+    s.winner=best;
+  }
+  const mode=room.players.some(p=>p.isBot)?'1p_bot':room.players.length===2?'2p':room.players.length===3?'3p':'4p';
+  const dur=room.sessionStartedAt?Math.round((Date.now()-room.sessionStartedAt)/1000):null;
+  trackEvent('session_completed',{gameType:'clusterflick',mode,uvKey:room.uvKey||'',duration:dur});
+}
+
+function cfBroadcastState(room) {
+  const s=room.cfState;
+  const base={type:'state_update',code:room.code,state:{
+    phase:s.phase,round:s.round,currentPlayer:s.currentPlayer,flicksLeft:s.flicksLeft,
+    tokens:s.tokens,dice:s.dice,
+    players:s.players.map((pl,i)=>({...pl,color:room.players[i].color,name:room.players[i].name,
+      hex:COLOR_INFO[room.players[i].color].hex,connected:room.players[i].connected,isBot:!!room.players[i].isBot})),
+    roundDoubledAnimal:s.roundDoubledAnimal,gameOver:s.gameOver,winner:s.winner,
+  }};
+  for(let i=0;i<room.players.length;i++){const p=room.players[i];if(p.connected&&p.ws)send(p.ws,{...base,yourId:i});}
+  for(const o of(room.observers||[])){if(o.connected&&o.ws)send(o.ws,{...base,yourId:-1,isObserver:true});}
+}
+
+function processCFAction(room, playerIdx, msg) {
+  const s=room.cfState;
+  if(s.gameOver)return'Game is over';
+  if(s.currentPlayer!==playerIdx)return'Not your turn';
+  const pl=s.players[playerIdx];
+
+  switch(msg.action){
+    case 'flick_token':{
+      if(s.phase!=='flicking')return'Wrong phase';
+      if(pl.flicksThisRound>=CF_FLICKS_PER_PLAYER)return'No flicks left';
+      const{angle,power,side}=msg;
+      if(typeof angle!=='number'||typeof power!=='number')return'Invalid params';
+      if(!['sample','unidentified'].includes(side))return'Invalid side';
+      const pw=Math.max(0.05,Math.min(1.05,power));
+      const fz=CF_FLICK_ZONES[playerIdx%4];
+      const vx=Math.cos(angle)*pw*CF_MAX_SPEED,vy=Math.sin(angle)*pw*CF_MAX_SPEED;
+      const objs=cfSimulatePhysics(s.tokens.filter(t=>t.active),s.dice,fz.x,fz.y,vx,vy);
+      const nObj=objs[0];
+      // Update only objects that were part of the collision chain
+      const actToks=s.tokens.filter(t=>t.active);
+      for(let i=0;i<actToks.length;i++){const o=objs[i+1];if(!o||!o.moved)continue;actToks[i].x=o.x;actToks[i].y=o.y;actToks[i].knockOrder=o.knockOrder||0;const z=cfGetZone(o.x,o.y);if(z){actToks[i].animalIdx=z.animalIdx;actToks[i].confidence=z.confidence;}}
+      for(let i=0;i<s.dice.length;i++){const o=objs[actToks.length+1+i];if(!o||!o.moved)continue;s.dice[i].x=o.x;s.dice[i].y=o.y;}
+      const zone=cfGetZone(nObj.x,nObj.y)||{animalIdx:-1,confidence:0};
+      if(side==='sample'){
+        if(zone.animalIdx>=0){
+          const dc=zone.confidence;
+          const animalAngle=(zone.animalIdx*60+30)*Math.PI/180;
+          const bandR=(CF_BANDS[Math.max(0,zone.confidence-2)]+CF_BANDS[zone.confidence-1])/2;
+          const bx=CF_CX+Math.cos(animalAngle)*bandR,by=CF_CY+Math.sin(animalAngle)*bandR;
+          for(let d=0;d<dc;d++){
+            const da=(Math.PI*2*d)/Math.max(1,dc),dr=30;
+            let px=bx+Math.cos(da)*dr,py=by+Math.sin(da)*dr;
+            const pd=Math.hypot(px-CF_CX,py-CF_CY);
+            if(pd+CF_DICE_R>CF_BOARD_R){px=CF_CX+(px-CF_CX)/pd*(CF_BOARD_R-CF_DICE_R);py=CF_CY+(py-CF_CY)/pd*(CF_BOARD_R-CF_DICE_R);}
+            s.dice.push({id:s.nextDiceId++,animalIdx:zone.animalIdx,x:px,y:py});
+          }
+        }
+      } else {
+        const tokenId=s.nextTokenId++;
+        s.tokens.push({id:tokenId,playerIdx,x:nObj.x,y:nObj.y,side:'unidentified',animalIdx:zone.animalIdx,confidence:zone.confidence,active:true});
+        if(zone.animalIdx<0){pl.hasFlickedUnidentified=true;pl.unclassifiedTokenIds.push(tokenId);}
+      }
+      pl.flicksThisRound++;s.flicksLeft--;
+      if(pl.flicksThisRound>=CF_FLICKS_PER_PLAYER){
+        const hasUnc=s.tokens.some(t=>t.playerIdx===playerIdx&&t.animalIdx<0&&t.active);
+        if(!pl.reflickUsed&&pl.hasFlickedUnidentified&&hasUnc){s.phase='reflick_pending';s.flicksLeft=1;}
+        else cfAdvanceTurn(room);
+      }
+      return null;
+    }
+    case 'reflick_token':{
+      if(s.phase!=='reflick_pending')return'Wrong phase';
+      const{tokenId,angle,power}=msg;
+      const tokIdx=s.tokens.findIndex(t=>t.id===tokenId&&t.playerIdx===playerIdx&&t.animalIdx<0&&t.active);
+      if(tokIdx<0)return'Invalid token';
+      const pw=Math.max(0.05,Math.min(1.05,power));
+      const fz=CF_FLICK_ZONES[playerIdx%4];
+      s.tokens.splice(tokIdx,1);
+      const objs=cfSimulatePhysics(s.tokens.filter(t=>t.active),s.dice,fz.x,fz.y,Math.cos(angle)*pw*CF_MAX_SPEED,Math.sin(angle)*pw*CF_MAX_SPEED);
+      const nObj=objs[0];
+      const actToks=s.tokens.filter(t=>t.active);
+      for(let i=0;i<actToks.length;i++){const o=objs[i+1];if(!o||!o.moved)continue;actToks[i].x=o.x;actToks[i].y=o.y;const z=cfGetZone(o.x,o.y);if(z){actToks[i].animalIdx=z.animalIdx;actToks[i].confidence=z.confidence;}}
+      for(let i=0;i<s.dice.length;i++){const o=objs[actToks.length+1+i];if(!o||!o.moved)continue;s.dice[i].x=o.x;s.dice[i].y=o.y;}
+      const zone=cfGetZone(nObj.x,nObj.y)||{animalIdx:-1,confidence:0};
+      s.tokens.push({id:tokenId,playerIdx,x:nObj.x,y:nObj.y,side:'unidentified',animalIdx:zone.animalIdx,confidence:zone.confidence,active:true});
+      pl.reflickUsed=true;
+      cfAdvanceTurn(room);
+      return null;
+    }
+    case 'skip_reflick':{
+      if(s.phase!=='reflick_pending')return'Wrong phase';
+      cfAdvanceTurn(room);return null;
+    }
+    default:return'Unknown action';
+  }
+}
+
+// ==================== CLUSTERFLICK BOT ====================
+function cfBotDecideFlick(room) {
+  const s=room.cfState,botIdx=s.currentPlayer,pl=s.players[botIdx];
+  const fz=CF_FLICK_ZONES[botIdx%4];
+  let tgtAnimal=0,minC=pl.confidence[0];
+  for(let a=1;a<6;a++){if(pl.confidence[a]<minC){minC=pl.confidence[a];tgtAnimal=a;}}
+  const diceForAnimal=s.dice.filter(d=>d.animalIdx===tgtAnimal).length;
+  const side=(diceForAnimal<2&&Math.random()>0.35)?'sample':'unidentified';
+  const tgtConf=Math.floor(2+Math.random()*3);
+  const innerR=tgtConf>0?CF_BANDS[tgtConf-1]:CF_UNCLASSIFIED_R;
+  const outerR=CF_BANDS[tgtConf];
+  const zoneR=(innerR+outerR)/2;
+  const animalAng=(tgtAnimal*60+30)*Math.PI/180;
+  const tx=CF_CX+Math.cos(animalAng)*zoneR,ty=CF_CY+Math.sin(animalAng)*zoneR;
+  const baseAng=Math.atan2(ty-fz.y,tx-fz.x);
+  return{angle:baseAng+(Math.random()-0.5)*0.45,power:0.45+Math.random()*0.45,side};
+}
+
+async function executeCFBotTurn(room) {
+  const s=room.cfState;
+  const botIdx=s.currentPlayer;
+  if(!room.players[botIdx]?.isBot||s.gameOver)return;
+  if(room._cfBotRunning)return;
+  room._cfBotRunning=true;
+  while(s.phase==='flicking'&&s.currentPlayer===botIdx&&s.players[botIdx].flicksThisRound<CF_FLICKS_PER_PLAYER&&!s.gameOver){
+    await delay(900+Math.random()*700);
+    if(s.currentPlayer!==botIdx||s.phase!=='flicking')break;
+    const{angle,power,side}=cfBotDecideFlick(room);
+    processCFAction(room,botIdx,{action:'flick_token',angle,power,side});
+    cfBroadcastState(room);
+  }
+  await delay(700);
+  if(s.phase==='reflick_pending'&&s.currentPlayer===botIdx){
+    processCFAction(room,botIdx,{action:'skip_reflick'});
+    cfBroadcastState(room);
+  }
+  room._cfBotRunning=false;
+  if(!s.gameOver&&s.phase==='flicking'&&room.players[s.currentPlayer]?.isBot)executeCFBotTurn(room);
+}
+
 // ==================== ROOM MANAGEMENT ====================
 const rooms = new Map();
 const wsData = new Map();    // ws -> { roomCode, playerIdx, isObserver?, observerIdx? }
@@ -944,7 +1256,10 @@ function sendEventStatus(room) {
   if (!room.eventOrganizers || room.eventOrganizers.length === 0) return;
   let status = 'pending';
   if (room.started) {
-    status = (room.bcState && room.bcState.phase === 'game_over') ? 'completed' : 'in_progress';
+    const isOver = (room.bcState && room.bcState.phase === 'game_over')
+      || (room.cfState && room.cfState.gameOver)
+      || (room.state && room.state.gameOver);
+    status = isOver ? 'completed' : 'in_progress';
   }
   const playerCount = room.players.filter(p => !p.isBot).length;
   const update = { type: 'event_status_update', code: room.code, playerCount, status };
@@ -1377,7 +1692,7 @@ function handleMessage(ws, raw) {
       const code = generateCode();
       const room = {
         code, hostIdx: 0,
-        gameType: msg.gameType === 'byteclub' ? 'byteclub' : 'fuzznet',
+        gameType: msg.gameType === 'byteclub' ? 'byteclub' : msg.gameType === 'clusterflick' ? 'clusterflick' : 'fuzznet',
         players: [{ color, name: sanitizeName(msg.playerName, COLOR_INFO[color].name), ws, connected: true }],
         observers: [],
         started: false, state: null, bcState: null,
@@ -1400,7 +1715,7 @@ function handleMessage(ws, raw) {
       const name = sanitizeName(msg.name, 'Observer');
       const room = {
         code, hostIdx: 0,
-        gameType: msg.gameType === 'byteclub' ? 'byteclub' : 'fuzznet',
+        gameType: msg.gameType === 'byteclub' ? 'byteclub' : msg.gameType === 'clusterflick' ? 'clusterflick' : 'fuzznet',
         players: [],
         observers: [{ ws, name, connected: true }],
         started: false, state: null, bcState: null,
@@ -1499,7 +1814,8 @@ function handleMessage(ws, raw) {
           for (const p of room.players) if (p.connected && p.ws) send(p.ws, rjEvent);
           for (const o of (room.observers || [])) if (o.connected && o.ws) send(o.ws, rjEvent);
           bcBroadcastState(room);
-        } else broadcastState(room);
+        } else if (room.gameType === 'clusterflick') cfBroadcastState(room);
+        else broadcastState(room);
         break;
       }
 
@@ -1551,6 +1867,7 @@ function handleMessage(ws, raw) {
       // If game already started send current state immediately
       if (room.started) {
         if (room.gameType === 'byteclub') bcBroadcastState(room);
+        else if (room.gameType === 'clusterflick') cfBroadcastState(room);
         else broadcastState(room);
       }
       break;
@@ -1580,7 +1897,8 @@ function handleMessage(ws, raw) {
           for (const p of room.players) if (p.connected && p.ws) send(p.ws, rjEvent);
           for (const o of (room.observers || [])) if (o.connected && o.ws) send(o.ws, rjEvent);
           bcBroadcastState(room);
-        } else broadcastState(room);
+        } else if (room.gameType === 'clusterflick') cfBroadcastState(room);
+        else broadcastState(room);
       }
       break;
     }
@@ -1638,6 +1956,12 @@ function handleMessage(ws, raw) {
         for (const p of room.players) if (p.ws) send(p.ws, { type: 'bc_game_started' });
         for (const o of (room.observers || [])) if (o.ws) send(o.ws, { type: 'bc_game_started' });
         bcBroadcastState(room);
+      } else if (room.gameType === 'clusterflick') {
+        room.cfState = createCFGameState(room.players.length);
+        for (const p of room.players) if (p.ws) send(p.ws, { type: 'game_started' });
+        for (const o of (room.observers || [])) if (o.ws) send(o.ws, { type: 'game_started' });
+        cfBroadcastState(room);
+        if (room.players[0].isBot) setTimeout(() => executeCFBotTurn(room), 800);
       } else {
         room.state = createGameState(room.players.length);
         room.state.players[0].firstTurnDone = true;
@@ -1657,6 +1981,13 @@ function handleMessage(ws, raw) {
       if (!room || !room.started) return send(ws, {type:'error',msg:'Game not started'});
       if (room.gameType === 'byteclub') {
         bcHandleAction(room, info.playerIdx, msg);
+      } else if (room.gameType === 'clusterflick') {
+        const err = processCFAction(room, info.playerIdx, msg);
+        if (err) return send(ws, {type:'error',msg:err});
+        cfBroadcastState(room);
+        if (!room.cfState.gameOver && room.cfState.phase === 'flicking' && room.players[room.cfState.currentPlayer]?.isBot) {
+          executeCFBotTurn(room);
+        }
       } else {
         const err = processAction(room, info.playerIdx, msg);
         if (err) return send(ws, {type:'error',msg:err});
@@ -1757,6 +2088,8 @@ function leaveRoom(ws, explicit = false) {
     if (!explicit) {
       const gameOver = room.gameType === 'byteclub'
         ? (room.bcState && room.bcState.phase === 'game_over')
+        : room.gameType === 'clusterflick'
+        ? (room.cfState && room.cfState.gameOver)
         : (room.state && room.state.gameOver);
       if (!gameOver) trackEvent('ws_disconnect', { gameType: room.gameType || '' });
     }
@@ -1780,6 +2113,14 @@ function leaveRoom(ws, explicit = false) {
         bcEndTurn(room);
       } else if (room.bcState) {
         bcBroadcastState(room);
+      }
+    } else if (room.gameType === 'clusterflick') {
+      const s = room.cfState;
+      if (s && s.currentPlayer === info.playerIdx && !s.gameOver) {
+        cfAdvanceTurn(room);
+        cfBroadcastState(room);
+      } else if (s) {
+        cfBroadcastState(room);
       }
     } else {
       if (room.state.currentPlayer === info.playerIdx && !room.state.gameOver) {
@@ -3366,6 +3707,7 @@ const server = http.createServer((req, res) => {
   }
   if (pathname === '/byteclub' || pathname === '/byteclub.html') pathname = '/byteclub.html';
   else if (pathname === '/fuzznet' || pathname === '/fuzznet.html') pathname = '/fuzznet.html';
+  else if (pathname === '/clusterflick' || pathname === '/clusterflick.html') pathname = '/clusterflick.html';
   else if (pathname === '/cybersecurity' || pathname === '/cybersecurity.html') pathname = '/cybersecurity.html';
   else if (pathname === '/ai' || pathname === '/ai.html') pathname = '/ai.html';
   else if (pathname === '/qubit-waitlist' || pathname === '/qubit-waitlist.html') pathname = '/qubit-waitlist.html';
