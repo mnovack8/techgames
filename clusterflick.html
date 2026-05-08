@@ -8,7 +8,7 @@
 <meta property="og:title" content="Clusterflick - A K-NN Machine Learning Board Game">
 <meta property="og:description" content="Clusterflick turns K-Nearest Neighbors (K-NN) into a physics board game. Experience a kind of machine learning that isn't GenAI - classification by similarity, not neural networks.">
 <meta property="og:image" content="https://cybersecgames.com/images/cover.png">
-<meta property="og:url" content="https://cybersecgames.com/clusterflick">
+<meta property="og:url" content="https://cybersecgames.com/knn">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Clusterflick - A K-NN Machine Learning Board Game">
 <meta name="twitter:description" content="Clusterflick turns K-Nearest Neighbors (K-NN) into a physics board game. Experience a kind of machine learning that isn't GenAI - classification by similarity, not neural networks.">
@@ -21,7 +21,7 @@
 <meta name="theme-color" content="#7c3aed">
 <link rel="icon" type="image/png" href="/images/logo.png">
 <link rel="apple-touch-icon" href="/images/logo.png">
-<link rel="canonical" href="https://cybersecgames.com/clusterflick">
+<link rel="canonical" href="https://cybersecgames.com/knn">
 <title>Clusterflick - A K-NN Machine Learning Board Game | Tech CoLab</title>
 <script type="application/ld+json">
 {
@@ -498,7 +498,7 @@ body.observer-active #side-panel .action-btns{pointer-events:none;opacity:0.5;}
       <button class="cf-nav-dropdown-trigger">Games ▾</button>
       <div class="cf-nav-dropdown-menu">
         <a href="/cybersecurity">Cybersecurity</a>
-        <div class="cf-nav-sub-dropdown"><button class="cf-nav-sub-trigger">Artificial Intelligence ▸</button><div class="cf-nav-sub-menu"><a href="/ai">Neural Network / LLM</a><a href="/clusterflick" class="active">K-Nearest Neighbor</a></div></div>
+        <div class="cf-nav-sub-dropdown"><button class="cf-nav-sub-trigger">Artificial Intelligence ▸</button><div class="cf-nav-sub-menu"><a href="/ai">Neural Network / LLM</a><a href="/knn" class="active">K-Nearest Neighbor</a></div></div>
         <a href="/qubit-waitlist">Quantum Computing</a>
       </div>
     </div>
@@ -599,7 +599,7 @@ body.observer-active #side-panel .action-btns{pointer-events:none;opacity:0.5;}
 
     <!-- CTA BUTTONS BAR -->
     <div class="cf-cta-buttons-bar">
-      <button class="cf-btn-play-now" onclick="document.getElementById('cf-play-section').scrollIntoView({behavior:'smooth',block:'start'})">▶ Play Now. Free Online</button>
+      <button class="cf-btn-play-now" onclick="location.href='/clusterflick'">▶ Play Now. Free Online</button>
       <button class="cf-btn-buy-physical" onclick="startTutorial()">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
         Learn How to Play
@@ -2235,6 +2235,7 @@ window.addEventListener('DOMContentLoaded',()=>{
 
   cfLoadAnimalImages();
   drawLobbyPreview();
+
   connectWS(()=>{
     const token=sessionStorage.getItem(SESSION_KEY);
     if(token)send({type:'rejoin_room',token});
