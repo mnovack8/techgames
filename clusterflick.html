@@ -159,6 +159,7 @@ body.cf-landing-active{padding-top:0;}
 .cf-nav-dropdown-menu.open{display:flex;}
 .cf-nav-dropdown-menu a{display:block;padding:8px 14px;border-radius:7px;font-size:14px;font-weight:700;color:#c4b5fd;text-decoration:none;transition:all 0.15s;white-space:nowrap;}
 .cf-nav-dropdown-menu a:hover,.cf-nav-dropdown-menu a.active{background:rgba(124,58,237,0.2);color:#fff;}
+.cf-nav-sub-dropdown{position:relative;}.cf-nav-sub-trigger{display:flex;align-items:center;justify-content:space-between;width:100%;padding:8px 14px;border-radius:7px;font-size:14px;font-weight:700;color:#c4b5fd;background:none;border:none;cursor:pointer;font-family:inherit;text-align:left;transition:background 0.15s,color 0.15s;white-space:nowrap;}.cf-nav-sub-trigger:hover,.cf-nav-sub-dropdown:hover .cf-nav-sub-trigger{background:rgba(124,58,237,0.2);color:#fff;}.cf-nav-sub-menu{position:absolute;left:100%;top:-6px;background:#1a1030;border:1.5px solid rgba(124,58,237,0.4);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.55);padding:6px;min-width:200px;display:none;flex-direction:column;gap:2px;z-index:300;}.cf-nav-sub-dropdown:hover .cf-nav-sub-menu{display:flex;}
 
 /* HERO */
 @keyframes cf-hero-drift{from{transform:translate(0,0);}to{transform:translate(30px,30px);}}
@@ -497,8 +498,7 @@ body.observer-active #side-panel .action-btns{pointer-events:none;opacity:0.5;}
       <button class="cf-nav-dropdown-trigger">Games ▾</button>
       <div class="cf-nav-dropdown-menu">
         <a href="/cybersecurity">Cybersecurity</a>
-        <a href="/ai">Artificial Intelligence</a>
-        <a href="/clusterflick" class="active">Clusterflick (K-NN)</a>
+        <div class="cf-nav-sub-dropdown"><button class="cf-nav-sub-trigger">Artificial Intelligence ▸</button><div class="cf-nav-sub-menu"><a href="/ai">Neural Network / LLM</a><a href="/clusterflick" class="active">K-Nearest Neighbor</a></div></div>
         <a href="/qubit-waitlist">Quantum Computing</a>
       </div>
     </div>

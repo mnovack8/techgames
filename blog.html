@@ -83,6 +83,7 @@ nav a.nav-cta-buy:hover { background: #4a8c11; color: #fff; }
   display: none; flex-direction: column; gap: 2px; z-index: 200;
 }
 .nav-dropdown-menu.open { display: flex; }
+.nav-sub-dropdown{position:relative;}.nav-sub-trigger{display:flex;align-items:center;justify-content:space-between;width:100%;padding:8px 14px;border-radius:7px;font-size:14px;font-weight:700;color:#4a4a4a;background:none;border:none;cursor:pointer;font-family:inherit;text-align:left;transition:background 0.15s,color 0.15s;white-space:nowrap;}.nav-sub-trigger:hover,.nav-sub-dropdown:hover .nav-sub-trigger{background:#f4fae8;color:#4a8c11;}.nav-sub-menu{position:absolute;left:100%;top:-6px;background:#fff;border:1.5px solid #dde8c8;border-radius:10px;box-shadow:0 8px 24px rgba(98,181,23,0.15);padding:6px;min-width:200px;display:none;flex-direction:column;gap:2px;z-index:300;}.nav-sub-dropdown:hover .nav-sub-menu{display:flex;}
 .nav-dropdown-menu a { display: block; padding: 8px 14px; border-radius: 7px; font-size: 14px; font-weight: 700; color: #4a4a4a; text-decoration: none; transition: background 0.15s, color 0.15s; white-space: nowrap; }
 .nav-dropdown-menu a:hover { background: #f4fae8; color: #4a8c11; }
 @media (max-width: 600px) {
@@ -253,7 +254,7 @@ footer { background: #2a2a2a; color: #777; text-align: center; padding: 12px 24p
       <button class="nav-dropdown-trigger">Games ▾</button>
       <div class="nav-dropdown-menu">
         <a href="/cybersecurity">Cybersecurity</a>
-        <a href="/ai">Artificial Intelligence</a>
+        <div class="nav-sub-dropdown"><button class="nav-sub-trigger">Artificial Intelligence ▸</button><div class="nav-sub-menu"><a href="/ai">Neural Network / LLM</a><a href="/clusterflick">K-Nearest Neighbor</a></div></div>
         <a href="/qubit-waitlist">Quantum Computing</a>
       </div>
     </div>
