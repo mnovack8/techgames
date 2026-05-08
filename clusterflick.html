@@ -627,7 +627,7 @@ const CF_ZONE_CIRCLES = (function(){
   return z;
 })();
 const CF_TOKEN_R = 18;
-const CF_SQUARE_R = 14;
+const CF_SQUARE_R = 20; // collision radius — covers full visual diamond (corners at ~14*√2≈20px)
 const CF_FRICTION = 0.955;
 const CF_BOUNCE = 0.60;
 const CF_MAX_SPEED = 49;
@@ -673,7 +673,7 @@ function cfSimulatePhysics(tokens,dice,sx,sy,vx,vy) {
 
 // ==================== STATE ====================
 let ws, G = null, myId = -1, roomCode = '', isObserver = false, isHost = false, myObserverIdx = -1;
-let isDragging = false, dragCurX = 0, dragCurY = 0;
+let isDragging = false, dragStartX = 0, dragStartY = 0, dragCurX = 0, dragCurY = 0;
 let selectedReflickToken = null;
 let tokenAnims = new Map(); // tokenId → {fromX, fromY, toX, toY, t, delay, playerIdx}
 let prevG = null;
@@ -859,8 +859,16 @@ function renderGameCanvas() {
     // Hide the token that's been "picked up" for reflick
     if(tok.id===selectedReflickToken)continue;
     const anim=tokenAnims.get(tok.id);
-    const tx=anim?(anim.delay>0?anim.fromX:anim.fromX+(anim.toX-anim.fromX)*easeOut(anim.t)):tok.x;
-    const ty=anim?(anim.delay>0?anim.fromY:anim.fromY+(anim.toY-anim.fromY)*easeOut(anim.t)):tok.y;
+    let tx,ty;
+    if(!anim){tx=tok.x;ty=tok.y;}
+    else if(anim.delay>0){tx=anim.fromX;ty=anim.fromY;}
+    else if(anim.segs&&anim.segs.length>1){
+      // Multi-segment path animation (e.g. zone → bounce point → final)
+      const n=anim.segs.length-1;
+      const s=anim.t*n;const si=Math.min(Math.floor(s),n-1);const lt=s-si;
+      const a=anim.segs[si],b=anim.segs[si+1];
+      tx=a.x+(b.x-a.x)*easeOut(lt);ty=a.y+(b.y-a.y)*easeOut(lt);
+    } else {tx=anim.fromX+(anim.toX-anim.fromX)*easeOut(anim.t);ty=anim.fromY+(anim.toY-anim.fromY)*easeOut(anim.t);}
     const pl=G.players[tok.playerIdx];
     const hex=pl?pl.hex:'#888';
     const consumed=!!tok.sampleConsumed;
@@ -1009,17 +1017,19 @@ function renderGameCanvas() {
   const showingReflick=G.phase==='sample_reflick'&&!isObserver&&G.sampleReflickFor===myId&&selectedReflickToken!==null;
   if(isDragging&&!isObserver&&G&&!G.gameOver&&(G.phase==='flicking'&&G.currentPlayer===myId||showingReflick)){
     const fz=CF_FLICK_ZONES[myId%4];
-    const dx=dragCurX-fz.x,dy=dragCurY-fz.y;
-    const dist=Math.hypot(dx,dy);
-    const power=Math.min(dist/CF_MAX_DRAG,1);
+    // Direction: always relative to zone CENTRE (cursor vs centre determines aim)
+    // Power: drag DELTA from start so it doesn't depend on where in the zone you clicked
+    const dirDx=dragCurX-fz.x, dirDy=dragCurY-fz.y;       // for angle
+    const delDx=dragCurX-dragStartX, delDy=dragCurY-dragStartY; // for power
+    const power=Math.min(Math.hypot(delDx,delDy)/CF_MAX_DRAG,1);
     // Power ring
     ctx.beginPath();ctx.arc(fz.x,fz.y,30,0,Math.PI*2*power);
     ctx.strokeStyle=`hsl(${120-power*120},90%,60%)`;ctx.lineWidth=4;ctx.stroke();
-    // Drag line
+    // Drag line (from zone centre to current cursor)
     ctx.beginPath();ctx.moveTo(fz.x,fz.y);ctx.lineTo(dragCurX,dragCurY);
     ctx.strokeStyle='rgba(255,255,255,0.35)';ctx.lineWidth=1.5;ctx.setLineDash([5,4]);ctx.stroke();ctx.setLineDash([]);
-    // Flick direction arrow
-    const ang=Math.atan2(-dy,-dx);const arrowLen=50+power*60;
+    // Flick direction arrow (opposite of cursor-vs-centre = launch direction)
+    const ang=Math.atan2(-dirDy,-dirDx);const arrowLen=50+power*60;
     const ax=fz.x+Math.cos(ang)*arrowLen,ay=fz.y+Math.sin(ang)*arrowLen;
     ctx.beginPath();ctx.moveTo(fz.x,fz.y);ctx.lineTo(ax,ay);
     const col=`hsl(${120-power*120},90%,65%)`;
@@ -1147,6 +1157,9 @@ function processStateUpdate(newG){
       prevG=newG;
       return;
     }
+    // If scoring animation is in progress, track the latest state so finishScoringAnim
+    // applies the most recent server state rather than the stale round-start snapshot.
+    if(scoringAnim) scoringAnim.latestG=newG;
     const speed=1/18; // ~300ms at 60fps
     if(prevG.tokens){
       const prevById=new Map(prevG.tokens.map(t=>[t.id,t]));
@@ -1157,9 +1170,17 @@ function processStateUpdate(newG){
           // Knocked token — delay until flicked token finishes animating
           tokenAnims.set(tok.id,{fromX:prev.x,fromY:prev.y,toX:tok.x,toY:tok.y,t:0,delay:ANIM_FRAMES,playerIdx:tok.playerIdx});
         } else if(!prevIds.has(tok.id)){
-          // New token — animate immediately from player's flick zone corner
+          // New token — animate from player's flick zone.
+          // If the server sent bounce waypoints, animate along the actual path (zone→bounce→final).
           const fz=CF_FLICK_ZONES[tok.playerIdx%4];
-          tokenAnims.set(tok.id,{fromX:fz.x,fromY:fz.y,toX:tok.x,toY:tok.y,t:0,delay:0,playerIdx:tok.playerIdx});
+          const wpts=newG.flickWaypoints;
+          if(wpts&&wpts.length>0){
+            // Build full path: flick zone → each bounce contact point → final position
+            const segs=[{x:fz.x,y:fz.y},...wpts,{x:tok.x,y:tok.y}];
+            tokenAnims.set(tok.id,{segs,t:0,delay:0,playerIdx:tok.playerIdx,fromX:fz.x,fromY:fz.y,toX:tok.x,toY:tok.y});
+          } else {
+            tokenAnims.set(tok.id,{fromX:fz.x,fromY:fz.y,toX:tok.x,toY:tok.y,t:0,delay:0,playerIdx:tok.playerIdx});
+          }
         }
       }
     }
@@ -1170,12 +1191,12 @@ function processStateUpdate(newG){
 
 // ==================== SCORING ANIMATION ====================
 function startScoringAnim(oldG, newG){
-  if(scoringAnim){finishScoringAnim(newG,true);return;}
+  if(scoringAnim){finishScoringAnim(scoringAnim.latestG,true);return;}
   // Only count own tokens for timing (observers count all)
   const numToks=(oldG.tokens||[]).filter(t=>t.active&&!t.sampleConsumed&&t.animalIdx>=0&&t.confidence>0&&(isObserver||t.playerIdx===myId)).length;
   // 2.5s label phase + 0.5s stagger per own token + 1s last flight + 0.5s buffer
   const totalMs=2500+numToks*500+1500;
-  scoringAnim={oldG,newG,phase:'labels',flyEls:[],liveScores:null};
+  scoringAnim={oldG,latestG:newG,phase:'labels',flyEls:[],liveScores:null};
   G=oldG;
   renderSidePanel();
   startRenderLoop();
@@ -1186,7 +1207,7 @@ function startScoringAnim(oldG, newG){
   },2500);
   setTimeout(()=>{
     if(!scoringAnim||scoringAnim.oldG!==oldG)return;
-    finishScoringAnim(newG,false);
+    finishScoringAnim(scoringAnim.latestG,false);
   },totalMs);
 }
 
@@ -1419,6 +1440,7 @@ function renderSidePanel(){
         <button onclick="send({type:'game_action',action:'skip_sample_reflick'})" style="width:100%;padding:7px 14px;background:rgba(124,58,237,0.25);border:1px solid rgba(124,58,237,0.5);color:#a78bfa;border-radius:7px;cursor:pointer;font-family:inherit;font-size:12px;font-weight:700;">Skip Reflick</button>`;
     } else if(isMyTurn){
       const mode=G.players[myId]?.actionMode||'identify';
+      const sampleUsed=!!G.players[myId]?.usedSampleThisRound;
       ab.innerHTML=`
         <button class="action-btn${mode==='identify'?' selected':''}" onclick="send({type:'game_action',action:'set_action_mode',mode:'identify'})" style="background:${mode==='identify'?'rgba(74,158,255,0.18)':'rgba(20,14,36,0.7)'};color:${mode==='identify'?'#93c5fd':'rgba(200,180,255,0.6)'};border-color:${mode==='identify'?'#4a9eff':'rgba(124,58,237,0.25)'};">
           <span style="font-size:16px;">📷</span>
@@ -1427,11 +1449,11 @@ function renderSidePanel(){
             <div style="font-size:10px;font-weight:500;opacity:0.75;">Token stays on board</div>
           </span>
         </button>
-        <button class="action-btn${mode==='sample'?' selected':''}" onclick="send({type:'game_action',action:'set_action_mode',mode:'sample'})" style="background:${mode==='sample'?'rgba(251,191,36,0.18)':'rgba(20,14,36,0.7)'};color:${mode==='sample'?'#fbbf24':'rgba(200,180,255,0.6)'};border-color:${mode==='sample'?'#fbbf24':'rgba(124,58,237,0.25)'};">
+        <button class="action-btn${mode==='sample'?' selected':''}" ${sampleUsed?'disabled':''} onclick="send({type:'game_action',action:'set_action_mode',mode:'sample'})" style="background:${mode==='sample'?'rgba(251,191,36,0.18)':sampleUsed?'rgba(20,14,36,0.4)':'rgba(20,14,36,0.7)'};color:${mode==='sample'?'#fbbf24':sampleUsed?'rgba(200,180,255,0.25)':'rgba(200,180,255,0.6)'};border-color:${mode==='sample'?'#fbbf24':sampleUsed?'rgba(124,58,237,0.1)':'rgba(124,58,237,0.25)'};${sampleUsed?'cursor:not-allowed;opacity:0.45;':''}">
           <span style="font-size:16px;">🎲</span>
           <span>
             <div style="font-size:12px;font-weight:800;">Add Samples</div>
-            <div style="font-size:10px;font-weight:500;opacity:0.75;">Place dice, token removed</div>
+            <div style="font-size:10px;font-weight:500;opacity:0.75;">${sampleUsed?'Used this round':'Place dice, token removed'}</div>
           </span>
         </button>`;
     } else {
@@ -1487,14 +1509,14 @@ function onPointerDown(e){
     if(tok){selectedReflickToken=tok.id;renderGameCanvas();return;}
     // If already selected a reflick token, allow dragging from flick zone
     if(selectedReflickToken!==null&&isInFlickZone(x,y,myId)){
-      isDragging=true;dragCurX=x;dragCurY=y;startRenderLoop();return;
+      isDragging=true;dragStartX=x;dragStartY=y;dragCurX=x;dragCurY=y;startRenderLoop();return;
     }
     return;
   }
   if(G.currentPlayer!==myId||G.phase!=='flicking')return;
   const {x,y}=toCanvasXY(e);
   if(isInFlickZone(x,y,myId)){
-    isDragging=true;dragCurX=x;dragCurY=y;
+    isDragging=true;dragStartX=x;dragStartY=y;dragCurX=x;dragCurY=y;
     startRenderLoop();
   }
 }
@@ -1512,12 +1534,15 @@ function onPointerUp(e){
   if(!G||isObserver||G.gameOver)return;
   const {x,y}=toCanvasXY(e);
   const fz=CF_FLICK_ZONES[myId%4];
-  const dx=x-fz.x,dy=y-fz.y;
-  const dist=Math.hypot(dx,dy);
-  if(dist<8){renderGameCanvas();return;} // too small
+  // Direction from zone centre (consistent regardless of where in zone you clicked)
+  const dirDx=x-fz.x, dirDy=y-fz.y;
+  // Power from drag delta (consistent regardless of where in zone you clicked)
+  const delDx=x-dragStartX, delDy=y-dragStartY;
+  const deltaDist=Math.hypot(delDx,delDy);
+  if(deltaDist<8){renderGameCanvas();return;} // too small
 
-  const power=Math.min(dist/CF_MAX_DRAG,1.0);
-  const angle=Math.atan2(-dy,-dx); // opposite of drag direction
+  const power=Math.min(deltaDist/CF_MAX_DRAG,1.0);
+  const angle=Math.atan2(-dirDy,-dirDx); // direction opposite to cursor-vs-centre = launch direction
 
   if(G.phase==='sample_reflick'&&G.sampleReflickFor===myId&&selectedReflickToken!==null){
     send({type:'game_action',action:'sample_reflick_token',tokenId:selectedReflickToken,angle,power});

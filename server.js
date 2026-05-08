@@ -530,7 +530,7 @@ const CF_ZONE_CIRCLES = (function(){
   return z;
 })();
 const CF_TOKEN_R = 18;
-const CF_SQUARE_R = 14;
+const CF_SQUARE_R = 20; // collision radius — covers full visual diamond (corners at ~14*√2≈20px)
 const CF_FRICTION = 0.955;
 const CF_BOUNCE = 0.60;
 const CF_MAX_SPEED = 49;
@@ -554,42 +554,66 @@ function cfGetZone(x,y) {
 function cfSimulatePhysics(tokens, walls, sx, sy, vx, vy) {
   // walls = sampleSquares (immovable — tokens bounce off them, walls don't move)
   // moved=true means this object is part of the active chain (flicked or hit by it)
+  // SUBSTEPS: split each frame into 3 mini-steps so fast tokens can't tunnel through
+  // walls.  Max speed=49px/frame → 16px/substep, well under the 32px collision radius.
+  if(walls.length>0) console.log(`[PHYSICS] starting with ${walls.length} wall(s):`, walls.map(w=>`(${w.x.toFixed(0)},${w.y.toFixed(0)})`).join(' '));
+  let wallHits=0;
+  const waypoints=[]; // Wall contact positions for objs[0] (used by client for path animation)
+  const SUBSTEPS=3;
   const objs=[
     {x:sx,y:sy,vx,vy,r:CF_TOKEN_R,moved:true},
     ...tokens.map(t=>({x:t.x,y:t.y,vx:0,vy:0,r:CF_TOKEN_R,moved:false})),
   ];
   for(let f=0;f<600;f++){
+    // Early-exit if nothing is moving
     let mv=false;
-    for(const o of objs){
-      const sp=Math.hypot(o.vx,o.vy);
-      if(sp<0.08){o.vx=0;o.vy=0;continue;}
-      mv=true; o.x+=o.vx; o.y+=o.vy; o.vx*=CF_FRICTION; o.vy*=CF_FRICTION;
-    }
+    for(const o of objs){if(Math.hypot(o.vx,o.vy)>=0.08)mv=true;}
     if(!mv)break;
-    // Board boundary reflection for moving objects
-    for(const o of objs){
-      if(!o.moved)continue;
-      const dx=o.x-CF_CX,dy=o.y-CF_CY,d=Math.hypot(dx,dy);
-      if(d+o.r>CF_BOARD_R){
-        const nx=dx/d,ny=dy/d;
-        o.x=CF_CX+nx*(CF_BOARD_R-o.r); o.y=CF_CY+ny*(CF_BOARD_R-o.r);
-        const dot=o.vx*nx+o.vy*ny;
-        if(dot>0){o.vx-=(1+CF_BOUNCE)*dot*nx; o.vy-=(1+CF_BOUNCE)*dot*ny;
-        o.vx*=CF_BOUNCE; o.vy*=CF_BOUNCE;}
+
+    // ── substep loop: move + boundary + wall checks ──────────────────────────
+    for(let sub=0;sub<SUBSTEPS;sub++){
+      // Move each object by 1/SUBSTEPS of its velocity
+      for(const o of objs){
+        if(Math.hypot(o.vx,o.vy)<0.08)continue;
+        o.x+=o.vx/SUBSTEPS; o.y+=o.vy/SUBSTEPS;
+      }
+      // Board boundary reflection (moving objects only)
+      for(const o of objs){
+        if(!o.moved)continue;
+        const dx=o.x-CF_CX,dy=o.y-CF_CY,d=Math.hypot(dx,dy);
+        if(d+o.r>CF_BOARD_R){
+          const nx=dx/d,ny=dy/d;
+          o.x=CF_CX+nx*(CF_BOARD_R-o.r); o.y=CF_CY+ny*(CF_BOARD_R-o.r);
+          const dot=o.vx*nx+o.vy*ny;
+          if(dot>0){o.vx-=(1+CF_BOUNCE)*dot*nx; o.vy-=(1+CF_BOUNCE)*dot*ny;
+          o.vx*=CF_BOUNCE; o.vy*=CF_BOUNCE;}
+        }
+      }
+      // Immovable wall (sample square) collisions — moving objects bounce off
+      for(const o of objs){
+        if(!o.moved)continue;
+        for(const w of walls){
+          const dx=o.x-w.x,dy=o.y-w.y,d=Math.hypot(dx,dy),minD=o.r+CF_SQUARE_R;
+          if(d>=minD||d<0.001)continue;
+          wallHits++;
+          console.log(`[PHYSICS] Wall hit #${wallHits}: token=(${o.x.toFixed(1)},${o.y.toFixed(1)}) wall=(${w.x.toFixed(0)},${w.y.toFixed(0)}) d=${d.toFixed(1)} minD=${minD}`);
+          const nx=dx/d,ny=dy/d;
+          o.x=w.x+nx*minD; o.y=w.y+ny*minD;
+          // Record contact point so client can animate along actual path
+          if(o===objs[0]) waypoints.push({x:o.x,y:o.y});
+          const dot=o.vx*nx+o.vy*ny;
+          if(dot<0){o.vx-=(1+CF_BOUNCE)*dot*nx; o.vy-=(1+CF_BOUNCE)*dot*ny;}
+        }
       }
     }
-    // Immovable square walls — moving objects bounce off them
+    // ── end substeps ─────────────────────────────────────────────────────────
+
+    // Apply friction and hard-stop once per frame (not per substep)
     for(const o of objs){
-      if(!o.moved)continue;
-      for(const w of walls){
-        const dx=o.x-w.x,dy=o.y-w.y,d=Math.hypot(dx,dy),minD=o.r+CF_SQUARE_R;
-        if(d>=minD||d<0.001)continue;
-        const nx=dx/d,ny=dy/d;
-        o.x=w.x+nx*minD; o.y=w.y+ny*minD;
-        const dot=o.vx*nx+o.vy*ny;
-        if(dot<0){o.vx-=(1+CF_BOUNCE)*dot*nx; o.vy-=(1+CF_BOUNCE)*dot*ny;}
-      }
+      o.vx*=CF_FRICTION; o.vy*=CF_FRICTION;
+      if(Math.hypot(o.vx,o.vy)<0.08){o.vx=0;o.vy=0;}
     }
+
     // Flicked token stops at contact and transfers its velocity to the hit token
     const f0=objs[0];
     if(Math.hypot(f0.vx,f0.vy)>0.01){
@@ -625,7 +649,8 @@ function cfSimulatePhysics(tokens, walls, sx, sy, vx, vy) {
     const dx=o.x-CF_CX,dy=o.y-CF_CY,d=Math.hypot(dx,dy);
     if(d+o.r>CF_BOARD_R){o.x=CF_CX+(dx/d)*(CF_BOARD_R-o.r);o.y=CF_CY+(dy/d)*(CF_BOARD_R-o.r);}
   }
-  return objs;
+  if(walls.length>0) console.log(`[PHYSICS] done. Total wall hits: ${wallHits}. Token final pos: (${objs[0].x.toFixed(1)},${objs[0].y.toFixed(1)})`);
+  return {objs,waypoints};
 }
 
 const INPUT_TO_L1 = { 0:[0], 1:[0,1], 2:[1,2], 3:[2,3], 4:[3] };
@@ -1077,7 +1102,7 @@ function cfEndGame(room) {
   trackEvent('session_completed',{gameType:'clusterflick',mode,uvKey:room.uvKey||'',duration:dur});
 }
 
-function cfBroadcastState(room) {
+function cfBroadcastState(room, flickWaypoints=null) {
   const s=room.cfState;
   const base={type:'state_update',code:room.code,state:{
     phase:s.phase,round:s.round,currentPlayer:s.currentPlayer,flicksLeft:s.flicksLeft,
@@ -1089,6 +1114,7 @@ function cfBroadcastState(room) {
       hex:COLOR_INFO[room.players[i].color].hex,connected:room.players[i].connected,isBot:!!room.players[i].isBot,
       actionMode:pl.actionMode})),
     roundDoubledAnimal:s.roundDoubledAnimal,doubledAnimals:s.doubledAnimals,gameOver:s.gameOver,winner:s.winner,
+    flickWaypoints: flickWaypoints||null,  // wall-bounce path for client animation (null if no bounces)
   }};
   for(let i=0;i<room.players.length;i++){const p=room.players[i];if(p.connected&&p.ws)send(p.ws,{...base,yourId:i});}
   for(const o of(room.observers||[])){if(o.connected&&o.ws)send(o.ws,{...base,yourId:-1,isObserver:true});}
@@ -1109,6 +1135,7 @@ function processCFAction(room, playerIdx, msg) {
     case 'set_action_mode':{
       const{mode}=msg;
       if(mode!=='identify'&&mode!=='sample')return'Invalid mode';
+      if(mode==='sample'&&pl.usedSampleThisRound)return'Already used Add Samples this round';
       pl.actionMode=mode;
       return null;
     }
@@ -1121,12 +1148,13 @@ function processCFAction(room, playerIdx, msg) {
       const fz=CF_FLICK_ZONES[playerIdx%4];
       const vx=Math.cos(angle)*pw*CF_MAX_SPEED,vy=Math.sin(angle)*pw*CF_MAX_SPEED;
       const actToks=s.tokens.filter(t=>t.active);
-      const objs=cfSimulatePhysics(actToks,s.sampleSquares,fz.x,fz.y,vx,vy);
+      const {objs,waypoints}=cfSimulatePhysics(actToks,s.sampleSquares,fz.x,fz.y,vx,vy);
       const nObj=objs[0];
       // Update tokens that were knocked
       for(let i=0;i<actToks.length;i++){const o=objs[i+1];if(!o||!o.moved)continue;actToks[i].x=o.x;actToks[i].y=o.y;const z=cfGetZone(o.x,o.y);if(z){actToks[i].animalIdx=z.animalIdx;actToks[i].confidence=z.confidence;}}
       const zone=cfGetZone(nObj.x,nObj.y)||{animalIdx:-1,confidence:0};
       pl.flicksThisRound++;
+      room._lastFlickWaypoints=waypoints.length>0?waypoints:null;
       if(pl.actionMode==='sample'){
         if(zone.animalIdx>=0&&zone.confidence>=1){
           // Token lands in any animal zone (confidence 1-5) — slide it, then enter placing phase
@@ -1206,13 +1234,14 @@ function processCFAction(room, playerIdx, msg) {
       const vx=Math.cos(angle)*pw*CF_MAX_SPEED,vy=Math.sin(angle)*pw*CF_MAX_SPEED;
       // Physics identical to identify flick: all remaining active tokens are obstacles
       const actToks=s.tokens.filter(t=>t.active);
-      const objs=cfSimulatePhysics(actToks,s.sampleSquares,fz.x,fz.y,vx,vy);
+      const {objs,waypoints}=cfSimulatePhysics(actToks,s.sampleSquares,fz.x,fz.y,vx,vy);
       const nObj=objs[0];
       // Update knocked tokens (same as flick_token identify path)
       for(let i=0;i<actToks.length;i++){const o=objs[i+1];if(!o||!o.moved)continue;actToks[i].x=o.x;actToks[i].y=o.y;const z=cfGetZone(o.x,o.y);if(z){actToks[i].animalIdx=z.animalIdx;actToks[i].confidence=z.confidence;}}
       // Add the re-flicked token as a brand-new token so the client animates it from the flick zone
       const zone=cfGetZone(nObj.x,nObj.y)||{animalIdx:-1,confidence:0};
       s.tokens.push({id:s.nextTokenId++,playerIdx,x:nObj.x,y:nObj.y,animalIdx:zone.animalIdx,confidence:zone.confidence,active:true});
+      room._lastFlickWaypoints=waypoints.length>0?waypoints:null;
       s.phase='flicking';
       delete s.sampleReflickFor;
       cfAdvanceTurn(room);
@@ -1252,7 +1281,8 @@ async function executeCFBotTurn(room) {
     if(s.currentPlayer===botIdx&&s.phase==='flicking'&&!s.gameOver){
       const{angle,power}=cfBotDecideFlick(room);
       processCFAction(room,botIdx,{action:'flick_token',angle,power});
-      cfBroadcastState(room);
+      cfBroadcastState(room,room._lastFlickWaypoints||null);
+      room._lastFlickWaypoints=null;
     }
   }finally{
     room._cfBotRunning=false;
@@ -2072,7 +2102,9 @@ function handleMessage(ws, raw) {
       } else if (room.gameType === 'clusterflick') {
         const err = processCFAction(room, info.playerIdx, msg);
         if (err) return send(ws, {type:'error',msg:err});
-        cfBroadcastState(room);
+        const wpts=room._lastFlickWaypoints||null;
+        room._lastFlickWaypoints=null;
+        cfBroadcastState(room,wpts);
       } else {
         const err = processAction(room, info.playerIdx, msg);
         if (err) return send(ws, {type:'error',msg:err});
