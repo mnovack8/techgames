@@ -168,6 +168,8 @@ body { padding-top: 44px; }
 .ev-copy-btn { background: #f4fae8; border: 1px solid #c8dda0; border-radius: 6px; padding: 3px 10px; font-size: 11px; font-weight: 700; color: #4a8c11; cursor: pointer; transition: all 0.12s; white-space: nowrap; font-family: inherit; }
 .ev-copy-btn:hover { border-color: #62b517; background: #e2f3cc; }
 .ev-copy-btn.copied { color: #62b517; border-color: #a8c96a; background: #e2f3cc; }
+.ev-observe-btn { background: #f4fae8; border: 1px solid #a8c96a; border-radius: 6px; padding: 3px 10px; font-size: 11px; font-weight: 700; color: #4a8c11; cursor: pointer; transition: all 0.12s; white-space: nowrap; font-family: inherit; }
+.ev-observe-btn:hover { border-color: #62b517; background: #e2f3cc; color: #2d6a0a; }
 .ev-players { color: #888; font-size: 13px; }
 .ev-status { display: inline-block; font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; border-radius: 3px; padding: 2px 7px; }
 .ev-status.pending     { background: rgba(107,114,128,0.08); border: 1px solid rgba(107,114,128,0.25); color: #888; }
@@ -837,7 +839,7 @@ rect.tut-animal-hl { animation: tut-hl-pulse 1.1s ease-in-out infinite; }
         <div id="fn-event-table-wrap" style="display:none">
           <table class="event-table">
             <thead><tr>
-              <th>Room</th><th>Invite Link</th><th>Players</th><th>Status</th><th></th>
+              <th>Room</th><th>Join Room</th><th>Invite Link</th><th>Players</th><th>Status</th><th></th>
             </tr></thead>
             <tbody id="fn-event-table-body"></tbody>
           </table>
@@ -1126,6 +1128,7 @@ function fnRenderEventTable() {
     tr.id = 'fn-ev-row-' + code;
     tr.innerHTML = `
       <td><span class="ev-code">${code}</span></td>
+      <td><button class="ev-observe-btn" onclick="fnOpenObserverTab('${code}')">Join Room</button></td>
       <td><button class="ev-copy-btn" id="fn-ev-copy-${code}" onclick="fnCopyEventLink('${code}')">Copy Link</button></td>
       <td class="ev-players">${room.playerCount}<span style="color:#253347"> / 4</span></td>
       <td><span class="ev-status ${statusClass}">${statusLabel}</span></td>
@@ -1133,6 +1136,12 @@ function fnRenderEventTable() {
     tbody.appendChild(tr);
   }
   fnUpdateEventAddBtn();
+}
+
+function fnOpenObserverTab(code) {
+  const name = (localStorage.getItem('fuzznet_event_name') || '').trim();
+  const nameParam = name ? '&name=' + encodeURIComponent(name) : '';
+  window.open(`${location.origin}/fuzznet?room=${code}&obs=1${nameParam}`, '_blank');
 }
 
 function fnCopyEventLink(code) {
@@ -1161,6 +1170,7 @@ function connect() {
   ws.onopen = () => {
     const token = sessionStorage.getItem(SESSION_KEY);
     if (token) sendMsg({ type: 'rejoin_room', token });
+    else if (urlRoom && urlObs) sendMsg({ type: 'join_as_observer', code: urlRoom.toUpperCase(), name: urlName });
     else if (urlRoom) sendMsg({ type: 'check_room', code: urlRoom.toUpperCase() });
     // Restore Event Hub rooms from localStorage
     const savedEvName = localStorage.getItem('fuzznet_event_name');
@@ -1200,7 +1210,7 @@ function handleServerMsg(msg) {
       handleRoomInfo(msg);
       break;
     case 'room_joined':
-      roomCode = msg.code; myId = msg.yourId; isHost = false;
+      roomCode = msg.code; myId = msg.yourId; isHost = !!msg.isHost;
       isObserver = false; myObserverIdx = -1;
       document.body.classList.remove('observer-active');
       if (msg.token) sessionStorage.setItem(SESSION_KEY, msg.token);
@@ -3263,7 +3273,9 @@ connect();
 
 // Check URL for room code (e.g. ?room=ABCD). Highlight Join card, dim Create card
 const urlRoom = new URLSearchParams(location.search).get('room');
-if (urlRoom) {
+const urlObs  = new URLSearchParams(location.search).get('obs') === '1';
+const urlName = new URLSearchParams(location.search).get('name') || '';
+if (urlRoom && !urlObs) {
   const code = urlRoom.toUpperCase();
   document.getElementById('join-code').value = code;
   const joinCard  = document.getElementById('lobby-join-card');

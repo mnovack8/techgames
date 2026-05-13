@@ -3,46 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Clusterflick turns K-Nearest Neighbors (K-NN) into a physics board game. Experience a kind of machine learning that isn't GenAI - classification by similarity, not neural networks. Free to play online.">
+<meta name="description" content="Play Clusterflick online - a K-Nearest Neighbors physics board game. 2-4 players, free online.">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Clusterflick - A K-NN Machine Learning Board Game">
-<meta property="og:description" content="Clusterflick turns K-Nearest Neighbors (K-NN) into a physics board game. Experience a kind of machine learning that isn't GenAI - classification by similarity, not neural networks.">
+<meta property="og:title" content="Clusterflick - Play K-NN Online">
+<meta property="og:description" content="Play Clusterflick online - a K-Nearest Neighbors physics board game. 2-4 players, free online.">
 <meta property="og:image" content="https://cybersecgames.com/images/cover.png">
-<meta property="og:url" content="https://cybersecgames.com/knn">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Clusterflick - A K-NN Machine Learning Board Game">
-<meta name="twitter:description" content="Clusterflick turns K-Nearest Neighbors (K-NN) into a physics board game. Experience a kind of machine learning that isn't GenAI - classification by similarity, not neural networks.">
-<meta name="twitter:image" content="https://cybersecgames.com/images/cover.png">
-<meta name="robots" content="index, follow">
-<meta name="author" content="Tech CoLab">
-<meta name="keywords" content="Clusterflick, K-NN board game, K-Nearest Neighbors game, machine learning board game, classical machine learning, AI literacy game, non-GenAI machine learning, classification algorithm game, FuzzNet Labs sister game">
-<meta property="og:site_name" content="Tech CoLab">
-<meta property="og:locale" content="en_US">
-<meta name="theme-color" content="#7c3aed">
+<meta property="og:url" content="https://cybersecgames.com/clusterflick">
+<meta name="robots" content="noindex">
 <link rel="icon" type="image/png" href="/images/logo.png">
-<link rel="apple-touch-icon" href="/images/logo.png">
-<link rel="canonical" href="https://cybersecgames.com/knn">
-<title>Clusterflick - A K-NN Machine Learning Board Game | Tech CoLab</title>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Game",
-  "name": "Clusterflick",
-  "description": "Clusterflick turns K-Nearest Neighbors (K-NN) into a physics board game. A different kind of machine learning from GenAI - classification by similarity to known examples, not neural networks. Free to play online.",
-  "url": "https://cybersecgames.com/clusterflick",
-  "image": "https://cybersecgames.com/images/cover.png",
-  "numberOfPlayers": { "@type": "QuantitativeValue", "minValue": 2, "maxValue": 4 },
-  "genre": ["Educational", "Board Game", "Machine Learning"],
-  "audience": { "@type": "Audience", "audienceType": "Corporate teams, AI literacy training, L&D professionals" },
-  "publisher": { "@type": "Organization", "name": "Tech CoLab", "url": "https://cybersecgames.com", "logo": { "@type": "ImageObject", "url": "https://cybersecgames.com/images/logo.svg" } }
-}
-</script>
+<link rel="canonical" href="https://cybersecgames.com/clusterflick">
+<title>Clusterflick - Play K-NN | Tech CoLab</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'Nunito','Segoe UI',system-ui,sans-serif;background:#0d0a1a;color:#e8e0ff;min-height:100vh;overflow-x:hidden;}
 html.tutorial-loading body{visibility:hidden;}
-html.tutorial-loading #tutorial-overlay,html.tutorial-loading #tutorial-overlay *{visibility:visible;}
+html.tutorial-loading #cft-intro,html.tutorial-loading #cft-intro *{visibility:visible;}
 html.tutorial-loading{background:#0d0a1a;}
 
 /* ===== TOP NAV ===== */
@@ -129,142 +105,7 @@ body{padding-top:44px;}
 @media(max-width:780px){.lobby-hero{grid-template-columns:1fr;text-align:center;gap:20px;}.lobby-hero-board{margin:0 auto;}.lobby-tutorial-cta{align-self:center;}.lobby-play-grid{grid-template-columns:1fr;}.lo-strip{grid-template-columns:1fr 1fr;}.lo-item:nth-child(2){border-right:none;}.lo-item:nth-child(1),.lo-item:nth-child(2){border-bottom:1px solid rgba(124,58,237,0.15);}#lobby h1{font-size:34px;}}
 @media(max-width:480px){#lobby h1{font-size:28px;}.lo-item-desc{display:none;}}
 
-/* =====================================================================
-   /ai-STYLE LANDING-PAGE FORMAT (purple/dark variant)
-   These classes are scoped with cf- prefix so they don't collide with
-   the existing in-game styling. They turn the lobby into a full
-   marketing landing page parallel to the /ai page for FuzzNet Labs.
-   ===================================================================== */
 
-/* Hide the simple in-page top-nav once the marketing header is present */
-body.cf-landing-active #top-nav{display:none;}
-body.cf-landing-active{padding-top:0;}
-
-/* HEADER */
-.cf-header{background:#14102a;border-bottom:3px solid #7c3aed;padding:0 40px;height:68px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 16px rgba(124,58,237,0.25);position:sticky;top:0;z-index:100;}
-.cf-header-logo{display:flex;align-items:center;gap:6px;text-decoration:none;}
-.cf-header-logo img{height:50px;width:auto;object-fit:contain;display:block;}
-.cf-logo-text{font-size:16px;font-weight:800;color:#a78bfa;letter-spacing:0.5px;}
-.cf-logo-sub{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;display:block;line-height:1;color:#7c5cbf;}
-.cf-nav{display:flex;align-items:center;gap:4px;}
-.cf-nav a{font-size:15px;font-weight:700;color:#c4b5fd;text-decoration:none;padding:8px 16px;border-radius:8px;transition:background 0.15s,color 0.15s;}
-.cf-nav a:hover{background:rgba(124,58,237,0.18);color:#fff;}
-.cf-nav a.active{color:#fff;background:rgba(124,58,237,0.18);}
-.cf-nav a.cf-nav-cta-buy{background:#7c3aed;color:#fff;margin-left:4px;box-shadow:0 2px 6px rgba(124,58,237,0.35);}
-.cf-nav a.cf-nav-cta-buy:hover{background:#6d28d9;color:#fff;}
-.cf-nav-dropdown{position:relative;display:flex;align-items:center;}
-.cf-nav-dropdown-trigger{font-size:15px;font-weight:700;color:#c4b5fd;background:none;border:none;padding:8px 16px;border-radius:8px;cursor:pointer;font-family:inherit;transition:background 0.15s,color 0.15s;}
-.cf-nav-dropdown-trigger.open{background:rgba(124,58,237,0.18);color:#fff;}
-.cf-nav-dropdown-menu{position:absolute;top:calc(100% + 4px);left:0;background:#1a1030;border:1.5px solid rgba(124,58,237,0.4);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.55);padding:6px;min-width:200px;display:none;flex-direction:column;gap:2px;z-index:200;}
-.cf-nav-dropdown-menu.open{display:flex;}
-.cf-nav-dropdown-menu a{display:block;padding:8px 14px;border-radius:7px;font-size:14px;font-weight:700;color:#c4b5fd;text-decoration:none;transition:all 0.15s;white-space:nowrap;}
-.cf-nav-dropdown-menu a:hover,.cf-nav-dropdown-menu a.active{background:rgba(124,58,237,0.2);color:#fff;}
-.cf-nav-sub-dropdown{position:relative;}.cf-nav-sub-trigger{display:flex;align-items:center;justify-content:space-between;width:100%;padding:8px 14px;border-radius:7px;font-size:14px;font-weight:700;color:#c4b5fd;background:none;border:none;cursor:pointer;font-family:inherit;text-align:left;transition:background 0.15s,color 0.15s;white-space:nowrap;}.cf-nav-sub-trigger:hover,.cf-nav-sub-dropdown:hover .cf-nav-sub-trigger{background:rgba(124,58,237,0.2);color:#fff;}.cf-nav-sub-menu{position:absolute;left:100%;top:-6px;background:#1a1030;border:1.5px solid rgba(124,58,237,0.4);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.55);padding:6px;min-width:200px;display:none;flex-direction:column;gap:2px;z-index:300;}.cf-nav-sub-dropdown:hover .cf-nav-sub-menu{display:flex;}
-
-/* HERO */
-@keyframes cf-hero-drift{from{transform:translate(0,0);}to{transform:translate(30px,30px);}}
-@keyframes cf-fade-up{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
-@keyframes cf-underline-grow{from{transform:scaleX(0);}to{transform:scaleX(1);}}
-.cf-hero{position:relative;overflow:hidden;padding:64px 24px 56px;text-align:center;background:linear-gradient(160deg,#16112c 0%,#100d22 60%,#0d0a1a 100%);border-bottom:1px solid rgba(124,58,237,0.22);}
-.cf-hero::before{content:'';position:absolute;inset:-56px;background-image:radial-gradient(circle,rgba(167,139,250,0.13) 1.5px,transparent 1.5px);background-size:30px 30px;animation:cf-hero-drift 22s linear infinite;pointer-events:none;z-index:0;}
-.cf-hero-badge{display:inline-block;background:rgba(167,139,250,0.15);border:1px solid #a78bfa;color:#c4b5fd;font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase;padding:5px 14px;border-radius:20px;margin-bottom:24px;position:relative;z-index:1;animation:cf-fade-up 0.4s ease both;}
-.cf-hero h1{font-size:clamp(36px,6vw,58px);font-weight:900;line-height:1.1;padding-bottom:32px;margin-bottom:40px;color:#e8e0ff;position:relative;z-index:1;overflow:visible;animation:cf-fade-up 0.45s 0.1s ease both;}
-.cf-hero h1 .cf-game-name{color:#a78bfa;position:relative;}
-.cf-hero h1 .cf-game-name::after{content:'';position:absolute;left:0;right:0;bottom:0;height:4px;background:#7c3aed;border-radius:3px;transform:scaleX(0);transform-origin:left center;animation:cf-underline-grow 0.4s 0.5s ease forwards;}
-.cf-hero-subtitle{font-size:17px;font-weight:600;color:#c4b5fd;margin:0 auto 12px;max-width:600px;line-height:1.55;position:relative;z-index:1;animation:cf-fade-up 0.45s 0.22s ease both;}
-.cf-hero-subtitle.cf-secondary{font-size:13px;opacity:0.8;max-width:560px;margin-bottom:32px;}
-.cf-hero-subtitle a{color:#c4b5fd;font-weight:800;}
-.cf-hero-subtitle strong{color:#e8e0ff;}
-.cf-hero-visual{position:relative;z-index:1;width:220px;height:220px;margin:0 auto;animation:cf-fade-up 0.45s 0.3s ease both;}
-.cf-hero-visual svg{width:100%;height:100%;display:block;}
-
-/* FEATURES STRIP */
-.cf-features{display:flex;justify-content:center;gap:0;flex-wrap:wrap;background:#14102a;border-bottom:1px solid rgba(124,58,237,0.22);padding:0;}
-.cf-feature{display:flex;flex-direction:column;align-items:center;gap:8px;padding:28px 32px;flex:1;min-width:160px;max-width:260px;border-right:1px solid rgba(124,58,237,0.18);text-align:center;}
-.cf-feature:last-child{border-right:none;}
-.cf-feature-icon{width:48px;height:48px;border-radius:12px;background:rgba(124,58,237,0.14);border:1px solid rgba(167,139,250,0.4);display:flex;align-items:center;justify-content:center;font-size:24px;}
-.cf-feature h3{font-size:13px;font-weight:800;color:#e8e0ff;letter-spacing:0.3px;}
-.cf-feature p{font-size:12px;color:#9d8ec4;line-height:1.4;}
-
-/* CTA BUTTONS BAR */
-.cf-cta-buttons-bar{display:flex;justify-content:center;align-items:center;gap:16px;padding:28px 24px;background:#14102a;border-bottom:1px solid rgba(124,58,237,0.22);flex-wrap:wrap;}
-.cf-btn-play-now{display:inline-flex;align-items:center;gap:8px;background:#7c3aed;color:#fff;text-decoration:none;text-align:center;padding:14px 32px;border-radius:10px;font-size:16px;font-weight:800;transition:all 0.15s;cursor:pointer;border:none;font-family:inherit;}
-.cf-btn-play-now:hover{background:#6d28d9;transform:scale(1.02);}
-.cf-btn-buy-physical{display:inline-flex;align-items:center;gap:8px;background:transparent;color:#c4b5fd;text-decoration:none;text-align:center;padding:12px 28px;border-radius:10px;font-size:15px;font-weight:800;border:2px solid rgba(167,139,250,0.5);transition:all 0.15s;cursor:pointer;font-family:inherit;}
-.cf-btn-buy-physical:hover{background:rgba(124,58,237,0.14);border-color:#a78bfa;color:#fff;}
-
-/* GAME INFO BAR */
-.cf-game-info-bar{display:flex;justify-content:center;align-items:center;gap:0;background:rgba(124,58,237,0.07);border-bottom:1px solid rgba(124,58,237,0.22);padding:0;flex-wrap:wrap;}
-.cf-game-info-item{display:flex;align-items:center;gap:8px;padding:14px 28px;font-size:13px;font-weight:700;color:#c4b5fd;border-right:1px solid rgba(124,58,237,0.18);}
-.cf-game-info-item:last-child{border-right:none;}
-.cf-game-info-item svg{flex-shrink:0;}
-
-/* MAIN COLUMN INSIDE DEEP SECTIONS */
-.cf-main{max-width:860px;margin:0 auto;width:100%;padding:0 24px;}
-.cf-info-col{padding:48px 0 52px;}
-.cf-info-col h2{font-size:26px;font-weight:900;color:#e8e0ff;margin-bottom:16px;line-height:1.2;}
-.cf-info-col h2 em{font-style:normal;color:#a78bfa;}
-.cf-info-col > p{font-size:14px;color:#9d8ec4;line-height:1.7;margin-bottom:28px;}
-.cf-learn-section-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:2px;color:#a78bfa;border-left:4px solid #7c3aed;padding-left:10px;margin-bottom:14px;}
-
-/* CONCEPT CARDS (deep learning section) */
-.cf-concept-list{list-style:none;display:flex;flex-direction:column;margin-bottom:28px;}
-.cf-concept-list li{display:block;padding:0;}
-.cf-concept-card{border-radius:12px;padding:16px 18px;margin-bottom:12px;border:2px solid rgba(167,139,250,0.32);background:#1a1030;box-shadow:0 2px 8px rgba(124,58,237,0.12);}
-.cf-concept-card-top{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
-.cf-concept-card-top strong{font-size:14px;font-weight:900;color:#e8e0ff;}
-.cf-concept-icon{width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;font-size:20px;background:rgba(124,58,237,0.2);border-radius:8px;}
-.cf-concept-explain{font-size:13px;color:#9d8ec4;line-height:1.65;margin-bottom:0 !important;}
-.cf-concept-explain em{color:#c4b5fd;font-style:italic;}
-.cf-concept-explain strong{color:#c4b5fd;}
-
-/* LEARNING SECTION (darker bg with subtle K-NN dot/edge pattern) */
-.cf-learning-bg{background:#0a0815 url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg stroke='%237c3aed' stroke-opacity='0.16' stroke-width='1.4' fill='none' stroke-linecap='round'%3E%3Ccircle cx='25' cy='25' r='2.5' fill='%237c3aed' fill-opacity='0.18'/%3E%3Ccircle cx='75' cy='40' r='2.5' fill='%23a78bfa' fill-opacity='0.18'/%3E%3Ccircle cx='40' cy='75' r='2.5' fill='%237c3aed' fill-opacity='0.18'/%3E%3Ccircle cx='80' cy='80' r='2.5' fill='%23a78bfa' fill-opacity='0.18'/%3E%3Cline x1='25' y1='25' x2='75' y2='40'/%3E%3Cline x1='25' y1='25' x2='40' y2='75'/%3E%3Cline x1='75' y1='40' x2='80' y2='80'/%3E%3Cline x1='40' y1='75' x2='80' y2='80'/%3E%3C/g%3E%3C/svg%3E") repeat;background-size:120px 120px;}
-.cf-learning-bg .cf-info-col h2{color:#fff;}
-.cf-learning-bg .cf-info-col h2 em{color:#c4b5fd;}
-.cf-learning-bg .cf-info-col > p{color:rgba(255,255,255,0.74);}
-
-/* WORKSHOP SECTION (lighter elevated dark) */
-.cf-workshop{background:#14102a;border-top:1px solid rgba(124,58,237,0.2);border-bottom:1px solid rgba(124,58,237,0.2);padding:48px 24px;}
-.cf-workshop-cta-link{display:inline-flex;align-items:center;gap:8px;background:#7c3aed;color:#fff;font-weight:800;font-size:14px;padding:12px 22px;border-radius:10px;text-decoration:none;transition:all 0.15s;}
-.cf-workshop-cta-link:hover{background:#6d28d9;transform:translateY(-1px);}
-
-/* PLAY ONLINE SECTION (the embedded Create/Join cards) */
-.cf-play-online{background:#100d22;padding:48px 24px 40px;}
-.cf-play-online .cf-main{max-width:900px;}
-
-/* FOOTER */
-.cf-footer{background:#050309;padding:18px 24px;text-align:center;font-size:12px;color:#6b5ea8;}
-.cf-footer a{color:#a78bfa;text-decoration:none;font-weight:700;}
-.cf-footer a:hover{text-decoration:underline;}
-
-/* SCROLL REVEAL */
-[data-reveal]{opacity:0;transform:translateY(28px);transition:opacity 0.65s cubic-bezier(0.65,0,0.35,1),transform 0.65s cubic-bezier(0.65,0,0.35,1);}
-[data-reveal].is-visible{opacity:1;transform:none;}
-[data-delay="1"]{transition-delay:0.10s;}
-[data-delay="2"]{transition-delay:0.20s;}
-[data-delay="3"]{transition-delay:0.30s;}
-[data-delay="4"]{transition-delay:0.40s;}
-[data-delay="5"]{transition-delay:0.50s;}
-@media (prefers-reduced-motion: reduce){[data-reveal],[data-reveal].is-visible{opacity:1 !important;transform:none !important;transition:none !important;}}
-
-/* When the lobby uses the new landing-page format, override the old centered/padded layout */
-#lobby.cf-landing{padding:0 !important;align-items:stretch;display:block;background:#0d0a1a;}
-#lobby.cf-landing.screen.active{display:block;}
-#lobby.cf-landing > .lobby-container{display:block;max-width:none;padding:0;gap:0;width:100%;}
-#lobby.cf-landing .lobby-section{margin:0;}
-
-/* RESPONSIVE LANDING-PAGE TWEAKS */
-@media(max-width:820px){
-  .cf-main{padding:0 16px;}
-  .cf-feature{padding:20px 16px;}
-  .cf-header{padding:8px 16px 6px;height:auto;flex-direction:column;gap:6px;}
-  .cf-cta-buttons-bar{flex-direction:column;align-items:stretch;padding:20px 16px;}
-  .cf-btn-play-now,.cf-btn-buy-physical{justify-content:center;}
-  .cf-nav a,.cf-nav-dropdown-trigger{padding:6px 10px;font-size:13px;}
-  .cf-feature{flex:1 1 45%;border-bottom:1px solid rgba(124,58,237,0.18);}
-  .cf-feature:nth-child(2){border-right:none;}
-}
 
 #waiting{flex-direction:column;align-items:center;justify-content:center;min-height:calc(100vh - 44px);padding:20px;background:#0d0a1a;gap:16px;}
 .room-code-display{font-size:52px;font-weight:900;letter-spacing:14px;color:#a78bfa;font-family:monospace;text-shadow:0 0 30px rgba(124,58,237,0.5);}
@@ -363,24 +204,6 @@ body.cf-landing-active{padding-top:0;}
 #observer-banner{display:none;background:rgba(6,182,212,0.08);border-bottom:1px solid rgba(6,182,212,0.25);padding:6px 16px;align-items:center;gap:10px;font-size:12px;color:#22d3ee;font-weight:700;flex-shrink:0;}
 #observer-banner.show{display:flex;}
 
-/* ===== TUTORIAL ===== */
-#tutorial-overlay{position:fixed;bottom:60px;left:50%;transform:translateX(-50%);z-index:150;width:min(540px,calc(100vw - 24px));pointer-events:none;}
-#tutorial-card{background:#1a1030;border:1.5px solid rgba(124,58,237,0.5);border-radius:14px;padding:20px;box-shadow:0 8px 40px rgba(0,0,0,0.6);pointer-events:all;display:none;}
-.tut-header{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
-.tut-header span{font-size:11px;color:#7c5cbf;font-weight:700;}
-.tut-progress{flex:1;height:6px;background:rgba(124,58,237,0.15);border-radius:3px;overflow:hidden;}
-#tut-progress-fill{height:100%;background:linear-gradient(90deg,#7c3aed,#a78bfa);border-radius:3px;transition:width 0.3s;}
-#tut-title{font-size:17px;font-weight:800;color:#c4b5fd;margin-bottom:10px;}
-#tut-body{font-size:13px;color:#9d8ec4;line-height:1.6;}
-#tut-body strong{color:#c4b5fd;}
-#tut-body ul{padding-left:18px;margin-top:6px;}
-#tut-body li{margin-bottom:4px;}
-.tut-footer{display:flex;align-items:center;gap:8px;margin-top:16px;}
-.tut-footer-left{flex:1;font-size:11px;color:#6b5ea8;}
-#tut-exit{padding:6px 14px;background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.2);border-radius:6px;color:#f87171;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;}
-#tut-next{padding:6px 18px;background:#7c3aed;border:none;border-radius:6px;color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;}
-#tut-next:disabled{opacity:0.3;cursor:not-allowed;}
-
 /* ===== INFO OVERLAY ===== */
 #info-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:190;align-items:center;justify-content:center;}
 #info-overlay.show{display:flex;}
@@ -462,18 +285,113 @@ body.observer-active #side-panel .action-btns{pointer-events:none;opacity:0.5;}
 .animal-bar-wrap.bar-flash .animal-bar-fill{
   animation:barFlash 0.8s ease-out;
 }
+
+/* =====================================================================
+   TUTORIAL — TWO-PHASE SYSTEM
+   Phase 1: Full-screen concept intro overlay  (like Byte Club bc-tut-intro)
+   Phase 2: Fixed sidebar during game          (like Byte Club bc-tut-panel)
+   ===================================================================== */
+
+/* ---------- INTRO OVERLAY ---------- */
+#cft-intro{display:none;position:fixed;inset:0;background:rgba(5,3,15,0.97);z-index:500;align-items:center;justify-content:center;padding:24px;}
+body.cft-intro-active #cft-intro{display:flex;}
+#cft-intro-card{background:#110d24;border:1.5px solid rgba(124,58,237,0.5);border-radius:16px;padding:36px 40px 28px;max-width:860px;width:100%;max-height:calc(100vh - 48px);overflow-y:auto;display:flex;flex-direction:column;gap:18px;box-shadow:0 24px 64px rgba(0,0,0,0.92);}
+.cfti-header{display:flex;flex-direction:column;gap:8px;}
+.cfti-label{font-size:10px;font-weight:700;color:#4b3a6e;text-transform:uppercase;letter-spacing:1.2px;}
+.cfti-progress{width:100%;height:4px;background:rgba(124,58,237,0.18);border-radius:4px;overflow:hidden;}
+#cfti-prog-fill{height:100%;background:#7c3aed;border-radius:4px;transition:width 0.35s;}
+#cfti-title{font-size:24px;font-weight:900;color:#a78bfa;line-height:1.2;margin-top:2px;}
+#cfti-body{font-size:14px;color:#9d8ec4;line-height:1.75;flex:1;}
+#cfti-body strong{color:#e8e0ff;}
+#cfti-body em{color:#c4b5fd;font-style:normal;font-weight:700;}
+#cfti-body p{margin-bottom:12px;}
+#cfti-body p:last-child{margin-bottom:0;}
+.cfti-footer{display:flex;justify-content:space-between;align-items:center;padding-top:4px;}
+#cfti-exit{padding:7px 16px;border:1px solid rgba(124,58,237,0.25);border-radius:7px;background:transparent;color:#4b3a6e;font-size:12px;cursor:pointer;font-family:inherit;transition:all 0.12s;}
+#cfti-exit:hover{color:#9d8ec4;border-color:rgba(124,58,237,0.5);}
+#cfti-next{padding:12px 32px;background:#7c3aed;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;transition:filter 0.12s;box-shadow:0 4px 16px rgba(124,58,237,0.4);}
+#cfti-next:hover{filter:brightness(1.12);}
+
+/* Two-column layout */
+.cfti-two-col{display:flex;gap:28px;align-items:flex-start;margin:8px 0;}
+.cfti-left{flex:0 0 42%;font-size:14px;line-height:1.75;}
+.cfti-right{flex:1;min-width:0;}
+@media(max-width:640px){.cfti-two-col{flex-direction:column;}.cfti-left{flex:none;width:100%;}}
+
+/* Compare boxes */
+.cfti-compare-box{display:flex;gap:14px;margin:14px 0;}
+.cfti-compare-side{flex:1;border-radius:10px;padding:14px 16px;}
+.cfti-compare-side.knn{background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.4);}
+.cfti-compare-side.nn{background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.3);}
+.cfti-compare-label{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:6px;}
+.cfti-compare-side.knn .cfti-compare-label{color:#a78bfa;}
+.cfti-compare-side.nn  .cfti-compare-label{color:#60a5fa;}
+.cfti-compare-text{font-size:12px;color:#9d8ec4;line-height:1.6;}
+.cfti-compare-text strong{color:#e8e0ff;}
+
+/* Concept row (icon + label) */
+.cfti-concept-row{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0;}
+.cfti-concept-chip{display:flex;align-items:center;gap:8px;padding:8px 14px;background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.3);border-radius:8px;font-size:13px;color:#c4b5fd;font-weight:700;}
+.cfti-concept-chip .ci{font-size:18px;}
+
+/* Game map (phase 1 → game mapping) */
+.cfti-map{display:flex;flex-direction:column;gap:8px;margin:10px 0;}
+.cfti-map-row{display:flex;align-items:center;gap:12px;padding:9px 14px;background:#1a1030;border:1px solid rgba(124,58,237,0.25);border-radius:8px;font-size:13px;}
+.cfti-map-left{font-weight:800;color:#a78bfa;min-width:140px;flex-shrink:0;}
+.cfti-map-arrow{color:#4b3a6e;flex-shrink:0;}
+.cfti-map-right{color:#9d8ec4;}
+
+/* ---------- GAME SIDEBAR ---------- */
+#cft-panel{display:none;position:fixed;top:44px;right:0;bottom:0;width:272px;z-index:310;background:#110d24;border-left:2px solid #7c3aed;padding:14px 16px 16px;flex-direction:column;gap:12px;box-shadow:-4px 0 28px rgba(0,0,0,0.7);overflow-y:auto;}
+body.cft-panel-active #cft-panel{display:flex;}
+body.cft-panel-active .game-body{padding-right:272px;}
+/* Tutorial loading overlay */
+#cft-loading{display:none;position:fixed;inset:0;background:rgba(5,3,15,0.97);z-index:490;align-items:center;justify-content:center;flex-direction:column;gap:16px;text-align:center;}
+body.cft-loading-active #cft-loading{display:flex;}
+.cft-loading-spinner{width:40px;height:40px;border:3px solid rgba(124,58,237,0.2);border-top-color:#7c3aed;border-radius:50%;animation:cft-spin 0.8s linear infinite;}
+@keyframes cft-spin{to{transform:rotate(360deg);}}
+.cft-header{display:flex;flex-direction:column;gap:6px;}
+#cft-step-label{font-size:10px;font-weight:700;color:#4b3a6e;text-transform:uppercase;letter-spacing:1px;}
+.cft-progress{width:100%;height:4px;background:rgba(124,58,237,0.18);border-radius:4px;overflow:hidden;}
+#cft-prog-fill{height:100%;background:#7c3aed;border-radius:4px;transition:width 0.3s;}
+#cft-title{font-size:14px;font-weight:800;color:#a78bfa;line-height:1.3;}
+#cft-body{font-size:12px;color:#9d8ec4;line-height:1.6;flex:1;overflow-y:auto;}
+#cft-body strong{color:#e8e0ff;}
+#cft-body em{color:#c4b5fd;font-style:normal;font-weight:700;}
+#cft-body p{margin-bottom:8px;}
+#cft-body p:last-child{margin-bottom:0;}
+#cft-body ul{padding-left:14px;margin:4px 0;}
+#cft-body li{margin-bottom:4px;}
+.cft-footer{display:flex;flex-direction:column;gap:8px;margin-top:auto;padding-top:8px;}
+#cft-hint{font-size:11px;color:#4b3a6e;line-height:1.4;min-height:16px;}
+#cft-hint em{color:#a78bfa;}
+#cft-exit{padding:6px 12px;border:1px solid rgba(124,58,237,0.25);border-radius:7px;background:transparent;color:#4b3a6e;font-size:11px;cursor:pointer;font-family:inherit;text-align:center;transition:all 0.12s;}
+#cft-exit:hover{background:rgba(124,58,237,0.1);color:#9d8ec4;}
+#cft-next{padding:9px 18px;background:#7c3aed;color:#fff;border:none;border-radius:7px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;width:100%;text-align:center;box-shadow:0 3px 12px rgba(124,58,237,0.35);}
+#cft-next:hover{filter:brightness(1.1);}
+
+/* Tutorial glow highlight */
+@keyframes cft-pulse{
+  0%,100%{outline-color:#a78bfa;box-shadow:0 0 0 2px #a78bfa,0 0 12px 4px rgba(167,139,250,0.45);}
+  50%{outline-color:#c4b5fd;box-shadow:0 0 0 3px #c4b5fd,0 0 22px 8px rgba(196,181,253,0.5);}
+}
+.cft-glow{outline:2px solid #a78bfa !important;outline-offset:3px;animation:cft-pulse 1.1s ease-in-out infinite !important;border-radius:6px;}
+
+@media(max-width:700px){
+  #cft-panel{top:auto;bottom:0;left:0;right:0;width:auto;height:auto;max-height:46vh;border-left:none;border-top:2px solid #7c3aed;box-shadow:0 -4px 24px rgba(0,0,0,0.65);}
+  body.cft-panel-active #side-panel{display:none;}
+}
+
 </style>
 </head>
 <body id="body">
 
-<!-- SVG icon defs -->
 <svg style="display:none" xmlns="http://www.w3.org/2000/svg">
   <symbol id="icon-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
   </symbol>
 </svg>
 
-<!-- ===== SIMPLE IN-GAME TOP NAV (only shown during waiting/game screens) ===== -->
 <nav id="top-nav">
   <a href="/">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
@@ -483,247 +401,46 @@ body.observer-active #side-panel .action-btns{pointer-events:none;opacity:0.5;}
   <span class="nav-current">Clusterflick</span>
 </nav>
 
-<!-- ===== MARKETING HEADER (only shown on landing/lobby) ===== -->
-<header class="cf-header" id="cf-header">
-  <a class="cf-header-logo" href="/">
-    <img src="/images/logo.png" alt="Tech CoLab logo" width="50" height="50" decoding="async">
-    <div>
-      <span class="cf-logo-text">Tech CoLab</span>
-      <span class="cf-logo-sub">Bridge the Gap.<br>Empower their Decisions.</span>
-    </div>
-  </a>
-  <nav class="cf-nav">
-    <a href="/">Home</a>
-    <div class="cf-nav-dropdown">
-      <button class="cf-nav-dropdown-trigger">Games ▾</button>
-      <div class="cf-nav-dropdown-menu">
-        <a href="/cybersecurity">Cybersecurity</a>
-        <div class="cf-nav-sub-dropdown"><button class="cf-nav-sub-trigger">Artificial Intelligence ▸</button><div class="cf-nav-sub-menu"><a href="/ai">Neural Network / LLM</a><a href="/knn" class="active">K-Nearest Neighbor</a></div></div>
-        <a href="/qubit-waitlist">Quantum Computing</a>
-      </div>
-    </div>
-    <div class="cf-nav-dropdown">
-      <button class="cf-nav-dropdown-trigger">Use Cases ▾</button>
-      <div class="cf-nav-dropdown-menu">
-        <a href="/board-culture-change">Broad Culture Change</a>
-        <a href="/focused-deep-work">Focused, Deep Work</a>
-      </div>
-    </div>
-    <a href="/blog">Blog</a>
-    <a href="/contact">Contact</a>
-    <a href="/buy-now" class="cf-nav-cta-buy">Buy Now</a>
-  </nav>
-</header>
-
-<!-- ===== LOBBY (re-formatted to mirror /ai marketing landing page) ===== -->
-<div id="lobby" class="screen active cf-landing">
+<div id="lobby" class="screen active">
   <div class="lobby-container">
 
-    <!-- HERO -->
-    <div class="cf-hero">
-      <div class="cf-hero-badge">Machine Learning · BETA</div>
-      <h1><span class="cf-game-name">Clusterflick</span></h1>
-      <p class="cf-hero-subtitle">Not all AI is GenAI. Clusterflick is a <strong>K-Nearest Neighbors</strong> physics board game: place labelled training data, flick photo tokens onto the board, and classification happens by proximity.</p>
-      <p class="cf-hero-subtitle cf-secondary">Sister game to <a href="/ai">FuzzNet Labs</a>. Where FuzzNet opens the GenAI black box, Clusterflick shows you <strong>machine learning outside GenAI</strong>: transparent, distance-based, and no black box.</p>
-      <div class="cf-hero-visual" aria-hidden="true">
-        <!-- K-NN visual: a query point surrounded by labelled neighbours, with distance lines to its k=3 nearest -->
-        <svg viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <filter id="cf-knn-glow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-          </defs>
-          <!-- Decision boundary suggestion: dashed circle around query showing "k=3 neighbourhood" -->
-          <circle cx="110" cy="110" r="58" fill="none" stroke="#a78bfa" stroke-opacity="0.55" stroke-width="1.5" stroke-dasharray="4 4">
-            <animate attributeName="r" values="55;62;55" dur="3s" repeatCount="indefinite"/>
-            <animate attributeName="stroke-opacity" values="0.45;0.7;0.45" dur="3s" repeatCount="indefinite"/>
-          </circle>
-          <!-- Distance lines from query to its 3 nearest labelled points -->
-          <g stroke="#a78bfa" stroke-width="1.4" stroke-opacity="0.85">
-            <line x1="110" y1="110" x2="78" y2="82"/>
-            <line x1="110" y1="110" x2="148" y2="92"/>
-            <line x1="110" y1="110" x2="124" y2="158"/>
-          </g>
-          <!-- Distant labelled points (faded - outside k=3) -->
-          <g opacity="0.45">
-            <circle cx="32" cy="40" r="6" fill="#fbbf24"/>
-            <circle cx="40" cy="172" r="6" fill="#4a9eff"/>
-            <circle cx="180" cy="42" r="6" fill="#fbbf24"/>
-            <circle cx="190" cy="170" r="6" fill="#6ee7b7"/>
-            <circle cx="172" cy="180" r="6" fill="#4a9eff"/>
-            <circle cx="20" cy="110" r="6" fill="#6ee7b7"/>
-          </g>
-          <!-- Close labelled points (the k=3 neighbours) -->
-          <g filter="url(#cf-knn-glow)">
-            <circle cx="78" cy="82" r="9" fill="#fbbf24" stroke="#fff" stroke-width="2"/>
-            <circle cx="148" cy="92" r="9" fill="#fbbf24" stroke="#fff" stroke-width="2"/>
-            <circle cx="124" cy="158" r="9" fill="#4a9eff" stroke="#fff" stroke-width="2"/>
-          </g>
-          <!-- Query point in the middle (the unclassified flick) -->
-          <g filter="url(#cf-knn-glow)">
-            <circle cx="110" cy="110" r="13" fill="#1a1030" stroke="#a78bfa" stroke-width="2.5"/>
-            <circle cx="110" cy="110" r="6" fill="#a78bfa">
-              <animate attributeName="opacity" values="0.6;1;0.6" dur="1.6s" repeatCount="indefinite"/>
-            </circle>
-          </g>
-          <!-- Pulse ring around query -->
-          <circle cx="110" cy="110" r="13" fill="none" stroke="#a78bfa" stroke-width="1.4">
-            <animate attributeName="r" values="13;26;13" dur="2.2s" repeatCount="indefinite"/>
-            <animate attributeName="opacity" values="0.7;0;0.7" dur="2.2s" repeatCount="indefinite"/>
-          </circle>
-        </svg>
-      </div>
-    </div>
-
-    <!-- FEATURES STRIP: learning objective previews -->
-    <div class="cf-features">
-      <div class="cf-feature">
-        <div class="cf-feature-icon">🌐</div>
-        <h3>Beyond the Black Box</h3>
-        <p>Machine learning is a whole family - GenAI is just one branch</p>
-      </div>
-      <div class="cf-feature">
-        <div class="cf-feature-icon">📍</div>
-        <h3>Distance, Not Probability</h3>
-        <p>K-NN classifies by similarity to known examples - no neural net required</p>
-      </div>
-      <div class="cf-feature">
-        <div class="cf-feature-icon">🧪</div>
-        <h3>Data IS the Model</h3>
-        <p>The training set isn't compressed into weights - every sample stays visible</p>
-      </div>
-      <div class="cf-feature">
-        <div class="cf-feature-icon">🧭</div>
-        <h3>You are AI-Fluent</h3>
-        <p>Knowing which kind of ML fits the job is what real AI literacy looks like</p>
-      </div>
-    </div>
-
-    <!-- CTA BUTTONS BAR -->
-    <div class="cf-cta-buttons-bar">
-      <button class="cf-btn-play-now" onclick="location.href='/clusterflick'">▶ Play Now. Free Online</button>
-      <button class="cf-btn-buy-physical" onclick="startTutorial()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        Learn How to Play
-      </button>
-    </div>
-
-    <!-- GAME INFO BAR -->
-    <div class="cf-game-info-bar">
-      <div class="cf-game-info-item">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="3"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><circle cx="17" cy="7" r="2" opacity="0.6"/><path d="M21 21v-1.5a4 4 0 0 0-3-3.87" opacity="0.6"/></svg>
-        2–4 Players
-      </div>
-      <div class="cf-game-info-item">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15" stroke="#c4b5fd"/></svg>
-        ~30 Min · 6 Rounds
-      </div>
-      <div class="cf-game-info-item">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6" stroke="#c4b5fd"/><circle cx="12" cy="12" r="2" fill="#c4b5fd" stroke="none"/></svg>
-        Ages 14+
-      </div>
-    </div>
-
-    <!-- DEEP LEARNING-OBJECTIVES SECTION (dark bg, concept cards) -->
-    <section class="cf-learning-bg">
-      <div class="cf-main">
-        <div class="cf-info-col">
-          <h2 data-reveal>Classify by similarity, <em>not by neural network.</em></h2>
-          <p data-reveal data-delay="1">Most AI literacy training stops at GenAI. But "machine learning" covers a whole family of algorithms - K-Nearest Neighbors, decision trees, clustering, regression, support vector machines - most of which look nothing like a transformer. Clusterflick puts you inside one of the simplest and most transparent: <strong>K-NN</strong>. Place the labelled training data. Flick a new sample onto the board. Where it lands - and which neighbours it lands closest to - decides what it is.</p>
-
-          <div class="cf-learn-section-label" data-reveal data-delay="2">What you'll actually understand after playing</div>
-
-          <ul class="cf-concept-list">
-            <li>
-              <div class="cf-concept-card" data-reveal>
-                <div class="cf-concept-card-top">
-                  <span class="cf-concept-icon">🌐</span>
-                  <strong>Beyond the Black Box</strong>
-                </div>
-                <p class="cf-concept-explain">When people say "AI" today they almost always mean GenAI - large neural networks like ChatGPT or image generators. But machine learning is a whole <em>family</em> of algorithms, and most of them aren't black boxes at all. K-Nearest Neighbors, decision trees, clustering, linear regression - these are all "AI" too, and many of them produce predictions you can actually inspect and explain. Clusterflick lets you experience one of those algorithms directly. Once you see how K-NN works, the GenAI hype starts to feel like one tool in a much larger toolbox.</p>
-              </div>
-            </li>
-            <li>
-              <div class="cf-concept-card" data-reveal>
-                <div class="cf-concept-card-top">
-                  <span class="cf-concept-icon">📍</span>
-                  <strong>Distance, Not Probability</strong>
-                </div>
-                <p class="cf-concept-explain">K-NN doesn't "learn" anything in the neural-network sense. There's no training run, no gradient descent, no weights. To classify a new input, K-NN just measures the distance to every labelled example it knows about, looks at the <em>k</em> closest ones, and takes a vote. That's it. In Clusterflick, that "distance" is literal - physical distance on the board between your flicked token and the sample squares around it. Understanding this distance-based logic is half of intuitively understanding most classical ML.</p>
-              </div>
-            </li>
-            <li>
-              <div class="cf-concept-card" data-reveal>
-                <div class="cf-concept-card-top">
-                  <span class="cf-concept-icon">🧪</span>
-                  <strong>Data IS the Model</strong>
-                </div>
-                <p class="cf-concept-explain">In a neural net, the training data gets compressed into millions of weights and effectively disappears - you can't point at any one number and say "this is what the model learned about cats." K-NN is the opposite extreme: <em>the training data is the model</em>. Every labelled sample stays visible, and predictions are made by direct comparison against them. That makes the consequences of bad data immediately obvious - mislabel one sample and you can watch its bad influence spread to everything that lands near it. It's a powerful, tactile lesson about why <strong>data quality matters more than algorithmic cleverness</strong> in most real ML projects.</p>
-              </div>
-            </li>
-            <li>
-              <div class="cf-concept-card" data-reveal>
-                <div class="cf-concept-card-top">
-                  <span class="cf-concept-icon">🧭</span>
-                  <strong>You are AI-Fluent</strong>
-                </div>
-                <p class="cf-concept-explain">Real AI fluency isn't being able to use ChatGPT. It's knowing which kind of model fits which kind of problem - and pushing back when someone reaches for GenAI on a problem that a 30-line classical ML algorithm would solve faster, cheaper, and more reliably. After Clusterflick, "AI" stops meaning "the magic chatbot" and starts meaning <em>a family of techniques with very different tradeoffs</em>. That's the difference between being talked at by AI vendors and asking the right questions.</p>
-              </div>
-            </li>
-          </ul>
+    <div class="lobby-hero">
+      <canvas id="lobby-preview-canvas" class="lobby-hero-board" width="220" height="220"></canvas>
+      <div class="lobby-hero-text">
+        <h1>Clusterflick</h1>
+        <p class="subtitle">K-Nearest Neighbors &middot; Machine Learning</p>
+        <div class="lobby-meta">
+          <span class="lobby-meta-item">&#x1F9E0; K-NN Algorithm</span>
+          <span class="lobby-meta-item">&#x1F465; 2-4 Players</span>
+          <span class="lobby-meta-item">&#x1F550; ~30 Min</span>
         </div>
+        <button class="lobby-tutorial-cta" onclick="startTutorial()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          How to Play
+        </button>
       </div>
-    </section>
+    </div>
 
-    <!-- WORKSHOP SECTION -->
-    <section class="cf-workshop">
-      <div class="cf-main">
-        <div class="cf-info-col" style="padding:0;">
-          <div class="cf-learn-section-label" data-reveal>Running a Workshop?</div>
-          <h2 data-reveal style="margin-bottom:12px;">Pair Clusterflick with FuzzNet Labs for a <em>complete picture of ML.</em></h2>
-          <p data-reveal data-delay="1">Use <strong>Clusterflick</strong> to teach the variety of machine learning that <em>isn't</em> GenAI - classical, transparent, distance-based methods. Then use <a href="/ai" style="color:#a78bfa;font-weight:800;">FuzzNet Labs</a> to teach the neural-network side: layered architectures, training cycles, and why GenAI is the way it is. Together they show participants that "AI" is bigger than the chatbot they used yesterday.</p>
-
-          <div class="cf-concept-card" data-reveal data-delay="2" style="margin-top:4px;">
-            <div class="cf-concept-card-top">
-              <span class="cf-concept-icon">🎯</span>
-              <strong>Suggested Workshop Flow</strong>
-            </div>
-            <p class="cf-concept-explain"><strong>Open with Clusterflick:</strong> Establish that ML is a family of algorithms - and that not all of them are mysterious. Participants build intuition for distance-based classification and the importance of training data placement.<br><br>
-            <strong>Bridge to FuzzNet Labs:</strong> Now contrast: what if your data has thousands of dimensions? What if "distance" stops being meaningful? That's where neural networks come in.<br><br>
-            <strong>Close with reflection:</strong> Which kind of model would you reach for on the problem your team is actually facing? Most of the time, the answer isn't GenAI.</p>
-          </div>
-
-          <div class="cf-concept-card" data-reveal data-delay="3">
-            <div class="cf-concept-card-top">
-              <span class="cf-concept-icon">🧰</span>
-              <strong>Run only the sections you need</strong>
-            </div>
-            <p class="cf-concept-explain">Clusterflick's tutorial is a self-paced overlay you can have participants run before or during the session. The <em>Learn How to Play</em> button walks through K-NN concepts and gameplay together, so you don't need to lecture before play begins.</p>
-          </div>
-
-          <div data-reveal data-delay="4" style="margin-top:8px;">
-            <a href="/blog/how-to-facilitate-an-ai-literacy-workshop" class="cf-workshop-cta-link">
-              Read the Workshop Facilitation Guide
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7 H12 M8 3 L12 7 L8 11" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </a>
-          </div>
-        </div>
+    <div class="lobby-section">
+      <div class="lo-strip">
+        <div class="lo-item"><div class="lo-item-icon">&#x1F310;</div><div class="lo-item-title">Beyond the Black Box</div><div class="lo-item-desc">ML is a family - GenAI is just one branch</div></div>
+        <div class="lo-item"><div class="lo-item-icon">&#x1F4CD;</div><div class="lo-item-title">Distance, Not Probability</div><div class="lo-item-desc">K-NN classifies by similarity, no neural net needed</div></div>
+        <div class="lo-item"><div class="lo-item-icon">&#x1F9EA;</div><div class="lo-item-title">Data IS the Model</div><div class="lo-item-desc">Every sample stays visible - no hidden weights</div></div>
+        <div class="lo-item"><div class="lo-item-icon">&#x1F9ED;</div><div class="lo-item-title">AI Fluency</div><div class="lo-item-desc">Know which ML tool fits which job</div></div>
       </div>
-    </section>
+    </div>
 
-    <!-- PLAY ONLINE SECTION (Create / Join) -->
-    <section class="cf-play-online" id="cf-play-section">
-      <div class="cf-main">
-        <div class="lobby-section-head" style="margin-bottom:18px;"><span class="lobby-section-label">Play Now · Free Online</span></div>
-        <div class="invited-banner" id="invited-banner">
-          <div class="invited-banner-icon">🎮</div>
-          <div class="invited-banner-text">
-            <span class="invited-banner-title">You've been invited to room <span class="invited-banner-code" id="invited-banner-code"></span></span>
-            <span class="invited-banner-sub">Enter your name and pick a role in the Join card below.</span>
-          </div>
-          <div class="invited-banner-arrow">↓</div>
+    <div class="lobby-section">
+      <div class="lobby-section-head"><span class="lobby-section-label">Play Now &middot; Free Online</span></div>
+      <div class="invited-banner" id="invited-banner">
+        <div class="invited-banner-icon">&#x1F3AE;</div>
+        <div class="invited-banner-text">
+          <span class="invited-banner-title">You've been invited to room <span class="invited-banner-code" id="invited-banner-code"></span></span>
+          <span class="invited-banner-sub">Enter your name and pick a role in the Join card below.</span>
         </div>
-        <div class="lobby-play-grid">
-
-          <!-- Create -->
+        <div class="invited-banner-arrow">&#x2193;</div>
+      </div>
+      <div class="lobby-play-grid">
           <div class="lobby-card" id="lobby-create-card">
             <h3>Create Game</h3>
             <p class="card-desc">Share the room code to invite players, or play solo vs a bot.</p>
@@ -773,20 +490,12 @@ body.observer-active #side-panel .action-btns{pointer-events:none;opacity:0.5;}
             <button class="lobby-btn btn-join" id="btn-join" onclick="joinRoom()" disabled>Join Game</button>
             <div class="error-msg" id="join-error"></div>
           </div>
-
-        </div>
       </div>
-    </section>
-
-    <!-- FOOTER -->
-    <footer class="cf-footer">
-      <p>© 2026 Tech CoLab · <a href="/">Back to all games</a> · <a href="/ai">FuzzNet Labs (sister game)</a></p>
-    </footer>
+    </div>
 
   </div>
 </div>
 
-<!-- ===== WAITING ROOM ===== -->
 <div id="waiting" class="screen">
   <div style="font-size:14px;color:#7c5cbf">Room Code</div>
   <div class="room-code-display" id="room-code-display">----</div>
@@ -811,7 +520,6 @@ body.observer-active #side-panel .action-btns{pointer-events:none;opacity:0.5;}
   <div class="error-msg" id="waiting-error"></div>
 </div>
 
-<!-- ===== GAME ===== -->
 <div id="game" class="screen">
   <!-- Observer banner -->
   <div id="observer-banner">
@@ -866,20 +574,34 @@ body.observer-active #side-panel .action-btns{pointer-events:none;opacity:0.5;}
   <div id="status-bar"></div>
 </div>
 
-<!-- ===== TUTORIAL OVERLAY ===== -->
-<div id="tutorial-overlay">
-  <div id="tutorial-card">
-    <div class="tut-header">
-      <span id="tut-step">Step 1 of 8</span>
-      <div class="tut-progress"><div id="tut-progress-fill" style="width:12%"></div></div>
+<!-- ===== TUTORIAL PHASE 1: CONCEPT INTRO OVERLAY ===== -->
+<div id="cft-intro">
+  <div id="cft-intro-card">
+    <div class="cfti-header">
+      <span class="cfti-label" id="cfti-label">Concept 1 of 4</span>
+      <div class="cfti-progress"><div id="cfti-prog-fill" style="width:25%"></div></div>
+      <div id="cfti-title"></div>
     </div>
-    <h3 id="tut-title"></h3>
-    <div id="tut-body"></div>
-    <div class="tut-footer">
-      <span class="tut-footer-left" id="tut-hint"></span>
-      <button id="tut-exit" onclick="endTutorial()">Exit</button>
-      <button id="tut-next" onclick="tutNext()">Next →</button>
+    <div id="cfti-body"></div>
+    <div class="cfti-footer">
+      <button id="cfti-exit" onclick="cftIntroExit()">Skip Tutorial</button>
+      <button id="cfti-next" onclick="cftIntroNext()">Next →</button>
     </div>
+  </div>
+</div>
+
+<!-- ===== TUTORIAL PHASE 2: IN-GAME SIDEBAR ===== -->
+<div id="cft-panel">
+  <div class="cft-header">
+    <span id="cft-step-label">Step 1 of 8</span>
+    <div class="cft-progress"><div id="cft-prog-fill" style="width:12%"></div></div>
+    <div id="cft-title"></div>
+  </div>
+  <div id="cft-body"></div>
+  <div class="cft-footer">
+    <div id="cft-hint"></div>
+    <button id="cft-next" onclick="cftGameNext()">Next →</button>
+    <button id="cft-exit" onclick="cftGameExit()">Exit Tutorial</button>
   </div>
 </div>
 
@@ -890,6 +612,13 @@ body.observer-active #side-panel .action-btns{pointer-events:none;opacity:0.5;}
     <h3 id="info-title"></h3>
     <div id="info-body"></div>
   </div>
+</div>
+
+<!-- ===== TUTORIAL LOADING OVERLAY ===== -->
+<div id="cft-loading">
+  <div class="cft-loading-spinner"></div>
+  <div style="color:#a78bfa;font-size:18px;font-weight:800;margin-top:4px;">Setting up tutorial game&hellip;</div>
+  <div style="color:#7c5cbf;font-size:13px;">Starting a practice match vs bot</div>
 </div>
 
 <!-- ===== CANCEL MODAL ===== -->
@@ -1921,6 +1650,11 @@ function handleMsg(msg){
     case 'room_created':
       roomCode=msg.code;myId=msg.yourId;isHost=true;isObserver=false;
       if(msg.token)sessionStorage.setItem(SESSION_KEY,msg.token);
+      if(cftTutPendingStart){
+        // Tutorial auto-flow: silently add a bot
+        send({type:'toggle_bot'});
+        break;
+      }
       document.getElementById('room-code-display').textContent=roomCode;
       showScreen('waiting');
       document.getElementById('btn-bot-toggle').style.display='block';
@@ -1948,14 +1682,28 @@ function handleMsg(msg){
     case 'rejoin_failed':
       sessionStorage.removeItem(SESSION_KEY);showScreen('lobby');break;
     case 'lobby_update':
+      if(cftTutPendingStart){
+        // Tutorial auto-flow: start game once bot is in the room
+        if(msg.players && msg.players.some(p=>p.isBot)) send({type:'start_game'});
+        break;
+      }
       renderLobbyPlayers(msg.players,msg.observers||[]);
       break;
     case 'game_started':
       if(isObserver)document.body.classList.add('observer-active');
       else document.body.classList.remove('observer-active');
       boardImageData=null;
+      if(cftTutPendingStart){
+        cftTutPendingStart = false;
+        cftTutMode = true;
+      }
       showScreen('game');
       document.getElementById('btn-end-game').style.display=isHost?'inline-block':'none';
+      if(cftTutMode){
+        document.body.classList.remove('cft-loading-active');
+        document.body.classList.add('cft-panel-active');
+        cftRenderGame();
+      }
       break;
     case 'state_update':
       if(msg.isObserver||isObserver){isObserver=true;myId=-1;}
@@ -1963,7 +1711,8 @@ function handleMsg(msg){
       if(!msg.isObserver&&!isObserver&&msg.yourId!==undefined)myId=msg.yourId;
       renderGame();
       startRenderLoop();
-      if(G.gameOver)setTimeout(showGameOver,500);
+      if(G && G.gameOver) setTimeout(showGameOver,500);
+      if(cftTutMode && G) cftTutCheckAdvance(G);
       break;
     case 'left_room':
       sessionStorage.removeItem(SESSION_KEY);roomCode='';myId=-1;G=null;isObserver=false;
@@ -2144,52 +1893,297 @@ function toggleHTP(){
   document.getElementById('htp-toggle').textContent=b.classList.contains('open')?'How to Play ▴':'How to Play ▾';
 }
 
-// ==================== TUTORIAL ====================
-const TUT_STEPS=[
-  {title:'Welcome to Clusterflick!',
-   body:`<p>Clusterflick turns <strong>K-Nearest Neighbors (K-NN)</strong> - a classical machine learning algorithm - into a physics flicking game. K-NN classifies things by asking <em>"what does this most look like?"</em> and looking at the closest known examples.</p><p>It's a different kind of AI than the GenAI/neural-network world (that's our sister game, <strong>FuzzNet Labs</strong>). Here, every sample you place is visible, the math is simple, and there's no black box.</p><p>Flick photo tokens onto the board to classify them, and place sample data to shape future classifications. First player to collect <strong>8+ confidence for all 6 animals</strong> wins. 6 rounds max.</p>`},
-  {title:'The Board',
-   body:`<p>The circular board is divided into <strong>6 animal wedge zones</strong> (Frog 🐸, Fish 🐟, Rabbit 🐰, Dog 🐕, Bird 🐦, Squirrel 🐿️), each with <strong>5 concentric confidence bands</strong> numbered 1–5.</p><p>The <strong>dark center circle</strong> is the Unclassified zone - tokens landing there score 0 points. Band 5 (the outer ring) scores 5 points.</p>`},
-  {title:'Your Flick Zone',
-   body:`<p>Each player has a <strong>corner Flick Zone</strong> on the board. When it's your turn, your zone glows with your player color.</p><p>To flick, <strong>click and drag backward from your zone</strong> - like pulling back a slingshot. The farther you drag, the more power. <strong>Release to flick!</strong></p>`},
-  {title:'Your Turn Actions',
-   body:`<p>Before each flick, choose your action using the two buttons near your Flick Zone. Each turn defaults to <strong>Identify</strong>:</p><ul><li><strong>📷 Identify Photo</strong> - Flick a token onto the board. It stays and earns confidence points at round end based on where it lands.</li><li><strong>🎲 Add Samples</strong> - <strong>Once per round.</strong> Flick a token as sample data. If it lands in an animal zone (confidence 1–5), that many sample squares are placed inside that animal's circle, and the token is removed from play.</li></ul><p>Choose strategically - samples build walls and boost scores, but only Identify tokens count toward your confidence!</p>`},
-  {title:'Sample Squares - Walls & Bonus',
-   body:`<p>Sample squares are the <strong>K-NN "neighbors"</strong> - labelled training examples. In a real K-NN model, a new input gets classified by looking at the labels of the closest known data points. In Clusterflick, that closeness is literal: where you land matters because of what's next to you.</p><ul><li><strong>Walls:</strong> Tokens flicked into a sample square <strong>bounce off it</strong> - use them to block opponents or set up ricochets.</li><li><strong>Neighbor Bonus:</strong> At round end, each matching-animal square <strong>touching your unidentified token</strong> or in the <strong>same confidence band</strong> grants <strong>+1 confidence</strong>. Good neighbors → stronger classification.</li></ul><p>Add Samples is limited to <strong>once per round</strong> - placing data well matters as much as placing it often.</p>`},
-  {title:'Doubled Animal',
-   body:`<p>Every round, one animal's confidence points are <strong>doubled</strong>. The doubled animal is shown with a ⭐ gold badge in the side panel.</p><p>Strategically flick toward the doubled animal's zone - and consider seeding samples there - to maximize your score!</p>`},
-  {title:'The Reflick',
-   body:`<p>After using the <strong>🎲 Add Samples</strong> action and placing your squares, if you have any identified tokens already on the board you get an <strong>optional free Reflick</strong>.</p><p>Tap any of your glowing tokens on the board, then drag from your Flick Zone to send it to a better position - perfect for nudging a token into a higher-confidence band or next to a matching sample square. Or click <strong>Skip Reflick</strong> to pass.</p>`},
-  {title:'Winning',
-   body:`<p>After all players flick each round, all Unidentified tokens are scored. Then the board is cleared for the next round.</p><p>Win by being the <strong>first to reach 8+ confidence in all 6 animals</strong>. If no one reaches this after 6 rounds, the player with the most completed animals wins. Ties broken by total confidence points.</p><p>You're ready to play - good luck! 🎯</p>`},
+// ==================== TUTORIAL (TWO-PHASE) ====================
+
+// ── Phase 1: Concept intro steps ──────────────────────────────────────────
+const CFT_INTRO_STEPS = [
+  {
+    title: 'Machine Learning is Bigger Than GenAI',
+    body: `<p>When most people say "AI" they picture <strong>ChatGPT, image generators, or large language models</strong> — all examples of <em>Generative AI</em>, built on deep neural networks.</p>
+<p>But machine learning is a whole <strong>family of algorithms</strong>. Most of them look nothing like a neural network. <em>K-Nearest Neighbors (K-NN)</em> is one of the oldest, simplest, and most transparent.</p>
+<div class="cfti-concept-row">
+  <div class="cfti-concept-chip"><span class="ci">🧠</span> Neural Networks / GenAI</div>
+  <div class="cfti-concept-chip"><span class="ci">📍</span> K-Nearest Neighbors</div>
+  <div class="cfti-concept-chip"><span class="ci">🌲</span> Decision Trees</div>
+  <div class="cfti-concept-chip"><span class="ci">📈</span> Linear Regression</div>
+  <div class="cfti-concept-chip"><span class="ci">🔵</span> Clustering</div>
+</div>
+<p><strong>Clusterflick</strong> puts you inside K-NN — so you can experience an algorithm that is the <em>opposite</em> of a black box.</p>`
+  },
+  {
+    title: 'How K-NN Actually Works',
+    body: `<div class="cfti-two-col">
+  <div class="cfti-left">
+    <p>K-NN stands for <strong>K-Nearest Neighbors</strong>. To classify a new input, it asks one question:</p>
+    <p><em>"What are the k closest labeled examples I already know about — and what label do most of them have?"</em></p>
+    <p>That's the entire algorithm. No training run. No weights. No gradient descent. <strong>The training data is the model.</strong></p>
+    <p>In the diagram: the query point (pulsing circle) looks at its <strong>3 nearest neighbors</strong>. Two are yellow, one is blue. K-NN votes yellow — so the new point is classified yellow.</p>
+  </div>
+  <div class="cfti-right" style="display:flex;align-items:center;justify-content:center;">
+    <svg viewBox="0 0 220 220" width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+      <defs><filter id="cft-glow2"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+      <circle cx="110" cy="110" r="58" fill="none" stroke="#a78bfa" stroke-opacity="0.5" stroke-width="1.5" stroke-dasharray="4 4"><animate attributeName="r" values="55;62;55" dur="3s" repeatCount="indefinite"/></circle>
+      <g stroke="#a78bfa" stroke-width="1.4" stroke-opacity="0.8"><line x1="110" y1="110" x2="78" y2="82"/><line x1="110" y1="110" x2="148" y2="92"/><line x1="110" y1="110" x2="124" y2="158"/></g>
+      <g opacity="0.35"><circle cx="32" cy="40" r="6" fill="#fbbf24"/><circle cx="40" cy="172" r="6" fill="#4a9eff"/><circle cx="180" cy="42" r="6" fill="#fbbf24"/><circle cx="190" cy="170" r="6" fill="#6ee7b7"/><circle cx="172" cy="180" r="6" fill="#4a9eff"/><circle cx="20" cy="110" r="6" fill="#6ee7b7"/></g>
+      <g filter="url(#cft-glow2)">
+        <circle cx="78" cy="82" r="9" fill="#fbbf24" stroke="#fff" stroke-width="1.5"/>
+        <circle cx="148" cy="92" r="9" fill="#fbbf24" stroke="#fff" stroke-width="1.5"/>
+        <circle cx="124" cy="158" r="9" fill="#4a9eff" stroke="#fff" stroke-width="1.5"/>
+      </g>
+      <g filter="url(#cft-glow2)">
+        <circle cx="110" cy="110" r="13" fill="#1a1030" stroke="#a78bfa" stroke-width="2"/>
+        <circle cx="110" cy="110" r="6" fill="#a78bfa"><animate attributeName="opacity" values="0.5;1;0.5" dur="1.6s" repeatCount="indefinite"/></circle>
+      </g>
+      <text x="78" y="72" text-anchor="middle" font-size="9" fill="#fbbf24" font-weight="bold">🐕</text>
+      <text x="148" y="82" text-anchor="middle" font-size="9" fill="#fbbf24" font-weight="bold">🐕</text>
+      <text x="124" y="148" text-anchor="middle" font-size="9" fill="#4a9eff" font-weight="bold">🐟</text>
+      <text x="110" y="108" text-anchor="middle" font-size="9" fill="#e8e0ff" font-weight="bold">?</text>
+    </svg>
+  </div>
+</div>`
+  },
+  {
+    title: 'K-NN vs Neural Networks: Two Different Tools',
+    body: `<p>Neither is universally better. They solve different problems.</p>
+<div class="cfti-compare-box">
+  <div class="cfti-compare-side knn">
+    <div class="cfti-compare-label">K-Nearest Neighbors</div>
+    <div class="cfti-compare-text">
+      <strong>No training.</strong> Prediction is a live lookup.<br><br>
+      <strong>Fully transparent.</strong> Every decision traces back to specific data points you can inspect.<br><br>
+      <strong>Data is the model.</strong> Remove a sample and the model instantly changes.<br><br>
+      <strong>Use when:</strong> datasets are small-to-medium, interpretability matters, or you need to explain every prediction.
+    </div>
+  </div>
+  <div class="cfti-compare-side nn">
+    <div class="cfti-compare-label">Neural Network (GenAI)</div>
+    <div class="cfti-compare-text">
+      <strong>Trained on data.</strong> Patterns compressed into millions of weights.<br><br>
+      <strong>Black box.</strong> Hard to trace why a specific prediction was made.<br><br>
+      <strong>Scales to complexity.</strong> Images, language, audio — things K-NN can't handle efficiently.<br><br>
+      <strong>Use when:</strong> datasets are massive, inputs are high-dimensional (e.g. text, images), and raw performance matters more than explainability.
+    </div>
+  </div>
+</div>
+<p style="font-size:13px;color:#6b5ea8;"><em>Real AI fluency</em> means knowing which tool fits which problem — not just using GenAI for everything.</p>`
+  },
+  {
+    title: 'How Clusterflick Represents K-NN',
+    body: `<p>Every element of the game maps directly to the K-NN algorithm. As you play, you're not just playing a game — you're running the algorithm by hand.</p>
+<div class="cfti-map">
+  <div class="cfti-map-row"><span class="cfti-map-left">🎯 Photo token</span><span class="cfti-map-arrow">→</span><span class="cfti-map-right">A new unlabeled data point being classified</span></div>
+  <div class="cfti-map-row"><span class="cfti-map-left">🟪 Sample squares</span><span class="cfti-map-arrow">→</span><span class="cfti-map-right">Labeled training data (the "k neighbors")</span></div>
+  <div class="cfti-map-row"><span class="cfti-map-left">📍 Landing position</span><span class="cfti-map-arrow">→</span><span class="cfti-map-right">Distance measurement — proximity decides the label</span></div>
+  <div class="cfti-map-row"><span class="cfti-map-left">🏅 Neighbor bonus</span><span class="cfti-map-arrow">→</span><span class="cfti-map-right">Nearest neighbor influence — close samples boost confidence</span></div>
+  <div class="cfti-map-row"><span class="cfti-map-left">🎪 Board zones</span><span class="cfti-map-arrow">→</span><span class="cfti-map-right">The label space — 6 animal classes, 5 confidence levels</span></div>
+</div>
+<p>Now let's walk through the game itself. Click <strong>Start Playing →</strong> to open the game guide.</p>`
+  }
 ];
-const TUT_TOTAL=TUT_STEPS.length;
+
+// ── Phase 2: In-game sidebar steps ──────────────────────────────────────────
+const CFT_GAME_STEPS = [
+  {
+    title: 'The Board',
+    body: `<p>The circular board is divided into <strong>6 animal zones</strong> (Frog, Fish, Rabbit, Dog, Bird, Squirrel), each with <strong>5 concentric confidence bands</strong>.</p>
+<p><em>Band 1</em> (inner) = 1 pt &nbsp;·&nbsp; <em>Band 5</em> (outer) = 5 pts</p>
+<p>The <strong>dark centre circle</strong> is the Unclassified zone — tokens landing there score <em>0 pts</em>.</p>`,
+    hint: 'Look at the circular board in the centre of the screen.',
+    hl: null
+  },
+  {
+    title: 'Your Flick Zone',
+    body: `<p>Each player has a <strong>corner Flick Zone</strong>. When it's your turn, your zone glows in your player colour.</p>
+<p>To flick: <strong>click and drag backward</strong> from your zone (like a slingshot), then release. The farther you drag, the more power.</p>
+<p>Aim for the animal zone where you want to classify your photo.</p>`,
+    hint: 'Your flick zone is the coloured corner on the board.',
+    hl: null
+  },
+  {
+    title: '📷 Identify Photo',
+    body: `<p>The default action each turn. <strong>Identify Photo</strong> is already selected in the action panel.</p>
+<p>Click and drag backward from your <strong>corner Flick Zone</strong>, then release to flick your token onto the board. It stays where it lands and is scored at round end.</p>
+<p>Score = the confidence band number (1-5) where it lands.</p>
+<p style="margin-top:10px;padding:8px 10px;background:rgba(124,58,237,0.1);border-radius:6px;border-left:3px solid #7c3aed;"><strong>Your turn — make a flick now to continue.</strong></p>`,
+    hint: 'Drag back from your glowing corner zone and release to flick.',
+    hl: 'action-btns',
+    forced: true
+  },
+  {
+    title: '🎲 Add Samples',
+    body: `<p><strong>Once per round.</strong> Switch to <em>Add Samples</em> in the action panel, then flick. If it lands in an animal zone, that many sample squares are placed there as training data.</p>
+<p>The token is removed. You then get a free Reflick to nudge one of your Identify tokens.</p>
+<p>Samples act as walls and grant a neighbor bonus to nearby tokens at scoring.</p>
+<p style="margin-top:10px;padding:8px 10px;background:rgba(124,58,237,0.1);border-radius:6px;border-left:3px solid #7c3aed;"><strong>Select Add Samples below, then make a flick to continue.</strong></p>`,
+    hint: 'Switch to Add Samples in the action panel, then flick from your corner zone.',
+    hl: 'action-btns',
+    forced: true
+  },
+  {
+    title: 'Sample Squares: Walls + Neighbor Bonus',
+    body: `<p>Sample squares are the K-NN <em>"neighbors"</em> — labeled training data placed on the board.</p>
+<ul>
+  <li><strong>Walls:</strong> Tokens bounce off sample squares. Use them to redirect flicks or block opponents.</li>
+  <li><strong>Neighbor Bonus:</strong> At round end, each matching-animal square <em>touching</em> your token or in the <em>same confidence band</em> gives <strong>+1 confidence</strong>.</li>
+</ul>
+<p>Good data placement amplifies your score.</p>`,
+    hint: 'This is K-NN in action — proximity to labeled examples determines classification strength.',
+    hl: null
+  },
+  {
+    title: '⭐ Doubled Animal',
+    body: `<p>Every round, one animal's confidence points are <strong>doubled</strong>. The doubled animal is shown with a gold ⭐ badge here in the side panel.</p>
+<p>Prioritise that zone — and seed samples there — to maximise your score.</p>`,
+    hint: 'Check the Round Schedule above for the doubled animal each round.',
+    hl: 'doubled-wrap'
+  },
+  {
+    title: 'The Reflick',
+    body: `<p>After using <strong>Add Samples</strong> and placing your squares, if you have identified tokens on the board you get an <strong>optional free Reflick</strong>.</p>
+<p>Tap any of your glowing tokens, then drag from your Flick Zone to nudge it to a better position. Or click <strong>Skip Reflick</strong> to pass.</p>`,
+    hint: 'Use this to move a token closer to matching samples or a higher confidence band.',
+    hl: null
+  },
+  {
+    title: 'Winning',
+    body: `<p>At the end of each round, all Identify tokens are scored. The board then clears for the next round.</p>
+<p><strong>Win condition:</strong> First player to reach <em>8+ confidence in all 6 animals</em> wins. If no one does after 6 rounds, the player with the most completed animals wins. Ties broken by total confidence.</p>
+<p>Watch your confidence bars here →</p>`,
+    hint: "You're ready to play. Close this panel any time.",
+    hl: 'sp-scores-section'
+  }
+];
+
+let cftIntroStep = 0;
+let cftGameStep  = 0;
+let cftActive    = false;
+let cftTutMode   = false;   // Phase 2 is live (game running)
+let cftTutPendingStart = false; // waiting for auto-game to start
 
 function startTutorial(){
-  tutorialMode=true;tutStep=0;
-  const card=document.getElementById('tutorial-card');card.style.display='block';
-  renderTutStep();
-  // Show tutorial on game screen if on lobby
-  if(document.getElementById('lobby').classList.contains('active')){}
+  cftIntroStep = 0;
+  cftActive = true;
+  document.body.classList.add('cft-intro-active');
+  cftRenderIntro();
 }
-function endTutorial(){
-  tutorialMode=false;
-  document.getElementById('tutorial-card').style.display='none';
+
+function cftRenderIntro(){
+  const s = CFT_INTRO_STEPS[cftIntroStep];
+  const total = CFT_INTRO_STEPS.length;
+  document.getElementById('cfti-label').textContent = `Concept ${cftIntroStep+1} of ${total}`;
+  document.getElementById('cfti-prog-fill').style.width = ((cftIntroStep+1)/total*100)+'%';
+  document.getElementById('cfti-title').textContent = s.title;
+  document.getElementById('cfti-body').innerHTML = s.body;
+  const isLast = cftIntroStep === total-1;
+  document.getElementById('cfti-next').textContent = isLast ? 'Start Playing →' : 'Next →';
 }
-function tutNext(){
-  tutStep++;
-  if(tutStep>=TUT_TOTAL){endTutorial();return;}
-  renderTutStep();
+
+function cftIntroNext(){
+  cftIntroStep++;
+  if(cftIntroStep >= CFT_INTRO_STEPS.length){
+    document.body.classList.remove('cft-intro-active');
+    cftStartGamePhase();
+    return;
+  }
+  cftRenderIntro();
 }
-function renderTutStep(){
-  const s=TUT_STEPS[tutStep];
-  document.getElementById('tut-step').textContent=`Step ${tutStep+1} of ${TUT_TOTAL}`;
-  document.getElementById('tut-progress-fill').style.width=((tutStep+1)/TUT_TOTAL*100)+'%';
-  document.getElementById('tut-title').textContent=s.title;
-  document.getElementById('tut-body').innerHTML=s.body;
-  document.getElementById('tut-next').textContent=tutStep===TUT_TOTAL-1?'Got it ✓':'Next →';
-  document.getElementById('tut-hint').textContent='';
+
+function cftIntroExit(){
+  document.body.classList.remove('cft-intro-active');
+  document.body.classList.remove('cft-loading-active');
+  cftTutMode = false;
+  cftTutPendingStart = false;
+  cftActive = false;
 }
+
+function cftStartGamePhase(){
+  cftGameStep = 0;
+  cftTutMode = false;
+  cftTutPendingStart = true;
+  // Show loading overlay and auto-create a 1v1 bot game
+  document.body.classList.add('cft-loading-active');
+  send({type:'create_room', gameType:'clusterflick', playerName:'You', color:'blue'});
+}
+
+function cftRenderGame(){
+  const s = CFT_GAME_STEPS[cftGameStep];
+  const total = CFT_GAME_STEPS.length;
+  document.getElementById('cft-step-label').textContent = `Step ${cftGameStep+1} of ${total}`;
+  document.getElementById('cft-prog-fill').style.width = ((cftGameStep+1)/total*100)+'%';
+  document.getElementById('cft-title').textContent = s.title;
+  document.getElementById('cft-body').innerHTML = s.body;
+
+  const nextBtn = document.getElementById('cft-next');
+  const hint    = document.getElementById('cft-hint');
+  if(s.forced){
+    nextBtn.style.display = 'none';
+    hint.innerHTML = '<em style="color:#a78bfa">👆 Complete the action above to continue</em>';
+  } else {
+    nextBtn.style.display = 'block';
+    nextBtn.textContent = cftGameStep === total-1 ? 'Done ✓' : 'Next →';
+    hint.innerHTML = s.hint ? `<em>↑</em> ${s.hint}` : '';
+  }
+
+  // Glow highlight
+  document.querySelectorAll('.cft-glow').forEach(el=>el.classList.remove('cft-glow'));
+  if(s.hl){
+    const el = document.getElementById(s.hl);
+    if(el) el.classList.add('cft-glow');
+  }
+}
+
+function cftGameNext(){
+  document.querySelectorAll('.cft-glow').forEach(el=>el.classList.remove('cft-glow'));
+  cftGameStep++;
+  if(cftGameStep >= CFT_GAME_STEPS.length){ cftGameExit(); return; }
+  cftRenderGame();
+}
+
+function cftGameExit(){
+  document.querySelectorAll('.cft-glow').forEach(el=>el.classList.remove('cft-glow'));
+  document.body.classList.remove('cft-panel-active');
+  document.body.classList.remove('cft-loading-active');
+  cftTutMode = false;
+  cftTutPendingStart = false;
+  cftActive = false;
+  // Leave the tutorial game and return to the lobby
+  sessionStorage.removeItem(SESSION_KEY);
+  G = null;
+  if(ws && ws.readyState === 1) send({type:'leave_room'});
+  showScreen('lobby');
+}
+
+// Auto-advance tutorial to a specific step (only moves forward)
+function cftTutAdvance(toStep){
+  if(!cftTutMode) return;
+  if(cftGameStep >= toStep) return;
+  cftGameStep = toStep;
+  cftRenderGame();
+}
+
+// Called from processStateUpdate / state_update handler to check forced-step completions
+function cftTutCheckAdvance(state){
+  if(!cftTutMode || !state) return;
+  // Step 2 forced (Identify Photo): advance when player has placed their first token
+  if(cftGameStep === 2){
+    const myToks = state.tokens.filter(t=>t.active && !t.sampleConsumed && t.playerIdx===myId);
+    if(myToks.length > 0) setTimeout(()=>cftTutAdvance(3), 700);
+  }
+  // Step 3 forced (Add Samples): advance when placing_samples phase triggers for this player
+  if(cftGameStep === 3 && state.phase==='placing_samples' && state.placingInfo?.playerIdx===myId){
+    setTimeout(()=>cftTutAdvance(4), 500);
+  }
+  // Steps 4-5: auto-skip to Reflick step when sample_reflick phase starts for this player
+  if(cftGameStep >= 4 && cftGameStep < 6 && state.phase==='sample_reflick' && state.sampleReflickFor===myId){
+    setTimeout(()=>cftTutAdvance(6), 500);
+  }
+  // Step 6 (Reflick): advance once reflick phase ends (phase returns to flicking)
+  if(cftGameStep === 6 && state.phase==='flicking'){
+    setTimeout(()=>cftTutAdvance(7), 600);
+  }
+}
+
+function endTutorial(){ cftGameExit(); cftIntroExit(); }
 
 // ==================== INFO OVERLAY ====================
 function showInfo(key){
@@ -2210,14 +2204,9 @@ function showScreen(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   if(id==='gameover'){document.getElementById('gameover').style.display='flex';document.getElementById('game').classList.remove('active');}
-  // Marketing header is only visible on the lobby (landing). Hide it during waiting / game / gameover.
-  const cfHeader=document.getElementById('cf-header');
-  if(cfHeader){cfHeader.style.display=(id==='lobby')?'flex':'none';}
-  // The simple in-page #top-nav is the inverse: hidden on lobby, shown on waiting/game.
   const tn=document.getElementById('top-nav');
-  if(tn){tn.style.display=(id==='lobby')?'none':'flex';}
-  // Body padding-top compensation: 0 on lobby (full-bleed header), 44px otherwise (compact in-game nav)
-  document.body.style.paddingTop=(id==='lobby')?'0':'44px';
+  if(tn){tn.style.display='flex';}
+  document.body.style.paddingTop='44px';
 }
 
 // ==================== UTILITIES ====================
@@ -2229,9 +2218,8 @@ function escHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').
 
 // ==================== INIT ====================
 window.addEventListener('DOMContentLoaded',()=>{
-  // Lobby is the initial active screen - hide the in-game top-nav and show the marketing header.
-  const tn=document.getElementById('top-nav'); if(tn) tn.style.display='none';
-  document.body.style.paddingTop='0';
+  const tn=document.getElementById('top-nav'); if(tn) tn.style.display='flex';
+  document.body.style.paddingTop='44px';
 
   cfLoadAnimalImages();
   drawLobbyPreview();
@@ -2239,7 +2227,6 @@ window.addEventListener('DOMContentLoaded',()=>{
   connectWS(()=>{
     const token=sessionStorage.getItem(SESSION_KEY);
     if(token)send({type:'rejoin_room',token});
-    // Pre-fill invited room code
     const params=new URLSearchParams(location.search);
     const roomParam=params.get('room');
     if(roomParam){
@@ -2252,52 +2239,8 @@ window.addEventListener('DOMContentLoaded',()=>{
     }
     if(params.get('tutorial')==='1')startTutorial();
   });
-
-  // ===== Scroll-reveal for [data-reveal] elements (mirrors /ai page) =====
-  (function(){
-    const els=document.querySelectorAll('[data-reveal]');
-    if(!els.length||!('IntersectionObserver' in window)){
-      els.forEach(el=>el.classList.add('is-visible'));return;
-    }
-    const io=new IntersectionObserver(entries=>{
-      entries.forEach(entry=>{
-        if(entry.isIntersecting){entry.target.classList.add('is-visible');io.unobserve(entry.target);}
-      });
-    },{threshold:0.1,rootMargin:'0px 0px -40px 0px'});
-    els.forEach(el=>io.observe(el));
-  })();
-
-  // ===== Marketing-header dropdowns (Games / Use Cases) =====
-  (function(){
-    const dropdowns=document.querySelectorAll('.cf-nav-dropdown');
-    dropdowns.forEach(dd=>{
-      const trigger=dd.querySelector('.cf-nav-dropdown-trigger');
-      const menu=dd.querySelector('.cf-nav-dropdown-menu');
-      if(!trigger||!menu)return;
-      trigger.addEventListener('click',e=>{
-        e.stopPropagation();
-        dropdowns.forEach(other=>{
-          if(other!==dd){
-            const om=other.querySelector('.cf-nav-dropdown-menu');
-            const ot=other.querySelector('.cf-nav-dropdown-trigger');
-            if(om)om.classList.remove('open');
-            if(ot)ot.classList.remove('open');
-          }
-        });
-        const isOpen=menu.classList.toggle('open');
-        trigger.classList.toggle('open',isOpen);
-      });
-    });
-    document.addEventListener('click',()=>{
-      dropdowns.forEach(dd=>{
-        const om=dd.querySelector('.cf-nav-dropdown-menu');
-        const ot=dd.querySelector('.cf-nav-dropdown-trigger');
-        if(om)om.classList.remove('open');
-        if(ot)ot.classList.remove('open');
-      });
-    });
-  })();
 });
+
 </script>
 </body>
 </html>

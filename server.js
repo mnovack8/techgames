@@ -1975,10 +1975,20 @@ function handleMessage(ws, raw) {
       const observers = room.observers || (room.observers = []);
       if (observers.length >= 10) return send(ws, {type:'error', msg:'Observer limit reached (max 10)'});
       leaveRoom(ws, true);
-      const observerIdx = observers.length;
-      const isObsHost = observerIdx === 0;
       const name = sanitizeName(msg.name, 'Observer');
-      observers.push({ ws, name, connected: true });
+      // For event rooms, replace the null placeholder at index 0 so the first real
+      // observer inherits host status instead of being pushed to index 1.
+      const placeholderIdx = room.isEventRoom ? observers.findIndex(o => o.ws === null) : -1;
+      let observerIdx, isObsHost;
+      if (placeholderIdx !== -1) {
+        observers[placeholderIdx] = { ws, name, connected: true };
+        observerIdx = placeholderIdx;
+        isObsHost = placeholderIdx === 0;
+      } else {
+        observerIdx = observers.length;
+        isObsHost = observerIdx === 0;
+        observers.push({ ws, name, connected: true });
+      }
       wsData.set(ws, { roomCode: code, playerIdx: -1, isObserver: true, observerIdx });
       send(ws, { type: 'joined_as_observer', code, observerIdx, isHost: isObsHost, started: room.started });
       broadcastLobby(room);
@@ -3824,7 +3834,7 @@ const server = http.createServer((req, res) => {
   }
   if (pathname === '/byteclub' || pathname === '/byteclub.html') pathname = '/byteclub.html';
   else if (pathname === '/fuzznet' || pathname === '/fuzznet.html') pathname = '/fuzznet.html';
-  else if (pathname === '/knn' || pathname === '/knn.html') pathname = '/clusterflick.html';
+  else if (pathname === '/knn' || pathname === '/knn.html') pathname = '/knn.html';
   else if (pathname === '/clusterflick' || pathname === '/clusterflick.html') pathname = '/clusterflick.html';
   else if (pathname === '/cybersecurity' || pathname === '/cybersecurity.html') pathname = '/cybersecurity.html';
   else if (pathname === '/ai' || pathname === '/ai.html') pathname = '/ai.html';
