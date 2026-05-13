@@ -1,0 +1,52 @@
+/* ============================================================
+   SHARED GAME TOP-NAV — game-nav.css
+   Used by byteclub, clusterflick, fuzznet game pages.
+   Override colours per-game with CSS custom properties:
+
+     :root {
+       --gn-bg:           rgba(13,10,26,0.95);
+       --gn-border:       #7c3aed;
+       --gn-shadow:       0 1px 12px rgba(124,58,237,0.3);
+       --gn-link:         #a78bfa;
+       --gn-link-hover:   rgba(124,58,237,0.15);
+       --gn-divider:      #4b3a6e;
+       --gn-current:      #7c5cbf;
+     }
+
+   Load via: <link rel="stylesheet" href="/game-nav.css">
+   ============================================================ */
+
+/* Defaults match fuzznet (light theme) */
+:root {
+  --gn-bg:          rgba(255,255,255,0.92);
+  --gn-border:      #d1db24;
+  --gn-shadow:      0 1px 6px rgba(0,0,0,0.04);
+  --gn-link:        #4a8c11;
+  --gn-link-hover:  #f4fae8;
+  --gn-divider:     #ccc;
+  --gn-current:     #888;
+}
+
+#top-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: 44px;
+  background: var(--gn-bg);
+  backdrop-filter: blur(8px);
+  border-bottom: 2px solid var(--gn-border);
+  display: flex; align-items: center;
+  padding: 0 20px; gap: 0;
+  box-shadow: var(--gn-shadow);
+}
+#top-nav a {
+  font-size: 13px; font-weight: 700;
+  color: var(--gn-link);
+  text-decoration: none;
+  display: flex; align-items: center; gap: 5px;
+  padding: 5px 10px; border-radius: 7px;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+#top-nav a:hover { background: var(--gn-link-hover); }
+#top-nav .nav-divider { margin: 0 8px; color: var(--gn-divider); font-size: 16px; flex-shrink: 0; }
+#top-nav .nav-current { font-size: 13px; font-weight: 600; color: var(--gn-current); flex-shrink: 0; }
+body { padding-top: 44px; }

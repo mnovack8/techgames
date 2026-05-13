@@ -87,7 +87,6 @@ nav a {
   border-radius: 8px;
   transition: background 0.15s, color 0.15s;
 }
-nav a:hover { background: #f4fae8; color: #4a8c11; }
 @keyframes orbit-clockwise {
   from { transform: rotate(0deg); }
   to   { transform: rotate(360deg); }
@@ -112,43 +111,29 @@ nav a:hover { background: #f4fae8; color: #4a8c11; }
   from { transform: translate(0, 0); }
   to   { transform: translate(30px, 30px); }
 }
-nav a.active { color: #4a8c11; background: #f4fae8; }
-nav a.nav-cta-buy { background: #62b517; color: #fff; margin-left: 4px; box-shadow: 0 2px 6px rgba(98,181,23,0.3); }
-nav a.nav-cta-buy:hover { background: #4a8c11; color: #fff; }
 nav a.nav-cta { color: #4a4a4a; background: none; margin-left: 0; }
 nav a.nav-cta:hover { background: #f4fae8; color: #4a8c11; }
-.nav-dropdown { position: relative; display: flex; align-items: center; }
-.nav-dropdown-trigger {
   font-size: 15px; font-weight: 700; color: #4a4a4a;
   background: none; border: none; padding: 8px 18px;
   border-radius: 8px; cursor: pointer; font-family: inherit;
   transition: background 0.15s, color 0.15s;
 }
-.nav-dropdown-trigger.open { background: #f4fae8; color: #4a8c11; }
-.nav-dropdown-menu {
   position: absolute; top: calc(100% + 4px); left: 0;
   background: #fff; border: 1.5px solid #dde8c8;
   border-radius: 10px; box-shadow: 0 8px 24px rgba(98,181,23,0.15);
   padding: 6px; min-width: 200px;
   display: none; flex-direction: column; gap: 2px; z-index: 200;
 }
-.nav-dropdown-menu.open { display: flex; }
-.nav-sub-dropdown{position:relative;}.nav-sub-trigger{display:flex;align-items:center;justify-content:space-between;width:100%;padding:8px 14px;border-radius:7px;font-size:14px;font-weight:700;color:#4a4a4a;background:none;border:none;cursor:pointer;font-family:inherit;text-align:left;transition:background 0.15s,color 0.15s;white-space:nowrap;}.nav-sub-trigger:hover,.nav-sub-dropdown:hover .nav-sub-trigger{background:#f4fae8;color:#4a8c11;}.nav-sub-menu{position:absolute;left:100%;top:-6px;background:#fff;border:1.5px solid #dde8c8;border-radius:10px;box-shadow:0 8px 24px rgba(98,181,23,0.15);padding:6px;min-width:200px;display:none;flex-direction:column;gap:2px;z-index:300;}.nav-sub-dropdown:hover .nav-sub-menu{display:flex;}
-.nav-dropdown-menu a {
   display: block; padding: 8px 14px; border-radius: 7px;
   font-size: 14px; font-weight: 700; color: #4a4a4a;
   text-decoration: none; transition: background 0.15s, color 0.15s;
   white-space: nowrap;
 }
-.nav-dropdown-menu a:hover,
 .nav-dropdown-menu a.active { background: #f4fae8; color: #4a8c11; }
 @media (max-width: 600px) {
   header { padding: 8px 16px 6px; height: auto; flex-direction: column; align-items: center; gap: 4px; }
   .header-logo .logo-text { font-size: 12px; }
   .header-logo .logo-sub { font-size: 8px; letter-spacing: 1px; }
-  nav { gap: 0; justify-content: center; flex-wrap: wrap; }
-  nav a { padding: 6px 5px; font-size: 12px; }
-  .nav-dropdown-trigger { padding: 6px 5px; font-size: 12px; }
 }
 
 /* ===== HERO ===== */
@@ -594,6 +579,7 @@ footer a:hover { text-decoration: underline; }
   "publisher": { "@type": "Organization", "name": "Tech CoLab", "url": "https://cybersecgames.com", "logo": { "@type": "ImageObject", "url": "https://cybersecgames.com/images/logo.svg" } }
 }
 </script>
+<link rel="stylesheet" href="/nav.css">
 </head>
 <body>
 
@@ -849,57 +835,7 @@ footer a:hover { text-decoration: underline; }
 </footer>
 
 <script>
-// Scroll reveal
-(function() {
-  var els = document.querySelectorAll('[data-reveal]');
-  if (!els.length || !('IntersectionObserver' in window)) {
-    els.forEach(function(el) { el.classList.add('is-visible'); });
-    return;
-  }
-  var io = new IntersectionObserver(function(entries) {
-    entries.forEach(function(entry) {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('is-visible');
-        io.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-  els.forEach(function(el) { io.observe(el); });
-})();
-function trackClick(button) {
-  fetch('/track', { method:'POST', headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({ type:'button_click', button }) }).catch(()=>{});
-}
-// Games dropdown click toggle
-(function() {
-  var dropdowns = document.querySelectorAll('.nav-dropdown');
-  dropdowns.forEach(function(dd) {
-    var trigger = dd.querySelector('.nav-dropdown-trigger');
-    var menu    = dd.querySelector('.nav-dropdown-menu');
-    if (!trigger || !menu) return;
-    trigger.addEventListener('click', function(e) {
-      e.stopPropagation();
-      dropdowns.forEach(function(other) {
-        if (other !== dd) {
-          var om = other.querySelector('.nav-dropdown-menu');
-          var ot = other.querySelector('.nav-dropdown-trigger');
-          if (om) om.classList.remove('open');
-          if (ot) ot.classList.remove('open');
-        }
-      });
-      var isOpen = menu.classList.toggle('open');
-      trigger.classList.toggle('open', isOpen);
-    });
-  });
-  document.addEventListener('click', function() {
-    dropdowns.forEach(function(dd) {
-      var om = dd.querySelector('.nav-dropdown-menu');
-      var ot = dd.querySelector('.nav-dropdown-trigger');
-      if (om) om.classList.remove('open');
-      if (ot) ot.classList.remove('open');
-    });
-  });
-})();
 </script>
+<script src="/nav.js"></script>
 </body>
 </html>

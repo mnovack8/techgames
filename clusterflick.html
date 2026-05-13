@@ -21,13 +21,6 @@ html.tutorial-loading body{visibility:hidden;}
 html.tutorial-loading #cft-intro,html.tutorial-loading #cft-intro *{visibility:visible;}
 html.tutorial-loading{background:#0d0a1a;}
 
-/* ===== TOP NAV ===== */
-#top-nav{position:fixed;top:0;left:0;right:0;z-index:100;height:44px;background:rgba(13,10,26,0.95);backdrop-filter:blur(8px);border-bottom:2px solid #7c3aed;display:flex;align-items:center;padding:0 20px;box-shadow:0 1px 12px rgba(124,58,237,0.3);}
-#top-nav a{font-size:13px;font-weight:700;color:#a78bfa;text-decoration:none;display:flex;align-items:center;gap:5px;padding:5px 10px;border-radius:7px;transition:background 0.15s;}
-#top-nav a:hover{background:rgba(124,58,237,0.15);}
-#top-nav .nav-divider{margin:0 8px;color:#4b3a6e;font-size:16px;}
-#top-nav .nav-current{font-size:13px;font-weight:600;color:#7c5cbf;}
-body{padding-top:44px;}
 
 /* ===== SCREENS ===== */
 .screen{display:none;}
@@ -383,6 +376,8 @@ body.cft-loading-active #cft-loading{display:flex;}
 }
 
 </style>
+<link rel="stylesheet" href="/game-nav.css">
+<style>:root{--gn-bg:rgba(13,10,26,0.95);--gn-border:#7c3aed;--gn-shadow:0 1px 12px rgba(124,58,237,0.3);--gn-link:#a78bfa;--gn-link-hover:rgba(124,58,237,0.15);--gn-divider:#4b3a6e;--gn-current:#7c5cbf;}</style>
 </head>
 <body id="body">
 
