@@ -586,6 +586,7 @@ rect.tut-animal-hl { animation: tut-hl-pulse 1.1s ease-in-out infinite; }
 })();
 </script>
 <link rel="stylesheet" href="/game-nav.css">
+<script src="/lobby.js"></script>
 </head>
 <body>
 
@@ -764,6 +765,7 @@ rect.tut-animal-hl { animation: tut-hl-pulse 1.1s ease-in-out infinite; }
             </span>
           </button>
           <button class="lobby-btn btn-create" id="btn-create" onclick="createRoom()" disabled style="margin-top:10px">▶ Create Game</button>
+          <div class="error-msg" id="create-error"></div>
         </div>
 
         <!-- JOIN GAME -->
@@ -794,7 +796,7 @@ rect.tut-animal-hl { animation: tut-hl-pulse 1.1s ease-in-out infinite; }
             </span>
           </button>
           <button class="lobby-btn btn-join" id="btn-join" disabled onclick="joinRoom()" style="margin-top:10px">Join Room</button>
-          <div class="error-msg" id="lobby-error"></div>
+          <div class="error-msg" id="join-error"></div>
         </div>
 
       </div>
@@ -1044,12 +1046,7 @@ let myObserverIdx = -1;
 let viewingPlayer = -1; // -1 = my board (players); for observers: 0..N-1 (which player to view)
 let G = null;
 let selectedDice = new Set();
-let createColor = 'blue';
-let joinColor = '';
-let joinAvailable = [];
-let canObserveJoin = true;
-let createObserverSelected = false;
-let joinObserverSelected = false;
+// Lobby state managed by LobbyUI (lobby.js)
 let prevCurrentPlayer = -1;
 let tutorialMode = false;
 let tutorialStep = 0;
@@ -1188,7 +1185,7 @@ function handleServerMsg(msg) {
       document.getElementById('room-code-display').textContent = roomCode;
       break;
     case 'room_info':
-      handleRoomInfo(msg);
+      LobbyUI.handleRoomInfo(msg);
       break;
     case 'room_joined':
       roomCode = msg.code; myId = msg.yourId; isHost = !!msg.isHost;
@@ -1290,7 +1287,7 @@ function handleServerMsg(msg) {
       document.getElementById('btn-cancel-game').style.display = 'none';
       hideCancelModal();
       showScreen('lobby');
-      document.getElementById('lobby-error').textContent = 'The host ended the game.';
+      document.getElementById('join-error').textContent = 'The host ended the game.';
       break;
     case 'event_room_created':
       fnEventRooms.set(msg.code, { code: msg.code, playerCount: 0, status: 'pending' });
@@ -1313,9 +1310,8 @@ function handleServerMsg(msg) {
     case 'error': {
       const lobbyActive = document.getElementById('lobby').classList.contains('active');
       const waitActive = document.getElementById('waiting').classList.contains('active');
-      if (lobbyActive) document.getElementById('lobby-error').textContent = msg.msg;
+      if (lobbyActive) document.getElementById('join-error').textContent = msg.msg;
       else if (waitActive) document.getElementById('waiting-error').textContent = msg.msg;
-      if (msg.availableColors) { joinAvailable = msg.availableColors; renderJoinColors(); }
       break;
     }
   }
@@ -1336,179 +1332,7 @@ function showScreen(id) {
 }
 
 // ==================== LOBBY ====================
-function selectCreateColor(color) {
-  createColor = color;
-  // Deselect observer when picking a color
-  if (createObserverSelected) {
-    createObserverSelected = false;
-    document.getElementById('create-obs-btn').classList.remove('selected');
-    document.getElementById('create-player-role').classList.add('active');
-  }
-  document.querySelectorAll('#create-colors .color-btn').forEach(b =>
-    b.classList.toggle('selected', b.dataset.color === color));
-  updateCreateBtn();
-}
-function selectJoinColor(color) {
-  joinColor = color;
-  if (joinObserverSelected) {
-    joinObserverSelected = false;
-    document.getElementById('join-obs-btn').classList.remove('selected');
-    document.getElementById('join-player-role').classList.add('active');
-  }
-  document.querySelectorAll('#join-colors .color-btn').forEach(b =>
-    b.classList.toggle('selected', b.dataset.color === color));
-  updateJoinBtn();
-}
-function selectCreateRole(role) {
-  if (role === 'player' && createObserverSelected) {
-    createObserverSelected = false;
-    document.getElementById('create-obs-btn').classList.remove('selected');
-    document.getElementById('create-player-role').classList.add('active');
-    updateCreateBtn();
-  }
-}
-function selectJoinRole(role) {
-  if (role === 'player' && joinObserverSelected) {
-    joinObserverSelected = false;
-    document.getElementById('join-obs-btn').classList.remove('selected');
-    document.getElementById('join-player-role').classList.add('active');
-    updateJoinBtn();
-  }
-}
-function toggleCreateObserver() {
-  createObserverSelected = !createObserverSelected;
-  const btn = document.getElementById('create-obs-btn');
-  const playerBox = document.getElementById('create-player-role');
-  if (createObserverSelected) {
-    btn.classList.add('selected');
-    playerBox.classList.remove('active');
-    // Deselect color to make it obvious observer mode is active
-    createColor = null;
-    document.querySelectorAll('#create-colors .color-btn').forEach(b => b.classList.remove('selected'));
-  } else {
-    btn.classList.remove('selected');
-    playerBox.classList.add('active');
-    // Restore default color
-    createColor = 'blue';
-    document.querySelectorAll('#create-colors .color-btn').forEach(b =>
-      b.classList.toggle('selected', b.dataset.color === 'blue'));
-  }
-  updateCreateBtn();
-}
-function toggleJoinObserver() {
-  if (!canObserveJoin) return;
-  joinObserverSelected = !joinObserverSelected;
-  const btn = document.getElementById('join-obs-btn');
-  const playerBox = document.getElementById('join-player-role');
-  if (joinObserverSelected) {
-    btn.classList.add('selected');
-    playerBox.classList.remove('active');
-    joinColor = null;
-    document.querySelectorAll('#join-colors .color-btn').forEach(b => b.classList.remove('selected'));
-  } else {
-    btn.classList.remove('selected');
-    playerBox.classList.add('active');
-  }
-  updateJoinBtn();
-}
-function updateCreateBtn() {
-  const name = document.getElementById('create-name')?.value.trim() || '';
-  const playerReady = createColor && name.length >= 1;
-  const observerReady = createObserverSelected && name.length >= 1;
-  document.getElementById('btn-create').disabled = !playerReady && !observerReady;
-}
-function updateJoinBtn() {
-  const name = document.getElementById('join-name')?.value.trim() || '';
-  const code = document.getElementById('join-code').value.trim();
-  const codeOk = code.length === 4;
-  const playerReady = joinColor && codeOk && name.length >= 1;
-  const observerReady = joinObserverSelected && codeOk && name.length >= 1;
-  document.getElementById('btn-join').disabled = !playerReady && !observerReady;
-}
-function renderJoinColors() {
-  const c = document.getElementById('join-colors');
-  c.style.opacity = '1'; c.style.pointerEvents = 'auto';
-  c.querySelectorAll('.color-btn').forEach(b => {
-    b.disabled = !joinAvailable.includes(b.dataset.color);
-    b.classList.remove('selected');
-  });
-  joinColor = '';
-  // Reset observer selection when room changes
-  joinObserverSelected = false;
-  document.getElementById('join-obs-btn').classList.remove('selected');
-  document.getElementById('join-player-role').classList.add('active');
-  updateJoinBtn();
-}
-function checkRoom() {
-  const code = document.getElementById('join-code').value.trim().toUpperCase();
-  document.getElementById('lobby-error').textContent = '';
-  // Reset observer state when code changes
-  joinObserverSelected = false;
-  document.getElementById('join-obs-btn').classList.remove('selected');
-  document.getElementById('join-player-role').classList.add('active');
-  if (code.length === 4) {
-    sendMsg({ type: 'check_room', code });
-  } else {
-    const colors = document.getElementById('join-colors');
-    colors.style.opacity = '0.3';
-    colors.style.pointerEvents = 'none';
-    document.getElementById('join-obs-btn').disabled = true;
-    canObserveJoin = false;
-    document.getElementById('btn-join').disabled = true;
-  }
-}
-function handleRoomInfo(msg) {
-  const el = document.getElementById('lobby-error');
-  const obsBtn = document.getElementById('join-obs-btn');
-  if (!msg.exists) { el.textContent = 'Room not found'; canObserveJoin = false; obsBtn.disabled = true; return; }
-  if (msg.started) {
-    if (msg.rejoinColors && msg.rejoinColors.length > 0) {
-      el.textContent = 'Game in progress. Select your color to rejoin.';
-      joinAvailable = msg.rejoinColors;
-      renderJoinColors();
-      document.getElementById('btn-join').textContent = 'Rejoin Game';
-    } else {
-      el.textContent = 'Game in progress. No open slots to rejoin.';
-    }
-    // Allow observer to join mid-game if slots are open for observing
-    canObserveJoin = msg.canObserve !== false;
-    obsBtn.disabled = !canObserveJoin;
-    return;
-  }
-  if (msg.full) {
-    el.textContent = 'Room is full';
-    canObserveJoin = msg.canObserve !== false;
-    obsBtn.disabled = !canObserveJoin;
-    return;
-  }
-  el.textContent = '';
-  joinAvailable = msg.availableColors || [];
-  canObserveJoin = msg.canObserve !== false;
-  obsBtn.disabled = !canObserveJoin;
-  document.getElementById('btn-join').textContent = 'Join Game';
-  renderJoinColors();
-}
-function createRoom() {
-  const name = document.getElementById('create-name').value.trim();
-  if (!name) return;
-  if (createObserverSelected) {
-    sendMsg({ type: 'create_room_as_observer', gameType: 'fuzznet', name });
-    return;
-  }
-  if (!createColor) return;
-  sendMsg({ type: 'create_room', color: createColor, playerName: name });
-}
-function joinRoom() {
-  const code = document.getElementById('join-code').value.trim().toUpperCase();
-  const name = document.getElementById('join-name').value.trim();
-  if (!code || !name) return;
-  if (joinObserverSelected) {
-    sendMsg({ type: 'join_as_observer', code, name });
-    return;
-  }
-  if (!joinColor) return;
-  sendMsg({ type: 'join_room', code, color: joinColor, playerName: name });
-}
+// Lobby form logic lives in lobby.js (LobbyUI). Init call is at the bottom in INIT.
 function leaveRoom() {
   sessionStorage.removeItem(SESSION_KEY);
   sendMsg({ type: 'leave_room' });
@@ -3277,6 +3101,7 @@ function updateTutOverlay(idx) {
 }
 
 // ==================== INIT ====================
+LobbyUI.init({ gameType: 'fuzznet', sendFn: sendMsg });
 // Defensive: force lobby on init, regardless of any leftover state
 showScreen('lobby');
 connect();

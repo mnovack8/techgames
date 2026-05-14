@@ -128,6 +128,8 @@ html.tutorial-loading{background:#060d03;}
 .color-btn.selected{border-color:#d1db24;box-shadow:0 0 0 3px rgba(209,219,36,0.3);}
 .color-btn:disabled{opacity:0.2;cursor:not-allowed;transform:none;}
 
+.player-role-box{border:2px solid #374151;border-radius:10px;padding:10px 14px;cursor:pointer;transition:border-color 0.15s;margin-bottom:8px;}
+.player-role-box.active{border-color:#62b517;}
 .lobby-btn{width:100%;padding:12px;font-size:16px;border:none;border-radius:8px;cursor:pointer;font-weight:700;transition:all 0.15s;margin-top:8px;}
 .lobby-btn:hover:not(:disabled){transform:scale(1.01);filter:brightness(1.08);}
 .lobby-btn:disabled{opacity:0.4;cursor:not-allowed;}
@@ -1204,6 +1206,7 @@ body.screen-idle-glow::after{
 </script>
 <link rel="stylesheet" href="/game-nav.css">
 <style>:root{--gn-bg:rgba(6,13,3,0.96);--gn-border:#d1db24;--gn-shadow:0 1px 8px rgba(0,0,0,0.4);--gn-link:#62b517;--gn-link-hover:rgba(98,181,23,0.12);--gn-divider:#4b5563;--gn-current:#6b7280;}</style>
+<script src="/lobby.js"></script>
 </head>
 <body>
 
@@ -1305,12 +1308,17 @@ body.screen-idle-glow::after{
       <h3>Create Game</h3>
       <p style="font-size:12px;color:#6b7280;margin:-4px 0 8px">Share the room code to invite players, or play solo vs a bot.</p>
       <div class="role-section-label" style="margin-top:4px">Your Name</div>
-      <input class="lobby-input name-input" id="create-name" maxlength="12" placeholder="Required for all roles" oninput="onCreateNameInput()">
+      <input class="lobby-input name-input" id="create-name" maxlength="12" placeholder="Required for all roles" oninput="updateCreateBtn()">
       <div class="role-section-label">Choose Your Role</div>
       <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:4px;">
-        <div id="create-player-role" style="border:2px solid #374151;border-radius:10px;padding:10px 14px;cursor:pointer;transition:all 0.15s;" onclick="selectCreateRole('player')">
+        <div id="create-player-role" class="player-role-box active" onclick="selectCreateRole('player')">
           <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#62b517;margin-bottom:6px">Player</div>
-          <div class="color-options" id="create-colors" style="margin:0;justify-content:flex-start;gap:8px;"></div>
+          <div class="color-options" id="create-colors" style="margin:0;justify-content:flex-start;gap:8px;">
+            <button class="color-btn selected" data-color="blue" style="background:#4a9eff" onclick="event.stopPropagation();selectCreateColor('blue')">Blue</button>
+            <button class="color-btn" data-color="red" style="background:#ff4a4a" onclick="event.stopPropagation();selectCreateColor('red')">Red</button>
+            <button class="color-btn" data-color="green" style="background:#4aff8a" onclick="event.stopPropagation();selectCreateColor('green')">Green</button>
+            <button class="color-btn" data-color="purple" style="background:#c880ff" onclick="event.stopPropagation();selectCreateColor('purple')">Purple</button>
+          </div>
         </div>
         <button class="observer-role-btn" id="create-obs-btn" onclick="toggleCreateObserver()">
           <span class="obs-role-icon"><svg class="obs-eye-icon obs-eye-lg"><use href="#icon-obs-eye"/></svg></span>
@@ -1330,14 +1338,19 @@ body.screen-idle-glow::after{
     <!-- JOIN ROOM -->
     <div class="lobby-card" id="lobby-join-card">
       <h3>Join a Game</h3>
-      <input class="lobby-input" id="join-code" maxlength="4" placeholder="ROOM CODE" oninput="onCodeInput(this)">
+      <input class="lobby-input" id="join-code" maxlength="4" placeholder="ROOM CODE" oninput="checkRoom()">
       <div class="role-section-label">Your Name</div>
       <input class="lobby-input name-input" id="join-name" maxlength="12" placeholder="Required for all roles" oninput="updateJoinBtn()">
       <div class="role-section-label">Choose Your Role</div>
       <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:4px;">
-        <div id="join-player-role" style="border:2px solid #374151;border-radius:10px;padding:10px 14px;cursor:pointer;transition:all 0.15s;" onclick="selectJoinRole('player')">
+        <div id="join-player-role" class="player-role-box" onclick="selectJoinRole('player')">
           <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#62b517;margin-bottom:6px">Player</div>
-          <div class="color-options" id="join-colors" style="margin:0;justify-content:flex-start;gap:8px;"></div>
+          <div class="color-options" id="join-colors" style="margin:0;justify-content:flex-start;gap:8px;opacity:0.3;pointer-events:none;">
+            <button class="color-btn" data-color="blue" style="background:#4a9eff" onclick="event.stopPropagation();selectJoinColor('blue')">Blue</button>
+            <button class="color-btn" data-color="red" style="background:#ff4a4a" onclick="event.stopPropagation();selectJoinColor('red')">Red</button>
+            <button class="color-btn" data-color="green" style="background:#4aff8a" onclick="event.stopPropagation();selectJoinColor('green')">Green</button>
+            <button class="color-btn" data-color="purple" style="background:#c880ff" onclick="event.stopPropagation();selectJoinColor('purple')">Purple</button>
+          </div>
         </div>
         <button class="observer-role-btn" id="join-obs-btn" onclick="toggleJoinObserver()">
           <span class="obs-role-icon"><svg class="obs-eye-icon obs-eye-lg"><use href="#icon-obs-eye"/></svg></span>
@@ -1874,10 +1887,7 @@ const COLORS = Object.keys(COLOR_INFO);
 
 const WS_URL = location.protocol === 'https:' ? 'wss://' + location.host : 'ws://' + location.host;
 let ws;
-let myColor = null;          // join form selected color
-let createColor = null;      // create form selected color
-let createObserverSelected = false;
-let joinObserverSelected = false;
+// Lobby form state managed by LobbyUI (lobby.js)
 let myId = null;
 let myObserverIdx = -1;
 let roomCode = null;
@@ -2349,167 +2359,7 @@ function send(msg) {
 }
 
 // ==================== LOBBY ====================
-function renderColorButtons(containerId, selectedColor, disabledColors, onPick) {
-  const el = document.getElementById(containerId);
-  el.innerHTML = '';
-  COLORS.forEach(c => {
-    const btn = document.createElement('button');
-    btn.className = 'color-btn' + (selectedColor === c ? ' selected' : '');
-    btn.style.background = COLOR_INFO[c].hex;
-    btn.textContent = COLOR_INFO[c].name;
-    btn.disabled = disabledColors.includes(c);
-    btn.onclick = () => onPick(c);
-    el.appendChild(btn);
-  });
-}
-
-// ── Create colors init ──
-(function initCreateColors() {
-  function pick(c) {
-    createColor = c;
-    createObserverSelected = false;
-    document.getElementById('create-obs-btn').classList.remove('selected');
-    document.getElementById('create-player-role').style.borderColor = '#62b517';
-    renderColorButtons('create-colors', c, [], pick);
-    updateCreateBtn();
-  }
-  renderColorButtons('create-colors', null, [], pick);
-})();
-
-function selectCreateRole(role) {
-  // Clicking the player box area. Deselect observer
-  if (role === 'player' && createObserverSelected) {
-    createObserverSelected = false;
-    document.getElementById('create-obs-btn').classList.remove('selected');
-    updateCreateBtn();
-  }
-}
-
-function selectJoinRole(role) {
-  if (role === 'player' && joinObserverSelected) {
-    joinObserverSelected = false;
-    document.getElementById('join-obs-btn').classList.remove('selected');
-    updateJoinBtn();
-  }
-}
-
-function onCreateNameInput() {
-  updateCreateBtn();
-}
-
-function toggleCreateObserver() {
-  createObserverSelected = !createObserverSelected;
-  const btn = document.getElementById('create-obs-btn');
-  const playerBox = document.getElementById('create-player-role');
-  if (createObserverSelected) {
-    btn.classList.add('selected');
-    // Visually deselect colors
-    createColor = null;
-    playerBox.style.borderColor = '#374151';
-    renderColorButtons('create-colors', null, [], function pick(c) {
-      createColor = c;
-      createObserverSelected = false;
-      btn.classList.remove('selected');
-      playerBox.style.borderColor = '#62b517';
-      renderColorButtons('create-colors', c, [], pick);
-      updateCreateBtn();
-    });
-  } else {
-    btn.classList.remove('selected');
-  }
-  updateCreateBtn();
-}
-
-function updateCreateBtn() {
-  const name = document.getElementById('create-name')?.value.trim() || '';
-  const playerReady = createColor && name.length >= 1;
-  const observerReady = createObserverSelected && name.length >= 1;
-  document.getElementById('btn-create').disabled = !playerReady && !observerReady;
-}
-
-function toggleJoinObserver() {
-  joinObserverSelected = !joinObserverSelected;
-  const btn = document.getElementById('join-obs-btn');
-  const playerBox = document.getElementById('join-player-role');
-  if (joinObserverSelected) {
-    btn.classList.add('selected');
-    myColor = null;
-    playerBox.style.borderColor = '#374151';
-    renderColorButtons('join-colors', null, [], function pick(c) {
-      myColor = c;
-      joinObserverSelected = false;
-      btn.classList.remove('selected');
-      playerBox.style.borderColor = '#62b517';
-      renderColorButtons('join-colors', c, [], pick);
-      updateJoinBtn();
-    });
-  } else {
-    btn.classList.remove('selected');
-  }
-  updateJoinBtn();
-}
-
-function onCodeInput(el) {
-  el.value = el.value.toUpperCase().replace(/[^A-Z0-9]/g,'');
-  const code = el.value;
-  // Reset observer selection when code changes
-  joinObserverSelected = false;
-  document.getElementById('join-obs-btn').classList.remove('selected');
-  if (code.length === 4) {
-    send({ type:'check_room', code });
-    renderColorButtons('join-colors', null, [], function pick(c) {
-      myColor = c;
-      joinObserverSelected = false;
-      document.getElementById('join-obs-btn').classList.remove('selected');
-      document.getElementById('join-player-role').style.borderColor = '#62b517';
-      renderColorButtons('join-colors', c, [], pick);
-      updateJoinBtn();
-    });
-  } else {
-    myColor = null;
-    document.getElementById('join-colors').innerHTML = '';
-    document.getElementById('join-player-role').style.borderColor = '#374151';
-    document.getElementById('btn-join').disabled = true;
-  }
-}
-
-function updateJoinBtn() {
-  const name = document.getElementById('join-name')?.value.trim() || '';
-  const code = document.getElementById('join-code').value;
-  const codeOk = code.length === 4;
-  const playerReady = myColor && codeOk && name.length >= 1;
-  const observerReady = joinObserverSelected && codeOk && name.length >= 1;
-  document.getElementById('btn-join').disabled = !playerReady && !observerReady;
-}
-
-function createRoom() {
-  if (createObserverSelected) {
-    const name = document.getElementById('create-name').value.trim();
-    if (!name) return;
-    pendingObsName = name;
-    connectWS(() => send({ type:'create_room_as_observer', gameType:'byteclub', name }));
-    return;
-  }
-  if (!createColor) return;
-  const playerName = document.getElementById('create-name').value.trim();
-  connectWS(() => send({ type:'create_room', color:createColor, gameType:'byteclub', playerName }));
-}
-
-function joinRoom() {
-  const code = document.getElementById('join-code').value.toUpperCase();
-  if (!code) return;
-  if (joinObserverSelected) {
-    const name = document.getElementById('join-name').value.trim();
-    if (!name) return;
-    pendingObsName = name;
-    sessionStorage.setItem(OBS_SESSION_KEY, JSON.stringify({ roomCode: code, name }));
-    connectWS(() => send({ type:'join_as_observer', code, name }));
-    return;
-  }
-  if (!myColor) return;
-  const playerName = document.getElementById('join-name').value.trim();
-  connectWS(() => send({ type:'join_room', code, color:myColor, playerName }));
-}
+// Lobby form logic lives in lobby.js (LobbyUI). Init call is near the bottom in INIT.
 
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -2774,37 +2624,9 @@ function handleMsg(msg) {
       history.replaceState({}, '', '/byteclub');
       showScreen('lobby');
       break;
-    case 'room_info': {
-      const obsBtn = document.getElementById('join-obs-btn');
-      if (!msg.exists) { document.getElementById('join-error').textContent = 'Room not found.'; return; }
-      if (msg.started) {
-        if (msg.rejoinColors && msg.rejoinColors.length > 0) {
-          document.getElementById('join-error').textContent = 'Game in progress. Select your color to rejoin.';
-          renderColorButtons('join-colors', null, COLORS.filter(c => !msg.rejoinColors.includes(c)), function pick(c) {
-            myColor = c; joinObserverSelected = false; obsBtn.classList.remove('selected');
-            renderColorButtons('join-colors', c, COLORS.filter(cc => !msg.rejoinColors.includes(cc)), pick);
-            updateJoinBtn();
-          });
-          document.getElementById('btn-join').textContent = 'Rejoin Game';
-        } else {
-          // Game in progress, no player slots. Auto-activate observer mode
-          document.getElementById('join-colors').innerHTML = '';
-          joinObserverSelected = true;
-          obsBtn.classList.add('selected');
-          document.getElementById('join-error').textContent = 'Game in progress. No open slots to rejoin. You can join as an observer.';
-          updateJoinBtn();
-        }
-        return;
-      }
-      if (msg.full) { document.getElementById('join-error').textContent = 'Room is full.'; return; }
-      document.getElementById('btn-join').textContent = 'Join Room';
-      renderColorButtons('join-colors', null, COLORS.filter(c => !msg.availableColors.includes(c)), function pick(c) {
-        myColor = c; joinObserverSelected = false; obsBtn.classList.remove('selected');
-        renderColorButtons('join-colors', c, COLORS.filter(cc => !msg.availableColors.includes(cc)), pick);
-        updateJoinBtn();
-      });
+    case 'room_info':
+      LobbyUI.handleRoomInfo(msg);
       break;
-    }
     case 'joined_as_observer':
       isObserver = true;
       isHost = msg.isHost;
@@ -5531,6 +5353,17 @@ if (isAutoObserver) {
 }
 
 setupSpecialCardZoom();
+
+LobbyUI.init({
+  gameType : 'byteclub',
+  sendFn   : function (msg) { connectWS(function () { send(msg); }); },
+  checkFn  : send,
+  onCreateAsObserver : function (opts) { pendingObsName = opts.name; },
+  onJoinAsObserver   : function (opts) {
+    pendingObsName = opts.name;
+    sessionStorage.setItem(OBS_SESSION_KEY, JSON.stringify({ roomCode: opts.code, name: opts.name }));
+  },
+});
 
 // On connect: try session rejoin first, then URL room check, then nothing
 connectWS(() => {

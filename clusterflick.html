@@ -88,12 +88,12 @@ html.tutorial-loading{background:#0d0a1a;}
 .player-role-box:hover{border-color:rgba(124,58,237,0.5);}
 .role-title{font-size:13px;font-weight:800;color:#c4b5fd;margin-bottom:4px;}
 .observer-role-btn{width:100%;display:flex;align-items:center;gap:10px;padding:10px 14px;background:#100d1e;border:2px solid rgba(124,58,237,0.2);border-radius:10px;cursor:pointer;font-family:inherit;font-size:13px;color:#9d8ec4;transition:all 0.15s;text-align:left;margin-bottom:4px;}
-.observer-role-btn.active{border-color:#7c3aed;background:rgba(124,58,237,0.1);color:#c4b5fd;}
+.observer-role-btn.selected{border-color:#7c3aed;background:rgba(124,58,237,0.1);color:#c4b5fd;}
 .observer-role-btn:hover{border-color:rgba(124,58,237,0.5);}
 .obs-role-title{font-weight:800;display:block;color:#a78bfa;}
 .obs-role-sub{font-size:11px;color:#6b5ea8;display:block;}
 .obs-role-check{width:18px;height:18px;background:rgba(124,58,237,0.2);border-radius:50%;border:2px solid rgba(124,58,237,0.4);display:flex;align-items:center;justify-content:center;margin-left:auto;flex-shrink:0;}
-.observer-role-btn.active .obs-role-check{background:#7c3aed;border-color:#7c3aed;}
+.observer-role-btn.selected .obs-role-check{background:#7c3aed;border-color:#7c3aed;}
 .error-msg{color:#f87171;font-size:13px;text-align:center;min-height:20px;margin-top:4px;}
 @media(max-width:780px){.lobby-hero{grid-template-columns:1fr;text-align:center;gap:20px;}.lobby-hero-board{margin:0 auto;}.lobby-tutorial-cta{align-self:center;}.lobby-play-grid{grid-template-columns:1fr;}.lo-strip{grid-template-columns:1fr 1fr;}.lo-item:nth-child(2){border-right:none;}.lo-item:nth-child(1),.lo-item:nth-child(2){border-bottom:1px solid rgba(124,58,237,0.15);}#lobby h1{font-size:34px;}}
 @media(max-width:480px){#lobby h1{font-size:28px;}.lo-item-desc{display:none;}}
@@ -378,6 +378,7 @@ body.cft-loading-active #cft-loading{display:flex;}
 </style>
 <link rel="stylesheet" href="/game-nav.css">
 <style>:root{--gn-bg:rgba(13,10,26,0.95);--gn-border:#7c3aed;--gn-shadow:0 1px 12px rgba(124,58,237,0.3);--gn-link:#a78bfa;--gn-link-hover:rgba(124,58,237,0.15);--gn-divider:#4b3a6e;--gn-current:#7c5cbf;}</style>
+<script src="/lobby.js"></script>
 </head>
 <body id="body">
 
@@ -457,7 +458,7 @@ body.cft-loading-active #cft-loading{display:flex;}
               <span class="obs-role-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
             </button>
             <button class="lobby-btn btn-create" id="btn-create" onclick="createRoom()" disabled>▶ Create Game</button>
-            <div class="error-msg" id="lobby-error"></div>
+            <div class="error-msg" id="create-error"></div>
           </div>
 
           <!-- Join -->
@@ -1715,15 +1716,14 @@ function handleMsg(msg){
     case 'game_cancelled':
       sessionStorage.removeItem(SESSION_KEY);roomCode='';myId=-1;G=null;isHost=false;isObserver=false;
       document.body.classList.remove('observer-active');hideCancelModal();showScreen('lobby');
-      document.getElementById('lobby-error').textContent='The host ended the game.';break;
+      document.getElementById('create-error').textContent='The host ended the game.';break;
     case 'room_info':
-      handleRoomInfo(msg);break;
+      LobbyUI.handleRoomInfo(msg);break;
     case 'error':
-      {const le=document.getElementById('lobby-error');const je=document.getElementById('join-error');const we=document.getElementById('waiting-error');
+      {const le=document.getElementById('create-error');const je=document.getElementById('join-error');const we=document.getElementById('waiting-error');
       if(document.getElementById('lobby').classList.contains('active')){le.textContent=msg.msg;je.textContent=msg.msg;}
       else if(document.getElementById('waiting').classList.contains('active'))we.textContent=msg.msg;
-      else showToast(msg.msg);
-      if(msg.availableColors){joinAvailable=msg.availableColors;renderJoinColors();}}
+      else showToast(msg.msg);}
       break;
   }
 }
@@ -1756,93 +1756,7 @@ function showGameOver(){
 }
 
 // ==================== LOBBY FUNCTIONS ====================
-let createColor='blue', joinColor='blue', createIsObserver=false, joinIsObserver=false;
-let joinAvailable=[], roomCheckTimer=null;
-
-function selectCreateColor(c){
-  createColor=c;
-  document.querySelectorAll('#create-colors .color-btn').forEach(b=>{b.classList.toggle('selected',b.dataset.color===c);});
-  updateCreateBtn();
-}
-function selectJoinColor(c){
-  joinColor=c;
-  document.querySelectorAll('#join-colors .color-btn').forEach(b=>{b.classList.toggle('selected',b.dataset.color===c);});
-  updateJoinBtn();
-}
-function selectCreateRole(r){
-  if(r==='player'){createIsObserver=false;document.getElementById('create-player-role').classList.add('active');document.getElementById('create-obs-btn').classList.remove('active');}
-  updateCreateBtn();
-}
-function selectJoinRole(r){
-  if(r==='player'){joinIsObserver=false;document.getElementById('join-player-role').classList.add('active');document.getElementById('join-obs-btn').classList.remove('active');}
-  updateJoinBtn();
-}
-function toggleCreateObserver(){
-  createIsObserver=!createIsObserver;
-  document.getElementById('create-obs-btn').classList.toggle('active',createIsObserver);
-  document.getElementById('create-player-role').classList.toggle('active',!createIsObserver);
-  updateCreateBtn();
-}
-function toggleJoinObserver(){
-  joinIsObserver=!joinIsObserver;
-  document.getElementById('join-obs-btn').classList.toggle('active',joinIsObserver);
-  document.getElementById('join-player-role').classList.toggle('active',!joinIsObserver);
-  updateJoinBtn();
-}
-function updateCreateBtn(){
-  const name=document.getElementById('create-name').value.trim();
-  document.getElementById('btn-create').disabled=name.length<1;
-}
-function updateJoinBtn(){
-  const name=document.getElementById('join-name').value.trim();
-  const code=document.getElementById('join-code').value.trim();
-  document.getElementById('btn-join').disabled=name.length<1||code.length<4||(!joinIsObserver&&!joinAvailable.includes(joinColor));
-}
-
-function createRoom(){
-  const name=document.getElementById('create-name').value.trim();
-  if(!name)return;
-  document.getElementById('lobby-error').textContent='';
-  if(createIsObserver){send({type:'create_room_as_observer',gameType:'clusterflick',name});}
-  else{send({type:'create_room',gameType:'clusterflick',playerName:name,color:createColor});}
-}
-function joinRoom(){
-  const name=document.getElementById('join-name').value.trim();
-  const code=document.getElementById('join-code').value.trim().toUpperCase();
-  if(!name||code.length<4)return;
-  document.getElementById('join-error').textContent='';
-  if(joinIsObserver){send({type:'join_as_observer',code,name});}
-  else{send({type:'join_room',code,playerName:name,color:joinColor,gameType:'clusterflick'});}
-}
-
-function checkRoom(){
-  const code=document.getElementById('join-code').value.trim().toUpperCase();
-  document.getElementById('join-colors').style.opacity='0.3';
-  document.getElementById('join-colors').style.pointerEvents='none';
-  joinAvailable=[];
-  if(code.length<4){updateJoinBtn();return;}
-  clearTimeout(roomCheckTimer);
-  roomCheckTimer=setTimeout(()=>send({type:'check_room',code}),300);
-}
-function handleRoomInfo(msg){
-  const jColors=document.getElementById('join-colors');
-  if(!msg.exists){document.getElementById('join-error').textContent='Room not found.';jColors.style.opacity='0.3';jColors.style.pointerEvents='none';updateJoinBtn();return;}
-  if(msg.started){document.getElementById('join-error').textContent='Game already in progress.';jColors.style.opacity='0.3';jColors.style.pointerEvents='none';updateJoinBtn();return;}
-  if(msg.full){document.getElementById('join-error').textContent='Room is full.';jColors.style.opacity='0.3';jColors.style.pointerEvents='none';updateJoinBtn();return;}
-  document.getElementById('join-error').textContent='';
-  joinAvailable=msg.availableColors||[];
-  renderJoinColors();updateJoinBtn();
-}
-function renderJoinColors(){
-  const jColors=document.getElementById('join-colors');
-  jColors.style.opacity='1';jColors.style.pointerEvents='';
-  document.querySelectorAll('#join-colors .color-btn').forEach(b=>{
-    const avail=joinAvailable.includes(b.dataset.color);
-    b.disabled=!avail;
-    if(!avail&&b.dataset.color===joinColor){joinColor=joinAvailable[0]||'blue';}
-  });
-  document.querySelectorAll('#join-colors .color-btn').forEach(b=>{b.classList.toggle('selected',b.dataset.color===joinColor);});
-}
+// Lobby state and form functions managed by LobbyUI (lobby.js). Init call is at the bottom in INIT.
 
 function renderLobbyPlayers(players,observers){
   const list=document.getElementById('player-list');
@@ -2220,6 +2134,8 @@ function escHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').
 window.addEventListener('DOMContentLoaded',()=>{
   const tn=document.getElementById('top-nav'); if(tn) tn.style.display='flex';
   document.body.style.paddingTop='44px';
+
+  LobbyUI.init({ gameType: 'clusterflick', sendFn: send });
 
   cfLoadAnimalImages();
   drawLobbyPreview();
