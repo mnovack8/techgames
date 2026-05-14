@@ -3864,6 +3864,7 @@ const server = http.createServer((req, res) => {
   const REDIRECTS = {
     '/knn': '/ai-knn', '/knn.html': '/ai-knn',
     '/ai':  '/ai-neural-network', '/ai.html':  '/ai-neural-network',
+    '/qubit-waitlist': '/quantumcomputing', '/qubit-waitlist.html': '/quantumcomputing',
   };
   if (REDIRECTS[pathname]) {
     res.writeHead(301, { Location: REDIRECTS[pathname] + qs });
@@ -3877,11 +3878,11 @@ const server = http.createServer((req, res) => {
   else if (pathname === '/ai-knn' || pathname === '/ai-knn.html') pathname = '/games/ai-knn/index.html';
   else if (pathname === '/cybersecurity' || pathname === '/cybersecurity.html') pathname = '/games/cybersecurity/index.html';
   else if (pathname === '/ai-neural-network' || pathname === '/ai-neural-network.html') pathname = '/games/ai-neural-network/index.html';
-  else if (pathname === '/qubit-waitlist' || pathname === '/qubit-waitlist.html') pathname = '/qubit-waitlist.html';
+  else if (pathname === '/quantumcomputing' || pathname === '/quantumcomputing.html') pathname = '/games/quantumcomputing.html';
   else if (pathname === '/contact' || pathname === '/contact.html') pathname = '/contact.html';
   else if (pathname === '/about' || pathname === '/about.html') pathname = '/about.html';
-  else if (pathname === '/board-culture-change' || pathname === '/board-culture-change.html' || pathname === '/corporate-training' || pathname === '/corporate-training.html') pathname = '/board-culture-change.html';
-  else if (pathname === '/focused-deep-work' || pathname === '/focused-deep-work.html' || pathname === '/specialized-training' || pathname === '/specialized-training.html') pathname = '/focused-deep-work.html';
+  else if (pathname === '/board-culture-change' || pathname === '/board-culture-change.html' || pathname === '/corporate-training' || pathname === '/corporate-training.html') pathname = '/use-cases/board-culture-change.html';
+  else if (pathname === '/focused-deep-work' || pathname === '/focused-deep-work.html' || pathname === '/specialized-training' || pathname === '/specialized-training.html') pathname = '/use-cases/focused-deep-work.html';
   else if (pathname === '/buy-now' || pathname === '/buy-now.html') pathname = '/buy-now.html';
   else if (pathname === '/admin' || pathname === '/admin.html') pathname = '/admin.html';
   else if (pathname === '/blog' || pathname === '/blog.html') pathname = '/blog/index.html';
