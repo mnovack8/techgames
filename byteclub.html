@@ -1231,8 +1231,8 @@ body.screen-idle-glow::after{
   <span class="nav-divider">/</span>
   <span class="nav-current">Byte Club</span>
   <div id="nav-game-btns">
-    <button id="htp-btn" onclick="document.getElementById('htp-panel').classList.toggle('open')">How to Play</button>
-    <button id="btn-cancel-game" onclick="showCancelModal()">✕ Cancel Game</button>
+    <button id="htp-btn" onclick="document.getElementById('htp-panel').classList.toggle('open')" style="display:none">How to Play</button>
+    <button id="btn-cancel-game" onclick="showCancelModal()" style="display:none">✕ Cancel Game</button>
   </div>
 </div>
 
@@ -2513,7 +2513,9 @@ function joinRoom() {
 
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+  const el = document.getElementById(id);
+  el.classList.add('active');
+  el.scrollTop = 0;
   // Rejoin handshake resolved. Drop the visibility guard so the screen paints
   document.body.classList.remove('rejoin-pending');
 }
@@ -3038,16 +3040,16 @@ function buildHandCard(card, clickable, isSelected) {
 // ==================== OBSERVER RENDER ====================
 // Toggle: show/hide all player hands in observer mode
 function handleWinBtn() {
-  if (isObserver) {
-    // Observer: clear session and return to lobby
-    sessionStorage.removeItem(OBS_SESSION_KEY);
-    sessionStorage.removeItem(SESSION_KEY);
-    location.href = '/byteclub';
-  } else {
-    // Player: clear session and reload
-    sessionStorage.removeItem(SESSION_KEY);
-    location.reload();
-  }
+  sessionStorage.removeItem(SESSION_KEY);
+  sessionStorage.removeItem(OBS_SESSION_KEY);
+  roomCode = null; myId = null; myObserverIdx = -1; gameState = null; isHost = false; isObserver = false;
+  document.getElementById('htp-btn').style.display = 'none';
+  document.getElementById('btn-cancel-game').style.display = 'none';
+  document.getElementById('win-screen').classList.remove('show');
+  document.getElementById('observer-banner').style.display = 'none';
+  document.body.classList.remove('observer-active');
+  history.replaceState({}, '', '/byteclub');
+  showScreen('lobby');
 }
 
 function toggleObserverHands() {

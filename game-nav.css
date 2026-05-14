@@ -49,4 +49,28 @@
 #top-nav a:hover { background: var(--gn-link-hover); }
 #top-nav .nav-divider { margin: 0 8px; color: var(--gn-divider); font-size: 16px; flex-shrink: 0; }
 #top-nav .nav-current { font-size: 13px; font-weight: 600; color: var(--gn-current); flex-shrink: 0; }
+
+/* In-game action buttons (How to Play, Cancel Game, etc.) */
+#nav-game-btns {
+  margin-left: auto;
+  display: flex; align-items: center; gap: 6px;
+  flex-shrink: 0;
+}
+#nav-game-btns button {
+  font-size: 12px; font-weight: 700;
+  color: var(--gn-link);
+  background: none;
+  border: 1px solid var(--gn-border);
+  padding: 4px 10px; border-radius: 7px;
+  cursor: pointer; font-family: inherit; line-height: 1.4;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+#nav-game-btns button:hover { background: var(--gn-link-hover); }
+#nav-game-btns #btn-cancel-game {
+  color: #f87171;
+  border-color: rgba(248,113,113,0.35);
+}
+#nav-game-btns #btn-cancel-game:hover { background: rgba(248,113,113,0.1); }
+
 body { padding-top: 44px; }

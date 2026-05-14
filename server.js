@@ -1796,6 +1796,96 @@ function processAction(room, playerIdx, msg) {
   }
 }
 
+// ==================== GAME REGISTRY ====================
+// Single source of truth for per-game behaviour.
+// Adding a new game: add one entry here — no other switch branches needed.
+
+const GAME_REGISTRY = {
+  byteclub: {
+    startGame(room) {
+      initBCGame(room);
+      broadcastToRoom(room, { type: 'bc_game_started' });
+      bcBroadcastState(room);
+    },
+    broadcastState(room)      { bcBroadcastState(room); },
+    onRejoin(room, playerIdx) {
+      const p = room.players[playerIdx];
+      const evt = { type: 'bc_player_event', event: 'rejoined', playerIdx, playerName: p.name, playerColor: p.color };
+      broadcastToRoom(room, evt);
+      bcBroadcastState(room);
+    },
+    onDisconnect(room, playerIdx) {
+      const p = room.players[playerIdx];
+      const evt = { type: 'bc_player_event', event: 'disconnected', playerIdx, playerName: p.name, playerColor: p.color };
+      broadcastToRoom(room, evt);
+      if (room.bcState && room.bcState.currentPlayer === playerIdx && room.bcState.phase !== 'game_over') {
+        bcEndTurn(room);
+      } else if (room.bcState) {
+        bcBroadcastState(room);
+      }
+    },
+    isGameOver(room) { return !!(room.bcState && room.bcState.phase === 'game_over'); },
+  },
+
+  clusterflick: {
+    startGame(room) {
+      room.cfState = createCFGameState(room.players.length);
+      broadcastToRoom(room, { type: 'game_started' });
+      cfBroadcastState(room);
+      if (room.players[0].isBot) setTimeout(() => executeCFBotTurn(room), 800);
+    },
+    broadcastState(room)      { cfBroadcastState(room); },
+    onRejoin(room)            { cfBroadcastState(room); },
+    onDisconnect(room, playerIdx) {
+      const s = room.cfState;
+      if (s && s.currentPlayer === playerIdx && !s.gameOver) {
+        cfAdvanceTurn(room);
+        cfBroadcastState(room);
+      } else if (s) {
+        cfBroadcastState(room);
+      }
+    },
+    isGameOver(room) { return !!(room.cfState && room.cfState.gameOver); },
+  },
+
+  fuzznet: {
+    startGame(room) {
+      room.state = createGameState(room.players.length);
+      room.state.players[0].firstTurnDone = true;
+      broadcastToRoom(room, { type: 'game_started' });
+      broadcastState(room);
+      if (room.players[0].isBot) executeBotTurn(room);
+    },
+    broadcastState(room)      { broadcastState(room); },
+    onRejoin(room)            { broadcastState(room); },
+    onDisconnect(room, playerIdx) {
+      if (room.state && room.state.currentPlayer === playerIdx && !room.state.gameOver) {
+        room.state.actionsLeft = 0;
+        room.state.phase = 'idle';
+        nextTurn(room);
+        broadcastState(room);
+      }
+    },
+    isGameOver(room) { return !!(room.state && room.state.gameOver); },
+  },
+};
+
+/** Resolve an incoming gameType string to a known registry key, defaulting to fuzznet. */
+function resolveGameType(raw) {
+  return GAME_REGISTRY[raw] ? raw : 'fuzznet';
+}
+
+/** Get the registry entry for a room, with fuzznet as safe fallback. */
+function getGame(room) {
+  return GAME_REGISTRY[room.gameType] || GAME_REGISTRY.fuzznet;
+}
+
+/** Send a message to every connected player and observer in a room. */
+function broadcastToRoom(room, msg) {
+  for (const p of room.players)          if (p.ws)                  send(p.ws, msg);
+  for (const o of (room.observers || [])) if (o.connected && o.ws)  send(o.ws, msg);
+}
+
 // ==================== WEBSOCKET HANDLING ====================
 function handleMessage(ws, raw) {
   let msg;
@@ -1810,7 +1900,7 @@ function handleMessage(ws, raw) {
       const code = generateCode();
       const room = {
         code, hostIdx: 0,
-        gameType: msg.gameType === 'byteclub' ? 'byteclub' : msg.gameType === 'clusterflick' ? 'clusterflick' : 'fuzznet',
+        gameType: resolveGameType(msg.gameType),
         players: [{ color, name: sanitizeName(msg.playerName, COLOR_INFO[color].name), ws, connected: true }],
         observers: [],
         started: false, state: null, bcState: null,
@@ -1833,7 +1923,7 @@ function handleMessage(ws, raw) {
       const name = sanitizeName(msg.name, 'Observer');
       const room = {
         code, hostIdx: 0,
-        gameType: msg.gameType === 'byteclub' ? 'byteclub' : msg.gameType === 'clusterflick' ? 'clusterflick' : 'fuzznet',
+        gameType: resolveGameType(msg.gameType),
         players: [],
         observers: [{ ws, name, connected: true }],
         started: false, state: null, bcState: null,
@@ -1926,14 +2016,7 @@ function handleMessage(ws, raw) {
         const token = generateToken();
         sessions.set(token, { roomCode: code, playerIdx: rejoinIdx });
         send(ws, { type: 'room_rejoined', code, yourId: rejoinIdx, token, started: true, isHost: rejoinIdx === room.hostIdx });
-        if (room.gameType === 'byteclub') {
-          // Notify all players (including the rejoiner) of the reconnect
-          const rjEvent = { type: 'bc_player_event', event: 'rejoined', playerIdx: rejoinIdx, playerName: room.players[rejoinIdx].name, playerColor: room.players[rejoinIdx].color };
-          for (const p of room.players) if (p.connected && p.ws) send(p.ws, rjEvent);
-          for (const o of (room.observers || [])) if (o.connected && o.ws) send(o.ws, rjEvent);
-          bcBroadcastState(room);
-        } else if (room.gameType === 'clusterflick') cfBroadcastState(room);
-        else broadcastState(room);
+        getGame(room).onRejoin(room, rejoinIdx);
         break;
       }
 
@@ -1993,11 +2076,7 @@ function handleMessage(ws, raw) {
       send(ws, { type: 'joined_as_observer', code, observerIdx, isHost: isObsHost, started: room.started });
       broadcastLobby(room);
       // If game already started send current state immediately
-      if (room.started) {
-        if (room.gameType === 'byteclub') bcBroadcastState(room);
-        else if (room.gameType === 'clusterflick') cfBroadcastState(room);
-        else broadcastState(room);
-      }
+      if (room.started) getGame(room).broadcastState(room);
       break;
     }
 
@@ -2009,6 +2088,11 @@ function handleMessage(ws, raw) {
       const playerIdx = session.playerIdx;
       const player = room.players[playerIdx];
       if (!player || player.isBot) { sessions.delete(msg.token); return send(ws, { type: 'rejoin_failed' }); }
+      // Reject rejoin into a finished game — client lands on lobby instead of game-over screen
+      if (room.started && getGame(room).isGameOver(room)) {
+        sessions.delete(msg.token);
+        return send(ws, { type: 'rejoin_failed' });
+      }
       // Detach old ws if any
       if (player.ws && player.ws !== ws) wsData.delete(player.ws);
       player.ws = ws;
@@ -2019,14 +2103,7 @@ function handleMessage(ws, raw) {
         broadcastLobby(room);
       } else {
         send(ws, { type: 'room_rejoined', code: room.code, yourId: playerIdx, token: msg.token, started: true, isHost: playerIdx === room.hostIdx });
-        if (room.gameType === 'byteclub') {
-          // Notify all players (including the rejoiner) of the reconnect
-          const rjEvent = { type: 'bc_player_event', event: 'rejoined', playerIdx, playerName: player.name, playerColor: player.color };
-          for (const p of room.players) if (p.connected && p.ws) send(p.ws, rjEvent);
-          for (const o of (room.observers || [])) if (o.connected && o.ws) send(o.ws, rjEvent);
-          bcBroadcastState(room);
-        } else if (room.gameType === 'clusterflick') cfBroadcastState(room);
-        else broadcastState(room);
+        getGame(room).onRejoin(room, playerIdx);
       }
       break;
     }
@@ -2079,25 +2156,7 @@ function handleMessage(ws, raw) {
         : room.players.length === 3 ? '3p' : '4p';
       const _rematch = isRematch(room.uvKey, room.gameType);
       trackEvent('session_started', { gameType: room.gameType, mode: _startMode, uvKey: room.uvKey, rematch: _rematch });
-      if (room.gameType === 'byteclub') {
-        initBCGame(room);
-        for (const p of room.players) if (p.ws) send(p.ws, { type: 'bc_game_started' });
-        for (const o of (room.observers || [])) if (o.ws) send(o.ws, { type: 'bc_game_started' });
-        bcBroadcastState(room);
-      } else if (room.gameType === 'clusterflick') {
-        room.cfState = createCFGameState(room.players.length);
-        for (const p of room.players) if (p.ws) send(p.ws, { type: 'game_started' });
-        for (const o of (room.observers || [])) if (o.ws) send(o.ws, { type: 'game_started' });
-        cfBroadcastState(room);
-        if (room.players[0].isBot) setTimeout(() => executeCFBotTurn(room), 800);
-      } else {
-        room.state = createGameState(room.players.length);
-        room.state.players[0].firstTurnDone = true;
-        for (const p of room.players) if (p.ws) send(p.ws, { type: 'game_started' });
-        for (const o of (room.observers || [])) if (o.ws) send(o.ws, { type: 'game_started' });
-        broadcastState(room);
-        if (room.players[0].isBot) executeBotTurn(room);
-      }
+      getGame(room).startGame(room);
       sendEventStatus(room);
       break;
     }
@@ -2213,12 +2272,7 @@ function leaveRoom(ws, explicit = false) {
   } else {
     // Track unexpected mid-game disconnects (not explicit leaves, not already finished games)
     if (!explicit) {
-      const gameOver = room.gameType === 'byteclub'
-        ? (room.bcState && room.bcState.phase === 'game_over')
-        : room.gameType === 'clusterflick'
-        ? (room.cfState && room.cfState.gameOver)
-        : (room.state && room.state.gameOver);
-      if (!gameOver) trackEvent('ws_disconnect', { gameType: room.gameType || '' });
+      if (!getGame(room).isGameOver(room)) trackEvent('ws_disconnect', { gameType: room.gameType || '' });
     }
     // Mark as disconnected in game — keep their slot for reconnection
     room.players[info.playerIdx].connected = false;
@@ -2229,34 +2283,7 @@ function leaveRoom(ws, explicit = false) {
         if (s.roomCode === room.code && s.playerIdx === info.playerIdx) sessions.delete(t);
       }
     }
-    if (room.gameType === 'byteclub') {
-      // Notify all remaining connected players of the disconnect
-      const dcName = room.players[info.playerIdx].name;
-      const dcColor = room.players[info.playerIdx].color;
-      const dcEvent = { type: 'bc_player_event', event: 'disconnected', playerIdx: info.playerIdx, playerName: dcName, playerColor: dcColor };
-      for (const p of room.players) if (p.connected && p.ws) send(p.ws, dcEvent);
-      for (const o of (room.observers || [])) if (o.connected && o.ws) send(o.ws, dcEvent);
-      if (room.bcState && room.bcState.currentPlayer === info.playerIdx && room.bcState.phase !== 'game_over') {
-        bcEndTurn(room);
-      } else if (room.bcState) {
-        bcBroadcastState(room);
-      }
-    } else if (room.gameType === 'clusterflick') {
-      const s = room.cfState;
-      if (s && s.currentPlayer === info.playerIdx && !s.gameOver) {
-        cfAdvanceTurn(room);
-        cfBroadcastState(room);
-      } else if (s) {
-        cfBroadcastState(room);
-      }
-    } else {
-      if (room.state.currentPlayer === info.playerIdx && !room.state.gameOver) {
-        room.state.actionsLeft = 0;
-        room.state.phase = 'idle';
-        nextTurn(room);
-        broadcastState(room);
-      }
-    }
+    getGame(room).onDisconnect(room, info.playerIdx);
     // Only delete room if all players explicitly left or all disconnected with no sessions
     const hasRejoinable = room.players.some(p => !p.isBot && !p.connected &&
       [...sessions.values()].some(s => s.roomCode === room.code && s.playerIdx === room.players.indexOf(p)));

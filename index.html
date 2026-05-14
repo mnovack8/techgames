@@ -2958,6 +2958,73 @@ function trackClick(button) {
   }, 3400);
 })();
 </script>
+<script>
+// Scroll reveal
+(function() {
+  var els = document.querySelectorAll('[data-reveal]');
+  if (!els.length || !('IntersectionObserver' in window)) {
+    els.forEach(function(el) { el.classList.add('is-visible'); });
+    return;
+  }
+  var io = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -48px 0px' });
+  els.forEach(function(el) { io.observe(el); });
+})();
+
+// Blog carousel — shuffle cards into random order on each load
+(function() {
+  var pages = document.querySelectorAll('.blog-page');
+  var allCards = [];
+  pages.forEach(function(p) {
+    p.querySelectorAll('.blog-card').forEach(function(c) { allCards.push(c); });
+  });
+  for (var i = allCards.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = allCards[i]; allCards[i] = allCards[j]; allCards[j] = tmp;
+  }
+  pages.forEach(function(p, pi) {
+    while (p.firstChild) p.removeChild(p.firstChild);
+    for (var k = pi * 3; k < pi * 3 + 3 && k < allCards.length; k++) {
+      p.appendChild(allCards[k]);
+    }
+  });
+})();
+
+// Blog carousel navigation
+(function() {
+  var pages = document.querySelectorAll('.blog-page');
+  var dots  = document.querySelectorAll('.blog-dot');
+  var prev  = document.getElementById('blog-prev');
+  var next  = document.getElementById('blog-next');
+  if (!prev || !next || !pages.length) return;
+  var total = pages.length;
+  var current = 0;
+  function goTo(idx, dir) {
+    var animClass = dir === 1 ? 'anim-right' : 'anim-left';
+    pages[current].classList.remove('active', 'anim-right', 'anim-left');
+    if (dots[current]) dots[current].classList.remove('active');
+    current = idx;
+    pages[current].classList.add('active', animClass);
+    if (dots[current]) dots[current].classList.add('active');
+    prev.disabled = current === 0;
+    next.disabled = current === total - 1;
+  }
+  prev.addEventListener('click', function() { if (current > 0) goTo(current - 1, -1); });
+  next.addEventListener('click', function() { if (current < total - 1) goTo(current + 1, 1); });
+  dots.forEach(function(dot) {
+    dot.addEventListener('click', function() {
+      var idx = parseInt(dot.getAttribute('data-page'));
+      if (idx !== current) goTo(idx, idx > current ? 1 : -1);
+    });
+  });
+})();
+</script>
 <script src="/nav.js"></script>
 </body>
 </html>

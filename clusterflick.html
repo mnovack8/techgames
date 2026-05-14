@@ -23,7 +23,7 @@ html.tutorial-loading{background:#0d0a1a;}
 
 
 /* ===== SCREENS ===== */
-.screen{display:none;}
+.screen:not(.active){display:none !important;}
 .screen.active{display:flex;}
 
 /* ===== LOBBY ===== */
@@ -1729,8 +1729,11 @@ function handleMsg(msg){
 }
 
 function showGameOver(){
-  const scr=document.getElementById('gameover');
   if(!G)return;
+  // Only show if the game screen is active (prevents late state_update re-triggering after lobby return)
+  if(!document.getElementById('game').classList.contains('active'))return;
+  // Clear session so a page reload doesn't rejoin a finished game
+  sessionStorage.removeItem(SESSION_KEY);
   const winner=G.winner>=0?G.players[G.winner]:null;
   document.getElementById('go-winner').textContent=winner?`🏆 ${winner.name} wins!`:'Game over!';
   let html='';
@@ -2197,7 +2200,9 @@ function closeInfo(e){if(!e||e.target===document.getElementById('info-overlay'))
 // ==================== SCREEN MANAGEMENT ====================
 function showScreen(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+  const el=document.getElementById(id);
+  el.classList.add('active');
+  el.scrollTop=0;
   if(id==='gameover'){document.getElementById('gameover').style.display='flex';document.getElementById('game').classList.remove('active');}
   const tn=document.getElementById('top-nav');
   if(tn){tn.style.display='flex';}
