@@ -3871,12 +3871,12 @@ const server = http.createServer((req, res) => {
     return;
   }
   // ── URL → file path ───────────────────────────────────────────────────────
-  if (pathname === '/cybersecurity/byteclub' || pathname === '/cybersecurity/byteclub.html') pathname = '/cybersecurity/byteclub.html';
-  else if (pathname === '/ai-neural-network/fuzznet' || pathname === '/ai-neural-network/fuzznet.html') pathname = '/ai-neural-network/fuzznet.html';
-  else if (pathname === '/ai-knn/clusterflick' || pathname === '/ai-knn/clusterflick.html') pathname = '/ai-knn/clusterflick.html';
-  else if (pathname === '/ai-knn' || pathname === '/ai-knn.html') pathname = '/ai-knn/index.html';
-  else if (pathname === '/cybersecurity' || pathname === '/cybersecurity.html') pathname = '/cybersecurity/index.html';
-  else if (pathname === '/ai-neural-network' || pathname === '/ai-neural-network.html') pathname = '/ai-neural-network/index.html';
+  if (pathname === '/cybersecurity/byteclub' || pathname === '/cybersecurity/byteclub.html') pathname = '/games/cybersecurity/byteclub.html';
+  else if (pathname === '/ai-neural-network/fuzznet' || pathname === '/ai-neural-network/fuzznet.html') pathname = '/games/ai-neural-network/fuzznet.html';
+  else if (pathname === '/ai-knn/clusterflick' || pathname === '/ai-knn/clusterflick.html') pathname = '/games/ai-knn/clusterflick.html';
+  else if (pathname === '/ai-knn' || pathname === '/ai-knn.html') pathname = '/games/ai-knn/index.html';
+  else if (pathname === '/cybersecurity' || pathname === '/cybersecurity.html') pathname = '/games/cybersecurity/index.html';
+  else if (pathname === '/ai-neural-network' || pathname === '/ai-neural-network.html') pathname = '/games/ai-neural-network/index.html';
   else if (pathname === '/qubit-waitlist' || pathname === '/qubit-waitlist.html') pathname = '/qubit-waitlist.html';
   else if (pathname === '/contact' || pathname === '/contact.html') pathname = '/contact.html';
   else if (pathname === '/about' || pathname === '/about.html') pathname = '/about.html';
@@ -3884,7 +3884,7 @@ const server = http.createServer((req, res) => {
   else if (pathname === '/focused-deep-work' || pathname === '/focused-deep-work.html' || pathname === '/specialized-training' || pathname === '/specialized-training.html') pathname = '/focused-deep-work.html';
   else if (pathname === '/buy-now' || pathname === '/buy-now.html') pathname = '/buy-now.html';
   else if (pathname === '/admin' || pathname === '/admin.html') pathname = '/admin.html';
-  else if (pathname === '/blog'  || pathname === '/blog.html')  pathname = '/blog.html';
+  else if (pathname === '/blog' || pathname === '/blog.html') pathname = '/blog/index.html';
   else if (pathname.startsWith('/blog/') && !path.extname(pathname)) pathname = pathname + '.html';
   else if (pathname === '/') pathname = '/index.html';
   const filePath = path.join(__dirname, pathname);
