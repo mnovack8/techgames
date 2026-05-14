@@ -3859,12 +3859,24 @@ const server = http.createServer((req, res) => {
       trackEvent('homepage_visit', { uvKey, vid, returnVisitor, referrerSource });
     }
   }
-  if (pathname === '/byteclub' || pathname === '/byteclub.html') pathname = '/byteclub.html';
-  else if (pathname === '/fuzznet' || pathname === '/fuzznet.html') pathname = '/fuzznet.html';
-  else if (pathname === '/ai-knn' || pathname === '/ai-knn.html' || pathname === '/knn' || pathname === '/knn.html') pathname = '/ai-knn.html';
-  else if (pathname === '/clusterflick' || pathname === '/clusterflick.html') pathname = '/clusterflick.html';
-  else if (pathname === '/cybersecurity' || pathname === '/cybersecurity.html') pathname = '/cybersecurity.html';
-  else if (pathname === '/ai-neural-network' || pathname === '/ai-neural-network.html' || pathname === '/ai' || pathname === '/ai.html') pathname = '/ai-neural-network.html';
+  // ── Legacy-URL redirects (301) ───────────────────────────────────────────────
+  const qs = parsed.search || '';
+  const REDIRECTS = {
+    '/knn': '/ai-knn', '/knn.html': '/ai-knn',
+    '/ai':  '/ai-neural-network', '/ai.html':  '/ai-neural-network',
+  };
+  if (REDIRECTS[pathname]) {
+    res.writeHead(301, { Location: REDIRECTS[pathname] + qs });
+    res.end();
+    return;
+  }
+  // ── URL → file path ───────────────────────────────────────────────────────
+  if (pathname === '/cybersecurity/byteclub' || pathname === '/cybersecurity/byteclub.html') pathname = '/cybersecurity/byteclub.html';
+  else if (pathname === '/ai-neural-network/fuzznet' || pathname === '/ai-neural-network/fuzznet.html') pathname = '/ai-neural-network/fuzznet.html';
+  else if (pathname === '/ai-knn/clusterflick' || pathname === '/ai-knn/clusterflick.html') pathname = '/ai-knn/clusterflick.html';
+  else if (pathname === '/ai-knn' || pathname === '/ai-knn.html') pathname = '/ai-knn/index.html';
+  else if (pathname === '/cybersecurity' || pathname === '/cybersecurity.html') pathname = '/cybersecurity/index.html';
+  else if (pathname === '/ai-neural-network' || pathname === '/ai-neural-network.html') pathname = '/ai-neural-network/index.html';
   else if (pathname === '/qubit-waitlist' || pathname === '/qubit-waitlist.html') pathname = '/qubit-waitlist.html';
   else if (pathname === '/contact' || pathname === '/contact.html') pathname = '/contact.html';
   else if (pathname === '/about' || pathname === '/about.html') pathname = '/about.html';

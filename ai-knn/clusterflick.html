@@ -1777,7 +1777,7 @@ function toggleBot(){send({type:'toggle_bot'});}
 function startGame(){send({type:'start_game'});}
 function leaveRoom(){send({type:'leave_room'});}
 function copyCode(){navigator.clipboard?.writeText(roomCode);showToast('Room code copied!');}
-function copyLink(){navigator.clipboard?.writeText(`${location.origin}/clusterflick?room=${roomCode}`);showToast('Invite link copied!');}
+function copyLink(){navigator.clipboard?.writeText(`${location.origin}/ai-knn/clusterflick?room=${roomCode}`);showToast('Invite link copied!');}
 function showCancelModal(){document.getElementById('cancel-modal').classList.add('show');}
 function hideCancelModal(){document.getElementById('cancel-modal').classList.remove('show');}
 function confirmCancel(){send({type:'cancel_game'});hideCancelModal();}
