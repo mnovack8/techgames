@@ -1207,6 +1207,7 @@ body.screen-idle-glow::after{
 <link rel="stylesheet" href="/game-nav.css">
 <style>:root{--gn-bg:rgba(6,13,3,0.96);--gn-border:#d1db24;--gn-shadow:0 1px 8px rgba(0,0,0,0.4);--gn-link:#62b517;--gn-link-hover:rgba(98,181,23,0.12);--gn-divider:#4b5563;--gn-current:#6b7280;}</style>
 <script src="/lobby.js"></script>
+<script src="/socket.js"></script>
 </head>
 <body>
 
@@ -1885,8 +1886,8 @@ const COLOR_INFO = {
 };
 const COLORS = Object.keys(COLOR_INFO);
 
-const WS_URL = location.protocol === 'https:' ? 'wss://' + location.host : 'ws://' + location.host;
-let ws;
+let hub;
+let _hubFirstConnect = true;
 // Lobby form state managed by LobbyUI (lobby.js)
 let myId = null;
 let myObserverIdx = -1;
@@ -2333,29 +2334,9 @@ const SESSION_KEY = 'techgames_byteclub_session';
 const OBS_SESSION_KEY = 'techgames_byteclub_observer';
 let pendingObsName = '';
 
-function connectWS(cb) {
-  ws = new WebSocket(WS_URL);
-  ws.onopen = () => {
-    const token = sessionStorage.getItem(SESSION_KEY);
-    if (token) { send({ type: 'rejoin_room', token }); return; }
-    const obsSession = sessionStorage.getItem(OBS_SESSION_KEY);
-    if (obsSession) {
-      try {
-        const { roomCode: rc, name: n } = JSON.parse(obsSession);
-        send({ type: 'join_as_observer', code: rc, name: n });
-      } catch(e) { sessionStorage.removeItem(OBS_SESSION_KEY); if (cb) cb(); }
-      return;
-    }
-    if (cb) cb();
-  };
-  ws.onmessage = e => handleMsg(JSON.parse(e.data));
-  ws.onclose = () => setTimeout(() => connectWS(null), 2000);
-}
-
 function send(msg) {
-  if (bcTutMode) { handleBcTutAction(msg); return; }
-  if (isObserver && msg.type === 'game_action') return; // observers cannot affect gameplay
-  if (ws && ws.readyState === 1) ws.send(JSON.stringify(msg));
+  if (bcTutMode) { handleBcTutAction(msg); return; }    // tutorial intercept
+  hub.send(msg);
 }
 
 // ==================== LOBBY ====================
@@ -5354,9 +5335,54 @@ if (isAutoObserver) {
 
 setupSpecialCardZoom();
 
+hub = SocketHub.create({
+  reconnectMs  : 2000,
+  onConnect    : function () {
+    // Every open: attempt session rejoin
+    const token = sessionStorage.getItem(SESSION_KEY);
+    if (token) { hub.send({ type: 'rejoin_room', token }); return; }
+    const obsSession = sessionStorage.getItem(OBS_SESSION_KEY);
+    if (obsSession) {
+      try {
+        const { roomCode: rc, name: n } = JSON.parse(obsSession);
+        hub.send({ type: 'join_as_observer', code: rc, name: n });
+      } catch (e) { sessionStorage.removeItem(OBS_SESSION_KEY); }
+      return;
+    }
+    // First connect: URL-driven actions and event hub restore
+    if (_hubFirstConnect) {
+      _hubFirstConnect = false;
+      if (isAutoObserver && pendingObsName) {
+        // Event Hub Join Room — store session so reconnects auto-rejoin as observer
+        sessionStorage.setItem(OBS_SESSION_KEY, JSON.stringify({ roomCode: urlRoom.toUpperCase(), name: pendingObsName }));
+        hub.send({ type: 'join_as_observer', code: urlRoom.toUpperCase(), name: pendingObsName });
+      } else if (urlRoom && !hasPendingRejoin) {
+        hub.send({ type: 'check_room', code: urlRoom.toUpperCase() });
+      }
+      const savedName = localStorage.getItem('byteclub_event_name');
+      if (savedName) {
+        const nameInput = document.getElementById('event-hub-name');
+        if (nameInput) { nameInput.value = savedName; updateEventAddBtn(); }
+      }
+      const savedCodes = JSON.parse(localStorage.getItem(EV_STORAGE_KEY) || '[]');
+      if (savedCodes.length > 0) {
+        for (const code of savedCodes) {
+          if (!eventRooms.has(code)) eventRooms.set(code, { code, playerCount: 0, status: 'pending' });
+        }
+        renderEventTable();
+        hub.send({ type: 'query_event_rooms', codes: savedCodes });
+      }
+    }
+  },
+  sendFilter   : function (msg) {
+    if (isObserver && msg.type === 'game_action') return false;
+  },
+});
+hub.on('*', handleMsg);
+
 LobbyUI.init({
   gameType : 'byteclub',
-  sendFn   : function (msg) { connectWS(function () { send(msg); }); },
+  sendFn   : send,
   checkFn  : send,
   onCreateAsObserver : function (opts) { pendingObsName = opts.name; },
   onJoinAsObserver   : function (opts) {
@@ -5365,31 +5391,7 @@ LobbyUI.init({
   },
 });
 
-// On connect: try session rejoin first, then URL room check, then nothing
-connectWS(() => {
-  if (isAutoObserver && pendingObsName) {
-    // Event Hub Join Room. Skip the lobby entirely, join directly as host observer
-    // Store session AFTER connect so onopen doesn't intercept and skip this callback
-    sessionStorage.setItem(OBS_SESSION_KEY, JSON.stringify({ roomCode: urlRoom.toUpperCase(), name: pendingObsName }));
-    send({ type: 'join_as_observer', code: urlRoom.toUpperCase(), name: pendingObsName });
-  } else if (urlRoom && !hasPendingRejoin) {
-    send({ type:'check_room', code: urlRoom.toUpperCase() });
-  }
-  // Restore event hub state from previous session
-  const savedName = localStorage.getItem('byteclub_event_name');
-  if (savedName) {
-    const nameInput = document.getElementById('event-hub-name');
-    if (nameInput) { nameInput.value = savedName; updateEventAddBtn(); }
-  }
-  const savedCodes = JSON.parse(localStorage.getItem(EV_STORAGE_KEY) || '[]');
-  if (savedCodes.length > 0) {
-    for (const code of savedCodes) {
-      if (!eventRooms.has(code)) eventRooms.set(code, { code, playerCount: 0, status: 'pending' });
-    }
-    renderEventTable();
-    send({ type: 'query_event_rooms', codes: savedCodes });
-  }
-});
+hub.connect();
 
 // Auto-start tutorial via ?tutorial=1 — start ASAP, hide page until ready
 if (urlParams.get('tutorial') === '1') {

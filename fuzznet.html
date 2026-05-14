@@ -588,6 +588,7 @@ rect.tut-animal-hl { animation: tut-hl-pulse 1.1s ease-in-out infinite; }
 <link rel="stylesheet" href="/game-nav.css">
 <script src="/lobby.js"></script>
 <script src="/observer.js"></script>
+<script src="/socket.js"></script>
 </head>
 <body>
 
@@ -1038,7 +1039,7 @@ function edgePos(e) {
 const ALL_EDGES = getAllEdges();
 
 // ==================== CLIENT STATE ====================
-let ws = null;
+let hub;
 let myId = -1;
 let roomCode = '';
 let isHost = false;
@@ -1143,37 +1144,7 @@ function fnRemoveEventRoom(code) {
 // ==================== WEBSOCKET ====================
 const SESSION_KEY = 'techgames_fuzznet_session';
 
-function connect() {
-  const proto = location.protocol === 'https:' ? 'wss' : 'ws';
-  ws = new WebSocket(`${proto}://${location.host}`);
-  ws.onopen = () => {
-    const token = sessionStorage.getItem(SESSION_KEY);
-    if (token) sendMsg({ type: 'rejoin_room', token });
-    else if (urlRoom && urlObs) sendMsg({ type: 'join_as_observer', code: urlRoom.toUpperCase(), name: urlName });
-    else if (urlRoom) sendMsg({ type: 'check_room', code: urlRoom.toUpperCase() });
-    // Restore Event Hub rooms from localStorage
-    const savedEvName = localStorage.getItem('fuzznet_event_name');
-    if (savedEvName) {
-      const nameInput = document.getElementById('fn-event-hub-name');
-      if (nameInput) { nameInput.value = savedEvName; fnUpdateEventAddBtn(); }
-    }
-    const savedEvCodes = JSON.parse(localStorage.getItem(FN_EV_STORAGE_KEY) || '[]');
-    if (savedEvCodes.length > 0) {
-      for (const code of savedEvCodes) {
-        if (!fnEventRooms.has(code)) fnEventRooms.set(code, { code, playerCount: 0, status: 'pending' });
-      }
-      fnRenderEventTable();
-      sendMsg({ type: 'query_event_rooms', codes: savedEvCodes });
-    }
-  };
-  ws.onclose = () => setTimeout(connect, 2000);
-  ws.onmessage = (e) => handleServerMsg(JSON.parse(e.data));
-}
-
-function sendMsg(msg) {
-  if (isObserver && msg.type === 'game_action') return; // observers cannot affect gameplay
-  if (ws && ws.readyState === 1) ws.send(JSON.stringify(msg));
-}
+function sendMsg(msg) { hub.send(msg); }
 
 function handleServerMsg(msg) {
   switch (msg.type) {
@@ -3086,10 +3057,37 @@ function updateTutOverlay(idx) {
 }
 
 // ==================== INIT ====================
+hub = SocketHub.create({
+  reconnectMs : 2000,
+  onConnect   : function () {
+    const token = sessionStorage.getItem(SESSION_KEY);
+    if (token) hub.send({ type: 'rejoin_room', token });
+    else if (urlRoom && urlObs) hub.send({ type: 'join_as_observer', code: urlRoom.toUpperCase(), name: urlName });
+    else if (urlRoom) hub.send({ type: 'check_room', code: urlRoom.toUpperCase() });
+    // Restore Event Hub rooms from localStorage
+    const savedEvName = localStorage.getItem('fuzznet_event_name');
+    if (savedEvName) {
+      const nameInput = document.getElementById('fn-event-hub-name');
+      if (nameInput) { nameInput.value = savedEvName; fnUpdateEventAddBtn(); }
+    }
+    const savedEvCodes = JSON.parse(localStorage.getItem(FN_EV_STORAGE_KEY) || '[]');
+    if (savedEvCodes.length > 0) {
+      for (const code of savedEvCodes) {
+        if (!fnEventRooms.has(code)) fnEventRooms.set(code, { code, playerCount: 0, status: 'pending' });
+      }
+      fnRenderEventTable();
+      hub.send({ type: 'query_event_rooms', codes: savedEvCodes });
+    }
+  },
+  sendFilter  : function (msg) {
+    if (isObserver && msg.type === 'game_action') return false;
+  },
+});
+hub.on('*', handleServerMsg);
 LobbyUI.init({ gameType: 'fuzznet', sendFn: sendMsg });
 // Defensive: force lobby on init, regardless of any leftover state
 showScreen('lobby');
-connect();
+hub.connect();
 
 // Check URL for room code (e.g. ?room=ABCD). Highlight Join card, dim Create card
 const urlRoom = new URLSearchParams(location.search).get('room');

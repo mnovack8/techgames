@@ -382,6 +382,7 @@ body.cft-loading-active #cft-loading{display:flex;}
 <style>:root{--gn-bg:rgba(13,10,26,0.95);--gn-border:#7c3aed;--gn-shadow:0 1px 12px rgba(124,58,237,0.3);--gn-link:#a78bfa;--gn-link-hover:rgba(124,58,237,0.15);--gn-divider:#4b3a6e;--gn-current:#7c5cbf;}</style>
 <script src="/lobby.js"></script>
 <script src="/observer.js"></script>
+<script src="/socket.js"></script>
 </head>
 <body id="body">
 
@@ -746,7 +747,8 @@ function cfSimulatePhysics(tokens,dice,sx,sy,vx,vy) {
 }
 
 // ==================== STATE ====================
-let ws, G = null, myId = -1, roomCode = '', isObserver = false, isHost = false, myObserverIdx = -1;
+let hub, _hubFirstConnect = true;
+let G = null, myId = -1, roomCode = '', isObserver = false, isHost = false, myObserverIdx = -1;
 let isDragging = false, dragStartX = 0, dragStartY = 0, dragCurX = 0, dragCurY = 0;
 let selectedReflickToken = null;
 let tokenAnims = new Map(); // tokenId → {fromX, fromY, toX, toY, t, delay, playerIdx}
@@ -1628,21 +1630,7 @@ function onPointerUp(e){
 }
 
 // ==================== WEBSOCKET ====================
-function connectWS(cb){
-  const proto=location.protocol==='https:'?'wss:':'ws:';
-  ws=new WebSocket(`${proto}//${location.host}`);
-  ws.onopen=()=>{if(cb)cb();};
-  ws.onmessage=e=>handleMsg(JSON.parse(e.data));
-  ws.onclose=()=>{showToast('Disconnected - reconnecting…');setTimeout(()=>connectWS(tryRejoin),2500);};
-  ws.onerror=()=>{};
-}
-
-function send(msg){if(ws&&ws.readyState===1)ws.send(JSON.stringify(msg));}
-
-function tryRejoin(){
-  const token=sessionStorage.getItem(SESSION_KEY);
-  if(token)send({type:'rejoin_room',token});
-}
+function send(msg) { hub.send(msg); }
 
 function handleMsg(msg){
   switch(msg.type){
@@ -2132,26 +2120,36 @@ window.addEventListener('DOMContentLoaded',()=>{
   const tn=document.getElementById('top-nav'); if(tn) tn.style.display='flex';
   document.body.style.paddingTop='44px';
 
+  hub = SocketHub.create({
+    reconnectMs  : 2500,
+    onConnect    : function () {
+      const token = sessionStorage.getItem(SESSION_KEY);
+      if (token) hub.send({ type: 'rejoin_room', token });
+      if (_hubFirstConnect) {
+        _hubFirstConnect = false;
+        const params = new URLSearchParams(location.search);
+        const roomParam = params.get('room');
+        if (roomParam) {
+          document.getElementById('join-code').value = roomParam.toUpperCase();
+          document.getElementById('invited-banner-code').textContent = roomParam.toUpperCase();
+          document.getElementById('invited-banner').classList.add('show');
+          document.getElementById('lobby-join-card').classList.add('lobby-card-focus');
+          document.getElementById('lobby-create-card').classList.add('lobby-card-dim');
+          checkRoom();
+        }
+        if (params.get('tutorial') === '1') startTutorial();
+      }
+    },
+    onDisconnect : function () { showToast('Disconnected - reconnecting…'); },
+  });
+  hub.on('*', handleMsg);
+
   LobbyUI.init({ gameType: 'clusterflick', sendFn: send });
 
   cfLoadAnimalImages();
   drawLobbyPreview();
 
-  connectWS(()=>{
-    const token=sessionStorage.getItem(SESSION_KEY);
-    if(token)send({type:'rejoin_room',token});
-    const params=new URLSearchParams(location.search);
-    const roomParam=params.get('room');
-    if(roomParam){
-      document.getElementById('join-code').value=roomParam.toUpperCase();
-      document.getElementById('invited-banner-code').textContent=roomParam.toUpperCase();
-      document.getElementById('invited-banner').classList.add('show');
-      document.getElementById('lobby-join-card').classList.add('lobby-card-focus');
-      document.getElementById('lobby-create-card').classList.add('lobby-card-dim');
-      checkRoom();
-    }
-    if(params.get('tutorial')==='1')startTutorial();
-  });
+  hub.connect();
 });
 
 </script>
