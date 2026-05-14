@@ -7,12 +7,12 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="FuzzNet Labs. AI & Machine Learning Board Game">
 <meta property="og:description" content="FuzzNet Labs turns machine learning into a board game. Design a neural network, train it on data, test it on animals. And finally see inside the black box. Free to play online.">
-<meta property="og:image" content="https://cybersecgames.com/images/cover.png">
+<meta property="og:image" content="https://cybersecgames.com/images/fuzznet/fuzznet_cover.png">
 <meta property="og:url" content="https://cybersecgames.com/fuzznet">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="FuzzNet Labs. AI & Machine Learning Board Game">
 <meta name="twitter:description" content="FuzzNet Labs turns machine learning into a board game. Design a neural network, train it on data, test it on animals. And finally see inside the black box. Free to play online.">
-<meta name="twitter:image" content="https://cybersecgames.com/images/cover.png">
+<meta name="twitter:image" content="https://cybersecgames.com/images/fuzznet/fuzznet_cover.png">
 <meta name="robots" content="index, follow">
 <meta name="author" content="Tech CoLab">
 <meta name="keywords" content="FuzzNet Labs, AI board game online, machine learning board game, neural network game online, artificial intelligence game, data science board game">
@@ -623,7 +623,7 @@ rect.tut-animal-hl { animation: tut-hl-pulse 1.1s ease-in-out infinite; }
 
     <!-- HERO -->
     <section class="lobby-hero">
-      <img src="/images/cover.png" alt="FuzzNet Labs">
+      <img src="/images/fuzznet/fuzznet_cover.png" alt="FuzzNet Labs">
       <div class="lobby-hero-text">
         <h1>FuzzNet Labs</h1>
         <p class="subtitle">Build a neural network to classify animal photos. And finally understand what's actually happening inside an AI.</p>
@@ -911,8 +911,8 @@ rect.tut-animal-hl { animation: tut-hl-pulse 1.1s ease-in-out infinite; }
     <div id="side-panel">
       <div class="section-title">Actions <button class="info-btn" onclick="showInfo('actions')">i</button></div>
       <div class="action-btns">
-        <div style="display:flex;align-items:center;gap:4px"><button class="action-btn" id="btn-design" onclick="doAction('start_design')" style="flex:1;display:flex;align-items:center;gap:6px;justify-content:center"><img src="/images/token-design-node.png" style="width:18px;height:18px;flex-shrink:0"> Design Model</button><button class="info-btn" onclick="showInfo('design')">i</button></div>
-        <div style="display:flex;align-items:center;gap:4px"><button class="action-btn" id="btn-train" onclick="doAction('start_train')" style="flex:1;display:flex;align-items:center;gap:6px;justify-content:center"><img src="/images/token-train.png" style="width:18px;height:18px;flex-shrink:0"><span style="font-size:10px;font-weight:800;color:#4ade80;line-height:1">×2</span> Train Model</button><button class="info-btn" onclick="showInfo('train')">i</button></div>
+        <div style="display:flex;align-items:center;gap:4px"><button class="action-btn" id="btn-design" onclick="doAction('start_design')" style="flex:1;display:flex;align-items:center;gap:6px;justify-content:center"><img src="/images/fuzznet/token-design-node.png" style="width:18px;height:18px;flex-shrink:0"> Design Model</button><button class="info-btn" onclick="showInfo('design')">i</button></div>
+        <div style="display:flex;align-items:center;gap:4px"><button class="action-btn" id="btn-train" onclick="doAction('start_train')" style="flex:1;display:flex;align-items:center;gap:6px;justify-content:center"><img src="/images/fuzznet/token-train.png" style="width:18px;height:18px;flex-shrink:0"><span style="font-size:10px;font-weight:800;color:#4ade80;line-height:1">×2</span> Train Model</button><button class="info-btn" onclick="showInfo('train')">i</button></div>
         <div style="display:flex;align-items:center;gap:4px"><button class="action-btn" id="btn-test" onclick="doAction('start_test')" style="flex:1;display:flex;align-items:center;gap:6px;justify-content:center"><svg width="44" height="20" viewBox="0 0 44 20" style="flex-shrink:0;overflow:visible">
   <!-- Die 1: tilted left, face 1 (single centre pip) -->
   <g transform="translate(1,5) rotate(-18,5.5,5.5)">
@@ -1485,7 +1485,7 @@ function renderTopBar() {
     if (isViewed) cls += ' active';
     if (isTurn) cls += ' is-turn';
     const viewArg = (!isObserver && idx === myId) ? -1 : idx;
-    const firstMark = idx === 0 ? '<img src="/images/icon-brain.png" style="width:16px;height:16px;vertical-align:middle;margin-left:2px"><span class="first-badge">1ST<span onclick="event.stopPropagation();showInfo(\'firstplayer\')" style="margin-left:3px;font-size:8px;width:13px;height:13px;line-height:13px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;border:1px solid rgba(255,255,255,0.7);background:rgba(255,255,255,0.25);cursor:pointer;padding:0 2px;font-weight:700">i</span></span>' : '';
+    const firstMark = idx === 0 ? '<img src="/images/fuzznet/icon-brain.png" style="width:16px;height:16px;vertical-align:middle;margin-left:2px"><span class="first-badge">1ST<span onclick="event.stopPropagation();showInfo(\'firstplayer\')" style="margin-left:3px;font-size:8px;width:13px;height:13px;line-height:13px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;border:1px solid rgba(255,255,255,0.7);background:rgba(255,255,255,0.25);cursor:pointer;padding:0 2px;font-weight:700">i</span></span>' : '';
     vhtml += `<button class="${cls}" onclick="setView(${viewArg})"><span class="vb-dot" style="background:${p.hex}"></span>${label}${firstMark}</button>`;
   }
   document.getElementById('view-toggle').innerHTML = vhtml;
@@ -1539,7 +1539,7 @@ function renderBoard() {
     // Bright border when clickable in non-tutorial mode
     if (test && !tutAnimalHL) html += `<rect x="${bx}" y="${by}" width="${bw}" height="${bh}" rx="4" fill="none" stroke="white" stroke-width="2.5" stroke-dasharray="6,3" opacity="0.9"/>`;
     // Grayscale animal image
-    html += `<image href="images/${ANIMAL_IMGS[i]}.png" x="${cx-sz/2}" y="${cy-sz/2}" width="${sz}" height="${sz}" style="filter:grayscale(1)"${oc}/>`;
+    html += `<image href="/images/animals/${ANIMAL_IMGS[i]}.png" x="${cx-sz/2}" y="${cy-sz/2}" width="${sz}" height="${sz}" style="filter:grayscale(1)"${oc}/>`;
     html += `<text class="input-label" x="${x}" y="${y+26}" text-anchor="middle" font-size="10" fill="${playerHex}">${ANIMALS[i]}</text>`;
   }
 
@@ -1551,7 +1551,7 @@ function renderBoard() {
     const sz=34, cx=x, cy=y-6;
     const filt=colorizeFilter(playerHex);
     const opacity=t?1:0.4;
-    html += `<image href="images/${ANIMAL_IMGS[ai]}.png" x="${cx-sz/2}" y="${cy-sz/2}" width="${sz}" height="${sz}" style="filter:${filt};opacity:${opacity}"/>`;
+    html += `<image href="/images/animals/${ANIMAL_IMGS[ai]}.png" x="${cx-sz/2}" y="${cy-sz/2}" width="${sz}" height="${sz}" style="filter:${filt};opacity:${opacity}"/>`;
     html += `<text class="output-label" x="${x}" y="${y+24}" text-anchor="middle" font-size="10" fill="${t?playerHex:'#bbb'}">${ANIMALS[ai]}${t?' ✓':''}</text>`;
   }
 
@@ -1705,7 +1705,7 @@ function renderScoreboard() {
   for (let i=0;i<vals.length;i++) h+=`<th class="score-val">${vals[i]}pt</th>`;
   h+='</tr>';
   for (let a=0;a<5;a++) {
-    h+=`<tr><td class="score-animal"><img src="/images/${ANIMAL_IMGS[a]}.png" style="width:22px;height:22px;object-fit:contain;vertical-align:middle;filter:grayscale(1) brightness(0.35)"></td>`;
+    h+=`<tr><td class="score-animal"><img src="/images/animals/${ANIMAL_IMGS[a]}.png" style="width:22px;height:22px;object-fit:contain;vertical-align:middle;filter:grayscale(1) brightness(0.35)"></td>`;
     const roundCounts={};
     for (const e of G.scoreboard[a]) if (e) roundCounts[e.round]=(roundCounts[e.round]||0)+1;
     for (let i=0;i<vals.length;i++) {
@@ -1847,7 +1847,7 @@ function playerBoardSVGContent(p, animalOrder) {
     const {x,y}=INP[i];
     const sz=34, cx=x, cy=y-6;
     h += `<rect x="${cx-sz/2-4}" y="${cy-sz/2-4}" width="${sz+8}" height="${sz+8}" rx="3" fill="${p.hex}" opacity="0.85"/>`;
-    h += `<image href="images/${ANIMAL_IMGS[i]}.png" x="${cx-sz/2}" y="${cy-sz/2}" width="${sz}" height="${sz}" style="filter:grayscale(1)"/>`;
+    h += `<image href="/images/animals/${ANIMAL_IMGS[i]}.png" x="${cx-sz/2}" y="${cy-sz/2}" width="${sz}" height="${sz}" style="filter:grayscale(1)"/>`;
     h += `<text x="${x}" y="${y+24}" text-anchor="middle" font-size="9" fill="${p.hex}">${ANIMALS[i]}</text>`;
   }
   // Output animals (colorized; dimmed if untested)
@@ -1857,7 +1857,7 @@ function playerBoardSVGContent(p, animalOrder) {
     const ai=animalOrder[i];
     const tested=p.tested&&p.tested[ai];
     const sz=30, cx=x, cy=y-6;
-    h += `<image href="images/${ANIMAL_IMGS[ai]}.png" x="${cx-sz/2}" y="${cy-sz/2}" width="${sz}" height="${sz}" style="filter:${filt};opacity:${tested?1:0.3}"/>`;
+    h += `<image href="/images/animals/${ANIMAL_IMGS[ai]}.png" x="${cx-sz/2}" y="${cy-sz/2}" width="${sz}" height="${sz}" style="filter:${filt};opacity:${tested?1:0.3}"/>`;
     h += `<text x="${x}" y="${y+22}" text-anchor="middle" font-size="9" fill="${tested?p.hex:'#bbb'}">${ANIMALS[ai]}${tested?' ✓':''}</text>`;
   }
   // Nodes
@@ -1906,7 +1906,7 @@ function showGameOver() {
     h += `<th class="go-sb-pts">${SLOT_LABELS[i]}<br><span style="font-size:10px;font-weight:400;color:#aaa">${vals[i]}pt</span></th>`;
   h += '</tr>';
   for (let a=0;a<5;a++) {
-    h += `<tr><td class="go-sb-animal"><img src="/images/${ANIMAL_IMGS[a]}.png" style="width:18px;height:18px;object-fit:contain;vertical-align:middle;margin-right:4px">${ANIMALS[a]}</td>`;
+    h += `<tr><td class="go-sb-animal"><img src="/images/animals/${ANIMAL_IMGS[a]}.png" style="width:18px;height:18px;object-fit:contain;vertical-align:middle;margin-right:4px">${ANIMALS[a]}</td>`;
     const roundCounts={};
     for (const e of G.scoreboard[a]) if (e) roundCounts[e.round]=(roundCounts[e.round]||0)+1;
     for (let i=0;i<vals.length;i++) {
@@ -2364,22 +2364,22 @@ const TSTEPS = [
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px">
 
   <div style="display:flex;align-items:center;gap:8px;background:#f4fae8;border:1.5px solid #a8c96a;border-radius:10px;padding:8px 10px">
-    <img src="/images/player-board.png" width="54" height="54" style="flex-shrink:0;object-fit:cover;border-radius:6px;border:1px solid #ccc" alt="player board"/>
+    <img src="/images/fuzznet/player-board.png" width="54" height="54" style="flex-shrink:0;object-fit:cover;border-radius:6px;border:1px solid #ccc" alt="player board"/>
     <div><div style="font-size:11px;font-weight:800;color:#1a3a00">4 Player Boards</div><div style="font-size:10px;color:#555;line-height:1.4">Your personal neural network grid. 5 animal inputs, 9 node spaces across 3 hidden layers, 5 outputs</div></div>
   </div>
 
   <div style="display:flex;align-items:center;gap:8px;background:#f4fae8;border:1.5px solid #a8c96a;border-radius:10px;padding:8px 10px">
-    <img src="/images/score-board.png" width="54" height="54" style="flex-shrink:0;object-fit:contain;border-radius:6px;border:1px solid #ccc;background:#fff" alt="score board"/>
+    <img src="/images/fuzznet/score-board.png" width="54" height="54" style="flex-shrink:0;object-fit:contain;border-radius:6px;border:1px solid #ccc;background:#fff" alt="score board"/>
     <div><div style="font-size:11px;font-weight:800;color:#1a3a00">1 Score Board</div><div style="font-size:10px;color:#555;line-height:1.4">Shared in the centre. Columns 5, 4, 3, 2 show point values. Players place Animal Figures here when they pass a test</div></div>
   </div>
 
   <div style="display:flex;align-items:center;gap:8px;background:#f4fae8;border:1.5px solid #a8c96a;border-radius:10px;padding:8px 10px">
     <div style="display:flex;gap:3px;flex-shrink:0;align-items:center">
-      <img src="/images/dog.png" width="18" height="18" style="object-fit:contain" alt="dog"/>
-      <img src="/images/bunny.png" width="18" height="18" style="object-fit:contain" alt="bunny"/>
-      <img src="/images/frog.png" width="18" height="18" style="object-fit:contain" alt="frog"/>
-      <img src="/images/squirrel.png" width="18" height="18" style="object-fit:contain" alt="squirrel"/>
-      <img src="/images/fish.png" width="18" height="18" style="object-fit:contain" alt="fish"/>
+      <img src="/images/animals/dog.png" width="18" height="18" style="object-fit:contain" alt="dog"/>
+      <img src="/images/animals/bunny.png" width="18" height="18" style="object-fit:contain" alt="bunny"/>
+      <img src="/images/animals/frog.png" width="18" height="18" style="object-fit:contain" alt="frog"/>
+      <img src="/images/animals/squirrel.png" width="18" height="18" style="object-fit:contain" alt="squirrel"/>
+      <img src="/images/animals/fish.png" width="18" height="18" style="object-fit:contain" alt="fish"/>
     </div>
     <div><div style="font-size:11px;font-weight:800;color:#1a3a00">Animal Figures (per player)</div><div style="font-size:10px;color:#555;line-height:1.4">Dog, Bunny, Frog, Squirrel, Fish — each player gets a full set in their colour. Used on Player Board and Score Board</div></div>
   </div>
@@ -2397,12 +2397,12 @@ const TSTEPS = [
   </div>
 
   <div style="display:flex;align-items:center;gap:8px;background:#f4fae8;border:1.5px solid #a8c96a;border-radius:10px;padding:8px 10px">
-    <img src="/images/token-design-node.png" width="36" height="36" style="flex-shrink:0;object-fit:contain" alt="node token"/>
+    <img src="/images/fuzznet/token-design-node.png" width="36" height="36" style="flex-shrink:0;object-fit:contain" alt="node token"/>
     <div><div style="font-size:11px;font-weight:800;color:#1a3a00">44 Node Tokens</div><div style="font-size:10px;color:#555;line-height:1.4">Placed on your Player Board to build network paths. Cannot be moved or removed once placed</div></div>
   </div>
 
   <div style="display:flex;align-items:center;gap:8px;background:#f4fae8;border:1.5px solid #a8c96a;border-radius:10px;padding:8px 10px">
-    <img src="/images/token-train.png" width="36" height="36" style="flex-shrink:0;object-fit:contain" alt="data token"/>
+    <img src="/images/fuzznet/token-train.png" width="36" height="36" style="flex-shrink:0;object-fit:contain" alt="data token"/>
     <div><div style="font-size:11px;font-weight:800;color:#1a3a00">100 Data Tokens</div><div style="font-size:10px;color:#555;line-height:1.4">Added to Node Tokens when training. Each adds +1 to your test roll. Max 3 per node</div></div>
   </div>
 
@@ -2429,7 +2429,7 @@ const TSTEPS = [
   </div>
 
   <div style="grid-column:1/-1;display:flex;align-items:center;gap:9px;background:#e6f3cf;border:1.5px solid #62b517;border-radius:10px;padding:9px 11px">
-    <img src="/images/icon-brain.png" width="38" height="38" style="flex-shrink:0;object-fit:contain;border-radius:50%" alt="first player marker"/>
+    <img src="/images/fuzznet/icon-brain.png" width="38" height="38" style="flex-shrink:0;object-fit:contain;border-radius:50%" alt="first player marker"/>
     <div><div style="font-size:11px;font-weight:800;color:#1a3a00">1 First Player Marker</div><div style="font-size:10px;color:#555;line-height:1.4">The brain token. Given to whoever goes first. Passes clockwise each round</div></div>
   </div>
 
@@ -2445,7 +2445,7 @@ const TSTEPS = [
 <div style="display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap;margin-bottom:12px">
   <!-- Score Board diagram -->
   <div style="flex:1;min-width:200px">
-    <img src="/images/score-board.png" alt="Score Board" style="width:100%;border-radius:8px;border:1.5px solid #a8c96a"/>
+    <img src="/images/fuzznet/score-board.png" alt="Score Board" style="width:100%;border-radius:8px;border:1.5px solid #a8c96a"/>
     <div style="text-align:center;font-size:10px;font-weight:700;color:#3a6a0a;margin-top:5px">Score Board — centre of table</div>
   </div>
   <!-- Tokens pile diagram -->
@@ -2455,11 +2455,11 @@ const TSTEPS = [
       <div style="font-size:11px;color:#1a3a00;font-weight:700">3 Dice — within reach</div>
     </div>
     <div style="background:#f4fae8;border:1.5px solid #a8c96a;border-radius:8px;padding:8px 10px;display:flex;align-items:center;gap:8px">
-      <img src="/images/token-design-node.png" width="28" height="28" style="object-fit:contain" alt="node token"/>
+      <img src="/images/fuzznet/token-design-node.png" width="28" height="28" style="object-fit:contain" alt="node token"/>
       <div style="font-size:11px;color:#1a3a00;font-weight:700">Node Tokens — shared pile</div>
     </div>
     <div style="background:#f4fae8;border:1.5px solid #a8c96a;border-radius:8px;padding:8px 10px;display:flex;align-items:center;gap:8px">
-      <img src="/images/token-train.png" width="28" height="28" style="object-fit:contain" alt="data token"/>
+      <img src="/images/fuzznet/token-train.png" width="28" height="28" style="object-fit:contain" alt="data token"/>
       <div style="font-size:11px;color:#1a3a00;font-weight:700">Data Tokens — shared pile</div>
     </div>
     <div style="background:#f4fae8;border:1.5px solid #a8c96a;border-radius:8px;padding:8px 10px;display:flex;align-items:center;gap:8px">
@@ -2479,7 +2479,7 @@ const TSTEPS = [
 <div style="display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap">
   <!-- Player board actual image -->
   <div style="flex:1;min-width:220px">
-    <img src="/images/player-setup.png" alt="Player Set Up diagram" style="width:100%;border-radius:8px;border:1.5px solid #a8c96a"/>
+    <img src="/images/fuzznet/player-setup.png" alt="Player Set Up diagram" style="width:100%;border-radius:8px;border:1.5px solid #a8c96a"/>
   </div>
 
   <!-- Steps -->
@@ -2490,7 +2490,7 @@ const TSTEPS = [
     </div>
     <div style="display:flex;gap:8px;align-items:flex-start">
       <div style="flex-shrink:0;width:22px;height:22px;border-radius:50%;background:#62b517;color:#fff;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center">2</div>
-      <div style="font-size:11px;color:#1a3a00;line-height:1.5;padding-top:2px">Determine who goes first by the method of your choice. Give that player the <b>First Player Marker</b> <img src="/images/icon-brain.png" width="16" height="16" style="vertical-align:middle;border-radius:50%" alt="brain"/></div>
+      <div style="font-size:11px;color:#1a3a00;line-height:1.5;padding-top:2px">Determine who goes first by the method of your choice. Give that player the <b>First Player Marker</b> <img src="/images/fuzznet/icon-brain.png" width="16" height="16" style="vertical-align:middle;border-radius:50%" alt="brain"/></div>
     </div>
     <div style="display:flex;gap:8px;align-items:flex-start">
       <div style="flex-shrink:0;width:22px;height:22px;border-radius:50%;background:#62b517;color:#fff;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center">3</div>

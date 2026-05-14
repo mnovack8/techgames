@@ -7,12 +7,12 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="Byte Club. Cybersecurity Card Game">
 <meta property="og:description" content="Byte Club is a cybersecurity card game teaching the Cyber Kill Chain and NIST Framework through experiential learning. 2–4 players. Free to play online. Physical version available.">
-<meta property="og:image" content="https://cybersecgames.com/images/byteclub.png">
+<meta property="og:image" content="https://cybersecgames.com/images/byteclub/byteclub.png">
 <meta property="og:url" content="https://cybersecgames.com/byteclub">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Byte Club. Cybersecurity Card Game">
 <meta name="twitter:description" content="Byte Club is a cybersecurity card game teaching the Cyber Kill Chain and NIST Framework through experiential learning. 2–4 players. Free to play online. Physical version available.">
-<meta name="twitter:image" content="https://cybersecgames.com/images/byteclub.png">
+<meta name="twitter:image" content="https://cybersecgames.com/images/byteclub/byteclub.png">
 <meta name="robots" content="index, follow">
 <meta name="author" content="Tech CoLab">
 <meta name="keywords" content="Byte Club, cybersecurity card game, Kill Chain card game, NIST cybersecurity game, security awareness game, play cybersecurity game online">
@@ -1246,7 +1246,7 @@ body.screen-idle-glow::after{
 
     <!-- HERO -->
     <section class="lobby-hero">
-      <img src="/images/byteclub.png" alt="Byte Club">
+      <img src="/images/byteclub/byteclub.png" alt="Byte Club">
       <div class="lobby-hero-text">
         <h1>BYTE CLUB</h1>
         <p class="subtitle">Experience the Cycle of Cyberwarfare from both sides. Race to steal the Data Flag while defending your own.</p>
@@ -1456,28 +1456,28 @@ body.screen-idle-glow::after{
         </div>
       </div>
       <div class="special-card sc-dataflag" id="sc-dataflag">
-        <div class="sc-icon"><img src="/images/special-data-flag.png" alt="Data Flag"></div>
+        <div class="sc-icon"><img src="/images/byteclub/special-data-flag.png" alt="Data Flag"></div>
         <div class="sc-text">
           <div class="sc-name">Data Flag <span class="info-btn" onclick="">i<div class="info-popup below"><strong>Win Condition 1:</strong> Hold the Data Flag in your hand when <em>Times Up</em> is revealed from the deck. You can steal it using <em>C2</em> or <em>Action Objectives</em>.</div></span></div>
           <div class="sc-status" id="dataflag-status">In deck</div>
         </div>
       </div>
       <div class="special-card sc-timesup" id="sc-timesup">
-        <div class="sc-icon"><img src="/images/special-times-up.png" alt="Times Up"></div>
+        <div class="sc-icon"><img src="/images/byteclub/special-times-up.png" alt="Times Up"></div>
         <div class="sc-text">
           <div class="sc-name">Times Up <span class="info-btn" onclick="">i<div class="info-popup below">When drawn from the deck, the game <strong>immediately checks</strong> if any player holds the Data Flag. If so, that player wins! Times Up cannot be held in hand. It triggers instantly.</div></span></div>
           <div class="sc-status" id="timesup-status">In deck</div>
         </div>
       </div>
       <div class="special-card sc-govern" id="sc-govern">
-        <div class="sc-icon"><img src="/images/defend-govern.png" alt="Govern"></div>
+        <div class="sc-icon"><img src="/images/byteclub/defend-govern.png" alt="Govern"></div>
         <div class="sc-text">
           <div class="sc-name">Govern <span class="info-btn" onclick="">i<div class="info-popup wide below"><strong>How to unlock:</strong> Be the first to play all 5 NIST defend types (Identify, Protect, Detect, Respond, Recover) in front of you.<br><br><strong>Effect:</strong> Look at each player's hand privately, take 1 card from each, then give 1 card back to each. <em>Weaponize cannot cancel this card.</em></div></span></div>
           <div class="sc-status" id="govern-status">Locked</div>
         </div>
       </div>
       <div class="special-card sc-actionobj" id="sc-actionobj">
-        <div class="sc-icon"><img src="/images/attack-action-obj.png" alt="Action Obj."></div>
+        <div class="sc-icon"><img src="/images/byteclub/attack-action-obj.png" alt="Action Obj."></div>
         <div class="sc-text">
           <div class="sc-name">Action Obj. <span class="info-btn" onclick="">i<div class="info-popup wide below"><strong>How to unlock:</strong> Be the first to play all 6 Kill Chain attack types (Recon, Weaponize, Delivery, Exploit, Install, C2) in front of you.<br><br><strong>Effect:</strong> Play at any time. The player holding the Data Flag must give it to you. <em>Respond cannot cancel this card.</em></div></span></div>
           <div class="sc-status" id="actionobj-status">Locked</div>
@@ -1595,21 +1595,21 @@ body.screen-idle-glow::after{
   <p><strong>Opponents bar</strong>: top row shows each opponent's panel: hand size, played Kill Chain &amp; NIST slots, and whose turn it is.</p>
   <p><strong>Status strip</strong>: the bar directly below opponents shows five game-wide indicators: Draw Deck count, Data Flag location, Times Up state, Govern availability, and Action Objective status. Click any <strong>ⓘ</strong> for details.</p>
   <p><strong>Your Hand (left 2/3)</strong>: your cards are here. Click one to play it on your turn. Active action prompts also appear in this area.</p>
-  <p><strong>Cards in Front of You (right 1/3)</strong>: your played area. The <img src="/images/cyber-kill-chain.svg" style="width:10px;height:10px;vertical-align:middle;"> <strong>Cyber Kill Chain</strong> row tracks attack cards; the <img src="/images/nist-framework.svg" style="width:10px;height:10px;vertical-align:middle;"> <strong>NIST</strong> row tracks defend cards. Dotted slots show what you still need.</p>
+  <p><strong>Cards in Front of You (right 1/3)</strong>: your played area. The <img src="/images/byteclub/cyber-kill-chain.svg" style="width:10px;height:10px;vertical-align:middle;"> <strong>Cyber Kill Chain</strong> row tracks attack cards; the <img src="/images/byteclub/nist-framework.svg" style="width:10px;height:10px;vertical-align:middle;"> <strong>NIST</strong> row tracks defend cards. Dotted slots show what you still need.</p>
   <p><strong>Activity feed</strong>: the narrow column between your hand and played area logs every game event.</p>
   <h5><span style="color:#62b517">◆</span> Turn Flow</h5>
   <p><strong>1. Play cards</strong>: click cards from your hand to play them. You can play multiple cards per turn.</p>
   <p><strong>2. End turn</strong>: click End Turn when done.</p>
   <p><strong>3. Draw</strong>: you automatically draw 1 card.</p>
   <p><strong>4. Discard</strong>: if you have more than 6 cards, click one to discard.</p>
-  <h5><span style="color:#f87171">▸</span> <img src="/images/cyber-kill-chain.svg" style="width:10px;height:10px;vertical-align:middle;"> Kill Chain. Attack Cards</h5>
+  <h5><span style="color:#f87171">▸</span> <img src="/images/byteclub/cyber-kill-chain.svg" style="width:10px;height:10px;vertical-align:middle;"> Kill Chain. Attack Cards</h5>
   <p><span style="color:#f87171;font-size:9px;font-weight:900">ATK</span> <strong>Recon</strong>: peek at a hand or swap played attack cards</p>
   <p><span style="color:#f87171;font-size:9px;font-weight:900">ATK</span> <strong>Weaponize</strong>: cancel an opponent's defend card (played out of turn)</p>
   <p><span style="color:#f87171;font-size:9px;font-weight:900">ATK</span> <strong>Delivery</strong>: swap up to 2 played cards with opponents</p>
   <p><span style="color:#f87171;font-size:9px;font-weight:900">ATK</span> <strong>Exploit</strong>: blindly steal 1 card from a target</p>
   <p><span style="color:#f87171;font-size:9px;font-weight:900">ATK</span> <strong>Install</strong>: block a target from playing defend cards</p>
   <p><span style="color:#f87171;font-size:9px;font-weight:900">ATK</span> <strong>C2</strong>: steal the Data Flag, or target gives you a card</p>
-  <h5><span style="color:#93c5fd">▸</span> <img src="/images/nist-framework.svg" style="width:10px;height:10px;vertical-align:middle;"> NIST Framework. Defend Cards</h5>
+  <h5><span style="color:#93c5fd">▸</span> <img src="/images/byteclub/nist-framework.svg" style="width:10px;height:10px;vertical-align:middle;"> NIST Framework. Defend Cards</h5>
   <p><span style="color:#93c5fd;font-size:9px;font-weight:900">DEF</span> <strong>Identify</strong>: reveal who has the Data Flag or swap played defend cards</p>
   <p><span style="color:#93c5fd;font-size:9px;font-weight:900">DEF</span> <strong>Protect</strong>: block attacks until your next turn</p>
   <p><span style="color:#93c5fd;font-size:9px;font-weight:900">DEF</span> <strong>Detect</strong>: view and reorder the top 5 deck cards</p>
@@ -1771,10 +1771,10 @@ function hideCardZoom() {
 
 function setupSpecialCardZoom() {
   const specials = [
-    { id: 'sc-dataflag',  card: { name: 'Data Flag',         cat: 'special', type: 'data_flag',  img: '/images/special-data-flag.png', desc: 'Hold this when Times Up is drawn to win instantly! Can be stolen with C2 or Action Objectives.' } },
-    { id: 'sc-timesup',   card: { name: 'Times Up',          cat: 'special', type: 'times_up',   img: '/images/special-times-up.png',  desc: 'Triggers instantly when drawn. If any player is holding the Data Flag, that player wins immediately!' } },
-    { id: 'sc-govern',    card: { name: 'Govern',            cat: 'defend',  type: 'govern',     img: '/images/defend-govern.png',     desc: 'Earned by playing all 5 NIST defend types. Look at each player\'s hand privately, take 1 card from each, then give 1 card back to each. Cannot be cancelled by Weaponize.' } },
-    { id: 'sc-actionobj', card: { name: 'Action Objectives', cat: 'attack',  type: 'action_obj', img: '/images/attack-action-obj.png', desc: 'Earned by completing the full Kill Chain (all 6 attack types). The Data Flag holder must give it to you immediately. Cannot be cancelled by Respond.' } },
+    { id: 'sc-dataflag',  card: { name: 'Data Flag',         cat: 'special', type: 'data_flag',  img: '/images/byteclub/special-data-flag.png', desc: 'Hold this when Times Up is drawn to win instantly! Can be stolen with C2 or Action Objectives.' } },
+    { id: 'sc-timesup',   card: { name: 'Times Up',          cat: 'special', type: 'times_up',   img: '/images/byteclub/special-times-up.png',  desc: 'Triggers instantly when drawn. If any player is holding the Data Flag, that player wins immediately!' } },
+    { id: 'sc-govern',    card: { name: 'Govern',            cat: 'defend',  type: 'govern',     img: '/images/byteclub/defend-govern.png',     desc: 'Earned by playing all 5 NIST defend types. Look at each player\'s hand privately, take 1 card from each, then give 1 card back to each. Cannot be cancelled by Weaponize.' } },
+    { id: 'sc-actionobj', card: { name: 'Action Objectives', cat: 'attack',  type: 'action_obj', img: '/images/byteclub/attack-action-obj.png', desc: 'Earned by completing the full Kill Chain (all 6 attack types). The Data Flag holder must give it to you immediately. Cannot be cancelled by Respond.' } },
   ];
   specials.forEach(({ id, card }) => {
     const el = document.getElementById(id);
@@ -2711,27 +2711,27 @@ function handleMsg(msg) {
 
 // ==================== GAME RENDER ====================
 const ATTACK_TYPES = [
-  { id:'recon',     name:'Reconnaissance',   emoji:'🔍', img:'/images/attack-recon.png' },
-  { id:'weaponize', name:'Weaponization',     emoji:'⚒️', img:'/images/attack-weaponize.png' },
-  { id:'deliver',   name:'Delivery',          emoji:'📨', img:'/images/attack-delivery.png' },
-  { id:'exploit',   name:'Exploitation',      emoji:'💥', img:'/images/attack-exploit.png' },
-  { id:'install',   name:'Installation',      emoji:'⚙️', img:'/images/attack-install.png' },
-  { id:'c2',        name:'Command & Control', emoji:'📡', img:'/images/attack-c2.png' },
-  { id:'action_obj',name:'Action Objectives', emoji:'🎯', img:'/images/attack-action-obj.png' },
+  { id:'recon',     name:'Reconnaissance',   emoji:'🔍', img:'/images/byteclub/attack-recon.png' },
+  { id:'weaponize', name:'Weaponization',     emoji:'⚒️', img:'/images/byteclub/attack-weaponize.png' },
+  { id:'deliver',   name:'Delivery',          emoji:'📨', img:'/images/byteclub/attack-delivery.png' },
+  { id:'exploit',   name:'Exploitation',      emoji:'💥', img:'/images/byteclub/attack-exploit.png' },
+  { id:'install',   name:'Installation',      emoji:'⚙️', img:'/images/byteclub/attack-install.png' },
+  { id:'c2',        name:'Command & Control', emoji:'📡', img:'/images/byteclub/attack-c2.png' },
+  { id:'action_obj',name:'Action Objectives', emoji:'🎯', img:'/images/byteclub/attack-action-obj.png' },
 ];
 const DEFEND_TYPES = [
-  { id:'identify', name:'Identify', emoji:'🔎', img:'/images/defend-identify.png' },
-  { id:'protect',  name:'Protect',  emoji:'🛡️', img:'/images/defend-protect.png' },
-  { id:'detect',   name:'Detect',   emoji:'👁️', img:'/images/defend-detect.png' },
-  { id:'respond',  name:'Respond',  emoji:'🚨', img:'/images/defend-respond.png' },
-  { id:'recover',  name:'Recover',  emoji:'🔄', img:'/images/defend-recover.png' },
-  { id:'govern',   name:'Govern',   emoji:'🏛️', img:'/images/defend-govern.png' },
+  { id:'identify', name:'Identify', emoji:'🔎', img:'/images/byteclub/defend-identify.png' },
+  { id:'protect',  name:'Protect',  emoji:'🛡️', img:'/images/byteclub/defend-protect.png' },
+  { id:'detect',   name:'Detect',   emoji:'👁️', img:'/images/byteclub/defend-detect.png' },
+  { id:'respond',  name:'Respond',  emoji:'🚨', img:'/images/byteclub/defend-respond.png' },
+  { id:'recover',  name:'Recover',  emoji:'🔄', img:'/images/byteclub/defend-recover.png' },
+  { id:'govern',   name:'Govern',   emoji:'🏛️', img:'/images/byteclub/defend-govern.png' },
 ];
 
 // Return the artwork image path for a card (by type), or null if none yet
 const SPECIAL_IMGS = {
-  data_flag: '/images/special-data-flag.png',
-  times_up:  '/images/special-times-up.png',
+  data_flag: '/images/byteclub/special-data-flag.png',
+  times_up:  '/images/byteclub/special-times-up.png',
 };
 const NAME_TO_TYPE = {
   'Reconnaissance': 'recon', 'Weaponization': 'weaponize', 'Delivery': 'deliver',
@@ -2957,11 +2957,11 @@ function renderObserverGame(gs) {
     const defendSlots = DEFEND_TYPES.map(t => obsFullSlot(t, t.id==='govern'?'special':'defend')).join('');
     const oppPlayedHtml = `<div class="my-played-rows obs-played-rows">
       <div class="kc-row">
-        <span class="kc-row-label attack"><img src="/images/cyber-kill-chain.svg" style="width:14px;height:14px;object-fit:contain;flex-shrink:0;display:block;">Cyberkill Chain<span class="info-btn" onclick="">i<div class="info-popup wide"><strong>Cyber Kill Chain</strong>: the attack path. A player must play one of each attack type to unlock <em>Action Objectives</em>.<br><br><strong>Recon</strong>: look at a hand or swap played attack cards<br><strong>Weaponize</strong>: cancel an opponent's defend card (out of turn)<br><strong>Delivery</strong>: swap up to 2 played cards with opponents<br><strong>Exploit</strong>: blindly steal 1 card from a target<br><strong>Install</strong>: block a target from playing defend cards<br><strong>C2</strong>: steal the Data Flag, or target gives you a card</div></span></span>
+        <span class="kc-row-label attack"><img src="/images/byteclub/cyber-kill-chain.svg" style="width:14px;height:14px;object-fit:contain;flex-shrink:0;display:block;">Cyberkill Chain<span class="info-btn" onclick="">i<div class="info-popup wide"><strong>Cyber Kill Chain</strong>: the attack path. A player must play one of each attack type to unlock <em>Action Objectives</em>.<br><br><strong>Recon</strong>: look at a hand or swap played attack cards<br><strong>Weaponize</strong>: cancel an opponent's defend card (out of turn)<br><strong>Delivery</strong>: swap up to 2 played cards with opponents<br><strong>Exploit</strong>: blindly steal 1 card from a target<br><strong>Install</strong>: block a target from playing defend cards<br><strong>C2</strong>: steal the Data Flag, or target gives you a card</div></span></span>
         <div class="kc-slots">${attackSlots}</div>
       </div>
       <div class="kc-row">
-        <span class="kc-row-label defend"><img src="/images/nist-framework.svg" style="width:14px;height:14px;object-fit:contain;flex-shrink:0;display:block;">NIST<span class="info-btn" onclick="">i<div class="info-popup wide"><strong>NIST Cybersecurity Framework</strong>: the defense path. A player must play one of each defend type to unlock <em>Govern</em>.<br><br><strong>Identify</strong>: reveal Data Flag holder or swap played defend cards<br><strong>Protect</strong>: block attacks until your next turn<br><strong>Detect</strong>: view and reorder the top 5 deck cards<br><strong>Respond</strong>: cancel an attack targeting you (out of turn)<br><strong>Recover</strong>: draw until you have 5 cards</div></span></span>
+        <span class="kc-row-label defend"><img src="/images/byteclub/nist-framework.svg" style="width:14px;height:14px;object-fit:contain;flex-shrink:0;display:block;">NIST<span class="info-btn" onclick="">i<div class="info-popup wide"><strong>NIST Cybersecurity Framework</strong>: the defense path. A player must play one of each defend type to unlock <em>Govern</em>.<br><br><strong>Identify</strong>: reveal Data Flag holder or swap played defend cards<br><strong>Protect</strong>: block attacks until your next turn<br><strong>Detect</strong>: view and reorder the top 5 deck cards<br><strong>Respond</strong>: cancel an attack targeting you (out of turn)<br><strong>Recover</strong>: draw until you have 5 cards</div></span></span>
         <div class="kc-slots">${defendSlots}</div>
       </div>
     </div>`;
@@ -3278,11 +3278,11 @@ function renderMyPlayed(played) {
 
   el.innerHTML = `
     <div class="kc-row">
-      <span class="kc-row-label attack"><img src="/images/cyber-kill-chain.svg" style="width:14px;height:14px;object-fit:contain;flex-shrink:0;display:block;">Cyberkill Chain<span class="info-btn" onclick="">i<div class="info-popup wide"><strong>Cyber Kill Chain</strong>: play one of each attack type to unlock <em>Action Objectives</em>.<br><br><strong>Recon</strong>: look at a hand or swap played attack cards<br><strong>Weaponize</strong>: cancel an opponent's defend card (out of turn)<br><strong>Delivery</strong>: swap up to 2 played cards with opponents<br><strong>Exploit</strong>: blindly steal 1 card from a target<br><strong>Install</strong>: block a target from playing defend cards<br><strong>C2</strong>: steal the Data Flag, or target gives you a card</div></span></span>
+      <span class="kc-row-label attack"><img src="/images/byteclub/cyber-kill-chain.svg" style="width:14px;height:14px;object-fit:contain;flex-shrink:0;display:block;">Cyberkill Chain<span class="info-btn" onclick="">i<div class="info-popup wide"><strong>Cyber Kill Chain</strong>: play one of each attack type to unlock <em>Action Objectives</em>.<br><br><strong>Recon</strong>: look at a hand or swap played attack cards<br><strong>Weaponize</strong>: cancel an opponent's defend card (out of turn)<br><strong>Delivery</strong>: swap up to 2 played cards with opponents<br><strong>Exploit</strong>: blindly steal 1 card from a target<br><strong>Install</strong>: block a target from playing defend cards<br><strong>C2</strong>: steal the Data Flag, or target gives you a card</div></span></span>
       <div class="kc-slots">${attackSlots}</div>
     </div>
     <div class="kc-row">
-      <span class="kc-row-label defend"><img src="/images/nist-framework.svg" style="width:14px;height:14px;object-fit:contain;flex-shrink:0;display:block;">NIST<span class="info-btn" onclick="">i<div class="info-popup wide"><strong>NIST Cybersecurity Framework</strong>: play one of each defend type to unlock <em>Govern</em>.<br><br><strong>Identify</strong>: reveal Data Flag holder or swap played defend cards<br><strong>Protect</strong>: block attacks until your next turn<br><strong>Detect</strong>: view and reorder the top 5 deck cards<br><strong>Respond</strong>: cancel an attack targeting you (out of turn)<br><strong>Recover</strong>: draw until you have 5 cards</div></span></span>
+      <span class="kc-row-label defend"><img src="/images/byteclub/nist-framework.svg" style="width:14px;height:14px;object-fit:contain;flex-shrink:0;display:block;">NIST<span class="info-btn" onclick="">i<div class="info-popup wide"><strong>NIST Cybersecurity Framework</strong>: play one of each defend type to unlock <em>Govern</em>.<br><br><strong>Identify</strong>: reveal Data Flag holder or swap played defend cards<br><strong>Protect</strong>: block attacks until your next turn<br><strong>Detect</strong>: view and reorder the top 5 deck cards<br><strong>Respond</strong>: cancel an attack targeting you (out of turn)<br><strong>Recover</strong>: draw until you have 5 cards</div></span></span>
       <div class="kc-slots">${defendSlots}</div>
     </div>`;
 }
@@ -4322,27 +4322,27 @@ let bcTutG    = null;
 // IDs are integers so they match the selectedHandCard comparison in selectCard()
 const BTC = {
   // Alex's starting hand
-  recon:    { id:1001, cat:'attack', type:'recon',     name:'Reconnaissance', img:'/images/attack-recon.png', desc:'Look at target\'s hand, or swap your played attack cards.' },
-  c2:       { id:1002, cat:'attack', type:'c2',        name:'C2 Control',     img:'/images/attack-c2.png',        desc:'Steal the Data Flag, or target must give you a card.' },
+  recon:    { id:1001, cat:'attack', type:'recon',     name:'Reconnaissance', img:'/images/byteclub/attack-recon.png', desc:'Look at target\'s hand, or swap your played attack cards.' },
+  c2:       { id:1002, cat:'attack', type:'c2',        name:'C2 Control',     img:'/images/byteclub/attack-c2.png',        desc:'Steal the Data Flag, or target must give you a card.' },
   respond:  { id:1003, cat:'defend', type:'respond',   name:'Respond',        desc:'Cancel an attack targeting you. Played out of turn.' },
   identify: { id:1004, cat:'defend', type:'identify',  name:'Identify',       desc:'Reveal who holds the Data Flag, or swap defend cards.' },
   recover:  { id:1005, cat:'defend', type:'recover',   name:'Recover',        desc:'Draw cards until you have 5 in hand.' },
   // Mira's pre-played cards
-  exploit:  { id:2001, cat:'attack', type:'exploit',   name:'Exploitation',   img:'/images/attack-exploit.png',   desc:'Blindly steal 1 random card from target\'s hand.' },
-  deliver:  { id:2002, cat:'attack', type:'deliver',   name:'Delivery',       img:'/images/attack-delivery.png',  desc:'Swap up to 2 played cards with an opponent.' },
+  exploit:  { id:2001, cat:'attack', type:'exploit',   name:'Exploitation',   img:'/images/byteclub/attack-exploit.png',   desc:'Blindly steal 1 random card from target\'s hand.' },
+  deliver:  { id:2002, cat:'attack', type:'deliver',   name:'Delivery',       img:'/images/byteclub/attack-delivery.png',  desc:'Swap up to 2 played cards with an opponent.' },
   // Data Flag (moves to Alex's hand in step 4)
-  dataFlag: { id:3001, cat:'special', type:'data_flag', name:'Data Flag',  img:'/images/special-data-flag.png', desc:'Hold this when Times Up is drawn to win instantly!' },
+  dataFlag: { id:3001, cat:'special', type:'data_flag', name:'Data Flag',  img:'/images/byteclub/special-data-flag.png', desc:'Hold this when Times Up is drawn to win instantly!' },
   // Step 7: the two "completing" cards
-  c2b:      { id:1006, cat:'attack', type:'c2',        name:'C2 Control',     img:'/images/attack-c2.png',        desc:'Steal the Data Flag, or target must give you a card.' },
+  c2b:      { id:1006, cat:'attack', type:'c2',        name:'C2 Control',     img:'/images/byteclub/attack-c2.png',        desc:'Steal the Data Flag, or target must give you a card.' },
   recoverB: { id:1007, cat:'defend', type:'recover',   name:'Recover',        desc:'Draw cards until you have 5 in hand.' },
 };
 
 // Pre-built sets of pre-filled cards for the win-condition-2 step
 const BTC_PREFILLED_ATTACK = [
-  { id:4001, cat:'attack', type:'weaponize', name:'Weaponization', img:'/images/attack-weaponize.png', desc:'' },
-  { id:4002, cat:'attack', type:'deliver',   name:'Delivery',      img:'/images/attack-delivery.png',  desc:'' },
-  { id:4003, cat:'attack', type:'exploit',   name:'Exploitation',  img:'/images/attack-exploit.png',   desc:'' },
-  { id:4004, cat:'attack', type:'install',   name:'Installation',  img:'/images/attack-install.png',   desc:'' },
+  { id:4001, cat:'attack', type:'weaponize', name:'Weaponization', img:'/images/byteclub/attack-weaponize.png', desc:'' },
+  { id:4002, cat:'attack', type:'deliver',   name:'Delivery',      img:'/images/byteclub/attack-delivery.png',  desc:'' },
+  { id:4003, cat:'attack', type:'exploit',   name:'Exploitation',  img:'/images/byteclub/attack-exploit.png',   desc:'' },
+  { id:4004, cat:'attack', type:'install',   name:'Installation',  img:'/images/byteclub/attack-install.png',   desc:'' },
   { id:4005, cat:'attack', type:'action_obj',name:'Action Obj.',   desc:'' },
 ];
 const BTC_PREFILLED_DEFEND = [
@@ -4355,11 +4355,11 @@ const BTC_PREFILLED_DEFEND = [
 // ── Step 8 (Win Condition 2). New multi-phase sequence cards ────────────────
 // Pre-filled board: 5 attack (missing exploit+action_obj), 4 defend (missing protect+govern)
 const BTC8_PRE_ATTACK = [
-  { id:4101, cat:'attack', type:'recon',     name:'Reconnaissance', img:'/images/attack-recon.png',     desc:'' },
-  { id:4102, cat:'attack', type:'weaponize', name:'Weaponization',  img:'/images/attack-weaponize.png', desc:'' },
-  { id:4103, cat:'attack', type:'deliver',   name:'Delivery',       img:'/images/attack-delivery.png',  desc:'' },
-  { id:4104, cat:'attack', type:'install',   name:'Installation',   img:'/images/attack-install.png',   desc:'' },
-  { id:4105, cat:'attack', type:'c2',        name:'C2 Control',     img:'/images/attack-c2.png',        desc:'' },
+  { id:4101, cat:'attack', type:'recon',     name:'Reconnaissance', img:'/images/byteclub/attack-recon.png',     desc:'' },
+  { id:4102, cat:'attack', type:'weaponize', name:'Weaponization',  img:'/images/byteclub/attack-weaponize.png', desc:'' },
+  { id:4103, cat:'attack', type:'deliver',   name:'Delivery',       img:'/images/byteclub/attack-delivery.png',  desc:'' },
+  { id:4104, cat:'attack', type:'install',   name:'Installation',   img:'/images/byteclub/attack-install.png',   desc:'' },
+  { id:4105, cat:'attack', type:'c2',        name:'C2 Control',     img:'/images/byteclub/attack-c2.png',        desc:'' },
 ];
 const BTC8_PRE_DEFEND = [
   { id:4106, cat:'defend', type:'identify',  name:'Identify',  desc:'' },
@@ -4368,7 +4368,7 @@ const BTC8_PRE_DEFEND = [
   { id:4109, cat:'defend', type:'recover',   name:'Recover',   desc:'' },
 ];
 // Cards that arrive / are earned during the sequence
-const TUT8_EXPLOIT    = { id:1008, cat:'attack', type:'exploit',    name:'Exploitation', img:'/images/attack-exploit.png', desc:"Blindly steal 1 random card from target's hand." };
+const TUT8_EXPLOIT    = { id:1008, cat:'attack', type:'exploit',    name:'Exploitation', img:'/images/byteclub/attack-exploit.png', desc:"Blindly steal 1 random card from target's hand." };
 const TUT8_PROTECT    = { id:4110, cat:'defend', type:'protect',    name:'Protect',      desc:'Block or nullify threats before they take hold.' };
 const TUT8_ACTION_OBJ = { id:4111, cat:'attack', type:'action_obj', name:'Action Obj.',  desc:"Earned: you completed the full Kill Chain." };
 const TUT8_GOVERN     = { id:4112, cat:'defend', type:'govern',     name:'Govern',       desc:"Earned: you completed the full NIST Framework." };
@@ -4424,8 +4424,8 @@ const BCTSTEPS = [
   { title: 'The Cycle of Cyberwarfare',
     body: `Cybersecurity is a <strong>never-ending arms race</strong> between two sides. Both competing for control over <em>access to data</em>.
 <div class="bcti-cycle-box">
-  <div class="bcti-cycle-side attacker"><div class="bcti-cycle-label"><img src="/images/cyber-kill-chain.svg" style="width:14px;height:14px;vertical-align:middle;margin-right:5px;"> Attacker</div><div class="bcti-cycle-text">Wants data the defender didn't intend to share. Only needs to succeed <strong>once</strong> to win.</div></div>
-  <div class="bcti-cycle-side defender"><div class="bcti-cycle-label"><img src="/images/nist-framework.svg" style="width:14px;height:14px;vertical-align:middle;margin-right:5px;"> Defender</div><div class="bcti-cycle-text">Protects confidential data by building controls. Must succeed <strong>every single time</strong>.</div></div>
+  <div class="bcti-cycle-side attacker"><div class="bcti-cycle-label"><img src="/images/byteclub/cyber-kill-chain.svg" style="width:14px;height:14px;vertical-align:middle;margin-right:5px;"> Attacker</div><div class="bcti-cycle-text">Wants data the defender didn't intend to share. Only needs to succeed <strong>once</strong> to win.</div></div>
+  <div class="bcti-cycle-side defender"><div class="bcti-cycle-label"><img src="/images/byteclub/nist-framework.svg" style="width:14px;height:14px;vertical-align:middle;margin-right:5px;"> Defender</div><div class="bcti-cycle-text">Protects confidential data by building controls. Must succeed <strong>every single time</strong>.</div></div>
 </div>
 Defenders improve their controls → attackers find new gaps → defenders adapt again. The cycle <em>never stops</em>.<br><br>
 In Byte Club you play <strong>both sides simultaneously</strong>: attacking your opponent while defending your own data.`,
@@ -4433,38 +4433,38 @@ In Byte Club you play <strong>both sides simultaneously</strong>: attacking your
     forced: false, next: 'Next →' },
 
   // 1. Cyber Kill Chain  (intro overlay)
-  { title: '<img src="/images/cyber-kill-chain.svg" style="width:26px;height:26px;vertical-align:middle;margin-right:8px;"> The Cyber Kill Chain',
-    body: `The Kill Chain is the <strong>precise sequence every attacker follows</strong> to breach a target. Each stage must complete before the next can begin. Stop any single step and the entire attack collapses.<br><br>In Byte Club, each <img src="/images/cyber-kill-chain.svg" style="width:14px;height:14px;vertical-align:middle;"> <strong>attack card</strong> maps to one of these 7 stages. Play them all to win by Kill Chain.
+  { title: '<img src="/images/byteclub/cyber-kill-chain.svg" style="width:26px;height:26px;vertical-align:middle;margin-right:8px;"> The Cyber Kill Chain',
+    body: `The Kill Chain is the <strong>precise sequence every attacker follows</strong> to breach a target. Each stage must complete before the next can begin. Stop any single step and the entire attack collapses.<br><br>In Byte Club, each <img src="/images/byteclub/cyber-kill-chain.svg" style="width:14px;height:14px;vertical-align:middle;"> <strong>attack card</strong> maps to one of these 7 stages. Play them all to win by Kill Chain.
 <div class="bcti-kc-row">
-  <div class="bcti-kc-item"><img src="/images/attack-recon.png"><div class="bcti-kc-name">Reconnaissance</div></div>
+  <div class="bcti-kc-item"><img src="/images/byteclub/attack-recon.png"><div class="bcti-kc-name">Reconnaissance</div></div>
   <div class="bcti-kc-arrow">→</div>
-  <div class="bcti-kc-item"><img src="/images/attack-weaponize.png"><div class="bcti-kc-name">Weaponize</div></div>
+  <div class="bcti-kc-item"><img src="/images/byteclub/attack-weaponize.png"><div class="bcti-kc-name">Weaponize</div></div>
   <div class="bcti-kc-arrow">→</div>
-  <div class="bcti-kc-item"><img src="/images/attack-delivery.png"><div class="bcti-kc-name">Delivery</div></div>
+  <div class="bcti-kc-item"><img src="/images/byteclub/attack-delivery.png"><div class="bcti-kc-name">Delivery</div></div>
   <div class="bcti-kc-arrow">→</div>
-  <div class="bcti-kc-item"><img src="/images/attack-exploit.png"><div class="bcti-kc-name">Exploitation</div></div>
+  <div class="bcti-kc-item"><img src="/images/byteclub/attack-exploit.png"><div class="bcti-kc-name">Exploitation</div></div>
   <div class="bcti-kc-arrow">→</div>
-  <div class="bcti-kc-item"><img src="/images/attack-install.png"><div class="bcti-kc-name">Installation</div></div>
+  <div class="bcti-kc-item"><img src="/images/byteclub/attack-install.png"><div class="bcti-kc-name">Installation</div></div>
   <div class="bcti-kc-arrow">→</div>
-  <div class="bcti-kc-item"><img src="/images/attack-c2.png"><div class="bcti-kc-name">Command &amp; Control</div></div>
+  <div class="bcti-kc-item"><img src="/images/byteclub/attack-c2.png"><div class="bcti-kc-name">Command &amp; Control</div></div>
   <div class="bcti-kc-arrow">→</div>
-  <div class="bcti-kc-item"><img src="/images/attack-action-obj.png"><div class="bcti-kc-name">Actions on Objectives</div></div>
+  <div class="bcti-kc-item"><img src="/images/byteclub/attack-action-obj.png"><div class="bcti-kc-name">Actions on Objectives</div></div>
 </div>
 <div style="text-align:center;font-size:11px;color:#374151;letter-spacing:0.3px;">Must complete all 7 stages in sequence. Stop any step and the attack fails</div>`,
     makeG: () => makeBcTutG({ alexHand:[BTC.recon,BTC.c2,BTC.respond,BTC.identify,BTC.recover] }),
     forced: false, next: 'Next →' },
 
   // 2. NIST Framework  (intro overlay)
-  { title: '<img src="/images/nist-framework.svg" style="width:26px;height:26px;vertical-align:middle;margin-right:8px;"> The NIST Cybersecurity Framework',
-    body: `<div class="bcti-two-col"><div class="bcti-left">NIST is the framework defenders use to <strong>organize their entire response</strong> to threats. Unlike the Kill Chain, NIST is a <em>continuous cycle</em>: defenders loop through all 5 functions indefinitely, always improving.<br><br>In Byte Club, each <img src="/images/nist-framework.svg" style="width:14px;height:14px;vertical-align:middle;"> <strong>defend card</strong> maps to one of these functions. Complete all 6 (including Govern) to win by NIST.<br><br><strong>Govern</strong> sits at the center. It oversees and coordinates the entire cycle.</div><div class="bcti-right">
+  { title: '<img src="/images/byteclub/nist-framework.svg" style="width:26px;height:26px;vertical-align:middle;margin-right:8px;"> The NIST Cybersecurity Framework',
+    body: `<div class="bcti-two-col"><div class="bcti-left">NIST is the framework defenders use to <strong>organize their entire response</strong> to threats. Unlike the Kill Chain, NIST is a <em>continuous cycle</em>: defenders loop through all 5 functions indefinitely, always improving.<br><br>In Byte Club, each <img src="/images/byteclub/nist-framework.svg" style="width:14px;height:14px;vertical-align:middle;"> <strong>defend card</strong> maps to one of these functions. Complete all 6 (including Govern) to win by NIST.<br><br><strong>Govern</strong> sits at the center. It oversees and coordinates the entire cycle.</div><div class="bcti-right">
 <div class="bcti-circle-wrap">
   <div class="bcti-circle-ring"></div>
-  <div class="bcti-circle-outer-item" style="left:141px;top:12px;"><img src="/images/defend-identify.png"><div class="bcti-card-name">Identify</div></div>
-  <div class="bcti-circle-outer-item" style="left:264px;top:90px;"><img src="/images/defend-protect.png"><div class="bcti-card-name">Protect</div></div>
-  <div class="bcti-circle-outer-item" style="left:216px;top:247px;"><img src="/images/defend-detect.png"><div class="bcti-card-name">Detect</div></div>
-  <div class="bcti-circle-outer-item" style="left:64px;top:247px;"><img src="/images/defend-respond.png"><div class="bcti-card-name">Respond</div></div>
-  <div class="bcti-circle-outer-item" style="left:16px;top:90px;"><img src="/images/defend-recover.png"><div class="bcti-card-name">Recover</div></div>
-  <div class="bcti-circle-center-item"><img src="/images/defend-govern.png"><div class="bcti-card-name">Govern</div></div>
+  <div class="bcti-circle-outer-item" style="left:141px;top:12px;"><img src="/images/byteclub/defend-identify.png"><div class="bcti-card-name">Identify</div></div>
+  <div class="bcti-circle-outer-item" style="left:264px;top:90px;"><img src="/images/byteclub/defend-protect.png"><div class="bcti-card-name">Protect</div></div>
+  <div class="bcti-circle-outer-item" style="left:216px;top:247px;"><img src="/images/byteclub/defend-detect.png"><div class="bcti-card-name">Detect</div></div>
+  <div class="bcti-circle-outer-item" style="left:64px;top:247px;"><img src="/images/byteclub/defend-respond.png"><div class="bcti-card-name">Respond</div></div>
+  <div class="bcti-circle-outer-item" style="left:16px;top:90px;"><img src="/images/byteclub/defend-recover.png"><div class="bcti-card-name">Recover</div></div>
+  <div class="bcti-circle-center-item"><img src="/images/byteclub/defend-govern.png"><div class="bcti-card-name">Govern</div></div>
 </div>
 <div style="text-align:center;font-size:11px;color:#4b6280;margin-top:8px;letter-spacing:0.3px;">↻ Continuous cycle. All 5 functions loop back indefinitely</div>
 </div></div>`,
@@ -4477,40 +4477,40 @@ In Byte Club you play <strong>both sides simultaneously</strong>: attacking your
 <p style="margin:0;font-size:13px;color:#9ca3af">The deck contains three types of cards. Knowing what each looks like helps you set up fast.</p>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
   <div style="background:#0a1520;border:1px solid rgba(248,113,113,0.35);border-radius:10px;padding:12px 14px">
-    <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.7px;color:#f87171;margin-bottom:10px"><img src="/images/cyber-kill-chain.svg" style="width:11px;height:11px;vertical-align:middle;margin-right:5px">Attack Cards (×5 each)</div>
+    <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.7px;color:#f87171;margin-bottom:10px"><img src="/images/byteclub/cyber-kill-chain.svg" style="width:11px;height:11px;vertical-align:middle;margin-right:5px">Attack Cards (×5 each)</div>
     <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center">
-      <img src="/images/attack-recon.png" style="width:44px;height:61px;object-fit:contain;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.6)">
-      <img src="/images/attack-weaponize.png" style="width:44px;height:61px;object-fit:contain;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.6)">
-      <img src="/images/attack-delivery.png" style="width:44px;height:61px;object-fit:contain;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.6)">
-      <img src="/images/attack-exploit.png" style="width:44px;height:61px;object-fit:contain;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.6)">
-      <img src="/images/attack-install.png" style="width:44px;height:61px;object-fit:contain;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.6)">
-      <img src="/images/attack-c2.png" style="width:44px;height:61px;object-fit:contain;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.6)">
+      <img src="/images/byteclub/attack-recon.png" style="width:44px;height:61px;object-fit:contain;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.6)">
+      <img src="/images/byteclub/attack-weaponize.png" style="width:44px;height:61px;object-fit:contain;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.6)">
+      <img src="/images/byteclub/attack-delivery.png" style="width:44px;height:61px;object-fit:contain;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.6)">
+      <img src="/images/byteclub/attack-exploit.png" style="width:44px;height:61px;object-fit:contain;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.6)">
+      <img src="/images/byteclub/attack-install.png" style="width:44px;height:61px;object-fit:contain;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.6)">
+      <img src="/images/byteclub/attack-c2.png" style="width:44px;height:61px;object-fit:contain;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.6)">
     </div>
   </div>
   <div style="background:#0a1520;border:1px solid rgba(96,165,250,0.35);border-radius:10px;padding:12px 14px">
-    <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.7px;color:#60a5fa;margin-bottom:10px"><img src="/images/nist-framework.svg" style="width:11px;height:11px;vertical-align:middle;margin-right:5px">Defend Cards (×5 each)</div>
+    <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.7px;color:#60a5fa;margin-bottom:10px"><img src="/images/byteclub/nist-framework.svg" style="width:11px;height:11px;vertical-align:middle;margin-right:5px">Defend Cards (×5 each)</div>
     <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center">
-      <img src="/images/defend-identify.png" style="width:44px;height:61px;object-fit:contain;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.6)">
-      <img src="/images/defend-protect.png" style="width:44px;height:61px;object-fit:contain;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.6)">
-      <img src="/images/defend-detect.png" style="width:44px;height:61px;object-fit:contain;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.6)">
-      <img src="/images/defend-respond.png" style="width:44px;height:61px;object-fit:contain;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.6)">
-      <img src="/images/defend-recover.png" style="width:44px;height:61px;object-fit:contain;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.6)">
+      <img src="/images/byteclub/defend-identify.png" style="width:44px;height:61px;object-fit:contain;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.6)">
+      <img src="/images/byteclub/defend-protect.png" style="width:44px;height:61px;object-fit:contain;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.6)">
+      <img src="/images/byteclub/defend-detect.png" style="width:44px;height:61px;object-fit:contain;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.6)">
+      <img src="/images/byteclub/defend-respond.png" style="width:44px;height:61px;object-fit:contain;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.6)">
+      <img src="/images/byteclub/defend-recover.png" style="width:44px;height:61px;object-fit:contain;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.6)">
     </div>
   </div>
   <div style="background:#0a1520;border:1px solid rgba(209,219,36,0.35);border-radius:10px;padding:12px 14px">
     <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.7px;color:#d1db24;margin-bottom:10px">Special Cards — shuffle into deck</div>
     <div style="display:flex;gap:10px;align-items:center">
-      <img src="/images/special-data-flag.png" style="width:44px;height:61px;object-fit:contain;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.6)">
+      <img src="/images/byteclub/special-data-flag.png" style="width:44px;height:61px;object-fit:contain;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.6)">
       <div style="font-size:11px;color:#9ca3af;line-height:1.4">Data Flag + Times Up go into the <strong style="color:#e2e8f0">main deck</strong> before dealing.</div>
-      <img src="/images/special-times-up.png" style="width:44px;height:61px;object-fit:contain;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.6)">
+      <img src="/images/byteclub/special-times-up.png" style="width:44px;height:61px;object-fit:contain;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.6)">
     </div>
   </div>
   <div style="background:#0a1520;border:1px solid rgba(74,140,17,0.5);border-radius:10px;padding:12px 14px">
     <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.7px;color:#62b517;margin-bottom:10px">Action Deck — kept separate</div>
     <div style="display:flex;gap:10px;align-items:center">
-      <img src="/images/attack-action-obj.png" style="width:44px;height:61px;object-fit:contain;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.6)">
+      <img src="/images/byteclub/attack-action-obj.png" style="width:44px;height:61px;object-fit:contain;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.6)">
       <div style="font-size:11px;color:#9ca3af;line-height:1.4">Action Objective + Govern form the <strong style="color:#e2e8f0">Action Deck</strong>. Keep these face-down separate from the main deck.</div>
-      <img src="/images/defend-govern.png" style="width:44px;height:61px;object-fit:contain;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.6)">
+      <img src="/images/byteclub/defend-govern.png" style="width:44px;height:61px;object-fit:contain;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.6)">
     </div>
   </div>
 </div></div>`,
@@ -4525,7 +4525,7 @@ In Byte Club you play <strong>both sides simultaneously</strong>: attacking your
     <div style="flex-shrink:0;width:24px;height:24px;border-radius:50%;background:#62b517;color:#0a1200;font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center">1</div>
     <div>
       <div style="font-size:12px;font-weight:800;color:#e2e8f0;margin-bottom:3px">Build the Action Deck</div>
-      <div style="font-size:11px;color:#9ca3af;line-height:1.45">Place <img src="/images/attack-action-obj.png" style="width:14px;height:19px;vertical-align:middle;border-radius:2px"> Action Objective and <img src="/images/defend-govern.png" style="width:14px;height:19px;vertical-align:middle;border-radius:2px"> Govern face-down in a small separate pile in the centre of the table. This is the <strong style="color:#e2e8f0">Action Deck</strong> — players earn these cards by completing their boards.</div>
+      <div style="font-size:11px;color:#9ca3af;line-height:1.45">Place <img src="/images/byteclub/attack-action-obj.png" style="width:14px;height:19px;vertical-align:middle;border-radius:2px"> Action Objective and <img src="/images/byteclub/defend-govern.png" style="width:14px;height:19px;vertical-align:middle;border-radius:2px"> Govern face-down in a small separate pile in the centre of the table. This is the <strong style="color:#e2e8f0">Action Deck</strong> — players earn these cards by completing their boards.</div>
     </div>
   </div>
   <div style="background:#0a1520;border:1px solid #1e3a5f;border-radius:10px;padding:11px 14px">
@@ -4533,7 +4533,7 @@ In Byte Club you play <strong>both sides simultaneously</strong>: attacking your
       <div style="flex-shrink:0;width:24px;height:24px;border-radius:50%;background:#62b517;color:#0a1200;font-size:12px;font-weight:900;display:flex;align-items:center;justify-content:center">2</div>
       <div>
         <div style="font-size:12px;font-weight:800;color:#e2e8f0;margin-bottom:3px">Shuffle the Main Deck</div>
-        <div style="font-size:11px;color:#9ca3af;line-height:1.5">Shuffle all attack and defend cards, then divide into <strong style="color:#e2e8f0">3 roughly equal piles</strong>. Shuffle <img src="/images/special-data-flag.png" style="width:12px;height:17px;vertical-align:middle;border-radius:2px"> <strong style="color:#4ade80">Data Flag</strong> into one pile and <img src="/images/special-times-up.png" style="width:12px;height:17px;vertical-align:middle;border-radius:2px"> <strong style="color:#d1db24">Times Up</strong> into another. Stack them: <strong style="color:#4ade80">Data Flag pile on top</strong>, middle pile in the centre, <strong style="color:#d1db24">Times Up pile on the bottom</strong>.</div>
+        <div style="font-size:11px;color:#9ca3af;line-height:1.5">Shuffle all attack and defend cards, then divide into <strong style="color:#e2e8f0">3 roughly equal piles</strong>. Shuffle <img src="/images/byteclub/special-data-flag.png" style="width:12px;height:17px;vertical-align:middle;border-radius:2px"> <strong style="color:#4ade80">Data Flag</strong> into one pile and <img src="/images/byteclub/special-times-up.png" style="width:12px;height:17px;vertical-align:middle;border-radius:2px"> <strong style="color:#d1db24">Times Up</strong> into another. Stack them: <strong style="color:#4ade80">Data Flag pile on top</strong>, middle pile in the centre, <strong style="color:#d1db24">Times Up pile on the bottom</strong>.</div>
       </div>
     </div>
     <!-- Visual: 3 piles diagram -->
@@ -4545,7 +4545,7 @@ In Byte Club you play <strong>both sides simultaneously</strong>: attacking your
         <rect x="10" y="14" width="64" height="44" rx="3" fill="#152514" stroke="#3a6a3a" stroke-width="1"/>
         <!-- Data Flag card face -->
         <rect x="22" y="6" width="40" height="56" rx="4" fill="#1a3a1a" stroke="#4ade80" stroke-width="1.5"/>
-        <image href="/images/special-data-flag.png" x="27" y="10" width="30" height="44"/>
+        <image href="/images/byteclub/special-data-flag.png" x="27" y="10" width="30" height="44"/>
         <!-- Label -->
         <text x="42" y="74" text-anchor="middle" font-family="sans-serif" font-size="8.5" font-weight="700" fill="#4ade80">Data Flag pile</text>
         <text x="42" y="84" text-anchor="middle" font-family="sans-serif" font-size="7.5" fill="#6b7280">goes on TOP</text>
@@ -4574,7 +4574,7 @@ In Byte Club you play <strong>both sides simultaneously</strong>: attacking your
         <rect x="228" y="14" width="62" height="44" rx="3" fill="#222210" stroke="#4a4a18" stroke-width="1"/>
         <!-- Times Up card face -->
         <rect x="238" y="6" width="40" height="56" rx="4" fill="#2a2a08" stroke="#d1db24" stroke-width="1.5"/>
-        <image href="/images/special-times-up.png" x="243" y="10" width="30" height="44"/>
+        <image href="/images/byteclub/special-times-up.png" x="243" y="10" width="30" height="44"/>
         <!-- Label -->
         <text x="258" y="74" text-anchor="middle" font-family="sans-serif" font-size="8.5" font-weight="700" fill="#d1db24">Times Up pile</text>
         <text x="258" y="84" text-anchor="middle" font-family="sans-serif" font-size="7.5" fill="#6b7280">goes on BOTTOM</text>
@@ -4623,12 +4623,12 @@ Play continues <strong>clockwise</strong> until a player achieves either win con
   <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;color:#4b5563;margin-bottom:10px">Two Ways to Win</div>
   <div style="display:flex;flex-direction:column;gap:10px">
     <div style="background:#0a1520;border:1px solid #1e3a5f;border-radius:8px;padding:12px 14px">
-      <div style="font-size:10px;font-weight:800;color:#4b5563;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:4px"><img src="/images/cyber-kill-chain.svg" style="width:11px;height:11px;vertical-align:middle;margin-right:4px"> Win Condition 1</div>
+      <div style="font-size:10px;font-weight:800;color:#4b5563;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:4px"><img src="/images/byteclub/cyber-kill-chain.svg" style="width:11px;height:11px;vertical-align:middle;margin-right:4px"> Win Condition 1</div>
       <div style="font-size:12px;color:#e2e8f0;font-weight:700;margin-bottom:3px">Hold the Data Flag when Times Up appears</div>
-      <div style="font-size:11px;color:#6b7280;line-height:1.4">The <img src="/images/special-data-flag.png" style="width:13px;height:18px;vertical-align:middle;"> Data Flag is a special card hidden in the deck. Whoever holds it when <img src="/images/special-times-up.png" style="width:13px;height:18px;vertical-align:middle;"> Times Up is drawn wins instantly.</div>
+      <div style="font-size:11px;color:#6b7280;line-height:1.4">The <img src="/images/byteclub/special-data-flag.png" style="width:13px;height:18px;vertical-align:middle;"> Data Flag is a special card hidden in the deck. Whoever holds it when <img src="/images/byteclub/special-times-up.png" style="width:13px;height:18px;vertical-align:middle;"> Times Up is drawn wins instantly.</div>
     </div>
     <div style="background:#0a1520;border:1px solid #1e3a5f;border-radius:8px;padding:12px 14px">
-      <div style="font-size:10px;font-weight:800;color:#4b5563;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:4px"><img src="/images/nist-framework.svg" style="width:11px;height:11px;vertical-align:middle;margin-right:4px"> Win Condition 2</div>
+      <div style="font-size:10px;font-weight:800;color:#4b5563;text-transform:uppercase;letter-spacing:0.6px;margin-bottom:4px"><img src="/images/byteclub/nist-framework.svg" style="width:11px;height:11px;vertical-align:middle;margin-right:4px"> Win Condition 2</div>
       <div style="font-size:12px;color:#e2e8f0;font-weight:700;margin-bottom:3px">Complete the full Kill Chain + NIST board</div>
       <div style="font-size:11px;color:#6b7280;line-height:1.4">Play all 7 Kill Chain types (including Action Obj.) and all 6 NIST types (including Govern). Win without waiting for Times Up.</div>
     </div>
@@ -4641,26 +4641,26 @@ Play continues <strong>clockwise</strong> until a player achieves either win con
   { title: 'Your Two Card Types',
     body: `<div class="bcti-two-col" style="gap:32px;align-items:flex-start">
 <div style="flex:1;min-width:0">
-  <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;color:#f87171;margin-bottom:10px"><img src="/images/cyber-kill-chain.svg" style="width:12px;height:12px;vertical-align:middle;margin-right:5px">Attack Cards — Cyber Kill Chain</div>
+  <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;color:#f87171;margin-bottom:10px"><img src="/images/byteclub/cyber-kill-chain.svg" style="width:12px;height:12px;vertical-align:middle;margin-right:5px">Attack Cards — Cyber Kill Chain</div>
   <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
-    <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><img src="/images/attack-recon.png" style="width:56px;height:78px;object-fit:contain;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,0.6)"><div style="font-size:9px;font-weight:700;color:#e2e8f0;text-align:center">Recon</div></div>
-    <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><img src="/images/attack-weaponize.png" style="width:56px;height:78px;object-fit:contain;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,0.6)"><div style="font-size:9px;font-weight:700;color:#e2e8f0;text-align:center">Weaponize</div></div>
-    <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><img src="/images/attack-delivery.png" style="width:56px;height:78px;object-fit:contain;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,0.6)"><div style="font-size:9px;font-weight:700;color:#e2e8f0;text-align:center">Delivery</div></div>
-    <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><img src="/images/attack-exploit.png" style="width:56px;height:78px;object-fit:contain;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,0.6)"><div style="font-size:9px;font-weight:700;color:#e2e8f0;text-align:center">Exploit</div></div>
-    <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><img src="/images/attack-install.png" style="width:56px;height:78px;object-fit:contain;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,0.6)"><div style="font-size:9px;font-weight:700;color:#e2e8f0;text-align:center">Install</div></div>
-    <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><img src="/images/attack-c2.png" style="width:56px;height:78px;object-fit:contain;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,0.6)"><div style="font-size:9px;font-weight:700;color:#e2e8f0;text-align:center">C2 Control</div></div>
-    <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><img src="/images/attack-action-obj.png" style="width:56px;height:78px;object-fit:contain;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,0.6)"><div style="font-size:9px;font-weight:700;color:#e2e8f0;text-align:center;line-height:1.2">Action Obj.</div></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><img src="/images/byteclub/attack-recon.png" style="width:56px;height:78px;object-fit:contain;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,0.6)"><div style="font-size:9px;font-weight:700;color:#e2e8f0;text-align:center">Recon</div></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><img src="/images/byteclub/attack-weaponize.png" style="width:56px;height:78px;object-fit:contain;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,0.6)"><div style="font-size:9px;font-weight:700;color:#e2e8f0;text-align:center">Weaponize</div></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><img src="/images/byteclub/attack-delivery.png" style="width:56px;height:78px;object-fit:contain;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,0.6)"><div style="font-size:9px;font-weight:700;color:#e2e8f0;text-align:center">Delivery</div></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><img src="/images/byteclub/attack-exploit.png" style="width:56px;height:78px;object-fit:contain;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,0.6)"><div style="font-size:9px;font-weight:700;color:#e2e8f0;text-align:center">Exploit</div></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><img src="/images/byteclub/attack-install.png" style="width:56px;height:78px;object-fit:contain;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,0.6)"><div style="font-size:9px;font-weight:700;color:#e2e8f0;text-align:center">Install</div></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><img src="/images/byteclub/attack-c2.png" style="width:56px;height:78px;object-fit:contain;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,0.6)"><div style="font-size:9px;font-weight:700;color:#e2e8f0;text-align:center">C2 Control</div></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><img src="/images/byteclub/attack-action-obj.png" style="width:56px;height:78px;object-fit:contain;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,0.6)"><div style="font-size:9px;font-weight:700;color:#e2e8f0;text-align:center;line-height:1.2">Action Obj.</div></div>
   </div>
 </div>
 <div style="flex:1;min-width:0">
-  <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;color:#60a5fa;margin-bottom:10px"><img src="/images/nist-framework.svg" style="width:12px;height:12px;vertical-align:middle;margin-right:5px">Defend Cards — NIST Framework</div>
+  <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;color:#60a5fa;margin-bottom:10px"><img src="/images/byteclub/nist-framework.svg" style="width:12px;height:12px;vertical-align:middle;margin-right:5px">Defend Cards — NIST Framework</div>
   <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
-    <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><img src="/images/defend-identify.png" style="width:56px;height:78px;object-fit:contain;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,0.6)"><div style="font-size:9px;font-weight:700;color:#e2e8f0;text-align:center">Identify</div></div>
-    <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><img src="/images/defend-protect.png" style="width:56px;height:78px;object-fit:contain;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,0.6)"><div style="font-size:9px;font-weight:700;color:#e2e8f0;text-align:center">Protect</div></div>
-    <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><img src="/images/defend-detect.png" style="width:56px;height:78px;object-fit:contain;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,0.6)"><div style="font-size:9px;font-weight:700;color:#e2e8f0;text-align:center">Detect</div></div>
-    <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><img src="/images/defend-respond.png" style="width:56px;height:78px;object-fit:contain;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,0.6)"><div style="font-size:9px;font-weight:700;color:#e2e8f0;text-align:center">Respond</div></div>
-    <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><img src="/images/defend-recover.png" style="width:56px;height:78px;object-fit:contain;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,0.6)"><div style="font-size:9px;font-weight:700;color:#e2e8f0;text-align:center">Recover</div></div>
-    <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><img src="/images/defend-govern.png" style="width:56px;height:78px;object-fit:contain;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,0.6)"><div style="font-size:9px;font-weight:700;color:#e2e8f0;text-align:center">Govern</div></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><img src="/images/byteclub/defend-identify.png" style="width:56px;height:78px;object-fit:contain;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,0.6)"><div style="font-size:9px;font-weight:700;color:#e2e8f0;text-align:center">Identify</div></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><img src="/images/byteclub/defend-protect.png" style="width:56px;height:78px;object-fit:contain;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,0.6)"><div style="font-size:9px;font-weight:700;color:#e2e8f0;text-align:center">Protect</div></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><img src="/images/byteclub/defend-detect.png" style="width:56px;height:78px;object-fit:contain;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,0.6)"><div style="font-size:9px;font-weight:700;color:#e2e8f0;text-align:center">Detect</div></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><img src="/images/byteclub/defend-respond.png" style="width:56px;height:78px;object-fit:contain;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,0.6)"><div style="font-size:9px;font-weight:700;color:#e2e8f0;text-align:center">Respond</div></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><img src="/images/byteclub/defend-recover.png" style="width:56px;height:78px;object-fit:contain;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,0.6)"><div style="font-size:9px;font-weight:700;color:#e2e8f0;text-align:center">Recover</div></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:4px"><img src="/images/byteclub/defend-govern.png" style="width:56px;height:78px;object-fit:contain;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,0.6)"><div style="font-size:9px;font-weight:700;color:#e2e8f0;text-align:center">Govern</div></div>
   </div>
 </div></div>`,
     makeG: () => makeBcTutG({ alexHand:[BTC.recon,BTC.c2,BTC.respond,BTC.identify,BTC.recover] }),
@@ -4671,28 +4671,28 @@ Play continues <strong>clockwise</strong> until a player achieves either win con
     body: `These four cards are not part of the Kill Chain or NIST Framework. They shape the whole game.<br><br>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
   <div style="display:flex;gap:12px;align-items:flex-start;background:#0a1520;border:1px solid #1e3a5f;border-radius:10px;padding:12px 14px">
-    <img src="/images/special-data-flag.png" style="width:52px;height:73px;object-fit:contain;border-radius:5px;box-shadow:0 3px 10px rgba(0,0,0,0.65);flex-shrink:0">
+    <img src="/images/byteclub/special-data-flag.png" style="width:52px;height:73px;object-fit:contain;border-radius:5px;box-shadow:0 3px 10px rgba(0,0,0,0.65);flex-shrink:0">
     <div>
       <div style="font-size:12px;font-weight:800;color:#4ade80;margin-bottom:4px">Data Flag</div>
       <div style="font-size:11px;color:#9ca3af;line-height:1.45"><strong style="color:#e2e8f0">Cannot be played, discarded or removed.</strong> Hold this card when Times Up is revealed and you win instantly.</div>
     </div>
   </div>
   <div style="display:flex;gap:12px;align-items:flex-start;background:#0a1520;border:1px solid #1e3a5f;border-radius:10px;padding:12px 14px">
-    <img src="/images/special-times-up.png" style="width:52px;height:73px;object-fit:contain;border-radius:5px;box-shadow:0 3px 10px rgba(0,0,0,0.65);flex-shrink:0">
+    <img src="/images/byteclub/special-times-up.png" style="width:52px;height:73px;object-fit:contain;border-radius:5px;box-shadow:0 3px 10px rgba(0,0,0,0.65);flex-shrink:0">
     <div>
       <div style="font-size:12px;font-weight:800;color:#d1db24;margin-bottom:4px">Times Up</div>
       <div style="font-size:11px;color:#9ca3af;line-height:1.45"><strong style="color:#e2e8f0">Game Over — reveal to all players.</strong> The player holding the Data Flag wins. If no one holds it, the player with the most complete board wins.</div>
     </div>
   </div>
   <div style="display:flex;gap:12px;align-items:flex-start;background:#0a1520;border:1px solid #1e3a5f;border-radius:10px;padding:12px 14px">
-    <img src="/images/attack-action-obj.png" style="width:52px;height:73px;object-fit:contain;border-radius:5px;box-shadow:0 3px 10px rgba(0,0,0,0.65);flex-shrink:0">
+    <img src="/images/byteclub/attack-action-obj.png" style="width:52px;height:73px;object-fit:contain;border-radius:5px;box-shadow:0 3px 10px rgba(0,0,0,0.65);flex-shrink:0">
     <div>
       <div style="font-size:12px;font-weight:800;color:#f87171;margin-bottom:4px">Action Objective</div>
       <div style="font-size:11px;color:#9ca3af;line-height:1.45"><strong style="color:#e2e8f0">Play at any time.</strong> Earned by completing the Kill Chain. Forces the Data Flag holder to give it to you. Cannot be cancelled.</div>
     </div>
   </div>
   <div style="display:flex;gap:12px;align-items:flex-start;background:#0a1520;border:1px solid #1e3a5f;border-radius:10px;padding:12px 14px">
-    <img src="/images/defend-govern.png" style="width:52px;height:73px;object-fit:contain;border-radius:5px;box-shadow:0 3px 10px rgba(0,0,0,0.65);flex-shrink:0">
+    <img src="/images/byteclub/defend-govern.png" style="width:52px;height:73px;object-fit:contain;border-radius:5px;box-shadow:0 3px 10px rgba(0,0,0,0.65);flex-shrink:0">
     <div>
       <div style="font-size:12px;font-weight:800;color:#60a5fa;margin-bottom:4px">Govern</div>
       <div style="font-size:11px;color:#9ca3af;line-height:1.45"><strong style="color:#e2e8f0">Earned by completing the NIST Framework.</strong> Privately look at all players' hands, take one card from each, then give any card to each player.</div>
@@ -4706,16 +4706,16 @@ Play continues <strong>clockwise</strong> until a player achieves either win con
   { title: 'Welcome to Byte Club',
     body: `<strong>Byte Club</strong> is a cybersecurity card game where you race to complete your attack chain and defense framework. While fighting your opponent for the ${TUT_FLAG} <strong>Data Flag</strong>.
 <div class="bcti-welcome-row">
-  <div class="bcti-win-box"><div class="bcti-win-box-label"><img src="/images/cyber-kill-chain.svg" style="width:13px;height:13px;vertical-align:middle;margin-right:4px;"> Win Condition 1</div><div class="bcti-win-box-title">Complete the Kill Chain</div><div class="bcti-win-box-desc">Play all 7 attack types in your row. Earn the Action on Objectives card and force the Data Flag holder to give it to you.</div></div>
-  <div class="bcti-win-box"><div class="bcti-win-box-label"><img src="/images/nist-framework.svg" style="width:13px;height:13px;vertical-align:middle;margin-right:4px;"> Win Condition 2</div><div class="bcti-win-box-title">Complete the NIST Framework</div><div class="bcti-win-box-desc">Play all 5 defend types in your row. Earn the Govern card and steal the Data Flag directly from your opponent.</div></div>
+  <div class="bcti-win-box"><div class="bcti-win-box-label"><img src="/images/byteclub/cyber-kill-chain.svg" style="width:13px;height:13px;vertical-align:middle;margin-right:4px;"> Win Condition 1</div><div class="bcti-win-box-title">Complete the Kill Chain</div><div class="bcti-win-box-desc">Play all 7 attack types in your row. Earn the Action on Objectives card and force the Data Flag holder to give it to you.</div></div>
+  <div class="bcti-win-box"><div class="bcti-win-box-label"><img src="/images/byteclub/nist-framework.svg" style="width:13px;height:13px;vertical-align:middle;margin-right:4px;"> Win Condition 2</div><div class="bcti-win-box-title">Complete the NIST Framework</div><div class="bcti-win-box-desc">Play all 5 defend types in your row. Earn the Govern card and steal the Data Flag directly from your opponent.</div></div>
 </div>
 You'll play both roles at once. Attacking with red cards and defending with blue. The tutorial will walk you through both.`,
     makeG: () => makeBcTutG({ alexHand:[BTC.recon,BTC.c2,BTC.respond,BTC.identify,BTC.recover] }),
     forced: false, next: 'Start Tutorial →' },
 
   // 1. Play Recon
-  { title: '<img src="/images/cyber-kill-chain.svg" style="width:15px;height:15px;vertical-align:middle;margin-right:5px;"> Your Turn. Play Recon',
-    body: `Your hand is in the <strong>left 2/3</strong> of the screen. <strong>Red/dark</strong> cards are <img src="/images/cyber-kill-chain.svg" style="width:13px;height:13px;vertical-align:middle;"> <strong>Attack</strong>; <strong>blue/dark</strong> are <img src="/images/nist-framework.svg" style="width:13px;height:13px;vertical-align:middle;"> <strong>Defend</strong>.<br>
+  { title: '<img src="/images/byteclub/cyber-kill-chain.svg" style="width:15px;height:15px;vertical-align:middle;margin-right:5px;"> Your Turn. Play Recon',
+    body: `Your hand is in the <strong>left 2/3</strong> of the screen. <strong>Red/dark</strong> cards are <img src="/images/byteclub/cyber-kill-chain.svg" style="width:13px;height:13px;vertical-align:middle;"> <strong>Attack</strong>; <strong>blue/dark</strong> are <img src="/images/byteclub/nist-framework.svg" style="width:13px;height:13px;vertical-align:middle;"> <strong>Defend</strong>.<br>
 Playing a card places it face-up in <em>Cards in Front of You</em> (right column), filling a Kill Chain or NIST slot.<br>
 <em>Click Reconnaissance</em> in your hand to play it. It lets you peek at Mira's hand!`,
     makeG: () => makeBcTutG({ alexHand:[BTC.recon,BTC.c2,BTC.respond,BTC.identify,BTC.recover] }),
@@ -4755,7 +4755,7 @@ Playing a card places it face-up in <em>Cards in Front of You</em> (right column
         BCTSTEPS[10].tutHL = 'end_turn';
         BCTSTEPS[10].nextAction = () => bcTutAdvanceTo(11);
         document.getElementById('bc-tut-body').innerHTML =
-          `Recon is in your <img src="/images/cyber-kill-chain.svg" style="width:13px;height:13px;vertical-align:middle;"> Kill Chain row! Mira\'s hand is back face-down.<br>Click <strong>End Turn (Draw 1)</strong> to pass the turn to Mira.`;
+          `Recon is in your <img src="/images/byteclub/cyber-kill-chain.svg" style="width:13px;height:13px;vertical-align:middle;"> Kill Chain row! Mira\'s hand is back face-down.<br>Click <strong>End Turn (Draw 1)</strong> to pass the turn to Mira.`;
         const nextBtn = document.getElementById('bc-tut-next');
         nextBtn.textContent = 'End Turn →';
         nextBtn.style.display = '';
@@ -4916,7 +4916,7 @@ That\'s the first way to win Byte Club. Click <strong>Next</strong> to see the s
 
   // 8. Win Condition 2: Exploit → steal Protect → earn Action Obj → earn Govern → win
   { title: 'Win Condition 2. Complete the Board',
-    body: `The <strong>second way</strong> to win: fill every slot in <em>Cards in Front of You</em>: all 6 <img src="/images/cyber-kill-chain.svg" style="width:13px;height:13px;vertical-align:middle;"> Kill Chain types <strong>+</strong> all 5 <img src="/images/nist-framework.svg" style="width:13px;height:13px;vertical-align:middle;"> NIST types (plus the earned Action Obj. and Govern).<br><br>
+    body: `The <strong>second way</strong> to win: fill every slot in <em>Cards in Front of You</em>: all 6 <img src="/images/byteclub/cyber-kill-chain.svg" style="width:13px;height:13px;vertical-align:middle;"> Kill Chain types <strong>+</strong> all 5 <img src="/images/byteclub/nist-framework.svg" style="width:13px;height:13px;vertical-align:middle;"> NIST types (plus the earned Action Obj. and Govern).<br><br>
 Watch the <strong>status strip</strong> above. It shows when Govern and Action Obj. become available. Your board is nearly there. You hold a single card: <strong>Exploitation</strong>. Play it. It fills your last Kill Chain slot <em>and</em> steals a random card from Mira.`,
     makeG: () => makeBcTutG({
       alexPlayed: [...BTC8_PRE_ATTACK.map(c=>({...c})), ...BTC8_PRE_DEFEND.map(c=>({...c}))],
@@ -4943,7 +4943,7 @@ Watch the <strong>status strip</strong> above. It shows when Govern and Action O
         gameState = bcTutG;
         selectedHandCard = null;
         document.getElementById('bc-tut-body').innerHTML =
-          `<img src="/images/cyber-kill-chain.svg" style="width:15px;height:15px;vertical-align:middle;"> <strong>Kill Chain complete!</strong> Exploitation filled the last attack slot. The board awarded you the <strong>Action Obj.</strong> card.<br><br>
+          `<img src="/images/byteclub/cyber-kill-chain.svg" style="width:15px;height:15px;vertical-align:middle;"> <strong>Kill Chain complete!</strong> Exploitation filled the last attack slot. The board awarded you the <strong>Action Obj.</strong> card.<br><br>
            The steal also grabbed <strong>Protect</strong> from Mira's hand. Exactly the defend card your NIST row was missing!<br>
            Now <em>play Protect</em> to fill that slot.`;
         renderGame(bcTutG);
@@ -4961,7 +4961,7 @@ Watch the <strong>status strip</strong> above. It shows when Govern and Action O
         gameState = bcTutG;
         selectedHandCard = null;
         document.getElementById('bc-tut-body').innerHTML =
-          `<img src="/images/nist-framework.svg" style="width:15px;height:15px;vertical-align:middle;"> <strong>NIST Framework complete!</strong> Protect filled the last regular slot. You've earned the <strong>Govern</strong> card.<br><br>
+          `<img src="/images/byteclub/nist-framework.svg" style="width:15px;height:15px;vertical-align:middle;"> <strong>NIST Framework complete!</strong> Protect filled the last regular slot. You've earned the <strong>Govern</strong> card.<br><br>
            You now hold both bonus cards. Play <strong>Action Obj.</strong> first. That seals the Kill Chain side of the win.`;
         renderGame(bcTutG);
         return;
@@ -4978,8 +4978,8 @@ Watch the <strong>status strip</strong> above. It shows when Govern and Action O
         gameState = bcTutG;
         selectedHandCard = null;
         document.getElementById('bc-tut-body').innerHTML =
-          `<strong>You've completed half of this win condition</strong>: the full <img src="/images/cyber-kill-chain.svg" style="width:13px;height:13px;vertical-align:middle;"> Cyber Kill Chain, including Action Obj.<br><br>
-           One card left. Play <strong>Govern</strong> to complete the <img src="/images/nist-framework.svg" style="width:13px;height:13px;vertical-align:middle;"> NIST Framework side and <em>win the game</em>.`;
+          `<strong>You've completed half of this win condition</strong>: the full <img src="/images/byteclub/cyber-kill-chain.svg" style="width:13px;height:13px;vertical-align:middle;"> Cyber Kill Chain, including Action Obj.<br><br>
+           One card left. Play <strong>Govern</strong> to complete the <img src="/images/byteclub/nist-framework.svg" style="width:13px;height:13px;vertical-align:middle;"> NIST Framework side and <em>win the game</em>.`;
         renderGame(bcTutG);
         return;
       }
