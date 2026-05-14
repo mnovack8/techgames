@@ -194,7 +194,7 @@ body.observer-active #game { height: calc(100vh - 44px - 36px - 4px); }
 .waiting-observer-label { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: #0891b2; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
 .waiting-observer-row { display: flex; align-items: center; gap: 10px; padding: 8px 14px; background: #ecfeff; border-radius: 8px; border: 1px solid rgba(34,211,238,0.3); margin-bottom: 5px; }
 .waiting-observer-row .obs-name { font-size: 14px; color: #0e7490; flex: 1; font-weight: 600; }
-.waiting-observer-row .host-badge { font-size: 10px; color: #c90; font-weight: 700; }
+.waiting-observer-row .host-badge, .obs-host-badge { font-size: 10px; color: #c90; font-weight: 700; }
 
 /* ===== WAITING ROOM ===== */
 #waiting { flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; gap: 20px; background: linear-gradient(160deg, #f8faf2 0%, #edf2e0 100%); }
@@ -587,6 +587,7 @@ rect.tut-animal-hl { animation: tut-hl-pulse 1.1s ease-in-out infinite; }
 </script>
 <link rel="stylesheet" href="/game-nav.css">
 <script src="/lobby.js"></script>
+<script src="/observer.js"></script>
 </head>
 <body>
 
@@ -1380,23 +1381,7 @@ function renderLobbyPlayers(players, observers = []) {
   ).join('');
 
   // Render observer section
-  const obsSection = document.getElementById('waiting-observer-section');
-  const obsList = document.getElementById('waiting-observer-list');
-  const obsCount = document.getElementById('waiting-observer-count');
-  if (observers.length > 0) {
-    obsSection.style.display = 'block';
-    obsCount.textContent = `Observers (${observers.length})`;
-    obsList.innerHTML = observers.map(o =>
-      `<div class="waiting-observer-row">
-        <svg class="obs-eye-icon obs-eye-sm"><use href="#icon-obs-eye"/></svg>
-        <span class="obs-name">${o.name}</span>
-        ${o.isHost ? '<span class="host-badge">HOST</span>' : ''}
-      </div>`
-    ).join('');
-  } else {
-    obsSection.style.display = 'none';
-    obsList.innerHTML = '';
-  }
+  ObserverUI.renderWaitingObservers(observers);
 
   // Observer-host can start/use controls; show start button for any isHost (player or observer)
   const btn = document.getElementById('btn-start-game');
