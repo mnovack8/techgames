@@ -205,7 +205,7 @@ function cfAdvanceTurn(room) {
   s.flicksLeft=CF_FLICKS_PER_PLAYER-s.players[s.currentPlayer].flicksThisRound;
   // Reset incoming player's action mode to identify at the start of their turn
   s.players[s.currentPlayer].actionMode='identify';
-  if(room.players[s.currentPlayer].isBot)setTimeout(()=>executeCFBotTurn(room),800);
+  if(room.players[s.currentPlayer].isBot){const t=setTimeout(()=>executeCFBotTurn(room),800);if(t?.unref)t.unref();}
 }
 
 function cfScoreRound(room) {
@@ -243,7 +243,7 @@ function cfScoreRound(room) {
   // First player rotates clockwise each round: round 1→player 0, round 2→player 1, etc.
   const firstOfRound=(s.round-1)%s.players.length;
   s.currentPlayer=firstOfRound;s.flicksLeft=CF_FLICKS_PER_PLAYER;s.phase='flicking';
-  if(room.players[firstOfRound].isBot)setTimeout(()=>executeCFBotTurn(room),800);
+  if(room.players[firstOfRound].isBot){const t=setTimeout(()=>executeCFBotTurn(room),800);if(t?.unref)t.unref();}
 }
 
 function cfEndGame(room) {
@@ -430,7 +430,7 @@ function cfBotDecideFlick(room) {
   return{angle:baseAng+(Math.random()-0.5)*0.45,power:0.45+Math.random()*0.45};
 }
 
-function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+function delay(ms) { return new Promise(r => { const t = setTimeout(r, ms); if (t?.unref) t.unref(); }); }
 
 async function executeCFBotTurn(room) {
   const s=room.cfState;

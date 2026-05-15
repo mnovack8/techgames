@@ -163,7 +163,7 @@ const GAME_REGISTRY = {
       room.cfState = createCFGameState(room.players.length);
       broadcastToRoom(room, { type: 'game_started' });
       cfBroadcastState(room);
-      if (room.players[0].isBot) setTimeout(() => executeCFBotTurn(room), 800);
+      if (room.players[0].isBot) { const t = setTimeout(() => executeCFBotTurn(room), 800); if (t?.unref) t.unref(); }
     },
     broadcastState(room)      { cfBroadcastState(room); },
     onRejoin(room)            { cfBroadcastState(room); },
@@ -514,7 +514,7 @@ function handleMessage(ws, raw) {
       if (!room || !room.started) break;
       const isPlayerHost = !info.isObserver && info.playerIdx === room.hostIdx;
       const isObsHost = info.isObserver && info.observerIdx === 0;
-      if (!isPlayerHost && !isObsHost) break; // only host can cancel
+      if (!isPlayerHost && !isObsHost) return send(ws, { type: 'error', msg: 'Only the host can cancel the game' });
       // Notify all connected players and observers
       for (const p of room.players) {
         if (p.connected && p.ws) send(p.ws, { type: 'game_cancelled' });
@@ -532,6 +532,11 @@ function handleMessage(ws, raw) {
       for (const o of (room.observers || [])) {
         if (o.ws) wsData.delete(o.ws);
       }
+      // Stop any in-flight bot loops by marking the game as over before deleting the room.
+      // Without this, async bot turns hold a stale room reference and keep spinning.
+      if (room.state)   room.state.gameOver   = true;
+      if (room.bcState) room.bcState.phase     = 'game_over';
+      if (room.cfState) room.cfState.gameOver  = true;
       // Notify event organizers before the room is deleted
       if (room.isEventRoom && room.eventOrganizers?.length > 0) {
         const update = { type: 'event_status_update', code: room.code, playerCount: 0, status: 'cancelled' };

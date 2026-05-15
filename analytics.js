@@ -5,7 +5,7 @@ const path = require('path');
 const crypto = require('crypto');
 
 // ==================== METRICS ====================
-const METRICS_FILE = path.join(__dirname, 'metrics.json');
+const METRICS_FILE = process.env.METRICS_FILE || path.join(__dirname, 'metrics.json');
 let metricsEvents = [];
 
 // Load persisted events on startup

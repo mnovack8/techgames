@@ -100,7 +100,7 @@ function calculateScore(ps, scoreboard, numPlayers) {
 }
 
 // ==================== BOT AI ====================
-function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+function delay(ms) { return new Promise(r => { const t = setTimeout(r, ms); if (t?.unref) t.unref(); }); }
 
 function botPickNode(ps, animalOrder) {
   // Score each empty node by how many new paths it completes for untested animals

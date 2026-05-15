@@ -66,6 +66,38 @@ ipconfig getifaddr en0
 ipconfig
 ```
 
+## Running Tests
+
+The test suite uses Node's built-in `node:test` runner — no extra dependencies required.
+
+```bash
+npm test
+```
+
+This runs all 5 test files in sequence and prints a pass/fail summary:
+
+| File | What it covers |
+|------|---------------|
+| `tests/routes.test.js` | Every HTTP route returns the correct status code (200, 301, 404, etc.) |
+| `tests/websocket.test.js` | Room lifecycle over WebSocket — create, join, leave, bot toggle, observer flow, session rejoin |
+| `tests/games/fuzznet.test.js` | FuzzNet game flow — lobby rules, game start, actions, cancellation, multiplayer |
+| `tests/games/byteclub.test.js` | ByteClub game flow — lobby rules, game start, card hands, actions, cancellation, multiplayer |
+| `tests/games/clusterflick.test.js` | ClusterFlick game flow — lobby rules, game start, flick actions, cancellation, multiplayer |
+
+**Requirements:** Node.js v18 or higher (uses the built-in `node:test` module).
+
+To run a single test file in isolation:
+
+```bash
+node --test tests/routes.test.js
+node --test tests/websocket.test.js
+node --test tests/games/byteclub.test.js
+node --test tests/games/clusterflick.test.js
+node --test tests/games/fuzznet.test.js
+```
+
+---
+
 ## Dependencies
 
 | Package | Version | Purpose |

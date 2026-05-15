@@ -80,6 +80,11 @@ wss.on('connection', (ws, req) => {
   });
 });
 
-server.listen(PORT, () => {
-  console.log(`FuzzNet Labs server running at http://localhost:${PORT}`);
-});
+// Only auto-listen when run directly (not when required by tests)
+if (require.main === module) {
+  server.listen(PORT, () => {
+    console.log(`FuzzNet Labs server running at http://localhost:${PORT}`);
+  });
+}
+
+module.exports = { server, wss };

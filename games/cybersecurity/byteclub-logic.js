@@ -8,7 +8,8 @@ function init({ rooms, broadcastToRoom, trackEvent }) {
   _trackEvent = trackEvent;
 }
 
-function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+function delay(ms) { return new Promise(r => { const t = setTimer(r, ms); if (t?.unref) t.unref(); }); }
+function setTimer(fn, ms) { const t = setTimer(fn, ms); if (t?.unref) t.unref(); return t; }
 
 function send(ws, msg) {
   if (ws.readyState === 1) ws.send(JSON.stringify(msg));
@@ -595,7 +596,7 @@ function bcBroadcastState(room) {
   if (gs.phase === 'play' && gs.winner < 0) {
     const botIdx = gs.currentPlayer;
     if (room.players[botIdx]?.isBot) {
-      room._bcBotWatchdog = setTimeout(() => {
+      room._bcBotWatchdog = setTimer(() => {
         if (gs.phase === 'play' && gs.currentPlayer === botIdx && gs.winner < 0) {
           console.log(`[Bot watchdog] ${room.players[botIdx]?.name} inactive 3 s — forcing end_play_phase`);
           room._bcBotRunning = false;
@@ -657,7 +658,7 @@ function bcOpenWeaponizeWindow(room, playerIdx, card, resolveCb) {
   gs.weaponizeWindow = { defender: playerIdx, card, _resolve: resolveCb };
   gs.phase = 'weaponize_window';
   const ww = gs.weaponizeWindow;
-  const timer = setTimeout(() => {
+  const timer = setTimer(() => {
     if (gs.weaponizeWindow === ww) {
       gs.weaponizeWindow = null;
       gs.phase = 'play';  // reset before resolveCb so Protect/Recover land in 'play'; Detect/Identify override it
@@ -666,7 +667,7 @@ function bcOpenWeaponizeWindow(room, playerIdx, card, resolveCb) {
       // If phase stayed 'play', bcFinishPlay (called inside resolveCb) already scheduled the re-trigger.
       if (room.players[playerIdx]?.isBot && gs.currentPlayer === playerIdx && gs.phase !== 'play') {
         room._bcBotRunning = false;
-        setTimeout(() => bcBotContinueTurn(room, playerIdx), 50);
+        setTimer(() => bcBotContinueTurn(room, playerIdx), 50);
       }
     }
   }, 8000);
@@ -676,7 +677,7 @@ function bcOpenWeaponizeWindow(room, playerIdx, card, resolveCb) {
   gs.players.forEach((opl, i) => {
     if (i === playerIdx || !room.players[i]?.isBot) return;
     const wc = opl.hand.find(c => c.type === 'weaponize');
-    setTimeout(() => {
+    setTimer(() => {
       if (gs.weaponizeWindow !== ww) return;
       if (wc) {
         bcHandleAction(room, i, { type: 'game_action', action: 'play_weaponize', cardId: wc.id });
@@ -688,7 +689,7 @@ function bcOpenWeaponizeWindow(room, playerIdx, card, resolveCb) {
   const allOpponentsBots = gs.players.every((_, i) => i === playerIdx || room.players[i]?.isBot);
   const anyBotOpponentHasWeaponize = gs.players.some((opl, i) => i !== playerIdx && room.players[i]?.isBot && opl.hand.some(c => c.type === 'weaponize'));
   if (allOpponentsBots && !anyBotOpponentHasWeaponize) {
-    setTimeout(() => {
+    setTimer(() => {
       if (gs.weaponizeWindow === ww) {
         clearTimeout(ww._timer);
         gs.weaponizeWindow = null;
@@ -697,7 +698,7 @@ function bcOpenWeaponizeWindow(room, playerIdx, card, resolveCb) {
         // Same rule: only re-trigger bot for sub-phases; bcFinishPlay handles play-phase re-trigger
         if (room.players[playerIdx]?.isBot && gs.currentPlayer === playerIdx && gs.phase !== 'play') {
           room._bcBotRunning = false;
-          setTimeout(() => bcBotContinueTurn(room, playerIdx), 50);
+          setTimer(() => bcBotContinueTurn(room, playerIdx), 50);
         }
       }
     }, 1500);
@@ -710,7 +711,7 @@ function bcResolveRecon(room, st) {
   bcLog(room, `Recon resolved — ${room.players[st.attacker].name} chooses: Look at hand or Swap attack cards.`);
   bcBroadcastState(room);
   if (room.players[st.attacker]?.isBot) {
-    setTimeout(() => {
+    setTimer(() => {
       if (gs.phase !== 'attack_recon_choose' || gs.attackState?.attacker !== st.attacker) return;
       // Bot swaps only if both sides have played attack cards; otherwise look
       const myAttack = gs.players[st.attacker].played.filter(c => c.cat === 'attack');
@@ -739,7 +740,7 @@ function bcResolveExploit(room, st) {
 
 function bcBotGovern(room, playerIdx) {
   const gs = room.bcState;
-  setTimeout(() => {
+  setTimer(() => {
     if (!gs.governState || gs.governState.viewer !== playerIdx) return;
     if (gs.phase === 'govern_take') {
       const fromIdx = gs.governState.targets[gs.governState.step];
@@ -793,14 +794,14 @@ function bcResolveDelivery(room, st) {
   bcBroadcastState(room);
   // 15-second auto-resolve for non-bots (safety net)
   const snapAtk = gs.attackState;
-  setTimeout(() => {
+  setTimer(() => {
     if (gs.phase === 'attack_delivery_pick' && gs.attackState === snapAtk) {
       bcLog(room, `Delivery timed out — resolving with ${snapAtk.swaps.length} swap(s).`);
       bcExecuteDelivery(room);
     }
   }, 120000);
   if (room.players[st.attacker]?.isBot) {
-    setTimeout(() => {
+    setTimer(() => {
       if (gs.phase !== 'attack_delivery_pick' || gs.attackState?.attacker !== st.attacker) return;
       // Bot: swap first played card with first opponent's played card
       const myPlayed = gs.players[st.attacker].played;
@@ -849,7 +850,7 @@ function bcResolveC2(room, st) {
     bcLog(room, `C2 — ${room.players[target].name} must give a card of their choice to ${room.players[attacker].name}.`);
     bcBroadcastState(room);
     if (room.players[target]?.isBot) {
-      setTimeout(() => {
+      setTimer(() => {
         if (gs.phase !== 'attack_c2_give' || gs.attackState?.target !== target) return;
         // Bot gives: prefer giving duplicates, then non-special
         const hand = gs.players[target].hand;
@@ -919,7 +920,7 @@ function bcFinishPlay(room, playerIdx) {
   // before the timer callback's own post-resolveCb log line executes.
   if (!w && gs.phase === 'play' && gs.currentPlayer === playerIdx && room.players[playerIdx]?.isBot) {
     room._bcBotRunning = false;
-    setTimeout(() => {
+    setTimer(() => {
       if (gs.phase === 'play' && gs.currentPlayer === playerIdx)
         bcBotContinueTurn(room, playerIdx);
     }, 50);
@@ -1169,7 +1170,7 @@ function bcHandleAction(room, playerIdx, msg) {
       bcBroadcastState(room);
       // Auto-resolve for bot target
       if (room.players[tgt]?.isBot) {
-        setTimeout(() => {
+        setTimer(() => {
           if (gs.phase !== 'attack_respond_window' || gs.attackState?.target !== tgt) return;
           const respondCard = gs.players[tgt].hand.find(c => c.type === 'respond');
           if (respondCard) {
@@ -1181,7 +1182,7 @@ function bcHandleAction(room, playerIdx, msg) {
       } else {
         // Auto-skip after 12 seconds if human doesn't act
         const snapAttack = gs.attackState;
-        setTimeout(() => {
+        setTimer(() => {
           if (gs.phase === 'attack_respond_window' && gs.attackState === snapAttack) {
             bcHandleAction(room, tgt, { type: 'game_action', action: 'respond_skip' });
           }
@@ -1237,7 +1238,7 @@ function bcHandleAction(room, playerIdx, msg) {
         bcLog(room, `${room.players[playerIdx].name} looks at ${room.players[gs.attackState.target].name}'s hand.`);
         bcBroadcastState(room);
         // Auto-dismiss after 10s
-        setTimeout(() => {
+        setTimer(() => {
           if (gs.phase === 'attack_recon_look' && gs.attackState?.attacker === playerIdx) {
             gs.attackState = null; gs.phase = 'play'; bcFinishPlay(room, playerIdx);
           }
@@ -1248,7 +1249,7 @@ function bcHandleAction(room, playerIdx, msg) {
         bcBroadcastState(room);
         // Bot auto-picks swap-my card
         if (room.players[playerIdx]?.isBot) {
-          setTimeout(() => {
+          setTimer(() => {
             if (gs.phase !== 'attack_recon_swap_my' || gs.attackState?.attacker !== playerIdx) return;
             const myAttack = gs.players[playerIdx].played.filter(c => c.cat === 'attack');
             if (myAttack.length > 0) bcHandleAction(room, playerIdx, { type: 'game_action', action: 'recon_swap_my', cardId: myAttack[0].id });
@@ -1297,7 +1298,7 @@ function bcHandleAction(room, playerIdx, msg) {
       bcBroadcastState(room);
       // Bot auto-picks their card
       if (room.players[playerIdx]?.isBot) {
-        setTimeout(() => {
+        setTimer(() => {
           if (gs.phase !== 'attack_recon_swap_their' || gs.attackState?.attacker !== playerIdx) return;
           const tgt = gs.attackState.target;
           const theirAttack = gs.players[tgt].played.filter(c => c.cat === 'attack');
@@ -1471,7 +1472,7 @@ function bcHandleAction(room, playerIdx, msg) {
         bcBroadcastState(room);
         // Auto-dismiss for bot chooser
         if (room.players[playerIdx]?.isBot) {
-          setTimeout(() => {
+          setTimer(() => {
             if (gs.phase === 'identify_dataflag') {
               gs.identifyState = null; gs.phase = 'play';
               bcBroadcastState(room);

@@ -3,7 +3,13 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "node --test tests/routes.test.js tests/websocket.test.js tests/games/fuzznet.test.js tests/games/byteclub.test.js tests/games/clusterflick.test.js",
+    "test:routes": "node --test tests/routes.test.js",
+    "test:ws":     "node --test tests/websocket.test.js",
+    "test:fuzznet":      "node --test tests/games/fuzznet.test.js",
+    "test:byteclub":     "node --test tests/games/byteclub.test.js",
+    "test:clusterflick": "node --test tests/games/clusterflick.test.js"
   },
   "dependencies": {
     "dotenv": "^17.4.1",
