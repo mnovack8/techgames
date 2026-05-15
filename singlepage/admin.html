@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tech CoLab Admin</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -49,7 +50,6 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
 /* ── Admin shell ── */
 #admin-screen { display:none; flex-direction:column; width:100%; min-height:100vh; animation:fadein .5s ease; }
 
-/* Top bar — mirrors the homepage header */
 .admin-topbar { background:var(--white); border-bottom:3px solid var(--yellow); padding:0 28px; height:56px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:10; box-shadow:0 2px 12px var(--shadow); }
 .brand { font-size:16px; font-weight:800; color:var(--dark-green); display:flex; align-items:center; gap:10px; letter-spacing:.5px; }
 .brand span { font-size:10px; font-weight:800; letter-spacing:1.5px; text-transform:uppercase; background:var(--yellow); color:#2a3a00; padding:2px 8px; border-radius:20px; }
@@ -58,13 +58,14 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
 .sign-out-btn:hover { border-color:var(--red); color:var(--red); }
 
 /* Page nav */
-.page-nav { background:var(--white); border-bottom:1px solid var(--border-light); padding:0 28px; display:flex; gap:2px; }
-.page-nav-btn { padding:13px 20px; background:transparent; border:none; border-bottom:3px solid transparent; color:var(--subtle); font-family:inherit; font-size:13px; font-weight:800; cursor:pointer; transition:all .15s; white-space:nowrap; }
+.page-nav { background:var(--white); border-bottom:1px solid var(--border-light); padding:0 28px; display:flex; gap:2px; overflow-x:auto; }
+.page-nav-btn { padding:13px 18px; background:transparent; border:none; border-bottom:3px solid transparent; color:var(--subtle); font-family:inherit; font-size:13px; font-weight:800; cursor:pointer; transition:all .15s; white-space:nowrap; }
 .page-nav-btn:hover { color:var(--dark-green); }
 .page-nav-btn.active { color:var(--dark-green); border-bottom-color:var(--yellow); }
+.page-nav-sep { width:1px; background:var(--border-light); margin:10px 4px; flex-shrink:0; }
 
 /* Content */
-.admin-content { padding:24px 28px; max-width:1100px; width:100%; margin:0 auto; display:flex; flex-direction:column; gap:28px; }
+.admin-content { padding:24px 28px; max-width:1200px; width:100%; margin:0 auto; display:flex; flex-direction:column; gap:28px; }
 #page-content { display:flex; flex-direction:column; gap:20px; }
 
 /* Mode filter pills */
@@ -79,7 +80,7 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
 .period-btn:hover { border-color:var(--green); color:var(--dark-green); }
 .period-btn.active { background:var(--yellow); color:#2a3a00; border-color:var(--yellow-dark); }
 
-/* Section label — matches homepage's green left-border label style */
+/* Section label */
 .section-lbl { font-size:10px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:var(--green); border-left:4px solid var(--yellow); padding-left:10px; }
 
 /* Stat grid */
@@ -91,10 +92,14 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
 .stat-card.hl { border-color:var(--yellow); background:linear-gradient(135deg,#fff 60%,#f8fce8); }
 .stat-card.hl .val { color:var(--dark-green); }
 .stat-card.green .val { color:var(--green); }
+.stat-card.warn { border-color:#f59e0b; background:linear-gradient(135deg,#fff 60%,#fffbeb); }
+.stat-card.warn .val { color:#d97706; }
 
 /* Charts */
 .chart-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
-@media(max-width:700px){ .chart-grid { grid-template-columns:1fr; } }
+.chart-grid-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; }
+@media(max-width:900px){ .chart-grid-3 { grid-template-columns:1fr 1fr; } }
+@media(max-width:700px){ .chart-grid { grid-template-columns:1fr; } .chart-grid-3 { grid-template-columns:1fr; } }
 .chart-card { background:var(--white); border:2px solid var(--border); border-radius:14px; padding:20px 22px; box-shadow:0 4px 16px var(--shadow); }
 .chart-card h3 { font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.8px; color:var(--muted); margin-bottom:14px; }
 .chart-wrap { position:relative; height:175px; }
@@ -120,21 +125,19 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
 
 .loading-msg { color:var(--subtle); font-size:13px; font-weight:600; padding:12px 0; }
 
-/* Funnel flow */
+/* Funnel */
 .funnel-flow { display:flex; align-items:center; flex-wrap:wrap; gap:0; }
-.funnel-stage { flex:1; min-width:130px; background:var(--white); border:2px solid var(--border); border-radius:12px; padding:16px 12px; text-align:center; box-shadow:0 4px 12px var(--shadow); }
+.funnel-stage { flex:1; min-width:120px; background:var(--white); border:2px solid var(--border); border-radius:12px; padding:16px 12px; text-align:center; box-shadow:0 4px 12px var(--shadow); }
 .funnel-stage.active-stage { border-color:var(--yellow); background:linear-gradient(135deg,#fff 60%,#f8fce8); }
 .funnel-stage .f-lbl { font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.8px; color:var(--muted); }
-.funnel-stage .f-val { font-size:30px; font-weight:900; color:var(--text); line-height:1.1; margin:4px 0 2px; }
+.funnel-stage .f-val { font-size:28px; font-weight:900; color:var(--text); line-height:1.1; margin:4px 0 2px; }
 .funnel-stage .f-cvr { font-size:12px; font-weight:700; color:var(--green); }
-.funnel-drop { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:0 6px; min-width:52px; flex-shrink:0; }
+.funnel-drop { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:0 4px; min-width:44px; flex-shrink:0; }
 .funnel-drop .drop-arrow { font-size:16px; color:var(--border); line-height:1; }
 .funnel-drop .drop-lost { font-size:10px; font-weight:800; color:#c0392b; white-space:nowrap; margin-top:2px; }
 .funnel-drop .drop-pct  { font-size:10px; font-weight:600; color:var(--subtle); white-space:nowrap; }
-/* Weakest conversion highlight */
-.stat-card.warn { border-color:#f59e0b; background:linear-gradient(135deg,#fff 60%,#fffbeb); }
-.stat-card.warn .val { color:#d97706; }
-/* Period comparison table */
+
+/* Period comparison */
 .compare-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:12px; }
 .compare-card { background:var(--white); border:2px solid var(--border-light); border-radius:12px; padding:16px 14px; box-shadow:0 2px 8px var(--shadow); }
 .compare-card .c-lbl { font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.8px; color:var(--muted); margin-bottom:6px; }
@@ -146,8 +149,21 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
 .c-delta.down { color:#c0392b; }
 .c-delta.flat { color:var(--subtle); }
 
+/* Site pages tab */
+.pages-section { display:flex; flex-direction:column; gap:16px; }
+.pages-group { background:var(--white); border:2px solid var(--border); border-radius:14px; padding:22px; box-shadow:0 4px 16px var(--shadow); }
+.pages-group-title { font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.8px; color:var(--muted); margin-bottom:14px; display:flex; align-items:center; gap:8px; }
+.pages-group-title span { font-size:16px; }
+.page-row { display:flex; align-items:center; justify-content:space-between; padding:9px 0; border-bottom:1px solid var(--border-light); gap:12px; }
+.page-row:last-child { border-bottom:none; padding-bottom:0; }
+.page-row-left { display:flex; flex-direction:column; gap:2px; }
+.page-row-name { font-size:13px; font-weight:800; color:var(--text); }
+.page-row-desc { font-size:11px; color:var(--subtle); font-weight:600; }
+.page-row-url { font-size:12px; font-weight:700; color:var(--dark-green); font-family:monospace; background:var(--surface); padding:3px 8px; border-radius:6px; border:1px solid var(--border-light); text-decoration:none; white-space:nowrap; }
+.page-row-url:hover { border-color:var(--green); }
+.file-path { font-size:10px; color:var(--subtle); font-family:monospace; margin-top:2px; }
+
 @keyframes fadein { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
-.logo-text-accent {}
 </style>
 </head>
 <body>
@@ -188,17 +204,19 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
     </div>
   </div>
 
-  <!-- Page navigation -->
   <div class="page-nav">
-    <button class="page-nav-btn active" data-page="funnel"    onclick="setPage('funnel')">Sales Funnel</button>
-    <button class="page-nav-btn"        data-page="homepage"  onclick="setPage('homepage')">Homepage</button>
-    <button class="page-nav-btn"        data-page="fuzznet"   onclick="setPage('fuzznet')">FuzzNet Labs</button>
-    <button class="page-nav-btn"        data-page="byteclub"  onclick="setPage('byteclub')">Byte Club</button>
+    <button class="page-nav-btn active" data-page="funnel"       onclick="setPage('funnel')">Sales Funnel</button>
+    <button class="page-nav-btn"        data-page="homepage"     onclick="setPage('homepage')">Homepage</button>
+    <div class="page-nav-sep"></div>
+    <button class="page-nav-btn"        data-page="fuzznet"      onclick="setPage('fuzznet')">FuzzNet Labs</button>
+    <button class="page-nav-btn"        data-page="byteclub"     onclick="setPage('byteclub')">Byte Club</button>
+    <button class="page-nav-btn"        data-page="clusterflick" onclick="setPage('clusterflick')">ClusterFlick</button>
+    <div class="page-nav-sep"></div>
+    <button class="page-nav-btn"        data-page="sitepages"    onclick="setPage('sitepages')">Site Pages</button>
   </div>
 
   <div class="admin-content">
-    <!-- Period selector (shared) -->
-    <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+    <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap" id="period-row">
       <div class="section-lbl">Period</div>
       <div class="period-tabs">
         <button class="period-btn" data-days="7"   onclick="setPeriod(7)">7 days</button>
@@ -212,8 +230,7 @@ body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--te
       <div class="loading-msg">Loading…</div>
     </div>
 
-    <!-- Export (always shown) -->
-    <div>
+    <div id="export-section">
       <div class="section-lbl" style="margin-bottom:10px">CSV Export</div>
       <div class="export-row">
         <button class="export-btn" onclick="exportCSV(7)">⬇ 7 days</button>
@@ -283,10 +300,15 @@ function setPage(page) {
   _gameData = null;
   _hpData = null;
   document.querySelectorAll('[data-page]').forEach(b => b.classList.toggle('active', b.dataset.page === page));
+  // Hide period selector and export on sitepages tab
+  const isStatic = page === 'sitepages';
+  document.getElementById('period-row').style.display = isStatic ? 'none' : 'flex';
+  document.getElementById('export-section').style.display = isStatic ? 'none' : 'block';
   loadData();
 }
 
 async function loadData() {
+  if (currentPage === 'sitepages') { renderSitePages(); return; }
   document.getElementById('page-content').innerHTML = '<div class="loading-msg">Loading…</div>';
   destroyCharts();
   try {
@@ -296,18 +318,18 @@ async function loadData() {
     if (currentPage === 'homepage') renderHomepage(d);
     else if (currentPage === 'funnel') renderFunnel(d);
     else renderGame(d);
-  } catch(e) { document.getElementById('page-content').innerHTML = `<div class="loading-msg">Error: ${e.message}</div>`; console.error('loadData error:', e); }
+  } catch(e) { document.getElementById('page-content').innerHTML = `<div class="loading-msg">Error: ${e.message}</div>`; }
 }
 
 /* ── HOMEPAGE PAGE ── */
 const HP_SERIES = [
-  { key:'visits',   label:'Homepage Visits',    data: d => d.chart.hp,     borderColor:'#d1db24', backgroundColor:'rgba(209,219,36,.15)' },
-  { key:'fuzznet',  label:'FuzzNet Buy',         data: d => d.chart.fnPhys, borderColor:'#3b82f6', backgroundColor:'rgba(59,130,246,.12)'  },
-  { key:'byteclub', label:'Byte Club Buy',        data: d => d.chart.bcPhys, borderColor:'#62b517', backgroundColor:'rgba(98,181,23,.12)'   },
-  { key:'qubit',    label:'Qubit Waitlist',       data: d => d.chart.qubit,  borderColor:'#8b5cf6', backgroundColor:'rgba(139,92,246,.12)'  },
+  { key:'visits',   label:'Homepage Visits',       data: d => d.chart.hp,     borderColor:'#d1db24', backgroundColor:'rgba(209,219,36,.15)' },
+  { key:'fuzznet',  label:'FuzzNet Buy',            data: d => d.chart.fnPhys, borderColor:'#3b82f6', backgroundColor:'rgba(59,130,246,.12)'  },
+  { key:'byteclub', label:'Byte Club Buy',          data: d => d.chart.bcPhys, borderColor:'#62b517', backgroundColor:'rgba(98,181,23,.12)'   },
+  { key:'qubit',    label:'Quantum Computing WL',   data: d => d.chart.qubit,  borderColor:'#8b5cf6', backgroundColor:'rgba(139,92,246,.12)'  },
 ];
 const ALL_HP_KEYS = HP_SERIES.map(s => s.key);
-let activeHpFilters = new Set(ALL_HP_KEYS); // all on by default
+let activeHpFilters = new Set(ALL_HP_KEYS);
 let _hpData = null;
 
 function buildHpChart(d) {
@@ -318,22 +340,15 @@ function buildHpChart(d) {
     .filter(s => activeHpFilters.has(s.key))
     .map(s => ({ label: s.label, data: s.data(d) || zeros, borderColor: s.borderColor, backgroundColor: s.backgroundColor, fill: true, tension: .3, pointRadius: 3 }));
   charts.hpMain = new Chart(document.getElementById('chart-hp-main'), {
-    type: 'line',
-    data: { labels, datasets },
-    options: { ...CHART_OPT },
+    type: 'line', data: { labels, datasets }, options: { ...CHART_OPT },
   });
 }
 
 function toggleHpFilter(key) {
-  if (key === 'all') {
-    // If all already active, do nothing; otherwise restore all
-    ALL_HP_KEYS.forEach(k => activeHpFilters.add(k));
-  } else {
-    if (activeHpFilters.has(key)) {
-      if (activeHpFilters.size > 1) activeHpFilters.delete(key); // keep at least one series
-    } else {
-      activeHpFilters.add(key);
-    }
+  if (key === 'all') { ALL_HP_KEYS.forEach(k => activeHpFilters.add(k)); }
+  else {
+    if (activeHpFilters.has(key)) { if (activeHpFilters.size > 1) activeHpFilters.delete(key); }
+    else { activeHpFilters.add(key); }
   }
   updateHpPills();
   if (_hpData) buildHpChart(_hpData);
@@ -355,7 +370,7 @@ function renderHomepage(d) {
       <div class="stat-grid" id="hp-stats"></div>
     </div>
     <div>
-      <div class="section-lbl" style="margin-bottom:14px">Engagement &amp; Quality</div>
+      <div class="section-lbl" style="margin-bottom:14px">Engagement &amp; Buy Interest</div>
       <div class="stat-grid" id="hp-engage-stats"></div>
     </div>
     <div class="chart-full">
@@ -386,7 +401,7 @@ function renderHomepage(d) {
     <div class="stat-card">
       <div class="lbl">Return visitor rate</div>
       <div class="val">${d.returnRate ?? 0}%</div>
-      <div class="sub">${(d.returnVisitors ?? 0).toLocaleString()} of ${d.hp.toLocaleString()} visits</div>
+      <div class="sub">${(d.returnVisitors ?? 0).toLocaleString()} returning visitors</div>
     </div>
     <div class="stat-card">
       <div class="lbl">Bounce rate</div>
@@ -396,7 +411,7 @@ function renderHomepage(d) {
     <div class="stat-card">
       <div class="lbl">WS disconnect rate</div>
       <div class="val">${d.wsDCRate ?? 0}%</div>
-      <div class="sub">${(d.wsDCTotal ?? 0)} mid-game drops (all games)</div>
+      <div class="sub">${(d.wsDCTotal ?? 0)} mid-game drops</div>
     </div>
   `;
 
@@ -412,9 +427,14 @@ function renderHomepage(d) {
       <div class="sub">button clicks</div>
     </div>
     <div class="stat-card">
-      <div class="lbl">Qubit Waitlist</div>
+      <div class="lbl">Quantum Computing WL</div>
       <div class="val">${d.qubit.toLocaleString()}</div>
-      <div class="sub">button clicks</div>
+      <div class="sub">waitlist clicks</div>
+    </div>
+    <div class="stat-card green">
+      <div class="lbl">Play-to-buy</div>
+      <div class="val">${d.playToBuy ?? 0}</div>
+      <div class="sub">completed a game then clicked buy</div>
     </div>
   `;
 
@@ -426,7 +446,6 @@ function renderHomepage(d) {
 
   buildHpChart(d);
 
-  // Referrer bar chart
   if (charts.referrer) { charts.referrer.destroy(); delete charts.referrer; }
   const ref = d.referrers || {};
   charts.referrer = new Chart(document.getElementById('chart-referrer'), {
@@ -441,9 +460,8 @@ function renderHomepage(d) {
     options: { ...CHART_OPT },
   });
 
-  // Hourly bar chart — rotate UTC buckets to Eastern Time (UTC-5)
   if (charts.hourly) { charts.hourly.destroy(); delete charts.hourly; }
-  const EST_OFFSET = 5; // UTC-5; close enough year-round for display purposes
+  const EST_OFFSET = 5;
   const utcHrs = d.hourly || new Array(24).fill(0);
   const estHrs = Array.from({length:24}, (_, h) => utcHrs[(h + EST_OFFSET) % 24]);
   const estLabels = Array.from({length:24}, (_, h) => {
@@ -464,37 +482,37 @@ function renderHomepage(d) {
 
 /* ── SALES FUNNEL PAGE ── */
 function renderFunnel(d) {
-  const visits       = d.visits || 0;
-  const fnStarted    = d.fnStarted || 0;
-  const bcStarted    = d.bcStarted || 0;
-  const totalStarted = fnStarted + bcStarted;
-  const fnCompleted  = d.fnCompleted || 0;
-  const bcCompleted  = d.bcCompleted || 0;
-  const totalCompleted = fnCompleted + bcCompleted;
-  const fnBuys       = d.fnBuys || 0;
-  const bcBuys       = d.bcBuys || 0;
-  const totalBuys    = fnBuys + bcBuys;
+  const visits         = d.visits || 0;
+  const fnStarted      = d.fnStarted || 0;
+  const bcStarted      = d.bcStarted || 0;
+  const cfStarted      = d.cfStarted || 0;
+  const totalStarted   = fnStarted + bcStarted + cfStarted;
+  const fnCompleted    = d.fnCompleted || 0;
+  const bcCompleted    = d.bcCompleted || 0;
+  const cfCompleted    = d.cfCompleted || 0;
+  const totalCompleted = fnCompleted + bcCompleted + cfCompleted;
+  const fnBuys         = d.fnBuys || 0;
+  const bcBuys         = d.bcBuys || 0;
+  const totalBuys      = fnBuys + bcBuys;
+  const quantumWL      = d.quantumWL || 0;
 
-  // Conversion rates between stages
-  const r_vToS = visits > 0        ? Math.round(totalStarted   / visits        * 100) : 0;
-  const r_sToC = totalStarted > 0  ? Math.round(totalCompleted / totalStarted  * 100) : 0;
-  const r_cToB = totalCompleted > 0 ? Math.round(totalBuys      / totalCompleted * 100) : 0;
+  const r_vToS = visits > 0         ? Math.round(totalStarted   / visits        * 100) : 0;
+  const r_sToC = totalStarted > 0   ? Math.round(totalCompleted / totalStarted  * 100) : 0;
+  const r_cToB = totalCompleted > 0  ? Math.round(totalBuys      / totalCompleted * 100) : 0;
 
-  // Weakest step (lowest conversion rate)
   const steps = [{id:'vToS',rate:r_vToS},{id:'sToC',rate:r_sToC},{id:'cToB',rate:r_cToB}];
   const weakest = steps.reduce((a,b) => a.rate <= b.rate ? a : b).id;
 
-  // Drop-off counts
   const d_vToS = visits - totalStarted;
   const d_sToC = totalStarted - totalCompleted;
   const d_cToB = totalCompleted - totalBuys;
 
-  // Period comparison helpers
-  const prev = d.prev || {};
-  const pVisits    = prev.visits || 0;
-  const pStarted   = (prev.fnStarted||0) + (prev.bcStarted||0);
-  const pCompleted = (prev.fnCompleted||0) + (prev.bcCompleted||0);
-  const pBuys      = (prev.fnBuys||0) + (prev.bcBuys||0);
+  const prev      = d.prev || {};
+  const pVisits   = prev.visits || 0;
+  const pStarted  = (prev.fnStarted||0) + (prev.bcStarted||0) + (prev.cfStarted||0);
+  const pCompleted= (prev.fnCompleted||0) + (prev.bcCompleted||0) + (prev.cfCompleted||0);
+  const pBuys     = (prev.fnBuys||0) + (prev.bcBuys||0);
+
   function delta(curr, prev) {
     const diff = curr - prev;
     if (diff === 0 || prev === 0) return `<span class="c-delta flat">—</span>`;
@@ -514,13 +532,13 @@ function renderFunnel(d) {
       <div class="stat-grid" id="funnel-rates"></div>
     </div>
     <div class="chart-full">
-      <h3 style="margin-bottom:14px">Per-game breakdown</h3>
+      <h3 style="margin-bottom:14px">Per-game breakdown — started, completed, buy clicks</h3>
       <div class="chart-full-wrap"><canvas id="chart-funnel"></canvas></div>
     </div>
     <div class="chart-grid">
       <div class="chart-card">
-        <h3>Qubit interest — Visits → Waitlist</h3>
-        <div class="chart-wrap"><canvas id="chart-qubit-funnel"></canvas></div>
+        <h3>Quantum Computing — Visits → Waitlist</h3>
+        <div class="chart-wrap"><canvas id="chart-quantum-funnel"></canvas></div>
       </div>
       <div style="background:var(--white);border:2px solid var(--border);border-radius:14px;padding:20px 22px;box-shadow:0 4px 16px var(--shadow);">
         <h3 style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:14px">Period comparison — previous ${currentDays} days</h3>
@@ -529,7 +547,6 @@ function renderFunnel(d) {
     </div>
   `;
 
-  // Funnel flow visual
   function stageHTML(lbl, val, cvr, isFirst) {
     return `<div class="funnel-stage${isFirst ? ' active-stage' : ''}">
       <div class="f-lbl">${lbl}</div>
@@ -545,30 +562,29 @@ function renderFunnel(d) {
     </div>`;
   }
   document.getElementById('funnel-flow').innerHTML =
-    stageHTML('Site Visits',      visits,        null,  true) +
+    stageHTML('Site Visits',     visits,         null,   true) +
     dropHTML(Math.max(d_vToS,0), 100 - r_vToS) +
-    stageHTML('Games Started',    totalStarted,  r_vToS, false) +
+    stageHTML('Games Started',   totalStarted,   r_vToS, false) +
     dropHTML(Math.max(d_sToC,0), 100 - r_sToC) +
-    stageHTML('Games Completed',  totalCompleted, r_sToC, false) +
+    stageHTML('Games Completed', totalCompleted, r_sToC, false) +
     dropHTML(Math.max(d_cToB,0), 100 - r_cToB) +
-    stageHTML('Buy Clicks',       totalBuys,      r_cToB, false);
+    stageHTML('Buy Clicks',      totalBuys,      r_cToB, false);
 
-  // Conversion rate cards — highlight weakest
   document.getElementById('funnel-rates').innerHTML = `
     <div class="stat-card${weakest==='vToS' ? ' warn' : ''}">
       <div class="lbl">Visit → Started</div>
       <div class="val">${r_vToS}%</div>
-      <div class="sub">${totalStarted.toLocaleString()} of ${visits.toLocaleString()} visitors started a game</div>
+      <div class="sub">${totalStarted.toLocaleString()} of ${visits.toLocaleString()} visitors started</div>
     </div>
     <div class="stat-card${weakest==='sToC' ? ' warn' : ''}">
       <div class="lbl">Started → Completed</div>
       <div class="val">${r_sToC}%</div>
-      <div class="sub">${totalCompleted.toLocaleString()} of ${totalStarted.toLocaleString()} games finished</div>
+      <div class="sub">${totalCompleted.toLocaleString()} of ${totalStarted.toLocaleString()} finished</div>
     </div>
     <div class="stat-card${weakest==='cToB' ? ' warn' : ''}">
       <div class="lbl">Completed → Buy Click</div>
       <div class="val">${r_cToB}%</div>
-      <div class="sub">${totalBuys.toLocaleString()} of ${totalCompleted.toLocaleString()} completions led to buy</div>
+      <div class="sub">${totalBuys.toLocaleString()} of ${totalCompleted.toLocaleString()} led to buy</div>
     </div>
     <div class="stat-card">
       <div class="lbl">Overall visit → buy</div>
@@ -577,7 +593,6 @@ function renderFunnel(d) {
     </div>
   `;
 
-  // Per-game grouped bar chart
   if (charts.funnel) { charts.funnel.destroy(); delete charts.funnel; }
   charts.funnel = new Chart(document.getElementById('chart-funnel'), {
     type: 'bar',
@@ -586,37 +601,36 @@ function renderFunnel(d) {
       datasets: [
         { label:'FuzzNet Labs', data:[fnStarted, fnCompleted, fnBuys],
           backgroundColor:'rgba(59,130,246,.7)', borderColor:'#3b82f6', borderWidth:2, borderRadius:6 },
-        { label:'Byte Club',    data:[bcStarted, bcCompleted, bcBuys],
+        { label:'Byte Club', data:[bcStarted, bcCompleted, bcBuys],
           backgroundColor:'rgba(98,181,23,.7)',  borderColor:'#62b517', borderWidth:2, borderRadius:6 },
+        { label:'ClusterFlick', data:[cfStarted, cfCompleted, 0],
+          backgroundColor:'rgba(245,158,11,.7)', borderColor:'#f59e0b', borderWidth:2, borderRadius:6 },
       ],
     },
     options: { ...CHART_OPT },
   });
 
-  // Qubit mini-funnel chart
-  if (charts.qubitFunnel) { charts.qubitFunnel.destroy(); delete charts.qubitFunnel; }
-  const qubitWL = d.qubitWL || 0;
-  const qubitRate = visits > 0 ? Math.round(qubitWL / visits * 100) : 0;
-  charts.qubitFunnel = new Chart(document.getElementById('chart-qubit-funnel'), {
+  if (charts.quantumFunnel) { charts.quantumFunnel.destroy(); delete charts.quantumFunnel; }
+  const quantumRate = visits > 0 ? Math.round(quantumWL / visits * 100) : 0;
+  charts.quantumFunnel = new Chart(document.getElementById('chart-quantum-funnel'), {
     type: 'bar',
     data: {
-      labels: [`Site Visits (${visits.toLocaleString()})`, `Waitlist Clicks (${qubitWL.toLocaleString()})`],
-      datasets: [{ label:'Count', data:[visits, qubitWL],
+      labels: [`Site Visits (${visits.toLocaleString()})`, `Waitlist Clicks (${quantumWL.toLocaleString()})`],
+      datasets: [{ label:'Count', data:[visits, quantumWL],
         backgroundColor:['rgba(209,219,36,.7)','rgba(139,92,246,.7)'],
         borderColor:['#d1db24','#8b5cf6'], borderWidth:2, borderRadius:6 }],
     },
     options: { ...CHART_OPT, plugins:{ ...CHART_OPT.plugins,
       legend:{ display:false },
-      subtitle:{ display: qubitRate > 0, text:`${qubitRate}% of visitors joined the waitlist`, color:'#6b7a4a', font:{family:'Nunito',size:11} }
+      subtitle:{ display: quantumRate > 0, text:`${quantumRate}% of visitors joined the waitlist`, color:'#6b7a4a', font:{family:'Nunito',size:11} }
     }},
   });
 
-  // Period comparison
   document.getElementById('funnel-compare').innerHTML = [
-    { lbl:'Site Visits',      curr:visits,        prev:pVisits    },
-    { lbl:'Games Started',    curr:totalStarted,  prev:pStarted   },
-    { lbl:'Games Completed',  curr:totalCompleted,prev:pCompleted },
-    { lbl:'Buy Clicks',       curr:totalBuys,     prev:pBuys      },
+    { lbl:'Site Visits',     curr:visits,        prev:pVisits    },
+    { lbl:'Games Started',   curr:totalStarted,  prev:pStarted   },
+    { lbl:'Games Completed', curr:totalCompleted,prev:pCompleted },
+    { lbl:'Buy Clicks',      curr:totalBuys,     prev:pBuys      },
   ].map(({lbl,curr,prev}) => `
     <div class="compare-card">
       <div class="c-lbl">${lbl}</div>
@@ -625,15 +639,15 @@ function renderFunnel(d) {
     </div>`).join('');
 }
 
-/* ── GAME PAGE (FuzzNet / Byte Club) ── */
+/* ── GAME PAGE (FuzzNet / Byte Club / ClusterFlick) ── */
 const GAME_SERIES = [
-  { key:'started',  label:'All Started', data: d => d.chart.started,                      borderColor:'#3b82f6', backgroundColor:'rgba(59,130,246,.15)' },
-  { key:'completed',label:'Completed',   data: d => d.chart.completed,                    borderColor:'#62b517', backgroundColor:'rgba(98,181,23,.12)'  },
-  { key:'tutorial', label:'Tutorial',    data: d => (d.chart.modeStarted||{}).tutorial,   borderColor:'#d1db24', backgroundColor:'rgba(209,219,36,.12)'  },
-  { key:'1p_bot',   label:'1P + Bot',    data: d => (d.chart.modeStarted||{})['1p_bot'],  borderColor:'#60a5fa', backgroundColor:'rgba(96,165,250,.12)'  },
-  { key:'2p',       label:'2 Player',    data: d => (d.chart.modeStarted||{})['2p'],      borderColor:'#4aff8a', backgroundColor:'rgba(74,255,138,.1)'   },
-  { key:'3p',       label:'3 Player',    data: d => (d.chart.modeStarted||{})['3p'],      borderColor:'#f59e0b', backgroundColor:'rgba(245,158,11,.12)'  },
-  { key:'4p',       label:'4 Player',    data: d => (d.chart.modeStarted||{})['4p'],      borderColor:'#8b5cf6', backgroundColor:'rgba(139,92,246,.12)'  },
+  { key:'started',   label:'All Started', data: d => d.chart.started,                      borderColor:'#3b82f6', backgroundColor:'rgba(59,130,246,.15)' },
+  { key:'completed', label:'Completed',   data: d => d.chart.completed,                    borderColor:'#62b517', backgroundColor:'rgba(98,181,23,.12)'  },
+  { key:'tutorial',  label:'Tutorial',    data: d => (d.chart.modeStarted||{}).tutorial,   borderColor:'#d1db24', backgroundColor:'rgba(209,219,36,.12)'  },
+  { key:'1p_bot',    label:'1P + Bot',    data: d => (d.chart.modeStarted||{})['1p_bot'],  borderColor:'#60a5fa', backgroundColor:'rgba(96,165,250,.12)'  },
+  { key:'2p',        label:'2 Player',    data: d => (d.chart.modeStarted||{})['2p'],      borderColor:'#4aff8a', backgroundColor:'rgba(74,255,138,.1)'   },
+  { key:'3p',        label:'3 Player',    data: d => (d.chart.modeStarted||{})['3p'],      borderColor:'#f59e0b', backgroundColor:'rgba(245,158,11,.12)'  },
+  { key:'4p',        label:'4 Player',    data: d => (d.chart.modeStarted||{})['4p'],      borderColor:'#8b5cf6', backgroundColor:'rgba(139,92,246,.12)'  },
 ];
 const DEFAULT_GAME_KEYS = new Set(['started', 'completed']);
 let activeGameFilters = new Set(DEFAULT_GAME_KEYS);
@@ -647,22 +661,16 @@ function buildSessionsChart(d) {
     .filter(s => activeGameFilters.has(s.key))
     .map(s => ({ label: s.label, data: s.data(d) || zeros, borderColor: s.borderColor, backgroundColor: s.backgroundColor, fill: true, tension: .3, pointRadius: 3 }));
   charts.sessions = new Chart(document.getElementById('chart-sessions'), {
-    type: 'line',
-    data: { labels, datasets },
-    options: { ...CHART_OPT },
+    type: 'line', data: { labels, datasets }, options: { ...CHART_OPT },
   });
 }
 
 function toggleGameFilter(key) {
   const ALL_GAME_KEYS = GAME_SERIES.map(s => s.key);
-  if (key === 'all') {
-    ALL_GAME_KEYS.forEach(k => activeGameFilters.add(k));
-  } else {
-    if (activeGameFilters.has(key)) {
-      if (activeGameFilters.size > 1) activeGameFilters.delete(key);
-    } else {
-      activeGameFilters.add(key);
-    }
+  if (key === 'all') { ALL_GAME_KEYS.forEach(k => activeGameFilters.add(k)); }
+  else {
+    if (activeGameFilters.has(key)) { if (activeGameFilters.size > 1) activeGameFilters.delete(key); }
+    else { activeGameFilters.add(key); }
   }
   updateGamePills();
   if (_gameData) buildSessionsChart(_gameData);
@@ -677,10 +685,12 @@ function updateGamePills() {
   });
 }
 
+const GAME_NAMES = { fuzznet: 'FuzzNet Labs', byteclub: 'Byte Club', clusterflick: 'ClusterFlick' };
+
 function renderGame(d) {
   _gameData = d;
   const pct = d.pct;
-  const gameName = d.page === 'fuzznet' ? 'FuzzNet Labs' : 'Byte Club';
+  const gameName = GAME_NAMES[d.page] || d.page;
 
   document.getElementById('page-content').innerHTML = `
     <div>
@@ -729,7 +739,6 @@ function renderGame(d) {
     </div>
   `;
 
-  // Build series filter pills
   document.getElementById('mode-filter-pills').innerHTML =
     `<button class="mode-pill game-pill${GAME_SERIES.every(s => activeGameFilters.has(s.key)) ? ' active' : ''}" data-series="all" onclick="toggleGameFilter('all')">All</button>` +
     GAME_SERIES.map(s =>
@@ -738,7 +747,6 @@ function renderGame(d) {
 
   buildSessionsChart(d);
 
-  // Mode breakdown bars (static summary, uses all modes regardless of chart filter)
   const modeBars = GAME_SERIES.filter(s => !['started','completed'].includes(s.key));
   const max = Math.max(...modeBars.map(s => d.by_mode[s.key] || 0), 1);
   document.getElementById('mode-breakdown').innerHTML = modeBars.map(s => {
@@ -752,9 +760,91 @@ function renderGame(d) {
   }).join('');
 }
 
+/* ── SITE PAGES TAB ── */
+function renderSitePages() {
+  const groups = [
+    {
+      icon: '🎮', title: 'Games',
+      pages: [
+        { name: 'Cybersecurity (landing)',    desc: 'Game category landing page',        url: '/cybersecurity',              file: 'games/cybersecurity/index.html' },
+        { name: 'Byte Club',                  desc: 'Multiplayer cybersecurity card game',url: '/cybersecurity/byteclub',     file: 'games/cybersecurity/byteclub.html' },
+        { name: 'AI Neural Network (landing)',desc: 'Game category landing page',        url: '/ai-neural-network',          file: 'games/ai-neural-network/index.html' },
+        { name: 'FuzzNet Labs',               desc: 'Multiplayer AI/ML board game',      url: '/ai-neural-network/fuzznet',  file: 'games/ai-neural-network/fuzznet.html' },
+        { name: 'AI KNN (landing)',            desc: 'Game category landing page',        url: '/ai-knn',                     file: 'games/ai-knn/index.html' },
+        { name: 'ClusterFlick',               desc: 'Multiplayer KNN physics game',      url: '/ai-knn/clusterflick',        file: 'games/ai-knn/clusterflick.html' },
+        { name: 'Quantum Computing',          desc: 'Qubit game waitlist page',          url: '/quantumcomputing',           file: 'games/quantumcomputing.html' },
+      ]
+    },
+    {
+      icon: '📄', title: 'Single Pages',
+      pages: [
+        { name: 'Homepage',   desc: 'Main site landing page',          url: '/',         file: 'index.html' },
+        { name: 'About',      desc: 'About Tech CoLab',                url: '/about',    file: 'singlepage/about.html' },
+        { name: 'Contact',    desc: 'Contact form',                    url: '/contact',  file: 'singlepage/contact.html' },
+        { name: 'Buy Now',    desc: 'Physical game purchase page',     url: '/buy-now',  file: 'singlepage/buy-now.html' },
+        { name: 'Admin',      desc: 'This admin dashboard',            url: '/admin',    file: 'singlepage/admin.html' },
+        { name: '404',        desc: 'Not found fallback page',         url: '/404',      file: 'singlepage/404.html' },
+      ]
+    },
+    {
+      icon: '✍️', title: 'Blog',
+      pages: [
+        { name: 'Blog Index',                           desc: 'All posts listing',        url: '/blog',                                          file: 'blog/index.html' },
+        { name: 'Quantum Computing Basics',             desc: 'Blog post',                url: '/blog/quantum-computing-basics',                 file: 'blog/quantum-computing-basics.html' },
+        { name: 'Why We Learn Better Through Play',     desc: 'Blog post',                url: '/blog/why-we-learn-better-through-play',         file: 'blog/why-we-learn-better-through-play.html' },
+        { name: 'People, Process, Tools',               desc: 'Blog post',                url: '/blog/people-process-tools',                     file: 'blog/people-process-tools.html' },
+        { name: 'Culture Is Already Showing',           desc: 'Blog post',                url: '/blog/culture-is-already-showing',               file: 'blog/culture-is-already-showing.html' },
+        { name: 'AI Security Workshop',                 desc: 'Blog post',                url: '/blog/ai-security-workshop',                     file: 'blog/ai-security-workshop.html' },
+        { name: 'Cybersecurity Mindset',                desc: 'Blog post',                url: '/blog/cybersecurity-mindset-critical-thinking',  file: 'blog/cybersecurity-mindset-critical-thinking.html' },
+        { name: 'Cybersecurity Awareness Workshop',     desc: 'Blog post',                url: '/blog/cybersecurity-awareness-workshop',         file: 'blog/cybersecurity-awareness-workshop.html' },
+        { name: 'How to Facilitate an AI Workshop',     desc: 'Blog post',                url: '/blog/how-to-facilitate-an-ai-literacy-workshop',file: 'blog/how-to-facilitate-an-ai-literacy-workshop.html' },
+        { name: 'How to Run an AI Workshop Online',     desc: 'Blog post',                url: '/blog/how-to-run-an-ai-literacy-workshop-online',file: 'blog/how-to-run-an-ai-literacy-workshop-online.html' },
+        { name: 'Principles of AI & Data Science',      desc: 'Blog post',                url: '/blog/principles-of-ai-data-science',            file: 'blog/principles-of-ai-data-science.html' },
+      ]
+    },
+    {
+      icon: '🏢', title: 'Use Cases',
+      pages: [
+        { name: 'Board Culture Change',  desc: 'Corporate training use case', url: '/board-culture-change', file: 'use-cases/board-culture-change.html' },
+        { name: 'Focused Deep Work',     desc: 'Specialized training use case',url: '/focused-deep-work',   file: 'use-cases/focused-deep-work.html' },
+      ]
+    },
+    {
+      icon: '🔀', title: 'Legacy Redirects (301)',
+      pages: [
+        { name: '/ai → /ai-neural-network',         desc: 'Permanent redirect', url: '/ai',           file: '—' },
+        { name: '/knn → /ai-knn',                   desc: 'Permanent redirect', url: '/knn',          file: '—' },
+        { name: '/qubit-waitlist → /quantumcomputing', desc: 'Permanent redirect', url: '/qubit-waitlist', file: '—' },
+      ]
+    },
+  ];
+
+  document.getElementById('page-content').innerHTML = `
+    <div>
+      <div class="section-lbl" style="margin-bottom:16px">All Site Pages &amp; Routes</div>
+      <div class="pages-section" id="pages-section"></div>
+    </div>
+  `;
+
+  document.getElementById('pages-section').innerHTML = groups.map(g => `
+    <div class="pages-group">
+      <div class="pages-group-title"><span>${g.icon}</span>${g.title}</div>
+      ${g.pages.map(p => `
+        <div class="page-row">
+          <div class="page-row-left">
+            <div class="page-row-name">${p.name}</div>
+            <div class="page-row-desc">${p.desc}</div>
+            ${p.file !== '—' ? `<div class="file-path">${p.file}</div>` : ''}
+          </div>
+          <a class="page-row-url" href="${p.url}" target="_blank" rel="noopener">${p.url}</a>
+        </div>
+      `).join('')}
+    </div>
+  `).join('');
+}
+
 function exportCSV(days) { window.location.href = `/admin/metrics/export?days=${days}`; }
 
-// Session restore on load
 (async () => {
   const res = await fetch('/admin/session', { credentials:'same-origin' });
   if (res.ok) {

@@ -10,6 +10,11 @@ const MIME_TYPES = {
   '.jpg':  'image/jpeg',
   '.svg':  'image/svg+xml',
   '.pdf':  'application/pdf',
+  '.xml':  'application/xml; charset=utf-8',
+  '.txt':  'text/plain; charset=utf-8',
+  '.webp': 'image/webp',
+  '.jpeg': 'image/jpeg',
+  '.ico':  'image/x-icon',
 };
 
 // ── Legacy-URL redirects (301) ───────────────────────────────────────────────

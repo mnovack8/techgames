@@ -3,7 +3,6 @@ require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
-const { google } = require('googleapis');
 
 // ==================== METRICS ====================
 const METRICS_FILE = path.join(__dirname, 'metrics.json');
@@ -72,7 +71,6 @@ function trackEvent(type, extra = {}) {
   const event = { type, ts: Date.now(), ...extra };
   metricsEvents.push(event);
   saveMetrics();
-  syncEventToSheets(event); // fire-and-forget to Google Sheets
 }
 
 function makeBuckets(cutoff, days) {
@@ -125,7 +123,7 @@ function getMetrics(days, page = 'homepage') {
       if (e.type === 'button_click') {
         if (e.button === 'fuzznet_physical')  { fnPhys++;  fnPhysSeries[i]++; }
         if (e.button === 'byteclub_physical') { bcPhys++;  bcPhysSeries[i]++; }
-        if (e.button === 'qubit_waitlist')    { qubit++;   qubitSeries[i]++;  }
+        if (e.button === 'qubit_waitlist')    { qubit++;   qubitSeries[i]++;  } // button id unchanged for historical data
       }
       if (e.type === 'ws_disconnect') wsDCTotal++;
     }
@@ -146,24 +144,26 @@ function getMetrics(days, page = 'homepage') {
 
   if (page === 'funnel') {
     function funnelStats(events) {
-      let visits = 0, fnStarted = 0, bcStarted = 0, fnCompleted = 0, bcCompleted = 0, fnBuys = 0, bcBuys = 0, qubitWL = 0;
+      let visits = 0, fnStarted = 0, bcStarted = 0, cfStarted = 0, fnCompleted = 0, bcCompleted = 0, cfCompleted = 0, fnBuys = 0, bcBuys = 0, quantumWL = 0;
       for (const e of events) {
         if (e.type === 'homepage_visit') visits++;
         if (e.type === 'session_started') {
-          if (e.gameType === 'fuzznet')  fnStarted++;
-          if (e.gameType === 'byteclub') bcStarted++;
+          if (e.gameType === 'fuzznet')      fnStarted++;
+          if (e.gameType === 'byteclub')     bcStarted++;
+          if (e.gameType === 'clusterflick') cfStarted++;
         }
         if (e.type === 'session_completed') {
-          if (e.gameType === 'fuzznet')  fnCompleted++;
-          if (e.gameType === 'byteclub') bcCompleted++;
+          if (e.gameType === 'fuzznet')      fnCompleted++;
+          if (e.gameType === 'byteclub')     bcCompleted++;
+          if (e.gameType === 'clusterflick') cfCompleted++;
         }
         if (e.type === 'button_click') {
           if (e.button === 'fuzznet_physical')  fnBuys++;
           if (e.button === 'byteclub_physical') bcBuys++;
-          if (e.button === 'qubit_waitlist')    qubitWL++;
+          if (e.button === 'qubit_waitlist')    quantumWL++;
         }
       }
-      return { visits, fnStarted, bcStarted, fnCompleted, bcCompleted, fnBuys, bcBuys, qubitWL };
+      return { visits, fnStarted, bcStarted, cfStarted, fnCompleted, bcCompleted, cfCompleted, fnBuys, bcBuys, quantumWL };
     }
     const curr = funnelStats(ev);
     // Previous equivalent period for comparison
@@ -270,146 +270,6 @@ async function handleAdminExportCSV(req, res, verifyToken, getSessionCookie) {
   res.end(lines.join('\n'));
 }
 
-// ==================== GOOGLE SHEETS SYNC ====================
-// Credentials come from env vars — no JSON file needed.
-// On localhost these vars are not set so all sync is silently skipped.
-
-function getSheetsClient() {
-  const email = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
-  const key   = process.env.GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY;
-  if (!email || !key) return null;
-  try {
-    const auth = new google.auth.GoogleAuth({
-      credentials: {
-        client_email: email,
-        private_key: key.replace(/\\n/g, '\n'), // PM2 stores \n as literal \\n
-      },
-      scopes: ['https://www.googleapis.com/auth/spreadsheets'],
-    });
-    return google.sheets({ version: 'v4', auth });
-  } catch (e) { return null; }
-}
-
-// Real-time: append one row to the Events tab on every tracked event
-async function syncEventToSheets(event) {
-  const sheets = getSheetsClient();
-  if (!sheets) return;
-  const sid = process.env.SHEETS_ID;
-  if (!sid) return;
-  try {
-    const row = [
-      new Date(event.ts).toISOString(),
-      event.type,
-      event.gameType || '',
-      event.mode     || '',
-      event.button   || '',
-      event.uvKey    || '',
-      event.referrer || '',
-    ];
-    await sheets.spreadsheets.values.append({
-      spreadsheetId: sid,
-      range: 'Events!A:G',
-      valueInputOption: 'USER_ENTERED',
-      requestBody: { values: [row] },
-    });
-  } catch (e) { /* Sheets unavailable — local metrics still intact */ }
-}
-
-// Nightly: write one summary row per tab for yesterday (ET)
-async function writeDailySummary() {
-  const sheets = getSheetsClient();
-  if (!sheets) return;
-  const sid = process.env.SHEETS_ID;
-  if (!sid) return;
-
-  // Yesterday's window in ET
-  const etNow       = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }));
-  const etToday     = new Date(etNow); etToday.setHours(0, 0, 0, 0);
-  const etYesterday = new Date(etToday.getTime() - 24 * 60 * 60 * 1000);
-  const dateStr     = etYesterday.toLocaleDateString('en-US', { timeZone: 'America/New_York' });
-  const utcOffset   = new Date().getTime() - etNow.getTime();
-  const startUTC    = etYesterday.getTime() - utcOffset;
-  const endUTC      = etToday.getTime()     - utcOffset;
-  const ev = metricsEvents.filter(e => e.ts >= startUTC && e.ts < endUTC);
-
-  // ── Homepage summary ──
-  let visits = 0, fnPhys = 0, bcPhys = 0, qubitWL = 0;
-  let direct = 0, search = 0, linkedin = 0, refOther = 0;
-  let bounces = 0, wsDC = 0;
-  for (const e of ev) {
-    if (e.type === 'homepage_visit') {
-      visits++;
-      if      (e.referrer === 'direct')   direct++;
-      else if (e.referrer === 'search')   search++;
-      else if (e.referrer === 'linkedin') linkedin++;
-      else if (e.referrer === 'other')    refOther++;
-    }
-    if (e.type === 'button_click') {
-      if (e.button === 'fuzznet_physical')  fnPhys++;
-      if (e.button === 'byteclub_physical') bcPhys++;
-      if (e.button === 'qubit_waitlist')    qubitWL++;
-    }
-    if (e.type === 'bounce')        bounces++;
-    if (e.type === 'ws_disconnect') wsDC++;
-  }
-  const bounceRate = visits > 0 ? Math.round(bounces / visits * 100) : 0;
-
-  // ── Per-game summary ──
-  const gameStats = {};
-  for (const gt of ['fuzznet', 'byteclub']) {
-    let started = 0, completed = 0, tutorials = 0, rematches = 0;
-    let totalDur = 0, durCount = 0;
-    const byMode = { '1p_bot': 0, '2p': 0, '3p': 0, '4p': 0, tutorial: 0 };
-    for (const e of ev) {
-      if (e.gameType !== gt) continue;
-      if (e.type === 'session_started')   { started++;   if (e.mode && byMode[e.mode] !== undefined) byMode[e.mode]++; }
-      if (e.type === 'session_completed') { completed++; if (e.duration_ms) { totalDur += e.duration_ms; durCount++; } if (e.rematch) rematches++; }
-      if (e.type === 'tutorial_started')  tutorials++;
-    }
-    gameStats[gt] = {
-      started, completed,
-      pct:    started  > 0 ? Math.round(completed / started * 100) : 0,
-      avgDur: durCount > 0 ? Math.round(totalDur  / durCount / 1000) : 0,
-      tutorials, rematches, byMode,
-    };
-  }
-
-  // ── Funnel summary ──
-  const totalStarted   = (gameStats.fuzznet.started   || 0) + (gameStats.byteclub.started   || 0);
-  const totalCompleted = (gameStats.fuzznet.completed || 0) + (gameStats.byteclub.completed || 0);
-  const totalBuys      = fnPhys + bcPhys;
-  const r1 = visits        > 0 ? Math.round(totalStarted   / visits        * 100) : 0;
-  const r2 = totalStarted  > 0 ? Math.round(totalCompleted / totalStarted  * 100) : 0;
-  const r3 = totalCompleted > 0 ? Math.round(totalBuys      / totalCompleted * 100) : 0;
-
-  try {
-    await sheets.spreadsheets.values.append({
-      spreadsheetId: sid, range: 'Daily Homepage!A:K', valueInputOption: 'USER_ENTERED',
-      requestBody: { values: [[dateStr, visits, fnPhys, bcPhys, qubitWL, direct, search, linkedin, refOther, bounceRate + '%', wsDC]] },
-    });
-    for (const [gt, s] of Object.entries(gameStats)) {
-      const name = gt === 'fuzznet' ? 'FuzzNet Labs' : 'Byte Club';
-      await sheets.spreadsheets.values.append({
-        spreadsheetId: sid, range: 'Daily Games!A:L', valueInputOption: 'USER_ENTERED',
-        requestBody: { values: [[dateStr, name, s.started, s.completed, s.pct + '%', s.tutorials, s.byMode['1p_bot'], s.byMode['2p'], s.byMode['3p'], s.byMode['4p'], s.avgDur + 's', s.rematches]] },
-      });
-    }
-    await sheets.spreadsheets.values.append({
-      spreadsheetId: sid, range: 'Daily Funnel!A:H', valueInputOption: 'USER_ENTERED',
-      requestBody: { values: [[dateStr, visits, totalStarted, totalCompleted, totalBuys, r1 + '%', r2 + '%', r3 + '%']] },
-    });
-    console.log('[sheets] Daily summary written for', dateStr);
-  } catch (e) { console.error('[sheets] writeDailySummary error:', e.message); }
-}
-
-// Schedule writeDailySummary every night at midnight ET
-function scheduleMidnightSync() {
-  const etNow      = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }));
-  const etMidnight = new Date(etNow); etMidnight.setHours(24, 0, 0, 0);
-  const ms = etMidnight - etNow;
-  setTimeout(() => { writeDailySummary(); scheduleMidnightSync(); }, ms);
-}
-scheduleMidnightSync();
 
 module.exports = {
   trackEvent,
