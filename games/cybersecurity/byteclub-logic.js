@@ -9,7 +9,7 @@ function init({ rooms, broadcastToRoom, trackEvent }) {
 }
 
 function delay(ms) { return new Promise(r => { const t = setTimer(r, ms); if (t?.unref) t.unref(); }); }
-function setTimer(fn, ms) { const t = setTimer(fn, ms); if (t?.unref) t.unref(); return t; }
+function setTimer(fn, ms) { const t = setTimeout(fn, ms); if (t?.unref) t.unref(); return t; }
 
 function send(ws, msg) {
   if (ws.readyState === 1) ws.send(JSON.stringify(msg));

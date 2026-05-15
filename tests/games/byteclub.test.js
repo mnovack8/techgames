@@ -148,15 +148,12 @@ describe('ByteClub — Game Flow', () => {
 
       host.send({ type: 'game_action', action: 'play_card', cardId: playable.id });
 
-      // Should get back bc_state (success) or error (card not playable in current phase)
-      const res = await Promise.race([
-        host.next('bc_state', 3000),
-        host.next('error',    3000),
-      ]);
-      assert.ok(
-        res.type === 'bc_state' || res.type === 'error',
-        'Expected bc_state or error response to play_card'
-      );
+      // ByteClub never sends 'error' for invalid play_card — it silently ignores them.
+      // Wait only for bc_state. Using Promise.race with two concurrent host.next() calls
+      // leaves a dangling resolver whose 3-second timeout fires as an unhandled rejection
+      // and intermittently fails the test via node:test's async-context tracking.
+      const res = await host.next('bc_state', 5000);
+      assert.equal(res.type, 'bc_state', 'Expected bc_state response to play_card');
 
       host.close();
     });
@@ -173,11 +170,9 @@ describe('ByteClub — Game Flow', () => {
 
       host.send({ type: 'game_action', action: 'end_play_phase' });
 
-      const res = await Promise.race([
-        host.next('bc_state', 3000),
-        host.next('error',    3000),
-      ]);
-      assert.ok(res, 'Received response to end_play_phase');
+      // Wait for bc_state only — avoids the dangling-resolver problem of Promise.race
+      const res = await host.next('bc_state', 5000);
+      assert.ok(res, 'Received bc_state response to end_play_phase');
 
       host.close();
     });
