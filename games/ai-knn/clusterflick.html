@@ -27,7 +27,7 @@
   "@type": "Game",
   "name": "ClusterFlick",
   "description": "A multiplayer physics-based board game teaching K-nearest neighbour machine learning concepts.",
-  "url": "https://cybersecgames.com/ai-knn/clusterflick",
+  "url": "https://cybersecgames.com/ai/knn/clusterflick",
   "genre": "Educational, Board Game",
   "numberOfPlayers": { "@type": "QuantitativeValue", "minValue": 2, "maxValue": 4 },
   "publisher": { "@type": "Organization", "name": "Tech CoLab", "url": "https://cybersecgames.com" }
@@ -1432,7 +1432,7 @@ function toggleBot(){send({type:'toggle_bot'});}
 function startGame(){send({type:'start_game'});}
 function leaveRoom(){send({type:'leave_room'});}
 function copyCode(){navigator.clipboard?.writeText(roomCode);showToast('Room code copied!');}
-function copyLink(){navigator.clipboard?.writeText(`${location.origin}/ai-knn/clusterflick?room=${roomCode}`);showToast('Invite link copied!');}
+function copyLink(){navigator.clipboard?.writeText(`${location.origin}/ai/knn/clusterflick?room=${roomCode}`);showToast('Invite link copied!');}
 function showCancelModal(){document.getElementById('cancel-modal').classList.add('show');}
 function hideCancelModal(){document.getElementById('cancel-modal').classList.remove('show');}
 function confirmCancel(){send({type:'cancel_game'});hideCancelModal();}

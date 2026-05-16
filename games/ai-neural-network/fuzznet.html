@@ -43,7 +43,7 @@
   "@type": "Game",
   "name": "FuzzNet Labs",
   "description": "A multiplayer board game teaching AI and machine learning concepts through neural network design and training.",
-  "url": "https://cybersecgames.com/ai-neural-network/fuzznet",
+  "url": "https://cybersecgames.com/ai/neural-network/fuzznet",
   "genre": "Educational, Board Game",
   "numberOfPlayers": { "@type": "QuantitativeValue", "minValue": 1, "maxValue": 4 },
   "publisher": { "@type": "Organization", "name": "Tech CoLab", "url": "https://cybersecgames.com" }
@@ -584,11 +584,11 @@ function fnRenderEventTable() {
 function fnOpenObserverTab(code) {
   const name = (localStorage.getItem('fuzznet_event_name') || '').trim();
   const nameParam = name ? '&name=' + encodeURIComponent(name) : '';
-  window.open(`${location.origin}/ai-neural-network/fuzznet?room=${code}&obs=1${nameParam}`, '_blank');
+  window.open(`${location.origin}/ai/neural-network/fuzznet?room=${code}&obs=1${nameParam}`, '_blank');
 }
 
 function fnCopyEventLink(code) {
-  const link = `${location.origin}/ai-neural-network/fuzznet?room=${code}`;
+  const link = `${location.origin}/ai/neural-network/fuzznet?room=${code}`;
   navigator.clipboard.writeText(link).catch(() => {});
   const btn = document.getElementById('fn-ev-copy-' + code);
   if (!btn) return;
@@ -769,7 +769,7 @@ function showScreen(id) {
   el.scrollTop = 0;
   // Update URL with room code
   if ((id === 'waiting' || id === 'game') && roomCode) {
-    history.replaceState(null, '', `/ai-neural-network/fuzznet?room=${roomCode}`);
+    history.replaceState(null, '', `/ai/neural-network/fuzznet?room=${roomCode}`);
   } else if (id === 'lobby') {
     history.replaceState(null, '', location.pathname);
   }
@@ -801,7 +801,7 @@ function copyCode() {
   navigator.clipboard.writeText(roomCode).then(() => flashCopied('btn-copy-code')).catch(()=>{});
 }
 function copyLink() {
-  const url = `${location.origin}/ai-neural-network/fuzznet?room=${roomCode}`;
+  const url = `${location.origin}/ai/neural-network/fuzznet?room=${roomCode}`;
   navigator.clipboard.writeText(url).then(() => flashCopied('btn-copy-link')).catch(()=>{});
 }
 function flashCopied(btnId) {
@@ -1452,7 +1452,7 @@ function fnReturnToLobby() {
   isObserver = false; myObserverIdx = -1;
   document.body.classList.remove('observer-active');
   document.getElementById('btn-cancel-game').style.display = 'none';
-  history.replaceState({}, '', '/ai-neural-network/fuzznet');
+  history.replaceState({}, '', '/ai/neural-network/fuzznet');
   showScreen('lobby');
 }
 

@@ -19,8 +19,17 @@ const MIME_TYPES = {
 
 // ── Legacy-URL redirects (301) ───────────────────────────────────────────────
 const REDIRECTS = {
-  '/knn': '/ai-knn', '/knn.html': '/ai-knn',
-  '/ai':  '/ai-neural-network', '/ai.html':  '/ai-neural-network',
+  // Legacy AI paths → new nested structure under /ai
+  '/ai-neural-network':           '/ai/neural-network',
+  '/ai-neural-network.html':      '/ai/neural-network',
+  '/ai-neural-network/fuzznet':   '/ai/neural-network/fuzznet',
+  '/ai-neural-network/fuzznet.html': '/ai/neural-network/fuzznet',
+  '/ai-knn':                      '/ai/knn',
+  '/ai-knn.html':                 '/ai/knn',
+  '/ai-knn/clusterflick':         '/ai/knn/clusterflick',
+  '/ai-knn/clusterflick.html':    '/ai/knn/clusterflick',
+  '/knn':       '/ai/knn',
+  '/knn.html':  '/ai/knn',
   '/qubit-waitlist': '/quantumcomputing', '/qubit-waitlist.html': '/quantumcomputing',
 };
 
@@ -34,12 +43,13 @@ function resolvePathname(pathname) {
   }
 
   // ── URL → file path ───────────────────────────────────────────────────────
-  if (pathname === '/cybersecurity/byteclub' || pathname === '/cybersecurity/byteclub.html') pathname = '/games/cybersecurity/byteclub.html';
-  else if (pathname === '/ai-neural-network/fuzznet' || pathname === '/ai-neural-network/fuzznet.html') pathname = '/games/ai-neural-network/fuzznet.html';
-  else if (pathname === '/ai-knn/clusterflick' || pathname === '/ai-knn/clusterflick.html') pathname = '/games/ai-knn/clusterflick.html';
-  else if (pathname === '/ai-knn' || pathname === '/ai-knn.html') pathname = '/games/ai-knn/index.html';
+  if (pathname === '/ai' || pathname === '/ai.html') pathname = '/games/ai/index.html';
+  else if (pathname === '/ai/neural-network' || pathname === '/ai/neural-network.html') pathname = '/games/ai-neural-network/index.html';
+  else if (pathname === '/ai/neural-network/fuzznet' || pathname === '/ai/neural-network/fuzznet.html') pathname = '/games/ai-neural-network/fuzznet.html';
+  else if (pathname === '/ai/knn' || pathname === '/ai/knn.html') pathname = '/games/ai-knn/index.html';
+  else if (pathname === '/ai/knn/clusterflick' || pathname === '/ai/knn/clusterflick.html') pathname = '/games/ai-knn/clusterflick.html';
+  else if (pathname === '/cybersecurity/byteclub' || pathname === '/cybersecurity/byteclub.html') pathname = '/games/cybersecurity/byteclub.html';
   else if (pathname === '/cybersecurity' || pathname === '/cybersecurity.html') pathname = '/games/cybersecurity/index.html';
-  else if (pathname === '/ai-neural-network' || pathname === '/ai-neural-network.html') pathname = '/games/ai-neural-network/index.html';
   else if (pathname === '/quantumcomputing' || pathname === '/quantumcomputing.html') pathname = '/games/quantumcomputing.html';
   else if (pathname === '/contact' || pathname === '/contact.html') pathname = '/singlepage/contact.html';
   else if (pathname === '/about' || pathname === '/about.html') pathname = '/singlepage/about.html';

@@ -56,10 +56,11 @@ describe('Route Coverage', () => {
   // ── Game hubs ─────────────────────────────────────────────────────────────
   describe('Game hub pages', () => {
     const hubs = [
-      ['/cybersecurity',        'ByteClub hub'],
-      ['/ai-neural-network',    'FuzzNet hub'],
-      ['/ai-knn',               'ClusterFlick hub'],
-      ['/quantumcomputing',     'Quantum Computing'],
+      ['/cybersecurity',            'ByteClub hub'],
+      ['/ai',                       'AI hub'],
+      ['/ai/neural-network',        'FuzzNet hub'],
+      ['/ai/knn',                   'ClusterFlick hub'],
+      ['/quantumcomputing',         'Quantum Computing'],
     ];
 
     for (const [path, label] of hubs) {
@@ -73,9 +74,9 @@ describe('Route Coverage', () => {
   // ── Game play pages ────────────────────────────────────────────────────────
   describe('Game play pages', () => {
     const games = [
-      ['/cybersecurity/byteclub',       'ByteClub game'],
-      ['/ai-neural-network/fuzznet',    'FuzzNet game'],
-      ['/ai-knn/clusterflick',          'ClusterFlick game'],
+      ['/cybersecurity/byteclub',          'ByteClub game'],
+      ['/ai/neural-network/fuzznet',       'FuzzNet game'],
+      ['/ai/knn/clusterflick',             'ClusterFlick game'],
     ];
 
     for (const [path, label] of games) {
@@ -135,12 +136,20 @@ describe('Route Coverage', () => {
   // ── 301 Redirects ──────────────────────────────────────────────────────────
   describe('Legacy URL redirects (301)', () => {
     const redirects = [
-      ['/knn',             '/ai-knn'],
-      ['/knn.html',        '/ai-knn'],
-      ['/ai',              '/ai-neural-network'],
-      ['/ai.html',         '/ai-neural-network'],
-      ['/qubit-waitlist',  '/quantumcomputing'],
-      ['/qubit-waitlist.html', '/quantumcomputing'],
+      // AI nested-path migration
+      ['/ai-neural-network',              '/ai/neural-network'],
+      ['/ai-neural-network.html',         '/ai/neural-network'],
+      ['/ai-neural-network/fuzznet',      '/ai/neural-network/fuzznet'],
+      ['/ai-neural-network/fuzznet.html', '/ai/neural-network/fuzznet'],
+      ['/ai-knn',                         '/ai/knn'],
+      ['/ai-knn.html',                    '/ai/knn'],
+      ['/ai-knn/clusterflick',            '/ai/knn/clusterflick'],
+      ['/ai-knn/clusterflick.html',       '/ai/knn/clusterflick'],
+      // Short aliases
+      ['/knn',                            '/ai/knn'],
+      ['/knn.html',                       '/ai/knn'],
+      ['/qubit-waitlist',                 '/quantumcomputing'],
+      ['/qubit-waitlist.html',            '/quantumcomputing'],
     ];
 
     for (const [from, to] of redirects) {
@@ -157,7 +166,7 @@ describe('Route Coverage', () => {
     it('Redirect preserves query string (?room=ABCD)', async () => {
       const res = await get('/knn?room=ABCD');
       assert.equal(res.status, 301);
-      assert.equal(res.headers.location, '/ai-knn?room=ABCD');
+      assert.equal(res.headers.location, '/ai/knn?room=ABCD');
     });
   });
 
@@ -281,13 +290,14 @@ describe('Route Coverage', () => {
   // ── URL aliases ────────────────────────────────────────────────────────────
   describe('URL aliases (.html extensions)', () => {
     const aliases = [
-      ['/about.html',                   200],
-      ['/contact.html',                 200],
-      ['/buy-now.html',                 200],
-      ['/cybersecurity.html',           200],
-      ['/ai-neural-network.html',       200],
-      ['/ai-knn.html',                  200],
-      ['/cybersecurity/byteclub.html',  200],
+      ['/about.html',                       200],
+      ['/contact.html',                     200],
+      ['/buy-now.html',                     200],
+      ['/cybersecurity.html',               200],
+      ['/ai.html',                          200],
+      ['/ai/neural-network.html',           200],
+      ['/ai/knn.html',                      200],
+      ['/cybersecurity/byteclub.html',      200],
     ];
 
     for (const [path, status] of aliases) {
