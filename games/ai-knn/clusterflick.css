@@ -303,12 +303,14 @@ body.cft-intro-active #cft-intro{display:flex;}
 /* Concept row (icon + label) */
 .cfti-concept-row{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0;}
 .cfti-concept-chip{display:flex;align-items:center;gap:8px;padding:8px 14px;background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.3);border-radius:8px;font-size:13px;color:#c4b5fd;font-weight:700;}
-.cfti-concept-chip .ci{font-size:18px;}
+.cfti-concept-chip .ci{font-size:18px;display:inline-flex;align-items:center;justify-content:center;}
+.cfti-concept-chip .ci svg{display:block;}
 
 /* Game map (phase 1 → game mapping) */
 .cfti-map{display:flex;flex-direction:column;gap:8px;margin:10px 0;}
 .cfti-map-row{display:flex;align-items:center;gap:12px;padding:9px 14px;background:#1a1030;border:1px solid rgba(124,58,237,0.25);border-radius:8px;font-size:13px;}
-.cfti-map-left{font-weight:800;color:#a78bfa;min-width:140px;flex-shrink:0;}
+.cfti-map-left{font-weight:800;color:#a78bfa;min-width:140px;flex-shrink:0;display:inline-flex;align-items:center;gap:7px;}
+.cfti-map-left svg{flex-shrink:0;}
 .cfti-map-arrow{color:#4b3a6e;flex-shrink:0;}
 .cfti-map-right{color:#9d8ec4;}
 

@@ -86,12 +86,12 @@
             <filter id="cf-knn-glow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
           </defs>
           <!-- Decision boundary suggestion: dashed circle around query showing "k=3 neighbourhood" -->
-          <circle cx="110" cy="110" r="58" fill="none" stroke="#a78bfa" stroke-opacity="0.55" stroke-width="1.5" stroke-dasharray="4 4">
+          <circle cx="110" cy="110" r="58" fill="none" stroke="#62b517" stroke-opacity="0.55" stroke-width="1.5" stroke-dasharray="4 4">
             <animate attributeName="r" values="55;62;55" dur="3s" repeatCount="indefinite"/>
             <animate attributeName="stroke-opacity" values="0.45;0.7;0.45" dur="3s" repeatCount="indefinite"/>
           </circle>
           <!-- Distance lines from query to its 3 nearest labelled points -->
-          <g stroke="#a78bfa" stroke-width="1.4" stroke-opacity="0.85">
+          <g stroke="#62b517" stroke-width="1.4" stroke-opacity="0.85">
             <line x1="110" y1="110" x2="78" y2="82"/>
             <line x1="110" y1="110" x2="148" y2="92"/>
             <line x1="110" y1="110" x2="124" y2="158"/>
@@ -113,13 +113,13 @@
           </g>
           <!-- Query point in the middle (the unclassified flick) -->
           <g filter="url(#cf-knn-glow)">
-            <circle cx="110" cy="110" r="13" fill="#1a1030" stroke="#a78bfa" stroke-width="2.5"/>
+            <circle cx="110" cy="110" r="13" fill="#1a1030" stroke="#62b517" stroke-width="2.5"/>
             <circle cx="110" cy="110" r="6" fill="#a78bfa">
               <animate attributeName="opacity" values="0.6;1;0.6" dur="1.6s" repeatCount="indefinite"/>
             </circle>
           </g>
           <!-- Pulse ring around query -->
-          <circle cx="110" cy="110" r="13" fill="none" stroke="#a78bfa" stroke-width="1.4">
+          <circle cx="110" cy="110" r="13" fill="none" stroke="#62b517" stroke-width="1.4">
             <animate attributeName="r" values="13;26;13" dur="2.2s" repeatCount="indefinite"/>
             <animate attributeName="opacity" values="0.7;0;0.7" dur="2.2s" repeatCount="indefinite"/>
           </circle>
@@ -130,22 +130,22 @@
     <!-- FEATURES STRIP: learning objective previews -->
     <div class="cf-features">
       <div class="cf-feature">
-        <div class="cf-feature-icon">🌐</div>
+        <div class="cf-feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="1.8" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="9" ry="4" stroke="#a8c96a"/><ellipse cx="12" cy="12" rx="4" ry="9" stroke="#a8c96a"/><circle cx="12" cy="12" r="2" fill="#d1db24" stroke="none"/></svg></div>
         <h3>Beyond the Black Box</h3>
         <p>Machine learning is a whole family - GenAI is just one branch</p>
       </div>
       <div class="cf-feature">
-        <div class="cf-feature-icon">📍</div>
+        <div class="cf-feature-icon"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9" stroke="#a8c96a" stroke-width="1" stroke-dasharray="2 2"/><circle cx="12" cy="12" r="5" stroke="#62b517" stroke-width="1.8"/><path d="M12 8 L12 16 M8 12 L16 12" stroke="#62b517" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="12" r="2.5" fill="#d1db24" stroke="#62b517" stroke-width="1.5"/></svg></div>
         <h3>Distance, Not Probability</h3>
         <p>K-NN classifies by similarity to known examples - no neural net required</p>
       </div>
       <div class="cf-feature">
-        <div class="cf-feature-icon">🧪</div>
+        <div class="cf-feature-icon"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 3 L9 9 L5 18 a3 3 0 0 0 2.7 4 H16.3 a3 3 0 0 0 2.7 -4 L15 9 V3" stroke="#62b517" stroke-width="1.8" stroke-linejoin="round"/><line x1="8" y1="3" x2="16" y2="3" stroke="#62b517" stroke-width="2" stroke-linecap="round"/><path d="M6.5 15 L17.5 15" stroke="#d1db24" stroke-width="2"/><circle cx="10" cy="18" r="0.9" fill="#d1db24"/><circle cx="14" cy="19" r="0.7" fill="#a8c96a"/></svg></div>
         <h3>Data IS the Model</h3>
         <p>The training set isn't compressed into weights - every sample stays visible</p>
       </div>
       <div class="cf-feature">
-        <div class="cf-feature-icon">🧭</div>
+        <div class="cf-feature-icon"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9" stroke="#62b517" stroke-width="2"/><polygon points="12,5 14,12 12,11 10,12" fill="#d1db24" stroke="#62b517" stroke-width="1"/><polygon points="12,19 10,12 12,13 14,12" fill="#a8c96a" stroke="#62b517" stroke-width="1"/><circle cx="12" cy="12" r="1.2" fill="#62b517"/></svg></div>
         <h3>You are AI-Fluent</h3>
         <p>Knowing which kind of ML fits the job is what real AI literacy looks like</p>
       </div>
@@ -163,15 +163,15 @@
     <!-- GAME INFO BAR -->
     <div class="cf-game-info-bar">
       <div class="cf-game-info-item">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="3"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><circle cx="17" cy="7" r="2" opacity="0.6"/><path d="M21 21v-1.5a4 4 0 0 0-3-3.87" opacity="0.6"/></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="7" r="3"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><circle cx="17" cy="7" r="2" opacity="0.6"/><path d="M21 21v-1.5a4 4 0 0 0-3-3.87" opacity="0.6"/></svg>
         2–4 Players
       </div>
       <div class="cf-game-info-item">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15" stroke="#c4b5fd"/></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15" stroke="#d1db24"/></svg>
         ~30 Min · 6 Rounds
       </div>
       <div class="cf-game-info-item">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6" stroke="#c4b5fd"/><circle cx="12" cy="12" r="2" fill="#c4b5fd" stroke="none"/></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6" stroke="#d1db24"/><circle cx="12" cy="12" r="2" fill="#d1db24" stroke="none"/></svg>
         Ages 14+
       </div>
     </div>
@@ -189,7 +189,7 @@
             <li>
               <div class="cf-concept-card" data-reveal>
                 <div class="cf-concept-card-top">
-                  <span class="cf-concept-icon">🌐</span>
+                  <span class="cf-concept-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="1.8" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="9" ry="4" stroke="#a8c96a"/><ellipse cx="12" cy="12" rx="4" ry="9" stroke="#a8c96a"/><circle cx="12" cy="12" r="2" fill="#d1db24" stroke="none"/></svg></span>
                   <strong>Beyond the Black Box</strong>
                 </div>
                 <p class="cf-concept-explain">When people say "AI" today they almost always mean GenAI - large neural networks like ChatGPT or image generators. But machine learning is a whole <em>family</em> of algorithms, and most of them aren't black boxes at all. K-Nearest Neighbors, decision trees, clustering, linear regression - these are all "AI" too, and many of them produce predictions you can actually inspect and explain. Clusterflick lets you experience one of those algorithms directly. Once you see how K-NN works, the GenAI hype starts to feel like one tool in a much larger toolbox.</p>
@@ -198,7 +198,7 @@
             <li>
               <div class="cf-concept-card" data-reveal>
                 <div class="cf-concept-card-top">
-                  <span class="cf-concept-icon">📍</span>
+                  <span class="cf-concept-icon"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9" stroke="#a8c96a" stroke-width="1" stroke-dasharray="2 2"/><circle cx="12" cy="12" r="5" stroke="#62b517" stroke-width="1.8"/><path d="M12 8 L12 16 M8 12 L16 12" stroke="#62b517" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="12" r="2.5" fill="#d1db24" stroke="#62b517" stroke-width="1.5"/></svg></span>
                   <strong>Distance, Not Probability</strong>
                 </div>
                 <p class="cf-concept-explain">K-NN doesn't "learn" anything in the neural-network sense. There's no training run, no gradient descent, no weights. To classify a new input, K-NN just measures the distance to every labelled example it knows about, looks at the <em>k</em> closest ones, and takes a vote. That's it. In Clusterflick, that "distance" is literal - physical distance on the board between your flicked token and the sample squares around it. Understanding this distance-based logic is half of intuitively understanding most classical ML.</p>
@@ -207,7 +207,7 @@
             <li>
               <div class="cf-concept-card" data-reveal>
                 <div class="cf-concept-card-top">
-                  <span class="cf-concept-icon">🧪</span>
+                  <span class="cf-concept-icon"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 3 L9 9 L5 18 a3 3 0 0 0 2.7 4 H16.3 a3 3 0 0 0 2.7 -4 L15 9 V3" stroke="#62b517" stroke-width="1.8" stroke-linejoin="round"/><line x1="8" y1="3" x2="16" y2="3" stroke="#62b517" stroke-width="2" stroke-linecap="round"/><path d="M6.5 15 L17.5 15" stroke="#d1db24" stroke-width="2"/><circle cx="10" cy="18" r="0.9" fill="#d1db24"/></svg></span>
                   <strong>Data IS the Model</strong>
                 </div>
                 <p class="cf-concept-explain">In a neural net, the training data gets compressed into millions of weights and effectively disappears - you can't point at any one number and say "this is what the model learned about cats." K-NN is the opposite extreme: <em>the training data is the model</em>. Every labelled sample stays visible, and predictions are made by direct comparison against them. That makes the consequences of bad data immediately obvious - mislabel one sample and you can watch its bad influence spread to everything that lands near it. It's a powerful, tactile lesson about why <strong>data quality matters more than algorithmic cleverness</strong> in most real ML projects.</p>
@@ -216,7 +216,7 @@
             <li>
               <div class="cf-concept-card" data-reveal>
                 <div class="cf-concept-card-top">
-                  <span class="cf-concept-icon">🧭</span>
+                  <span class="cf-concept-icon"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9" stroke="#62b517" stroke-width="2"/><polygon points="12,5 14,12 12,11 10,12" fill="#d1db24" stroke="#62b517" stroke-width="1"/><polygon points="12,19 10,12 12,13 14,12" fill="#a8c96a" stroke="#62b517" stroke-width="1"/><circle cx="12" cy="12" r="1.2" fill="#62b517"/></svg></span>
                   <strong>You are AI-Fluent</strong>
                 </div>
                 <p class="cf-concept-explain">Real AI fluency isn't being able to use ChatGPT. It's knowing which kind of model fits which kind of problem - and pushing back when someone reaches for GenAI on a problem that a 30-line classical ML algorithm would solve faster, cheaper, and more reliably. After Clusterflick, "AI" stops meaning "the magic chatbot" and starts meaning <em>a family of techniques with very different tradeoffs</em>. That's the difference between being talked at by AI vendors and asking the right questions.</p>
@@ -237,7 +237,7 @@
 
           <div class="cf-concept-card" data-reveal data-delay="2" style="margin-top:4px;">
             <div class="cf-concept-card-top">
-              <span class="cf-concept-icon">🎯</span>
+              <span class="cf-concept-icon"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9" stroke="#62b517" stroke-width="2"/><circle cx="12" cy="12" r="5" stroke="#a8c96a" stroke-width="1.5"/><circle cx="12" cy="12" r="2.2" fill="#d1db24"/></svg></span>
               <strong>Suggested Workshop Flow</strong>
             </div>
             <p class="cf-concept-explain"><strong>Open with Clusterflick:</strong> Establish that ML is a family of algorithms - and that not all of them are mysterious. Participants build intuition for distance-based classification and the importance of training data placement.<br><br>
@@ -247,7 +247,7 @@
 
           <div class="cf-concept-card" data-reveal data-delay="3">
             <div class="cf-concept-card-top">
-              <span class="cf-concept-icon">🧰</span>
+              <span class="cf-concept-icon"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="9" width="18" height="11" rx="2" stroke="#62b517" stroke-width="2"/><path d="M8 9 V6 a2 2 0 0 1 2 -2 h4 a2 2 0 0 1 2 2 V9" stroke="#62b517" stroke-width="2" stroke-linejoin="round"/><rect x="9.5" y="12" width="5" height="3" fill="#d1db24" rx="0.5"/><line x1="3" y1="14" x2="21" y2="14" stroke="#a8c96a" stroke-width="1"/></svg></span>
               <strong>Run only the sections you need</strong>
             </div>
             <p class="cf-concept-explain">Clusterflick's tutorial is a self-paced overlay you can have participants run before or during the session. The <em>Learn How to Play</em> button walks through K-NN concepts and gameplay together, so you don't need to lecture before play begins.</p>
