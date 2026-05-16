@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="{{meta_description}}">
+<meta property="og:type" content="website">
+<meta property="og:title" content="{{og_title}}">
+<meta property="og:description" content="{{og_description}}">
+<meta property="og:image" content="{{og_image}}">
+<meta property="og:url" content="{{og_url}}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{twitter_title}}">
+<meta name="twitter:description" content="{{twitter_description}}">
+<meta name="twitter:image" content="{{twitter_image}}">
+<meta name="robots" content="index, follow">
+<meta name="author" content="Tech CoLab">
+<meta name="keywords" content="{{meta_keywords}}">
+<meta property="og:site_name" content="Tech CoLab">
+<meta property="og:locale" content="en_US">
+<meta name="theme-color" content="{{theme_color}}">
+<link rel="icon" type="image/png" href="/images/logo.png">
+<link rel="apple-touch-icon" href="/images/logo.png">
+<link rel="canonical" href="{{canonical_url}}">
+<title>{{page_title}}</title>
+<script type="application/ld+json">
+{{json_ld}}
+</script>
+<link rel="stylesheet" href="/nav.css">
+<link rel="stylesheet" href="/main.css">
+<link rel="stylesheet" href="/games/hub.css">
+{{extra_css}}
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <a class="header-logo" href="/">
+    <img src="/images/logo.png" alt="Tech CoLab logo" width="56" height="56" fetchpriority="high" decoding="async">
+    <div>
+      <span class="logo-text">Tech Co<span class="logo-text-accent">Lab</span></span>
+      <span class="logo-sub">Bridge the Gap.<br>Empower their Decisions.</span>
+    </div>
+  </a>
+  <nav>
+    <a href="/">Home</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-trigger">Games ▾</button>
+      <div class="nav-dropdown-menu">
+        <a href="/cybersecurity" class="{{nav_cybersecurity_active}}">Cybersecurity</a>
+        <a href="/ai?v=1" class="{{nav_ai_active}}">Artificial Intelligence</a>
+        <a href="/quantumcomputing" class="{{nav_quantum_active}}">Quantum Computing</a>
+      </div>
+    </div>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-trigger">Use Cases ▾</button>
+      <div class="nav-dropdown-menu">
+        <a href="/board-culture-change">Broad Culture Change</a>
+        <a href="/focused-deep-work">Focused, Deep Work</a>
+      </div>
+    </div>
+    <a href="/blog">Blog</a>
+    <a href="/contact">Contact</a>
+    <a href="/buy-now" class="nav-cta-buy">Buy Now</a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">{{hero_badge}}</div>
+  <h1>{{hero_h1}}</h1>
+  {{hero_subtitle_html}}
+  <div class="hero-visual" aria-hidden="true">
+    {{hero_visual_svg}}
+  </div>
+</div>
+
+<!-- FEATURES STRIP -->
+<div class="features">
+  {{#features}}
+  <div class="feature">
+    <div class="feature-icon">{{icon_svg}}</div>
+    <h3>{{title}}</h3>
+    <p>{{description}}</p>
+  </div>
+  {{/features}}
+</div>
+
+<!-- CTA BUTTONS -->
+<div class="cta-buttons-bar">
+  <a class="btn-play-now" href="{{play_now_url}}"{{play_now_onclick_attr}}>{{play_now_label}}</a>
+  {{buy_button_html}}
+</div>
+
+<!-- GAME INFO BAR -->
+<div class="game-info-bar">
+  <div class="game-info-item"><span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><circle cx="9" cy="7" r="3"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><circle cx="17" cy="7" r="2" opacity="0.6"/><path d="M21 21v-1.5a4 4 0 0 0-3-3.87" opacity="0.6"/></svg></span> {{players_text}}</div>
+  <div class="game-info-item"><span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15" stroke="#d1db24" stroke-width="2"/></svg></span> {{time_text}}</div>
+  <div class="game-info-item"><span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6" stroke="#d1db24"/><circle cx="12" cy="12" r="2" fill="#d1db24" stroke="none"/></svg></span> {{ages_text}}</div>
+</div>
+
+<!-- LEARNING OBJECTIVES -->
+<section class="learning-bg">
+  <div class="main">
+    <div class="info-col">
+      <h2 data-reveal>{{learning_h2_html}}</h2>
+      <p data-reveal data-delay="1">{{learning_intro_p_html}}</p>
+
+      <div class="learn-section-label" data-reveal data-delay="2">{{learning_section_label}}</div>
+
+      <ul class="concept-list">
+        {{#concept_cards}}
+        <li>
+          <div class="concept-card" data-reveal>
+            <div class="concept-card-top">
+              <span class="concept-icon">{{icon_svg}}</span>
+              <strong>{{title}}</strong>
+            </div>
+            <p class="concept-explain">{{body_html}}</p>
+          </div>
+        </li>
+        {{/concept_cards}}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- WORKSHOP SECTION -->
+<section class="workshop">
+  <div class="main">
+    <div class="info-col" style="padding:0;">
+      <div class="learn-section-label" data-reveal>Running a Workshop?</div>
+      <h2 data-reveal style="margin-bottom:12px;">{{workshop_h2_html}}</h2>
+      <p data-reveal data-delay="1">{{workshop_intro_p_html}}</p>
+
+      {{#workshop_cards}}
+      <div class="concept-card" data-reveal data-delay="2" style="margin-top:4px;">
+        <div class="concept-card-top">
+          <span class="concept-icon">{{icon_svg}}</span>
+          <strong>{{title}}</strong>
+        </div>
+        <p class="concept-explain">{{body_html}}</p>
+      </div>
+      {{/workshop_cards}}
+
+      <div data-reveal data-delay="4" style="margin-top:8px;">
+        <a href="{{workshop_cta_url}}" class="workshop-cta-link">
+          {{workshop_cta_label}}
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7 H12 M8 3 L12 7 L8 11" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>{{footer_html}}</p>
+</footer>
+
+<script>
+// Scroll reveal
+(function() {
+  var els = document.querySelectorAll('[data-reveal]');
+  if (!els.length || !('IntersectionObserver' in window)) {
+    els.forEach(function(el) { el.classList.add('is-visible'); });
+    return;
+  }
+  var io = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) { entry.target.classList.add('is-visible'); io.unobserve(entry.target); }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -48px 0px' });
+  els.forEach(function(el) { io.observe(el); });
+})();
+</script>
+<script src="/nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,105 @@
+{
+  "meta_description": "Byte Club is a cybersecurity card game teaching the Cyber Kill Chain and NIST Framework through experiential learning. 2–4 players. Free to play online. Physical version available.",
+  "og_title": "Byte Club. Cybersecurity Card Game",
+  "og_description": "Byte Club is a cybersecurity card game teaching the Cyber Kill Chain and NIST Framework through experiential learning. 2–4 players. Free to play online. Physical version available.",
+  "og_image": "https://cybersecgames.com/images/byteclub/byteclub.png",
+  "og_url": "https://cybersecgames.com/cybersecurity",
+  "twitter_title": "Byte Club. Cybersecurity Card Game",
+  "twitter_description": "Byte Club is a cybersecurity card game teaching the Cyber Kill Chain and NIST Framework through experiential learning. 2–4 players. Free to play online. Physical version available.",
+  "twitter_image": "https://cybersecgames.com/images/byteclub/byteclub.png",
+  "meta_keywords": "Byte Club game, cybersecurity card game, Cyber Kill Chain game, NIST framework game, security awareness training, cybersecurity board game, learn cybersecurity",
+  "theme_color": "#62b517",
+  "canonical_url": "https://cybersecgames.com/cybersecurity",
+  "page_title": "Byte Club. Cybersecurity | Tech CoLab",
+  "json_ld": "{\"@context\":\"https://schema.org\",\"@type\":\"Game\",\"name\":\"Byte Club\",\"description\":\"Byte Club is a cybersecurity card game teaching the Cyber Kill Chain and NIST Framework through experiential learning. 2–4 players. Free to play online.\",\"url\":\"https://cybersecgames.com/cybersecurity\",\"image\":\"https://cybersecgames.com/images/byteclub/byteclub.png\",\"numberOfPlayers\":{\"@type\":\"QuantitativeValue\",\"minValue\":2,\"maxValue\":4},\"genre\":[\"Educational\",\"Card Game\",\"Cybersecurity\"],\"audience\":{\"@type\":\"Audience\",\"audienceType\":\"Corporate teams, security awareness training, L&D professionals\"},\"publisher\":{\"@type\":\"Organization\",\"name\":\"Tech CoLab\",\"url\":\"https://cybersecgames.com\",\"logo\":{\"@type\":\"ImageObject\",\"url\":\"https://cybersecgames.com/images/logo.png\"}}}",
+  "extra_css": "<link rel=\"stylesheet\" href=\"/games/cybersecurity/cybersecurity.css\">",
+
+  "nav_cybersecurity_active": "active",
+  "nav_ai_active": "",
+  "nav_quantum_active": "",
+
+  "hero_badge": "[ Cybersecurity · Available Now ]",
+  "hero_h1": "<span class=\"game-name\">Byte Club</span><span class=\"terminal-cursor\">_</span>",
+  "hero_subtitle_html": "<p class=\"hero-subtitle\">A capture-the-flag competition where you're hacking, getting hacked, and doing both at once. <em style=\"color:#d1db24;\">and so is everyone else at the table.</em></p>",
+  "hero_visual_svg": "<svg viewBox=\"0 0 220 220\" xmlns=\"http://www.w3.org/2000/svg\"><defs><filter id=\"glow-d\"><feGaussianBlur stdDeviation=\"4\" result=\"blur\"/><feMerge><feMergeNode in=\"blur\"/><feMergeNode in=\"SourceGraphic\"/></feMerge></filter><filter id=\"glow-a\"><feGaussianBlur stdDeviation=\"4\" result=\"blur\"/><feMerge><feMergeNode in=\"blur\"/><feMergeNode in=\"SourceGraphic\"/></feMerge></filter></defs><circle cx=\"110\" cy=\"110\" r=\"82\" fill=\"rgba(98,181,23,0.08)\"/><circle cx=\"110\" cy=\"110\" r=\"58\" fill=\"none\" stroke=\"rgba(168,201,106,0.38)\" stroke-width=\"1.5\" stroke-dasharray=\"6 9\"/><g style=\"transform-box:view-box; transform-origin:110px 110px; animation:orbit-clockwise 9s linear infinite;\"><g transform=\"translate(52, 110)\"><g filter=\"url(#glow-d)\" style=\"transform-box:fill-box; transform-origin:50% 50%; animation:counter-rotate 9s linear infinite;\"><path d=\"M0,-26 L22,-16 L22,2 C22,16 0,26 0,26 C0,26 -22,16 -22,2 L-22,-16 Z\" fill=\"#62b517\"/><path d=\"M0,-26 L22,-16 L22,2 C22,16 0,26 0,26 C0,26 -22,16 -22,2 L-22,-16 Z\" fill=\"none\" stroke=\"rgba(255,255,255,0.35)\" stroke-width=\"1.5\"/><path d=\"M-6,-5 L-6,-11 Q0,-17 6,-11 L6,-5\" fill=\"none\" stroke=\"#d1db24\" stroke-width=\"3\" stroke-linecap=\"round\"/><rect x=\"-8\" y=\"-5\" width=\"16\" height=\"13\" rx=\"3\" fill=\"#d1db24\"/><circle cx=\"0\" cy=\"1.5\" r=\"2.8\" fill=\"#2a5a06\"/></g></g></g><g style=\"transform-box:view-box; transform-origin:110px 110px; animation:orbit-clockwise 9s linear infinite;\"><g transform=\"translate(168, 110)\"><g filter=\"url(#glow-a)\" style=\"transform-box:fill-box; transform-origin:50% 50%; animation:counter-rotate 9s linear infinite;\"><path d=\"M0,-20 C-5,-20 -11,-14 -12,-4 L-13,18 Q-7,21 0,21 Q7,21 13,18 L12,-4 C11,-14 5,-20 0,-20 Z\" fill=\"#1e4a04\"/><path d=\"M-12,-4 Q-7,-24 0,-24 Q7,-24 12,-4 Z\" fill=\"#2a5a06\"/><path d=\"M-12,0 L-20,7 Q-17,12 -13,10 L-12,5 Z\" fill=\"#1e4a04\"/><path d=\"M12,0 L20,7 Q17,12 13,10 L12,5 Z\" fill=\"#1e4a04\"/><rect x=\"-10\" y=\"6\" width=\"20\" height=\"13\" rx=\"2\" fill=\"#4a8c11\"/><rect x=\"-8.5\" y=\"7.5\" width=\"17\" height=\"8\" rx=\"1.5\" fill=\"#0d1a06\"/><path d=\"M-4.5,9.5 L-7,11 L-4.5,12.5\" fill=\"none\" stroke=\"#d1db24\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><line x1=\"-1\" y1=\"9.2\" x2=\"1\" y2=\"13.3\" stroke=\"#d1db24\" stroke-width=\"1.2\" stroke-linecap=\"round\"/><path d=\"M4.5,9.5 L7,11 L4.5,12.5\" fill=\"none\" stroke=\"#d1db24\" stroke-width=\"1.2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><path d=\"M0,-20 C-9,-20 -10,-9 -8,-3 Q-4,5 0,5 Q4,5 8,-3 C10,-9 9,-20 0,-20 Z\" fill=\"#d1db24\" stroke=\"rgba(100,120,0,0.18)\" stroke-width=\"0.8\"/><path d=\"M-8,-14 Q0,-19 8,-14\" fill=\"none\" stroke=\"#b0b800\" stroke-width=\"0.8\"/><path d=\"M-7,-11 Q-4,-16 -1,-12\" fill=\"none\" stroke=\"#2a4a08\" stroke-width=\"1.5\" stroke-linecap=\"round\"/><path d=\"M1,-12 Q4,-16 7,-11\" fill=\"none\" stroke=\"#2a4a08\" stroke-width=\"1.5\" stroke-linecap=\"round\"/><ellipse cx=\"-4\" cy=\"-8\" rx=\"2.5\" ry=\"1.8\" fill=\"#1e3a06\"/><ellipse cx=\"4\" cy=\"-8\" rx=\"2.5\" ry=\"1.8\" fill=\"#1e3a06\"/><circle cx=\"-6.5\" cy=\"-3\" r=\"2.5\" fill=\"rgba(98,181,23,0.35)\"/><circle cx=\"6.5\" cy=\"-3\" r=\"2.5\" fill=\"rgba(98,181,23,0.35)\"/><path d=\"M-0.5,0.5 Q-3,1.5 -6,0 Q-9,-1.5 -8.5,-3.5\" fill=\"none\" stroke=\"#2a4a08\" stroke-width=\"1.7\" stroke-linecap=\"round\"/><path d=\"M0.5,0.5 Q3,1.5 6,0 Q9,-1.5 8.5,-3.5\" fill=\"none\" stroke=\"#2a4a08\" stroke-width=\"1.7\" stroke-linecap=\"round\"/><path d=\"M-2.5,3 Q0,7 2.5,3 Z\" fill=\"#2a4a08\"/></g></g></g></svg>",
+
+  "features": [
+    {
+      "icon_svg": "<svg viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M22,11 L17,13 L19,18 L14,16 L12,22 L10,16 L5,18 L7,13 L2,11 L7,9 L5,4 L10,6 L12,1 L14,6 L19,4 L17,9 Z\" fill=\"#d1db24\"/><circle cx=\"12\" cy=\"11\" r=\"3.5\" fill=\"#62b517\"/><circle cx=\"12\" cy=\"11\" r=\"1.5\" fill=\"#d1db24\"/></svg>",
+      "title": "Attacker Mindset",
+      "description": "How hackers plan and execute attacks, stage by stage"
+    },
+    {
+      "icon_svg": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#62b517\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M12 2L4 6v6c0 5.5 3.5 10.7 8 12 4.5-1.3 8-6.5 8-12V6L12 2z\"/><path d=\"M9 12l2 2 4-4\" stroke=\"#d1db24\" stroke-width=\"2\"/></svg>",
+      "title": "Defender Mindset",
+      "description": "How security teams protect, detect, and respond to threats"
+    },
+    {
+      "icon_svg": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#62b517\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M1 4v6h6\"/><path d=\"M23 20v-6h-6\"/><path d=\"M20.49 9A9 9 0 0 0 5.64 5.64L1 10\"/><path d=\"M23 14l-4.64 4.36A9 9 0 0 1 3.51 15\" stroke=\"#d1db24\"/></svg>",
+      "title": "The Cycle of Cyberwarfare",
+      "description": "Why attack and defense never stop evolving against each other"
+    },
+    {
+      "icon_svg": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#62b517\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z\"/><line x1=\"8\" y1=\"10\" x2=\"16\" y2=\"10\" stroke=\"#d1db24\"/><line x1=\"8\" y1=\"14\" x2=\"12\" y2=\"14\" stroke=\"#d1db24\"/></svg>",
+      "title": "You are CyberFluent",
+      "description": "Break down any incident and challenge anyone who can't explain it"
+    }
+  ],
+
+  "play_now_url": "/cybersecurity/byteclub",
+  "play_now_label": "▶ Play Now. Free Online",
+  "play_now_onclick_attr": " onclick=\"trackClick('cybersecurity_play_now')\"",
+  "buy_button_html": "<a class=\"btn-buy-physical\" href=\"https://cybersecgames.com/products/byte-club-card-game-to-hack-or-not-to-hack\" target=\"_blank\" rel=\"noopener\" onclick=\"trackClick('cybersecurity_buy_physical')\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" style=\"display:inline;vertical-align:middle;margin-right:6px\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"9\" cy=\"21\" r=\"1\"/><circle cx=\"20\" cy=\"21\" r=\"1\"/><path d=\"M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6\"/></svg> Buy the Physical Game</a>",
+
+  "players_text": "2–4 Players",
+  "time_text": "20 Min",
+  "ages_text": "Ages 14+",
+
+  "learning_h2_html": "You're the hacker. <em>You're also the target.</em>",
+  "learning_intro_p_html": "Every player is attacking and defending at the same time. Racing to steal a Data Flag while building the defenses to stop everyone else from stealing yours. One turn. Two jobs. No excuses.",
+  "learning_section_label": "What you'll actually understand after playing",
+
+  "concept_cards": [
+    {
+      "icon_svg": "<svg viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M22,11 L17,13 L19,18 L14,16 L12,22 L10,16 L5,18 L7,13 L2,11 L7,9 L5,4 L10,6 L12,1 L14,6 L19,4 L17,9 Z\" fill=\"#d1db24\"/><circle cx=\"12\" cy=\"11\" r=\"3.5\" fill=\"#62b517\"/><circle cx=\"12\" cy=\"11\" r=\"1.5\" fill=\"#d1db24\"/></svg>",
+      "title": "Attacker Mindset",
+      "body_html": "Attackers don't strike randomly. They follow a sequence. The Cyber Kill Chain maps every stage from the first bit of reconnaissance to the final objective. Playing the attack side teaches you how adversaries think, plan, and move, and why disrupting any single stage can collapse the entire operation."
+    },
+    {
+      "icon_svg": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#62b517\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M12 2L4 6v6c0 5.5 3.5 10.7 8 12 4.5-1.3 8-6.5 8-12V6L12 2z\"/><path d=\"M9 12l2 2 4-4\" stroke=\"#d1db24\" stroke-width=\"2\"/></svg>",
+      "title": "Defender Mindset",
+      "body_html": "Defense isn't one big wall. It's a complete posture. The NIST Cybersecurity Framework gives defenders a structured approach: Identify what you're protecting, Protect it, Detect threats early, Respond fast, and Recover fully. With Govern at the center, providing the policies, roles, and decisions that hold it all together. Every gap in that posture is a stage of the Kill Chain a defender failed to cover."
+    },
+    {
+      "icon_svg": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#62b517\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M1 4v6h6\"/><path d=\"M23 20v-6h-6\"/><path d=\"M20.49 9A9 9 0 0 0 5.64 5.64L1 10\"/><path d=\"M23 14l-4.64 4.36A9 9 0 0 1 3.51 15\" stroke=\"#d1db24\"/></svg>",
+      "title": "The Cycle of Cyberwarfare",
+      "body_html": "Attack and defense are never finished. They feed each other. Defenders add controls to disrupt the Kill Chain; attackers find ways around them; defenders adapt again. That perpetual loop is the Cycle of Cyberwarfare. And once you see it, you can use it as a mental model to make sense of any threat, breach, or security decision you'll ever encounter."
+    },
+    {
+      "icon_svg": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#62b517\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z\"/><line x1=\"8\" y1=\"10\" x2=\"16\" y2=\"10\" stroke=\"#d1db24\"/><line x1=\"8\" y1=\"14\" x2=\"12\" y2=\"14\" stroke=\"#d1db24\"/></svg>",
+      "title": "You are CyberFluent",
+      "body_html": "Understanding that cycle means you can break down any cybersecurity incident or topic and ask the right questions. It won't make you a cyber expert. But it means you can appropriately challenge one. Instead of waiting for the latest checklist from experts to tell you what to think, you'll have the mental model to think critically yourself. Rather than just accepting what you're told or begrudgingly going along with it, you'll understand enough to be genuinely on the same page and push toward the best solution."
+    }
+  ],
+
+  "workshop_h2_html": "The interactive demo <em>supports the physical game</em> &mdash; run only what you need.",
+  "workshop_intro_p_html": "The <strong>Play Now</strong> demo includes a built-in interactive tutorial with three independent sections you can toggle on or off. It works alongside the physical game: use it to explain rules, walk through concepts projected on screen, or let participants follow along at their own pace.",
+
+  "workshop_cards": [
+    {
+      "icon_svg": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#62b517\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><polyline points=\"12 7 12 12 15 15\" stroke=\"#d1db24\" stroke-width=\"2\"/></svg>",
+      "title": "Suggested Workshop Flow",
+      "body_html": "<strong>Before the session:</strong> Ask participants to open the demo and run the <em>Context</em> section on their own. This covers the Cyber Kill Chain, the NIST Framework, and the Cycle of Cyberwarfare &mdash; so you arrive with shared vocabulary, not a lecture.<br><br><strong>At the start of the session (in person):</strong> Walk through the <em>Physical Game Setup</em> and <em>How to Play</em> sections together &mdash; projected or on individual screens &mdash; so everyone sets up and learns the rules at the same pace.<br><br><strong>Online session:</strong> Skip the setup section entirely. The demo handles the rules walkthrough interactively as participants play."
+    },
+    {
+      "icon_svg": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#62b517\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M12 2L4 6v6c0 5.5 3.5 10.7 8 12 4.5-1.3 8-6.5 8-12V6L12 2z\"/><path d=\"M9 12l2 2 4-4\" stroke=\"#d1db24\" stroke-width=\"2\"/></svg>",
+      "title": "Run only the sections you need",
+      "body_html": "The tutorial lets you toggle three sections independently: <em>Context for Learning Objectives</em>, <em>Physical Game Setup</em>, and <em>How to Play Instructions</em>. If participants already know the concepts, skip Context. If you're playing online, skip Setup. Mix and match to fit your session without sitting through parts that don't apply."
+    }
+  ],
+
+  "workshop_cta_url": "/blog/cybersecurity-awareness-workshop",
+  "workshop_cta_label": "Read the Workshop Facilitation Guide",
+
+  "footer_html": "© 2026 Tech CoLab · <a href=\"/\">Back to all games</a>"
+}

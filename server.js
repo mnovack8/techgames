@@ -8,6 +8,7 @@ const analytics    = require('./analytics');
 const auth         = require('./auth');
 const gameManager  = require('./games/game-manager');
 const siteRouting  = require('./site-routing');
+const hubRenderer  = require('./games/marketing-hub-renderer');
 
 const PORT = process.env.PORT || 8090;
 
@@ -49,6 +50,19 @@ const server = http.createServer((req, res) => {
   if (resolved.redirect) {
     res.writeHead(301, { Location: resolved.redirect + qs });
     res.end();
+    return;
+  }
+
+  if (resolved.renderHub) {
+    try {
+      const html = hubRenderer.renderHub(resolved.renderHub);
+      res.writeHead(200, { 'Content-Type': resolved.contentType });
+      res.end(html);
+    } catch (err) {
+      console.error(`[hubRenderer] Failed to render ${resolved.renderHub}:`, err);
+      res.writeHead(500, { 'Content-Type': 'text/plain' });
+      res.end('Server Error');
+    }
     return;
   }
 

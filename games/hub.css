@@ -315,6 +315,33 @@
   gap: 4px;
 }
 
+/* ===== WORKSHOP SECTION ===== */
+.workshop {
+  background: #fff;
+  border-top: 1px solid #dde8c8;
+  border-bottom: 1px solid #dde8c8;
+  padding: 48px 24px;
+}
+.workshop-cta-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #62b517;
+  color: #fff;
+  font-weight: 800;
+  font-size: 14px;
+  padding: 12px 22px;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: all 0.15s;
+  box-shadow: 0 3px 12px rgba(98,181,23,0.28);
+}
+.workshop-cta-link:hover {
+  background: #4a8c11;
+  transform: translateY(-1px);
+  box-shadow: 0 5px 16px rgba(98,181,23,0.38);
+}
+
 /* ===== SIMPLE FOOTER (overrides main.css full footer for hub pages) ===== */
 footer {
   background: #2a2a2a;

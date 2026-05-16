@@ -42,9 +42,21 @@ function resolvePathname(pathname) {
     return { redirect: REDIRECTS[pathname] };
   }
 
+  // ── Marketing hub pages: rendered from /games/marketing-hub.template.html
+  //    + /games/<gameKey>/marketing.json. Returned via { renderHub: <gameKey> }.
+  if (pathname === '/cybersecurity' || pathname === '/cybersecurity.html') {
+    return { renderHub: 'cybersecurity', contentType: 'text/html; charset=utf-8' };
+  }
+  if (pathname === '/ai/neural-network' || pathname === '/ai/neural-network.html') {
+    return { renderHub: 'ai-neural-network', contentType: 'text/html; charset=utf-8' };
+  }
+  if (pathname === '/ai/knn' || pathname === '/ai/knn.html') {
+    return { renderHub: 'ai-knn', contentType: 'text/html; charset=utf-8' };
+  }
+
   // ── URL → file path ───────────────────────────────────────────────────────
+
   if (pathname === '/ai' || pathname === '/ai.html') pathname = '/games/ai/index.html';
-  else if (pathname === '/ai/neural-network' || pathname === '/ai/neural-network.html') pathname = '/games/ai-neural-network/index.html';
   else if (
     pathname === '/ai/neural-network/fuzznet' ||
     pathname === '/ai/neural-network/fuzznet.html' ||
