@@ -45,10 +45,28 @@ function resolvePathname(pathname) {
   // ── URL → file path ───────────────────────────────────────────────────────
   if (pathname === '/ai' || pathname === '/ai.html') pathname = '/games/ai/index.html';
   else if (pathname === '/ai/neural-network' || pathname === '/ai/neural-network.html') pathname = '/games/ai-neural-network/index.html';
-  else if (pathname === '/ai/neural-network/fuzznet' || pathname === '/ai/neural-network/fuzznet.html') pathname = '/games/ai-neural-network/fuzznet.html';
+  else if (
+    pathname === '/ai/neural-network/fuzznet' ||
+    pathname === '/ai/neural-network/fuzznet.html' ||
+    pathname === '/ai/neural-network/fuzznet/lobby' ||
+    pathname === '/ai/neural-network/fuzznet/activegame' ||
+    pathname === '/ai/neural-network/fuzznet/tutorial'
+  ) pathname = '/games/ai-neural-network/fuzznet.html';
   else if (pathname === '/ai/knn' || pathname === '/ai/knn.html') pathname = '/games/ai-knn/index.html';
-  else if (pathname === '/ai/knn/clusterflick' || pathname === '/ai/knn/clusterflick.html') pathname = '/games/ai-knn/clusterflick.html';
-  else if (pathname === '/cybersecurity/byteclub' || pathname === '/cybersecurity/byteclub.html') pathname = '/games/cybersecurity/byteclub.html';
+  else if (
+    pathname === '/ai/knn/clusterflick' ||
+    pathname === '/ai/knn/clusterflick.html' ||
+    pathname === '/ai/knn/clusterflick/lobby' ||
+    pathname === '/ai/knn/clusterflick/activegame' ||
+    pathname === '/ai/knn/clusterflick/tutorial'
+  ) pathname = '/games/ai-knn/clusterflick.html';
+  else if (
+    pathname === '/cybersecurity/byteclub' ||
+    pathname === '/cybersecurity/byteclub.html' ||
+    pathname === '/cybersecurity/byteclub/lobby' ||
+    pathname === '/cybersecurity/byteclub/activegame' ||
+    pathname === '/cybersecurity/byteclub/tutorial'
+  ) pathname = '/games/cybersecurity/byteclub.html';
   else if (pathname === '/cybersecurity' || pathname === '/cybersecurity.html') pathname = '/games/cybersecurity/index.html';
   else if (pathname === '/quantumcomputing' || pathname === '/quantumcomputing.html') pathname = '/games/quantumcomputing.html';
   else if (pathname === '/contact' || pathname === '/contact.html') pathname = '/singlepage/contact.html';

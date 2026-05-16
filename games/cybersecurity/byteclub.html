@@ -24,10 +24,10 @@
 <link rel="canonical" href="https://cybersecgames.com/byteclub">
 <title>Byte Club — Cybersecurity Card Game | Tech CoLab</title>
 <script>
-// Run before body parses: if ?tutorial=1, hide everything until tutorial mounts.
+// Run before body parses: if ?tutorial=1 OR path ends in /tutorial, hide everything until tutorial mounts.
 (function(){
   try {
-    if (new URLSearchParams(location.search).get('tutorial') === '1') {
+    if (new URLSearchParams(location.search).get('tutorial') === '1' || /\/tutorial\/?$/.test(location.pathname)) {
       document.documentElement.classList.add('tutorial-loading');
     }
   } catch(e){}
@@ -1193,6 +1193,7 @@ function send(msg) {
 // ==================== LOBBY ====================
 // Lobby form logic lives in lobby.js (LobbyUI). Init call is near the bottom in INIT.
 
+const BC_BASE_PATH = '/cybersecurity/byteclub';
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   const el = document.getElementById(id);
@@ -1200,6 +1201,15 @@ function showScreen(id) {
   el.scrollTop = 0;
   // Rejoin handshake resolved. Drop the visibility guard so the screen paints
   document.body.classList.remove('rejoin-pending');
+  // Sync URL with game state:
+  //   waiting → /lobby (room created, game not started)
+  //   game / gameover → /activegame (active play)
+  //   lobby → base path
+  let suffix = '';
+  if (id === 'waiting') suffix = '/lobby';
+  else if (id === 'game' || id === 'gameover') suffix = '/activegame';
+  const qs = roomCode ? `?room=${encodeURIComponent(roomCode)}` : '';
+  try { history.replaceState(null, '', BC_BASE_PATH + suffix + qs); } catch (_) {}
 }
 
 // ==================== EVENT HUB ====================
@@ -3926,6 +3936,8 @@ function startBcTutorial() {
   myId = 0;
   // bc-tut-active / bc-tut-intro-active are managed by applyBcTutStep
   showScreen('game');
+  // Override the /activegame URL set by showScreen — tutorial has its own path
+  try { history.replaceState(null, '', BC_BASE_PATH + '/tutorial'); } catch (_) {}
   document.getElementById('htp-btn').style.display = 'flex';
   document.getElementById('btn-cancel-game').style.display = 'none';
   document.getElementById('win-screen').classList.remove('show');
@@ -4232,8 +4244,8 @@ LobbyUI.init({
 
 hub.connect();
 
-// Auto-start tutorial via ?tutorial=1 — start ASAP, hide page until ready
-if (urlParams.get('tutorial') === '1') {
+// Auto-start tutorial via ?tutorial=1 OR /tutorial path — start ASAP, hide page until ready
+if (urlParams.get('tutorial') === '1' || /\/tutorial\/?$/.test(location.pathname)) {
   var __startTut = function(){
     try { startBcTutorial(); } catch (e) {}
     // Reveal the page now that the tutorial overlay is mounted on top.

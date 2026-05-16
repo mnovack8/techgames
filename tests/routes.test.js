@@ -74,9 +74,18 @@ describe('Route Coverage', () => {
   // ── Game play pages ────────────────────────────────────────────────────────
   describe('Game play pages', () => {
     const games = [
-      ['/cybersecurity/byteclub',          'ByteClub game'],
-      ['/ai/neural-network/fuzznet',       'FuzzNet game'],
-      ['/ai/knn/clusterflick',             'ClusterFlick game'],
+      ['/cybersecurity/byteclub',                   'ByteClub game'],
+      ['/cybersecurity/byteclub/lobby',             'ByteClub lobby (state)'],
+      ['/cybersecurity/byteclub/activegame',        'ByteClub active game (state)'],
+      ['/cybersecurity/byteclub/tutorial',          'ByteClub tutorial (state)'],
+      ['/ai/neural-network/fuzznet',                'FuzzNet game'],
+      ['/ai/neural-network/fuzznet/lobby',          'FuzzNet lobby (state)'],
+      ['/ai/neural-network/fuzznet/activegame',     'FuzzNet active game (state)'],
+      ['/ai/neural-network/fuzznet/tutorial',       'FuzzNet tutorial (state)'],
+      ['/ai/knn/clusterflick',                      'ClusterFlick game'],
+      ['/ai/knn/clusterflick/lobby',                'ClusterFlick lobby (state)'],
+      ['/ai/knn/clusterflick/activegame',           'ClusterFlick active game (state)'],
+      ['/ai/knn/clusterflick/tutorial',             'ClusterFlick tutorial (state)'],
     ];
 
     for (const [path, label] of games) {

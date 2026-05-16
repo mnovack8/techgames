@@ -24,10 +24,10 @@
 <link rel="canonical" href="https://cybersecgames.com/fuzznet">
 <title>FuzzNet Labs — AI & Machine Learning Game | Tech CoLab</title>
 <script>
-// Run before body parses: if ?tutorial=1, hide everything until tutorial mounts.
+// Run before body parses: if ?tutorial=1 OR path ends in /tutorial, hide everything until tutorial mounts.
 (function(){
   try {
-    if (new URLSearchParams(location.search).get('tutorial') === '1') {
+    if (new URLSearchParams(location.search).get('tutorial') === '1' || /\/tutorial\/?$/.test(location.pathname)) {
       document.documentElement.classList.add('tutorial-loading');
     }
   } catch(e){}
@@ -762,17 +762,21 @@ function handleServerMsg(msg) {
 }
 
 // ==================== SCREENS ====================
+const FN_BASE_PATH = '/ai/neural-network/fuzznet';
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   const el = document.getElementById(id);
   el.classList.add('active');
   el.scrollTop = 0;
-  // Update URL with room code
-  if ((id === 'waiting' || id === 'game') && roomCode) {
-    history.replaceState(null, '', `/ai/neural-network/fuzznet?room=${roomCode}`);
-  } else if (id === 'lobby') {
-    history.replaceState(null, '', location.pathname);
-  }
+  // Sync URL with game state:
+  //   waiting → /lobby (game created, not started)
+  //   game / gameover → /activegame (active play)
+  //   lobby → base path
+  let suffix = '';
+  if (id === 'waiting') suffix = '/lobby';
+  else if (id === 'game' || id === 'gameover') suffix = '/activegame';
+  const qs = roomCode ? `?room=${encodeURIComponent(roomCode)}` : '';
+  try { history.replaceState(null, '', FN_BASE_PATH + suffix + qs); } catch (_) {}
 }
 
 // ==================== LOBBY ====================
@@ -2369,6 +2373,8 @@ function startTutorial() {
   document.getElementById('tutorial-overlay').classList.add('active');
   applyTutStep(0);
   showScreen('game');
+  // Override the /activegame URL set by showScreen — tutorial has its own path
+  try { history.replaceState(null, '', FN_BASE_PATH + '/tutorial'); } catch (_) {}
   document.getElementById('btn-cancel-game').style.display = 'none';
   document.getElementById('room-badge').textContent = 'DEMO';
 }
@@ -2633,8 +2639,8 @@ LobbyUI.init({
 showScreen('lobby');
 hub.connect();
 
-// Auto-start tutorial via ?tutorial=1 — start ASAP, hide page until ready
-if (new URLSearchParams(location.search).get('tutorial') === '1') {
+// Auto-start tutorial via ?tutorial=1 OR /tutorial path — start ASAP, hide page until ready
+if (new URLSearchParams(location.search).get('tutorial') === '1' || /\/tutorial\/?$/.test(location.pathname)) {
   var __startTut = function(){
     try { startTutorial(); } catch (e) {}
     requestAnimationFrame(function(){

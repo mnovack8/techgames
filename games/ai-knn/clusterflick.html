@@ -1617,6 +1617,7 @@ function startTutorial(){
   cftActive = true;
   document.body.classList.add('cft-intro-active');
   cftRenderIntro();
+  try { history.replaceState(null, '', CF_BASE_PATH + '/tutorial'); } catch(_){}
 }
 
 function cftRenderIntro(){
@@ -1735,7 +1736,7 @@ function cftTutCheckAdvance(state){
   }
 }
 
-function endTutorial(){ cftGameExit(); cftIntroExit(); }
+function endTutorial(){ cftGameExit(); cftIntroExit(); try { history.replaceState(null, '', CF_BASE_PATH); } catch(_){} }
 
 // ==================== INFO OVERLAY ====================
 function showInfo(key){
@@ -1752,6 +1753,17 @@ function showInfo(key){
 function closeInfo(e){if(!e||e.target===document.getElementById('info-overlay'))document.getElementById('info-overlay').classList.remove('show');}
 
 // ==================== SCREEN MANAGEMENT ====================
+const CF_BASE_PATH = '/ai/knn/clusterflick';
+function syncUrlForScreen(id){
+  // waiting = room created, game not started → /lobby
+  // game/gameover = active play → /activegame
+  // anything else (lobby) → base path
+  let suffix = '';
+  if (id === 'waiting') suffix = '/lobby';
+  else if (id === 'game' || id === 'gameover') suffix = '/activegame';
+  const qs = (roomCode ? `?room=${encodeURIComponent(roomCode)}` : '');
+  try { history.replaceState(null, '', CF_BASE_PATH + suffix + qs); } catch(_){}
+}
 function showScreen(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   const el=document.getElementById(id);
@@ -1761,6 +1773,7 @@ function showScreen(id){
   const tn=document.getElementById('top-nav');
   if(tn){tn.style.display='flex';}
   document.body.style.paddingTop='44px';
+  syncUrlForScreen(id);
 }
 
 // ==================== UTILITIES ====================
@@ -1792,7 +1805,7 @@ window.addEventListener('DOMContentLoaded',()=>{
           document.getElementById('lobby-create-card').classList.add('lobby-card-dim');
           checkRoom();
         }
-        if (params.get('tutorial') === '1') startTutorial();
+        if (params.get('tutorial') === '1' || /\/tutorial\/?$/.test(location.pathname)) startTutorial();
       }
     },
     onDisconnect : function () { showToast('Disconnected - reconnecting…'); },
