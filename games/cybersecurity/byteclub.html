@@ -35,6 +35,7 @@
 </script>
 <link rel="stylesheet" href="/games/game-nav.css">
 <script src="/games/lobby.js"></script>
+<script src="/games/observer.js"></script>
 <script src="/games/socket.js"></script>
 <script type="application/ld+json">
 {
@@ -49,6 +50,7 @@
 }
 </script>
   <link rel="stylesheet" href="/main.css">
+  <link rel="stylesheet" href="/games/hub.css">
   <link rel="stylesheet" href="/games/cybersecurity/byteclub.css">
 </head>
 <body>
@@ -71,8 +73,19 @@
   </symbol>
 </svg>
 
-<!-- TOP NAV -->
-<div id="top-nav">
+<!-- ===== OBSERVER BANNER (shown during game for observers) ===== -->
+<div id="observer-banner">
+  <svg class="obs-eye-icon obs-eye-xl obs-eye-pulse"><use href="#icon-obs-eye"/></svg>
+  <span>Observer Mode</span>
+  <span class="obs-pill">Read Only. You can see all cards but cannot play</span>
+  <div class="obs-banner-btns">
+    <button id="obs-hide-hands-btn" onclick="toggleObserverHands()">Hide Hands</button>
+    <button id="obs-hide-actions-btn" onclick="toggleObserverActions()">Hide Active Actions</button>
+  </div>
+</div>
+
+<!-- ===== TOP NAV ===== -->
+<nav id="top-nav">
   <a href="/"><img src="/images/logo.png" alt="Tech CoLab" width="22" height="22" fetchpriority="high" decoding="async" style="height:22px;width:auto;"><span class="nav-brand-text"> Tech Co<span class="logo-text-accent">Lab</span></span></a>
   <span class="nav-divider">/</span>
   <span class="nav-current">Byte Club</span>
@@ -80,7 +93,7 @@
     <button id="htp-btn" onclick="document.getElementById('htp-panel').classList.toggle('open')" style="display:none">How to Play</button>
     <button id="btn-cancel-game" onclick="showCancelModal()" style="display:none">✕ Cancel Game</button>
   </div>
-</div>
+</nav>
 
 <!-- SCREEN: LOBBY -->
 <div class="screen active" id="lobby">
@@ -107,26 +120,26 @@
     <!-- LEARNING OBJECTIVES -->
     <section class="lobby-section">
       <div class="lobby-section-head"><span class="lobby-section-label">What you'll learn</span></div>
-      <div class="lobby-lo-strip">
-        <div class="lobby-lo-item">
-          <div class="lobby-lo-icon"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22,11 L17,13 L19,18 L14,16 L12,22 L10,16 L5,18 L7,13 L2,11 L7,9 L5,4 L10,6 L12,1 L14,6 L19,4 L17,9 Z" fill="#d1db24"/><circle cx="12" cy="11" r="3.5" fill="#62b517"/><circle cx="12" cy="11" r="1.5" fill="#d1db24"/></svg></div>
-          <div class="lobby-lo-title">Attacker Mindset</div>
-          <div class="lobby-lo-desc">How hackers plan and execute attacks, stage by stage</div>
+      <div class="lo-strip">
+        <div class="lo-item">
+          <div class="lo-item-icon"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22,11 L17,13 L19,18 L14,16 L12,22 L10,16 L5,18 L7,13 L2,11 L7,9 L5,4 L10,6 L12,1 L14,6 L19,4 L17,9 Z" fill="#d1db24"/><circle cx="12" cy="11" r="3.5" fill="#62b517"/><circle cx="12" cy="11" r="1.5" fill="#d1db24"/></svg></div>
+          <div class="lo-item-title">Attacker Mindset</div>
+          <div class="lo-item-desc">How hackers plan and execute attacks, stage by stage</div>
         </div>
-        <div class="lobby-lo-item">
-          <div class="lobby-lo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L4 6v6c0 5.5 3.5 10.7 8 12 4.5-1.3 8-6.5 8-12V6L12 2z"/><path d="M9 12l2 2 4-4" stroke="#d1db24" stroke-width="2"/></svg></div>
-          <div class="lobby-lo-title">Defender Mindset</div>
-          <div class="lobby-lo-desc">How security teams protect, detect, and respond to threats</div>
+        <div class="lo-item">
+          <div class="lo-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L4 6v6c0 5.5 3.5 10.7 8 12 4.5-1.3 8-6.5 8-12V6L12 2z"/><path d="M9 12l2 2 4-4" stroke="#d1db24" stroke-width="2"/></svg></div>
+          <div class="lo-item-title">Defender Mindset</div>
+          <div class="lo-item-desc">How security teams protect, detect, and respond to threats</div>
         </div>
-        <div class="lobby-lo-item">
-          <div class="lobby-lo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10"/><path d="M23 14l-4.64 4.36A9 9 0 0 1 3.51 15" stroke="#d1db24"/></svg></div>
-          <div class="lobby-lo-title">The Cycle of Cyberwarfare</div>
-          <div class="lobby-lo-desc">Why attack and defense never stop evolving against each other</div>
+        <div class="lo-item">
+          <div class="lo-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10"/><path d="M23 14l-4.64 4.36A9 9 0 0 1 3.51 15" stroke="#d1db24"/></svg></div>
+          <div class="lo-item-title">The Cycle of Cyberwarfare</div>
+          <div class="lo-item-desc">Why attack and defense never stop evolving against each other</div>
         </div>
-        <div class="lobby-lo-item">
-          <div class="lobby-lo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><line x1="8" y1="10" x2="16" y2="10" stroke="#d1db24"/><line x1="8" y1="14" x2="12" y2="14" stroke="#d1db24"/></svg></div>
-          <div class="lobby-lo-title">You are CyberFluent</div>
-          <div class="lobby-lo-desc">Break down any incident and challenge anyone who can't explain it</div>
+        <div class="lo-item">
+          <div class="lo-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><line x1="8" y1="10" x2="16" y2="10" stroke="#d1db24"/><line x1="8" y1="14" x2="12" y2="14" stroke="#d1db24"/></svg></div>
+          <div class="lo-item-title">You are CyberFluent</div>
+          <div class="lo-item-desc">Break down any incident and challenge anyone who can't explain it</div>
         </div>
       </div>
     </section>
@@ -276,6 +289,13 @@
   <span>↕</span><span>Play Order</span>
 </div>
 <div class="waiting-players" id="waiting-players"></div>
+  <div class="waiting-observer-section" id="waiting-observer-section" style="display:none">
+    <div class="waiting-observer-label">
+      <svg class="obs-eye-icon obs-eye-sm"><use href="#icon-obs-eye"/></svg>
+      <span id="waiting-observer-count">Observers</span>
+    </div>
+    <div id="waiting-observer-list"></div>
+  </div>
   <button class="copy-btn" id="btn-bot-toggle" onclick="toggleBot()" style="display:none;padding:10px 24px;font-size:14px;">Play Solo vs Bot</button>
   <button class="start-btn" id="btn-start" onclick="startGame()" disabled>Start Game</button>
   <p class="waiting-hint" id="waiting-hint">Share the room code to invite players.</p>
@@ -386,17 +406,6 @@
       <span class="action-bar-hint" id="action-hint">Waiting…</span>
     </div>
 
-  </div>
-</div>
-
-<!-- OBSERVER BANNER (shown during game for observers) -->
-<div id="observer-banner">
-  <svg class="obs-eye-icon obs-eye-xl obs-eye-pulse"><use href="#icon-obs-eye"/></svg>
-  <span>Observer Mode</span>
-  <span class="obs-pill">Read Only. You can see all cards but cannot play</span>
-  <div class="obs-banner-btns">
-    <button id="obs-hide-hands-btn" onclick="toggleObserverHands()">Hide Hands</button>
-    <button id="obs-hide-actions-btn" onclick="toggleObserverActions()">Hide Active Actions</button>
   </div>
 </div>
 
@@ -1365,20 +1374,8 @@ function renderLobbyPlayers(players, observers) {
   }
   el.appendChild(playersSection);
 
-  // Observers section (if any)
-  if (observers.length > 0) {
-    const obsSection = document.createElement('div');
-    obsSection.className = 'waiting-observer-section';
-    obsSection.innerHTML = `<div class="waiting-observer-label"><svg class="obs-eye-icon obs-eye-sm"><use href="#icon-obs-eye"/></svg> Observers (${observers.length})</div>`;
-    observers.forEach((o, oi) => {
-      const isMe = isObserver && oi === myObserverIdx;
-      const row = document.createElement('div');
-      row.className = 'waiting-observer-row' + (isMe ? ' waiting-player-me' : '');
-      row.innerHTML = `<span class="obs-name">${o.name}${isMe ? ' <span class="you-tag">You</span>' : ''}</span>${o.isHost ? '<span class="host-badge" style="background:#1e2a3a;color:#6b7280;border:1px solid #374151">HOST</span>' : ''}`;
-      obsSection.appendChild(row);
-    });
-    el.appendChild(obsSection);
-  }
+  // Delegate observer list rendering to shared ObserverUI module
+  ObserverUI.renderWaitingObservers(observers);
 
   const startBtn = document.getElementById('btn-start');
   const botBtn   = document.getElementById('btn-bot-toggle');

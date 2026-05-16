@@ -39,10 +39,17 @@
 <body id="body">
 
 <svg style="display:none" xmlns="http://www.w3.org/2000/svg">
-  <symbol id="icon-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <symbol id="icon-obs-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
   </symbol>
 </svg>
+
+<!-- ===== OBSERVER BANNER (shown during game for observers) ===== -->
+<div id="observer-banner">
+  <svg class="obs-eye-icon obs-eye-xl obs-eye-pulse"><use href="#icon-obs-eye"/></svg>
+  <span>Observer Mode</span>
+  <span class="obs-pill">Read-only. You can see the board but cannot play</span>
+</div>
 
 <nav id="top-nav">
   <a href="/">
@@ -73,16 +80,16 @@
       </div>
     </div>
 
-    <div class="lobby-section">
+    <section class="lobby-section">
       <div class="lo-strip">
         <div class="lo-item"><div class="lo-item-icon">&#x1F310;</div><div class="lo-item-title">Beyond the Black Box</div><div class="lo-item-desc">ML is a family - GenAI is just one branch</div></div>
         <div class="lo-item"><div class="lo-item-icon">&#x1F4CD;</div><div class="lo-item-title">Distance, Not Probability</div><div class="lo-item-desc">K-NN classifies by similarity, no neural net needed</div></div>
         <div class="lo-item"><div class="lo-item-icon">&#x1F9EA;</div><div class="lo-item-title">Data IS the Model</div><div class="lo-item-desc">Every sample stays visible - no hidden weights</div></div>
         <div class="lo-item"><div class="lo-item-icon">&#x1F9ED;</div><div class="lo-item-title">AI Fluency</div><div class="lo-item-desc">Know which ML tool fits which job</div></div>
       </div>
-    </div>
+    </section>
 
-    <div class="lobby-section">
+    <section class="lobby-section">
       <div class="lobby-section-head"><span class="lobby-section-label">Play Now &middot; Free Online</span></div>
       <div class="invited-banner" id="invited-banner">
         <div class="invited-banner-icon">&#x1F3AE;</div>
@@ -109,7 +116,7 @@
               </div>
             </div>
             <button class="observer-role-btn" id="create-obs-btn" onclick="toggleCreateObserver()">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-eye"/></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-obs-eye"/></svg>
               <span class="obs-role-text"><span class="obs-role-title">Observer</span><span class="obs-role-sub">Spectate only - no actions</span></span>
               <span class="obs-role-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
             </button>
@@ -135,7 +142,7 @@
               </div>
             </div>
             <button class="observer-role-btn" id="join-obs-btn" onclick="toggleJoinObserver()">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-eye"/></svg>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-obs-eye"/></svg>
               <span class="obs-role-text"><span class="obs-role-title">Observer</span><span class="obs-role-sub">Spectate only - no actions</span></span>
               <span class="obs-role-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
             </button>
@@ -143,7 +150,7 @@
             <div class="error-msg" id="join-error"></div>
           </div>
       </div>
-    </div>
+    </section>
 
   </div>
 </div>
@@ -159,7 +166,7 @@
   <div class="player-list" id="player-list"></div>
   <div class="waiting-observer-section" id="waiting-observer-section" style="display:none">
     <div class="waiting-observer-label">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-eye"/></svg>
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-obs-eye"/></svg>
       <span id="waiting-observer-count">Observers</span>
     </div>
     <div id="waiting-observer-list"></div>
@@ -173,11 +180,6 @@
 </div>
 
 <div id="game" class="screen">
-  <!-- Observer banner -->
-  <div id="observer-banner">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-eye"/></svg>
-    Observer Mode - watching only
-  </div>
 
   <!-- Body -->
   <div class="game-body">
