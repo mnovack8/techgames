@@ -1,4 +1,6 @@
 {
+  "routes": ["/ai/knn", "/ai/knn.html"],
+
   "meta_description": "ClusterFlick: K-NN physics board game. Machine learning that isn't GenAI — classification by similarity, not neural networks. Free to play online.",
   "og_title": "ClusterFlick — KNN Machine Learning Board Game | Tech CoLab",
   "og_description": "ClusterFlick: K-NN physics board game. Machine learning that isn't GenAI — classification by similarity, not neural networks. Free to play online.",

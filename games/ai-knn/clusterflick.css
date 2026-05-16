@@ -1,5 +1,30 @@
 /* Page-specific styles */
 body { font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif; background: #fff; color: #2a2a2a; min-height: 100vh; overflow-x: hidden; }
+
+/* ===== EVENT HUB (light theme, matches FuzzNet) ===== */
+.event-hub-card { width: 100%; background: #fff; border: 1.5px solid #dde8c8; border-radius: 14px; padding: 20px 24px 22px; box-shadow: 0 2px 16px rgba(98,181,23,0.08); }
+.event-hub-card h3 { font-size: 13px; color: #4a8c11; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px; font-weight: 800; }
+.event-hub-add { display: flex; gap: 10px; margin-top: 12px; align-items: center; }
+.event-hub-add button { flex-shrink: 0; padding: 9px 18px; background: #f0f7e6; border: 1.5px solid #a8c96a; border-radius: 8px; color: #4a8c11; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.15s; white-space: nowrap; font-family: inherit; }
+.event-hub-add button:hover:not(:disabled) { background: #e2f3cc; border-color: #62b517; color: #2d6309; }
+.event-hub-empty { font-size: 12px; color: #999; padding: 16px 0 4px; text-align: center; font-style: italic; }
+.event-table { width: 100%; border-collapse: collapse; margin-top: 14px; font-size: 13px; }
+.event-table th { font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: #9aad7a; padding: 4px 10px 8px; text-align: left; border-bottom: 1px solid #e8f0d4; }
+.event-table td { padding: 9px 10px; border-bottom: 1px solid #edf2e4; vertical-align: middle; }
+.event-table tr:last-child td { border-bottom: none; }
+.ev-code { font-size: 17px; font-weight: 800; letter-spacing: 3px; color: #4a8c11; font-family: monospace; }
+.ev-copy-btn { background: #f4fae8; border: 1px solid #c8dda0; border-radius: 6px; padding: 3px 10px; font-size: 11px; font-weight: 700; color: #4a8c11; cursor: pointer; transition: all 0.12s; white-space: nowrap; font-family: inherit; }
+.ev-copy-btn:hover { border-color: #62b517; background: #e2f3cc; }
+.ev-copy-btn.copied { color: #62b517; border-color: #a8c96a; background: #e2f3cc; }
+.ev-observe-btn { background: #f4fae8; border: 1px solid #a8c96a; border-radius: 6px; padding: 3px 10px; font-size: 11px; font-weight: 700; color: #4a8c11; cursor: pointer; transition: all 0.12s; white-space: nowrap; font-family: inherit; }
+.ev-observe-btn:hover { border-color: #62b517; background: #e2f3cc; color: #2d6a0a; }
+.ev-players { color: #888; font-size: 13px; }
+.ev-status { display: inline-block; font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; border-radius: 3px; padding: 2px 7px; }
+.ev-status.pending     { background: rgba(107,114,128,0.08); border: 1px solid rgba(107,114,128,0.25); color: #888; }
+.ev-status.in-progress { background: rgba(98,181,23,0.10); border: 1px solid rgba(98,181,23,0.35); color: #4a8c11; }
+.ev-status.completed   { background: rgba(74,140,17,0.10); border: 1px solid rgba(74,140,17,0.3); color: #2d6309; }
+.ev-status.cancelled   { background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.25); color: #c0392b; }
+
 html.tutorial-loading body { visibility: hidden; }
 html.tutorial-loading #cft-intro, html.tutorial-loading #cft-intro * { visibility: visible; }
 html.tutorial-loading { background: #0d0a1a; }

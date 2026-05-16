@@ -84,9 +84,20 @@ body.observer-active #game .game-layout { height: calc(100vh - 44px - 36px - 10p
   .lo-item:nth-child(1), .lo-item:nth-child(2) { border-bottom: 1px solid rgba(98,181,23,0.12); }
   #lobby h1 { font-size: 36px; }
 }
-/* ===== EVENT HUB ===== */
+/* ===== EVENT HUB (dark theme) ===== */
 .event-hub-card{width:100%;background:#0a1200;border:1px solid rgba(98,181,23,0.18);border-radius:14px;padding:20px 24px 22px;}
 .event-hub-card h3{font-size:13px;color:#62b517;margin-bottom:4px;text-transform:uppercase;letter-spacing:1px;}
+.event-hub-desc{color:#9ca3af;}
+.event-hub-name-input{background:#0d1a03;border-color:#253347;color:#d1fae5;}
+.event-hub-name-input::placeholder{color:#4b5563;}
+.event-hub-hint-text{color:#6b7280;}
+
+/* ===== WORKSHOP BANNER (dark theme) ===== */
+.workshop-banner{background:#0d1a03;border-color:#253347;}
+.workshop-banner:hover{border-color:#62b517;}
+.workshop-banner-title{color:#d1fae5;}
+.workshop-banner-sub{color:#6b7280;}
+
 .event-hub-add{display:flex;gap:10px;margin-top:12px;align-items:center;flex-wrap:wrap;}
 .event-hub-add button{flex-shrink:0;padding:9px 18px;background:#111d04;border:1px solid rgba(98,181,23,0.45);border-radius:8px;color:#62b517;font-size:13px;font-weight:700;cursor:pointer;transition:all 0.15s;white-space:nowrap;}
 .event-hub-add button:hover{background:rgba(98,181,23,0.1);border-color:#62b517;}

@@ -1,0 +1,166 @@
+<div id="lobby" class="screen active">
+  <div class="lobby-container">
+
+    <!-- HERO -->
+    <section class="lobby-hero">
+      {{hero_visual_html}}
+      <div class="lobby-hero-text">
+        <h1>{{game_display_name}}</h1>
+        <p class="subtitle">{{hero_subtitle}}</p>
+        <div class="lobby-meta">
+          <span class="lobby-meta-item">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><circle cx="9" cy="7" r="3"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg>
+            2–4 Players
+          </span>
+          <span class="lobby-meta-item">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+            {{time_text}}
+          </span>
+          <span class="lobby-meta-item">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/></svg>
+            Ages 14+
+          </span>
+        </div>
+        <button class="lobby-tutorial-cta" onclick="startTutorial()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Interactive Tutorial. Learn to Play
+        </button>
+      </div>
+    </section>
+
+    <!-- LEARNING OBJECTIVES -->
+    <section class="lobby-section">
+      <div class="lobby-section-head"><span class="lobby-section-label">What you'll learn</span></div>
+      <div class="lo-strip">
+        {{#learning_objectives}}
+        <div class="lo-item">
+          <div class="lo-item-icon">{{icon_svg}}</div>
+          <div class="lo-item-title">{{title}}</div>
+          <div class="lo-item-desc">{{description}}</div>
+        </div>
+        {{/learning_objectives}}
+      </div>
+    </section>
+
+    <!-- PLAY -->
+    <section class="lobby-section">
+      <div class="lobby-section-head"><span class="lobby-section-label">Play now</span></div>
+      <div class="invited-banner" id="invited-banner">
+        <div class="invited-banner-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="7.5 4.21 12 6.81 16.5 4.21"/><polyline points="7.5 19.79 7.5 14.6 3 12"/><polyline points="21 12 16.5 14.6 16.5 19.79"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+        </div>
+        <div class="invited-banner-text">
+          <span class="invited-banner-title">You've been invited to room <span class="invited-banner-code" id="invited-banner-code"></span></span>
+          <span class="invited-banner-sub">Enter your name and pick a role in the highlighted Join card below to play.</span>
+        </div>
+        <div class="invited-banner-arrow">↓</div>
+      </div>
+      <div class="lobby-play-grid">
+
+        <!-- CREATE GAME -->
+        <div class="lobby-card" id="lobby-create-card">
+          <h3>Create Game</h3>
+          <p class="card-desc">Share the room code to invite players, or play solo vs a bot.</p>
+          <div class="role-section-label">Your Name</div>
+          <input class="lobby-input name-input" id="create-name" maxlength="12" placeholder="Required for all roles" oninput="updateCreateBtn()">
+          <div class="role-section-label">Choose Your Role</div>
+          <div id="create-player-role" class="player-role-box active" onclick="selectCreateRole('player')">
+            <div class="role-title">Player</div>
+            <div class="color-options" id="create-colors" style="margin:4px 0 0;justify-content:flex-start;gap:8px">
+              <button class="color-btn selected" data-color="blue" style="background:#4a9eff" onclick="event.stopPropagation();selectCreateColor('blue')">Blue</button>
+              <button class="color-btn" data-color="red" style="background:#ff4a4a" onclick="event.stopPropagation();selectCreateColor('red')">Red</button>
+              <button class="color-btn" data-color="green" style="background:#3aaa6a" onclick="event.stopPropagation();selectCreateColor('green')">Green</button>
+              <button class="color-btn" data-color="purple" style="background:#a060dd" onclick="event.stopPropagation();selectCreateColor('purple')">Purple</button>
+            </div>
+          </div>
+          <button class="observer-role-btn" id="create-obs-btn" onclick="toggleCreateObserver()">
+            <span class="obs-role-icon"><svg class="obs-eye-icon obs-eye-lg"><use href="#icon-obs-eye"/></svg></span>
+            <span class="obs-role-text">
+              <span class="obs-role-title">Observer</span>
+              <span class="obs-role-sub">{{observer_subtitle}}</span>
+            </span>
+            <span class="obs-role-check">
+              <svg width="10" height="8" viewBox="0 0 10 8" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+          </button>
+          <button class="lobby-btn btn-create" id="btn-create" onclick="createRoom()" disabled style="margin-top:10px">▶ Create Game</button>
+          <div class="error-msg" id="create-error"></div>
+        </div>
+
+        <!-- JOIN GAME -->
+        <div class="lobby-card" id="lobby-join-card">
+          <h3>Join a Game</h3>
+          <p class="card-desc">Have a room code? Enter it below to join.</p>
+          <input class="lobby-input" id="join-code" maxlength="4" placeholder="ROOM CODE" oninput="checkRoom()">
+          <div class="role-section-label">Your Name</div>
+          <input class="lobby-input name-input" id="join-name" maxlength="12" placeholder="Required for all roles" oninput="updateJoinBtn()">
+          <div class="role-section-label">Choose Your Role</div>
+          <div id="join-player-role" class="player-role-box" onclick="selectJoinRole('player')">
+            <div class="role-title">Player</div>
+            <div class="color-options" id="join-colors" style="margin:4px 0 0;justify-content:flex-start;gap:8px;opacity:0.3;pointer-events:none;">
+              <button class="color-btn" data-color="blue" style="background:#4a9eff" onclick="event.stopPropagation();selectJoinColor('blue')">Blue</button>
+              <button class="color-btn" data-color="red" style="background:#ff4a4a" onclick="event.stopPropagation();selectJoinColor('red')">Red</button>
+              <button class="color-btn" data-color="green" style="background:#3aaa6a" onclick="event.stopPropagation();selectJoinColor('green')">Green</button>
+              <button class="color-btn" data-color="purple" style="background:#a060dd" onclick="event.stopPropagation();selectJoinColor('purple')">Purple</button>
+            </div>
+          </div>
+          <button class="observer-role-btn" id="join-obs-btn" onclick="toggleJoinObserver()" disabled>
+            <span class="obs-role-icon"><svg class="obs-eye-icon obs-eye-lg"><use href="#icon-obs-eye"/></svg></span>
+            <span class="obs-role-text">
+              <span class="obs-role-title">Observer</span>
+              <span class="obs-role-sub">{{observer_subtitle}}</span>
+            </span>
+            <span class="obs-role-check">
+              <svg width="10" height="8" viewBox="0 0 10 8" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </span>
+          </button>
+          <button class="lobby-btn btn-join" id="btn-join" disabled onclick="joinRoom()" style="margin-top:10px">Join Room</button>
+          <div class="error-msg" id="join-error"></div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- EVENT HUB -->
+    <section class="lobby-section">
+      <div class="lobby-section-head"><span class="lobby-section-label">For organizers</span></div>
+      <div class="event-hub-card" id="event-hub-card">
+        <h3>Event Hub. Run Multiple Tables</h3>
+        <p class="event-hub-desc">Create and manage multiple game rooms at once. Players join using the shareable link for each table. You are added as an observer to each room.</p>
+        <div class="event-hub-name-row">
+          <input type="text" id="event-hub-name" class="event-hub-name-input" maxlength="20" placeholder="Your organizer name…" oninput="updateEventAddBtn()" />
+        </div>
+        <div class="event-hub-add">
+          <button id="event-add-btn" onclick="createEventRoom()" disabled style="opacity:0.4;cursor:not-allowed">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;margin-right:4px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add Table
+          </button>
+          <span class="event-hub-hint-text" id="event-hub-hint">Enter your name above, then click Add Table.</span>
+        </div>
+        <div id="event-table-wrap" style="display:none">
+          <table class="event-table">
+            <thead><tr>
+              <th>Room</th><th>Join Room</th><th>Invite Link</th><th>Players</th><th>Status</th><th></th>
+            </tr></thead>
+            <tbody id="event-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- WORKSHOP BANNER -->
+    <section class="lobby-section">
+      <div class="lobby-section-head"><span class="lobby-section-label">Running a workshop?</span></div>
+      <a href="{{workshop_url}}" class="workshop-banner" target="_blank" rel="noopener">
+        <svg class="workshop-banner-icon" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="7" y1="9" x2="17" y2="9"/><line x1="7" y1="13" x2="13" y2="13"/></svg>
+        <div class="workshop-banner-text">
+          <div class="workshop-banner-title">{{workshop_title}}</div>
+          <div class="workshop-banner-sub">Step-by-step guide · In person &amp; online · Reflection questions included</div>
+        </div>
+        <svg class="workshop-banner-arrow" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7 H12 M8 3 L12 7 L8 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </section>
+
+    {{footer_cta_html}}
+
+  </div>
+</div>

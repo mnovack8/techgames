@@ -1,4 +1,6 @@
 {
+  "routes": ["/ai/neural-network", "/ai/neural-network.html"],
+
   "meta_description": "FuzzNet Labs is an AI board game where you build an analogue AI model, train neural networks, manage data, and race to make the right prediction. Free to play online.",
   "og_title": "FuzzNet Labs. AI & Machine Learning Board Game",
   "og_description": "FuzzNet Labs is an AI board game where you build an analogue AI model, train neural networks, manage data, and race to make the right prediction. Free to play online.",

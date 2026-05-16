@@ -81,236 +81,7 @@
 </nav>
 
 <!-- ===== LOBBY ===== -->
-<div id="lobby" class="screen active">
-  <div class="lobby-container">
-
-    <!-- HERO -->
-    <section class="lobby-hero">
-      <img src="/images/fuzznet/fuzznet_cover.png" alt="FuzzNet Labs">
-      <div class="lobby-hero-text">
-        <h1>FuzzNet Labs</h1>
-        <p class="subtitle">Build a neural network to classify animal photos. And finally understand what's actually happening inside an AI.</p>
-        <div class="lobby-meta">
-          <span class="lobby-meta-item">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><circle cx="9" cy="7" r="3"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg>
-            2–4 Players
-          </span>
-          <span class="lobby-meta-item">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
-            30 Min
-          </span>
-          <span class="lobby-meta-item">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/></svg>
-            Ages 14+
-          </span>
-        </div>
-        <button class="lobby-tutorial-cta" onclick="startTutorial()">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-          Interactive Tutorial. Learn to Play
-        </button>
-        <p style="font-size:12px;color:#888;margin-top:2px;">In-game help on every action via <b>i</b> buttons, or <a href="/games/ai-neural-network/rulebook.pdf" target="_blank" rel="noopener" style="color:#62b517;font-weight:600;">read the rulebook (PDF)</a></p>
-      </div>
-    </section>
-
-    <!-- LEARNING OBJECTIVES -->
-    <section class="lobby-section">
-      <div class="lobby-section-head"><span class="lobby-section-label">What you'll learn</span></div>
-      <div class="lo-strip">
-        <div class="lo-item">
-          <div class="lo-item-icon">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg">
-              <rect x="3" y="3" width="18" height="18" rx="3"/>
-              <circle cx="8" cy="12" r="1.5" fill="#d1db24" stroke="none"/>
-              <circle cx="12" cy="7" r="1.5" fill="#d1db24" stroke="none"/>
-              <circle cx="16" cy="12" r="1.5" fill="#d1db24" stroke="none"/>
-              <circle cx="12" cy="17" r="1.5" fill="#62b517" stroke="none"/>
-              <line x1="8" y1="12" x2="12" y2="7" stroke="#62b517" stroke-width="1.5"/>
-              <line x1="12" y1="7" x2="16" y2="12" stroke="#62b517" stroke-width="1.5"/>
-              <line x1="16" y1="12" x2="12" y2="17" stroke="#62b517" stroke-width="1.5"/>
-              <line x1="12" y1="17" x2="8" y2="12" stroke="#62b517" stroke-width="1.5"/>
-            </svg>
-          </div>
-          <div class="lo-item-title">Open the Black Box</div>
-          <div class="lo-item-desc">See inside the neural network architecture powering modern AI</div>
-        </div>
-        <div class="lo-item">
-          <div class="lo-item-icon">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <line x1="3" y1="21" x2="21" y2="21" stroke="#62b517" stroke-width="2" stroke-linecap="round"/>
-              <rect x="5" y="12" width="4" height="9" fill="#62b517" rx="1"/>
-              <rect x="10" y="7" width="4" height="14" fill="#d1db24" rx="1"/>
-              <rect x="15" y="15" width="4" height="6" fill="#62b517" rx="1" opacity="0.6"/>
-            </svg>
-          </div>
-          <div class="lo-item-title">AI is a Probability Machine</div>
-          <div class="lo-item-desc">Why 100% accuracy is impossible and every model navigates tradeoffs</div>
-        </div>
-        <div class="lo-item">
-          <div class="lo-item-icon">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <!-- Brain: bumpy two-hemisphere silhouette with brainstem -->
-              <path d="M2,9 C2,7 2.5,5.5 4,5 C4.3,4 5,3 6,3 C6.5,2 7.5,2 8,3 C8.5,2 9.5,2 10,3 C11,3 11.7,4 12,5 C13.5,5.5 14,7 14,9 C14,11 12.5,13 11,13 L11,14.5 L5,14.5 L5,13 C3.5,13 2,11 2,9 Z" fill="#f0fae8" stroke="#62b517" stroke-width="1.2" stroke-linejoin="round"/>
-              <!-- Central fissure -->
-              <line x1="8" y1="2.5" x2="8" y2="14.5" stroke="#a8c96a" stroke-width="0.8" stroke-dasharray="1.3 1"/>
-              <!-- Left hemisphere gyri -->
-              <path d="M4,7 Q5.5,8 4,9" stroke="#a8c96a" stroke-width="0.7" fill="none" stroke-linecap="round"/>
-              <path d="M4,10.5 Q5.5,11.5 4,12.5" stroke="#a8c96a" stroke-width="0.7" fill="none" stroke-linecap="round"/>
-              <!-- Right hemisphere gyri -->
-              <path d="M12,7 Q10.5,8 12,9" stroke="#a8c96a" stroke-width="0.7" fill="none" stroke-linecap="round"/>
-              <path d="M12,10.5 Q10.5,11.5 12,12.5" stroke="#a8c96a" stroke-width="0.7" fill="none" stroke-linecap="round"/>
-              <!-- Wrench (open-end head upper-left, handle to lower-right) -->
-              <g transform="translate(18 17.5) rotate(45)">
-                <path d="M-5,-1.5 L-2.5,-1.5 L-2.5,-0.5 L-3.7,-0.5 L-3.7,0.5 L-2.5,0.5 L-2.5,1.5 L-5,1.5 Z" fill="#d1db24" stroke="#62b517" stroke-width="0.6" stroke-linejoin="round"/>
-                <rect x="-2.8" y="-0.65" width="6.8" height="1.3" rx="0.3" fill="#d1db24" stroke="#62b517" stroke-width="0.6"/>
-              </g>
-              <!-- Hammer crossed over wrench (head upper-right, handle to lower-left) -->
-              <g transform="translate(18 17.5) rotate(-45)">
-                <rect x="-4" y="-0.5" width="6.2" height="1" rx="0.2" fill="#8b6f3a" stroke="#62b517" stroke-width="0.5"/>
-                <path d="M1,-2 L1,2 L1.8,1.6 L1.8,-1.6 Z" fill="#3a6a0a"/>
-                <rect x="1.8" y="-1.6" width="3" height="3.2" rx="0.2" fill="#62b517" stroke="#3a6a0a" stroke-width="0.4"/>
-              </g>
-            </svg>
-          </div>
-          <div class="lo-item-title">How AI Gets Built</div>
-          <div class="lo-item-desc">The Design-Train-Test cycle and why data is destiny</div>
-        </div>
-        <div class="lo-item">
-          <div class="lo-item-icon">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
-              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-              <line x1="8" y1="10" x2="16" y2="10" stroke="#d1db24"/>
-              <line x1="8" y1="14" x2="12" y2="14" stroke="#d1db24"/>
-            </svg>
-          </div>
-          <div class="lo-item-title">You are AI-Fluent</div>
-          <div class="lo-item-desc">Ask the right questions and push back when "the AI said so" isn't good enough</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- PLAY -->
-    <section class="lobby-section">
-      <div class="lobby-section-head"><span class="lobby-section-label">Play now</span></div>
-      <div class="invited-banner" id="invited-banner">
-        <div class="invited-banner-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="7.5 4.21 12 6.81 16.5 4.21"/><polyline points="7.5 19.79 7.5 14.6 3 12"/><polyline points="21 12 16.5 14.6 16.5 19.79"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
-        </div>
-        <div class="invited-banner-text">
-          <span class="invited-banner-title">You've been invited to room <span class="invited-banner-code" id="invited-banner-code"></span></span>
-          <span class="invited-banner-sub">Enter your name and pick a role in the highlighted Join card below to play.</span>
-        </div>
-        <div class="invited-banner-arrow">↓</div>
-      </div>
-      <div class="lobby-play-grid">
-
-        <!-- CREATE GAME -->
-        <div class="lobby-card" id="lobby-create-card">
-          <h3>Create Game</h3>
-          <p class="card-desc">Share the room code to invite players, or play solo vs a bot.</p>
-          <div class="role-section-label">Your Name</div>
-          <input class="lobby-input name-input" id="create-name" maxlength="12" placeholder="Required for all roles" oninput="updateCreateBtn()">
-          <div class="role-section-label">Choose Your Role</div>
-          <div id="create-player-role" class="player-role-box active" onclick="selectCreateRole('player')">
-            <div class="role-title">Player</div>
-            <div class="color-options" id="create-colors" style="margin:4px 0 0;justify-content:flex-start;gap:8px">
-              <button class="color-btn selected" data-color="blue" style="background:#4a9eff" onclick="event.stopPropagation();selectCreateColor('blue')">Blue</button>
-              <button class="color-btn" data-color="red" style="background:#ff4a4a" onclick="event.stopPropagation();selectCreateColor('red')">Red</button>
-              <button class="color-btn" data-color="green" style="background:#3aaa6a" onclick="event.stopPropagation();selectCreateColor('green')">Green</button>
-              <button class="color-btn" data-color="purple" style="background:#a060dd" onclick="event.stopPropagation();selectCreateColor('purple')">Purple</button>
-            </div>
-          </div>
-          <button class="observer-role-btn" id="create-obs-btn" onclick="toggleCreateObserver()">
-            <span class="obs-role-icon"><svg class="obs-eye-icon obs-eye-lg"><use href="#icon-obs-eye"/></svg></span>
-            <span class="obs-role-text">
-              <span class="obs-role-title">Observer</span>
-              <span class="obs-role-sub">Spectate only. See every board, no actions</span>
-            </span>
-            <span class="obs-role-check">
-              <svg width="10" height="8" viewBox="0 0 10 8" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </span>
-          </button>
-          <button class="lobby-btn btn-create" id="btn-create" onclick="createRoom()" disabled style="margin-top:10px">▶ Create Game</button>
-          <div class="error-msg" id="create-error"></div>
-        </div>
-
-        <!-- JOIN GAME -->
-        <div class="lobby-card" id="lobby-join-card">
-          <h3>Join a Game</h3>
-          <p class="card-desc">Have a room code? Enter it below to join.</p>
-          <input class="lobby-input" id="join-code" maxlength="4" placeholder="ROOM CODE" oninput="checkRoom()">
-          <div class="role-section-label">Your Name</div>
-          <input class="lobby-input name-input" id="join-name" maxlength="12" placeholder="Required for all roles" oninput="updateJoinBtn()">
-          <div class="role-section-label">Choose Your Role</div>
-          <div id="join-player-role" class="player-role-box" onclick="selectJoinRole('player')">
-            <div class="role-title">Player</div>
-            <div class="color-options" id="join-colors" style="margin:4px 0 0;justify-content:flex-start;gap:8px;opacity:0.3;pointer-events:none;">
-              <button class="color-btn" data-color="blue" style="background:#4a9eff" onclick="event.stopPropagation();selectJoinColor('blue')">Blue</button>
-              <button class="color-btn" data-color="red" style="background:#ff4a4a" onclick="event.stopPropagation();selectJoinColor('red')">Red</button>
-              <button class="color-btn" data-color="green" style="background:#3aaa6a" onclick="event.stopPropagation();selectJoinColor('green')">Green</button>
-              <button class="color-btn" data-color="purple" style="background:#a060dd" onclick="event.stopPropagation();selectJoinColor('purple')">Purple</button>
-            </div>
-          </div>
-          <button class="observer-role-btn" id="join-obs-btn" onclick="toggleJoinObserver()" disabled>
-            <span class="obs-role-icon"><svg class="obs-eye-icon obs-eye-lg"><use href="#icon-obs-eye"/></svg></span>
-            <span class="obs-role-text">
-              <span class="obs-role-title">Observer</span>
-              <span class="obs-role-sub">Spectate only. See every board, no actions</span>
-            </span>
-            <span class="obs-role-check">
-              <svg width="10" height="8" viewBox="0 0 10 8" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </span>
-          </button>
-          <button class="lobby-btn btn-join" id="btn-join" disabled onclick="joinRoom()" style="margin-top:10px">Join Room</button>
-          <div class="error-msg" id="join-error"></div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- EVENT HUB -->
-    <section class="lobby-section">
-      <div class="lobby-section-head"><span class="lobby-section-label">For organizers</span></div>
-      <div class="event-hub-card" id="fn-event-hub-card" style="max-width:none;">
-        <h3>Event Hub. Run Multiple Tables</h3>
-        <p style="font-size:12px;color:#888;margin:2px 0 0">Create and manage multiple game rooms at once. Players join using the shareable link for each table. You are added as an observer to each room.</p>
-        <div style="margin-top:12px;display:flex;align-items:center;gap:8px">
-          <input type="text" id="fn-event-hub-name" maxlength="20" placeholder="Your organizer name…"
-            oninput="fnUpdateEventAddBtn()"
-            style="flex:1;max-width:220px;background:#f8f7f4;border:1.5px solid #c8dda0;border-radius:8px;color:#333;font-size:13px;font-weight:600;padding:8px 12px;outline:none;font-family:inherit;" />
-        </div>
-        <div class="event-hub-add">
-          <button id="fn-event-add-btn" onclick="fnCreateEventRoom()" disabled style="opacity:0.4;cursor:not-allowed">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;margin-right:4px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add Table
-          </button>
-          <span style="font-size:12px;color:#999" id="fn-event-hub-hint">Enter your name above, then click Add Table.</span>
-        </div>
-        <div id="fn-event-table-wrap" style="display:none">
-          <table class="event-table">
-            <thead><tr>
-              <th>Room</th><th>Join Room</th><th>Invite Link</th><th>Players</th><th>Status</th><th></th>
-            </tr></thead>
-            <tbody id="fn-event-table-body"></tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <section class="lobby-section">
-      <div class="lobby-section-head"><span class="lobby-section-label">Running a workshop?</span></div>
-      <a href="/blog/how-to-facilitate-an-ai-literacy-workshop" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:14px;background:#f4fae8;border:1.5px solid #c8dda0;border-radius:12px;padding:16px 18px;text-decoration:none;transition:border-color 0.15s;" onmouseover="this.style.borderColor='#62b517'" onmouseout="this.style.borderColor='#c8dda0'">
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="7" y1="9" x2="17" y2="9"/><line x1="7" y1="13" x2="13" y2="13"/></svg>
-        <div>
-          <div style="font-size:13px;font-weight:800;color:#1a2a0a;margin-bottom:3px;">How to Facilitate an AI Literacy Workshop</div>
-          <div style="font-size:11px;color:#6b7280;">Step-by-step guide · In person &amp; online · Reflection questions included</div>
-        </div>
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="margin-left:auto;flex-shrink:0"><path d="M2 7 H12 M8 3 L12 7 L8 11" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
-    </section>
-
-    <a href="https://cybersecgames.com/products/fuzznet-labs?_pos=1&_psq=FuzzNet&_ss=e&_v=1.0" target="_blank" rel="noopener" style="font-size:13px;color:#888;text-decoration:none;transition:color 0.15s">Want the board game? <span style="color:#62b517;font-weight:600">Grab the tabletop version →</span></a>
-
-  </div>
-</div>
+<!-- CREATEGAME_HTML -->
 
 <!-- ===== WAITING ROOM ===== -->
 <div id="waiting" class="screen">
@@ -321,9 +92,6 @@
     <button class="copy-btn" id="btn-copy-link" onclick="copyLink()">Copy Link</button>
   </div>
   <div class="room-hint">Share the code or link with other players to join</div>
-  <div class="rules-banner">
-    <span>While you wait: <a href="/games/ai-neural-network/rulebook.pdf" target="_blank" rel="noopener">read the rulebook (PDF)</a>. Or just jump in, every action has a help <b>i</b> button in-game</span>
-  </div>
   <div class="player-list" id="player-list"></div>
   <div class="waiting-observer-section" id="waiting-observer-section" style="display:none">
     <div class="waiting-observer-label">
@@ -529,9 +297,9 @@ function fnSaveEventRooms() {
   localStorage.setItem(FN_EV_STORAGE_KEY, JSON.stringify([...fnEventRooms.keys()]));
 }
 
-function fnUpdateEventAddBtn() {
-  const name = (document.getElementById('fn-event-hub-name')?.value || '').trim();
-  const btn = document.getElementById('fn-event-add-btn');
+function updateEventAddBtn() {
+  const name = (document.getElementById('event-hub-name')?.value || '').trim();
+  const btn = document.getElementById('event-add-btn');
   if (!btn) return;
   const atLimit = fnEventRooms.size >= 10;
   const ok = !!name && !atLimit;
@@ -542,16 +310,16 @@ function fnUpdateEventAddBtn() {
   if (name) localStorage.setItem('fuzznet_event_name', name);
 }
 
-function fnCreateEventRoom() {
-  const name = (document.getElementById('fn-event-hub-name')?.value || '').trim();
+function createEventRoom() {
+  const name = (document.getElementById('event-hub-name')?.value || '').trim();
   if (!name) return;
   sendMsg({ type: 'create_event_room', gameType: 'fuzznet', name });
 }
 
 function fnRenderEventTable() {
-  const tbody = document.getElementById('fn-event-table-body');
-  const wrap  = document.getElementById('fn-event-table-wrap');
-  const hint  = document.getElementById('fn-event-hub-hint');
+  const tbody = document.getElementById('event-table-body');
+  const wrap  = document.getElementById('event-table-wrap');
+  const hint  = document.getElementById('event-hub-hint');
   if (fnEventRooms.size === 0) {
     wrap.style.display = 'none';
     hint.style.display = '';
@@ -578,7 +346,7 @@ function fnRenderEventTable() {
       <td><button class="ev-copy-btn" onclick="fnRemoveEventRoom('${code}')" title="Remove from list" style="color:#4b5563;border-color:#1e2d3d">✕</button></td>`;
     tbody.appendChild(tr);
   }
-  fnUpdateEventAddBtn();
+  updateEventAddBtn();
 }
 
 function fnOpenObserverTab(code) {
@@ -2608,8 +2376,8 @@ hub = SocketHub.create({
       // Restore Event Hub rooms from localStorage
       const savedEvName = localStorage.getItem('fuzznet_event_name');
       if (savedEvName) {
-        const nameInput = document.getElementById('fn-event-hub-name');
-        if (nameInput) { nameInput.value = savedEvName; fnUpdateEventAddBtn(); }
+        const nameInput = document.getElementById('event-hub-name');
+        if (nameInput) { nameInput.value = savedEvName; updateEventAddBtn(); }
       }
       const savedEvCodes = JSON.parse(localStorage.getItem(FN_EV_STORAGE_KEY) || '[]');
       if (savedEvCodes.length > 0) {

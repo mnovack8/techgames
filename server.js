@@ -1,6 +1,7 @@
 'use strict';
 require('dotenv').config();
 const http   = require('http');
+const path   = require('path');
 const crypto = require('crypto');
 const { WebSocketServer } = require('ws');
 
@@ -9,6 +10,7 @@ const auth         = require('./auth');
 const gameManager  = require('./games/game-manager');
 const siteRouting  = require('./site-routing');
 const hubRenderer  = require('./games/marketing-hub-renderer');
+const creategameRenderer = require('./games/creategame-renderer');
 
 const PORT = process.env.PORT || 8090;
 
@@ -66,7 +68,15 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  siteRouting.serveFile(resolved.filePath, resolved.contentType, res);
+  // If the resolved file is a registered game page, inject the create-game
+  // fragment into its <!-- CREATEGAME_HTML --> marker on the fly.
+  const relPath = '/' + path.relative(__dirname, resolved.filePath);
+  const mountedKey = creategameRenderer.getMounts().get(relPath);
+  const transform = mountedKey
+    ? (buf) => creategameRenderer.injectInto(relPath, buf.toString('utf8'))
+    : undefined;
+
+  siteRouting.serveFile(resolved.filePath, resolved.contentType, res, { transform });
 });
 
 const wss = new WebSocketServer({ server });

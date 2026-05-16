@@ -1,0 +1,38 @@
+{
+  "mount": "/games/cybersecurity/byteclub.html",
+
+  "game_display_name": "BYTE CLUB",
+  "hero_visual_html": "<img src=\"/images/byteclub/byteclub.png\" alt=\"Byte Club\">",
+  "hero_subtitle": "Experience the Cycle of Cyberwarfare from both sides. Race to steal the Data Flag while defending your own.",
+  "time_text": "20 Min",
+
+  "learning_objectives": [
+    {
+      "icon_svg": "<svg viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M22,11 L17,13 L19,18 L14,16 L12,22 L10,16 L5,18 L7,13 L2,11 L7,9 L5,4 L10,6 L12,1 L14,6 L19,4 L17,9 Z\" fill=\"#d1db24\"/><circle cx=\"12\" cy=\"11\" r=\"3.5\" fill=\"#62b517\"/><circle cx=\"12\" cy=\"11\" r=\"1.5\" fill=\"#d1db24\"/></svg>",
+      "title": "Attacker Mindset",
+      "description": "How hackers plan and execute attacks, stage by stage"
+    },
+    {
+      "icon_svg": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#62b517\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M12 2L4 6v6c0 5.5 3.5 10.7 8 12 4.5-1.3 8-6.5 8-12V6L12 2z\"/><path d=\"M9 12l2 2 4-4\" stroke=\"#d1db24\" stroke-width=\"2\"/></svg>",
+      "title": "Defender Mindset",
+      "description": "How security teams protect, detect, and respond to threats"
+    },
+    {
+      "icon_svg": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#62b517\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M1 4v6h6\"/><path d=\"M23 20v-6h-6\"/><path d=\"M20.49 9A9 9 0 0 0 5.64 5.64L1 10\"/><path d=\"M23 14l-4.64 4.36A9 9 0 0 1 3.51 15\" stroke=\"#d1db24\"/></svg>",
+      "title": "The Cycle of Cyberwarfare",
+      "description": "Why attack and defense never stop evolving against each other"
+    },
+    {
+      "icon_svg": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#62b517\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z\"/><line x1=\"8\" y1=\"10\" x2=\"16\" y2=\"10\" stroke=\"#d1db24\"/><line x1=\"8\" y1=\"14\" x2=\"12\" y2=\"14\" stroke=\"#d1db24\"/></svg>",
+      "title": "You are CyberFluent",
+      "description": "Break down any incident and challenge anyone who can't explain it"
+    }
+  ],
+
+  "observer_subtitle": "Read-only · see all cards & hands",
+
+  "workshop_url": "/blog/cybersecurity-awareness-workshop",
+  "workshop_title": "How to Facilitate a Cybersecurity Awareness Workshop",
+
+  "footer_cta_html": "<a href=\"https://cybersecgames.com/products/byte-club-card-game-to-hack-or-not-to-hack\" target=\"_blank\" rel=\"noopener\" style=\"font-size:13px;color:#888;text-decoration:none;transition:color 0.15s\">Want the board game? <span style=\"color:#62b517;font-weight:600\">Grab the tabletop version →</span></a>"
+}

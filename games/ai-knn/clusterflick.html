@@ -61,100 +61,7 @@
   <span class="nav-current">Clusterflick</span>
 </nav>
 
-<div id="lobby" class="screen active">
-  <div class="lobby-container">
-
-    <div class="lobby-hero">
-      <canvas id="lobby-preview-canvas" class="lobby-hero-board" width="220" height="220"></canvas>
-      <div class="lobby-hero-text">
-        <h1>Clusterflick</h1>
-        <p class="subtitle">K-Nearest Neighbors &middot; Machine Learning</p>
-        <div class="lobby-meta">
-          <span class="lobby-meta-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9" stroke="#a8c96a" stroke-width="1" stroke-dasharray="2 2"/><circle cx="12" cy="12" r="5" stroke="#62b517" stroke-width="1.8"/><path d="M12 8 L12 16 M8 12 L16 12" stroke="#62b517" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="12" r="2.5" fill="#d1db24" stroke="#62b517" stroke-width="1.5"/></svg> K-NN Algorithm</span>
-          <span class="lobby-meta-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><circle cx="9" cy="7" r="3"/><path d="M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><circle cx="17" cy="7" r="2" opacity="0.6"/><path d="M21 21v-1.5a4 4 0 0 0-3-3.87" opacity="0.6"/></svg> 2-4 Players</span>
-          <span class="lobby-meta-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15" stroke="#d1db24"/></svg> ~30 Min</span>
-        </div>
-        <button class="lobby-tutorial-cta" onclick="startTutorial()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-          How to Play
-        </button>
-      </div>
-    </div>
-
-    <section class="lobby-section">
-      <div class="lo-strip">
-        <div class="lo-item"><div class="lo-item-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#62b517" stroke-width="1.8" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="9" ry="4" stroke="#a8c96a"/><ellipse cx="12" cy="12" rx="4" ry="9" stroke="#a8c96a"/><circle cx="12" cy="12" r="2" fill="#d1db24" stroke="none"/></svg></div><div class="lo-item-title">Beyond the Black Box</div><div class="lo-item-desc">ML is a family - GenAI is just one branch</div></div>
-        <div class="lo-item"><div class="lo-item-icon"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9" stroke="#a8c96a" stroke-width="1" stroke-dasharray="2 2"/><circle cx="12" cy="12" r="5" stroke="#62b517" stroke-width="1.8"/><path d="M12 8 L12 16 M8 12 L16 12" stroke="#62b517" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="12" r="2.5" fill="#d1db24" stroke="#62b517" stroke-width="1.5"/></svg></div><div class="lo-item-title">Distance, Not Probability</div><div class="lo-item-desc">K-NN classifies by similarity, no neural net needed</div></div>
-        <div class="lo-item"><div class="lo-item-icon"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 3 L9 9 L5 18 a3 3 0 0 0 2.7 4 H16.3 a3 3 0 0 0 2.7 -4 L15 9 V3" stroke="#62b517" stroke-width="1.8" stroke-linejoin="round"/><line x1="8" y1="3" x2="16" y2="3" stroke="#62b517" stroke-width="2" stroke-linecap="round"/><path d="M6.5 15 L17.5 15" stroke="#d1db24" stroke-width="2"/><circle cx="10" cy="18" r="0.9" fill="#d1db24"/><circle cx="14" cy="19" r="0.7" fill="#a8c96a"/></svg></div><div class="lo-item-title">Data IS the Model</div><div class="lo-item-desc">Every sample stays visible - no hidden weights</div></div>
-        <div class="lo-item"><div class="lo-item-icon"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9" stroke="#62b517" stroke-width="2"/><polygon points="12,5 14,12 12,11 10,12" fill="#d1db24" stroke="#62b517" stroke-width="1"/><polygon points="12,19 10,12 12,13 14,12" fill="#a8c96a" stroke="#62b517" stroke-width="1"/><circle cx="12" cy="12" r="1.2" fill="#62b517"/></svg></div><div class="lo-item-title">AI Fluency</div><div class="lo-item-desc">Know which ML tool fits which job</div></div>
-      </div>
-    </section>
-
-    <section class="lobby-section">
-      <div class="lobby-section-head"><span class="lobby-section-label">Play Now &middot; Free Online</span></div>
-      <div class="invited-banner" id="invited-banner">
-        <div class="invited-banner-icon">&#x1F3AE;</div>
-        <div class="invited-banner-text">
-          <span class="invited-banner-title">You've been invited to room <span class="invited-banner-code" id="invited-banner-code"></span></span>
-          <span class="invited-banner-sub">Enter your name and pick a role in the Join card below.</span>
-        </div>
-        <div class="invited-banner-arrow">&#x2193;</div>
-      </div>
-      <div class="lobby-play-grid">
-          <div class="lobby-card" id="lobby-create-card">
-            <h3>Create Game</h3>
-            <p class="card-desc">Share the room code to invite players, or play solo vs a bot.</p>
-            <div class="role-section-label">Your Name</div>
-            <input class="lobby-input name-input" id="create-name" maxlength="12" placeholder="Enter your name" oninput="updateCreateBtn()">
-            <div class="role-section-label">Choose Your Role</div>
-            <div id="create-player-role" class="player-role-box active" onclick="selectCreateRole('player')">
-              <div class="role-title">Player</div>
-              <div class="color-options" id="create-colors" style="margin:4px 0 0;justify-content:flex-start;gap:8px">
-                <button class="color-btn selected" data-color="blue" style="background:#4a9eff" onclick="event.stopPropagation();selectCreateColor('blue')">Blue</button>
-                <button class="color-btn" data-color="red" style="background:#ff4a4a" onclick="event.stopPropagation();selectCreateColor('red')">Red</button>
-                <button class="color-btn" data-color="green" style="background:#4aff8a" onclick="event.stopPropagation();selectCreateColor('green')">Green</button>
-                <button class="color-btn" data-color="purple" style="background:#c880ff" onclick="event.stopPropagation();selectCreateColor('purple')">Purple</button>
-              </div>
-            </div>
-            <button class="observer-role-btn" id="create-obs-btn" onclick="toggleCreateObserver()">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-obs-eye"/></svg>
-              <span class="obs-role-text"><span class="obs-role-title">Observer</span><span class="obs-role-sub">Spectate only - no actions</span></span>
-              <span class="obs-role-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-            </button>
-            <button class="lobby-btn btn-create" id="btn-create" onclick="createRoom()" disabled>▶ Create Game</button>
-            <div class="error-msg" id="create-error"></div>
-          </div>
-
-          <!-- Join -->
-          <div class="lobby-card" id="lobby-join-card">
-            <h3>Join a Game</h3>
-            <p class="card-desc">Have a room code? Enter it below to join.</p>
-            <input class="lobby-input" id="join-code" maxlength="4" placeholder="ROOM CODE" oninput="checkRoom()">
-            <div class="role-section-label">Your Name</div>
-            <input class="lobby-input name-input" id="join-name" maxlength="12" placeholder="Enter your name" oninput="updateJoinBtn()">
-            <div class="role-section-label">Choose Your Role</div>
-            <div id="join-player-role" class="player-role-box" onclick="selectJoinRole('player')">
-              <div class="role-title">Player</div>
-              <div class="color-options" id="join-colors" style="margin:4px 0 0;justify-content:flex-start;gap:8px;opacity:0.3;pointer-events:none;">
-                <button class="color-btn" data-color="blue" style="background:#4a9eff" onclick="event.stopPropagation();selectJoinColor('blue')">Blue</button>
-                <button class="color-btn" data-color="red" style="background:#ff4a4a" onclick="event.stopPropagation();selectJoinColor('red')">Red</button>
-                <button class="color-btn" data-color="green" style="background:#4aff8a" onclick="event.stopPropagation();selectJoinColor('green')">Green</button>
-                <button class="color-btn" data-color="purple" style="background:#c880ff" onclick="event.stopPropagation();selectJoinColor('purple')">Purple</button>
-              </div>
-            </div>
-            <button class="observer-role-btn" id="join-obs-btn" onclick="toggleJoinObserver()">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-obs-eye"/></svg>
-              <span class="obs-role-text"><span class="obs-role-title">Observer</span><span class="obs-role-sub">Spectate only - no actions</span></span>
-              <span class="obs-role-check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-            </button>
-            <button class="lobby-btn btn-join" id="btn-join" onclick="joinRoom()" disabled>Join Game</button>
-            <div class="error-msg" id="join-error"></div>
-          </div>
-      </div>
-    </section>
-
-  </div>
-</div>
+<!-- CREATEGAME_HTML -->
 
 <div id="waiting" class="screen">
   <div style="font-size:14px;color:#7c5cbf">Room Code</div>
@@ -1284,11 +1191,113 @@ function onPointerUp(e){
   renderGameCanvas();
 }
 
+// ==================== EVENT HUB ====================
+const eventRooms = new Map(); // code → {code, playerCount, status}
+const EV_STORAGE_KEY = 'clusterflick_event_rooms';
+
+function saveEventRooms() {
+  localStorage.setItem(EV_STORAGE_KEY, JSON.stringify([...eventRooms.keys()]));
+}
+
+function updateEventAddBtn() {
+  const name = (document.getElementById('event-hub-name')?.value || '').trim();
+  const btn = document.getElementById('event-add-btn');
+  if (!btn) return;
+  const atLimit = eventRooms.size >= 10;
+  const ok = !!name && !atLimit;
+  btn.disabled = !ok;
+  btn.style.opacity = ok ? '1' : '0.4';
+  btn.style.cursor = ok ? 'pointer' : 'not-allowed';
+  btn.title = atLimit ? 'Maximum of 10 tables reached' : '';
+  if (name) localStorage.setItem('clusterflick_event_name', name);
+}
+
+function createEventRoom() {
+  const name = (document.getElementById('event-hub-name')?.value || '').trim();
+  if (!name) return;
+  send({ type: 'create_event_room', name });
+}
+
+function renderEventTable() {
+  const tbody = document.getElementById('event-table-body');
+  const wrap  = document.getElementById('event-table-wrap');
+  const hint  = document.getElementById('event-hub-hint');
+  if (!tbody || !wrap || !hint) return;
+  if (eventRooms.size === 0) {
+    wrap.style.display = 'none';
+    hint.style.display = '';
+    return;
+  }
+  hint.style.display = 'none';
+  wrap.style.display = '';
+  tbody.innerHTML = '';
+  for (const [code, room] of eventRooms) {
+    const statusClass = room.status === 'in_progress' ? 'in-progress'
+                      : room.status === 'completed'   ? 'completed'
+                      : room.status === 'cancelled'   ? 'cancelled' : 'pending';
+    const statusLabel = room.status === 'in_progress' ? 'In Progress'
+                      : room.status === 'completed'   ? 'Completed'
+                      : room.status === 'cancelled'   ? 'Cancelled'  : 'Pending';
+    const tr = document.createElement('tr');
+    tr.id = 'ev-row-' + code;
+    tr.innerHTML = `
+      <td><span class="ev-code">${code}</span></td>
+      <td><button class="ev-observe-btn" onclick="openObserverTab('${code}')">Join Room</button></td>
+      <td><button class="ev-copy-btn" id="ev-copy-${code}" onclick="copyEventLink('${code}')">Copy Link</button></td>
+      <td class="ev-players">${room.playerCount}<span style="color:#888"> / 4</span></td>
+      <td><span class="ev-status ${statusClass}">${statusLabel}</span></td>
+      <td><button class="ev-copy-btn" onclick="removeEventRoom('${code}')" title="Remove from list" style="color:#888">✕</button></td>`;
+    tbody.appendChild(tr);
+  }
+  updateEventAddBtn();
+}
+
+function openObserverTab(code) {
+  const name = (localStorage.getItem('clusterflick_event_name') || '').trim();
+  const nameParam = name ? '&name=' + encodeURIComponent(name) : '';
+  window.open(`${location.origin}/ai/knn/clusterflick?room=${code}&obs=1${nameParam}`, '_blank');
+}
+
+function copyEventLink(code) {
+  const link = `${location.origin}/ai/knn/clusterflick?room=${code}`;
+  navigator.clipboard.writeText(link).catch(() => {});
+  const btn = document.getElementById('ev-copy-' + code);
+  if (!btn) return;
+  const orig = btn.textContent;
+  btn.textContent = 'Copied!';
+  btn.classList.add('copied');
+  setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 1600);
+}
+
+function removeEventRoom(code) {
+  eventRooms.delete(code);
+  saveEventRooms();
+  renderEventTable();
+}
+
 // ==================== WEBSOCKET ====================
 function send(msg) { hub.send(msg); }
 
 function handleMsg(msg){
   switch(msg.type){
+    case 'event_room_created':
+      eventRooms.set(msg.code, { code: msg.code, playerCount: 0, status: 'pending' });
+      saveEventRooms();
+      renderEventTable();
+      break;
+    case 'event_status_update':
+      if (eventRooms.has(msg.code)) {
+        const er = eventRooms.get(msg.code);
+        er.playerCount = msg.playerCount;
+        er.status = msg.status;
+        renderEventTable();
+      }
+      break;
+    case 'event_rooms_expired':
+      for (const code of (msg.codes || [])) eventRooms.delete(code);
+      saveEventRooms();
+      renderEventTable();
+      break;
     case 'room_created':
       roomCode=msg.code;myId=msg.yourId;isHost=true;isObserver=false;
       if(msg.token)sessionStorage.setItem(SESSION_KEY,msg.token);
@@ -1806,6 +1815,20 @@ window.addEventListener('DOMContentLoaded',()=>{
           checkRoom();
         }
         if (params.get('tutorial') === '1' || /\/tutorial\/?$/.test(location.pathname)) startTutorial();
+        // Event Hub: restore prior organizer name + tables from localStorage
+        const savedName = localStorage.getItem('clusterflick_event_name');
+        if (savedName) {
+          const nameInput = document.getElementById('event-hub-name');
+          if (nameInput) { nameInput.value = savedName; updateEventAddBtn(); }
+        }
+        const savedCodes = JSON.parse(localStorage.getItem(EV_STORAGE_KEY) || '[]');
+        if (savedCodes.length > 0) {
+          for (const code of savedCodes) {
+            if (!eventRooms.has(code)) eventRooms.set(code, { code, playerCount: 0, status: 'pending' });
+          }
+          renderEventTable();
+          hub.send({ type: 'query_event_rooms', codes: savedCodes });
+        }
       }
     },
     onDisconnect : function () { showToast('Disconnected - reconnecting…'); },

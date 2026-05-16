@@ -8,6 +8,7 @@
 const { describe, it, before, after } = require('node:test');
 const assert = require('node:assert/strict');
 const { startServer, stopServer, httpRequest } = require('./helpers');
+const hubRenderer = require('../games/marketing-hub-renderer');
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Shared server instance for this file
@@ -55,13 +56,18 @@ describe('Route Coverage', () => {
 
   // ── Game hubs ─────────────────────────────────────────────────────────────
   describe('Game hub pages', () => {
-    const hubs = [
-      ['/cybersecurity',            'ByteClub hub'],
+    // Static hubs (not template-driven)
+    const staticHubs = [
       ['/ai',                       'AI hub'],
-      ['/ai/neural-network',        'FuzzNet hub'],
-      ['/ai/knn',                   'ClusterFlick hub'],
       ['/quantumcomputing',         'Quantum Computing'],
     ];
+
+    // Template-driven hubs auto-discovered from games/<key>/marketing.json
+    const templateRoutes = [...hubRenderer.getHubRoutes().keys()]
+      .filter(p => !p.endsWith('.html'))                       // skip .html aliases
+      .map(p => [p, `Marketing hub: ${hubRenderer.getHubRoutes().get(p)}`]);
+
+    const hubs = [...staticHubs, ...templateRoutes];
 
     for (const [path, label] of hubs) {
       it(`${label} (${path}) → 200`, async () => {

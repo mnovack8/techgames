@@ -488,3 +488,45 @@ body.rejoin-pending .screen.active { visibility: hidden; }
   .lo-item-icon { width: 36px; height: 36px; }
   .lo-item-desc { display: none; }
 }
+
+/* ============================================================
+   CREATE-GAME INLINE STYLES → CLASSES
+   Default values are the light/green theme (FuzzNet & ClusterFlick).
+   Dark-theme games (ByteClub) override these in their own per-game CSS.
+   ============================================================ */
+
+/* Event Hub — text below the heading + name input row */
+.event-hub-desc      { font-size: 12px; color: #888; margin: 2px 0 0; }
+.event-hub-name-row  { margin-top: 12px; display: flex; align-items: center; gap: 8px; }
+.event-hub-name-input {
+  flex: 1; max-width: 220px;
+  background: #f8f7f4;
+  border: 1.5px solid #c8dda0;
+  border-radius: 8px;
+  color: #333;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 12px;
+  outline: none;
+  font-family: inherit;
+}
+.event-hub-hint-text { font-size: 12px; color: #999; }
+
+/* Workshop banner — link card under "Running a workshop?" */
+.workshop-banner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #f4fae8;
+  border: 1.5px solid #c8dda0;
+  border-radius: 12px;
+  padding: 16px 18px;
+  text-decoration: none;
+  transition: border-color 0.15s;
+}
+.workshop-banner:hover { border-color: #62b517; }
+.workshop-banner-icon  { flex-shrink: 0; color: #62b517; }
+.workshop-banner-text  { display: block; }
+.workshop-banner-title { font-size: 13px; font-weight: 800; color: #1a2a0a; margin-bottom: 3px; }
+.workshop-banner-sub   { font-size: 11px; color: #6b7280; }
+.workshop-banner-arrow { margin-left: auto; flex-shrink: 0; color: #62b517; }

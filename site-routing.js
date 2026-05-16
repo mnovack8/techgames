@@ -1,6 +1,7 @@
 'use strict';
 const path = require('path');
 const fs   = require('fs');
+const hubRenderer = require('./games/marketing-hub-renderer');
 
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -42,16 +43,11 @@ function resolvePathname(pathname) {
     return { redirect: REDIRECTS[pathname] };
   }
 
-  // ── Marketing hub pages: rendered from /games/marketing-hub.template.html
-  //    + /games/<gameKey>/marketing.json. Returned via { renderHub: <gameKey> }.
-  if (pathname === '/cybersecurity' || pathname === '/cybersecurity.html') {
-    return { renderHub: 'cybersecurity', contentType: 'text/html; charset=utf-8' };
-  }
-  if (pathname === '/ai/neural-network' || pathname === '/ai/neural-network.html') {
-    return { renderHub: 'ai-neural-network', contentType: 'text/html; charset=utf-8' };
-  }
-  if (pathname === '/ai/knn' || pathname === '/ai/knn.html') {
-    return { renderHub: 'ai-knn', contentType: 'text/html; charset=utf-8' };
+  // ── Marketing hub pages: auto-discovered from games/<key>/marketing.json files.
+  //    Each JSON's "routes" array registers the URL(s) it serves.
+  const hubRoutes = hubRenderer.getHubRoutes();
+  if (hubRoutes.has(pathname)) {
+    return { renderHub: hubRoutes.get(pathname), contentType: 'text/html; charset=utf-8' };
   }
 
   // ── URL → file path ───────────────────────────────────────────────────────
@@ -99,9 +95,18 @@ function resolvePathname(pathname) {
 
 /**
  * Serve a resolved file path, writing to res.
+ *
+ * @param {string} filePath     Absolute path to read.
+ * @param {string} contentType  MIME type for the Content-Type header.
+ * @param {*} res               Response object.
+ * @param {object} [opts]
+ * @param {(buf: Buffer) => (Buffer|string)} [opts.transform]
+ *        Optional transform applied to the file contents before write
+ *        (used to inject the create-game fragment into game HTML pages).
+ *
  * Handles 404 with /404.html fallback and 500 on other errors.
  */
-function serveFile(filePath, contentType, res) {
+function serveFile(filePath, contentType, res, opts) {
   // Only serve files under __dirname (prevent path traversal)
   if (!filePath.startsWith(__dirname)) { res.writeHead(403); res.end('Forbidden'); return; }
   fs.readFile(filePath, (err, data) => {
@@ -116,8 +121,15 @@ function serveFile(filePath, contentType, res) {
       }
       return;
     }
+    let payload = data;
+    if (opts && typeof opts.transform === 'function') {
+      try { payload = opts.transform(data); } catch (e) {
+        console.error('[serveFile] transform error:', e);
+        payload = data;
+      }
+    }
     res.writeHead(200, { 'Content-Type': contentType });
-    res.end(data);
+    res.end(payload);
   });
 }
 

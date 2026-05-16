@@ -1,4 +1,6 @@
 {
+  "routes": ["/cybersecurity", "/cybersecurity.html"],
+
   "meta_description": "Byte Club is a cybersecurity card game teaching the Cyber Kill Chain and NIST Framework through experiential learning. 2–4 players. Free to play online. Physical version available.",
   "og_title": "Byte Club. Cybersecurity Card Game",
   "og_description": "Byte Club is a cybersecurity card game teaching the Cyber Kill Chain and NIST Framework through experiential learning. 2–4 players. Free to play online. Physical version available.",

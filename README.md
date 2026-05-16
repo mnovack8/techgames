@@ -98,6 +98,103 @@ node --test tests/games/fuzznet.test.js
 
 ---
 
+## Create-Game (Lobby) Pages — Template-Driven
+
+The `<div id="lobby">` block on each game page (`/cybersecurity/byteclub`, `/ai/neural-network/fuzznet`, `/ai/knn/clusterflick`) is **not** stored in the per-game HTML files. It is rendered at request time from a single shared fragment-template + per-game JSON config, and **injected into a `<!-- CREATEGAME_HTML -->` marker** in the game HTML by the server.
+
+**Files involved:**
+
+| File | Role |
+|---|---|
+| `games/creategame.template.html` | Shared lobby fragment: hero, learning objectives, create/join cards, Event Hub, workshop banner, footer slot |
+| `games/creategame-renderer.js` | Auto-discovers `games/*/creategame.json`, renders the fragment, injects it into each game HTML's marker |
+| `games/<game-key>/creategame.json` | Per-game data **and** the `mount` field that points at the game HTML file |
+| `games/template-util.js` | Shared Mustache-lite templater used by both the marketing hub and create-game renderers |
+
+**Request flow:** Request to a game page (e.g. `/ai/knn/clusterflick`) → `site-routing.js` resolves to `games/ai-knn/clusterflick.html` → `server.js` checks `creategameRenderer.getMounts()` and finds the file is mounted → server reads the HTML, replaces `<!-- CREATEGAME_HTML -->` with the rendered create-game fragment, returns 200.
+
+### Adding a new game's lobby
+
+**One step:** drop in `games/<game-key>/creategame.json` with a `mount` field pointing at your game's HTML file. The HTML file just needs a `<!-- CREATEGAME_HTML -->` marker where the `<div id="lobby">…</div>` block should go.
+
+```jsonc
+{
+  "mount": "/games/<game-key>/<game-name>.html",   // ← HTML file to inject into
+
+  "game_display_name": "My Game",
+  "hero_visual_html": "<img src=\"/images/...\" alt=\"\">",   // or <canvas>
+  "hero_subtitle": "…",
+  "time_text": "30 Min",
+
+  "learning_objectives": [
+    { "icon_svg": "<svg…>", "title": "…", "description": "…" },
+    // …4 items total
+  ],
+
+  "observer_subtitle": "…",
+  "workshop_url": "/blog/…",
+  "workshop_title": "…",
+  "footer_cta_html": ""    // optional Shopify CTA, or empty
+}
+```
+
+The renderer scans the filesystem on next server start, builds a mount map, and the server auto-injects the fragment into the marker in your HTML file. No router edits. No HTML to hand-write.
+
+**To change the lobby layout for all games:** edit `creategame.template.html` once.
+
+---
+
+## Marketing Hub Pages — Template-Driven
+
+The game-domain marketing pages (**`/cybersecurity`**, **`/ai/neural-network`**, **`/ai/knn`**, …) are not static HTML files. They are rendered at request time from a **single shared template** + **per-game JSON config**, and routes are **auto-discovered** at startup — no router edits needed when adding a new game.
+
+**Files involved:**
+
+| File | Role |
+|---|---|
+| `games/marketing-hub.template.html` | Shared HTML skeleton (hero, features, CTA bar, game-info bar, learning objectives, workshop section, footer) |
+| `games/marketing-hub-renderer.js` | ~100-line zero-dependency Mustache-lite templater + filesystem auto-discovery |
+| `games/<game-key>/marketing.json` | Per-game content **and** the `routes` array that registers its URL(s) |
+| `games/hub.css` | Shared layout/typography. Per-game CSS (`games/<game-key>/<game-key>.css`) only carries brand color overrides. |
+
+**Request flow:** Request → `site-routing.js` consults `hubRenderer.getHubRoutes()` (built once at startup by scanning `games/*/marketing.json`) → matched route returns `{ renderHub: <gameKey> }` → `server.js` calls `hubRenderer.renderHub(key)` → 200 + rendered HTML.
+
+**Templating syntax** (zero dependencies):
+
+- `{{key}}` — substitute as raw HTML
+- `{{#array}}…{{/array}}` — iterate; inner placeholders resolve against the current item
+
+### Adding a new game's marketing page
+
+**One step:** drop in `games/<game-key>/marketing.json`. That's it.
+
+```jsonc
+{
+  "routes": ["/your-domain", "/your-domain.html"],   // ← URLs to serve this page on
+
+  "page_title": "…",
+  "meta_description": "…",
+  "hero_badge": "…",
+  "hero_h1": "<span class=\"game-name\">My Game</span>",
+  "hero_subtitle_html": "<p class=\"hero-subtitle\">…</p>",
+  "hero_visual_svg": "<svg …>…</svg>",
+  "features": [ { "icon_svg": "…", "title": "…", "description": "…" }, … ],
+  // …see existing marketing.json files for the full schema
+}
+```
+
+On next server start the renderer scans the filesystem, picks up the new file, and registers every URL in its `routes` array. The router and test suite both consume the same discovered map, so:
+
+- **No `site-routing.js` edits**
+- **No `tests/routes.test.js` edits** — the hub-route test auto-iterates over discovered routes
+- **No HTML to write** — the template covers it
+
+Copy one of the existing `marketing.json` files as a starting point for the full schema (metadata, JSON-LD, hero, features, concept cards, workshop content, etc.).
+
+**To change layout/spacing/typography for all games:** edit `marketing-hub.template.html` or `games/hub.css` once.
+
+---
+
 ## Dependencies
 
 | Package | Version | Purpose |
