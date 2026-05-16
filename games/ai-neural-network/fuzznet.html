@@ -84,29 +84,7 @@
 <!-- CREATEGAME_HTML -->
 
 <!-- ===== WAITING ROOM ===== -->
-<div id="waiting" class="screen">
-  <div style="font-size:14px; color:#888;">Room Code</div>
-  <div class="room-code-display" id="room-code-display">----</div>
-  <div class="room-share">
-    <button class="copy-btn" id="btn-copy-code" onclick="copyCode()">Copy Code</button>
-    <button class="copy-btn" id="btn-copy-link" onclick="copyLink()">Copy Link</button>
-  </div>
-  <div class="room-hint">Share the code or link with other players to join</div>
-  <div class="player-list" id="player-list"></div>
-  <div class="waiting-observer-section" id="waiting-observer-section" style="display:none">
-    <div class="waiting-observer-label">
-      <svg class="obs-eye-icon obs-eye-sm"><use href="#icon-obs-eye"/></svg>
-      <span id="waiting-observer-count">Observers</span>
-    </div>
-    <div id="waiting-observer-list"></div>
-  </div>
-  <button class="bot-toggle" id="btn-bot-toggle" onclick="toggleBot()" style="display:none">Play Solo vs Bot</button>
-  <div class="waiting-actions">
-    <button id="btn-start-game" onclick="startGame()" disabled>Start Game</button>
-    <button id="btn-leave" onclick="leaveRoom()">Leave</button>
-  </div>
-  <div class="error-msg" id="waiting-error"></div>
-</div>
+<!-- LOBBY_HTML -->
 
 <!-- ===== GAME ===== -->
 <div id="game" class="screen">

@@ -99,28 +99,7 @@
 <!-- CREATEGAME_HTML -->
 
 <!-- SCREEN: WAITING ROOM -->
-<div class="screen" id="waiting">
-  <h2>Byte Club</h2>
-  <div class="room-code-display" id="room-code-text">ABCD</div>
-  <div class="room-share">
-    <button class="copy-btn" onclick="copyCode()">Copy Code</button>
-    <button class="copy-btn" onclick="copyLink()">Copy Link</button>
-  </div>
-  <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:#62b517;margin-bottom:8px;display:flex;align-items:center;gap:6px;">
-  <span>↕</span><span>Play Order</span>
-</div>
-<div class="waiting-players" id="waiting-players"></div>
-  <div class="waiting-observer-section" id="waiting-observer-section" style="display:none">
-    <div class="waiting-observer-label">
-      <svg class="obs-eye-icon obs-eye-sm"><use href="#icon-obs-eye"/></svg>
-      <span id="waiting-observer-count">Observers</span>
-    </div>
-    <div id="waiting-observer-list"></div>
-  </div>
-  <button class="copy-btn" id="btn-bot-toggle" onclick="toggleBot()" style="display:none;padding:10px 24px;font-size:14px;">Play Solo vs Bot</button>
-  <button class="start-btn" id="btn-start" onclick="startGame()" disabled>Start Game</button>
-  <p class="waiting-hint" id="waiting-hint">Share the room code to invite players.</p>
-</div>
+<!-- LOBBY_HTML -->
 
 <!-- SCREEN: GAME -->
 <div class="screen" id="game">
@@ -1133,6 +1112,16 @@ function copyLink() {
 
 function startGame() { send({ type:'start_game' }); }
 function toggleBot() { send({ type:'toggle_bot' }); }
+function leaveRoom() {
+  sessionStorage.removeItem(SESSION_KEY);
+  sessionStorage.removeItem(OBS_SESSION_KEY);
+  send({ type: 'leave_room' });
+  roomCode = null; myId = null; myObserverIdx = -1; gameState = null;
+  isHost = false; isObserver = false;
+  document.body.classList.remove('observer-active');
+  history.replaceState({}, '', BC_BASE_PATH);
+  showScreen('lobby');
+}
 
 function showCancelModal() { document.getElementById('cancel-modal-overlay').classList.add('open'); }
 function hideCancelModal() { document.getElementById('cancel-modal-overlay').classList.remove('open'); }
@@ -1177,7 +1166,7 @@ const WARN_ICON_TARGET = `<svg width="36" height="36" viewBox="0 0 24 24" fill="
 
 function renderLobbyPlayers(players, observers) {
   observers = observers || [];
-  const el = document.getElementById('waiting-players');
+  const el = document.getElementById('player-list');
   el.innerHTML = '';
 
   // Players section label + rows
@@ -1208,34 +1197,31 @@ function renderLobbyPlayers(players, observers) {
   // Delegate observer list rendering to shared ObserverUI module
   ObserverUI.renderWaitingObservers(observers);
 
-  const startBtn = document.getElementById('btn-start');
+  const startBtn = document.getElementById('btn-start-game');
   const botBtn   = document.getElementById('btn-bot-toggle');
-  const hint     = document.getElementById('waiting-hint');
   const humans   = players.filter(p => !p.isBot).length;
   const hasBot   = players.some(p => p.isBot);
 
-  if (isHost) {
-    startBtn.style.display = 'block';
-    startBtn.disabled = players.length < 2;
-    // Show bot toggle when host is alone (both player-host and observer-host can add a bot)
-    if (humans === 1) {
-      botBtn.style.display = 'inline-block';
-      botBtn.textContent = hasBot ? 'Remove Bot' : 'Play Solo vs Bot';
-    } else {
-      botBtn.style.display = 'none';
-    }
-    hint.textContent = players.length < 2
-      ? 'Waiting for at least 2 players (or 1 player + bot) to start…'
-      : players.length === 2 && hasBot
-        ? 'Playing solo vs bot. Or share the code to swap in a real player.'
-        : `${humans} player(s) ready. Start when you're ready!`;
+  // Start button — visible only for host, enabled when 2+ players
+  startBtn.style.display = isHost ? 'inline-block' : 'none';
+  startBtn.disabled = players.length < 2;
+
+  // Bot toggle — visible only when a player-host is alone (observer-host can't be a player)
+  if (isHost && !isObserver && humans === 1) {
+    botBtn.style.display = 'block';
+    botBtn.textContent = hasBot ? 'Remove Bot' : 'Play Solo vs Bot';
+    botBtn.classList.toggle('active', hasBot);
   } else {
-    startBtn.style.display = 'none';
-    botBtn.style.display   = 'none';
-    hint.textContent = isObserver
-      ? 'Observing. Waiting for the host to start the game…'
-      : 'Waiting for the host to start the game…';
+    botBtn.style.display = 'none';
   }
+
+  // Status message — canonical wording shared by all three games
+  const errMsg = isObserver
+    ? (players.length < 2 ? 'Waiting for players to join...' : isHost ? 'Ready. Start the game when players are set.' : 'Waiting for host to start...')
+    : isHost
+      ? (players.length < 2 ? 'Add a bot or invite players to start' : '')
+      : (players.length < 2 ? 'Waiting for more players...' : 'Waiting for host to start...');
+  document.getElementById('waiting-error').textContent = errMsg;
 }
 
 
@@ -1245,14 +1231,14 @@ function handleMsg(msg) {
     case 'room_created':
       roomCode = msg.code; myId = msg.yourId; isHost = true;
       if (msg.token) sessionStorage.setItem(SESSION_KEY, msg.token);
-      document.getElementById('room-code-text').textContent = roomCode;
+      document.getElementById('room-code-display').textContent = roomCode;
       history.replaceState({}, '', '/cybersecurity/byteclub?room=' + roomCode);
       showScreen('waiting');
       break;
     case 'room_joined':
       roomCode = msg.code; myId = msg.yourId; isHost = msg.isHost || false;
       if (msg.token) sessionStorage.setItem(SESSION_KEY, msg.token);
-      document.getElementById('room-code-text').textContent = roomCode;
+      document.getElementById('room-code-display').textContent = roomCode;
       history.replaceState({}, '', '/cybersecurity/byteclub?room=' + roomCode);
       showScreen('waiting');
       break;
@@ -1265,7 +1251,7 @@ function handleMsg(msg) {
         document.getElementById('htp-btn').style.display = 'flex';
         if (isHost) document.getElementById('btn-cancel-game').style.display = 'flex';
       } else {
-        document.getElementById('room-code-text').textContent = roomCode;
+        document.getElementById('room-code-display').textContent = roomCode;
         showScreen('waiting');
       }
       break;
@@ -1283,7 +1269,7 @@ function handleMsg(msg) {
       isHost = msg.isHost;
       myObserverIdx = msg.observerIdx;
       roomCode = msg.code;
-      document.getElementById('room-code-text').textContent = roomCode;
+      document.getElementById('room-code-display').textContent = roomCode;
       // Persist observer session so refresh stays in observer view
       sessionStorage.setItem(OBS_SESSION_KEY, JSON.stringify({ roomCode: msg.code, name: pendingObsName || (JSON.parse(sessionStorage.getItem(OBS_SESSION_KEY)||'{}').name) || '' }));
       history.replaceState({}, '', '/cybersecurity/byteclub?room=' + msg.code);

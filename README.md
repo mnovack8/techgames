@@ -98,6 +98,49 @@ node --test tests/games/fuzznet.test.js
 
 ---
 
+## Waiting-Room Pages — Template-Driven
+
+The `<div id="waiting">` block on each game page — the screen shown when a room has been created but the host hasn't started the game yet (host can also add a bot here) — is rendered at request time from a shared fragment-template + per-game JSON. The URL state for this screen is `/<domain>/<game>/lobby`.
+
+**Files involved:**
+
+| File | Role |
+|---|---|
+| `games/lobby.template.html` | Shared waiting-room fragment: room code, share buttons, player list, observer section, bot toggle, Start/Leave |
+| `games/lobby-renderer.js` | Auto-discovers `games/*/lobby.json`, renders the fragment, injects it into each game HTML's `<!-- LOBBY_HTML -->` marker |
+| `games/<game-key>/lobby.json` | Per-game data **and** the `mount` field that points at the game HTML file |
+
+**Request flow:** Request to a game page → `site-routing.js` resolves it to the game HTML file → `server.js` consults both `creategameRenderer.getMounts()` and `lobbyRenderer.getMounts()` → if either matches, the file is read and its `<!-- CREATEGAME_HTML -->` and `<!-- LOBBY_HTML -->` markers are replaced with the rendered fragments → returns 200.
+
+### Adding a new game's waiting room
+
+**One step:** drop in `games/<game-key>/lobby.json` with just a `mount` field pointing at your game's HTML file. The HTML file needs a `<!-- LOBBY_HTML -->` marker where the `<div id="waiting">…</div>` block should go.
+
+```jsonc
+{
+  "mount": "/games/<game-key>/<game-name>.html"
+}
+```
+
+The waiting-room template currently has **no per-game variation** — every game renders the identical fragment. Canonical IDs the JS hooks into: `room-code-display`, `player-list`, `btn-bot-toggle`, `btn-start-game`, `btn-leave`, `waiting-error`.
+
+### Shared status-message logic
+
+Each game's `renderLobbyPlayers()` function follows the same logic for the `#waiting-error` message:
+
+| Role | < 2 players | 2+ players |
+|---|---|---|
+| Host (player) | "Add a bot or invite players to start" | _(empty — ready)_ |
+| Host (observer) | "Waiting for players to join..." | "Ready. Start the game when players are set." |
+| Non-host player | "Waiting for more players..." | "Waiting for host to start..." |
+| Non-host observer | "Waiting for players to join..." | "Waiting for host to start..." |
+
+Bot toggle shows only when a **player-host** is alone (`humans === 1`). Start button shows for any host but stays disabled until `players.length >= 2`. Keep new games' lobby JS consistent with this contract.
+
+**To change the waiting-room layout for all games:** edit `lobby.template.html` once.
+
+---
+
 ## Create-Game (Lobby) Pages — Template-Driven
 
 The `<div id="lobby">` block on each game page (`/cybersecurity/byteclub`, `/ai/neural-network/fuzznet`, `/ai/knn/clusterflick`) is **not** stored in the per-game HTML files. It is rendered at request time from a single shared fragment-template + per-game JSON config, and **injected into a `<!-- CREATEGAME_HTML -->` marker** in the game HTML by the server.
@@ -141,6 +184,35 @@ The `<div id="lobby">` block on each game page (`/cybersecurity/byteclub`, `/ai/
 The renderer scans the filesystem on next server start, builds a mount map, and the server auto-injects the fragment into the marker in your HTML file. No router edits. No HTML to hand-write.
 
 **To change the lobby layout for all games:** edit `creategame.template.html` once.
+
+### Per-game theming (e.g. dark mode for ByteClub)
+
+The template renders **classes**, not inline styles. Defaults live in `games/hub.css` (light/green). Per-game CSS files override those classes to apply a different theme.
+
+| Layer | File | Purpose |
+|---|---|---|
+| Structure | `games/creategame.template.html` | Markup + class names only — no theme colors |
+| Default theme | `games/hub.css` | Light/green values (FuzzNet, ClusterFlick render with these directly) |
+| Per-game override | `games/<game-key>/<game>.css` | Re-defines the same classes with that game's palette |
+
+Example: ByteClub uses a dark "hacker terminal" theme. Its `games/cybersecurity/byteclub.css` re-defines the lobby-shared classes with dark backgrounds and mint text:
+
+```css
+/* hub.css (default light theme) */
+.workshop-banner       { background: #f4fae8; border: 1.5px solid #c8dda0; }
+.workshop-banner-title { color: #1a2a0a; }
+.event-hub-name-input  { background: #f8f7f4; color: #333; border: 1.5px solid #c8dda0; }
+
+/* byteclub.css (dark override) */
+.workshop-banner       { background: #0d1a03; border-color: #253347; }
+.workshop-banner-title { color: #d1fae5; }
+.event-hub-name-input  { background: #0d1a03; color: #d1fae5; border-color: #253347; }
+```
+
+**Class hooks already in the template** (override these as needed for a new theme):
+`.event-hub-card`, `.event-hub-desc`, `.event-hub-name-row`, `.event-hub-name-input`, `.event-hub-hint-text`, `.event-hub-add`, `.event-table`, `.ev-code`, `.ev-copy-btn`, `.ev-observe-btn`, `.ev-status`, `.workshop-banner`, `.workshop-banner-icon`, `.workshop-banner-title`, `.workshop-banner-sub`, `.workshop-banner-arrow`
+
+**Rule of thumb:** if you ever feel the urge to put a hardcoded color in `creategame.template.html`, lift it into a CSS class instead — that's the only way per-game themes can override it.
 
 ---
 

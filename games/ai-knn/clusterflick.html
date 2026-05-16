@@ -63,29 +63,7 @@
 
 <!-- CREATEGAME_HTML -->
 
-<div id="waiting" class="screen">
-  <div style="font-size:14px;color:#7c5cbf">Room Code</div>
-  <div class="room-code-display" id="room-code-display">----</div>
-  <div class="room-share">
-    <button class="copy-btn" id="btn-copy-code" onclick="copyCode()">Copy Code</button>
-    <button class="copy-btn" id="btn-copy-link" onclick="copyLink()">Copy Link</button>
-  </div>
-  <div class="room-hint">Share the code or link with other players to join</div>
-  <div class="player-list" id="player-list"></div>
-  <div class="waiting-observer-section" id="waiting-observer-section" style="display:none">
-    <div class="waiting-observer-label">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><use href="#icon-obs-eye"/></svg>
-      <span id="waiting-observer-count">Observers</span>
-    </div>
-    <div id="waiting-observer-list"></div>
-  </div>
-  <button class="bot-toggle" id="btn-bot-toggle" onclick="toggleBot()" style="display:none">Play Solo vs Bot</button>
-  <div class="waiting-actions">
-    <button id="btn-start-game" onclick="startGame()" disabled>Start Game</button>
-    <button id="btn-leave" onclick="leaveRoom()">Leave</button>
-  </div>
-  <div class="error-msg" id="waiting-error"></div>
-</div>
+<!-- LOBBY_HTML -->
 
 <div id="game" class="screen">
 
@@ -1427,14 +1405,31 @@ function renderLobbyPlayers(players,observers){
   }
   list.innerHTML=html;
   ObserverUI.renderWaitingObservers(observers);
-  const humanCount=players.filter(p=>!p.isBot).length;
-  const total=players.length;
-  const btnStart=document.getElementById('btn-start-game');
-  btnStart.disabled=total<2||!isHost;
-  const btnBot=document.getElementById('btn-bot-toggle');
-  if(isHost)btnBot.style.display='block';
+  const humans=players.filter(p=>!p.isBot).length;
   const hasBot=players.some(p=>p.isBot);
-  btnBot.textContent=hasBot?'Remove Bot':'Play Solo vs Bot';
+
+  // Start button — visible only for host, enabled when 2+ players
+  const btnStart=document.getElementById('btn-start-game');
+  btnStart.style.display=isHost?'inline-block':'none';
+  btnStart.disabled=players.length<2;
+
+  // Bot toggle — visible only when a player-host is alone (observer-host can't be a player)
+  const btnBot=document.getElementById('btn-bot-toggle');
+  if(isHost&&!isObserver&&humans===1){
+    btnBot.style.display='block';
+    btnBot.textContent=hasBot?'Remove Bot':'Play Solo vs Bot';
+    btnBot.classList.toggle('active',hasBot);
+  }else{
+    btnBot.style.display='none';
+  }
+
+  // Status message — canonical wording shared by all three games
+  const errMsg=isObserver
+    ?(players.length<2?'Waiting for players to join...':isHost?'Ready. Start the game when players are set.':'Waiting for host to start...')
+    :isHost
+      ?(players.length<2?'Add a bot or invite players to start':'')
+      :(players.length<2?'Waiting for more players...':'Waiting for host to start...');
+  document.getElementById('waiting-error').textContent=errMsg;
 }
 
 function toggleBot(){send({type:'toggle_bot'});}

@@ -313,17 +313,31 @@ body.obs-actions-hidden .gm-actions-section{display:none !important;}
 .copy-btn{padding:8px 16px;font-size:13px;font-weight:700;border:1px solid #374151;border-radius:8px;background:#1e2535;color:#62b517;cursor:pointer;transition:all 0.15s;}
 .copy-btn:hover{background:#374151;}
 .copy-btn.copied{background:#62b517;color:#fff;border-color:#62b517;}
-.waiting-players{display:flex;flex-direction:column;gap:8px;min-width:280px;}
+/* Player list — canonical class name matches FuzzNet/ClusterFlick */
+.player-list{display:flex;flex-direction:column;gap:8px;min-width:280px;}
 .waiting-player{display:flex;align-items:center;gap:12px;padding:10px 16px;background:#1e2535;border-radius:10px;border:1px solid #374151;}
 .waiting-player-me{border-color:#62b517 !important;background:#0d1f0a !important;}
 .you-tag{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:#62b517;background:rgba(98,181,23,0.12);border:1px solid rgba(98,181,23,0.3);border-radius:4px;padding:1px 5px;margin-left:4px;vertical-align:middle;}
 .waiting-player-dot{width:14px;height:14px;border-radius:50%;}
 .waiting-player-name{font-weight:700;font-size:15px;}
 .host-badge{font-size:11px;background:#d1db24;color:#111;padding:2px 8px;border-radius:20px;font-weight:700;margin-left:auto;}
-.start-btn{background:#62b517;color:#fff;border:none;padding:14px 40px;border-radius:10px;font-size:18px;font-weight:800;cursor:pointer;transition:all 0.15s;}
-.start-btn:hover:not(:disabled){filter:brightness(1.1);transform:scale(1.02);}
-.start-btn:disabled{opacity:0.4;cursor:not-allowed;}
-.waiting-hint{font-size:13px;color:#4b5563;}
+
+/* Room hint text */
+.room-hint{font-size:13px;color:#9ca3af;margin-bottom:8px;}
+
+/* Bot toggle (dashed-border secondary button) */
+.bot-toggle{padding:10px 20px;font-size:14px;font-weight:600;border:2px dashed #4b5563;border-radius:8px;background:transparent;color:#9ca3af;cursor:pointer;transition:all 0.15s;min-width:240px;}
+.bot-toggle:hover{border-color:#62b517;color:#62b517;background:rgba(98,181,23,0.08);}
+.bot-toggle.active{border-color:#62b517;border-style:solid;color:#62b517;background:rgba(98,181,23,0.10);}
+
+/* Start Game + Leave action buttons */
+.waiting-actions{display:flex;gap:10px;}
+.waiting-actions button{padding:14px 40px;border-radius:10px;border:none;cursor:pointer;font-size:18px;font-weight:800;transition:all 0.15s;}
+#btn-start-game{background:#62b517;color:#fff;}
+#btn-start-game:hover:not(:disabled){filter:brightness(1.1);transform:scale(1.02);}
+#btn-start-game:disabled{opacity:0.4;cursor:not-allowed;}
+#btn-leave{background:#1e2535;color:#9ca3af;border:1px solid #374151;}
+#btn-leave:hover{background:#253347;color:#d1fae5;}
 
 /* ===== GAME SCREEN ===== */
 #game{flex-direction:column;min-height:100vh;background:#0d1117;}
@@ -1058,7 +1072,7 @@ body.screen-idle-glow::after{
 
   /* Waiting room */
   .room-code-display{font-size:36px;letter-spacing:8px;padding:12px 24px;}
-  .waiting-players{min-width:unset;width:calc(100vw - 40px);max-width:400px;}
+  .player-list{min-width:unset;width:calc(100vw - 40px);max-width:400px;}
 
 /* Opponents: compact panels */
   .opponents-bar{padding:4px 10px;gap:6px;}

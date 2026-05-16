@@ -11,6 +11,7 @@ const gameManager  = require('./games/game-manager');
 const siteRouting  = require('./site-routing');
 const hubRenderer  = require('./games/marketing-hub-renderer');
 const creategameRenderer = require('./games/creategame-renderer');
+const lobbyRenderer       = require('./games/lobby-renderer');
 
 const PORT = process.env.PORT || 8090;
 
@@ -68,12 +69,18 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  // If the resolved file is a registered game page, inject the create-game
-  // fragment into its <!-- CREATEGAME_HTML --> marker on the fly.
+  // If the resolved file is a registered game page, inject any template
+  // fragments (create-game + lobby/waiting room) into their markers.
   const relPath = '/' + path.relative(__dirname, resolved.filePath);
-  const mountedKey = creategameRenderer.getMounts().get(relPath);
-  const transform = mountedKey
-    ? (buf) => creategameRenderer.injectInto(relPath, buf.toString('utf8'))
+  const needsCreategame = creategameRenderer.getMounts().has(relPath);
+  const needsLobby      = lobbyRenderer.getMounts().has(relPath);
+  const transform = (needsCreategame || needsLobby)
+    ? (buf) => {
+        let html = buf.toString('utf8');
+        if (needsCreategame) html = creategameRenderer.injectInto(relPath, html);
+        if (needsLobby)      html = lobbyRenderer.injectInto(relPath, html);
+        return html;
+      }
     : undefined;
 
   siteRouting.serveFile(resolved.filePath, resolved.contentType, res, { transform });
