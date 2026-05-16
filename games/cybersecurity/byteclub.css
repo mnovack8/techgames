@@ -1,5 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Share+Tech+Mono&display=swap');
-*{margin:0;padding:0;box-sizing:border-box;}
+/* Page-specific styles */
 body{font-family:'Nunito','Segoe UI',system-ui,sans-serif;background:#111827;color:#e2e8f0;min-height:100vh;overflow-x:hidden;}
 
 @media(max-width:480px){
@@ -1166,6 +1165,5 @@ body.screen-idle-glow::after{
   .win-condition{font-size:13px;}
   .win-btn{padding:10px 24px;font-size:14px;}
 }
-.logo-text-accent {}
 
 :root{--gn-bg:rgba(6,13,3,0.96);--gn-border:#d1db24;--gn-shadow:0 1px 8px rgba(0,0,0,0.4);--gn-link:#62b517;--gn-link-hover:rgba(98,181,23,0.12);--gn-divider:#4b5563;--gn-current:#6b7280;}

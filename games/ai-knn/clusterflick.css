@@ -1,5 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
-*{margin:0;padding:0;box-sizing:border-box;}
+/* Page-specific styles */
 body{font-family:'Nunito','Segoe UI',system-ui,sans-serif;background:#0d0a1a;color:#e8e0ff;min-height:100vh;overflow-x:hidden;}
 html.tutorial-loading body{visibility:hidden;}
 html.tutorial-loading #cft-intro,html.tutorial-loading #cft-intro *{visibility:visible;}
