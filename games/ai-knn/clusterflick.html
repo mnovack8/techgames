@@ -147,8 +147,8 @@
 <!-- ===== TUTORIAL LOADING OVERLAY ===== -->
 <div id="cft-loading">
   <div class="cft-loading-spinner"></div>
-  <div style="color:#a78bfa;font-size:18px;font-weight:800;margin-top:4px;">Setting up tutorial game&hellip;</div>
-  <div style="color:#7c5cbf;font-size:13px;">Starting a practice match vs bot</div>
+  <div style="color:#d1db24;font-size:18px;font-weight:800;margin-top:4px;">Setting up tutorial game&hellip;</div>
+  <div style="color:#4a8c11;font-size:13px;">Starting a practice match vs bot</div>
 </div>
 
 <!-- ===== CANCEL MODAL ===== -->
@@ -243,7 +243,7 @@ const CF_FLICK_ZONES = [
   {x:825, y:175}, // Player 2 (top-right)
   {x:175, y:175}, // Player 3 (top-left)
 ];
-const COLOR_HEX = {blue:'#4a9eff',red:'#ff4a4a',green:'#4aff8a',purple:'#c880ff'};
+const COLOR_HEX = {blue:'#4a9eff',red:'#ff4a4a',green:'#3aaa6a',purple:'#a060dd'};
 const SESSION_KEY = 'cf_session';
 
 // ==================== PHYSICS (client mirror) ====================
@@ -337,10 +337,10 @@ function drawBoard(ctx) {
 
   // Board shadow
   ctx.save();
-  ctx.shadowColor='rgba(124,58,237,0.4)';
+  ctx.shadowColor='rgba(98,181,23,0.4)';
   ctx.shadowBlur=42;
   ctx.beginPath();ctx.arc(CF_CX,CF_CY,CF_BOARD_R,0,Math.PI*2);
-  ctx.fillStyle='#1a1030';ctx.fill();
+  ctx.fillStyle='#06120a';ctx.fill();
   ctx.restore();
 
   // Sector background fills (very subtle - orientation guide + 1pt zone colour)
@@ -400,12 +400,12 @@ function drawBoard(ctx) {
 
   // Board outer ring
   ctx.beginPath();ctx.arc(CF_CX,CF_CY,CF_BOARD_R,0,Math.PI*2);
-  ctx.strokeStyle='rgba(124,58,237,0.6)';ctx.lineWidth=3.5;ctx.stroke();
+  ctx.strokeStyle='rgba(98,181,23,0.6)';ctx.lineWidth=3.5;ctx.stroke();
 
   // Unclassified center
   ctx.beginPath();ctx.arc(CF_CX,CF_CY,CF_UNCLASSIFIED_R,0,Math.PI*2);
-  ctx.fillStyle='#0d0a1a';ctx.fill();
-  ctx.strokeStyle='rgba(124,58,237,0.3)';ctx.lineWidth=2;ctx.stroke();
+  ctx.fillStyle='#040a02';ctx.fill();
+  ctx.strokeStyle='rgba(98,181,23,0.3)';ctx.lineWidth=2;ctx.stroke();
   ctx.fillStyle='rgba(200,180,255,0.6)';ctx.font='bold 15px Nunito,sans-serif';
   ctx.textAlign='center';ctx.textBaseline='middle';
   ctx.fillText('Unclassified',CF_CX,CF_CY-8);ctx.fillText('(0 pts)',CF_CX,CF_CY+12);
@@ -1037,25 +1037,25 @@ function renderSidePanel(){
       const animalName=CF_ANIMALS[pi.animalIdx]||'animal';
       ab.innerHTML=`
         <div style="font-size:12px;color:#fbbf24;font-weight:700;margin-bottom:4px;">🎲 Place ${pi.squaresLeft} sample square${pi.squaresLeft!==1?'s':''}</div>
-        <div style="font-size:11px;color:#9d8ec4;line-height:1.4;">Click anywhere inside the <strong style="color:${CF_ANIMAL_COLORS[pi.animalIdx]}">${animalName}</strong> circle to place each square.</div>`;
+        <div style="font-size:11px;color:#9aad7a;line-height:1.4;">Click anywhere inside the <strong style="color:${CF_ANIMAL_COLORS[pi.animalIdx]}">${animalName}</strong> circle to place each square.</div>`;
     } else if(G.phase==='sample_reflick'&&!isObserver&&G.sampleReflickFor===myId){
       // During reflick phase: show reflick prompt and skip button
       const mode=G.players[myId]?.actionMode||'identify';
       ab.innerHTML=`
-        <div style="font-size:11px;color:#9d8ec4;margin-bottom:4px;">Mode: <strong style="color:#c4b5fd">${mode==='sample'?'🎲 Add Samples':'📷 Identify'}</strong></div>
-        <button onclick="send({type:'game_action',action:'skip_sample_reflick'})" style="width:100%;padding:7px 14px;background:rgba(124,58,237,0.25);border:1px solid rgba(124,58,237,0.5);color:#a78bfa;border-radius:7px;cursor:pointer;font-family:inherit;font-size:12px;font-weight:700;">Skip Reflick</button>`;
+        <div style="font-size:11px;color:#9aad7a;margin-bottom:4px;">Mode: <strong style="color:#a8c96a">${mode==='sample'?'🎲 Add Samples':'📷 Identify'}</strong></div>
+        <button onclick="send({type:'game_action',action:'skip_sample_reflick'})" style="width:100%;padding:7px 14px;background:rgba(98,181,23,0.25);border:1px solid rgba(98,181,23,0.5);color:#d1db24;border-radius:7px;cursor:pointer;font-family:inherit;font-size:12px;font-weight:700;">Skip Reflick</button>`;
     } else if(isMyTurn){
       const mode=G.players[myId]?.actionMode||'identify';
       const sampleUsed=!!G.players[myId]?.usedSampleThisRound;
       ab.innerHTML=`
-        <button class="action-btn${mode==='identify'?' selected':''}" onclick="send({type:'game_action',action:'set_action_mode',mode:'identify'})" style="background:${mode==='identify'?'rgba(74,158,255,0.18)':'rgba(20,14,36,0.7)'};color:${mode==='identify'?'#93c5fd':'rgba(200,180,255,0.6)'};border-color:${mode==='identify'?'#4a9eff':'rgba(124,58,237,0.25)'};">
+        <button class="action-btn${mode==='identify'?' selected':''}" onclick="send({type:'game_action',action:'set_action_mode',mode:'identify'})" style="background:${mode==='identify'?'rgba(74,158,255,0.18)':'rgba(20,14,36,0.7)'};color:${mode==='identify'?'#93c5fd':'rgba(200,180,255,0.6)'};border-color:${mode==='identify'?'#4a9eff':'rgba(98,181,23,0.25)'};">
           <span style="font-size:16px;">📷</span>
           <span>
             <div style="font-size:12px;font-weight:800;">Identify Photo</div>
             <div style="font-size:10px;font-weight:500;opacity:0.75;">Token stays on board</div>
           </span>
         </button>
-        <button class="action-btn${mode==='sample'?' selected':''}" ${sampleUsed?'disabled':''} onclick="send({type:'game_action',action:'set_action_mode',mode:'sample'})" style="background:${mode==='sample'?'rgba(251,191,36,0.18)':sampleUsed?'rgba(20,14,36,0.4)':'rgba(20,14,36,0.7)'};color:${mode==='sample'?'#fbbf24':sampleUsed?'rgba(200,180,255,0.25)':'rgba(200,180,255,0.6)'};border-color:${mode==='sample'?'#fbbf24':sampleUsed?'rgba(124,58,237,0.1)':'rgba(124,58,237,0.25)'};${sampleUsed?'cursor:not-allowed;opacity:0.45;':''}">
+        <button class="action-btn${mode==='sample'?' selected':''}" ${sampleUsed?'disabled':''} onclick="send({type:'game_action',action:'set_action_mode',mode:'sample'})" style="background:${mode==='sample'?'rgba(251,191,36,0.18)':sampleUsed?'rgba(20,14,36,0.4)':'rgba(20,14,36,0.7)'};color:${mode==='sample'?'#fbbf24':sampleUsed?'rgba(200,180,255,0.25)':'rgba(200,180,255,0.6)'};border-color:${mode==='sample'?'#fbbf24':sampleUsed?'rgba(98,181,23,0.1)':'rgba(98,181,23,0.25)'};${sampleUsed?'cursor:not-allowed;opacity:0.45;':''}">
           <span style="font-size:16px;">🎲</span>
           <span>
             <div style="font-size:12px;font-weight:800;">Add Samples</div>
@@ -1063,7 +1063,7 @@ function renderSidePanel(){
           </span>
         </button>`;
     } else {
-      ab.innerHTML=`<div id="flick-ready-label" style="font-size:13px;color:#a78bfa;font-weight:700;text-align:center;visibility:visible;">Waiting for your turn…</div>`;
+      ab.innerHTML=`<div id="flick-ready-label" style="font-size:13px;color:#d1db24;font-weight:700;text-align:center;visibility:visible;">Waiting for your turn…</div>`;
     }
   }
 
@@ -1366,7 +1366,7 @@ function showGameOver(){
     const total=pl.confidence.reduce((a,b)=>a+b,0);
     html+=`<div class="final-score-row${isW?' winner':''}">`;
     html+=`<div class="fsr-header"><div class="fsr-dot" style="background:${pl.hex}"></div><div class="fsr-name">${escHtml(pl.name)}</div>${isW?'<span class="fsr-trophy">🏆</span>':''}</div>`;
-    html+=`<div style="font-size:11px;color:#7c5cbf;margin-bottom:6px">${completed}/6 animals classified · ${total} total pts</div>`;
+    html+=`<div style="font-size:11px;color:#4a8c11;margin-bottom:6px">${completed}/6 animals classified · ${total} total pts</div>`;
     html+=`<div class="fsr-animals">`;
     for(let a=0;a<6;a++){
       const v=pl.confidence[a];const c=v>=CF_WIN_THRESHOLD;
@@ -1468,8 +1468,8 @@ const CFT_INTRO_STEPS = [
   <div class="cfti-right" style="display:flex;align-items:center;justify-content:center;">
     <svg viewBox="0 0 220 220" width="200" height="200" xmlns="http://www.w3.org/2000/svg">
       <defs><filter id="cft-glow2"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
-      <circle cx="110" cy="110" r="58" fill="none" stroke="#a78bfa" stroke-opacity="0.5" stroke-width="1.5" stroke-dasharray="4 4"><animate attributeName="r" values="55;62;55" dur="3s" repeatCount="indefinite"/></circle>
-      <g stroke="#a78bfa" stroke-width="1.4" stroke-opacity="0.8"><line x1="110" y1="110" x2="78" y2="82"/><line x1="110" y1="110" x2="148" y2="92"/><line x1="110" y1="110" x2="124" y2="158"/></g>
+      <circle cx="110" cy="110" r="58" fill="none" stroke="#d1db24" stroke-opacity="0.5" stroke-width="1.5" stroke-dasharray="4 4"><animate attributeName="r" values="55;62;55" dur="3s" repeatCount="indefinite"/></circle>
+      <g stroke="#d1db24" stroke-width="1.4" stroke-opacity="0.8"><line x1="110" y1="110" x2="78" y2="82"/><line x1="110" y1="110" x2="148" y2="92"/><line x1="110" y1="110" x2="124" y2="158"/></g>
       <g opacity="0.35"><circle cx="32" cy="40" r="6" fill="#fbbf24"/><circle cx="40" cy="172" r="6" fill="#4a9eff"/><circle cx="180" cy="42" r="6" fill="#fbbf24"/><circle cx="190" cy="170" r="6" fill="#6ee7b7"/><circle cx="172" cy="180" r="6" fill="#4a9eff"/><circle cx="20" cy="110" r="6" fill="#6ee7b7"/></g>
       <g filter="url(#cft-glow2)">
         <circle cx="78" cy="82" r="9" fill="#fbbf24" stroke="#fff" stroke-width="1.5"/>
@@ -1477,13 +1477,13 @@ const CFT_INTRO_STEPS = [
         <circle cx="124" cy="158" r="9" fill="#4a9eff" stroke="#fff" stroke-width="1.5"/>
       </g>
       <g filter="url(#cft-glow2)">
-        <circle cx="110" cy="110" r="13" fill="#1a1030" stroke="#a78bfa" stroke-width="2"/>
-        <circle cx="110" cy="110" r="6" fill="#a78bfa"><animate attributeName="opacity" values="0.5;1;0.5" dur="1.6s" repeatCount="indefinite"/></circle>
+        <circle cx="110" cy="110" r="13" fill="#06120a" stroke="#d1db24" stroke-width="2"/>
+        <circle cx="110" cy="110" r="6" fill="#d1db24"><animate attributeName="opacity" values="0.5;1;0.5" dur="1.6s" repeatCount="indefinite"/></circle>
       </g>
       <text x="78" y="72" text-anchor="middle" font-size="9" fill="#fbbf24" font-weight="bold">🐕</text>
       <text x="148" y="82" text-anchor="middle" font-size="9" fill="#fbbf24" font-weight="bold">🐕</text>
       <text x="124" y="148" text-anchor="middle" font-size="9" fill="#4a9eff" font-weight="bold">🐟</text>
-      <text x="110" y="108" text-anchor="middle" font-size="9" fill="#e8e0ff" font-weight="bold">?</text>
+      <text x="110" y="108" text-anchor="middle" font-size="9" fill="#f0fae8" font-weight="bold">?</text>
     </svg>
   </div>
 </div>`
@@ -1511,7 +1511,7 @@ const CFT_INTRO_STEPS = [
     </div>
   </div>
 </div>
-<p style="font-size:13px;color:#6b5ea8;"><em>Real AI fluency</em> means knowing which tool fits which problem — not just using GenAI for everything.</p>`
+<p style="font-size:13px;color:#3a6a0a;"><em>Real AI fluency</em> means knowing which tool fits which problem — not just using GenAI for everything.</p>`
   },
   {
     title: 'How Clusterflick Represents K-NN',
@@ -1550,7 +1550,7 @@ const CFT_GAME_STEPS = [
     body: `<p>The default action each turn. <strong>Identify Photo</strong> is already selected in the action panel.</p>
 <p>Click and drag backward from your <strong>corner Flick Zone</strong>, then release to flick your token onto the board. It stays where it lands and is scored at round end.</p>
 <p>Score = the confidence band number (1-5) where it lands.</p>
-<p style="margin-top:10px;padding:8px 10px;background:rgba(124,58,237,0.1);border-radius:6px;border-left:3px solid #7c3aed;"><strong>Your turn — make a flick now to continue.</strong></p>`,
+<p style="margin-top:10px;padding:8px 10px;background:rgba(98,181,23,0.1);border-radius:6px;border-left:3px solid #62b517;"><strong>Your turn — make a flick now to continue.</strong></p>`,
     hint: 'Drag back from your glowing corner zone and release to flick.',
     hl: 'action-btns',
     forced: true
@@ -1560,7 +1560,7 @@ const CFT_GAME_STEPS = [
     body: `<p><strong>Once per round.</strong> Switch to <em>Add Samples</em> in the action panel, then flick. If it lands in an animal zone, that many sample squares are placed there as training data.</p>
 <p>The token is removed. You then get a free Reflick to nudge one of your Identify tokens.</p>
 <p>Samples act as walls and grant a neighbor bonus to nearby tokens at scoring.</p>
-<p style="margin-top:10px;padding:8px 10px;background:rgba(124,58,237,0.1);border-radius:6px;border-left:3px solid #7c3aed;"><strong>Select Add Samples below, then make a flick to continue.</strong></p>`,
+<p style="margin-top:10px;padding:8px 10px;background:rgba(98,181,23,0.1);border-radius:6px;border-left:3px solid #62b517;"><strong>Select Add Samples below, then make a flick to continue.</strong></p>`,
     hint: 'Switch to Add Samples in the action panel, then flick from your corner zone.',
     hl: 'action-btns',
     forced: true
@@ -1636,7 +1636,7 @@ function cftSectionsBody() {
       </div>
     </label>`;
   }
-  return `<p style="margin-bottom:12px;font-size:13px;color:#c4b5fd">Choose which sections to include in your tutorial:</p>
+  return `<p style="margin-bottom:12px;font-size:13px;color:#a8c96a">Choose which sections to include in your tutorial:</p>
 <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px">
   ${row('context','Context for Learning Objectives','How K-Nearest Neighbors works and why ML is bigger than GenAI — the real-world concepts behind the game.')}
   ${row('howto','How to Play','An interactive walkthrough of the board, tokens, scoring, and every action in the game.')}
@@ -1747,7 +1747,7 @@ function cftRenderGame(){
   const hint    = document.getElementById('tut-hint');
   if(s.forced){
     nextBtn.style.display = 'none';
-    hint.innerHTML = '<em style="color:#a78bfa">👆 Complete the action above to continue</em>';
+    hint.innerHTML = '<em style="color:#d1db24">👆 Complete the action above to continue</em>';
   } else {
     nextBtn.style.display = 'block';
     nextBtn.textContent = cftGameStep === total-1 ? 'Back to Lobby' : 'Next →';
