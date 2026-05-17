@@ -12,6 +12,7 @@ const siteRouting  = require('./site-routing');
 const hubRenderer  = require('./games/marketing-hub-renderer');
 const creategameRenderer = require('./games/creategame-renderer');
 const lobbyRenderer       = require('./games/lobby-renderer');
+const interactiveTutorialRenderer = require('./games/interactive-tutorial-renderer');
 
 const PORT = process.env.PORT || 8090;
 
@@ -70,15 +71,17 @@ const server = http.createServer((req, res) => {
   }
 
   // If the resolved file is a registered game page, inject any template
-  // fragments (create-game + lobby/waiting room) into their markers.
+  // fragments (create-game + lobby/waiting + interactive tutorial) into markers.
   const relPath = '/' + path.relative(__dirname, resolved.filePath);
   const needsCreategame = creategameRenderer.getMounts().has(relPath);
   const needsLobby      = lobbyRenderer.getMounts().has(relPath);
-  const transform = (needsCreategame || needsLobby)
+  const needsTutorial   = interactiveTutorialRenderer.getMounts().has(relPath);
+  const transform = (needsCreategame || needsLobby || needsTutorial)
     ? (buf) => {
         let html = buf.toString('utf8');
         if (needsCreategame) html = creategameRenderer.injectInto(relPath, html);
         if (needsLobby)      html = lobbyRenderer.injectInto(relPath, html);
+        if (needsTutorial)   html = interactiveTutorialRenderer.injectInto(relPath, html);
         return html;
       }
     : undefined;

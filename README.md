@@ -98,6 +98,47 @@ node --test tests/games/fuzznet.test.js
 
 ---
 
+## Interactive Tutorial Sidebar — Template-Driven
+
+The in-game **interactive tutorial sidebar** (the step-by-step walkthrough panel that overlays the live game during a tutorial) shares a single 12-line HTML fragment across all three games. Each game's HTML keeps its own wrapper container (since panel positioning differs — bottom card vs right side panel), but the inner content (header → title → body → footer with Exit + Next) is rendered from the shared template.
+
+**Files involved:**
+
+| File | Role |
+|---|---|
+| `games/interactive-tutorial.template.html` | Shared inner HTML: step counter, progress bar, title, body, hint, Exit + Next buttons |
+| `games/interactive-tutorial-renderer.js` | Auto-discovers `games/*/interactive-tutorial.json`, injects into each game's `<!-- INTERACTIVE_TUTORIAL_HTML -->` marker |
+| `games/<game-key>/interactive-tutorial.json` | Just declares the `mount` field |
+
+**Canonical contract every game must implement:**
+
+| What | Where it must exist |
+|---|---|
+| Function `tutNext()` | Global — handler for the Next button (template inlines `onclick="tutNext()"`) |
+| Function `endTutorial()` | Global — handler for the Exit Tutorial button (template inlines `onclick="endTutorial()"`) |
+| Element IDs the JS hooks: `#tut-step`, `#tut-progress-fill`, `#tut-title`, `#tut-body`, `#tut-hint`, `#tut-next`, `#tut-exit` | Provided by the rendered template |
+| CSS classes available for theming: `.tut-header`, `.tut-progress`, `.tut-footer` | Theme each in per-game CSS |
+
+**Per-game wrapper container** stays in each game's HTML (positioning + theme are game-specific):
+
+| Game | Wrapper |
+|---|---|
+| FuzzNet Labs | `<div id="tutorial-overlay"><div id="tutorial-card">…</div></div>` (bottom strip / fullscreen card) |
+| ByteClub | `<div id="bc-tut-panel">…</div>` (right-side dark panel) |
+| ClusterFlick | `<div id="cft-panel">…</div>` (right-side dark panel) |
+
+**Adding a new game's tutorial sidebar:**
+
+1. Drop in `games/<game-key>/interactive-tutorial.json` with a `mount` field
+2. Add a wrapper element with a `<!-- INTERACTIVE_TUTORIAL_HTML -->` marker inside its game HTML
+3. Implement `tutNext()` and `endTutorial()` in the game's JS
+4. Have the JS reference the canonical IDs (`#tut-step` etc.) when rendering each step
+5. Style `.tut-header`, `.tut-progress`, `.tut-footer`, `#tut-title`, etc. in the game's CSS to match its theme
+
+The renderer auto-discovers the new JSON on next server start — no router/test/template edits.
+
+---
+
 ## Waiting-Room Pages — Template-Driven
 
 The `<div id="waiting">` block on each game page — the screen shown when a room has been created but the host hasn't started the game yet (host can also add a bot here) — is rendered at request time from a shared fragment-template + per-game JSON. The URL state for this screen is `/<domain>/<game>/lobby`.

@@ -287,24 +287,14 @@
     <div id="bcti-body"></div>
     <div class="bcti-footer">
       <button id="bcti-exit" onclick="endTutorial()">Skip Tutorial</button>
-      <button id="bcti-next" onclick="bcTutNext()">Next →</button>
+      <button id="bcti-next" onclick="tutNext()">Next →</button>
     </div>
   </div>
 </div>
 
 <!-- BC TUTORIAL PANEL -->
 <div id="bc-tut-panel">
-  <div class="bc-tut-header">
-    <span id="bc-tut-step-label">Step 1 of 9</span>
-    <div class="bc-tut-progress"><div id="bc-tut-prog-fill" style="width:11%"></div></div>
-  </div>
-  <div id="bc-tut-title"></div>
-  <div id="bc-tut-body"></div>
-  <div class="bc-tut-footer">
-    <span id="bc-tut-hint"></span>
-    <button id="bc-tut-exit" onclick="endTutorial()">Exit Tutorial</button>
-    <button id="bc-tut-next" style="display:none" onclick="bcTutNext()">Next →</button>
-  </div>
+  <!-- INTERACTIVE_TUTORIAL_HTML -->
 </div>
 
 <!-- WIN SCREEN -->
@@ -1741,7 +1731,7 @@ function renderGame(gs) {
       btn.textContent = s?.next || 'Next →';
       btn.onclick = () => {
         document.getElementById('win-screen').classList.remove('show');
-        const nextIdx = bcTutNextEnabled(bcTutStep);
+        const nextIdx = tutNextEnabled(bcTutStep);
         if (nextIdx >= BCTSTEPS.length) endTutorial();
         else bcTutAdvanceTo(nextIdx);
       };
@@ -3398,7 +3388,7 @@ Playing a card places it face-up in <em>Cards in Front of You</em> (right column
         gameState = bcTutG;
         selectedHandCard = null;
         BCTSTEPS[10].tutHL = 'recon_done';
-        document.getElementById('bc-tut-body').innerHTML =
+        document.getElementById('tut-body').innerHTML =
           `Recon reveals <strong>Mira's hand</strong>! You can see all her cards. Useful for planning your next move.<br>Click <em>Done</em> to close the view.`;
         renderGame(bcTutG);
         return true;
@@ -3410,9 +3400,9 @@ Playing a card places it face-up in <em>Cards in Front of You</em> (right column
         gameState = bcTutG;
         BCTSTEPS[10].tutHL = 'end_turn';
         BCTSTEPS[10].nextAction = () => bcTutAdvanceTo(11);
-        document.getElementById('bc-tut-body').innerHTML =
+        document.getElementById('tut-body').innerHTML =
           `Recon is in your <img src="/images/byteclub/cyber-kill-chain.svg" style="width:13px;height:13px;vertical-align:middle;"> Kill Chain row! Mira\'s hand is back face-down.<br>Click <strong>End Turn (Draw 1)</strong> to pass the turn to Mira.`;
-        const nextBtn = document.getElementById('bc-tut-next');
+        const nextBtn = document.getElementById('tut-next');
         nextBtn.textContent = 'End Turn →';
         nextBtn.style.display = '';
         renderGame(bcTutG);
@@ -3480,7 +3470,7 @@ Mira is holding the ${TUT_FLAG} <strong>Data Flag</strong>. Whoever holds it whe
         gameState = bcTutG;
         selectedHandCard = null;
         BCTSTEPS[12].tutHL = 'mira_target';
-        document.getElementById('bc-tut-body').innerHTML =
+        document.getElementById('tut-body').innerHTML =
           `C2 is in play! Now <strong>click Mira</strong> in the target panel. She holds the Data Flag.`;
         renderGame(bcTutG);
         return true;
@@ -3598,7 +3588,7 @@ Watch the <strong>status strip</strong> above. It shows when Govern and Action O
         BCTSTEPS[17].tutHL = TUT8_PROTECT.id;
         gameState = bcTutG;
         selectedHandCard = null;
-        document.getElementById('bc-tut-body').innerHTML =
+        document.getElementById('tut-body').innerHTML =
           `<img src="/images/byteclub/cyber-kill-chain.svg" style="width:15px;height:15px;vertical-align:middle;"> <strong>Kill Chain complete!</strong> Exploitation filled the last attack slot. The board awarded you the <strong>Action Obj.</strong> card.<br><br>
            The steal also grabbed <strong>Protect</strong> from Mira's hand. Exactly the defend card your NIST row was missing!<br>
            Now <em>play Protect</em> to fill that slot.`;
@@ -3616,7 +3606,7 @@ Watch the <strong>status strip</strong> above. It shows when Govern and Action O
         BCTSTEPS[17].tutHL = TUT8_ACTION_OBJ.id;
         gameState = bcTutG;
         selectedHandCard = null;
-        document.getElementById('bc-tut-body').innerHTML =
+        document.getElementById('tut-body').innerHTML =
           `<img src="/images/byteclub/nist-framework.svg" style="width:15px;height:15px;vertical-align:middle;"> <strong>NIST Framework complete!</strong> Protect filled the last regular slot. You've earned the <strong>Govern</strong> card.<br><br>
            You now hold both bonus cards. Play <strong>Action Obj.</strong> first. That seals the Kill Chain side of the win.`;
         renderGame(bcTutG);
@@ -3633,7 +3623,7 @@ Watch the <strong>status strip</strong> above. It shows when Govern and Action O
         BCTSTEPS[17].tutHL = TUT8_GOVERN.id;
         gameState = bcTutG;
         selectedHandCard = null;
-        document.getElementById('bc-tut-body').innerHTML =
+        document.getElementById('tut-body').innerHTML =
           `<strong>You've completed half of this win condition</strong>: the full <img src="/images/byteclub/cyber-kill-chain.svg" style="width:13px;height:13px;vertical-align:middle;"> Cyber Kill Chain, including Action Obj.<br><br>
            One card left. Play <strong>Govern</strong> to complete the <img src="/images/byteclub/nist-framework.svg" style="width:13px;height:13px;vertical-align:middle;"> NIST Framework side and <em>win the game</em>.`;
         renderGame(bcTutG);
@@ -3672,7 +3662,7 @@ You\'re ready to play. Click below to head back to the lobby!`,
     }),
     forced: false,
     isWinScreen: true,
-    next: '← Back to Lobby' },
+    next: 'Back to Lobby' },
 ];
 
 // ── Section selection for "Before You Play" ─────────────────────────────────
@@ -3686,7 +3676,7 @@ function bcTutSectionForIdx(idx) {
   return null; // step 0 always shows
 }
 
-function bcTutNextEnabled(from) {
+function tutNextEnabled(from) {
   let next = from + 1;
   while (next < BCTSTEPS.length) {
     const sec = bcTutSectionForIdx(next);
@@ -3803,7 +3793,7 @@ function applyBcTutStep(idx) {
       btn.textContent = s.next || 'Next →';
       btn.onclick = () => {
         document.getElementById('win-screen').classList.remove('show');
-        const next = bcTutNextEnabled(idx);
+        const next = tutNextEnabled(idx);
         if (next >= BCTSTEPS.length) endTutorial();
         else bcTutAdvanceTo(next);
       };
@@ -3817,12 +3807,12 @@ function applyBcTutStep(idx) {
   }
 }
 
-function bcTutNext() {
+function tutNext() {
   const s = BCTSTEPS[bcTutStep];
   if (s.nextAction) { s.nextAction(); return; } // mid-step override (e.g. after Recon)
   if (s.forced) return;
-  if (s.next === '← Back to Lobby') { endTutorial(); return; }
-  const next = bcTutNextEnabled(bcTutStep);
+  if (s.next === 'Back to Lobby') { endTutorial(); return; }
+  const next = tutNextEnabled(bcTutStep);
   if (next >= BCTSTEPS.length) { endTutorial(); return; }
   bcTutAdvanceTo(next);
 }
@@ -3831,13 +3821,13 @@ function renderBcTutPanel(idx) {
   const s     = BCTSTEPS[idx];
   const total = BCTSTEPS.length;
   const pct   = Math.round(((idx + 1) / total) * 100);
-  document.getElementById('bc-tut-step-label').textContent = `Step ${idx + 1} of ${total}`;
-  document.getElementById('bc-tut-prog-fill').style.width  = pct + '%';
-  document.getElementById('bc-tut-title').innerHTML         = s.title;
-  document.getElementById('bc-tut-body').innerHTML         = s.body;
+  document.getElementById('tut-step').textContent = `Step ${idx + 1} of ${total}`;
+  document.getElementById('tut-progress-fill').style.width  = pct + '%';
+  document.getElementById('tut-title').innerHTML         = s.title;
+  document.getElementById('tut-body').innerHTML         = s.body;
 
-  const nextBtn = document.getElementById('bc-tut-next');
-  const hint    = document.getElementById('bc-tut-hint');
+  const nextBtn = document.getElementById('tut-next');
+  const hint    = document.getElementById('tut-hint');
 
   if (s.forced) {
     nextBtn.style.display = 'none';
@@ -3848,7 +3838,7 @@ function renderBcTutPanel(idx) {
     hint.textContent      = '';
   }
   // Hide exit on final step
-  document.getElementById('bc-tut-exit').style.display = (idx < total - 1) ? '' : 'none';
+  document.getElementById('tut-exit').style.display = (idx < total - 1) ? '' : 'none';
 }
 
 function renderBcTutIntro(idx) {

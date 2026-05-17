@@ -132,17 +132,7 @@
 
 <!-- ===== TUTORIAL PHASE 2: IN-GAME SIDEBAR ===== -->
 <div id="cft-panel">
-  <div class="cft-header">
-    <span id="cft-step-label">Step 1 of 8</span>
-    <div class="cft-progress"><div id="cft-prog-fill" style="width:12%"></div></div>
-    <div id="cft-title"></div>
-  </div>
-  <div id="cft-body"></div>
-  <div class="cft-footer">
-    <div id="cft-hint"></div>
-    <button id="cft-next" onclick="cftGameNext()">Next →</button>
-    <button id="cft-exit" onclick="cftGameExit()">Exit Tutorial</button>
-  </div>
+  <!-- INTERACTIVE_TUTORIAL_HTML -->
 </div>
 
 <!-- ===== INFO OVERLAY ===== -->
@@ -1616,15 +1606,68 @@ let cftActive    = false;
 let cftTutMode   = false;   // Phase 2 is live (game running)
 let cftTutPendingStart = false; // waiting for auto-game to start
 
+// "Before You Play" section selector — mirrors FuzzNet's tutSections.
+// ClusterFlick has no physical game, so only two toggles are exposed.
+let cftSections = { context: true, howto: true };
+let cftSectionError = false;
+// Sentinel step index for the section-selector slide (precedes CFT_INTRO_STEPS[0])
+const CFT_INTRO_SELECTOR = -1;
+
 function startTutorial(){
-  cftIntroStep = 0;
+  cftIntroStep = CFT_INTRO_SELECTOR;
+  cftSectionError = false;
   cftActive = true;
   document.body.classList.add('cft-intro-active');
   cftRenderIntro();
   try { history.replaceState(null, '', CF_BASE_PATH + '/tutorial'); } catch(_){}
 }
 
+// Generate HTML for the Before-You-Play checkbox screen (dark theme, matches cft-intro card)
+function cftSectionsBody() {
+  function row(key, label, sublabel) {
+    const on = cftSections[key];
+    return `<label style="display:flex;align-items:flex-start;gap:12px;background:${on?'rgba(98,181,23,0.10)':'rgba(255,255,255,0.04)'};border:1.5px solid ${on?'#62b517':'#2a3a2a'};border-radius:10px;padding:11px 14px;cursor:pointer;user-select:none;transition:background 0.15s,border-color 0.15s" onclick="cftToggleSection('${key}')">
+      <div style="flex-shrink:0;width:20px;height:20px;border-radius:5px;border:2px solid ${on?'#62b517':'#3a4a3a'};background:${on?'#62b517':'transparent'};display:flex;align-items:center;justify-content:center;margin-top:2px;pointer-events:none">
+        ${on?'<svg width="11" height="11" viewBox="0 0 11 11" fill="none"><polyline points="1.5,5.5 4.5,8.5 9.5,2.5" stroke="#0a1200" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>':''}
+      </div>
+      <div style="pointer-events:none">
+        <div style="font-size:13px;font-weight:800;color:#e2e8f0;line-height:1.3">${label}</div>
+        ${sublabel?`<div style="font-size:11px;color:#9aa4b2;margin-top:3px;line-height:1.4">${sublabel}</div>`:''}
+      </div>
+    </label>`;
+  }
+  return `<p style="margin-bottom:12px;font-size:13px;color:#c4b5fd">Choose which sections to include in your tutorial:</p>
+<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px">
+  ${row('context','Context for Learning Objectives','How K-Nearest Neighbors works and why ML is bigger than GenAI — the real-world concepts behind the game.')}
+  ${row('howto','How to Play','An interactive walkthrough of the board, tokens, scoring, and every action in the game.')}
+</div>${cftSectionError?`<div style="background:rgba(220,38,38,0.1);border:1.5px solid #dc2626;border-radius:8px;padding:8px 12px;font-size:12px;color:#f87171;font-weight:700;display:flex;align-items:center;gap:7px"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="#f87171" stroke-width="1.5"/><line x1="8" y1="4.5" x2="8" y2="8.5" stroke="#f87171" stroke-width="2" stroke-linecap="round"/><circle cx="8" cy="11" r="1" fill="#f87171"/></svg>At least one section must be selected.</div>`:''}`;
+}
+
+function cftToggleSection(key) {
+  if (cftSections[key]) {
+    const count = Object.values(cftSections).filter(Boolean).length;
+    if (count <= 1) {
+      cftSectionError = true;
+      cftRenderIntro();
+      return;
+    }
+  }
+  cftSectionError = false;
+  cftSections[key] = !cftSections[key];
+  cftRenderIntro();
+}
+
 function cftRenderIntro(){
+  // Section-selector slide
+  if(cftIntroStep === CFT_INTRO_SELECTOR){
+    document.getElementById('cfti-label').textContent = 'Before You Play';
+    document.getElementById('cfti-prog-fill').style.width = '0%';
+    document.getElementById('cfti-title').textContent = 'Before You Play';
+    document.getElementById('cfti-body').innerHTML = cftSectionsBody();
+    document.getElementById('cfti-next').textContent = 'Start →';
+    return;
+  }
+  // Concept slides
   const s = CFT_INTRO_STEPS[cftIntroStep];
   const total = CFT_INTRO_STEPS.length;
   document.getElementById('cfti-label').textContent = `Concept ${cftIntroStep+1} of ${total}`;
@@ -1632,14 +1675,42 @@ function cftRenderIntro(){
   document.getElementById('cfti-title').textContent = s.title;
   document.getElementById('cfti-body').innerHTML = s.body;
   const isLast = cftIntroStep === total-1;
-  document.getElementById('cfti-next').textContent = isLast ? 'Start Playing →' : 'Next →';
+  // On the last context slide: if How-to-Play is enabled, advance to game phase;
+  // otherwise the tutorial ends here and returns to the lobby.
+  if (isLast) {
+    document.getElementById('cfti-next').textContent = cftSections.howto ? 'Start Playing →' : 'Back to Lobby';
+  } else {
+    document.getElementById('cfti-next').textContent = 'Next →';
+  }
 }
 
 function cftIntroNext(){
+  // Section-selector → first concept slide (or skip to game phase if context unchecked)
+  if(cftIntroStep === CFT_INTRO_SELECTOR){
+    if(!cftSections.context && !cftSections.howto){
+      cftSectionError = true;
+      cftRenderIntro();
+      return;
+    }
+    if(cftSections.context){
+      cftIntroStep = 0;
+      cftRenderIntro();
+    } else {
+      // Context skipped — jump straight to game phase
+      document.body.classList.remove('cft-intro-active');
+      cftStartGamePhase();
+    }
+    return;
+  }
   cftIntroStep++;
   if(cftIntroStep >= CFT_INTRO_STEPS.length){
     document.body.classList.remove('cft-intro-active');
-    cftStartGamePhase();
+    if(cftSections.howto){
+      cftStartGamePhase();
+    } else {
+      // How-to-Play skipped — tutorial ends here, return to lobby
+      cftIntroExit();
+    }
     return;
   }
   cftRenderIntro();
@@ -1651,6 +1722,8 @@ function cftIntroExit(){
   cftTutMode = false;
   cftTutPendingStart = false;
   cftActive = false;
+  // Match FuzzNet/ByteClub: exit returns to the create-game (lobby) screen
+  showScreen('lobby');
 }
 
 function cftStartGamePhase(){
@@ -1665,19 +1738,19 @@ function cftStartGamePhase(){
 function cftRenderGame(){
   const s = CFT_GAME_STEPS[cftGameStep];
   const total = CFT_GAME_STEPS.length;
-  document.getElementById('cft-step-label').textContent = `Step ${cftGameStep+1} of ${total}`;
-  document.getElementById('cft-prog-fill').style.width = ((cftGameStep+1)/total*100)+'%';
-  document.getElementById('cft-title').textContent = s.title;
-  document.getElementById('cft-body').innerHTML = s.body;
+  document.getElementById('tut-step').textContent = `Step ${cftGameStep+1} of ${total}`;
+  document.getElementById('tut-progress-fill').style.width = ((cftGameStep+1)/total*100)+'%';
+  document.getElementById('tut-title').textContent = s.title;
+  document.getElementById('tut-body').innerHTML = s.body;
 
-  const nextBtn = document.getElementById('cft-next');
-  const hint    = document.getElementById('cft-hint');
+  const nextBtn = document.getElementById('tut-next');
+  const hint    = document.getElementById('tut-hint');
   if(s.forced){
     nextBtn.style.display = 'none';
     hint.innerHTML = '<em style="color:#a78bfa">👆 Complete the action above to continue</em>';
   } else {
     nextBtn.style.display = 'block';
-    nextBtn.textContent = cftGameStep === total-1 ? 'Done ✓' : 'Next →';
+    nextBtn.textContent = cftGameStep === total-1 ? 'Back to Lobby' : 'Next →';
     hint.innerHTML = s.hint ? `<em>↑</em> ${s.hint}` : '';
   }
 
@@ -1689,7 +1762,7 @@ function cftRenderGame(){
   }
 }
 
-function cftGameNext(){
+function tutNext(){
   document.querySelectorAll('.cft-glow').forEach(el=>el.classList.remove('cft-glow'));
   cftGameStep++;
   if(cftGameStep >= CFT_GAME_STEPS.length){ cftGameExit(); return; }
@@ -1706,7 +1779,7 @@ function cftGameExit(){
   // Leave the tutorial game and return to the lobby
   sessionStorage.removeItem(SESSION_KEY);
   G = null;
-  if(ws && ws.readyState === 1) send({type:'leave_room'});
+  try { if (hub) send({ type: 'leave_room' }); } catch (_) {}
   showScreen('lobby');
 }
 
