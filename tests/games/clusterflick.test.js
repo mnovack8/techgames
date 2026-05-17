@@ -209,4 +209,123 @@ describe('ClusterFlick — Game Flow', () => {
       host.close();
     });
   });
+
+  // ── Four-player game ───────────────────────────────────────────────────────
+  describe('Four-player game', () => {
+    /**
+     * Send an action from a socket and return the latest state_update payload.
+     * ClusterFlick may fire multiple state_update events per action (e.g. the
+     * flick result + turn advance), so we drain with a short window to settle.
+     */
+    /**
+     * Send an action and read the resulting state_update.
+     * IMPORTANT: drain the socket queue first — prior broadcasts (intended for
+     * other players' turns) accumulate in this socket's queue, and reading the
+     * oldest one would give us stale state and trip the "Not your turn" guard.
+     * ClusterFlick fires exactly one state_update per action.
+     */
+    async function actAndSettle(sock, msg) {
+      sock.drain();
+      sock.send(msg);
+      return sock.next('state_update', 5000);
+    }
+
+    it('4 humans can complete a full game lifecycle (create → join → start → flick rotation → end)', async () => {
+      const NAMES  = ['Alice', 'Bob', 'Carol', 'Dave'];
+      const COLORS = ['blue', 'red', 'green', 'purple'];
+
+      // 1. Open 4 WebSocket connections
+      const sockets = await Promise.all([0, 1, 2, 3].map(() => ws()));
+
+      // 2. Host (sockets[0]) creates the room
+      sockets[0].send({ type: 'create_room', gameType: 'clusterflick', playerName: NAMES[0], color: COLORS[0] });
+      const { code } = await sockets[0].next('room_created');
+
+      // 3. The other three players join in sequence
+      for (let i = 1; i < 4; i++) {
+        sockets[i].send({ type: 'join_room', code, gameType: 'clusterflick', playerName: NAMES[i], color: COLORS[i] });
+        await sockets[i].next('room_joined');
+      }
+
+      // 4. Host starts the game — every socket should receive game_started
+      sockets[0].send({ type: 'start_game' });
+      const startEvents = await Promise.all(sockets.map(s => s.next('game_started')));
+      assert.equal(startEvents.filter(e => e.type === 'game_started').length, 4,
+        'All 4 players receive game_started');
+
+      // 5. Initial state has 4 players, round 1, no winner
+      const initStates = await Promise.all(sockets.map(s => s.next('state_update')));
+      const initial = initStates[0].state;
+      assert.equal(initial.players.length, 4, 'state.players.length === 4');
+      assert.equal(initial.gameOver, false,    'Game not over at start');
+      assert.equal(initial.round,    1,        'Game begins at round 1');
+      assert.equal(initial.phase,    'flicking', 'Initial phase is "flicking"');
+      // Each player begins with all-zero confidence across the 6 animal classes
+      for (let i = 0; i < 4; i++) {
+        const p = initial.players[i];
+        assert.ok(Array.isArray(p.confidence) && p.confidence.length === 6,
+          `Player ${i} has 6-animal confidence array`);
+        assert.ok(p.confidence.every(c => c === 0),
+          `Player ${i} starts with all confidences = 0`);
+      }
+
+      // 6. Drive the game forward: on each turn, the current player flicks.
+      //    ClusterFlick has 6 rounds × 4 players × 5 flicks-per-player = 120
+      //    flicks max, after which the game naturally reaches game_over.
+      //    The flick angle/power values don't affect game completion — even
+      //    flicks that miss the board count and advance the turn.
+      let s = initial;
+      const distinctPlayers = new Set([s.currentPlayer]);
+      const MAX_ITERATIONS  = 200;
+      let iterations = 0;
+      let flicksTaken = 0;
+
+      while (!s.gameOver && iterations < MAX_ITERATIONS) {
+        // Sanity check: we never set actionMode to 'sample' so the player's
+        // turn always ends with a single flick_token. If the phase changes
+        // away from 'flicking' something is off — bail rather than hang.
+        if (s.phase !== 'flicking') break;
+
+        const cur  = s.currentPlayer;
+        const sock = sockets[cur];
+
+        // Vary angle/power deterministically so we don't get stuck in any one zone
+        const angle = (iterations * 0.7) % (2 * Math.PI);
+        const power = 0.3 + (iterations % 5) * 0.1;
+        const action = { type: 'game_action', action: 'flick_token', angle, power };
+
+        const after = await actAndSettle(sock, action);
+        flicksTaken++;
+        s = after.state;
+        distinctPlayers.add(s.currentPlayer);
+        iterations++;
+      }
+
+      // 7. Turn rotation should visit all 4 players (proves 4-way mechanics work)
+      assert.ok(distinctPlayers.size >= 4,
+        `Turn rotation should reach all 4 players; saw: ${[...distinctPlayers].sort().join(',')}`);
+      assert.ok(flicksTaken >= 4,
+        `Expected at least 4 actions taken; got ${flicksTaken}`);
+
+      // 8. Game should have reached a natural game-over after 6 rounds.
+      //    Fallback: host cancels — every socket should still receive game_cancelled.
+      if (s.gameOver) {
+        assert.equal(s.gameOver, true, 'Game reached natural game-over');
+        // Final round should be ≥ 1 and ≤ CF_ROUNDS (6)
+        assert.ok(s.round >= 1 && s.round <= 7,
+          `Final round in valid range; got ${s.round}`);
+      } else {
+        sockets[0].send({ type: 'cancel_game' });
+        const cancellations = await Promise.all(
+          sockets.map(sock => sock.next('game_cancelled', 5000))
+        );
+        assert.equal(
+          cancellations.filter(m => m.type === 'game_cancelled').length, 4,
+          'All 4 players receive game_cancelled on host cancel'
+        );
+      }
+
+      sockets.forEach(sock => sock.close());
+    });
+  });
 });

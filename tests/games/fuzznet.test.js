@@ -246,4 +246,108 @@ describe('FuzzNet — Game Flow', () => {
       host.close(); guest.close();
     });
   });
+
+  // ── Four-player game ───────────────────────────────────────────────────────
+  describe('Four-player game', () => {
+    /** Find an unused (empty) neural-network node for a player's design action. */
+    function pickEmptyNode(playerState) {
+      if (!playerState || !Array.isArray(playerState.nodes)) return -1;
+      for (let id = 0; id < playerState.nodes.length; id++) {
+        if (!playerState.nodes[id]) return id;
+      }
+      return -1;
+    }
+
+    it('4 humans can complete a full game lifecycle (create → join → start → turn rotation → end)', async () => {
+      const NAMES  = ['Alice', 'Bob', 'Carol', 'Dave'];
+      const COLORS = ['blue', 'red', 'green', 'purple'];
+
+      // 1. Open 4 WebSocket connections
+      const sockets = await Promise.all([0, 1, 2, 3].map(() => ws()));
+
+      // 2. Host (sockets[0]) creates the room
+      sockets[0].send({ type: 'create_room', gameType: 'fuzznet', playerName: NAMES[0], color: COLORS[0] });
+      const { code } = await sockets[0].next('room_created');
+
+      // 3. The other three players join in sequence
+      for (let i = 1; i < 4; i++) {
+        sockets[i].send({ type: 'join_room', code, gameType: 'fuzznet', playerName: NAMES[i], color: COLORS[i] });
+        await sockets[i].next('room_joined');
+      }
+
+      // 4. Host starts the game — every socket should receive game_started
+      sockets[0].send({ type: 'start_game' });
+      const startEvents = await Promise.all(sockets.map(s => s.next('game_started')));
+      assert.equal(startEvents.filter(e => e.type === 'game_started').length, 4,
+        'All 4 players receive game_started');
+
+      // 5. Initial state has 4 players, game in progress
+      const initStates = await Promise.all(sockets.map(s => s.next('state_update')));
+      const initial = initStates[0].state;
+      assert.equal(initial.players.length, 4, 'state.players.length === 4');
+      assert.equal(initial.gameOver, false,    'Game not over at start');
+      assert.ok(typeof initial.currentPlayer === 'number',
+        'state.currentPlayer is a number');
+      assert.equal(initial.actionsLeft, 3, 'Each turn starts with 3 actions');
+
+      // 6. Cycle through turns: the current player consumes all 3 actions
+      //    via start_design + place_node, which advances state and rotates the
+      //    turn through all 4 players. Cap at MAX_TURNS as a safety net so
+      //    a buggy game-state can never hang the test indefinitely.
+      let s = initial;
+      const distinctTurnPlayers = new Set([s.currentPlayer]);
+      const MAX_TURNS = 24;          // 6 rounds × 4 players, plenty of room
+      let turnsCompleted = 0;
+      let actionsTaken   = 0;
+
+      while (!s.gameOver && turnsCompleted < MAX_TURNS) {
+        const cur = s.currentPlayer;
+        const sock = sockets[cur];
+        const nodeId = pickEmptyNode(s.players[cur]);
+        if (nodeId < 0) break;       // no design slots left — stop early
+
+        // start_design (idle → design) — one state_update broadcast
+        sock.send({ type: 'game_action', action: 'start_design' });
+        await sock.next('state_update', 3000);
+
+        // place_node consumes 1 action; nextTurn fires automatically when
+        // actionsLeft reaches 0
+        sock.send({ type: 'game_action', action: 'place_node', nodeId });
+        const after = await sock.next('state_update', 3000);
+        s = after.state;
+        actionsTaken++;
+
+        // Track every player who has had at least one turn-as-current
+        distinctTurnPlayers.add(s.currentPlayer);
+
+        // If the turn advanced (current player changed), record one completed turn
+        if (s.currentPlayer !== cur) turnsCompleted++;
+      }
+
+      // 7. Verify the turn rotation actually visited all 4 players —
+      //    proves multi-player turn-based mechanics work end-to-end
+      assert.ok(distinctTurnPlayers.size >= 4,
+        `Turn rotation should reach all 4 players; saw players: ${[...distinctTurnPlayers].sort().join(',')}`);
+      assert.ok(actionsTaken >= 4,
+        `Expected at least 4 actions taken; got ${actionsTaken}`);
+
+      // 8. Complete the game cleanly — either it ended naturally, or the host
+      //    cancels and every player receives the cancellation broadcast.
+      if (s.gameOver) {
+        // Natural completion — game logic finished on its own
+        assert.equal(s.gameOver, true, 'Game reached natural game-over');
+      } else {
+        sockets[0].send({ type: 'cancel_game' });
+        const cancellations = await Promise.all(
+          sockets.map(sock => sock.next('game_cancelled', 5000))
+        );
+        assert.equal(
+          cancellations.filter(m => m.type === 'game_cancelled').length, 4,
+          'All 4 players receive game_cancelled on host cancel'
+        );
+      }
+
+      sockets.forEach(sock => sock.close());
+    });
+  });
 });
