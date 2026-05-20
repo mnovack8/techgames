@@ -7,8 +7,10 @@ html.tutorial-loading { background: #1a3a00; }
 
 /* ===== LOBBY COLORS ===== */
 #lobby { flex-direction: column; align-items: center; overflow-y: auto; min-height: calc(100vh - 44px); padding: 0 20px 52px; background: linear-gradient(160deg, #f8faf2 0%, #edf2e0 100%); }
-.lobby-hero img { width: 100%; max-width: 220px; height: auto; border-radius: 16px; box-shadow: 0 8px 32px rgba(98,181,23,0.2), 0 0 0 1px rgba(98,181,23,0.12); }
-#lobby h1 { font-size: 42px; color: #62b517; letter-spacing: 2px; font-weight: 800; margin: 0; line-height: 1.1; }
+.lobby-hero { grid-template-columns: 280px 1fr; }
+.lobby-hero img { width: 280px; max-width: 100%; height: auto; object-fit: contain; background: #fff; border-radius: 16px; box-shadow: 0 8px 32px rgba(98,181,23,0.2), 0 0 0 1px rgba(98,181,23,0.12); }
+#lobby h1 { font-size: 42px; color: #62b517; letter-spacing: 2px; font-weight: 800; margin: 0; line-height: 1.1; width: fit-content; background-image: linear-gradient(#d1db24, #d1db24); background-size: 0% 4px; background-position: 0 100%; background-repeat: no-repeat; animation: h1-underline-draw 0.8s 0.35s ease-out forwards; }
+@keyframes h1-underline-draw { to { background-size: 100% 4px; } }
 #lobby .subtitle { font-size: 15px; color: #555; margin: 0; line-height: 1.55; }
 .lobby-meta-item { background: #f0f7e6; border: 1px solid #a8c96a; color: #4a8c11; }
 .lobby-tutorial-cta { background: linear-gradient(135deg, #62b517 0%, #4a8e10 100%); color: #fff; box-shadow: 0 4px 18px rgba(98,181,23,0.32); }
@@ -63,6 +65,25 @@ body.observer-active #game { height: calc(100vh - 44px - 36px - 4px); }
 .rules-banner { color: #555; background: #f4fae8; border-color: #dde8c8; }
 .rules-banner a { color: #62b517; }
 .error-msg { color: #d44; }
+/* ===== NAV BUY BUTTON ===== */
+#top-nav a.nav-buy-btn { background: transparent; border: 1.5px solid rgba(98,181,23,0.5); color: #4a8c11; text-decoration: none; padding: 4px 12px; border-radius: 7px; font-size: 12px; font-weight: 800; line-height: 1.4; transition: all 0.15s; white-space: nowrap; }
+#top-nav a.nav-buy-btn:hover { background: #f4fae8; border-color: #62b517; }
+
+/* ===== LOBBY BUY BUTTON ===== */
+.lobby-hero-ctas { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 8px; }
+.lobby-tutorial-cta { margin-top: 0; }
+.lobby-buy-btn { display: inline-flex; flex-direction: row; align-items: center; padding: 10px 20px; border-radius: 10px; cursor: pointer; text-decoration: none; background: transparent; border: 2px solid rgba(98,181,23,0.5); color: #4a8c11; transition: all 0.15s; font-family: inherit; gap: 12px; }
+.lobby-buy-btn:hover { border-color: #62b517; background: #f4fae8; }
+.lobby-buy-label { font-size: 14px; font-weight: 700; letter-spacing: 0.4px; line-height: 1; }
+.lobby-buy-powered { display: flex; align-items: center; gap: 5px; font-size: 10px; font-weight: 500; opacity: 0.75; letter-spacing: 0.3px; line-height: 1; border-left: 1px solid rgba(98,181,23,0.3); padding-left: 12px; }
+.lobby-buy-brand { color: #2a3a10; font-size: 11px; font-weight: 600; letter-spacing: 0.2px; }
+@media (min-width: 781px) {
+  .lobby-hero { align-items: stretch; }
+  .lobby-hero img { height: 100%; align-self: stretch; }
+  .lobby-hero-ctas { margin-top: auto; flex-direction: column; align-items: stretch; }
+  .lobby-tutorial-cta { justify-content: center; align-self: auto; min-height: 46px; }
+  .lobby-buy-btn { justify-content: center; }
+}
 @media (max-width: 780px) {
   .lobby-hero img { max-width: 200px; margin: 0 auto; }
   .lobby-meta { justify-content: center; }

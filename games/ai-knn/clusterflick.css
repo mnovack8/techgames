@@ -31,9 +31,15 @@ html.tutorial-loading { background: #040a02; }
 
 /* ===== LOBBY COLORS (green/light — matches FuzzNet) ===== */
 #lobby { flex-direction: column; align-items: center; overflow-y: auto; min-height: calc(100vh - 44px); padding: 0 20px 52px; background: linear-gradient(160deg, #f8faf2 0%, #edf2e0 100%); }
-.lobby-hero { grid-template-columns: 220px 1fr; }
-.lobby-hero-board { width: 220px; height: 220px; border-radius: 16px; box-shadow: 0 8px 32px rgba(98,181,23,0.2), 0 0 0 1px rgba(98,181,23,0.12); flex-shrink: 0; background: #fafdf2; }
-#lobby h1 { font-size: 42px; color: #62b517; letter-spacing: 2px; font-weight: 800; margin: 0; line-height: 1.1; }
+.lobby-hero { grid-template-columns: 280px 1fr; }
+.lobby-hero-board-wrap { width: 280px; border-radius: 16px; box-shadow: 0 8px 32px rgba(98,181,23,0.2), 0 0 0 1px rgba(98,181,23,0.12); background: #100c20; display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; }
+.lobby-hero-board { width: 220px; height: 220px; display: block; flex-shrink: 0; }
+#lobby h1 { font-size: 42px; color: #62b517; letter-spacing: 2px; font-weight: 800; margin: 0; line-height: 1.1; width: fit-content; background-image: linear-gradient(#d1db24, #d1db24); background-size: 0% 4px; background-position: 0 100%; background-repeat: no-repeat; animation: h1-underline-draw 0.8s 0.35s ease-out forwards; }
+@keyframes h1-underline-draw { to { background-size: 100% 4px; } }
+.lobby-hero-ctas { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 8px; }
+.lobby-tutorial-cta { margin-top: 0; }
+.lobby-buy-btn { display: inline-flex; flex-direction: row; align-items: center; padding: 10px 20px; border-radius: 10px; cursor: default; background: transparent; border: 2px solid rgba(98,181,23,0.5); color: #4a8c11; font-family: inherit; gap: 12px; }
+.lobby-buy-label { font-size: 14px; font-weight: 700; letter-spacing: 0.4px; line-height: 1; }
 #lobby .subtitle { font-size: 15px; color: #555; margin: 0; line-height: 1.55; }
 .lobby-meta-item { background: #f0f7e6; border: 1px solid #a8c96a; color: #4a8c11; }
 .lobby-tutorial-cta { background: linear-gradient(135deg, #62b517 0%, #4a8e10 100%); color: #fff; box-shadow: 0 4px 18px rgba(98,181,23,0.32); }
@@ -89,9 +95,16 @@ html.tutorial-loading { background: #040a02; }
 .waiting-observer-row { background: #ecfeff; border-color: rgba(34,211,238,0.3); }
 .waiting-observer-row .obs-name { color: #0e7490; }
 .obs-host-badge { color: #c90; }
+@media (min-width: 781px) {
+  .lobby-hero { align-items: stretch; }
+  .lobby-hero-board-wrap { align-self: center; height: 253px; }
+  .lobby-hero-ctas { margin-top: auto; flex-direction: column; align-items: stretch; }
+  .lobby-tutorial-cta { justify-content: center; align-self: auto; min-height: 46px; }
+  .lobby-buy-btn { justify-content: center; min-height: 46px; }
+}
 @media (max-width: 780px) {
   .lobby-hero { grid-template-columns: 1fr; text-align: center; gap: 20px; }
-  .lobby-hero-board { margin: 0 auto; }
+  .lobby-hero-board-wrap { margin: 0 auto; }
   #lobby h1 { font-size: 34px; }
   .lo-item:nth-child(1), .lo-item:nth-child(2) { border-bottom: 1px solid #edf2e4; }
 }

@@ -2,7 +2,7 @@
   "mount": "/games/ai-knn/clusterflick.html",
 
   "game_display_name": "Clusterflick",
-  "hero_visual_html": "<canvas id=\"lobby-preview-canvas\" class=\"lobby-hero-board\" width=\"220\" height=\"220\"></canvas>",
+  "hero_visual_html": "<div class=\"lobby-hero-board-wrap\"><canvas id=\"lobby-preview-canvas\" class=\"lobby-hero-board\" width=\"220\" height=\"220\"></canvas></div>",
   "hero_subtitle": "K-Nearest Neighbors. Machine learning that isn't GenAI. Place training data, flick photo tokens, classify by proximity.",
   "time_text": "30 Min",
 
@@ -33,6 +33,8 @@
 
   "workshop_url": "/blog/how-to-facilitate-an-ai-literacy-workshop",
   "workshop_title": "How to Facilitate an AI Literacy Workshop",
+
+  "buy_now_html": "<span class=\"lobby-buy-btn\" style=\"cursor:default;justify-content:center\"><span class=\"lobby-buy-label\">Beta</span></span>",
 
   "footer_cta_html": ""
 }

@@ -8,7 +8,7 @@
 <meta property="og:title" content="FuzzNet Labs — AI & Machine Learning Game | Tech CoLab">
 <meta property="og:description" content="FuzzNet Labs: design a neural network, train it on data, test it on animals, and finally see inside the black box. Free to play online.">
 <meta property="og:image" content="https://cybersecgames.com/images/fuzznet/fuzznet_cover.png">
-<meta property="og:url" content="https://cybersecgames.com/fuzznet">
+<meta property="og:url" content="https://cybersecgames.com/ai/neural-network/fuzznet">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="FuzzNet Labs — AI & Machine Learning Game | Tech CoLab">
 <meta name="twitter:description" content="FuzzNet Labs: design a neural network, train it on data, test it on animals, and finally see inside the black box. Free to play online.">
@@ -21,7 +21,7 @@
 <meta name="theme-color" content="#62b517">
 <link rel="icon" type="image/png" href="/images/logo.png">
 <link rel="apple-touch-icon" href="/images/logo.png">
-<link rel="canonical" href="https://cybersecgames.com/fuzznet">
+<link rel="canonical" href="https://cybersecgames.com/ai/neural-network/fuzznet">
 <title>FuzzNet Labs — AI & Machine Learning Game | Tech CoLab</title>
 <script>
 // Run before body parses: if ?tutorial=1 OR path ends in /tutorial, hide everything until tutorial mounts.
@@ -78,6 +78,11 @@
   <a href="/">← All Games</a>
   <span class="nav-divider">/</span>
   <span class="nav-current">FuzzNet Labs</span>
+  <div id="nav-game-btns">
+    <a class="nav-buy-btn" href="https://cybersecgames.com/products/fuzznet-labs" target="_blank" rel="noopener" onclick="trackClick('fuzznet_nav_buy')">Buy Now</a>
+    <button id="htp-btn" onclick="document.getElementById('htp-panel').classList.toggle('open')" style="display:none">How to Play</button>
+    <button id="btn-cancel-game" onclick="showCancelModal()" style="display:none">✕ Cancel Game</button>
+  </div>
 </nav>
 
 <!-- ===== LOBBY ===== -->

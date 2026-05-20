@@ -32,6 +32,7 @@ const REDIRECTS = {
   '/knn':       '/ai/knn',
   '/knn.html':  '/ai/knn',
   '/qubit-waitlist': '/quantumcomputing', '/qubit-waitlist.html': '/quantumcomputing',
+  '/cybersecurity': '/cybersecurity/byteclub', '/cybersecurity.html': '/cybersecurity/byteclub',
 };
 
 /**
@@ -75,7 +76,6 @@ function resolvePathname(pathname) {
     pathname === '/cybersecurity/byteclub/activegame' ||
     pathname === '/cybersecurity/byteclub/tutorial'
   ) pathname = '/games/cybersecurity/byteclub.html';
-  else if (pathname === '/cybersecurity' || pathname === '/cybersecurity.html') pathname = '/games/cybersecurity/index.html';
   else if (pathname === '/quantumcomputing' || pathname === '/quantumcomputing.html') pathname = '/games/quantumcomputing.html';
   else if (pathname === '/contact' || pathname === '/contact.html') pathname = '/singlepage/contact.html';
   else if (pathname === '/about' || pathname === '/about.html') pathname = '/singlepage/about.html';
