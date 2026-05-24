@@ -152,17 +152,21 @@ describe('Route Coverage', () => {
   describe('Legacy URL redirects (301)', () => {
     const redirects = [
       // AI nested-path migration
-      ['/ai-neural-network',              '/ai/neural-network'],
-      ['/ai-neural-network.html',         '/ai/neural-network'],
+      ['/ai/neural-network',              '/ai/neural-network/fuzznet'],
+      ['/ai/neural-network.html',         '/ai/neural-network/fuzznet'],
+      ['/ai-neural-network',              '/ai/neural-network/fuzznet'],
+      ['/ai-neural-network.html',         '/ai/neural-network/fuzznet'],
       ['/ai-neural-network/fuzznet',      '/ai/neural-network/fuzznet'],
       ['/ai-neural-network/fuzznet.html', '/ai/neural-network/fuzznet'],
-      ['/ai-knn',                         '/ai/knn'],
-      ['/ai-knn.html',                    '/ai/knn'],
+      ['/ai/knn',                         '/ai/knn/clusterflick'],
+      ['/ai/knn.html',                    '/ai/knn/clusterflick'],
+      ['/ai-knn',                         '/ai/knn/clusterflick'],
+      ['/ai-knn.html',                    '/ai/knn/clusterflick'],
       ['/ai-knn/clusterflick',            '/ai/knn/clusterflick'],
       ['/ai-knn/clusterflick.html',       '/ai/knn/clusterflick'],
       // Short aliases
-      ['/knn',                            '/ai/knn'],
-      ['/knn.html',                       '/ai/knn'],
+      ['/knn',                            '/ai/knn/clusterflick'],
+      ['/knn.html',                       '/ai/knn/clusterflick'],
       ['/qubit-waitlist',                 '/quantumcomputing'],
       ['/qubit-waitlist.html',            '/quantumcomputing'],
     ];
@@ -181,7 +185,7 @@ describe('Route Coverage', () => {
     it('Redirect preserves query string (?room=ABCD)', async () => {
       const res = await get('/knn?room=ABCD');
       assert.equal(res.status, 301);
-      assert.equal(res.headers.location, '/ai/knn?room=ABCD');
+      assert.equal(res.headers.location, '/ai/knn/clusterflick?room=ABCD');
     });
   });
 
@@ -310,8 +314,6 @@ describe('Route Coverage', () => {
       ['/buy-now.html',                     200],
       ['/cybersecurity.html',               200],
       ['/ai.html',                          200],
-      ['/ai/neural-network.html',           200],
-      ['/ai/knn.html',                      200],
       ['/cybersecurity/byteclub.html',      200],
     ];
 

@@ -1,5 +1,6 @@
 {
   "mount": "/games/ai-knn/clusterflick.html",
+  "tutorial_url": "/ai/knn/clusterflick/tutorial",
 
   "game_display_name": "Clusterflick",
   "hero_visual_html": "<div class=\"lobby-hero-board-wrap\"><canvas id=\"lobby-preview-canvas\" class=\"lobby-hero-board\" width=\"220\" height=\"220\"></canvas></div>",

@@ -21,16 +21,20 @@ const MIME_TYPES = {
 // ── Legacy-URL redirects (301) ───────────────────────────────────────────────
 const REDIRECTS = {
   // Legacy AI paths → new nested structure under /ai
-  '/ai-neural-network':           '/ai/neural-network',
-  '/ai-neural-network.html':      '/ai/neural-network',
+  '/ai/neural-network':           '/ai/neural-network/fuzznet',
+  '/ai/neural-network.html':      '/ai/neural-network/fuzznet',
+  '/ai-neural-network':           '/ai/neural-network/fuzznet',
+  '/ai-neural-network.html':      '/ai/neural-network/fuzznet',
   '/ai-neural-network/fuzznet':   '/ai/neural-network/fuzznet',
   '/ai-neural-network/fuzznet.html': '/ai/neural-network/fuzznet',
-  '/ai-knn':                      '/ai/knn',
-  '/ai-knn.html':                 '/ai/knn',
+  '/ai/knn':                      '/ai/knn/clusterflick',
+  '/ai/knn.html':                 '/ai/knn/clusterflick',
+  '/ai-knn':                      '/ai/knn/clusterflick',
+  '/ai-knn.html':                 '/ai/knn/clusterflick',
   '/ai-knn/clusterflick':         '/ai/knn/clusterflick',
   '/ai-knn/clusterflick.html':    '/ai/knn/clusterflick',
-  '/knn':       '/ai/knn',
-  '/knn.html':  '/ai/knn',
+  '/knn':       '/ai/knn/clusterflick',
+  '/knn.html':  '/ai/knn/clusterflick',
   '/qubit-waitlist': '/quantumcomputing', '/qubit-waitlist.html': '/quantumcomputing',
   '/cybersecurity': '/cybersecurity/byteclub', '/cybersecurity.html': '/cybersecurity/byteclub',
 };
@@ -61,7 +65,6 @@ function resolvePathname(pathname) {
     pathname === '/ai/neural-network/fuzznet/activegame' ||
     pathname === '/ai/neural-network/fuzznet/tutorial'
   ) pathname = '/games/ai-neural-network/fuzznet.html';
-  else if (pathname === '/ai/knn' || pathname === '/ai/knn.html') pathname = '/games/ai-knn/index.html';
   else if (
     pathname === '/ai/knn/clusterflick' ||
     pathname === '/ai/knn/clusterflick.html' ||

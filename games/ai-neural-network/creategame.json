@@ -1,5 +1,6 @@
 {
   "mount": "/games/ai-neural-network/fuzznet.html",
+  "tutorial_url": "/ai/neural-network/fuzznet/tutorial",
 
   "game_display_name": "FuzzNet Labs",
   "hero_visual_html": "<img src=\"/images/fuzznet/fuzznet_cover.png\" alt=\"FuzzNet Labs\">",

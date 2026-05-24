@@ -1,5 +1,6 @@
 {
   "mount": "/games/cybersecurity/byteclub.html",
+  "tutorial_url": "/cybersecurity/byteclub/tutorial",
 
   "game_display_name": "BYTE CLUB",
   "hero_visual_html": "<img src=\"/images/byteclub/byteclub.png\" alt=\"Byte Club\">",

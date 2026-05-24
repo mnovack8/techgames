@@ -354,6 +354,7 @@ let pendingObsName    = '';
 function sendMsg(msg) { hub.send(msg); }
 
 function handleServerMsg(msg) {
+  if (tutorialMode) return;
   switch (msg.type) {
     case 'room_created':
       roomCode = msg.code; myId = msg.yourId; isHost = true;
@@ -2376,14 +2377,17 @@ LobbyUI.init({
     sessionStorage.setItem(OBS_SESSION_KEY, JSON.stringify({ roomCode: opts.code, name: opts.name }));
   },
 });
+// Capture tutorial flag BEFORE showScreen() changes location.pathname via history.replaceState
+const isTutorialAutoStart = /\/tutorial\/?$/.test(location.pathname) || new URLSearchParams(location.search).get('tutorial') === '1';
+
 // Always start at lobby; rejoin-pending CSS hides it during handshake when needed
 showScreen('lobby');
 hub.connect();
 
 // Auto-start tutorial via ?tutorial=1 OR /tutorial path — start ASAP, hide page until ready
-if (new URLSearchParams(location.search).get('tutorial') === '1' || /\/tutorial\/?$/.test(location.pathname)) {
+if (isTutorialAutoStart) {
   var __startTut = function(){
-    try { startTutorial(); } catch (e) {}
+    try { startTutorial(); } catch (e) { console.error('[tutorial auto-start]', e); }
     requestAnimationFrame(function(){
       document.documentElement.classList.remove('tutorial-loading');
     });

@@ -1,30 +1,26 @@
 {
-  "routes": ["/ai/knn", "/ai/knn.html"],
-
+  "routes": [],
   "meta_description": "ClusterFlick: K-NN physics board game. Machine learning that isn't GenAI — classification by similarity, not neural networks. Free to play online.",
   "og_title": "ClusterFlick — KNN Machine Learning Board Game | Tech CoLab",
   "og_description": "ClusterFlick: K-NN physics board game. Machine learning that isn't GenAI — classification by similarity, not neural networks. Free to play online.",
   "og_image": "https://cybersecgames.com/images/logo.png",
-  "og_url": "https://cybersecgames.com/ai/knn",
+  "og_url": "https://cybersecgames.com/ai/knn/clusterflick",
   "twitter_title": "ClusterFlick — KNN Machine Learning Board Game | Tech CoLab",
   "twitter_description": "ClusterFlick: K-NN physics board game. Machine learning that isn't GenAI — classification by similarity, not neural networks. Free to play online.",
   "twitter_image": "https://cybersecgames.com/images/logo.png",
   "meta_keywords": "Clusterflick, K-NN board game, K-Nearest Neighbors game, machine learning board game, classical machine learning, AI literacy game, non-GenAI machine learning, classification algorithm game, FuzzNet Labs sister game",
   "theme_color": "#62b517",
-  "canonical_url": "https://cybersecgames.com/ai/knn",
+  "canonical_url": "https://cybersecgames.com/ai/knn/clusterflick",
   "page_title": "ClusterFlick — KNN Machine Learning Board Game | Tech CoLab",
-  "json_ld": "{\"@context\":\"https://schema.org\",\"@type\":\"Game\",\"name\":\"Clusterflick\",\"description\":\"Clusterflick turns K-Nearest Neighbors (K-NN) into a physics board game. Classification by similarity to known examples, not neural networks. Free to play online.\",\"url\":\"https://cybersecgames.com/ai/knn\",\"image\":\"https://cybersecgames.com/images/fuzznet/fuzznet_cover.png\",\"numberOfPlayers\":{\"@type\":\"QuantitativeValue\",\"minValue\":2,\"maxValue\":4},\"genre\":[\"Educational\",\"Board Game\",\"Machine Learning\"],\"publisher\":{\"@type\":\"Organization\",\"name\":\"Tech CoLab\",\"url\":\"https://cybersecgames.com\"}}",
+  "json_ld": "{\"@context\":\"https://schema.org\",\"@type\":\"Game\",\"name\":\"Clusterflick\",\"description\":\"Clusterflick turns K-Nearest Neighbors (K-NN) into a physics board game. Classification by similarity to known examples, not neural networks. Free to play online.\",\"url\":\"https://cybersecgames.com/ai/knn/clusterflick\",\"image\":\"https://cybersecgames.com/images/fuzznet/fuzznet_cover.png\",\"numberOfPlayers\":{\"@type\":\"QuantitativeValue\",\"minValue\":2,\"maxValue\":4},\"genre\":[\"Educational\",\"Board Game\",\"Machine Learning\"],\"publisher\":{\"@type\":\"Organization\",\"name\":\"Tech CoLab\",\"url\":\"https://cybersecgames.com\"}}",
   "extra_css": "<link rel=\"stylesheet\" href=\"/games/ai-knn/ai-knn.css\">",
-
   "nav_cybersecurity_active": "",
   "nav_ai_active": "active",
   "nav_quantum_active": "",
-
   "hero_badge": "Machine Learning · BETA",
   "hero_h1": "<span class=\"game-name\">Clusterflick</span>",
-  "hero_subtitle_html": "<p class=\"hero-subtitle\">Not all AI is GenAI. Clusterflick is a <strong>K-Nearest Neighbors</strong> physics board game: place labelled training data, flick photo tokens onto the board, and classification happens by proximity.</p>\n<p class=\"hero-subtitle secondary\">Sister game to <a href=\"/ai/neural-network\">FuzzNet Labs</a>. Where FuzzNet opens the GenAI black box, Clusterflick shows you <strong>machine learning outside GenAI</strong>: transparent, distance-based, and no black box.</p>",
+  "hero_subtitle_html": "<p class=\"hero-subtitle\">Not all AI is GenAI. Clusterflick is a <strong>K-Nearest Neighbors</strong> physics board game: place labelled training data, flick photo tokens onto the board, and classification happens by proximity.</p>\n<p class=\"hero-subtitle secondary\">Sister game to <a href=\"/ai/neural-network/fuzznet\">FuzzNet Labs</a>. Where FuzzNet opens the GenAI black box, Clusterflick shows you <strong>machine learning outside GenAI</strong>: transparent, distance-based, and no black box.</p>",
   "hero_visual_svg": "<svg viewBox=\"0 0 220 220\" xmlns=\"http://www.w3.org/2000/svg\"><defs><filter id=\"knn-glow\"><feGaussianBlur stdDeviation=\"3\" result=\"b\"/><feMerge><feMergeNode in=\"b\"/><feMergeNode in=\"SourceGraphic\"/></feMerge></filter></defs><circle cx=\"110\" cy=\"110\" r=\"58\" fill=\"none\" stroke=\"#62b517\" stroke-opacity=\"0.55\" stroke-width=\"1.5\" stroke-dasharray=\"4 4\"><animate attributeName=\"r\" values=\"55;62;55\" dur=\"3s\" repeatCount=\"indefinite\"/><animate attributeName=\"stroke-opacity\" values=\"0.45;0.7;0.45\" dur=\"3s\" repeatCount=\"indefinite\"/></circle><g stroke=\"#62b517\" stroke-width=\"1.4\" stroke-opacity=\"0.85\"><line x1=\"110\" y1=\"110\" x2=\"78\" y2=\"82\"/><line x1=\"110\" y1=\"110\" x2=\"148\" y2=\"92\"/><line x1=\"110\" y1=\"110\" x2=\"124\" y2=\"158\"/></g><g opacity=\"0.45\"><circle cx=\"32\" cy=\"40\" r=\"6\" fill=\"#fbbf24\"/><circle cx=\"40\" cy=\"172\" r=\"6\" fill=\"#4a9eff\"/><circle cx=\"180\" cy=\"42\" r=\"6\" fill=\"#fbbf24\"/><circle cx=\"190\" cy=\"170\" r=\"6\" fill=\"#6ee7b7\"/><circle cx=\"172\" cy=\"180\" r=\"6\" fill=\"#4a9eff\"/><circle cx=\"20\" cy=\"110\" r=\"6\" fill=\"#6ee7b7\"/></g><g filter=\"url(#knn-glow)\"><circle cx=\"78\" cy=\"82\" r=\"9\" fill=\"#fbbf24\" stroke=\"#fff\" stroke-width=\"2\"/><circle cx=\"148\" cy=\"92\" r=\"9\" fill=\"#fbbf24\" stroke=\"#fff\" stroke-width=\"2\"/><circle cx=\"124\" cy=\"158\" r=\"9\" fill=\"#4a9eff\" stroke=\"#fff\" stroke-width=\"2\"/></g><g filter=\"url(#knn-glow)\"><circle cx=\"110\" cy=\"110\" r=\"13\" fill=\"#1a1030\" stroke=\"#62b517\" stroke-width=\"2.5\"/><circle cx=\"110\" cy=\"110\" r=\"6\" fill=\"#a78bfa\"><animate attributeName=\"opacity\" values=\"0.6;1;0.6\" dur=\"1.6s\" repeatCount=\"indefinite\"/></circle></g><circle cx=\"110\" cy=\"110\" r=\"13\" fill=\"none\" stroke=\"#62b517\" stroke-width=\"1.4\"><animate attributeName=\"r\" values=\"13;26;13\" dur=\"2.2s\" repeatCount=\"indefinite\"/><animate attributeName=\"opacity\" values=\"0.7;0;0.7\" dur=\"2.2s\" repeatCount=\"indefinite\"/></circle></svg>",
-
   "features": [
     {
       "icon_svg": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#62b517\" stroke-width=\"1.8\" stroke-linecap=\"round\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"12\" cy=\"12\" r=\"9\"/><ellipse cx=\"12\" cy=\"12\" rx=\"9\" ry=\"4\" stroke=\"#a8c96a\"/><ellipse cx=\"12\" cy=\"12\" rx=\"4\" ry=\"9\" stroke=\"#a8c96a\"/><circle cx=\"12\" cy=\"12\" r=\"2\" fill=\"#d1db24\" stroke=\"none\"/></svg>",
@@ -47,20 +43,16 @@
       "description": "Knowing which kind of ML fits the job is what real AI literacy looks like"
     }
   ],
-
   "play_now_url": "/ai/knn/clusterflick",
   "play_now_label": "▶ Play Now. Free Online",
   "play_now_onclick_attr": "",
   "buy_button_html": "<a class=\"btn-buy-physical\" href=\"/ai/knn/clusterflick/tutorial\"><svg width=\"14\" height=\"14\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.2\" stroke-linecap=\"round\" style=\"display:inline;vertical-align:middle;margin-right:6px\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><line x1=\"12\" y1=\"8\" x2=\"12\" y2=\"12\"/><line x1=\"12\" y1=\"16\" x2=\"12.01\" y2=\"16\"/></svg> Learn How to Play</a>",
-
   "players_text": "2–4 Players",
   "time_text": "~30 Min · 6 Rounds",
   "ages_text": "Ages 14+",
-
   "learning_h2_html": "Classify by similarity, <em>not by neural network.</em>",
   "learning_intro_p_html": "Most AI literacy training stops at GenAI. But \"machine learning\" covers a whole family of algorithms - K-Nearest Neighbors, decision trees, clustering, regression, support vector machines - most of which look nothing like a transformer. Clusterflick puts you inside one of the simplest and most transparent: <strong>K-NN</strong>. Place the labelled training data. Flick a new sample onto the board. Where it lands - and which neighbours it lands closest to - decides what it is.",
   "learning_section_label": "What you'll actually understand after playing",
-
   "concept_cards": [
     {
       "icon_svg": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#62b517\" stroke-width=\"1.8\" stroke-linecap=\"round\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"12\" cy=\"12\" r=\"9\"/><ellipse cx=\"12\" cy=\"12\" rx=\"9\" ry=\"4\" stroke=\"#a8c96a\"/><ellipse cx=\"12\" cy=\"12\" rx=\"4\" ry=\"9\" stroke=\"#a8c96a\"/><circle cx=\"12\" cy=\"12\" r=\"2\" fill=\"#d1db24\" stroke=\"none\"/></svg>",
@@ -83,10 +75,8 @@
       "body_html": "Real AI fluency isn't being able to use ChatGPT. It's knowing which kind of model fits which kind of problem - and pushing back when someone reaches for GenAI on a problem that a 30-line classical ML algorithm would solve faster, cheaper, and more reliably. After Clusterflick, \"AI\" stops meaning \"the magic chatbot\" and starts meaning <em>a family of techniques with very different tradeoffs</em>. That's the difference between being talked at by AI vendors and asking the right questions."
     }
   ],
-
   "workshop_h2_html": "Pair Clusterflick with FuzzNet Labs for a <em>complete picture of ML.</em>",
-  "workshop_intro_p_html": "Use <strong>Clusterflick</strong> to teach the variety of machine learning that <em>isn't</em> GenAI - classical, transparent, distance-based methods. Then use <a href=\"/ai/neural-network\" style=\"color:#4a8c11;font-weight:800;\">FuzzNet Labs</a> to teach the neural-network side: layered architectures, training cycles, and why GenAI is the way it is. Together they show participants that \"AI\" is bigger than the chatbot they used yesterday.",
-
+  "workshop_intro_p_html": "Use <strong>Clusterflick</strong> to teach the variety of machine learning that <em>isn't</em> GenAI - classical, transparent, distance-based methods. Then use <a href=\"/ai/neural-network/fuzznet\" style=\"color:#4a8c11;font-weight:800;\">FuzzNet Labs</a> to teach the neural-network side: layered architectures, training cycles, and why GenAI is the way it is. Together they show participants that \"AI\" is bigger than the chatbot they used yesterday.",
   "workshop_cards": [
     {
       "icon_svg": "<svg viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"12\" cy=\"12\" r=\"9\" stroke=\"#62b517\" stroke-width=\"2\"/><circle cx=\"12\" cy=\"12\" r=\"5\" stroke=\"#a8c96a\" stroke-width=\"1.5\"/><circle cx=\"12\" cy=\"12\" r=\"2.2\" fill=\"#d1db24\"/></svg>",
@@ -99,9 +89,7 @@
       "body_html": "Clusterflick's tutorial is a self-paced overlay you can have participants run before or during the session. The <em>Learn How to Play</em> button walks through K-NN concepts and gameplay together, so you don't need to lecture before play begins."
     }
   ],
-
   "workshop_cta_url": "/blog/how-to-facilitate-an-ai-literacy-workshop",
   "workshop_cta_label": "Read the Workshop Facilitation Guide",
-
-  "footer_html": "&copy; 2026 Tech CoLab &middot; <a href=\"/\">Back to all games</a> &middot; <a href=\"/ai/neural-network\">FuzzNet Labs (sister game)</a>"
+  "footer_html": "&copy; 2026 Tech CoLab &middot; <a href=\"/\">Back to all games</a> &middot; <a href=\"/ai/neural-network/fuzznet\">FuzzNet Labs (sister game)</a>"
 }

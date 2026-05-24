@@ -666,9 +666,28 @@
   letter-spacing: 0.04em;
   color: #fff;
 }
-.plan-mini-icon--ai { background: transparent; }
-.plan-mini-icon--cy { background: transparent; }
-.plan-mini-icon--qb { background: transparent; }
+.plan-mini-icon--ai  { background: transparent; }
+.plan-mini-icon--cy  { background: transparent; }
+.plan-mini-icon--knn { background: transparent; }
+.plan-mini-icon--qb  { background: transparent; }
+.plan-mini-label {
+  font-size: 9px;
+  font-weight: 700;
+  color: #a8b899;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 0 2px;
+}
+.plan-mini-label::before,
+.plan-mini-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #dcecc4;
+}
 .plan-mini-text {
   display: flex;
   flex-direction: column;
