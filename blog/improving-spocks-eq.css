@@ -1,0 +1,291 @@
+/* Page-specific styles for Improving Spock's EQ */
+
+/* ===== ASSUMPTIONS → CONDITIONS → PREDICTIONS CHAIN ===== */
+.logic-chain {
+  display: grid;
+  grid-template-columns: 1fr 28px 1fr 28px 1fr;
+  gap: 0;
+  margin: 32px 0;
+  align-items: stretch;
+}
+.logic-step {
+  background: #fff;
+  border: 2px solid;
+  border-radius: 10px;
+  padding: 20px 16px;
+  text-align: center;
+}
+.logic-step.ls-assume { border-color: #2a5a9a; background: #f0f5ff; }
+.logic-step.ls-cond   { border-color: #888;    background: #fafafa; }
+.logic-step.ls-pred   { border-color: #c04040; background: #fff8f8; }
+.logic-arrow {
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; color: #d1db24; font-weight: 900;
+}
+.logic-step-num {
+  font-size: 9px; font-weight: 900; text-transform: uppercase;
+  letter-spacing: 2px; margin-bottom: 6px;
+}
+.ls-assume .logic-step-num { color: #2a5a9a; }
+.ls-cond   .logic-step-num { color: #888; }
+.ls-pred   .logic-step-num { color: #c04040; }
+.logic-step-title { font-size: 16px; font-weight: 900; margin-bottom: 8px; }
+.ls-assume .logic-step-title { color: #1a3a7a; }
+.ls-cond   .logic-step-title { color: #333; }
+.ls-pred   .logic-step-title { color: #8a1a1a; }
+.logic-step-desc { font-size: 12px; color: #555; line-height: 1.55; }
+
+.logic-intervention {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 20px 0;
+}
+.intervention-wrong {
+  background: #fff8f8; border: 2px solid #e0a0a0; border-radius: 10px; padding: 16px;
+}
+.intervention-right {
+  background: #f8fff8; border: 2px solid #90c090; border-radius: 10px; padding: 16px;
+}
+.intervention-label {
+  font-size: 10px; font-weight: 900; text-transform: uppercase;
+  letter-spacing: 1.5px; margin-bottom: 8px;
+}
+.intervention-wrong .intervention-label { color: #c04040; }
+.intervention-right .intervention-label { color: #2a7a0a; }
+.intervention-text { font-size: 13px; color: #444; line-height: 1.6; }
+
+/* ===== PER-SECTION FRAMEWORK CALLOUT ===== */
+.framework-apply {
+  background: #f0f4ff;
+  border-left: 4px solid #2a5a9a;
+  border-radius: 0 8px 8px 0;
+  padding: 14px 18px;
+  margin: 20px 0;
+}
+.framework-apply-label {
+  font-size: 9px; font-weight: 900; text-transform: uppercase;
+  letter-spacing: 2px; color: #4a7aaa; margin-bottom: 8px;
+}
+.framework-apply p, .framework-apply-body {
+  font-size: 13px; color: #2a3a6a; line-height: 1.7; margin: 0;
+}
+
+@media (max-width: 600px) {
+  .logic-chain { grid-template-columns: 1fr; gap: 8px; }
+  .logic-arrow { transform: rotate(90deg); height: 24px; }
+  .logic-intervention { grid-template-columns: 1fr; }
+}
+
+/* ===== HERO THEME ===== */
+.article-hero { background: linear-gradient(160deg, #060b18 0%, #0c1430 55%, #081020 100%); }
+.article-tag-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px; }
+.tag-spock { background: #1a5a8a; }
+.tag-eq    { background: #7a3a10; }
+.article-hero-sub { color: #7aadca; }
+.article-meta-author { color: #d1db24; }
+.article-meta-date, .article-meta-read { color: #5a8aaa; }
+.article-meta-sep { color: #2a4a7a; }
+.article-cta { background: linear-gradient(135deg, #060b18 0%, #0c1430 100%); border: 2px solid #1a3a6a; }
+.article-cta p { color: #7aadca; }
+.article-cta a.secondary { color: #7aadca; border: 2px solid #2a4a7a; }
+
+/* ===== SPOCK PROFILE CARD ===== */
+.spock-profile {
+  background: #0a1020;
+  border: 2px solid #2a5a8a;
+  border-radius: 14px;
+  padding: 24px 28px;
+  margin: 32px 0;
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+.spock-emblem {
+  width: 80px; height: 80px;
+  background: #0c1830;
+  border: 2px solid #2a5a8a;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.spock-stats { display: flex; flex-direction: column; gap: 8px; }
+.spock-stats-title {
+  font-size: 14px; font-weight: 900; color: #d1db24;
+  text-transform: uppercase; letter-spacing: 2px; margin-bottom: 4px;
+}
+.spock-stat {
+  display: flex; gap: 10px; align-items: baseline;
+  font-size: 13px; line-height: 1.4;
+}
+.stat-label {
+  font-size: 10px; font-weight: 900; text-transform: uppercase;
+  letter-spacing: 1.5px; color: #4a9abb; white-space: nowrap; flex-shrink: 0;
+}
+.stat-value { color: #c8dde8; font-weight: 600; }
+.stat-value.stat-error { color: #c06040; }
+@media (max-width: 560px) {
+  .spock-profile { grid-template-columns: 1fr; }
+  .spock-emblem { margin: 0 auto; }
+}
+
+/* ===== EPISODE EVIDENCE GRID ===== */
+.episode-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin: 32px 0;
+}
+.episode-card {
+  background: #fff;
+  border: 2px solid #c8d8e8;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.episode-meta {
+  display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 2px;
+}
+.episode-title { font-size: 14px; font-weight: 900; color: #1a1a1a; }
+.episode-season {
+  font-size: 9px; font-weight: 900; text-transform: uppercase; letter-spacing: 1.5px;
+  color: #fff; padding: 3px 8px; border-radius: 4px; background: #1a5a8a;
+}
+.episode-emotion {
+  font-size: 12px; font-weight: 700; color: #4a5a6a;
+  line-height: 1.5;
+}
+.episode-what {
+  font-size: 13px; color: #444; line-height: 1.6; font-style: italic;
+}
+.episode-verdict {
+  font-size: 12px; font-weight: 800; margin-top: 4px; padding-top: 8px;
+  border-top: 1px solid #e0ecf0; line-height: 1.4;
+}
+.episode-verdict.bad  { color: #c04040; }
+.episode-verdict.warn { color: #9a6020; }
+.episode-verdict.good { color: #2a7a0a; }
+@media (max-width: 600px) { .episode-grid { grid-template-columns: 1fr; } }
+
+/* ===== EQ OVERVIEW QUAD ===== */
+.eq-quad {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border: 2px solid #c8d8e8;
+  border-radius: 14px;
+  overflow: hidden;
+  margin: 32px 0;
+}
+.eq-cell {
+  padding: 22px 20px;
+  border: 1px solid #e0e8f0;
+}
+.eq-cell:nth-child(1), .eq-cell:nth-child(2) { border-top: none; }
+.eq-cell:nth-child(1), .eq-cell:nth-child(3) { border-left: none; }
+.eq-cell:nth-child(2), .eq-cell:nth-child(4) { border-right: none; }
+.eq-cell:nth-child(3), .eq-cell:nth-child(4) { border-bottom: none; }
+.eq-cell.personal { background: #f0f5ff; }
+.eq-cell.social   { background: #fff8f0; }
+.eq-cell-tag {
+  font-size: 9px; font-weight: 900; text-transform: uppercase;
+  letter-spacing: 1.5px; color: #fff; padding: 3px 8px;
+  border-radius: 4px; margin-bottom: 10px; display: inline-block;
+}
+.personal .eq-cell-tag { background: #2a5a9a; }
+.social   .eq-cell-tag { background: #7a3a10; }
+.eq-cell-title { font-size: 16px; font-weight: 900; margin-bottom: 6px; }
+.personal .eq-cell-title { color: #1a3a7a; }
+.social   .eq-cell-title { color: #6a2a08; }
+.eq-cell-def { font-size: 12px; color: #555; line-height: 1.55; }
+.eq-stat {
+  font-size: 11px; font-weight: 800; color: #888; margin-top: 10px;
+  padding-top: 8px; border-top: 1px solid #e0e8f0;
+}
+.personal .eq-stat { color: #4a7aaa; }
+.social   .eq-stat { color: #9a6030; }
+@media (max-width: 560px) { .eq-quad { grid-template-columns: 1fr; } }
+
+/* ===== SPOCK VERDICT (dark quote callout) ===== */
+.spock-verdict {
+  background: #080e1c;
+  border: 2px solid #2a5a8a;
+  border-radius: 12px;
+  padding: 22px 26px 22px 24px;
+  margin: 28px 0;
+  position: relative;
+}
+.spock-verdict-header {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
+}
+.spock-verdict-label {
+  font-size: 10px; font-weight: 900; text-transform: uppercase;
+  letter-spacing: 2px; color: #d1db24;
+}
+.spock-verdict-text {
+  font-size: 14px; color: #7aadca; line-height: 1.7; font-style: italic;
+}
+
+/* ===== SECTION TACTIC LIST ===== */
+.tactic-list { display: flex; flex-direction: column; gap: 10px; margin: 24px 0; }
+.tactic-item {
+  display: flex; gap: 14px; align-items: flex-start;
+  padding: 14px 16px;
+  background: #fff;
+  border: 1.5px solid #c8d8e8;
+  border-radius: 10px;
+}
+.tactic-icon {
+  width: 32px; height: 32px; flex-shrink: 0;
+  background: #f0f5ff; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+}
+.tactic-body { flex: 1; }
+.tactic-title { font-size: 14px; font-weight: 900; color: #1a1a1a; margin-bottom: 4px; }
+.tactic-desc  { font-size: 13px; color: #555; line-height: 1.6; }
+
+/* ===== EQ SECTION HEADERS ===== */
+.eq-section-label {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 11px; font-weight: 900; text-transform: uppercase;
+  letter-spacing: 2px; margin-bottom: -8px; margin-top: 52px;
+}
+.eq-section-num {
+  width: 24px; height: 24px;
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 900; color: #fff;
+}
+.eq-section-label.s1 .eq-section-num { background: #2a5a9a; }
+.eq-section-label.s2 .eq-section-num { background: #2a7a0a; }
+.eq-section-label.s3 .eq-section-num { background: #7a4a0a; }
+.eq-section-label.s4 .eq-section-num { background: #7a1a1a; }
+.eq-section-label.s1 .eq-section-name { color: #2a5a9a; }
+.eq-section-label.s2 .eq-section-name { color: #2a7a0a; }
+.eq-section-label.s3 .eq-section-name { color: #7a4a0a; }
+.eq-section-label.s4 .eq-section-name { color: #7a1a1a; }
+.eq-section-name { font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; }
+
+/* ===== STAT HIGHLIGHT BOX ===== */
+.stat-highlight {
+  background: #fff;
+  border: 2px solid #c8d8e8;
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin: 28px 0;
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+.stat-big {
+  font-size: 42px; font-weight: 900; line-height: 1;
+  flex-shrink: 0;
+}
+.stat-big.s-bad  { color: #c04040; }
+.stat-big.s-good { color: #2a7a0a; }
+.stat-caption { font-size: 14px; color: #444; line-height: 1.6; align-self: center; }
+.stat-caption strong { color: #1a1a1a; }
