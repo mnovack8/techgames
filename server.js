@@ -1,6 +1,7 @@
 'use strict';
 require('dotenv').config();
 const http   = require('http');
+const fs     = require('fs');
 const path   = require('path');
 const crypto = require('crypto');
 const { WebSocketServer } = require('ws');
@@ -19,6 +20,36 @@ const PORT = process.env.PORT || 8090;
 const server = http.createServer((req, res) => {
   const parsed = new URL(req.url, `http://${req.headers.host}`);
   let pathname = parsed.pathname;
+
+  // ── Blog posts metadata API ──
+  if (pathname === '/api/posts' && req.method === 'GET') {
+    const blogDir = path.join(__dirname, 'blog');
+    const posts = [];
+    try {
+      const files = fs.readdirSync(blogDir).filter(f => f.endsWith('.html') && f !== 'index.html');
+      for (const file of files) {
+        try {
+          const content = fs.readFileSync(path.join(blogDir, file), 'utf8');
+          const match = content.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
+          if (!match) continue;
+          const data = JSON.parse(match[1]);
+          if (data['@type'] !== 'Article') continue;
+          const urlPath = (data.url || '').replace(/^https?:\/\/[^/]+/, '') || '/blog/' + file.replace('.html', '');
+          posts.push({
+            headline:    data.headline    || '',
+            description: data.description || '',
+            section:     data.articleSection || '',
+            url:         urlPath,
+            date:        data.datePublished || '1970-01-01'
+          });
+        } catch (_) {}
+      }
+      posts.sort((a, b) => b.date.localeCompare(a.date));
+    } catch (_) {}
+    res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-cache' });
+    res.end(JSON.stringify(posts));
+    return;
+  }
 
   // ── Admin API endpoints ──
   if (pathname === '/track'                && req.method === 'POST') return analytics.handleTrack(req, res);

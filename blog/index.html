@@ -81,6 +81,34 @@
 <!-- POSTS -->
 <main class="blog-main">
 
+  <!-- FILTER BAR -->
+  <div class="blog-filter-bar">
+    <div class="blog-filter-top">
+      <input type="text" class="blog-search" id="blog-search" placeholder="Search posts…" autocomplete="off" aria-label="Search posts">
+      <span class="blog-post-count" id="blog-post-count"></span>
+    </div>
+    <div class="blog-filter-row">
+      <span class="blog-filter-label">Type</span>
+      <div class="blog-chips" role="group" aria-label="Filter by type">
+        <button class="blog-chip active" data-dim="type" data-filter="all">All</button>
+        <button class="blog-chip" data-dim="type" data-filter="workshop-guides">Workshop Guides</button>
+        <button class="blog-chip" data-dim="type" data-filter="explainer">Explainer</button>
+        <button class="blog-chip" data-dim="type" data-filter="insights">Insights</button>
+      </div>
+    </div>
+    <div class="blog-filter-row">
+      <span class="blog-filter-label">Topic</span>
+      <div class="blog-chips" role="group" aria-label="Filter by topic">
+        <button class="blog-chip active" data-dim="topic" data-filter="all">All</button>
+        <button class="blog-chip" data-dim="topic" data-filter="ai">AI</button>
+        <button class="blog-chip" data-dim="topic" data-filter="cybersecurity">Cybersecurity</button>
+        <button class="blog-chip" data-dim="topic" data-filter="quantum">Quantum</button>
+        <button class="blog-chip" data-dim="topic" data-filter="career-development">Career Development</button>
+        <button class="blog-chip" data-dim="topic" data-filter="org-upskilling">Org Upskilling</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ===== SECTION 1: Game-Based Learning & Business Value ===== -->
   <!-- ===== WORKSHOP GUIDES SECTION ===== -->
   <div class="blog-section">
@@ -91,7 +119,7 @@
     <div class="blog-grid">
 
     <!-- Post: AI Security Workshop (2-hour combined) -->
-    <a href="/blog/ai-security-workshop" class="blog-card" data-reveal>
+    <a href="/blog/ai-security-workshop" class="blog-card" data-reveal data-topic="ai cybersecurity" data-type="workshop-guides">
       <div class="blog-card-img">
         <svg viewBox="0 0 400 170" xmlns="http://www.w3.org/2000/svg">
           <rect width="400" height="170" fill="#0d1a2a"/>
@@ -143,7 +171,8 @@
       <div class="blog-card-body">
         <div class="blog-card-meta">
           <span class="blog-card-tag tag-workshop">Workshop Guide</span>
-          <span class="blog-card-tag tag-ai" style="font-size:9px">2 Hours</span>
+          <span class="blog-card-tag tag-ai">AI</span>
+          <span class="blog-card-tag tag-cyber">Cybersecurity</span>
         </div>
         <div class="blog-card-title">How to Facilitate an AI Security Workshop</div>
         <div class="blog-card-excerpt">A 2-hour combined experience: AI literacy with FuzzNet Labs, cyber defense with Byte Club, then a real deepfake breach analysis. The same AI technology participants just learned about becomes the attack vector. That's what makes it land.</div>
@@ -152,7 +181,7 @@
     </a>
 
     <!-- Post: Online Workshop Guide -->
-    <a href="/blog/how-to-facilitate-an-ai-literacy-workshop" class="blog-card" data-reveal>
+    <a href="/blog/how-to-facilitate-an-ai-literacy-workshop" class="blog-card" data-reveal data-topic="ai" data-type="workshop-guides">
       <div class="blog-card-img">
         <svg viewBox="0 0 400 170" xmlns="http://www.w3.org/2000/svg">
           <rect width="400" height="170" fill="#f0f5e8"/>
@@ -210,6 +239,7 @@
       <div class="blog-card-body">
         <div class="blog-card-meta">
           <span class="blog-card-tag tag-workshop">Workshop Guide</span>
+          <span class="blog-card-tag tag-ai">AI</span>
         </div>
         <div class="blog-card-title">How to Facilitate an AI Literacy Workshop</div>
         <div class="blog-card-excerpt">A step-by-step facilitator guide for FuzzNet Labs. Set the stage with the interactive demo, host a live game, then close with three structured reflection questions - complete with model answers and common misunderstandings to listen for.</div>
@@ -218,7 +248,7 @@
     </a>
 
     <!-- Post: Cybersecurity Awareness Workshop Guide -->
-    <a href="/blog/cybersecurity-awareness-workshop" class="blog-card" data-reveal>
+    <a href="/blog/cybersecurity-awareness-workshop" class="blog-card" data-reveal data-topic="cybersecurity" data-type="workshop-guides">
       <div class="blog-card-img">
         <svg viewBox="0 0 400 170" xmlns="http://www.w3.org/2000/svg">
           <rect width="400" height="170" fill="#f0f5e8"/>
@@ -271,6 +301,7 @@
       <div class="blog-card-body">
         <div class="blog-card-meta">
           <span class="blog-card-tag tag-workshop">Workshop Guide</span>
+          <span class="blog-card-tag tag-cyber">Cybersecurity</span>
         </div>
         <div class="blog-card-title">How to Facilitate a Cybersecurity Awareness Workshop</div>
         <div class="blog-card-excerpt">A step-by-step facilitator guide for Byte Club. Walk your team through network defense fundamentals, host a live game, then close with a hands-on breach analysis — pick a real incident, map it to the Kill Chain, and discuss NIST controls as a group.</div>
@@ -281,15 +312,169 @@
     </div>
   </div><!-- /Workshop Guides -->
 
+  <!-- ===== SECTION 2: Technical Domains ===== -->
   <div class="blog-section">
     <div class="blog-section-header">
-      <span class="blog-section-label">Game-Based Learning &amp; Business Value</span>
-      <span class="blog-section-desc">How play, experience, and unconventional methods drive real organizational outcomes.</span>
+      <span class="blog-section-label label-tech">Explainer</span>
+      <span class="blog-section-desc">Plain-English guides to the technologies reshaping how we work, communicate, and defend.</span>
+    </div>
+    <div class="blog-grid">
+
+    <!-- Post: Principles of AI -->
+    <a href="/blog/principles-of-ai-data-science" class="blog-card" data-reveal data-delay="1" data-topic="ai" data-type="explainer">
+      <div class="blog-card-img">
+        <svg viewBox="0 0 400 170" xmlns="http://www.w3.org/2000/svg">
+          <rect width="400" height="170" fill="#f0f5e8"/>
+          <!-- Input layer -->
+          <circle cx="70"  cy="50"  r="14" fill="#fff" stroke="#4a7aaa" stroke-width="2"/>
+          <circle cx="70"  cy="85"  r="14" fill="#fff" stroke="#4a7aaa" stroke-width="2"/>
+          <circle cx="70"  cy="120" r="14" fill="#fff" stroke="#4a7aaa" stroke-width="2"/>
+          <!-- Hidden layer 1 -->
+          <circle cx="175" cy="50"  r="14" fill="#fff" stroke="#2a5a3a" stroke-width="2"/>
+          <circle cx="175" cy="85"  r="14" fill="#fff" stroke="#2a5a3a" stroke-width="2"/>
+          <circle cx="175" cy="120" r="14" fill="#fff" stroke="#2a5a3a" stroke-width="2"/>
+          <!-- Hidden layer 2 -->
+          <circle cx="280" cy="50"  r="14" fill="#fff" stroke="#2a5a3a" stroke-width="2"/>
+          <circle cx="280" cy="85"  r="14" fill="#fff" stroke="#2a5a3a" stroke-width="2"/>
+          <circle cx="280" cy="120" r="14" fill="#fff" stroke="#2a5a3a" stroke-width="2"/>
+          <!-- Output layer -->
+          <circle cx="370" cy="67"  r="16" fill="#edfde8" stroke="#62b517" stroke-width="2.5"/>
+          <circle cx="370" cy="110" r="16" fill="#edfde8" stroke="#62b517" stroke-width="2.5"/>
+          <!-- Connections -->
+          <g stroke="#c8ddb0" stroke-width="1" opacity="0.7">
+            <line x1="84" y1="50"  x2="161" y2="50"/>  <line x1="84" y1="50"  x2="161" y2="85"/>  <line x1="84" y1="50"  x2="161" y2="120"/>
+            <line x1="84" y1="85"  x2="161" y2="50"/>  <line x1="84" y1="85"  x2="161" y2="85"/>  <line x1="84" y1="85"  x2="161" y2="120"/>
+            <line x1="84" y1="120" x2="161" y2="50"/>  <line x1="84" y1="120" x2="161" y2="85"/>  <line x1="84" y1="120" x2="161" y2="120"/>
+            <line x1="189" y1="50"  x2="266" y2="50"/>  <line x1="189" y1="50"  x2="266" y2="85"/>  <line x1="189" y1="50"  x2="266" y2="120"/>
+            <line x1="189" y1="85"  x2="266" y2="50"/>  <line x1="189" y1="85"  x2="266" y2="85"/>  <line x1="189" y1="85"  x2="266" y2="120"/>
+            <line x1="189" y1="120" x2="266" y2="50"/>  <line x1="189" y1="120" x2="266" y2="85"/>  <line x1="189" y1="120" x2="266" y2="120"/>
+            <line x1="294" y1="50"  x2="354" y2="67"/>  <line x1="294" y1="85"  x2="354" y2="67"/>  <line x1="294" y1="120" x2="354" y2="67"/>
+            <line x1="294" y1="50"  x2="354" y2="110"/> <line x1="294" y1="85"  x2="354" y2="110"/> <line x1="294" y1="120" x2="354" y2="110"/>
+          </g>
+          <!-- Active path -->
+          <line x1="84" y1="50" x2="161" y2="85" stroke="#d1db24" stroke-width="2.5" opacity="0.9"/>
+          <line x1="189" y1="85" x2="266" y2="50" stroke="#d1db24" stroke-width="2.5" opacity="0.9"/>
+          <line x1="294" y1="50" x2="354" y2="67" stroke="#62b517" stroke-width="2.5" opacity="0.9"/>
+          <circle cx="70"  cy="50"  r="7" fill="#d1db24"/>
+          <circle cx="175" cy="85"  r="7" fill="#d1db24"/>
+          <circle cx="280" cy="50"  r="7" fill="#d1db24"/>
+          <circle cx="370" cy="67"  r="8" fill="#62b517"/>
+          <rect x="10" y="148" width="88" height="16" rx="5" fill="#1a5a8a" opacity="0.85"/>
+          <text x="54" y="159" text-anchor="middle" font-family="sans-serif" font-size="8" font-weight="900" fill="#fff" letter-spacing="0.5">DATA SCIENCE</text>
+        </svg>
+      </div>
+      <div class="blog-card-body">
+        <div class="blog-card-meta">
+          <span class="blog-card-tag tag-explainer">Explainer</span>
+          <span class="blog-card-tag tag-ai">AI</span>
+        </div>
+        <div class="blog-card-title">The Principles of AI: It is not Magic, it is (Data) Science</div>
+        <div class="blog-card-excerpt">Most people use AI every day and understand almost none of it. Here's what the technology actually runs on. From data science fundamentals to neural networks, overfitting, and the Design-Train-Test cycle.</div>
+        <div class="blog-card-read">Read more →</div>
+      </div>
+    </a>
+
+    <!-- Post: Quantum Computing Basics -->
+    <a href="/blog/quantum-computing-basics" class="blog-card" data-reveal data-delay="2" data-topic="quantum" data-type="explainer">
+      <div class="blog-card-img">
+        <svg viewBox="0 0 400 170" xmlns="http://www.w3.org/2000/svg">
+          <rect width="400" height="170" fill="#0d1535"/>
+          <!-- Bloch sphere -->
+          <ellipse cx="120" cy="85" rx="58" ry="58" fill="none" stroke="#7030c0" stroke-width="1.5" opacity="0.6"/>
+          <ellipse cx="120" cy="85" rx="58" ry="18" fill="none" stroke="#7030c0" stroke-width="1" stroke-dasharray="4,3" opacity="0.35"/>
+          <line x1="120" y1="25" x2="120" y2="145" stroke="#9060d0" stroke-width="1" stroke-dasharray="3,3" opacity="0.4"/>
+          <!-- glow -->
+          <circle cx="120" cy="85" r="42" fill="radial-gradient" opacity="0.06"/>
+          <!-- state vector -->
+          <line x1="120" y1="85" x2="155" y2="50" stroke="#d1db24" stroke-width="2.5"/>
+          <polygon points="155,50 148,60 160,58" fill="#d1db24"/>
+          <!-- poles -->
+          <circle cx="120" cy="27" r="6" fill="#c090ff"/>
+          <circle cx="120" cy="143" r="6" fill="#c090ff" opacity="0.4"/>
+          <text x="120" y="22" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#c090ff" font-weight="700">|0⟩</text>
+          <text x="120" y="158" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#c090ff" opacity="0.5">|1⟩</text>
+          <!-- entanglement line to right qubit -->
+          <line x1="180" y1="85" x2="244" y2="85" stroke="#d1db24" stroke-width="1.5" stroke-dasharray="5,3" opacity="0.7"/>
+          <!-- right qubit sphere -->
+          <ellipse cx="290" cy="85" rx="44" ry="44" fill="none" stroke="#3a7aaa" stroke-width="1.5" opacity="0.5"/>
+          <ellipse cx="290" cy="85" rx="44" ry="14" fill="none" stroke="#3a7aaa" stroke-width="1" stroke-dasharray="4,3" opacity="0.3"/>
+          <circle cx="290" cy="43" r="5" fill="#6aaddd" opacity="0.7"/>
+          <circle cx="290" cy="127" r="5" fill="#6aaddd" opacity="0.3"/>
+          <line x1="290" y1="85" x2="318" y2="60" stroke="#6aaddd" stroke-width="2" opacity="0.8"/>
+          <polygon points="318,60 313,68 322,66" fill="#6aaddd" opacity="0.8"/>
+          <!-- labels -->
+          <text x="120" y="165" text-anchor="middle" font-family="sans-serif" font-size="8" fill="#9060d0" font-weight="900" opacity="0.8">QUBIT A</text>
+          <text x="290" y="155" text-anchor="middle" font-family="sans-serif" font-size="8" fill="#3a7aaa" font-weight="900" opacity="0.8">QUBIT B</text>
+          <text x="212" y="78" text-anchor="middle" font-family="sans-serif" font-size="8" fill="#d1db24" font-weight="700" opacity="0.9">entangled</text>
+        </svg>
+      </div>
+      <div class="blog-card-body">
+        <div class="blog-card-meta">
+          <span class="blog-card-tag tag-explainer">Explainer</span>
+          <span class="blog-card-tag tag-quantum">Quantum</span>
+        </div>
+        <div class="blog-card-title">Quantum Computing Basics: A Plain-English Guide to the Next Computing Revolution</div>
+        <div class="blog-card-excerpt">Classical computers think in ones and zeros. Quantum computers think in both at once. And that changes everything about what's computationally possible. Here's what superposition, entanglement, and interference actually mean, and why the world is racing to get there first.</div>
+        <div class="blog-card-read">Read more →</div>
+      </div>
+    </a>
+
+    <!-- Post: Cybersecurity Mindset -->
+    <a href="/blog/cybersecurity-mindset-critical-thinking" class="blog-card" data-reveal data-delay="1" data-topic="cybersecurity" data-type="explainer">
+      <div class="blog-card-img">
+        <svg viewBox="0 0 400 170" xmlns="http://www.w3.org/2000/svg">
+          <rect width="400" height="170" fill="#f0f5e8"/>
+          <!-- brain / checklist split -->
+          <rect x="48" y="36" width="130" height="100" rx="8" fill="#fff" stroke="#c04040" stroke-width="1.5" opacity="0.6"/>
+          <rect x="64" y="52" width="20" height="20" rx="4" fill="#c04040" opacity="0.18"/>
+          <rect x="64" y="52" width="20" height="20" rx="4" fill="none" stroke="#c04040" stroke-width="1.5" opacity="0.7"/>
+          <rect x="92" y="57" width="68" height="8" rx="4" fill="#c04040" opacity="0.3"/>
+          <rect x="64" y="82" width="20" height="20" rx="4" fill="#c04040" opacity="0.18"/>
+          <rect x="64" y="82" width="20" height="20" rx="4" fill="none" stroke="#c04040" stroke-width="1.5" opacity="0.7"/>
+          <rect x="92" y="87" width="52" height="8" rx="4" fill="#c04040" opacity="0.3"/>
+          <rect x="64" y="112" width="20" height="20" rx="4" fill="#c04040" opacity="0.18"/>
+          <rect x="64" y="112" width="20" height="20" rx="4" fill="none" stroke="#c04040" stroke-width="1.5" opacity="0.7"/>
+          <rect x="92" y="117" width="62" height="8" rx="4" fill="#c04040" opacity="0.3"/>
+          <!-- arrow -->
+          <line x1="192" y1="85" x2="214" y2="85" stroke="#888" stroke-width="2" opacity="0.5"/>
+          <polygon points="214,80 224,85 214,90" fill="#888" opacity="0.5"/>
+          <!-- brain shape -->
+          <ellipse cx="296" cy="72" rx="48" ry="36" fill="#62b517" opacity="0.18"/>
+          <ellipse cx="296" cy="72" rx="36" ry="27" fill="#62b517" opacity="0.2"/>
+          <path d="M268 72 Q280 48 296 52 Q312 48 324 72 Q332 90 314 102 Q304 110 296 108 Q288 110 278 102 Q260 90 268 72Z" fill="none" stroke="#62b517" stroke-width="2" opacity="0.65"/>
+          <line x1="296" y1="52" x2="296" y2="108" stroke="#62b517" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.5"/>
+          <circle cx="280" cy="72" r="5" fill="#d1db24" opacity="0.8"/>
+          <circle cx="312" cy="72" r="5" fill="#d1db24" opacity="0.8"/>
+          <circle cx="296" cy="90" r="4" fill="#4a8c11" opacity="0.7"/>
+          <!-- "vs" label -->
+          <text x="200" y="155" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="900" fill="#888" opacity="0.6">COMPLIANCE  vs  MINDSET</text>
+        </svg>
+      </div>
+      <div class="blog-card-body">
+        <div class="blog-card-meta">
+          <span class="blog-card-tag tag-explainer">Explainer</span>
+          <span class="blog-card-tag tag-cyber">Cybersecurity</span>
+        </div>
+        <div class="blog-card-title">A Cybersecurity Mindset: Critical Thinking Over Checklists</div>
+        <div class="blog-card-excerpt">Passing a compliance audit doesn't make you secure. Here's why checklists create a false sense of safety. And how adversarial thinking, the Kill Chain, and NIST together build the mindset that actually stops attacks.</div>
+        <div class="blog-card-read">Read more →</div>
+      </div>
+    </a>
+
+    </div><!-- /blog-grid -->
+  </div><!-- /blog-section: Technical Domains -->
+
+
+  <!-- ===== SECTION: Insights ===== -->
+  <div class="blog-section">
+    <div class="blog-section-header">
+      <span class="blog-section-label label-insights">Insights</span>
+      <span class="blog-section-desc">Perspectives on career growth, organizational learning, and the human side of technical work.</span>
     </div>
     <div class="blog-grid">
 
     <!-- Post: Having Fun -->
-    <a href="/blog/why-we-learn-better-through-play" class="blog-card" data-reveal>
+    <a href="/blog/why-we-learn-better-through-play" class="blog-card" data-reveal data-topic="org-upskilling" data-type="insights">
       <div class="blog-card-img">
         <svg viewBox="0 0 400 170" xmlns="http://www.w3.org/2000/svg">
           <rect width="400" height="170" fill="#f0f5e8"/>
@@ -333,7 +518,7 @@
       </div>
       <div class="blog-card-body">
         <div class="blog-card-meta">
-          <span class="blog-card-tag tag-learn">Learning Science</span>
+          <span class="blog-card-tag tag-org-upskilling">Org Upskilling</span>
         </div>
         <div class="blog-card-title">Why We Learn Better by Having Fun</div>
         <div class="blog-card-excerpt">Decades of research confirm that experiential, game-based learning outperforms passive instruction. When learners are active participants rather than passive receivers, retention rates jump dramatically. Here's the science behind why fun is the most powerful learning tool we have.</div>
@@ -342,7 +527,7 @@
     </a>
 
     <!-- Post: People Process Tools -->
-    <a href="/blog/people-process-tools" class="blog-card" data-reveal data-delay="1">
+    <a href="/blog/people-process-tools" class="blog-card" data-reveal data-delay="1" data-topic="org-upskilling" data-type="insights">
       <div class="blog-card-img">
         <svg viewBox="0 0 400 170" xmlns="http://www.w3.org/2000/svg">
           <rect width="400" height="170" fill="#f0f5e8"/>
@@ -399,7 +584,7 @@
       </div>
       <div class="blog-card-body">
         <div class="blog-card-meta">
-          <span class="blog-card-tag tag-learn">Business</span>
+          <span class="blog-card-tag tag-org-upskilling">Org Upskilling</span>
         </div>
         <div class="blog-card-title">People, Process, and Tools: What Board Games Teach Us About Running a Business</div>
         <div class="blog-card-excerpt">A deck of cards on an empty table is just furniture. But put people around it with shared rules and it becomes something worth showing up for. The same hierarchy governs every organization that has ever succeeded or failed.</div>
@@ -408,7 +593,7 @@
     </a>
 
     <!-- Post: Culture Is Already Showing -->
-    <a href="/blog/culture-is-already-showing" class="blog-card" data-reveal data-delay="2">
+    <a href="/blog/culture-is-already-showing" class="blog-card" data-reveal data-delay="2" data-topic="org-upskilling" data-type="insights">
       <div class="blog-card-img">
         <svg viewBox="0 0 400 170" xmlns="http://www.w3.org/2000/svg">
           <rect width="400" height="170" fill="#f0f5e8"/>
@@ -450,7 +635,7 @@
       </div>
       <div class="blog-card-body">
         <div class="blog-card-meta">
-          <span class="blog-card-tag tag-train">Culture</span>
+          <span class="blog-card-tag tag-org-upskilling">Org Upskilling</span>
         </div>
         <div class="blog-card-title">Your Culture Is Already Showing: Why the Realest Team-Building Happens When Nobody's Trying</div>
         <div class="blog-card-excerpt">Most organizations have two cultures: the one on the wall and the one that runs the building. The gap between them isn't hypocrisy. It's the result of trying to declare something into existence that can only be grown through shared experience.</div>
@@ -458,168 +643,10 @@
       </div>
     </a>
 
-    </div><!-- /blog-grid -->
-  </div><!-- /blog-section: Game-Based Learning -->
-
-  <!-- ===== SECTION 2: Technical Domains ===== -->
-  <div class="blog-section">
-    <div class="blog-section-header">
-      <span class="blog-section-label label-tech">Technical Domains</span>
-      <span class="blog-section-desc">Plain-English guides to the technologies reshaping how we work, communicate, and defend.</span>
-    </div>
-    <div class="blog-grid">
-
-    <!-- Post: Principles of AI -->
-    <a href="/blog/principles-of-ai-data-science" class="blog-card" data-reveal data-delay="1">
-      <div class="blog-card-img">
-        <svg viewBox="0 0 400 170" xmlns="http://www.w3.org/2000/svg">
-          <rect width="400" height="170" fill="#f0f5e8"/>
-          <!-- Input layer -->
-          <circle cx="70"  cy="50"  r="14" fill="#fff" stroke="#4a7aaa" stroke-width="2"/>
-          <circle cx="70"  cy="85"  r="14" fill="#fff" stroke="#4a7aaa" stroke-width="2"/>
-          <circle cx="70"  cy="120" r="14" fill="#fff" stroke="#4a7aaa" stroke-width="2"/>
-          <!-- Hidden layer 1 -->
-          <circle cx="175" cy="50"  r="14" fill="#fff" stroke="#2a5a3a" stroke-width="2"/>
-          <circle cx="175" cy="85"  r="14" fill="#fff" stroke="#2a5a3a" stroke-width="2"/>
-          <circle cx="175" cy="120" r="14" fill="#fff" stroke="#2a5a3a" stroke-width="2"/>
-          <!-- Hidden layer 2 -->
-          <circle cx="280" cy="50"  r="14" fill="#fff" stroke="#2a5a3a" stroke-width="2"/>
-          <circle cx="280" cy="85"  r="14" fill="#fff" stroke="#2a5a3a" stroke-width="2"/>
-          <circle cx="280" cy="120" r="14" fill="#fff" stroke="#2a5a3a" stroke-width="2"/>
-          <!-- Output layer -->
-          <circle cx="370" cy="67"  r="16" fill="#edfde8" stroke="#62b517" stroke-width="2.5"/>
-          <circle cx="370" cy="110" r="16" fill="#edfde8" stroke="#62b517" stroke-width="2.5"/>
-          <!-- Connections -->
-          <g stroke="#c8ddb0" stroke-width="1" opacity="0.7">
-            <line x1="84" y1="50"  x2="161" y2="50"/>  <line x1="84" y1="50"  x2="161" y2="85"/>  <line x1="84" y1="50"  x2="161" y2="120"/>
-            <line x1="84" y1="85"  x2="161" y2="50"/>  <line x1="84" y1="85"  x2="161" y2="85"/>  <line x1="84" y1="85"  x2="161" y2="120"/>
-            <line x1="84" y1="120" x2="161" y2="50"/>  <line x1="84" y1="120" x2="161" y2="85"/>  <line x1="84" y1="120" x2="161" y2="120"/>
-            <line x1="189" y1="50"  x2="266" y2="50"/>  <line x1="189" y1="50"  x2="266" y2="85"/>  <line x1="189" y1="50"  x2="266" y2="120"/>
-            <line x1="189" y1="85"  x2="266" y2="50"/>  <line x1="189" y1="85"  x2="266" y2="85"/>  <line x1="189" y1="85"  x2="266" y2="120"/>
-            <line x1="189" y1="120" x2="266" y2="50"/>  <line x1="189" y1="120" x2="266" y2="85"/>  <line x1="189" y1="120" x2="266" y2="120"/>
-            <line x1="294" y1="50"  x2="354" y2="67"/>  <line x1="294" y1="85"  x2="354" y2="67"/>  <line x1="294" y1="120" x2="354" y2="67"/>
-            <line x1="294" y1="50"  x2="354" y2="110"/> <line x1="294" y1="85"  x2="354" y2="110"/> <line x1="294" y1="120" x2="354" y2="110"/>
-          </g>
-          <!-- Active path -->
-          <line x1="84" y1="50" x2="161" y2="85" stroke="#d1db24" stroke-width="2.5" opacity="0.9"/>
-          <line x1="189" y1="85" x2="266" y2="50" stroke="#d1db24" stroke-width="2.5" opacity="0.9"/>
-          <line x1="294" y1="50" x2="354" y2="67" stroke="#62b517" stroke-width="2.5" opacity="0.9"/>
-          <circle cx="70"  cy="50"  r="7" fill="#d1db24"/>
-          <circle cx="175" cy="85"  r="7" fill="#d1db24"/>
-          <circle cx="280" cy="50"  r="7" fill="#d1db24"/>
-          <circle cx="370" cy="67"  r="8" fill="#62b517"/>
-          <rect x="10" y="148" width="88" height="16" rx="5" fill="#1a5a8a" opacity="0.85"/>
-          <text x="54" y="159" text-anchor="middle" font-family="sans-serif" font-size="8" font-weight="900" fill="#fff" letter-spacing="0.5">DATA SCIENCE</text>
-        </svg>
-      </div>
-      <div class="blog-card-body">
-        <div class="blog-card-meta">
-          <span class="blog-card-tag tag-ai">AI</span>
-        </div>
-        <div class="blog-card-title">The Principles of AI: It is not Magic, it is (Data) Science</div>
-        <div class="blog-card-excerpt">Most people use AI every day and understand almost none of it. Here's what the technology actually runs on. From data science fundamentals to neural networks, overfitting, and the Design-Train-Test cycle.</div>
-        <div class="blog-card-read">Read more →</div>
-      </div>
-    </a>
-
-    <!-- Post: Quantum Computing Basics -->
-    <a href="/blog/quantum-computing-basics" class="blog-card" data-reveal data-delay="2">
-      <div class="blog-card-img">
-        <svg viewBox="0 0 400 170" xmlns="http://www.w3.org/2000/svg">
-          <rect width="400" height="170" fill="#0d1535"/>
-          <!-- Bloch sphere -->
-          <ellipse cx="120" cy="85" rx="58" ry="58" fill="none" stroke="#7030c0" stroke-width="1.5" opacity="0.6"/>
-          <ellipse cx="120" cy="85" rx="58" ry="18" fill="none" stroke="#7030c0" stroke-width="1" stroke-dasharray="4,3" opacity="0.35"/>
-          <line x1="120" y1="25" x2="120" y2="145" stroke="#9060d0" stroke-width="1" stroke-dasharray="3,3" opacity="0.4"/>
-          <!-- glow -->
-          <circle cx="120" cy="85" r="42" fill="radial-gradient" opacity="0.06"/>
-          <!-- state vector -->
-          <line x1="120" y1="85" x2="155" y2="50" stroke="#d1db24" stroke-width="2.5"/>
-          <polygon points="155,50 148,60 160,58" fill="#d1db24"/>
-          <!-- poles -->
-          <circle cx="120" cy="27" r="6" fill="#c090ff"/>
-          <circle cx="120" cy="143" r="6" fill="#c090ff" opacity="0.4"/>
-          <text x="120" y="22" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#c090ff" font-weight="700">|0⟩</text>
-          <text x="120" y="158" text-anchor="middle" font-family="sans-serif" font-size="9" fill="#c090ff" opacity="0.5">|1⟩</text>
-          <!-- entanglement line to right qubit -->
-          <line x1="180" y1="85" x2="244" y2="85" stroke="#d1db24" stroke-width="1.5" stroke-dasharray="5,3" opacity="0.7"/>
-          <!-- right qubit sphere -->
-          <ellipse cx="290" cy="85" rx="44" ry="44" fill="none" stroke="#3a7aaa" stroke-width="1.5" opacity="0.5"/>
-          <ellipse cx="290" cy="85" rx="44" ry="14" fill="none" stroke="#3a7aaa" stroke-width="1" stroke-dasharray="4,3" opacity="0.3"/>
-          <circle cx="290" cy="43" r="5" fill="#6aaddd" opacity="0.7"/>
-          <circle cx="290" cy="127" r="5" fill="#6aaddd" opacity="0.3"/>
-          <line x1="290" y1="85" x2="318" y2="60" stroke="#6aaddd" stroke-width="2" opacity="0.8"/>
-          <polygon points="318,60 313,68 322,66" fill="#6aaddd" opacity="0.8"/>
-          <!-- labels -->
-          <text x="120" y="165" text-anchor="middle" font-family="sans-serif" font-size="8" fill="#9060d0" font-weight="900" opacity="0.8">QUBIT A</text>
-          <text x="290" y="155" text-anchor="middle" font-family="sans-serif" font-size="8" fill="#3a7aaa" font-weight="900" opacity="0.8">QUBIT B</text>
-          <text x="212" y="78" text-anchor="middle" font-family="sans-serif" font-size="8" fill="#d1db24" font-weight="700" opacity="0.9">entangled</text>
-        </svg>
-      </div>
-      <div class="blog-card-body">
-        <div class="blog-card-meta">
-          <span class="blog-card-tag" style="background:#5a20a0;">Quantum</span>
-        </div>
-        <div class="blog-card-title">Quantum Computing Basics: A Plain-English Guide to the Next Computing Revolution</div>
-        <div class="blog-card-excerpt">Classical computers think in ones and zeros. Quantum computers think in both at once. And that changes everything about what's computationally possible. Here's what superposition, entanglement, and interference actually mean, and why the world is racing to get there first.</div>
-        <div class="blog-card-read">Read more →</div>
-      </div>
-    </a>
-
-    <!-- Post: Cybersecurity Mindset -->
-    <a href="/blog/cybersecurity-mindset-critical-thinking" class="blog-card" data-reveal data-delay="1">
-      <div class="blog-card-img">
-        <svg viewBox="0 0 400 170" xmlns="http://www.w3.org/2000/svg">
-          <rect width="400" height="170" fill="#f0f5e8"/>
-          <!-- brain / checklist split -->
-          <rect x="48" y="36" width="130" height="100" rx="8" fill="#fff" stroke="#c04040" stroke-width="1.5" opacity="0.6"/>
-          <rect x="64" y="52" width="20" height="20" rx="4" fill="#c04040" opacity="0.18"/>
-          <rect x="64" y="52" width="20" height="20" rx="4" fill="none" stroke="#c04040" stroke-width="1.5" opacity="0.7"/>
-          <rect x="92" y="57" width="68" height="8" rx="4" fill="#c04040" opacity="0.3"/>
-          <rect x="64" y="82" width="20" height="20" rx="4" fill="#c04040" opacity="0.18"/>
-          <rect x="64" y="82" width="20" height="20" rx="4" fill="none" stroke="#c04040" stroke-width="1.5" opacity="0.7"/>
-          <rect x="92" y="87" width="52" height="8" rx="4" fill="#c04040" opacity="0.3"/>
-          <rect x="64" y="112" width="20" height="20" rx="4" fill="#c04040" opacity="0.18"/>
-          <rect x="64" y="112" width="20" height="20" rx="4" fill="none" stroke="#c04040" stroke-width="1.5" opacity="0.7"/>
-          <rect x="92" y="117" width="62" height="8" rx="4" fill="#c04040" opacity="0.3"/>
-          <!-- arrow -->
-          <line x1="192" y1="85" x2="214" y2="85" stroke="#888" stroke-width="2" opacity="0.5"/>
-          <polygon points="214,80 224,85 214,90" fill="#888" opacity="0.5"/>
-          <!-- brain shape -->
-          <ellipse cx="296" cy="72" rx="48" ry="36" fill="#62b517" opacity="0.18"/>
-          <ellipse cx="296" cy="72" rx="36" ry="27" fill="#62b517" opacity="0.2"/>
-          <path d="M268 72 Q280 48 296 52 Q312 48 324 72 Q332 90 314 102 Q304 110 296 108 Q288 110 278 102 Q260 90 268 72Z" fill="none" stroke="#62b517" stroke-width="2" opacity="0.65"/>
-          <line x1="296" y1="52" x2="296" y2="108" stroke="#62b517" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.5"/>
-          <circle cx="280" cy="72" r="5" fill="#d1db24" opacity="0.8"/>
-          <circle cx="312" cy="72" r="5" fill="#d1db24" opacity="0.8"/>
-          <circle cx="296" cy="90" r="4" fill="#4a8c11" opacity="0.7"/>
-          <!-- "vs" label -->
-          <text x="200" y="155" text-anchor="middle" font-family="sans-serif" font-size="11" font-weight="900" fill="#888" opacity="0.6">COMPLIANCE  vs  MINDSET</text>
-        </svg>
-      </div>
-      <div class="blog-card-body">
-        <div class="blog-card-meta">
-          <span class="blog-card-tag tag-cyber">Cybersecurity</span>
-        </div>
-        <div class="blog-card-title">A Cybersecurity Mindset: Critical Thinking Over Checklists</div>
-        <div class="blog-card-excerpt">Passing a compliance audit doesn't make you secure. Here's why checklists create a false sense of safety. And how adversarial thinking, the Kill Chain, and NIST together build the mindset that actually stops attacks.</div>
-        <div class="blog-card-read">Read more →</div>
-      </div>
-    </a>
-
-    </div><!-- /blog-grid -->
-  </div><!-- /blog-section: Technical Domains -->
-
-  <!-- ===== SECTION: Technical Communication ===== -->
-  <div class="blog-section">
-    <div class="blog-section-header">
-      <span class="blog-section-label label-career">Technical Communication</span>
-      <span class="blog-section-desc">Career strategies for technical professionals who want to lead, influence, and grow beyond their specialty.</span>
-    </div>
-    <div class="blog-grid">
+    
 
     <!-- Post: Be the Bridge -->
-    <a href="/blog/be-the-bridge" class="blog-card" data-reveal>
+    <a href="/blog/be-the-bridge" class="blog-card" data-reveal data-topic="career-development" data-type="insights">
       <div class="blog-card-img">
         <svg viewBox="0 0 400 170" xmlns="http://www.w3.org/2000/svg">
           <rect width="400" height="170" fill="#0e1627"/>
@@ -679,7 +706,7 @@
       </div>
       <div class="blog-card-body">
         <div class="blog-card-meta">
-          <span class="blog-card-tag tag-career">Technical Communication</span>
+          <span class="blog-card-tag tag-career">Career Dev</span>
         </div>
         <div class="blog-card-title">Be the Bridge: The Career Superpower Technical Professionals Keep Overlooking</div>
         <div class="blog-card-excerpt">Deep technical skills get you hired. Being the bridge between technical and non-technical gets you promoted — and gets you into the rooms where consequential decisions are made. Here's the career framework that separates technical leaders from technical contributors.</div>
@@ -688,7 +715,7 @@
     </a>
 
     <!-- Post: Improving Spock's EQ -->
-    <a href="/blog/improving-spocks-eq" class="blog-card" data-reveal data-delay="1">
+    <a href="/blog/improving-spocks-eq" class="blog-card" data-reveal data-delay="1" data-topic="career-development" data-type="insights">
       <div class="blog-card-img">
         <svg viewBox="0 0 400 170" xmlns="http://www.w3.org/2000/svg">
           <rect width="400" height="170" fill="#060b18"/>
@@ -752,7 +779,7 @@
       </div>
       <div class="blog-card-body">
         <div class="blog-card-meta">
-          <span class="blog-card-tag tag-career">Technical Communication</span>
+          <span class="blog-card-tag tag-career">Career Dev</span>
         </div>
         <div class="blog-card-title">Improving Spock's EQ</div>
         <div class="blog-card-excerpt">The four components of emotional intelligence — self-awareness, self-management, social awareness, and relationship management — explained in terms Star Trek's most logical officer would finally accept. Root-cause analysis, input variables, data collection, and A/B testing. It's all there.</div>
@@ -762,7 +789,7 @@
 
 
     <!-- Post: Your First Industry Conference Talk -->
-    <a href="/blog/your-first-industry-conference-talk" class="blog-card" data-reveal data-delay="2">
+    <a href="/blog/your-first-industry-conference-talk" class="blog-card" data-reveal data-delay="2" data-topic="career-development" data-type="insights">
       <div class="blog-card-img">
         <svg viewBox="0 0 400 170" xmlns="http://www.w3.org/2000/svg">
           <rect width="400" height="170" fill="#1a1208"/>
@@ -841,7 +868,7 @@
       </div>
       <div class="blog-card-body">
         <div class="blog-card-meta">
-          <span class="blog-card-tag tag-career">Technical Communication</span>
+          <span class="blog-card-tag tag-career">Career Dev</span>
         </div>
         <div class="blog-card-title">Your First Industry Conference Talk: Less Scary Than You Think</div>
         <div class="blog-card-excerpt">You have real work worth sharing. Most people assume the stage is reserved for proven names or deep experts. It isn't. Here is how to find your story, shape a compelling proposal, and get on stage at an industry conference.</div>
@@ -849,8 +876,13 @@
       </div>
     </a>
 
-    </div><!-- /blog-grid -->
-  </div><!-- /blog-section: Technical Communication -->
+    
+    </div>
+  </div><!-- /blog-section: Insights -->
+
+  <div class="blog-no-results" id="blog-no-results" style="display:none">
+    No posts match — try a different topic.
+  </div>
 
 </main>
 
@@ -877,6 +909,99 @@
   els.forEach(function(el) { io.observe(el); });
 })();
 
+// Filter, search, read time, post count
+(function() {
+  var cards = Array.from(document.querySelectorAll('.blog-card'));
+  var chips = Array.from(document.querySelectorAll('.blog-chip'));
+  var searchInput = document.getElementById('blog-search');
+  var countEl = document.getElementById('blog-post-count');
+  var noResults = document.getElementById('blog-no-results');
+  var activeTopic = 'all';
+  var activeType = 'all';
+
+  // Inject read times calculated from excerpt word count
+  cards.forEach(function(card) {
+    var excerpt = card.querySelector('.blog-card-excerpt');
+    var meta = card.querySelector('.blog-card-meta');
+    if (!excerpt || !meta) return;
+    var words = excerpt.textContent.trim().split(/\s+/).length;
+    var mins = Math.max(3, Math.round(words / 15));
+    var rt = document.createElement('span');
+    rt.className = 'blog-card-readtime';
+    rt.textContent = mins + ' min read';
+    meta.appendChild(rt);
+  });
+
+  function updateChipAvailability() {
+    chips.forEach(function(chip) {
+      var filter = chip.dataset.filter;
+      var dim = chip.dataset.dim;
+      if (filter === 'all') return;
+      var hasMatch;
+      if (dim === 'topic') {
+        hasMatch = cards.some(function(card) {
+          var topics = (card.dataset.topic || '').split(' ');
+          return topics.indexOf(filter) !== -1 &&
+                 (activeType === 'all' || card.dataset.type === activeType);
+        });
+      } else {
+        hasMatch = cards.some(function(card) {
+          var topics = (card.dataset.topic || '').split(' ');
+          return card.dataset.type === filter &&
+                 (activeTopic === 'all' || topics.indexOf(activeTopic) !== -1);
+        });
+      }
+      chip.classList.toggle('unavailable', !hasMatch);
+    });
+  }
+
+  function applyFilters() {
+    var query = searchInput ? searchInput.value.toLowerCase().trim() : '';
+    var visible = 0;
+
+    cards.forEach(function(card) {
+      var topics = (card.dataset.topic || '').split(' ');
+      var topicOk = activeTopic === 'all' || topics.indexOf(activeTopic) !== -1;
+      var typeOk = activeType === 'all' || card.dataset.type === activeType;
+      var title = (card.querySelector('.blog-card-title') || {}).textContent || '';
+      var excerpt = (card.querySelector('.blog-card-excerpt') || {}).textContent || '';
+      var textOk = !query || (title + ' ' + excerpt).toLowerCase().indexOf(query) !== -1;
+      var show = topicOk && typeOk && textOk;
+      card.style.display = show ? '' : 'none';
+      if (show) visible++;
+    });
+
+    // Hide section headers when all their cards are filtered out
+    document.querySelectorAll('.blog-section').forEach(function(section) {
+      var anyVisible = Array.from(section.querySelectorAll('.blog-card')).some(function(c) {
+        return c.style.display !== 'none';
+      });
+      section.style.display = anyVisible ? '' : 'none';
+    });
+
+    if (countEl) countEl.textContent = 'Showing ' + visible + (visible === 1 ? ' post' : ' posts');
+    if (noResults) noResults.style.display = visible === 0 ? '' : 'none';
+    updateChipAvailability();
+  }
+
+  chips.forEach(function(chip) {
+    chip.addEventListener('click', function() {
+      var dim = chip.dataset.dim;
+      // Deactivate only chips in the same dimension
+      chips.forEach(function(c) {
+        if (c.dataset.dim === dim) c.classList.remove('active');
+      });
+      chip.classList.add('active');
+      if (dim === 'topic') activeTopic = chip.dataset.filter;
+      if (dim === 'type') activeType = chip.dataset.filter;
+      applyFilters();
+    });
+  });
+
+  if (searchInput) searchInput.addEventListener('input', applyFilters);
+
+  applyFilters();
+})();
 </script>
 <script src="/nav.js"></script>
 </body>
