@@ -1,0 +1,172 @@
+/* Page-specific styles: Why Most Corporate Training Doesn't Stick */
+
+/* ===== HERO THEME — dark forest/warm slate ===== */
+.article-hero {
+  background: linear-gradient(160deg, #0a1a0e 0%, #111f14 55%, #162618 100%);
+}
+.article-hero-sub { color: #7aaa7a; }
+.article-meta-date, .article-meta-read { color: #5a8a5a; }
+.article-meta-sep { color: #2a4a2a; }
+
+/* ===== ARTICLE TAG ROW ===== */
+.article-tag-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.article-tag-explainer {
+  background: #2a5a1a;
+  color: #a8d870;
+  border: 1.5px solid #4a8c2a;
+}
+.article-tag-upskilling {
+  background: #5a3a00;
+  color: #f0b84a;
+  border: 1.5px solid #8a5a10;
+}
+
+/* ===== CTA ===== */
+.article-cta {
+  background: linear-gradient(135deg, #0a1a0e 0%, #111f14 100%);
+  border: 2px solid #2a4a2a;
+}
+.article-cta p { color: #7aaa7a; }
+.article-cta a.secondary {
+  color: #7aaa7a;
+  border: 2px solid #2a5a2a;
+}
+.article-cta a.secondary:hover { color: #a8d870; }
+
+/* ===== FORGETTING CURVE CHART ===== */
+.forgetting-chart {
+  background: #0a1a0e;
+  border: 2px solid #1e3a22;
+  border-radius: 14px;
+  padding: 28px 24px 16px;
+  margin: 32px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.forgetting-chart.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.forgetting-chart-title {
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #5a8a5a;
+  text-align: center;
+}
+.forgetting-chart-subtitle {
+  font-size: 12px;
+  color: #3a6a3a;
+  text-align: center;
+  margin-bottom: 6px;
+}
+.forgetting-chart svg {
+  width: 100%;
+  max-width: 620px;
+  display: block;
+}
+
+/* ===== MASSED vs SPACED COMPARISON ===== */
+.spacing-compare {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 2px solid #1e3a22;
+  margin: 32px 0;
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.spacing-compare.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.spacing-col { padding: 22px 20px; }
+.spacing-col.massed {
+  background: #1a0e0e;
+  border-right: 2px solid #1e3a22;
+}
+.spacing-col.spaced {
+  background: #0e1a0e;
+}
+.spacing-col-label {
+  font-size: 9px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  margin-bottom: 4px;
+}
+.massed .spacing-col-label { color: #c04040; }
+.spaced .spacing-col-label { color: #7ec84a; }
+.spacing-col-sublabel {
+  font-size: 12px;
+  font-weight: 800;
+  margin-bottom: 14px;
+}
+.massed .spacing-col-sublabel { color: #8a4a4a; }
+.spaced .spacing-col-sublabel { color: #4a8a2a; }
+.spacing-item {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 0;
+  border-bottom: 1px solid;
+  line-height: 1.5;
+}
+.massed .spacing-item { color: #8a6a6a; border-color: #2a1a1a; }
+.spaced .spacing-item { color: #6aaa5a; border-color: #1a2a1a; }
+.spacing-item:last-of-type { border-bottom: none; }
+.spacing-outcome {
+  margin-top: 14px;
+  font-size: 13px;
+  font-weight: 900;
+  padding: 10px 12px;
+  border-radius: 8px;
+  text-align: center;
+  letter-spacing: 0.03em;
+}
+.spacing-outcome-bad {
+  background: #2a0e0e;
+  color: #e07070;
+  border: 1.5px solid #4a1a1a;
+}
+.spacing-outcome-good {
+  background: #0e2a0e;
+  color: #7ec84a;
+  border: 1.5px solid #2a5a1a;
+}
+@media (max-width: 580px) {
+  .spacing-compare { grid-template-columns: 1fr; }
+  .spacing-col.massed { border-right: none; border-bottom: 2px solid #1e3a22; }
+}
+
+/* ===== KEY INSIGHT CALLOUT ===== */
+.callout.key-insight {
+  background: #0e1a0e;
+  border: 2px solid #2a5a1a;
+  border-left: 5px solid #7ec84a;
+}
+.callout.key-insight .callout-text {
+  color: #8acc6a;
+  font-size: 15px;
+  line-height: 1.7;
+  font-weight: 700;
+}
+.callout.key-insight .callout-text strong {
+  color: #d1db24;
+  font-weight: 900;
+}

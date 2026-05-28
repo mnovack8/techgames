@@ -2,7 +2,10 @@
 
 /* ===== HERO THEME ===== */
 .article-hero { background: linear-gradient(160deg, #0a1a2a 0%, #1a2a40 55%, #1a3440 100%); }
-.article-tag  { background: #1a6a5a; }
+.article-tag-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+.tag-workshop { background: #1a6a5a; }
+.tag-ai       { background: #4a6a20; }
+.tag-cyber    { background: #2a5c0a; }
 .article-hero-sub { color: #80b0c0; }
 .article-meta-read { color: #6a9aaa; }
 .article-cta { background: linear-gradient(135deg, #0a1a2a 0%, #1a2a40 100%); border: 2px solid #2a4a60; }

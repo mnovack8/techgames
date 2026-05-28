@@ -2,7 +2,9 @@
 
 /* ===== HERO THEME ===== */
 .article-hero { background: linear-gradient(160deg, #1a2a0a 0%, #2a4010 55%, #344d14 100%); }
-.article-tag  { background: #6a8c30; }
+.article-tag-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+.tag-insights { background: #5a3a10; }
+.tag-org      { background: #7a4a10; }
 .article-hero-sub { color: #a8c870; }
 .article-meta-author { color: #d1db24; }
 .article-meta-date, .article-meta-read { color: #7a9a50; }
