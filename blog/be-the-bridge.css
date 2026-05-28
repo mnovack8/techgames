@@ -165,6 +165,139 @@
 .mc-exploit .model-actions span { background: rgba(42,122,10,0.1);  color: #2a7a0a; }
 .mc-expand  .model-actions span { background: rgba(122,74,10,0.1);  color: #7a4a0a; }
 
+/* ===== SKILL PORTFOLIO ===== */
+.portfolio-wrap { margin: 28px 0; }
+.portfolio-label {
+  font-size: 10px; font-weight: 900; text-transform: uppercase;
+  letter-spacing: 2px; color: #aaa; margin-bottom: 10px;
+}
+.skill-portfolio {
+  border: 2px solid #c8d8e8;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.skill-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 13px 20px;
+  background: #fff;
+  border-bottom: 1px solid #e8eef6;
+  gap: 12px;
+}
+.skill-row:last-child { border-bottom: none; }
+.skill-name { font-size: 14px; font-weight: 700; color: #1a1a1a; }
+.skill-stage {
+  font-size: 10px; font-weight: 900; text-transform: uppercase;
+  letter-spacing: 1.5px; color: #fff;
+  padding: 4px 12px; border-radius: 20px; flex-shrink: 0;
+}
+.stage-explore { background: #2a4a9a; }
+.stage-exploit { background: #2a7a0a; }
+.stage-expand  { background: #7a4a0a; }
+
+/* ===== STAGE TRANSITION CRITERIA ===== */
+.stage-criteria {
+  margin: 28px 0;
+  border: 2px solid #c8d8e8;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.criteria-row {
+  display: grid;
+  grid-template-columns: 148px 1fr;
+  align-items: stretch;
+  border-bottom: 2px solid #c8d8e8;
+}
+.criteria-row:last-child { border-bottom: none; }
+.criteria-transition {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 20px 14px;
+  background: #1a2840;
+  text-align: center;
+}
+.criteria-from, .criteria-to {
+  font-size: 13px; font-weight: 900; color: #d1db24; letter-spacing: 0.5px;
+}
+.criteria-arrow { font-size: 14px; color: rgba(255,255,255,0.3); }
+.criteria-list {
+  padding: 18px 22px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.criteria-item {
+  font-size: 13px; color: #333; line-height: 1.6;
+  padding-left: 18px;
+  position: relative;
+}
+.criteria-item::before {
+  content: '→';
+  position: absolute; left: 0; top: 1px;
+  color: #62b517; font-weight: 900; font-size: 12px;
+}
+@media (max-width: 600px) {
+  .criteria-row { grid-template-columns: 1fr; }
+  .criteria-transition {
+    flex-direction: row; gap: 8px;
+    padding: 12px 18px; justify-content: flex-start;
+  }
+}
+
+/* ===== PARETO SHIFT ===== */
+.pareto-shift {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 28px 0;
+}
+.pareto-col {
+  background: #fff;
+  border: 2px solid #c8d8e8;
+  border-radius: 12px;
+  padding: 22px 24px;
+}
+.pareto-col-label {
+  font-size: 10px; font-weight: 900; text-transform: uppercase;
+  letter-spacing: 2px; color: #aaa; margin-bottom: 4px;
+}
+.pareto-col-title {
+  font-size: 14px; font-weight: 900; color: #1a1a1a;
+  margin-bottom: 18px; line-height: 1.35;
+}
+.pareto-bar-row { display: flex; flex-direction: column; gap: 12px; }
+.pareto-bar-item { display: flex; align-items: center; gap: 10px; }
+.pareto-bar-name {
+  font-size: 10px; font-weight: 900; text-transform: uppercase;
+  letter-spacing: 1px; width: 54px; flex-shrink: 0;
+}
+.pb-explore .pareto-bar-name { color: #2a4a9a; }
+.pb-exploit .pareto-bar-name { color: #2a7a0a; }
+.pb-expand  .pareto-bar-name { color: #7a4a0a; }
+.pareto-bar-track {
+  flex: 1; height: 10px; background: #eef2f8;
+  border-radius: 5px; overflow: hidden;
+}
+.pareto-bar-fill { height: 100%; border-radius: 5px; }
+.pb-explore .pareto-bar-fill { background: #5a8ace; }
+.pb-exploit .pareto-bar-fill { background: #62b517; }
+.pb-expand  .pareto-bar-fill  { background: #c07a20; }
+.pareto-bar-pct {
+  font-size: 11px; font-weight: 900; color: #888;
+  width: 30px; text-align: right; flex-shrink: 0;
+}
+.pareto-note {
+  font-size: 12px; font-weight: 600; color: #666;
+  margin-top: 16px; padding-top: 14px;
+  border-top: 1px solid #e8eef6; line-height: 1.55;
+}
+@media (max-width: 600px) { .pareto-shift { grid-template-columns: 1fr; } }
+
 /* ===== ACTION STEPS ===== */
 .action-steps { margin: 32px 0; display: flex; flex-direction: column; gap: 14px; }
 .action-step {
