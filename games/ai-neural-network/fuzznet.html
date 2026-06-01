@@ -85,6 +85,12 @@
   </div>
 </nav>
 
+<!-- ===== TOAST ===== -->
+<div id="fn-toast" style="display:none">
+  <span id="fn-toast-msg"></span>
+  <button onclick="hideFnToast()" aria-label="Dismiss">✕</button>
+</div>
+
 <!-- ===== LOBBY ===== -->
 <!-- CREATEGAME_HTML -->
 
@@ -352,6 +358,24 @@ function fnRemoveEventRoom(code) {
   fnRenderEventTable();
 }
 
+// ==================== TOAST ====================
+let _fnToastTimer = null;
+function showFnToast(msg, duration) {
+  duration = duration || 4000;
+  const el  = document.getElementById('fn-toast');
+  const txt = document.getElementById('fn-toast-msg');
+  if (!el || !txt) return;
+  txt.textContent = msg;
+  el.style.display = 'flex';
+  clearTimeout(_fnToastTimer);
+  _fnToastTimer = setTimeout(hideFnToast, duration);
+}
+function hideFnToast() {
+  const el = document.getElementById('fn-toast');
+  if (el) el.style.display = 'none';
+  clearTimeout(_fnToastTimer);
+}
+
 // ==================== WEBSOCKET ====================
 const SESSION_KEY        = 'techgames_fuzznet_session';
 const OBS_SESSION_KEY    = 'techgames_fuzznet_obs_session';
@@ -526,9 +550,15 @@ function handleServerMsg(msg) {
       break;
     case 'error': {
       const lobbyActive = document.getElementById('lobby').classList.contains('active');
-      const waitActive = document.getElementById('waiting').classList.contains('active');
-      if (lobbyActive) document.getElementById('join-error').textContent = msg.msg;
-      else if (waitActive) document.getElementById('waiting-error').textContent = msg.msg;
+      const waitActive  = document.getElementById('waiting').classList.contains('active');
+      if (lobbyActive)      document.getElementById('join-error').textContent    = msg.msg;
+      else if (waitActive)  document.getElementById('waiting-error').textContent = msg.msg;
+      else                  showFnToast('⚠ ' + msg.msg, 5000);
+      break;
+    }
+    case 'player_disconnected': {
+      const verb = msg.explicit ? 'left the game' : 'disconnected — waiting for rejoin…';
+      showFnToast('🔌 ' + msg.name + ' ' + verb, 5000);
       break;
     }
   }

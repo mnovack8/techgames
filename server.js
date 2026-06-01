@@ -166,7 +166,8 @@ wss.on('connection', (ws, req) => {
     gameManager.leaveRoom(ws, false);
     gameManager.wsUvKey.delete(ws);
   });
-  ws.on('error', () => {
+  ws.on('error', (err) => {
+    console.error('[ws error]', err && err.message);
     for (const [, room] of gameManager.rooms) {
       if (room.eventOrganizers) room.eventOrganizers = room.eventOrganizers.filter(w => w !== ws);
     }

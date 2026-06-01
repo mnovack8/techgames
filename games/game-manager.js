@@ -610,6 +610,9 @@ function leaveRoom(ws, explicit = false) {
     if (!explicit) {
       if (!getGame(room).isGameOver(room)) trackEvent('ws_disconnect', { gameType: room.gameType || '' });
     }
+    // Capture name/color before nulling ws so the broadcast message is meaningful
+    const _dcName  = room.players[info.playerIdx].name;
+    const _dcColor = room.players[info.playerIdx].color;
     // Mark as disconnected in game — keep their slot for reconnection
     room.players[info.playerIdx].connected = false;
     room.players[info.playerIdx].ws = null;
@@ -618,6 +621,15 @@ function leaveRoom(ws, explicit = false) {
       for (const [t, s] of sessions.entries()) {
         if (s.roomCode === room.code && s.playerIdx === info.playerIdx) sessions.delete(t);
       }
+    }
+    // Notify remaining players so they know to wait (or that someone left)
+    if (!getGame(room).isGameOver(room)) {
+      broadcastToRoom(room, {
+        type    : 'player_disconnected',
+        name    : _dcName,
+        color   : _dcColor,
+        explicit: explicit,
+      });
     }
     getGame(room).onDisconnect(room, info.playerIdx);
     // Only delete room if all players explicitly left or all disconnected with no sessions
