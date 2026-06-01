@@ -38,10 +38,11 @@ const server = http.createServer((req, res) => {
     const idleSec = lastActivityAt ? Math.floor((Date.now() - lastActivityAt) / 1000) : null;
     res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-cache' });
     res.end(JSON.stringify({
-      status: 'ok',
-      activeRooms: gameManager.rooms.size,
-      idleSeconds: idleSec,
-      uptime: Math.floor(process.uptime()),
+      status          : 'ok',
+      activeRooms     : gameManager.rooms.size,
+      idleSeconds     : idleSec,
+      uptime          : Math.floor(process.uptime()),
+      selfPingEnabled : !!SELF_PING_URL,
     }));
     return;
   }
@@ -85,6 +86,33 @@ const server = http.createServer((req, res) => {
   if (pathname === '/admin/signout'        && req.method === 'POST') return auth.handleAdminSignout(req, res);
   if (pathname === '/admin/metrics'        && req.method === 'GET')  return analytics.handleAdminMetrics(req, res, auth.verifyToken, auth.getSessionCookie);
   if (pathname === '/admin/metrics/export' && req.method === 'GET')  return analytics.handleAdminExportCSV(req, res, auth.verifyToken, auth.getSessionCookie);
+  if (pathname === '/admin/rooms'          && req.method === 'GET')  {
+    const sess = auth.verifyToken(auth.getSessionCookie(req));
+    if (!sess) { res.writeHead(401); return res.end(JSON.stringify({ ok: false })); }
+    const roomList = [...gameManager.rooms.values()]
+      .filter(r => r.started)
+      .map(r => {
+        const isOver = (r.state && r.state.gameOver) || (r.cfState && r.cfState.gameOver)
+          || (r.bcState && r.bcState.phase === 'game_over');
+        // Pull the activity log from whichever game state has one
+        const log = (r.state && r.state.log)
+          || (r.bcState && r.bcState.log)
+          || [];
+        return {
+          code      : r.code,
+          gameType  : r.gameType,
+          started   : r.started,
+          gameOver  : !!isOver,
+          players   : r.players.map(p => ({ name: p.name, color: p.color, connected: p.connected, isBot: !!p.isBot })),
+          observers : (r.observers || []).filter(o => o.connected).length,
+          createdAt : r.createdAt,
+          startedAt : r.sessionStartedAt || null,
+          log       : log.slice(0, 40),
+        };
+      });
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    return res.end(JSON.stringify({ ok: true, rooms: roomList, uptime: Math.floor(process.uptime()) }));
+  }
 
   // Track homepage visits — deduplicated to one unique visitor per IP per calendar day
   if ((pathname === '/' || pathname === '/index.html') && req.method === 'GET') {

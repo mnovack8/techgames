@@ -1,5 +1,8 @@
 'use strict';
 
+const fs   = require('fs');
+const path = require('path');
+
 const { trackEvent, isRematch } = require('../analytics');
 const fuzznet      = require('./ai-neural-network/fuzznet-logic');
 const clusterflick = require('./ai-knn/clusterflick-logic');
@@ -18,6 +21,63 @@ const rooms    = new Map();
 const wsData   = new Map();    // ws -> { roomCode, playerIdx, isObserver?, observerIdx? }
 const sessions = new Map();    // token -> { roomCode, playerIdx }
 const wsUvKey  = new Map();    // ws -> uvKey (hash of IP + day, captured at connection time)
+
+// ── State persistence across server restarts ──────────────────────────────────
+const DATA_DIR   = path.join(__dirname, '..', 'data');
+const STATE_FILE = path.join(DATA_DIR, 'game-state.json');
+let _saveTimer   = null;
+
+function _serializeRooms() {
+  const out = { rooms: [], sessions: [] };
+  for (const [code, room] of rooms.entries()) {
+    // Only persist in-progress games that aren't over yet
+    const isOver = (room.state && room.state.gameOver)
+      || (room.cfState && room.cfState.gameOver)
+      || (room.bcState && room.bcState.phase === 'game_over');
+    if (!room.started || isOver) continue;
+    const saved = {
+      ...room,
+      players: room.players.map(p => ({ ...p, ws: undefined, connected: false })),
+      observers: (room.observers || []).map(o => ({ ...o, ws: undefined, connected: false })),
+      eventOrganizers: undefined,
+      _botRunning: false,
+    };
+    out.rooms.push([code, saved]);
+  }
+  for (const [token, sess] of sessions.entries()) {
+    out.sessions.push([token, sess]);
+  }
+  return out;
+}
+
+function saveState() {
+  try {
+    if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+    fs.writeFileSync(STATE_FILE, JSON.stringify(_serializeRooms()), 'utf8');
+  } catch (e) {
+    console.error('[saveState]', e.message);
+  }
+}
+
+function scheduleSave() {
+  if (_saveTimer) return;
+  _saveTimer = setTimeout(() => { _saveTimer = null; saveState(); }, 30000);
+  if (_saveTimer.unref) _saveTimer.unref();
+}
+
+// Restore rooms and sessions from disk on startup
+(function loadState() {
+  try {
+    if (!fs.existsSync(STATE_FILE)) return;
+    const raw = JSON.parse(fs.readFileSync(STATE_FILE, 'utf8'));
+    for (const [code, room] of (raw.rooms || [])) rooms.set(code, room);
+    for (const [token, sess] of (raw.sessions || [])) sessions.set(token, sess);
+    if (raw.rooms && raw.rooms.length)
+      console.log('[loadState] restored', raw.rooms.length, 'room(s),', (raw.sessions || []).length, 'session(s)');
+  } catch (e) {
+    console.error('[loadState]', e.message);
+  }
+})();
 
 function generateToken() {
   const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
@@ -484,6 +544,7 @@ function handleMessage(ws, raw) {
       trackEvent('session_started', { gameType: room.gameType, mode: _startMode, uvKey: room.uvKey, rematch: _rematch });
       getGame(room).startGame(room);
       sendEventStatus(room);
+      scheduleSave();
       break;
     }
 
@@ -506,6 +567,7 @@ function handleMessage(ws, raw) {
           if (err) return send(ws, {type:'error',msg:err});
           fnBroadcastState(room);
         }
+        scheduleSave();
       } catch (e) {
         console.error('[game_action crash] room=%s type=%s err=%s', info.roomCode, msg.action, e && e.message, e);
         send(ws, { type: 'error', msg: 'Server error processing that action — please rejoin if the game appears stuck.' });

@@ -58,6 +58,8 @@
     <button class="page-nav-btn"        data-page="byteclub"     onclick="setPage('byteclub')">Byte Club</button>
     <button class="page-nav-btn"        data-page="clusterflick" onclick="setPage('clusterflick')">ClusterFlick</button>
     <div class="page-nav-sep"></div>
+    <button class="page-nav-btn"        data-page="livegames"    onclick="setPage('livegames')">🔴 Live Games</button>
+    <div class="page-nav-sep"></div>
     <button class="page-nav-btn"        data-page="sitepages"    onclick="setPage('sitepages')">Site Pages</button>
   </div>
 
@@ -146,8 +148,8 @@ function setPage(page) {
   _gameData = null;
   _hpData = null;
   document.querySelectorAll('[data-page]').forEach(b => b.classList.toggle('active', b.dataset.page === page));
-  // Hide period selector and export on sitepages tab
-  const isStatic = page === 'sitepages';
+  // Hide period selector and export on non-metric tabs
+  const isStatic = page === 'sitepages' || page === 'livegames';
   document.getElementById('period-row').style.display = isStatic ? 'none' : 'flex';
   document.getElementById('export-section').style.display = isStatic ? 'none' : 'block';
   loadData();
@@ -155,6 +157,7 @@ function setPage(page) {
 
 async function loadData() {
   if (currentPage === 'sitepages') { renderSitePages(); return; }
+  if (currentPage === 'livegames') { renderLiveGames(); return; }
   document.getElementById('page-content').innerHTML = '<div class="loading-msg">Loading…</div>';
   destroyCharts();
   try {
@@ -165,6 +168,68 @@ async function loadData() {
     else if (currentPage === 'funnel') renderFunnel(d);
     else renderGame(d);
   } catch(e) { document.getElementById('page-content').innerHTML = `<div class="loading-msg">Error: ${e.message}</div>`; }
+}
+
+let _liveRefreshTimer = null;
+async function renderLiveGames() {
+  const pc = document.getElementById('page-content');
+  try {
+    const [roomsRes, healthRes] = await Promise.all([
+      fetch('/admin/rooms',  { credentials: 'same-origin' }),
+      fetch('/health',       { credentials: 'same-origin' }),
+    ]);
+    const d = await roomsRes.json();
+    const h = healthRes.ok ? await healthRes.json() : {};
+    if (!d.ok) { pc.innerHTML = '<div class="loading-msg">Failed to load live games.</div>'; return; }
+    const uptime = d.uptime ? `${Math.floor(d.uptime/3600)}h ${Math.floor((d.uptime%3600)/60)}m` : '—';
+    const idleMin = h.idleSeconds != null ? Math.floor(h.idleSeconds / 60) : null;
+    const idleLabel = idleMin === 0 ? 'active now' : idleMin != null ? `idle ${idleMin}m` : '—';
+    const selfPing = h.selfPingEnabled ? '✅ on' : '⚠ off';
+    let html = `<div style="background:#f0f8e8;border:1.5px solid #c8dca8;border-radius:10px;padding:12px 18px;margin-bottom:14px;display:flex;flex-wrap:wrap;gap:18px;align-items:center">
+      <span class="section-lbl" style="margin:0">🖥 Server Health</span>
+      <span>Uptime: <b>${uptime}</b></span>
+      <span>Activity: <b>${idleLabel}</b></span>
+      <span>Active rooms: <b>${h.activeRooms ?? d.rooms.length}</b></span>
+      <span>Self-ping: <b>${selfPing}</b></span>
+      <button class="export-btn" onclick="renderLiveGames()" style="margin-left:auto">↻ Refresh</button>
+    </div>`;
+    if (d.rooms.length === 0) {
+      html += '<div class="loading-msg" style="color:#aaa">No active games right now.</div>';
+    } else {
+      html += '<div style="display:flex;flex-direction:column;gap:10px">';
+      for (const r of d.rooms) {
+        const started = r.startedAt ? new Date(r.startedAt).toLocaleTimeString() : '—';
+        const playerRows = r.players.map(p =>
+          `<span style="display:inline-block;background:${p.connected?'#d1fae5':'#fee2e2'};border-radius:5px;padding:2px 8px;font-size:11px;margin:2px">`+
+          `${p.isBot?'🤖':'👤'} ${p.name} (${p.color}) ${p.connected?'✓':'✗'}</span>`
+        ).join(' ');
+        const logId = 'lg-' + r.code;
+        const logEntries = (r.log && r.log.length)
+          ? r.log.map(e => `<div style="padding:3px 0;border-bottom:1px solid #e8eef8;font-size:11px;color:#444;line-height:1.5">${e}</div>`).join('')
+          : '<div style="font-size:11px;color:#aaa;padding:4px 0">No log entries yet.</div>';
+        html += `<div style="background:#f8faf2;border:1.5px solid #c8dca8;border-radius:10px;padding:12px 16px">
+          <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:6px">
+            <code style="font-size:15px;font-weight:800;letter-spacing:2px">${r.code}</code>
+            <span style="font-size:12px;background:#e8f4d0;border-radius:4px;padding:2px 8px">${r.gameType}</span>
+            ${r.gameOver ? '<span style="font-size:11px;color:#ef4444;font-weight:700">GAME OVER</span>' : '<span style="font-size:11px;color:#16a34a;font-weight:700">IN PROGRESS</span>'}
+            <span style="font-size:11px;color:#888">Started: ${started}</span>
+            ${r.observers > 0 ? `<span style="font-size:11px;color:#888">👁 ${r.observers} observer${r.observers>1?'s':''}</span>` : ''}
+            <button onclick="var el=document.getElementById('${logId}');el.style.display=el.style.display==='none'?'block':'none';this.textContent=el.style.display==='none'?'▶ Log':'▼ Log'"
+              style="margin-left:auto;background:#e8f4d0;border:1px solid #a8c870;border-radius:6px;padding:3px 10px;font-size:11px;font-weight:700;cursor:pointer">▶ Log</button>
+          </div>
+          <div>${playerRows}</div>
+          <div id="${logId}" style="display:none;margin-top:8px;background:#f0f4ff;border:1px solid #dce4f0;border-radius:7px;padding:8px 10px;max-height:200px;overflow-y:auto">
+            ${logEntries}
+          </div>
+        </div>`;
+      }
+      html += '</div>';
+    }
+    pc.innerHTML = html;
+  } catch(e) { pc.innerHTML = `<div class="loading-msg">Error: ${e.message}</div>`; }
+  // Auto-refresh every 10 seconds while on this tab
+  clearTimeout(_liveRefreshTimer);
+  _liveRefreshTimer = setTimeout(() => { if (currentPage === 'livegames') renderLiveGames(); }, 10000);
 }
 
 /* ── HOMEPAGE PAGE ── */

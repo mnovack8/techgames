@@ -48,6 +48,19 @@ const COLOR_INFO = {
   green:  { hex: '#4aff8a', name: 'Green' },
   purple: { hex: '#c880ff', name: 'Purple' },
 };
+const CF_ANIMAL_EMOJI_LOG = ['🐸','🐟','🐰','🐕','🐦','🐿️'];
+
+function cfLog(room, msg) {
+  room.cfState.log.unshift(msg);
+  if (room.cfState.log.length > 40) room.cfState.log.pop();
+}
+function cfPSpan(room, idx) {
+  const c = room.players[idx];
+  return `<span style="color:${COLOR_INFO[c.color].hex}">●</span> ${c.name}`;
+}
+function cfAnimalLabel(idx) {
+  return idx >= 0 ? `<b>${CF_ANIMAL_EMOJI_LOG[idx]} ${CF_ANIMALS[idx]}</b>` : 'unclassified';
+}
 
 function cfGetZone(x,y) {
   const dx=x-CF_CX,dy=y-CF_CY,d=Math.hypot(dx,dy);
@@ -186,6 +199,7 @@ function createCFGameState(numPlayers) {
     nextTokenId:0,
     gameOver:false,
     winner:-1,
+    log:[],
   };
 }
 
@@ -210,6 +224,7 @@ function cfAdvanceTurn(room) {
 
 function cfScoreRound(room) {
   const s=room.cfState;
+  cfLog(room, `── Round ${s.round} scored ──`);
   const da=s.roundDoubledAnimal;
   for(const tok of s.tokens){
     if(!tok.active||tok.sampleConsumed||tok.animalIdx<0)continue;
@@ -257,6 +272,7 @@ function cfEndGame(room) {
     }
     s.winner=best;
   }
+  cfLog(room, s.winner >= 0 ? `🏁 ${room.players[s.winner].name} wins!` : '🏁 Game over!');
   const mode=room.players.some(p=>p.isBot)?'1p_bot':room.players.length===2?'2p':room.players.length===3?'3p':'4p';
   const dur=room.sessionStartedAt?Math.round((Date.now()-room.sessionStartedAt)/1000):null;
   _trackEvent('session_completed',{gameType:'clusterflick',mode,uvKey:room.uvKey||'',duration:dur});
@@ -274,6 +290,7 @@ function cfBroadcastState(room, flickWaypoints=null) {
       hex:COLOR_INFO[room.players[i].color].hex,connected:room.players[i].connected,isBot:!!room.players[i].isBot,
       actionMode:pl.actionMode})),
     roundDoubledAnimal:s.roundDoubledAnimal,doubledAnimals:s.doubledAnimals,gameOver:s.gameOver,winner:s.winner,
+    log:s.log,
     flickWaypoints: flickWaypoints||null,  // wall-bounce path for client animation (null if no bounces)
   }};
   for(let i=0;i<room.players.length;i++){const p=room.players[i];if(p.connected&&p.ws)send(p.ws,{...base,yourId:i});}
@@ -325,8 +342,10 @@ function processCFAction(room, playerIdx, msg) {
           s.phase='placing_samples';
           s.placingInfo={playerIdx,animalIdx:zone.animalIdx,squaresLeft:squaresToPlace,tokenId:tokId};
           pl.usedSampleThisRound=true;
+          cfLog(room, `${cfPSpan(room,playerIdx)} sampled ${cfAnimalLabel(zone.animalIdx)} — ${squaresToPlace} square${squaresToPlace!==1?'s':''}`);
         } else {
           // Landed in unclassified zone or off-board — no squares, no reflick
+          cfLog(room, `${cfPSpan(room,playerIdx)} sample — missed`);
           cfAdvanceTurn(room);
         }
         return null;
@@ -334,6 +353,9 @@ function processCFAction(room, playerIdx, msg) {
         // identify mode
         s.tokens.push({id:s.nextTokenId++,playerIdx,x:nObj.x,y:nObj.y,animalIdx:zone.animalIdx,confidence:zone.confidence,active:true});
         pl.unidentifiedFlickedThisRound++;
+        cfLog(room, zone.animalIdx >= 0
+          ? `${cfPSpan(room,playerIdx)} → ${cfAnimalLabel(zone.animalIdx)} +${zone.confidence}`
+          : `${cfPSpan(room,playerIdx)} → unclassified`);
         cfAdvanceTurn(room);
         return null;
       }
@@ -359,9 +381,11 @@ function processCFAction(room, playerIdx, msg) {
         // Remove the consumed token
         const consumedTok=s.tokens.find(t=>t.id===s.placingInfo.tokenId);
         if(consumedTok)consumedTok.active=false;
+        const placingAnimal=s.placingInfo.animalIdx;
         const placingPlayer=s.placingInfo.playerIdx;
         const placingPl=s.players[placingPlayer];
         delete s.placingInfo;
+        cfLog(room, `${cfPSpan(room,placingPlayer)} placed ${cfAnimalLabel(placingAnimal)} sample squares`);
         // Offer reflick if this player has any identified tokens on the board
         const hasIdentified=s.tokens.some(t=>t.active&&!t.sampleConsumed&&t.playerIdx===placingPlayer);
         if(hasIdentified&&placingPl.unidentifiedFlickedThisRound>0){
@@ -376,6 +400,7 @@ function processCFAction(room, playerIdx, msg) {
     case 'skip_sample_reflick':{
       if(s.phase!=='sample_reflick')return'Wrong phase';
       if(s.sampleReflickFor!==playerIdx)return'Not your reflick';
+      cfLog(room, `${cfPSpan(room,playerIdx)} skipped reflick`);
       s.phase='flicking';
       delete s.sampleReflickFor;
       cfAdvanceTurn(room);
@@ -402,6 +427,9 @@ function processCFAction(room, playerIdx, msg) {
       const zone=cfGetZone(nObj.x,nObj.y)||{animalIdx:-1,confidence:0};
       s.tokens.push({id:s.nextTokenId++,playerIdx,x:nObj.x,y:nObj.y,animalIdx:zone.animalIdx,confidence:zone.confidence,active:true});
       room._lastFlickWaypoints=waypoints.length>0?waypoints:null;
+      cfLog(room, zone.animalIdx >= 0
+        ? `${cfPSpan(room,playerIdx)} reflicked → ${cfAnimalLabel(zone.animalIdx)} +${zone.confidence}`
+        : `${cfPSpan(room,playerIdx)} reflicked → unclassified`);
       s.phase='flicking';
       delete s.sampleReflickFor;
       cfAdvanceTurn(room);

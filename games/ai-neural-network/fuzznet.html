@@ -85,6 +85,17 @@
   </div>
 </nav>
 
+<!-- ===== RECONNECT OVERLAY (item 12 — shown to all players on disconnect) ===== -->
+<div id="fn-reconnect-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:10000;align-items:center;justify-content:center">
+  <div style="background:#1a2a1a;border:2px solid #f87171;border-radius:14px;padding:28px 36px;text-align:center;color:#fca5a5;max-width:340px">
+    <div style="font-size:36px;margin-bottom:8px">🔄</div>
+    <div style="font-size:16px;font-weight:700;margin-bottom:6px">Connection Lost</div>
+    <div style="font-size:13px;color:#fda4a4">Attempting to reconnect… <span id="fn-reconnect-count">2</span>s</div>
+    <div id="fn-reconnect-room" style="font-size:11px;color:#9ca3af;margin-top:6px"></div>
+    <div style="font-size:11px;color:#6b7280;margin-top:10px">Your game is saved — you'll be back shortly.</div>
+  </div>
+</div>
+
 <!-- ===== TOAST ===== -->
 <div id="fn-toast" style="display:none">
   <span id="fn-toast-msg"></span>
@@ -380,8 +391,21 @@ function hideFnToast() {
 const SESSION_KEY        = 'techgames_fuzznet_session';
 const OBS_SESSION_KEY    = 'techgames_fuzznet_obs_session';
 const LS_SESSION_PREFIX  = 'techgames_fuzznet_ls_';   // localStorage, keyed per room code
+const LS_LAST_ROOM_KEY   = 'techgames_fuzznet_last_room'; // { code, joinedAt }
 let _hubFirstConnect  = true;
 let pendingObsName    = '';
+
+function _saveLastRoom(code) {
+  try { localStorage.setItem(LS_LAST_ROOM_KEY, JSON.stringify({ code, joinedAt: Date.now() })); } catch {}
+}
+function _clearLastRoom(code) {
+  try {
+    const raw = localStorage.getItem(LS_LAST_ROOM_KEY);
+    if (!raw) return;
+    const entry = JSON.parse(raw);
+    if (!code || entry.code === code) localStorage.removeItem(LS_LAST_ROOM_KEY);
+  } catch {}
+}
 
 function sendMsg(msg) { hub.send(msg); }
 
@@ -393,17 +417,34 @@ function handleServerMsg(msg) {
       isObserver = false; myObserverIdx = -1;
       document.body.classList.remove('observer-active');
       if (msg.token) { sessionStorage.setItem(SESSION_KEY, msg.token); localStorage.setItem(LS_SESSION_PREFIX + msg.code, msg.token); }
+      _saveLastRoom(msg.code);
       showScreen('waiting');
       document.getElementById('room-code-display').textContent = roomCode;
       break;
     case 'room_info':
       LobbyUI.handleRoomInfo(msg);
+      // Item 9: show prominent "Game in progress" banner when rejoining mid-game
+      if (msg.exists && msg.started && msg.rejoinColors && msg.rejoinColors.length > 0) {
+        const _code = (document.getElementById('join-code') || {}).value || '';
+        const _banner = document.getElementById('invited-banner');
+        const _bTitle = _banner && _banner.querySelector('.invited-banner-title');
+        const _bSub   = _banner && _banner.querySelector('.invited-banner-sub');
+        if (_banner)  _banner.classList.add('show');
+        if (_bTitle)  _bTitle.innerHTML = 'Game in progress — room <span id="invited-banner-code">' + _code + '</span>';
+        if (_bSub)    _bSub.textContent  = 'Select your color below to reconnect and rejoin the game.';
+        const _jc = document.getElementById('lobby-join-card');
+        const _cc = document.getElementById('lobby-create-card');
+        if (_jc) _jc.classList.add('lobby-card-focus');
+        if (_cc) _cc.classList.add('lobby-card-dim');
+        setTimeout(() => { if (_jc) _jc.scrollIntoView({ behavior:'smooth', block:'center' }); }, 150);
+      }
       break;
     case 'room_joined':
       roomCode = msg.code; myId = msg.yourId; isHost = !!msg.isHost;
       isObserver = false; myObserverIdx = -1;
       document.body.classList.remove('observer-active');
       if (msg.token) { sessionStorage.setItem(SESSION_KEY, msg.token); localStorage.setItem(LS_SESSION_PREFIX + msg.code, msg.token); }
+      _saveLastRoom(msg.code);
       showScreen('waiting');
       document.getElementById('room-code-display').textContent = roomCode;
       break;
@@ -430,6 +471,7 @@ function handleServerMsg(msg) {
       isObserver = false; myObserverIdx = -1;
       document.body.classList.remove('observer-active');
       if (msg.token) { sessionStorage.setItem(SESSION_KEY, msg.token); localStorage.setItem(LS_SESSION_PREFIX + msg.code, msg.token); }
+      _saveLastRoom(msg.code);
       if (msg.started) {
         viewingPlayer = -1;
         showScreen('game');
@@ -512,6 +554,7 @@ function handleServerMsg(msg) {
       sessionStorage.removeItem(SESSION_KEY);
       sessionStorage.removeItem(OBS_SESSION_KEY);
       if (roomCode) localStorage.removeItem(LS_SESSION_PREFIX + roomCode);
+      _clearLastRoom(roomCode);
       roomCode = ''; myId = -1; G = null;
       isObserver = false; myObserverIdx = -1;
       document.body.classList.remove('observer-active');
@@ -522,6 +565,7 @@ function handleServerMsg(msg) {
       sessionStorage.removeItem(SESSION_KEY);
       sessionStorage.removeItem(OBS_SESSION_KEY);
       if (roomCode) localStorage.removeItem(LS_SESSION_PREFIX + roomCode);
+      _clearLastRoom(roomCode);
       roomCode = ''; myId = -1; G = null; isHost = false;
       isObserver = false; myObserverIdx = -1;
       document.body.classList.remove('observer-active');
@@ -588,6 +632,7 @@ function leaveRoom() {
   sessionStorage.removeItem(SESSION_KEY);
   sessionStorage.removeItem(OBS_SESSION_KEY);
   if (roomCode) localStorage.removeItem(LS_SESSION_PREFIX + roomCode);
+  _clearLastRoom(roomCode);
   sendMsg({ type: 'leave_room' });
   roomCode = ''; myId = -1; G = null; isHost = false;
   isObserver = false; myObserverIdx = -1;
@@ -2572,8 +2617,9 @@ if (isAutoObserver) {
 }
 
 hub = SocketHub.create({
-  reconnectMs : 2000,
-  onConnect   : function () {
+  reconnectMs  : 2000,
+  onDisconnect : function () { _showAdminReconnect(); },
+  onConnect    : function () { _hideAdminReconnect();
     // On every open: attempt session rejoin first
     const token = sessionStorage.getItem(SESSION_KEY);
     if (token) { hub.send({ type: 'rejoin_room', token }); return; }
@@ -2638,6 +2684,57 @@ const isTutorialAutoStart = /\/tutorial\/?$/.test(location.pathname) || new URLS
 // Always start at lobby; rejoin-pending CSS hides it during handshake when needed
 showScreen('lobby');
 hub.connect();
+
+// ── Item 10: "Return to last game" prompt ────────────────────────────────────
+(function checkLastRoom() {
+  if (urlRoom || hasPendingRejoin) return; // URL param or active session takes priority
+  try {
+    const raw = localStorage.getItem(LS_LAST_ROOM_KEY);
+    if (!raw) return;
+    const entry = JSON.parse(raw);
+    if (!entry.code || !entry.joinedAt) return;
+    const ageHours = (Date.now() - entry.joinedAt) / 3600000;
+    if (ageHours > 24) { localStorage.removeItem(LS_LAST_ROOM_KEY); return; }
+    // Inject a dismissible prompt above the lobby content
+    const lobby = document.getElementById('lobby');
+    if (!lobby) return;
+    const div = document.createElement('div');
+    div.id = 'fn-last-room-banner';
+    div.innerHTML =
+      '<span>🕐 You were recently in room <b>' + entry.code + '</b></span>' +
+      '<a href="' + FN_BASE_PATH + '?room=' + entry.code + '" class="fn-last-room-btn">Return to Game</a>' +
+      '<button onclick="document.getElementById(\'fn-last-room-banner\').remove();localStorage.removeItem(\'' + LS_LAST_ROOM_KEY + '\')">✕</button>';
+    lobby.prepend(div);
+  } catch {}
+})();
+
+// ── Item 12: Reconnect countdown (shown to all players) ──────────────────────
+let _isAdmin = false;
+let _reconnectInterval = null;
+// Admin check used separately for item 13 (Live Games tab visibility)
+fetch('/admin/session', { credentials: 'include' })
+  .then(r => r.json()).then(d => { if (d && d.ok) _isAdmin = true; }).catch(() => {});
+
+function _showAdminReconnect() {
+  const overlay = document.getElementById('fn-reconnect-overlay');
+  const countEl = document.getElementById('fn-reconnect-count');
+  const roomEl  = document.getElementById('fn-reconnect-room');
+  if (!overlay) return;
+  if (roomEl) roomEl.textContent = roomCode ? 'Room: ' + roomCode : '';
+  overlay.style.display = 'flex';
+  let secs = 2;
+  if (countEl) countEl.textContent = secs;
+  clearInterval(_reconnectInterval);
+  _reconnectInterval = setInterval(() => {
+    secs++;
+    if (countEl) countEl.textContent = secs;
+  }, 1000);
+}
+function _hideAdminReconnect() {
+  clearInterval(_reconnectInterval);
+  const overlay = document.getElementById('fn-reconnect-overlay');
+  if (overlay) overlay.style.display = 'none';
+}
 
 // Auto-start tutorial via ?tutorial=1 OR /tutorial path — start ASAP, hide page until ready
 if (isTutorialAutoStart) {

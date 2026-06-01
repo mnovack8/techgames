@@ -208,6 +208,11 @@ html.tutorial-loading { background: #040a02; }
 /* Top section never shrinks; scores section fills remaining space and scrolls */
 #sp-top-section{flex-shrink:0;}
 #sp-scores-section{flex:1;overflow-y:auto;min-height:0;padding-bottom:8px;}
+/* Activity log */
+#sp-log-section{flex-shrink:0;}
+.cf-log{background:#0d1a0d;border:1px solid rgba(98,181,23,0.25);border-radius:8px;padding:6px 8px;max-height:130px;overflow-y:auto;}
+.cf-log-entry{font-size:11px;color:#9aad7a;line-height:1.5;padding:1px 0;border-bottom:1px solid rgba(98,181,23,0.1);}
+.cf-log-entry:last-child{border-bottom:none;}
 #status-bar{height:36px;background:#110d20;border-top:1px solid rgba(98,181,23,0.15);display:flex;align-items:center;padding:0 16px;font-size:13px;color:#9aad7a;flex-shrink:0;}
 
 /* Observer banner */

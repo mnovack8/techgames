@@ -108,6 +108,10 @@
         <div class="sp-title">Confidence Scores</div>
         <div id="player-scores"></div>
       </div>
+      <div class="sp-section" id="sp-log-section">
+        <div class="sp-title">Activity Log</div>
+        <div id="cf-log" class="cf-log"></div>
+      </div>
     </div>
   </div>
 
@@ -1067,6 +1071,8 @@ function renderSidePanel(){
     }
   }
 
+  renderCFLog();
+
   // Status bar
   const sb=document.getElementById('status-bar');
   if(G.gameOver)sb.textContent='';
@@ -1074,6 +1080,12 @@ function renderSidePanel(){
   else if(!isObserver&&(G.currentPlayer===myId||G.sampleReflickFor===myId))sb.textContent='FLICK: Drag back from your corner zone, then release!';
   else if(G.phase==='placing_samples'&&G.placingInfo)sb.textContent=`${G.players[G.placingInfo.playerIdx]?.name} is placing sample squares…`;
   else sb.textContent=`Watching ${G.players[G.currentPlayer].name} flick…`;
+}
+
+function renderCFLog() {
+  const el = document.getElementById('cf-log');
+  if (!el || !G || !G.log || G.log.length === 0) { if (el) el.innerHTML = ''; return; }
+  el.innerHTML = G.log.slice(0, 20).map(e => `<div class="cf-log-entry">${e}</div>`).join('');
 }
 
 function drawLobbyPreview(){
