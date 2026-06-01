@@ -216,7 +216,7 @@ function botPickBackprop(ps, testPath) {
 async function executeBotTurn(room) {
   // Guard: only one bot loop at a time. nextTurn may try to start a second
   // when the human is disconnected and we wrap back to the bot mid-loop.
-  if (room._botRunning) return;
+  if (!room.state || room._botRunning) return;
   room._botRunning = true;
 
   const s = room.state;

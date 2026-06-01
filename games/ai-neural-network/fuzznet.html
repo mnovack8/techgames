@@ -461,6 +461,7 @@ function handleServerMsg(msg) {
       document.getElementById('btn-cancel-game').style.display = isHost ? 'inline-block' : 'none';
       break;
     case 'state_update':
+      if (!msg.state || !Array.isArray(msg.state.players) || msg.state.players.length === 0) break;
       // For observers, msg.yourId === -1; keep myId at -1 and don't auto-switch view
       if (msg.isObserver || isObserver) {
         isObserver = true;

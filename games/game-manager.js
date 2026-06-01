@@ -492,18 +492,23 @@ function handleMessage(ws, raw) {
       if (!info) return send(ws, {type:'error',msg:'Not in a room'});
       const room = rooms.get(info.roomCode);
       if (!room || !room.started) return send(ws, {type:'error',msg:'Game not started'});
-      if (room.gameType === 'byteclub') {
-        bcHandleAction(room, info.playerIdx, msg);
-      } else if (room.gameType === 'clusterflick') {
-        const err = processCFAction(room, info.playerIdx, msg);
-        if (err) return send(ws, {type:'error',msg:err});
-        const wpts=room._lastFlickWaypoints||null;
-        room._lastFlickWaypoints=null;
-        cfBroadcastState(room,wpts);
-      } else {
-        const err = processAction(room, info.playerIdx, msg);
-        if (err) return send(ws, {type:'error',msg:err});
-        fnBroadcastState(room);
+      try {
+        if (room.gameType === 'byteclub') {
+          bcHandleAction(room, info.playerIdx, msg);
+        } else if (room.gameType === 'clusterflick') {
+          const err = processCFAction(room, info.playerIdx, msg);
+          if (err) return send(ws, {type:'error',msg:err});
+          const wpts=room._lastFlickWaypoints||null;
+          room._lastFlickWaypoints=null;
+          cfBroadcastState(room,wpts);
+        } else {
+          const err = processAction(room, info.playerIdx, msg);
+          if (err) return send(ws, {type:'error',msg:err});
+          fnBroadcastState(room);
+        }
+      } catch (e) {
+        console.error('[game_action crash] room=%s type=%s err=%s', info.roomCode, msg.action, e && e.message, e);
+        send(ws, { type: 'error', msg: 'Server error processing that action — please rejoin if the game appears stuck.' });
       }
       break;
     }

@@ -1,5 +1,10 @@
 'use strict';
 require('dotenv').config();
+
+// ── Process-level crash guards ───────────────────────────────────────────────
+// Log unhandled errors rather than silently killing the process.
+process.on('uncaughtException',  (err)       => console.error('[uncaughtException]',  err));
+process.on('unhandledRejection', (reason, p) => console.error('[unhandledRejection]', reason, p));
 const http   = require('http');
 const https  = require('https');
 const fs     = require('fs');

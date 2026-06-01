@@ -53,7 +53,9 @@ window.SocketHub = (function () {
 
     // ── Dispatch ───────────────────────────────────────────────────────────────
     function _dispatch(raw) {
-      var msg  = JSON.parse(raw);
+      var msg;
+      try { msg = JSON.parse(raw); } catch (e) { return; }
+      if (!msg || typeof msg.type !== 'string') return;
       var list = _handlers[msg.type];
       if (list) for (var i = 0; i < list.length; i++) list[i](msg);
       var all  = _handlers['*'];
