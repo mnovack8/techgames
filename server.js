@@ -1,6 +1,7 @@
 'use strict';
 require('dotenv').config();
 const http   = require('http');
+const https  = require('https');
 const fs     = require('fs');
 const path   = require('path');
 const crypto = require('crypto');
@@ -17,7 +18,28 @@ const interactiveTutorialRenderer = require('./games/interactive-tutorial-render
 
 const PORT = process.env.PORT || 8090;
 
+// Timestamp of the last WebSocket message from any player.
+// Used by the self-ping to decide whether the server is worth keeping awake.
+let lastActivityAt = 0;
+
+// Self-ping target: Render sets RENDER_EXTERNAL_URL automatically; other platforms
+// can set SERVER_URL.  If neither is present (local dev) we skip pinging entirely.
+const SELF_PING_URL = (process.env.RENDER_EXTERNAL_URL || process.env.SERVER_URL || '').replace(/\/$/, '');
+const PING_INTERVAL_MS  = 4 * 60 * 1000;   // every 4 minutes
+const ACTIVITY_WINDOW_MS = 60 * 60 * 1000; // stop pinging after 1 hour of silence
+
 const server = http.createServer((req, res) => {
+  if (req.url === '/health' && req.method === 'GET') {
+    const idleSec = lastActivityAt ? Math.floor((Date.now() - lastActivityAt) / 1000) : null;
+    res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-cache' });
+    res.end(JSON.stringify({
+      status: 'ok',
+      activeRooms: gameManager.rooms.size,
+      idleSeconds: idleSec,
+      uptime: Math.floor(process.uptime()),
+    }));
+    return;
+  }
   const parsed = new URL(req.url, `http://${req.headers.host}`);
   let pathname = parsed.pathname;
 
@@ -128,7 +150,10 @@ wss.on('connection', (ws, req) => {
   const day = new Date().toISOString().slice(0, 10);
   gameManager.wsUvKey.set(ws, crypto.createHash('sha256').update(ip + '|' + day).digest('hex').slice(0, 24));
 
-  ws.on('message', (raw) => gameManager.handleMessage(ws, raw.toString()));
+  ws.on('message', (raw) => {
+    lastActivityAt = Date.now();
+    gameManager.handleMessage(ws, raw.toString());
+  });
   ws.on('close', () => {
     for (const [, room] of gameManager.rooms) {
       if (room.eventOrganizers) room.eventOrganizers = room.eventOrganizers.filter(w => w !== ws);
@@ -150,6 +175,19 @@ if (require.main === module) {
   server.listen(PORT, () => {
     console.log(`FuzzNet Labs server running at http://localhost:${PORT}`);
   });
+}
+
+// Self-ping: keeps the platform from sleeping while games are active.
+// Fires every 4 minutes but only sends a request when someone has been
+// active within the last hour — after an hour of silence it stops, allowing
+// the platform to sleep normally.
+if (SELF_PING_URL) {
+  const pingLib = SELF_PING_URL.startsWith('https') ? https : http;
+  const interval = setInterval(() => {
+    if (!lastActivityAt || Date.now() - lastActivityAt > ACTIVITY_WINDOW_MS) return;
+    pingLib.get(`${SELF_PING_URL}/health`, (res) => { res.resume(); }).on('error', () => {});
+  }, PING_INTERVAL_MS);
+  if (interval.unref) interval.unref(); // don't block process exit in tests
 }
 
 module.exports = { server, wss };

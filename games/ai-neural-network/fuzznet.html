@@ -124,6 +124,8 @@
     </div>
     <div id="side-panel">
       <div class="section-title">Actions <button class="info-btn" onclick="showInfo('actions')">i</button></div>
+      <button class="guide-btn" id="guide-btn" onclick="toggleGuide()">💡 What can I do?</button>
+      <div id="guide-panel" class="guide-panel"></div>
       <div class="action-btns">
         <div style="display:flex;align-items:center;gap:4px"><button class="action-btn" id="btn-design" onclick="doAction('start_design')" style="flex:1;display:flex;align-items:center;gap:6px;justify-content:center"><img src="/images/fuzznet/token-design-node.png" style="width:18px;height:18px;flex-shrink:0"> Design Model</button><button class="info-btn" onclick="showInfo('design')">i</button></div>
         <div style="display:flex;align-items:center;gap:4px"><button class="action-btn" id="btn-train" onclick="doAction('start_train')" style="flex:1;display:flex;align-items:center;gap:6px;justify-content:center"><img src="/images/fuzznet/token-train.png" style="width:18px;height:18px;flex-shrink:0"><span style="font-size:10px;font-weight:800;color:#4ade80;line-height:1">×2</span> Train Model</button><button class="info-btn" onclick="showInfo('train')">i</button></div>
@@ -163,6 +165,9 @@
 
       <div class="section-title">Scoreboard <button class="info-btn" onclick="showInfo('scoreboard')">i</button></div>
       <div class="scoreboard" id="scoreboard"></div>
+
+      <div class="section-title" style="margin-top:8px">Activity Log</div>
+      <div id="fn-log" class="fn-log"></div>
     </div>
   </div>
 
@@ -252,6 +257,8 @@ let myObserverIdx = -1;
 let viewingPlayer = -1; // -1 = my board (players); for observers: 0..N-1 (which player to view)
 let G = null;
 let selectedDice = new Set();
+let _guideOpen = false;
+let _glowTimer = null;
 // Lobby state managed by LobbyUI (lobby.js)
 let prevCurrentPlayer = -1;
 let tutorialMode = false;
@@ -346,8 +353,9 @@ function fnRemoveEventRoom(code) {
 }
 
 // ==================== WEBSOCKET ====================
-const SESSION_KEY     = 'techgames_fuzznet_session';
-const OBS_SESSION_KEY = 'techgames_fuzznet_obs_session';
+const SESSION_KEY        = 'techgames_fuzznet_session';
+const OBS_SESSION_KEY    = 'techgames_fuzznet_obs_session';
+const LS_SESSION_PREFIX  = 'techgames_fuzznet_ls_';   // localStorage, keyed per room code
 let _hubFirstConnect  = true;
 let pendingObsName    = '';
 
@@ -360,7 +368,7 @@ function handleServerMsg(msg) {
       roomCode = msg.code; myId = msg.yourId; isHost = true;
       isObserver = false; myObserverIdx = -1;
       document.body.classList.remove('observer-active');
-      if (msg.token) sessionStorage.setItem(SESSION_KEY, msg.token);
+      if (msg.token) { sessionStorage.setItem(SESSION_KEY, msg.token); localStorage.setItem(LS_SESSION_PREFIX + msg.code, msg.token); }
       showScreen('waiting');
       document.getElementById('room-code-display').textContent = roomCode;
       break;
@@ -371,7 +379,7 @@ function handleServerMsg(msg) {
       roomCode = msg.code; myId = msg.yourId; isHost = !!msg.isHost;
       isObserver = false; myObserverIdx = -1;
       document.body.classList.remove('observer-active');
-      if (msg.token) sessionStorage.setItem(SESSION_KEY, msg.token);
+      if (msg.token) { sessionStorage.setItem(SESSION_KEY, msg.token); localStorage.setItem(LS_SESSION_PREFIX + msg.code, msg.token); }
       showScreen('waiting');
       document.getElementById('room-code-display').textContent = roomCode;
       break;
@@ -397,7 +405,7 @@ function handleServerMsg(msg) {
       roomCode = msg.code; myId = msg.yourId; isHost = msg.isHost;
       isObserver = false; myObserverIdx = -1;
       document.body.classList.remove('observer-active');
-      if (msg.token) sessionStorage.setItem(SESSION_KEY, msg.token);
+      if (msg.token) { sessionStorage.setItem(SESSION_KEY, msg.token); localStorage.setItem(LS_SESSION_PREFIX + msg.code, msg.token); }
       if (msg.started) {
         viewingPlayer = -1;
         showScreen('game');
@@ -410,6 +418,7 @@ function handleServerMsg(msg) {
     case 'rejoin_failed':
       sessionStorage.removeItem(SESSION_KEY);
       sessionStorage.removeItem(OBS_SESSION_KEY);
+      if (urlRoom) localStorage.removeItem(LS_SESSION_PREFIX + urlRoom.toUpperCase());
       document.body.classList.remove('rejoin-pending');
       roomCode = ''; myId = -1; G = null; isHost = false;
       isObserver = false; myObserverIdx = -1;
@@ -418,6 +427,25 @@ function handleServerMsg(msg) {
       // Force-hide any leftover gameover overlay
       document.getElementById('gameover').classList.remove('active');
       showScreen('lobby');
+      // Re-populate join form if the user arrived via an invite link
+      if (urlRoom) {
+        const _code = urlRoom.toUpperCase();
+        const _codeEl = document.getElementById('join-code');
+        if (_codeEl) { _codeEl.value = _code; if (window.checkRoom) window.checkRoom(); }
+        const _joinCard   = document.getElementById('lobby-join-card');
+        const _createCard = document.getElementById('lobby-create-card');
+        const _banner     = document.getElementById('invited-banner');
+        const _bannerCode = document.getElementById('invited-banner-code');
+        if (_joinCard)   _joinCard.classList.add('lobby-card-focus');
+        if (_createCard) _createCard.classList.add('lobby-card-dim');
+        if (_banner)     _banner.classList.add('show');
+        if (_bannerCode) _bannerCode.textContent = _code;
+        setTimeout(() => {
+          const _nameInput = document.getElementById('join-name');
+          if (_nameInput) _nameInput.focus({ preventScroll: true });
+          if (_joinCard) _joinCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 250);
+      }
       break;
     case 'lobby_update':
       renderLobbyPlayers(msg.players, msg.observers || []);
@@ -458,6 +486,7 @@ function handleServerMsg(msg) {
     case 'left_room':
       sessionStorage.removeItem(SESSION_KEY);
       sessionStorage.removeItem(OBS_SESSION_KEY);
+      if (roomCode) localStorage.removeItem(LS_SESSION_PREFIX + roomCode);
       roomCode = ''; myId = -1; G = null;
       isObserver = false; myObserverIdx = -1;
       document.body.classList.remove('observer-active');
@@ -467,6 +496,7 @@ function handleServerMsg(msg) {
     case 'game_cancelled':
       sessionStorage.removeItem(SESSION_KEY);
       sessionStorage.removeItem(OBS_SESSION_KEY);
+      if (roomCode) localStorage.removeItem(LS_SESSION_PREFIX + roomCode);
       roomCode = ''; myId = -1; G = null; isHost = false;
       isObserver = false; myObserverIdx = -1;
       document.body.classList.remove('observer-active');
@@ -526,6 +556,7 @@ function showScreen(id) {
 function leaveRoom() {
   sessionStorage.removeItem(SESSION_KEY);
   sessionStorage.removeItem(OBS_SESSION_KEY);
+  if (roomCode) localStorage.removeItem(LS_SESSION_PREFIX + roomCode);
   sendMsg({ type: 'leave_room' });
   roomCode = ''; myId = -1; G = null; isHost = false;
   isObserver = false; myObserverIdx = -1;
@@ -541,6 +572,7 @@ function hideCancelModal() {
 function confirmCancelGame() {
   hideCancelModal();
   sessionStorage.removeItem(SESSION_KEY);
+  if (roomCode) localStorage.removeItem(LS_SESSION_PREFIX + roomCode);
   sendMsg({ type: 'cancel_game' });
 }
 function copyCode() {
@@ -607,7 +639,7 @@ function cp() { return G ? G.players[G.currentPlayer] : null; }
 
 function renderGame() {
   if (!G) return;
-  renderTopBar(); renderBoard(); renderSidePanel(); renderStatus();
+  renderTopBar(); renderBoard(); renderSidePanel(); renderStatus(); resetGlowTimer(); if (_guideOpen) updateGuideText();
   if (tutorialMode) applyTutStatusHL();
 }
 
@@ -678,7 +710,7 @@ function renderTopBar() {
   document.getElementById('turn-name').textContent = (!isObserver && G.currentPlayer === myId ? 'Your' : c.name + "'s") + ' Turn';
   document.getElementById('round-info').textContent = 'Round ' + G.round + (G.gameEnding ? ' (Final)' : '');
   document.getElementById('room-badge').textContent = roomCode;
-  document.getElementById('actions-count').textContent = G.actionsLeft;
+  document.getElementById('actions-count').textContent = (isMyTurn() || isObserver) ? G.actionsLeft : 'N/A';
 
   // Observer banner visibility
   const banner = document.getElementById('observer-banner');
@@ -754,7 +786,8 @@ function renderBoard() {
     const bx=cx-sz/2-fw, by=cy-sz/2-fw, bw=sz+fw*2, bh=sz+fw*2;
     const oc = test?` onclick="clickAnimal(${i})" style="cursor:pointer"`:'';
     // Colored box background
-    html += `<rect${tutAnimalHL?' class="tut-animal-hl"':''} x="${bx}" y="${by}" width="${bw}" height="${bh}" rx="4" fill="${playerHex}" opacity="${test?1:0.85}"${oc}/>`;
+    const _animalCls = [tutAnimalHL?'tut-animal-hl':'', test?'animal-clickable':''].filter(Boolean).join(' ');
+    html += `<rect${_animalCls?' class="'+_animalCls+'"':''} x="${bx}" y="${by}" width="${bw}" height="${bh}" rx="4" fill="${playerHex}" opacity="${test?1:0.85}"${oc}/>`;
     // Bright border when clickable in non-tutorial mode
     if (test && !tutAnimalHL) html += `<rect x="${bx}" y="${by}" width="${bw}" height="${bh}" rx="4" fill="none" stroke="white" stroke-width="2.5" stroke-dasharray="6,3" opacity="0.9"/>`;
     // Grayscale animal image
@@ -916,6 +949,13 @@ function renderSidePanel() {
   }
   document.getElementById('test-info').innerHTML = ti;
   renderScoreboard();
+  renderLog();
+}
+
+function renderLog() {
+  const el = document.getElementById('fn-log');
+  if (!el || !G || !G.log || G.log.length === 0) { if (el) el.innerHTML = ''; return; }
+  el.innerHTML = G.log.slice(0, 20).map(e => `<div class="fn-log-entry">${e}</div>`).join('');
 }
 
 function renderScoreboard() {
@@ -1004,8 +1044,162 @@ function renderStatus() {
   el.innerHTML = `<span class="msg">${msg}</span>${btn}`;
 }
 
+// ==================== GUIDE ====================
+function toggleGuide() {
+  _guideOpen = !_guideOpen;
+  resetGlowTimer();
+  const panel = document.getElementById('guide-panel');
+  const btn = document.getElementById('guide-btn');
+  if (panel) panel.style.display = _guideOpen ? 'block' : 'none';
+  if (btn) btn.classList.toggle('active', _guideOpen);
+  if (_guideOpen) updateGuideText();
+  else _removeElemGlow();
+}
+function updateGuideText() {
+  const panel = document.getElementById('guide-panel');
+  if (!panel || !G) return;
+  panel.innerHTML = getGuideText();
+}
+function getGuideText() {
+  if (!G || G.gameOver) return 'The game is over. Check the scoreboard!';
+  // Always use the active player's board data so observers + waiting players see real context
+  const p = G.players[G.currentPlayer];
+  const isActive = isMyTurn() && viewedIdx() === myId;
+  const who = cp() ? cp().name : 'player';
+  const prefix = isActive ? '' : `<div style="font-size:10px;color:#888;margin-bottom:5px;font-style:italic">👁 ${who} is playing</div>`;
+
+  let body;
+  switch (G.phase) {
+    case 'idle':
+      body = G.actionsLeft > 0
+        ? `You have <b>${G.actionsLeft} action${G.actionsLeft !== 1 ? 's' : ''}</b>. Choose <b>Design</b> to add a node to your network, <b>Train</b> to place 2 data tokens, or <b>Test</b> to run an animal through your network and score points.`
+        : 'Your turn is complete — the game will advance automatically.';
+      break;
+    case 'design':
+      body = 'Click a <b>highlighted empty node</b> on the board to place a Node Token. Build across all 3 layers (L1, L2, L3) to create a complete test path. Costs 1 action.';
+      break;
+    case 'train1':
+      body = 'Click one of <b>your own nodes</b> to place your first Data Token. Data on your test path adds a bonus to your dice roll — more data = better odds of passing.';
+      break;
+    case 'train2':
+      body = 'Click a <b>second node</b> to place your second Data Token. It can be the same or a different node. Warning: a node at 3 tokens overfits and you must block one of its edges.';
+      break;
+    case 'train_overfit':
+      body = '⚠️ A node just hit 3 tokens — it\'s <b>overfitting</b>! Click a <b>yellow highlighted edge</b> to permanently block it. Blocked edges cannot be used in future test paths.';
+      break;
+    case 'test_animal':
+      body = 'Choose an <b>animal to test</b>. You need a complete chain of nodes you own — one per layer (L1 → L2 → L3) — connecting from that animal\'s input to its output column. Only valid animals are highlighted.';
+      break;
+    case 'test_path_l1':
+    case 'test_path_l2':
+    case 'test_path_l3':
+      body = 'Select which <b>highlighted node</b> to route through at this layer. Your chosen path determines the <b>data bonus</b> added to your dice — pick nodes with the most data tokens for best odds!';
+      break;
+    case 'test_roll':
+      body = 'Your path is locked in. Click <b>Roll Dice</b> — final score = dice sum + data on your path. Need <b>18 or more</b> to pass.';
+      break;
+    case 'test_eval': {
+      const ds = G.dice.reduce((a, b) => a + b, 0);
+      const dp = G.testPath.reduce((s, n) => s + p.data[n], 0);
+      const t = ds + dp;
+      if (t >= TEST_THRESHOLD) { body = `✅ Score is <b>${t}</b> — you passed! Click <b>Score!</b> to claim the scoreboard slot and earn points.`; break; }
+      const uses = 4 - p.cleanUses;
+      if (uses <= 0) { body = `❌ Score is <b>${t}</b> (need ${TEST_THRESHOLD}). No Clean Data uses left — click <b>Accept Fail</b> to trigger Backpropagation and reposition a data token.`; break; }
+      body = `❌ Score is <b>${t}</b> (need ${TEST_THRESHOLD}). ${uses} Clean Data use${uses !== 1 ? 's' : ''} left: <b>Reroll Dice</b> to re-roll selected dice, <b>Flip a Die</b> to flip one die's value (1↔6, 2↔5, 3↔4), or <b>Accept Fail</b> to trigger Backpropagation.`;
+      break;
+    }
+    case 'test_clean_reroll':
+      body = 'Click the <b>dice you want to reroll</b> (they highlight when selected), then click <b>Reroll Selected</b>. Costs 1 Clean Data use.';
+      break;
+    case 'test_clean_flip':
+      body = 'Click <b>any one die</b> to flip its value: 1↔6, 2↔5, 3↔4. Costs 1 Clean Data use.';
+      break;
+    case 'backprop_source':
+      body = '<b>Backpropagation</b> — your test failed, so you get to reposition a data token. Click a node to take data FROM. It must be on the test path or adjacent to a path node, and have at least 1 token.';
+      break;
+    case 'backprop_dest':
+      body = 'Click a node to move the token TO. It must have room (under 3 tokens), be different from the source, and at least one of the two nodes must lie on the test path.';
+      break;
+    case 'backprop_overfit':
+      body = '⚠️ Moving that token caused the node to hit 3 tokens — <b>overfitting</b>! Click a <b>yellow highlighted edge</b> to block it, then your action completes.';
+      break;
+    default:
+      body = 'Follow the prompt in the status bar below for your next step.';
+  }
+  return prefix + body;
+}
+function _applyElemGlow() {
+  if (!_guideOpen || !G || G.gameOver || !isMyTurn() || viewedIdx() !== myId) return;
+  switch (G.phase) {
+    case 'idle':
+      if (G.actionsLeft > 0) {
+        ['btn-design','btn-train','btn-test'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el && !el.disabled) el.classList.add('elem-glow');
+        });
+      }
+      break;
+    case 'design':
+    case 'train1':
+    case 'train2':
+    case 'test_path_l1':
+    case 'test_path_l2':
+    case 'test_path_l3':
+      document.querySelectorAll('.node-circle.clickable').forEach(el => el.classList.add('elem-glow-svg'));
+      break;
+    case 'backprop_source':
+      document.querySelectorAll('.node-circle.backprop-src').forEach(el => el.classList.add('elem-glow-svg'));
+      break;
+    case 'backprop_dest':
+      document.querySelectorAll('.node-circle.backprop-dst').forEach(el => el.classList.add('elem-glow-svg'));
+      break;
+    case 'train_overfit':
+    case 'backprop_overfit':
+      document.querySelectorAll('.edge-line.selectable').forEach(el => el.classList.add('elem-glow-svg'));
+      break;
+    case 'test_animal':
+      document.querySelectorAll('.animal-clickable').forEach(el => el.classList.add('elem-glow-svg'));
+      break;
+    case 'test_roll':
+      document.querySelectorAll('#status .primary').forEach(el => el.classList.add('elem-glow'));
+      break;
+    case 'test_eval':
+      document.querySelectorAll('#status button:not(.info-btn)').forEach(el => el.classList.add('elem-glow'));
+      break;
+    case 'test_clean_reroll':
+    case 'test_clean_flip':
+      ['die-0','die-1','die-2'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.add('elem-glow');
+      });
+      break;
+  }
+}
+function _removeElemGlow() {
+  document.querySelectorAll('.elem-glow').forEach(el => el.classList.remove('elem-glow'));
+  document.querySelectorAll('.elem-glow-svg').forEach(el => el.classList.remove('elem-glow-svg'));
+}
+function resetGlowTimer() {
+  const btn = document.getElementById('guide-btn');
+  if (btn) btn.classList.remove('glowing');
+  _removeElemGlow();
+  if (_glowTimer) { clearTimeout(_glowTimer); _glowTimer = null; }
+  if (G && !G.gameOver && isMyTurn() && viewedIdx() === myId) {
+    _glowTimer = setTimeout(() => {
+      const b = document.getElementById('guide-btn');
+      if (b) b.classList.add('glowing');
+      _applyElemGlow();
+    }, 5000);
+  }
+}
+// Any user activity removes the glow and restarts the 5s idle countdown
+['mousemove','mousedown','keydown','touchstart','wheel'].forEach(evt =>
+  document.addEventListener(evt, resetGlowTimer, { passive: true })
+);
+
 // ==================== ACTIONS ====================
 function doAction(action, extra) {
+  resetGlowTimer();
   if (tutorialMode) { handleTutAction(action, extra||{}); return; }
   sendMsg({ type:'game_action', action, ...(extra||{}) });
 }
@@ -1110,6 +1304,7 @@ function showGameOver() {
   // Clear session so a page reload doesn't rejoin a finished game
   sessionStorage.removeItem(SESSION_KEY);
   sessionStorage.removeItem(OBS_SESSION_KEY);
+  if (roomCode) localStorage.removeItem(LS_SESSION_PREFIX + roomCode);
   const SCORE_VALS = { 2:[5,3], 3:[5,3,2], 4:[5,4,3,2] };
   const PENALTIES = [0,-1,-2,-4,-6];
   const SLOT_LABELS = ['1st','2nd','3rd','4th'];
@@ -1193,6 +1388,7 @@ function fnReturnToLobby() {
   // Clear all game state and nav buttons, then return to lobby
   sessionStorage.removeItem(SESSION_KEY);
   sessionStorage.removeItem(OBS_SESSION_KEY);
+  if (roomCode) localStorage.removeItem(LS_SESSION_PREFIX + roomCode);
   sendMsg({ type: 'leave_room' });
   roomCode = ''; myId = -1; G = null; isHost = false;
   isObserver = false; myObserverIdx = -1;
@@ -1359,7 +1555,14 @@ function tutMakeG(pOv={}, gOv={}) {
   return { players:[tutMakePlayer(pOv)], currentPlayer:0, phase:'idle', actionsLeft:3,
     round:1, gameEnding:false, gameOver:false, dice:[0,0,0], testPath:[], testAnimal:-1,
     animalOrder:TUT_ANIMAL_ORDER, scoreboard:[[],[],[],[],[]], scores:[0],
-    pathClickable:[], overfitEdges:[], backpropSource:-1, ...gOv };
+    pathClickable:[], overfitEdges:[], backpropSource:-1, log:[], ...gOv };
+}
+function tutLog(msg) {
+  if (!tutorialG) return;
+  if (!tutorialG.log) tutorialG.log = [];
+  tutorialG.log.unshift(msg);
+  if (tutorialG.log.length > 20) tutorialG.log.pop();
+  renderLog();
 }
 
 // helper. TutFindPath used in test-animal step
@@ -1761,6 +1964,7 @@ const TSTEPS = [
       }
       if(action==='place_node'&&extra.nodeId===0){
         tutorialG.players[0].nodes[0]=true;
+        tutLog('Designed <b>'+NODE_LABELS[0]+'</b>');
         tutorialG.phase='idle'; tutorialG.actionsLeft=2;
         renderGame(); setTimeout(()=>tutAdvanceTo(11),350); return true;
       }
@@ -1784,6 +1988,7 @@ const TSTEPS = [
       }
       if(action==='place_node'&&extra.nodeId===4){
         tutorialG.players[0].nodes[4]=true;
+        tutLog('Designed <b>'+NODE_LABELS[4]+'</b>');
         tutorialG.phase='idle'; tutorialG.actionsLeft=1;
         renderGame(); setTimeout(()=>tutAdvanceTo(12),350); return true;
       }
@@ -1807,6 +2012,7 @@ const TSTEPS = [
       }
       if(action==='place_node'&&extra.nodeId===8){
         tutorialG.players[0].nodes[8]=true;
+        tutLog('Designed <b>'+NODE_LABELS[8]+'</b>');
         tutorialG.phase='idle'; tutorialG.actionsLeft=0;
         renderGame(); setTimeout(()=>tutAdvanceTo(13),350); return true;
       }
@@ -1840,6 +2046,7 @@ const TSTEPS = [
         const p=tutorialG.players[0];
         if(p.nodes[extra.nodeId]&&p.data[extra.nodeId]<3&&tutHighlightNodes.includes(extra.nodeId)){
           p.data[extra.nodeId]++;
+          tutLog('Trained <b>'+NODE_LABELS[extra.nodeId]+'</b> ('+p.data[extra.nodeId]+'/3)');
           tutorialDataPlaced++;
           if(tutorialDataPlaced>=2){
             tutorialG.phase='idle'; tutorialDataPlaced=0;
@@ -1864,6 +2071,7 @@ const TSTEPS = [
     interact:(action,extra)=>{
       if(action==='select_overfit_edge'){
         tutorialG.players[0].blocked.push(extra.edgeKey);
+        tutLog('⚠ Overfit — blocked <b>'+NODE_LABELS[parseInt(extra.edgeKey)]+'</b> edge');
         tutorialG.phase='idle'; tutorialG.overfitEdges=[];
         renderGame(); setTimeout(()=>tutAdvanceTo(16),350); return true;
       }
@@ -1891,6 +2099,7 @@ const TSTEPS = [
         if(path.length){
           tutHighlightAnimal=-1;
           tutorialG.testAnimal=extra.animalIdx; tutorialG.testPath=path;
+          tutLog('Testing <b>'+ANIMAL_LOG[extra.animalIdx]+'</b>…');
           tutorialG.phase='test_roll'; renderGame();
           setTimeout(()=>tutAdvanceTo(17),350); return true;
         }
@@ -1918,6 +2127,8 @@ const TSTEPS = [
     interact:(action,extra)=>{
       if(action==='roll_dice'){
         tutorialG.dice=[6,5,4]; tutorialG.phase='test_eval';
+        const _dp=tutorialG.testPath.reduce((s,n)=>s+tutorialG.players[0].data[n],0);
+        tutLog('🎲 Rolled 6+5+4=15, data '+_dp+' → '+(15+_dp));
         renderGame(); setTimeout(()=>tutAdvanceTo(18),350); return true;
       }
       return false;
@@ -1946,6 +2157,7 @@ const TSTEPS = [
         // Add player 0's 2nd-place Dog score and visibly update the scoreboard
         tutorialG.scoreboard[0].push({player:0,round:2,bonusTokens:0});
         tutorialG.players[0].tested[0]=true;
+        tutLog('✅ '+ANIMAL_LOG[0]+' passed! +3pts');
         tutorialG.phase='idle'; tutorialG.testAnimal=-1; tutorialG.testPath=[];
         document.getElementById('tut-body').innerHTML=
           `<p>You scored <b>3 points</b> for Dog (2nd place)! Jordan had 1st. Check the scoreboard on the right. The race is on for the remaining animals.</p>`;
@@ -1977,6 +2189,7 @@ const TSTEPS = [
       if(action==='clean_reroll'){
         tutorialG.dice=[5,4,3];
         tutorialG.players[0].cleanUses++;
+        tutLog('🧹 Rerolled dice (use '+tutorialG.players[0].cleanUses+'/4)');
         tutorialG.phase='test_eval';
         tutHighlightStatus='flip';
         document.getElementById('tut-body').innerHTML=
@@ -1989,6 +2202,7 @@ const TSTEPS = [
         const FLIP=[0,6,5,4,3,2,1];
         tutorialG.dice[extra.dieIdx]=FLIP[tutorialG.dice[extra.dieIdx]];
         tutorialG.players[0].cleanUses++;
+        tutLog('🧹 Flipped a die (use '+tutorialG.players[0].cleanUses+'/4)');
         tutorialG.phase='test_eval';
         const dsum=tutorialG.dice.reduce((a,b)=>a+b,0);
         const psum=tutorialG.testPath.reduce((s,ni)=>s+tutorialG.players[0].data[ni],0);
@@ -2006,6 +2220,8 @@ const TSTEPS = [
       }
       // Phase 3. Score / Accept Fail → NOW trigger backprop
       if(action==='resolve_success'||action==='resolve_fail'){
+        if(action==='resolve_success') tutLog('✅ '+ANIMAL_LOG[0]+' passed!');
+        else tutLog('❌ '+ANIMAL_LOG[0]+' failed');
         tutorialG.phase='backprop_source';
         tutHighlightStatus='';
         tutHighlightNodes=[0];
@@ -2029,6 +2245,7 @@ const TSTEPS = [
         const dest=extra.nodeId;
         tutorialG.players[0].data[0]--;
         tutorialG.players[0].data[dest]++;
+        tutLog('↩ Backprop: <b>'+NODE_LABELS[0]+'</b> → <b>'+NODE_LABELS[dest]+'</b>');
         tutorialG.players[0].blocked=tutorialG.players[0].blocked.filter(b=>b!=='0-6');
         tutorialG.backpropSource=-1;
         tutorialG.phase='idle';
@@ -2345,7 +2562,14 @@ hub = SocketHub.create({
         sessionStorage.setItem(OBS_SESSION_KEY, JSON.stringify({ roomCode: urlRoom.toUpperCase(), name: pendingObsName }));
         hub.send({ type: 'join_as_observer', code: urlRoom.toUpperCase(), name: pendingObsName });
       } else if (urlRoom) {
-        hub.send({ type: 'check_room', code: urlRoom.toUpperCase() });
+        // Check localStorage for a saved session for this room (e.g. opened in a new tab
+        // after the game started — sessionStorage is tab-specific so it would be empty).
+        const lsToken = localStorage.getItem(LS_SESSION_PREFIX + urlRoom.toUpperCase());
+        if (lsToken) {
+          hub.send({ type: 'rejoin_room', token: lsToken });
+        } else {
+          hub.send({ type: 'check_room', code: urlRoom.toUpperCase() });
+        }
       }
       // Restore Event Hub rooms from localStorage
       const savedEvName = localStorage.getItem('fuzznet_event_name');

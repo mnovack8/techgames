@@ -304,7 +304,7 @@ function handleMessage(ws, raw) {
       const canObserve = observerCount < 10;
       if (room.started) {
         const rejoinColors = room.players
-          .filter(p => !p.isBot && !p.connected)
+          .filter(p => !p.isBot)
           .map(p => p.color);
         return send(ws, { type:'room_info', exists:true, started:true, rejoinColors, observerCount, canObserve });
       }
@@ -325,10 +325,11 @@ function handleMessage(ws, raw) {
       const room = rooms.get(code);
       if (!room) return send(ws, {type:'error',msg:'Room not found'});
 
-      // Rejoin a started game by matching color to a disconnected player
+      // Rejoin a started game by matching color — allow even if the slot still
+      // appears connected (old tab may not have closed yet after a crash).
       if (room.started) {
-        const rejoinIdx = room.players.findIndex(p => !p.isBot && p.color === color && !p.connected);
-        if (rejoinIdx === -1) return send(ws, {type:'error',msg:'Game in progress — no open slot for that color'});
+        const rejoinIdx = room.players.findIndex(p => !p.isBot && p.color === color);
+        if (rejoinIdx === -1) return send(ws, {type:'error',msg:'Game in progress — that color is not in this game'});
         leaveRoom(ws, true);
         if (room.players[rejoinIdx].ws) wsData.delete(room.players[rejoinIdx].ws);
         room.players[rejoinIdx].ws = ws;

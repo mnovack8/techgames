@@ -18,6 +18,8 @@ const COLOR_INFO = {
 const CLEAN_PENALTIES = [0, -1, -2, -4, -6];
 const SCORE_VALUES = { 2: [5, 3], 3: [5, 3, 2], 4: [5, 4, 3, 2] };
 const TEST_THRESHOLD = 18;
+const NODE_LABELS = ['L1-A','L1-B','L1-C','L1-D','L2-A','L2-B','L2-C','L3-A','L3-B','L3-C','L3-D'];
+const ANIMAL_LOG  = ['🐕 Dog','🐰 Bunny','🐸 Frog','🐿️ Squirrel','🐟 Fish'];
 
 const INPUT_TO_L1 = { 0:[0], 1:[0,1], 2:[1,2], 3:[2,3], 4:[3] };
 const L1_TO_L2 = { 0:[4,6], 1:[4,5], 2:[5,6], 3:[4,6] };
@@ -25,6 +27,15 @@ const L2_TO_L3 = { 4:[7,8], 5:[8,9], 6:[9,10] };
 const L3_TO_OUT = { 7:[0,1], 8:[1,2], 9:[2,3], 10:[3,4] };
 
 // ==================== GAME HELPERS ====================
+function fnLog(room, msg) {
+  room.state.log.unshift(msg);
+  if (room.state.log.length > 40) room.state.log.pop();
+}
+function pSpan(room, idx) {
+  const c = room.players[idx];
+  return `<span style="color:${COLOR_INFO[c.color].hex}">●</span> ${c.name}`;
+}
+
 function getForwardEdges(nodeId) {
   if (nodeId <= 3) return (L1_TO_L2[nodeId]||[]).map(t => ({from:nodeId,to:t,key:nodeId+'-'+t}));
   if (nodeId <= 6) return (L2_TO_L3[nodeId]||[]).map(t => ({from:nodeId,to:t,key:nodeId+'-'+t}));
@@ -203,11 +214,21 @@ function botPickBackprop(ps, testPath) {
 }
 
 async function executeBotTurn(room) {
+  // Guard: only one bot loop at a time. nextTurn may try to start a second
+  // when the human is disconnected and we wrap back to the bot mid-loop.
+  if (room._botRunning) return;
+  room._botRunning = true;
+
   const s = room.state;
   const botIdx = s.currentPlayer;
-  if (!room.players[botIdx].isBot || s.gameOver) return;
+  if (!room.players[botIdx]?.isBot || s.gameOver) { room._botRunning = false; return; }
 
-  while (s.actionsLeft > 0 && !s.gameOver && s.currentPlayer === botIdx) {
+  // Track the current round so we exit after one full round of bot play instead
+  // of looping indefinitely when the disconnected human keeps getting skipped.
+  const startRound = s.round;
+
+  try {
+  while (s.actionsLeft > 0 && !s.gameOver && s.currentPlayer === botIdx && s.round === startRound) {
     const ps = s.players[botIdx];
     const action = decideBotAction(ps, s);
 
@@ -324,6 +345,15 @@ async function executeBotTurn(room) {
       }
     }
   }
+  } finally {
+    room._botRunning = false;
+    // If it's still the bot's turn (human was skipped past), schedule the next
+    // bot turn rather than looping immediately — gives the human time to reconnect.
+    if (!s.gameOver && room.players[s.currentPlayer]?.isBot) {
+      const t = setTimeout(() => executeBotTurn(room), 800);
+      if (t?.unref) t.unref();
+    }
+  }
 }
 
 function decideBotAction(ps, s) {
@@ -386,7 +416,7 @@ function broadcastState(room) {
       round: s.round, animalOrder: s.animalOrder, gameEnding: s.gameEnding, gameOver: s.gameOver,
       testAnimal: s.testAnimal, testPath: s.testPath, dice: s.dice,
       overfitEdges: s.overfitEdges, pathClickable: s.pathClickable, backpropSource: s.backpropSource,
-      scoreboard: s.scoreboard, roundScores: s.roundScores,
+      scoreboard: s.scoreboard, roundScores: s.roundScores, log: s.log,
       players: s.players.map((ps, i) => ({
         ...ps,
         color: room.players[i].color,
@@ -448,6 +478,7 @@ function createGameState(numPlayers) {
     pathOptions: [],
     _overfitFromTrain2: false,
     backpropSource: -1,
+    log: [],
   };
 }
 
@@ -501,9 +532,10 @@ function nextTurn(room) {
   s.actionsLeft = p.firstTurnDone ? 1 : 3;
   p.firstTurnDone = true;
   s.phase = 'idle';
+  fnLog(room, `── ${pSpan(room, s.currentPlayer)}'s turn ──`);
 
-  // Trigger bot turn if next player is a bot
-  if (room.players[s.currentPlayer].isBot) {
+  // Trigger bot turn if next player is a bot and no bot loop is already running
+  if (room.players[s.currentPlayer].isBot && !room._botRunning) {
     broadcastState(room);
     executeBotTurn(room);
   }
@@ -523,6 +555,7 @@ function checkTestingImpossible(s) {
 function endGame(room) {
   room.state.gameOver = true;
   room.state.phase = 'idle';
+  fnLog(room, '🏁 Game over!');
   const mode = room.players.some(p => p.isBot) ? '1p_bot'
     : room.players.length === 2 ? '2p'
     : room.players.length === 3 ? '3p' : '4p';
@@ -550,6 +583,7 @@ function processAction(room, playerIdx, msg) {
       const id = msg.nodeId;
       if (id < 0 || id > 10 || ps.nodes[id]) return 'Invalid node';
       ps.nodes[id] = true;
+      fnLog(room, `${pSpan(room, playerIdx)} designed <b>${NODE_LABELS[id]}</b>`);
       consumeAction(room);
       return null;
     }
@@ -565,6 +599,7 @@ function processAction(room, playerIdx, msg) {
       if (id < 0 || id > 10 || !ps.nodes[id] || ps.data[id] >= 3) return 'Invalid node';
       const wasPhase = s.phase;
       ps.data[id]++;
+      fnLog(room, `${pSpan(room, playerIdx)} trained <b>${NODE_LABELS[id]}</b> (${ps.data[id]}/3)`);
       if (ps.data[id] >= 3) {
         const fwd = getForwardEdges(id).filter(e => !ps.blocked.includes(e.key));
         if (fwd.length > 0) {
@@ -583,6 +618,7 @@ function processAction(room, playerIdx, msg) {
       const key = msg.edgeKey;
       if (!s.overfitEdges.find(e => e.key === key)) return 'Invalid edge';
       ps.blocked.push(key);
+      fnLog(room, `⚠ overfit — ${pSpan(room, playerIdx)} blocked <b>${NODE_LABELS[parseInt(key)]}</b> edge`);
       const wasFrom2 = s._overfitFromTrain2;
       s.overfitEdges = [];
       s._overfitFromTrain2 = false;
@@ -605,6 +641,7 @@ function processAction(room, playerIdx, msg) {
       if (paths.length === 0) return 'No valid paths';
       s.testAnimal = a;
       s.testPath = [];
+      fnLog(room, `${pSpan(room, playerIdx)} is testing ${ANIMAL_LOG[a]}…`);
       s.pathOptions = paths;
       if (paths.length === 1) {
         s.testPath = [...paths[0]];
@@ -672,7 +709,7 @@ function processAction(room, playerIdx, msg) {
       for (const i of indices) { if (i < 0 || i > 2) return 'Invalid die'; }
       ps.cleanUses++;
       for (const i of indices) s.dice[i] = rollDie();
-      // phase stays test_eval
+      fnLog(room, `🧹 ${pSpan(room, playerIdx)} rerolled ${indices.length} die (use ${ps.cleanUses}/4)`);
       return null;
     }
     case 'clean_flip': {
@@ -682,6 +719,7 @@ function processAction(room, playerIdx, msg) {
       if (i < 0 || i > 2) return 'Invalid die';
       ps.cleanUses++;
       s.dice[i] = 7 - s.dice[i];
+      fnLog(room, `🧹 ${pSpan(room, playerIdx)} flipped a die (use ${ps.cleanUses}/4)`);
       return null;
     }
     case 'resolve_success': {
@@ -701,6 +739,7 @@ function processAction(room, playerIdx, msg) {
           s.roundScores[a] = vals[slot];
         }
         s.scoreboard[a].push({ player: playerIdx, round: s.round, bonusTokens });
+        fnLog(room, `✅ ${ANIMAL_LOG[a]} passed! <b>+${vals[slot]}pts</b> → ${pSpan(room, playerIdx)}`);
       }
       if (ps.tested.every(t => t)) s.gameEnding = true;
       consumeAction(room);
@@ -708,6 +747,7 @@ function processAction(room, playerIdx, msg) {
     }
     case 'resolve_fail': {
       if (s.phase !== 'test_eval') return 'Wrong phase';
+      fnLog(room, `❌ ${ANIMAL_LOG[s.testAnimal]} failed → ${pSpan(room, playerIdx)}`);
       if (canBackprop(ps, s.testPath)) {
         s.phase = 'backprop_source';
         s.backpropSource = -1;
@@ -752,6 +792,7 @@ function processAction(room, playerIdx, msg) {
       }
       // Add data to destination
       ps.data[dst]++;
+      fnLog(room, `↩ ${pSpan(room, playerIdx)} backprop: <b>${NODE_LABELS[src]}</b> → <b>${NODE_LABELS[dst]}</b>`);
       // If destination becomes maxed (3), need overfit edge selection
       if (ps.data[dst] >= 3) {
         const fwd = getForwardEdges(dst).filter(e => !ps.blocked.includes(e.key));

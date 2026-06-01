@@ -1251,6 +1251,25 @@ function handleMsg(msg) {
       sessionStorage.removeItem(OBS_SESSION_KEY);
       history.replaceState({}, '', '/cybersecurity/byteclub');
       showScreen('lobby');
+      // Re-populate join form if the user arrived via an invite link
+      if (urlRoom) {
+        const _code = urlRoom.toUpperCase();
+        const _codeEl = document.getElementById('join-code');
+        if (_codeEl) { _codeEl.value = _code; if (window.checkRoom) window.checkRoom(); }
+        const _joinCard   = document.getElementById('lobby-join-card');
+        const _createCard = document.getElementById('lobby-create-card');
+        const _banner     = document.getElementById('invited-banner');
+        const _bannerCode = document.getElementById('invited-banner-code');
+        if (_joinCard)   _joinCard.classList.add('lobby-card-focus');
+        if (_createCard) _createCard.classList.add('lobby-card-dim');
+        if (_banner)     _banner.classList.add('show');
+        if (_bannerCode) _bannerCode.textContent = _code;
+        setTimeout(() => {
+          const _nameInput = document.getElementById('join-name');
+          if (_nameInput) _nameInput.focus({ preventScroll: true });
+          if (_joinCard) _joinCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 250);
+      }
       break;
     case 'room_info':
       LobbyUI.handleRoomInfo(msg);
