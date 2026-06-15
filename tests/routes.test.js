@@ -312,7 +312,7 @@ describe('Route Coverage', () => {
       ['/about.html',                       200],
       ['/contact.html',                     200],
       ['/buy-now.html',                     200],
-      ['/cybersecurity.html',               200],
+      ['/cybersecurity.html',               301],
       ['/ai.html',                          200],
       ['/cybersecurity/byteclub.html',      200],
     ];

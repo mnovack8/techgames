@@ -20,6 +20,12 @@ const { WebSocket } = require('ws');
 const TEMP_METRICS = path.join(os.tmpdir(), `techgames-test-metrics-${process.pid}.json`);
 process.env.METRICS_FILE = TEMP_METRICS;
 
+// Collapse bot animation delays so full-game tests finish in seconds, not minutes.
+process.env.TEST_MODE = '1';
+// Use a throwaway state dir so tests never read stale production rooms.
+const TEMP_STATE_DIR = path.join(os.tmpdir(), `techgames-test-state-${process.pid}`);
+process.env.STATE_DIR = TEMP_STATE_DIR;
+
 // ── Server lifecycle ─────────────────────────────────────────────────────────
 
 /** Start the server on a random OS-assigned port. Returns { server, wss, port }. */

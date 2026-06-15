@@ -372,6 +372,27 @@ describe('ByteClub — Game Flow', () => {
           `Winner index in range; got ${curState.winner}`);
         assert.equal(curState.phase, 'game_over',
           'Final phase should be "game_over" on natural win');
+
+        // ── Game Results ───────────────────────────────────────────────────────
+        const winner     = curState.players[curState.winner];
+        const totalCards = curState.players.reduce((sum, p) => sum + (p.played || []).length, 0);
+        const totalHeld  = curState.players.reduce((sum, p) => sum + (p.handCount ?? 0), 0);
+        console.log('\n  ━━━ ByteClub Results ━━━');
+        console.log(`  Winner       : ${winner.name} (${winner.color}) [player ${curState.winner}]`);
+        console.log(`  Final phase  : ${curState.phase}`);
+        console.log(`  Turns taken  : ${actionsTaken}  |  Players who acted: ${distinctPlayers.size}`);
+        console.log(`  Cards played : ${totalCards} total across all players  |  Cards in hand: ${totalHeld}`);
+        console.log('  Players:');
+        for (const [i, p] of curState.players.entries()) {
+          const isWinner = i === curState.winner ? ' ← winner' : '';
+          const nist     = p.nistTypes ? `  NIST: ${p.nistTypes.join(',')}` : '';
+          console.log(`    [${i}] ${String(p.name).padEnd(8)} (${p.color}) — hand: ${p.handCount ?? '?'}  played: ${(p.played || []).length}${nist}${isWinner}`);
+        }
+        if (curState.log && curState.log.length > 0) {
+          console.log('  Activity Log (last 5):');
+          curState.log.slice(0, 5).forEach(e => console.log(`    ${e.replace(/<[^>]+>/g, '')}`));
+        }
+        console.log('  ─────────────────────────\n');
       } else {
         sockets[0].send({ type: 'cancel_game' });
         const cancellations = await Promise.all(

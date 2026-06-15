@@ -247,6 +247,302 @@ describe('FuzzNet — Game Flow', () => {
     });
   });
 
+  // ── Full game results (human + bot to natural completion) ──────────────────
+  // TEST_MODE (set in helpers.js) collapses bot delays to ~10ms so this
+  // completes in a few seconds rather than ~90s.
+  describe('Full game result — human vs bot', () => {
+    const ANIMALS = ['Dog','Bunny','Frog','Squirrel','Fish'];
+
+    /**
+     * Human player strategy: test-first, then train to build the network.
+     *   Priority: test > design > train (prefer low-data nodes) > end_turn
+     *
+     * Contrast with the bot which designs the full network first, maxes all data,
+     * then tests. The human attempts tests as soon as any valid path exists —
+     * building paths and testing in parallel rather than front-loading infrastructure.
+     */
+    async function humanStep(sock, s) {
+      sock.drain();
+      const myPs = s.players[s.currentPlayer];
+
+      // Send one action and return any server response without hanging on errors.
+      async function act(msg) {
+        sock.send(msg);
+        return sock.next(null, 5000);
+      }
+
+      switch (s.phase) {
+        case 'idle': {
+          // 1. Test first — the human's defining trait vs the bot's design-first approach
+          if (myPs.tested && myPs.tested.some(t => !t)) {
+            const r = await act({ type: 'game_action', action: 'start_test' });
+            if (r.type === 'state_update') return r.state;
+            // Server error = no valid path yet — fall through to build the network
+          }
+          // 2. Design if empty slots exist
+          if (myPs.nodes.findIndex(n => !n) >= 0) {
+            const r = await act({ type: 'game_action', action: 'start_design' });
+            return r.type === 'state_update' ? r.state : null;
+          }
+          // 3. Train (uncapped — allows overfit which eventually blocks paths and ends game)
+          const dataSlots = myPs.nodes.reduce((sum, n, i) =>
+            (n && myPs.data[i] < 3 ? sum + (3 - myPs.data[i]) : sum), 0);
+          if (dataSlots >= 2) {
+            const r = await act({ type: 'game_action', action: 'start_train' });
+            return r.type === 'state_update' ? r.state : null;
+          }
+          // 4. Nothing useful — skip remaining actions
+          const r = await act({ type: 'game_action', action: 'end_turn' });
+          return r.type === 'state_update' ? r.state : null;
+        }
+        case 'design': {
+          const node = myPs.nodes.findIndex(n => !n);
+          if (node < 0) return null;
+          const r = await act({ type: 'game_action', action: 'place_node', nodeId: node });
+          if (r.type !== 'state_update') return null;
+          const ns = r.state;
+          // Skip leftover actions so the bot isn't blocked waiting on us
+          if (!ns.gameOver && ns.currentPlayer === 0 && ns.phase === 'idle' && ns.actionsLeft > 0 && ns.actionsLeft < 3) {
+            sock.drain();
+            const r2 = await act({ type: 'game_action', action: 'end_turn' });
+            return r2.type === 'state_update' ? r2.state : ns;
+          }
+          return ns;
+        }
+        case 'train1':
+        case 'train2': {
+          // Pick node with the most remaining capacity (spreads data evenly across network)
+          let best = -1, bestRoom = 0;
+          for (let i = 0; i < 11; i++) {
+            const room = myPs.nodes[i] && myPs.data[i] < 3 ? (3 - myPs.data[i]) : 0;
+            if (room > bestRoom) { best = i; bestRoom = room; }
+          }
+          if (best < 0) return null;
+          const r = await act({ type: 'game_action', action: 'place_data', nodeId: best });
+          return r.type === 'state_update' ? r.state : null;
+        }
+        case 'train_overfit':
+        case 'backprop_overfit': {
+          const edge = s.overfitEdges && s.overfitEdges[0];
+          if (!edge) return null;
+          const action = s.phase === 'train_overfit' ? 'select_overfit_edge' : 'backprop_select_overfit';
+          const r = await act({ type: 'game_action', action, edgeKey: edge.key });
+          return r.type === 'state_update' ? r.state : null;
+        }
+        case 'test_animal': {
+          // Try each untested animal; server returns error if no valid path
+          for (let a = 0; a < 5; a++) {
+            if (myPs.tested && !myPs.tested[a]) {
+              const r = await act({ type: 'game_action', action: 'select_animal', animalIdx: a });
+              if (r.type === 'state_update') return r.state;
+              // error = no valid path for this animal — try next
+            }
+          }
+          return null;
+        }
+        case 'test_path_l1':
+        case 'test_path_l2':
+        case 'test_path_l3': {
+          const node = s.pathClickable && s.pathClickable[0];
+          if (node == null) return null;
+          const r = await act({ type: 'game_action', action: 'select_path_node', nodeId: node });
+          return r.type === 'state_update' ? r.state : null;
+        }
+        case 'test_roll': {
+          const r = await act({ type: 'game_action', action: 'roll_dice' });
+          return r.type === 'state_update' ? r.state : null;
+        }
+        case 'test_eval': {
+          const ds = s.dice.reduce((a, b) => a + b, 0);
+          const dp = s.testPath.reduce((sum, n) => sum + myPs.data[n], 0);
+          if (ds + dp >= 18) {
+            const r = await act({ type: 'game_action', action: 'resolve_success' });
+            return r.type === 'state_update' ? r.state : null;
+          }
+          // Use Clean Data to flip the lowest die and boost the total if uses remain.
+          // Flipping 1→6 adds 5, 2→5 adds 3, 3→4 adds 1 — always improves worst die.
+          if ((myPs.cleanUses || 0) < 4) {
+            const minIdx = s.dice.indexOf(Math.min(...s.dice));
+            const r = await act({ type: 'game_action', action: 'clean_flip', dieIdx: minIdx });
+            if (r.type === 'state_update') return r.state; // re-enter test_eval next loop
+          }
+          const r = await act({ type: 'game_action', action: 'resolve_fail' });
+          return r.type === 'state_update' ? r.state : null;
+        }
+        case 'backprop_source': {
+          // Mirror canBackprop exactly: find the first src/dst pair where
+          // nodes[src] && data[src]>0 && nodes[dst] && data[dst]<3 && src≠dst &&
+          // (pathSet.has(src) || pathSet.has(dst))
+          const pathSet = new Set(s.testPath);
+          let src = null;
+          outer_src: for (let i = 0; i < 11; i++) {
+            if (!myPs.nodes[i] || myPs.data[i] <= 0) continue;
+            for (let j = 0; j < 11; j++) {
+              if (i === j || !myPs.nodes[j] || myPs.data[j] >= 3) continue;
+              if (pathSet.has(i) || pathSet.has(j)) { src = i; break outer_src; }
+            }
+          }
+          if (src == null) return null;
+          const r = await act({ type: 'game_action', action: 'backprop_select_source', nodeId: src });
+          return r.type === 'state_update' ? r.state : null;
+        }
+        case 'backprop_dest': {
+          // Mirror the server dest validation exactly:
+          // nodes[dst] && data[dst]<3 && dst≠src && (pathSet.has(src) || pathSet.has(dst))
+          const pathSet = new Set(s.testPath);
+          const src = s.backpropSource;
+          let dst = null;
+          for (let j = 0; j < 11; j++) {
+            if (j === src || !myPs.nodes[j] || myPs.data[j] >= 3) continue;
+            if (pathSet.has(src) || pathSet.has(j)) { dst = j; break; }
+          }
+          if (dst == null) return null;
+          const r = await act({ type: 'game_action', action: 'backprop_select_dest', nodeId: dst });
+          return r.type === 'state_update' ? r.state : null;
+        }
+        default:
+          return null;
+      }
+    }
+
+    it('human vs bot plays to natural game-over and reports final scores', async () => {
+      const host = await ws();
+      host.send({ type: 'create_room', gameType: 'fuzznet', playerName: 'Human', color: 'blue' });
+      await host.next('room_created');
+
+      host.send({ type: 'toggle_bot' });
+      await host.next('lobby_update');
+
+      host.send({ type: 'start_game' });
+      await host.next('game_started');
+      let s = (await host.next('state_update', 5000)).state;
+
+      // With TEST_MODE bot delays (~10ms each), a full game completes in < 3s.
+      const MAX_STEPS     = 500;
+      let steps           = 0;
+      let humanTurns      = 0;
+      let botUpdates      = 0;
+      let roundsReached   = new Set([s.round]);
+
+      while (!s.gameOver && steps < MAX_STEPS) {
+        steps++;
+
+        if (s.currentPlayer !== 0) {
+          // Bot's turn — consume state_updates until currentPlayer rotates back
+          s = (await host.next('state_update', 5000)).state;
+          botUpdates++;
+          roundsReached.add(s.round);
+          continue;
+        }
+
+        // Human's turn
+        const next = await humanStep(host, s);
+        if (!next) break; // unexpected phase — abort cleanly
+        s = next;
+        humanTurns++;
+        roundsReached.add(s.round);
+      }
+
+      // ── Assertions ────────────────────────────────────────────────────────
+      assert.equal(s.gameOver, true,
+        `Game must reach natural game-over; stopped at phase="${s.phase}" round=${s.round} after ${steps} steps`);
+
+      const scores = s.scores || s.players.map(() => 0);
+      assert.ok(Array.isArray(scores) && scores.length === 2, 'Two-player scores array present');
+      assert.ok(scores.some(sc => sc > 0),    'At least one player scored points');
+      assert.ok(s.round >= 2,                 `Game lasted at least 2 rounds; got ${s.round}`);
+
+      const totalTested = s.players.reduce((sum, p) => sum + (p.tested ? p.tested.filter(Boolean).length : 0), 0);
+      assert.ok(totalTested >= 1, `At least 1 animal tested across both players; got ${totalTested}`);
+
+      const totalNodes = s.players.reduce((sum, p) => sum + (p.nodes ? p.nodes.filter(Boolean).length : 0), 0);
+      assert.ok(totalNodes >= 3, `At least 3 nodes placed; got ${totalNodes}`);
+
+      // ── Results ───────────────────────────────────────────────────────────
+      const SCORE_VALUES = { 2: [5, 3], 3: [5, 3, 2], 4: [5, 4, 3, 2] };
+      const CLEAN_PENALTIES = [0, -1, -2, -4, -6];
+      const numP = s.players.length;
+      const vals = SCORE_VALUES[numP] || SCORE_VALUES[2];
+
+      // Compute per-player scoring breakdown from raw state
+      function scoreBreakdown(p, idx) {
+        let animalPts = 0, bonusPts = 0;
+        const animalDetail = [];
+        for (let a = 0; a < 5; a++) {
+          for (let slot = 0; slot < (s.scoreboard[a] || []).length; slot++) {
+            const entry = s.scoreboard[a][slot];
+            if (entry && entry.player === idx) {
+              const base = vals[slot] || 0;
+              animalPts += base;
+              bonusPts  += entry.bonusTokens || 0;
+              animalDetail.push(`${ANIMALS[a]} +${base}${entry.bonusTokens ? `+${entry.bonusTokens}bonus` : ''}`);
+            }
+          }
+        }
+        const maxedNodes  = p.nodes ? p.nodes.filter((n, ni) => n && p.data[ni] >= 3).length : 0;
+        const allTested   = p.tested && p.tested.every(Boolean) ? 1 : 0;
+        const cleanPen    = CLEAN_PENALTIES[Math.min(p.cleanUses || 0, 4)];
+        const total       = animalPts + bonusPts + maxedNodes + allTested + cleanPen;
+        return { animalPts, bonusPts, maxedNodes, allTested, cleanPen, total, animalDetail };
+      }
+
+      const winnerScore  = Math.max(...scores);
+      const winnerIdx    = scores.indexOf(winnerScore);
+      const totalData    = s.players.reduce((sum, p) => sum + (p.data ? p.data.reduce((a, b) => a + b, 0) : 0), 0);
+      const roundsPlayed = Math.max(...roundsReached);
+
+      // Why did the game end?
+      const allTestedPlayer = s.players.findIndex(p => p.tested && p.tested.every(Boolean));
+      const endReason = allTestedPlayer >= 0
+        ? `${s.players[allTestedPlayer].name} tested all 5 animals`
+        : 'Testing became impossible — remaining animal paths blocked by overfit edges';
+
+      console.log('\n  ━━━ FuzzNet Results ━━━');
+      console.log(`  Winner        : ${s.players[winnerIdx]?.name} (${s.players[winnerIdx]?.color}) — ${winnerScore} pts`);
+      console.log(`  Game ended    : ${endReason}`);
+      console.log(`  Rounds played : ${roundsPlayed}`);
+      console.log(`  Animals tested: ${totalTested}/10 across both players`);
+      console.log(`  Nodes on board: ${totalNodes}/22   Data tokens: ${totalData}`);
+      console.log(`  Loop steps    : ${steps}  |  Human turns: ${humanTurns}  Bot state updates: ${botUpdates}`);
+      console.log('  Players:');
+      for (const [i, p] of s.players.entries()) {
+        const tested     = p.tested ? p.tested.filter(Boolean).length : 0;
+        const animalList = p.tested
+          ? p.tested.map((t, ai) => t ? ANIMALS[ai] : null).filter(Boolean).join(', ') || 'none'
+          : 'none';
+        const nodesPlaced = p.nodes ? p.nodes.filter(Boolean).length : 0;
+        const dataTotal   = p.data  ? p.data.reduce((a, b) => a + b, 0) : 0;
+        const isWinner    = scores[i] === winnerScore ? ' ← winner' : '';
+        const bd          = scoreBreakdown(p, i);
+        console.log(`    [${i}] ${String(p.name || `P${i}`).padEnd(8)} (${p.color ?? 'bot'}) — TOTAL: ${String(scores[i]).padStart(3)} pts${isWinner}`);
+        console.log(`         Animals   : ${bd.animalPts} pts  [${bd.animalDetail.join(', ') || 'none'}]`);
+        console.log(`         Bonus tkns: +${bd.bonusPts}  Maxed nodes: +${bd.maxedNodes}  All tested: +${bd.allTested}  Clean pen: ${bd.cleanPen}`);
+        console.log(`         Network   : ${nodesPlaced}/11 nodes  ${dataTotal} data tokens  tested ${tested}/5 [${animalList}]  Clean uses: ${p.cleanUses || 0}/4`);
+      }
+      console.log('  Scoreboard:');
+      for (let a = 0; a < 5; a++) {
+        const slots = s.scoreboard[a] || [];
+        if (slots.length === 0) {
+          console.log(`    ${ANIMALS[a].padEnd(10)} — untested`);
+        } else {
+          const slotStr = slots.map((e, slot) => {
+            const name = s.players[e.player]?.name || `P${e.player}`;
+            const pts  = vals[slot] || 0;
+            return `${slot === 0 ? '1st' : slot === 1 ? '2nd' : '3rd'}: ${name} +${pts}${e.bonusTokens ? `+${e.bonusTokens}b` : ''} (R${e.round})`;
+          }).join('  ');
+          console.log(`    ${ANIMALS[a].padEnd(10)} — ${slotStr}`);
+        }
+      }
+      if (s.log && s.log.length > 0) {
+        console.log('  Activity Log (last 5):');
+        s.log.slice(0, 5).forEach(e => console.log(`    ${e.replace(/<[^>]+>/g, '')}`));
+      }
+      console.log('  ─────────────────────────\n');
+
+      host.close();
+    });
+  });
+
   // ── Four-player game ───────────────────────────────────────────────────────
   describe('Four-player game', () => {
     /** Find an unused (empty) neural-network node for a player's design action. */

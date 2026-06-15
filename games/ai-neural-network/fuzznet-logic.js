@@ -111,7 +111,9 @@ function calculateScore(ps, scoreboard, numPlayers) {
 }
 
 // ==================== BOT AI ====================
-function delay(ms) { return new Promise(r => { const t = setTimeout(r, ms); if (t?.unref) t.unref(); }); }
+// In TEST_MODE all bot delays collapse to 10 ms so full-game tests complete in seconds.
+const _BOT_DELAY_MS = process.env.TEST_MODE ? 10 : null;
+function delay(ms) { return new Promise(r => { const t = setTimeout(r, _BOT_DELAY_MS ?? ms); if (t?.unref) t.unref(); }); }
 
 function botPickNode(ps, animalOrder) {
   // Score each empty node by how many new paths it completes for untested animals

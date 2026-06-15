@@ -23,7 +23,7 @@ const sessions = new Map();    // token -> { roomCode, playerIdx }
 const wsUvKey  = new Map();    // ws -> uvKey (hash of IP + day, captured at connection time)
 
 // ── State persistence across server restarts ──────────────────────────────────
-const DATA_DIR   = path.join(__dirname, '..', 'data');
+const DATA_DIR   = process.env.STATE_DIR || path.join(__dirname, '..', 'data');
 const STATE_FILE = path.join(DATA_DIR, 'game-state.json');
 let _saveTimer   = null;
 

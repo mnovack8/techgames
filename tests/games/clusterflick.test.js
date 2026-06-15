@@ -309,11 +309,37 @@ describe('ClusterFlick — Game Flow', () => {
 
       // 8. Game should have reached a natural game-over after 6 rounds.
       //    Fallback: host cancels — every socket should still receive game_cancelled.
+      const CF_ANIMALS = ['Frog','Fish','Rabbit','Dog','Bird','Squirrel'];
+      const CF_WIN_THRESHOLD = 8;
       if (s.gameOver) {
         assert.equal(s.gameOver, true, 'Game reached natural game-over');
-        // Final round should be ≥ 1 and ≤ CF_ROUNDS (6)
         assert.ok(s.round >= 1 && s.round <= 7,
           `Final round in valid range; got ${s.round}`);
+        assert.ok(s.winner >= 0 && s.winner < 4,
+          `Winner index in range; got ${s.winner}`);
+
+        // ── Game Results ───────────────────────────────────────────────────────
+        const winner      = s.players[s.winner];
+        const totalTokens = s.tokens ? s.tokens.filter(t => t.active).length : '?';
+        const totalSquares= s.sampleSquares ? s.sampleSquares.length : '?';
+        const avgConf     = s.players.map(p => (p.confidence.reduce((a,b)=>a+b,0)/6).toFixed(1));
+        console.log('\n  ━━━ ClusterFlick Results ━━━');
+        console.log(`  Winner         : ${winner.name} (${winner.color}) [player ${s.winner}]`);
+        console.log(`  Rounds played  : ${s.round - 1} of 6`);
+        console.log(`  Total flicks   : ${flicksTaken}  |  Active tokens on board: ${totalTokens}  Sample squares: ${totalSquares}`);
+        console.log('  Players:');
+        for (const [i, p] of s.players.entries()) {
+          const classified = p.confidence.filter(c => c >= CF_WIN_THRESHOLD).length;
+          const total      = p.confidence.reduce((a, b) => a + b, 0);
+          const isWinner   = i === s.winner ? ' ← winner' : '';
+          const confStr    = CF_ANIMALS.map((a, ai) => `${a.slice(0,3)}:${String(p.confidence[ai]).padStart(2)}`).join('  ');
+          console.log(`    [${i}] ${String(p.name).padEnd(8)} (${p.color}) — classified: ${classified}/6  total conf: ${total}  avg: ${avgConf[i]}  |  ${confStr}${isWinner}`);
+        }
+        if (s.log && s.log.length > 0) {
+          console.log('  Activity Log (last 5):');
+          s.log.slice(0, 5).forEach(e => console.log(`    ${e.replace(/<[^>]+>/g, '')}`));
+        }
+        console.log('  ─────────────────────────────\n');
       } else {
         sockets[0].send({ type: 'cancel_game' });
         const cancellations = await Promise.all(
