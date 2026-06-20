@@ -1,0 +1,276 @@
+/* Page-specific styles for Heart of a Teacher */
+
+/* ===== HERO THEME ===== */
+.article-hero { background: linear-gradient(160deg, #0d1a0d 0%, #122a12 55%, #0f1f0f 100%); }
+.article-tag-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px; }
+.tag-insights { background: #1a4a1a; }
+.tag-career   { background: #2a5a9a; }
+.article-hero-sub { color: #8ac870; }
+.article-meta-read { color: #5a8a50; }
+.article-cta { background: linear-gradient(135deg, #0d1a0d 0%, #122a12 100%); border: 2px solid #2a6a1a; }
+.article-cta p { color: #8ac870; }
+.article-cta a.secondary { color: #8ac870; border: 2px solid #2a5a1a; }
+
+/* ===== H3 OVERRIDE ===== */
+.article-body h3 {
+  font-size: 19px;
+  font-weight: 900;
+  color: #0d1a0d;
+  text-transform: none;
+  letter-spacing: 0;
+  margin: 40px 0 10px;
+}
+.article-body h3::before {
+  content: '';
+  display: block;
+  width: 24px;
+  height: 3px;
+  background: #62b517;
+  border-radius: 2px;
+  margin-bottom: 10px;
+}
+
+/* ===== LEVERAGE TABLE ===== */
+.leverage-table {
+  border: 1px solid #d4e8a8;
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 28px 0;
+  font-size: 14px;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.leverage-table.is-visible { opacity: 1; transform: none; }
+
+.lev-row-header {
+  display: grid;
+  grid-template-columns: 2fr 2fr 1fr;
+  background: #f0f5e8;
+  padding: 10px 16px;
+  font-weight: 900;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #3a6a10;
+  gap: 12px;
+}
+.lev-row-item {
+  display: grid;
+  grid-template-columns: 2fr 2fr 1fr;
+  padding: 11px 16px;
+  border-top: 1px solid #e4f0c8;
+  gap: 12px;
+  align-items: center;
+}
+.lev-row-highlight {
+  background: #f0f8e8;
+  border-top: 2px solid #62b517;
+}
+.lev-activity { font-weight: 700; color: #1a3a0a; }
+.lev-who { color: #3a5a20; }
+.lev-duration {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+  text-align: center;
+}
+.lev-low  { background: #f5e8e8; color: #7a3030; }
+.lev-mid  { background: #faeeda; color: #7a5010; }
+.lev-high { background: #e8f0d8; color: #3a6a10; }
+.lev-max  { background: #62b517; color: #fff; }
+
+/* ===== TREE CALLOUT ===== */
+.tree-callout {
+  margin: 28px 0;
+  padding: 24px;
+  background: #f5faf0;
+  border: 1px solid #c8e898;
+  border-radius: 10px;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.tree-callout.is-visible { opacity: 1; transform: none; }
+
+.tree-node {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+.tree-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+.tree-dot-green { background: #62b517; }
+.tree-dot-mid   { background: #4a8c11; }
+.tree-dot-gold  { background: #d1db24; border: 2px solid #8a9a10; }
+
+.tree-content {}
+.tree-label { font-weight: 700; font-size: 15px; color: #1a3a0a; }
+.tree-sub   { font-size: 13px; color: #5a7a40; margin-top: 2px; }
+
+.tree-branch-line {
+  width: 2px;
+  height: 20px;
+  background: #c8e898;
+  margin: 8px 0 8px 6px;
+}
+.tree-level {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 0 0 0 12px;
+}
+
+/* ===== CONTRAST PAIR ===== */
+.contrast-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 28px 0;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.contrast-pair.is-visible { opacity: 1; transform: none; }
+
+@media (max-width: 640px) { .contrast-pair { grid-template-columns: 1fr; } }
+
+.contrast-card {
+  border-radius: 8px;
+  padding: 16px 18px;
+  font-size: 14px;
+}
+.contrast-weak   { background: #fdf2f2; border: 1px solid #f0c8c8; }
+.contrast-strong { background: #f2f8ea; border: 1px solid #c8e298; }
+
+.contrast-label {
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 10px;
+}
+.contrast-label-weak   { color: #b83030; }
+.contrast-label-strong { color: #3a7a10; }
+
+.contrast-example {
+  font-style: italic;
+  color: #2a2a2a;
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+.contrast-note {
+  font-size: 12px;
+  color: #6a6a6a;
+  line-height: 1.5;
+}
+
+/* ===== TEACHING FORMS ===== */
+.teaching-forms {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+  margin: 28px 0;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.teaching-forms.is-visible { opacity: 1; transform: none; }
+
+.form-card {
+  background: #f5faf0;
+  border: 1px solid #c8e898;
+  border-radius: 10px;
+  padding: 18px 16px;
+}
+.form-icon { margin-bottom: 12px; }
+.form-title {
+  font-size: 15px;
+  font-weight: 900;
+  color: #1a3a0a;
+  margin-bottom: 6px;
+}
+.form-desc {
+  font-size: 13px;
+  color: #3a5a20;
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+.form-effort {
+  font-size: 11px;
+  font-weight: 700;
+  color: #62b517;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ===== ACTION STEPS (reuse conference-talk pattern) ===== */
+.action-steps {
+  margin: 28px 0;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.action-steps.is-visible { opacity: 1; transform: none; }
+
+.action-step {
+  display: flex;
+  gap: 18px;
+  padding: 18px 0;
+  border-bottom: 1px solid #e4f0c8;
+}
+.action-step:last-child { border-bottom: none; }
+
+.action-num {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #62b517;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.action-title {
+  font-size: 15px;
+  font-weight: 900;
+  color: #1a3a0a;
+  margin-bottom: 6px;
+}
+.action-desc {
+  font-size: 14px;
+  color: #3a5a30;
+  line-height: 1.65;
+}
+
+/* ===== CC COMPOUND (matches blog.css class) ===== */
+.cc-compound {
+  background: #f0f8e8;
+  border-left: 4px solid #62b517;
+  border-radius: 0 8px 8px 0;
+  padding: 16px 20px;
+  margin: 24px 0;
+}
+.cc-compound-label {
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #62b517;
+  margin-bottom: 8px;
+}
+.cc-compound-body {
+  font-size: 15px;
+  color: #1a3a0a;
+  line-height: 1.7;
+}
