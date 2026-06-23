@@ -70,6 +70,32 @@
 .blog-chip:hover { border-color: #62b517; color: #3a7a0a; }
 .blog-chip.active { background: #62b517; border-color: #62b517; color: #fff; }
 .blog-chip.unavailable { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
+
+/* Chip tooltips */
+.blog-chip[data-tooltip] { position: relative; }
+.blog-chip[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1a1a1a;
+  color: #f0f0f0;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.5;
+  padding: 7px 12px;
+  border-radius: 7px;
+  white-space: normal;
+  width: 220px;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  z-index: 100;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
+.blog-chip[data-tooltip]:hover::after { opacity: 1; }
 .blog-card-readtime {
   font-size: 11px;
   font-weight: 600;

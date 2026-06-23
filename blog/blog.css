@@ -266,12 +266,14 @@
   padding: 3px 8px;
   border-radius: 5px;
 }
-.blog-card-tag.tag-cyber    { background: #2a5c0a; }
-.blog-card-tag.tag-ai       { background: #4a6a20; }
-.blog-card-tag.tag-learn    { background: #6a8c30; }
-.blog-card-tag.tag-train    { background: #3a7010; }
-.blog-card-tag.tag-workshop { background: #1a6a5a; }
-.blog-card-tag.tag-career   { background: #2a4a8a; }
+.blog-card-tag.tag-cyber         { background: #2a5c0a; }
+.blog-card-tag.tag-ai            { background: #4a6a20; }
+.blog-card-tag.tag-learn         { background: #6a8c30; }
+.blog-card-tag.tag-train         { background: #3a7010; }
+.blog-card-tag.tag-workshop      { background: #1a6a5a; }
+.blog-card-tag.tag-career        { background: #2a4a8a; }
+.blog-card-tag.tag-audience      { background: #555; }
+.article-tag.tag-audience        { background: #555; }
 .blog-card-date  { font-size: 11px; font-weight: 600; color: #888; }
 .blog-card-title { font-size: 18px; font-weight: 900; color: #1a1a1a; line-height: 1.3; }
 .blog-card-excerpt { font-size: 13px; color: #555; line-height: 1.65; flex: 1; }
@@ -289,6 +291,60 @@
 .blog-card.featured .blog-card-img { width: 380px; height: auto; min-height: 240px; flex-shrink: 0; border-radius: 0; }
 .blog-card.featured .blog-card-title { font-size: 22px; }
 .blog-card.featured .blog-card-excerpt { font-size: 14px; }
+
+/* Start Here header row */
+.start-here-header {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-bottom: 4px;
+  border-bottom: 2px solid #62b517;
+}
+.start-here-header-label {
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  color: #1a6a3a;
+  white-space: nowrap;
+}
+.start-here-header-sub {
+  font-size: 12px;
+  color: #6a9a6a;
+  font-weight: 500;
+}
+
+/* Start Here cards */
+.blog-card.start-here {
+  border-color: #62b517;
+  border-width: 2px;
+  box-shadow: 0 4px 18px rgba(98,181,23,0.13);
+  position: relative;
+}
+.blog-card.start-here::before {
+  content: '★  Start Here';
+  position: absolute;
+  top: 11px;
+  right: 11px;
+  background: #1a6a3a;
+  color: #d1db24;
+  font-size: 9px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  padding: 4px 9px;
+  border-radius: 5px;
+  z-index: 2;
+}
+
+/* Rest of content separator */
+.blog-grid-separator {
+  grid-column: 1 / -1;
+  height: 0;
+  border-top: 1px solid #e8f0d8;
+  margin: 8px 0;
+}
 
 /* ===== BLOG INDEX HERO ===== */
 .hero {
