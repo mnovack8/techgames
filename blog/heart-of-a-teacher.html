@@ -37,6 +37,7 @@
   "articleSection": "Career Development"
 }
 </script>
+<link rel="stylesheet" href="/nav.css">
 <link rel="stylesheet" href="/main.css">
 <link rel="stylesheet" href="/blog/blog.css">
 <link rel="stylesheet" href="/blog/heart-of-a-teacher.css">
@@ -373,31 +374,7 @@
   els.forEach(function(el) { io.observe(el); });
 })();
 
-(function() {
-  var dropdowns = document.querySelectorAll('.nav-dropdown');
-  dropdowns.forEach(function(dd) {
-    var trigger = dd.querySelector('.nav-dropdown-trigger');
-    var menu    = dd.querySelector('.nav-dropdown-menu');
-    if (!trigger || !menu) return;
-    trigger.addEventListener('click', function(e) {
-      e.stopPropagation();
-      dropdowns.forEach(function(other) {
-        if (other !== dd) {
-          other.querySelector('.nav-dropdown-menu').classList.remove('open');
-          other.querySelector('.nav-dropdown-trigger').classList.remove('open');
-        }
-      });
-      menu.classList.toggle('open');
-      trigger.classList.toggle('open');
-    });
-  });
-  document.addEventListener('click', function() {
-    dropdowns.forEach(function(dd) {
-      dd.querySelector('.nav-dropdown-menu').classList.remove('open');
-      dd.querySelector('.nav-dropdown-trigger').classList.remove('open');
-    });
-  });
-})();
 </script>
+<script src="/nav.js"></script>
 </body>
 </html>

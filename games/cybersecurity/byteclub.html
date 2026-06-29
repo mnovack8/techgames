@@ -33,7 +33,7 @@
   } catch(e){}
 })();
 </script>
-<link rel="stylesheet" href="/games/game-nav.css">
+<link rel="stylesheet" href="/nav.css">
 <script src="/games/lobby.js"></script>
 <script src="/games/observer.js"></script>
 <script src="/games/socket.js"></script>
@@ -85,16 +85,40 @@
 </div>
 
 <!-- ===== TOP NAV ===== -->
-<nav id="top-nav">
-  <a href="/"><img src="/images/logo.png" alt="Tech CoLab" width="22" height="22" fetchpriority="high" decoding="async" style="height:22px;width:auto;"><span class="nav-brand-text"> Tech Co<span class="logo-text-accent">Lab</span></span></a>
-  <span class="nav-divider">/</span>
-  <span class="nav-current">Byte Club</span>
+<header>
+  <a class="header-logo" href="/">
+    <img src="/images/logo.png" alt="Tech CoLab logo" width="56" height="56" fetchpriority="high" decoding="async">
+    <div>
+      <span class="logo-text">Tech Co<span class="logo-text-accent">Lab</span></span>
+      <span class="logo-sub">Bridge the Gap.<br>Empower their Decisions.</span>
+    </div>
+  </a>
+  <nav>
+    <a href="/">Home</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-trigger">Games ▾</button>
+      <div class="nav-dropdown-menu">
+        <a href="/cybersecurity" class="active">Cybersecurity</a>
+        <a href="/ai?v=1">Artificial Intelligence</a>
+        <a href="/quantumcomputing">Quantum Computing</a>
+      </div>
+    </div>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-trigger">Use Cases ▾</button>
+      <div class="nav-dropdown-menu">
+        <a href="/board-culture-change">Broad Culture Change</a>
+        <a href="/focused-deep-work">Focused, Deep Work</a>
+      </div>
+    </div>
+    <a href="/blog">Blog</a>
+    <a href="/contact">Contact</a>
+    <a href="/buy-now" class="nav-cta-buy">Buy Now</a>
+  </nav>
   <div id="nav-game-btns">
-    <a class="nav-buy-btn" href="https://cybersecgames.com/products/byte-club-card-game-to-hack-or-not-to-hack" target="_blank" rel="noopener" onclick="trackClick('byteclub_nav_buy')">Buy Now</a>
     <button id="htp-btn" onclick="document.getElementById('htp-panel').classList.toggle('open')" style="display:none">How to Play</button>
     <button id="btn-cancel-game" onclick="showCancelModal()" style="display:none">✕ Cancel Game</button>
   </div>
-</nav>
+</header>
 
 <!-- SCREEN: LOBBY -->
 <!-- CREATEGAME_HTML -->
@@ -4077,5 +4101,6 @@ if (urlParams.get('tutorial') === '1' || /\/tutorial\/?$/.test(location.pathname
   }
 }
 </script>
+<script src="/nav.js"></script>
 </body>
 </html>
