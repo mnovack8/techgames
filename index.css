@@ -65,6 +65,11 @@
 }
 @media (max-width: 600px) {
   .hero-empathy { font-size: 15px; margin-top: 18px; }
+  /* Scale h1 down so the word-box (longest: "Artificial Intelligence") fits */
+  .hero h1 { font-size: 7vw; }
+}
+@media (max-width: 400px) {
+  .hero h1 { font-size: 6.5vw; }
 }
 
 /* ===== HERO BUY BUTTON + DEMO ROW ===== */
