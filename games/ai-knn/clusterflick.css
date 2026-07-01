@@ -95,8 +95,9 @@ html.tutorial-loading { background: #040a02; }
 .waiting-observer-row .obs-name { color: #0e7490; }
 .obs-host-badge { color: #c90; }
 @media (min-width: 781px) {
-  .lobby-hero { align-items: stretch; }
-  .lobby-hero-board-wrap { align-self: center; height: 253px; }
+  .lobby-hero { flex-direction: row; align-items: stretch; text-align: left; gap: 32px; }
+  .lobby-hero-text { align-items: flex-start; flex: 1; }
+  .lobby-hero-board-wrap { align-self: stretch; height: auto; }
   .lobby-hero-ctas { margin-top: auto; flex-direction: column; align-items: stretch; }
   .lobby-tutorial-cta { justify-content: center; align-self: auto; min-height: 46px; }
   .lobby-buy-btn { justify-content: center; min-height: 46px; }
