@@ -99,7 +99,8 @@ body.observer-active #game { height: calc(100vh - 68px - 36px - 4px); }
 .lobby-buy-powered { display: flex; align-items: center; gap: 5px; font-size: 10px; font-weight: 500; opacity: 0.75; letter-spacing: 0.3px; line-height: 1; border-left: 1px solid rgba(98,181,23,0.3); padding-left: 12px; }
 .lobby-buy-brand { color: #2a3a10; font-size: 11px; font-weight: 600; letter-spacing: 0.2px; }
 @media (min-width: 781px) {
-  .lobby-hero { align-items: stretch; }
+  .lobby-hero { flex-direction: row; align-items: stretch; text-align: left; gap: 32px; }
+  .lobby-hero-text { align-items: flex-start; flex: 1; }
   .lobby-hero img { height: 100%; align-self: stretch; }
   .lobby-hero-ctas { margin-top: auto; flex-direction: column; align-items: stretch; }
   .lobby-tutorial-cta { justify-content: center; align-self: auto; min-height: 46px; }
