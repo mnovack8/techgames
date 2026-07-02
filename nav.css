@@ -4,7 +4,7 @@
    Load via: <link rel="stylesheet" href="/nav.css">
    ============================================================ */
 
-nav { display: flex; align-items: center; gap: 4px; }
+nav { display: flex; align-items: center; gap: 4px; margin-left: auto; }
 nav a { font-size: 15px; font-weight: 700; color: #4a4a4a; text-decoration: none; padding: 8px 18px; border-radius: 8px; transition: background 0.15s, color 0.15s; }
 nav a:hover { background: #f4fae8; color: #4a8c11; }
 nav a.active { color: #4a8c11; background: #f4fae8; }
