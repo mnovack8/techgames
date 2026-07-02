@@ -111,13 +111,14 @@
 .systems-table td.col-interactions { color: #5a5a00; }
 .systems-table td.col-components  { color: #2a2a7a; }
 
-/* Highlight the business-ops row (people-process-tools link) */
-.systems-table tr.row-ppt td { background: #f4fae8; }
-.systems-table tr.row-ppt td.col-domain {
+/* Highlight rows that link out to the people-process-tools deep dive */
+.systems-table tr.row-ppt td, .systems-table tr.row-game td { background: #f4fae8; }
+.systems-table tr.row-ppt td.col-domain, .systems-table tr.row-game td.col-domain {
   color: #4a8c11;
   display: flex;
-  align-items: center;
-  gap: 6px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
 }
 .ppt-link-badge {
   display: inline-block;
@@ -206,6 +207,25 @@
 @media (max-width: 600px) {
   .failure-modes { grid-template-columns: 1fr; }
 }
+
+/* ===== DIAGRAM EXAMPLE ===== */
+.diagram-example {
+  margin: 24px 0;
+  padding: 20px;
+  border-radius: 12px;
+  border: 2px solid #dde8c8;
+  background: #fbfdf6;
+}
+.diagram-caption {
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #7a8c5a;
+  margin-bottom: 10px;
+  text-align: center;
+}
+.diagram-example svg { width: 100%; height: auto; display: block; }
 
 /* ===== INCENTIVE ALIGNMENT VISUAL ===== */
 .alignment-visual {

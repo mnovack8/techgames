@@ -218,52 +218,73 @@
       </div>
     </a>
 
-<a href="/blog/people-process-tools" class="blog-card start-here" data-reveal data-topic="insights org-upskilling" data-audience="technical non-technical" data-readtime="7 min read">
+<a href="/blog/agents-components-interactions" class="blog-card start-here" data-reveal data-topic="insights org-upskilling" data-audience="technical non-technical" data-readtime="9 min read">
       <div class="blog-card-img">
         <svg viewBox="0 0 400 170" xmlns="http://www.w3.org/2000/svg">
-          <rect width="400" height="170" fill="#f0f5e8"/>
-          <circle cx="80" cy="54" r="16" fill="#62b517" opacity="0.85"/>
-          <ellipse cx="80" cy="88" rx="22" ry="14" fill="#62b517" opacity="0.55"/>
-          <circle cx="118" cy="58" r="13" fill="#4a8c11" opacity="0.7"/>
-          <ellipse cx="118" cy="89" rx="18" ry="12" fill="#4a8c11" opacity="0.4"/>
-          <rect x="56" y="108" width="84" height="16" rx="5" fill="#62b517" opacity="0.18"/>
-          <text x="98" y="120" text-anchor="middle" font-family="sans-serif" font-size="9" font-weight="900" fill="#2a7a0a" letter-spacing="1">PEOPLE</text>
-          <line x1="168" y1="24" x2="168" y2="146" stroke="#dde8c8" stroke-width="1.5"/>
-          <circle cx="230" cy="72" r="28" fill="none" stroke="#b0b820" stroke-width="3" opacity="0.5"/>
-          <circle cx="230" cy="72" r="16" fill="#fafaf0" stroke="#b0b820" stroke-width="2" opacity="0.7"/>
-          <circle cx="230" cy="72" r="6"  fill="#d1db24" opacity="0.9"/>
-          <rect x="224" y="36" width="12" height="10" rx="3" fill="#d1db24" opacity="0.6"/>
-          <rect x="224" y="98" width="12" height="10" rx="3" fill="#d1db24" opacity="0.6"/>
-          <rect x="194" y="66" width="10" height="12" rx="3" fill="#d1db24" opacity="0.6"/>
-          <rect x="256" y="66" width="10" height="12" rx="3" fill="#d1db24" opacity="0.6"/>
-          <rect x="202" y="43" width="10" height="10" rx="3" fill="#d1db24" opacity="0.5" transform="rotate(45,207,48)"/>
-          <rect x="248" y="43" width="10" height="10" rx="3" fill="#d1db24" opacity="0.5" transform="rotate(45,253,48)"/>
-          <rect x="202" y="91" width="10" height="10" rx="3" fill="#d1db24" opacity="0.5" transform="rotate(45,207,96)"/>
-          <rect x="248" y="91" width="10" height="10" rx="3" fill="#d1db24" opacity="0.5" transform="rotate(45,253,96)"/>
-          <rect x="194" y="108" width="72" height="16" rx="5" fill="#d1db24" opacity="0.2"/>
-          <text x="230" y="120" text-anchor="middle" font-family="sans-serif" font-size="9" font-weight="900" fill="#7a7a00" letter-spacing="1">PROCESS</text>
-          <line x1="294" y1="24" x2="294" y2="146" stroke="#dde8c8" stroke-width="1.5"/>
-          <rect x="310" y="36" width="42" height="58" rx="5" fill="#fff" stroke="#8080c0" stroke-width="2" opacity="0.8"/>
-          <rect x="316" y="44" width="30" height="5" rx="2" fill="#8080c0" opacity="0.4"/>
-          <rect x="316" y="54" width="22" height="4" rx="2" fill="#8080c0" opacity="0.25"/>
-          <rect x="316" y="63" width="26" height="4" rx="2" fill="#8080c0" opacity="0.25"/>
-          <rect x="318" y="100" width="26" height="26" rx="5" fill="#5a5aaa" opacity="0.75"/>
-          <circle cx="326" cy="108" r="2.5" fill="#fff" opacity="0.9"/>
-          <circle cx="334" cy="108" r="2.5" fill="#fff" opacity="0.9"/>
-          <circle cx="330" cy="116" r="2.5" fill="#fff" opacity="0.9"/>
-          <circle cx="326" cy="124" r="2.5" fill="#fff" opacity="0.9"/>
-          <circle cx="334" cy="124" r="2.5" fill="#fff" opacity="0.9"/>
-          <rect x="304" y="133" width="58" height="16" rx="5" fill="#5a5aaa" opacity="0.15"/>
-          <text x="333" y="145" text-anchor="middle" font-family="sans-serif" font-size="9" font-weight="900" fill="#3a3a8c" letter-spacing="1">TOOLS</text>
+          <rect width="400" height="170" fill="#071a0e"/>
+          <!-- Subtle grid -->
+          <line x1="0" y1="42" x2="190" y2="42" stroke="#0d2814" stroke-width="0.5"/>
+          <line x1="0" y1="84" x2="190" y2="84" stroke="#0d2814" stroke-width="0.5"/>
+          <line x1="0" y1="126" x2="190" y2="126" stroke="#0d2814" stroke-width="0.5"/>
+          <!-- Triangle connecting lines (behind nodes) -->
+          <line x1="95" y1="57" x2="52" y2="100" stroke="#1e4828" stroke-width="2" stroke-dasharray="5,3"/>
+          <line x1="95" y1="57" x2="138" y2="100" stroke="#1e4828" stroke-width="2" stroke-dasharray="5,3"/>
+          <line x1="68" y1="120" x2="122" y2="120" stroke="#1e4828" stroke-width="2" stroke-dasharray="5,3"/>
+          <!-- Arrow heads -->
+          <polygon points="50,98 56,106 44,106" fill="#1e4828" opacity="0.8"/>
+          <polygon points="140,98 136,106 148,106" fill="#1e4828" opacity="0.8"/>
+          <!-- Agents node (top, green) -->
+          <circle cx="95" cy="40" r="24" fill="#0a2810" stroke="#62b517" stroke-width="2.5"/>
+          <text x="95" y="37" text-anchor="middle" font-family="sans-serif" font-size="8" font-weight="900" fill="#62b517" letter-spacing="0.5">AGENTS</text>
+          <text x="95" y="48" text-anchor="middle" font-family="sans-serif" font-size="6.5" fill="#4a8c11">intent · decisions</text>
+          <!-- Interactions node (bottom-left, yellow) -->
+          <circle cx="48" cy="118" r="24" fill="#181806" stroke="#aaaa20" stroke-width="2.5"/>
+          <text x="48" y="115" text-anchor="middle" font-family="sans-serif" font-size="8" font-weight="900" fill="#c8c820" letter-spacing="0.3">INTER-</text>
+          <text x="48" y="126" text-anchor="middle" font-family="sans-serif" font-size="8" font-weight="900" fill="#c8c820" letter-spacing="0.3">ACTIONS</text>
+          <!-- Components node (bottom-right, blue) -->
+          <circle cx="142" cy="118" r="24" fill="#08081e" stroke="#5a5ab0" stroke-width="2.5"/>
+          <text x="142" y="115" text-anchor="middle" font-family="sans-serif" font-size="8" font-weight="900" fill="#8888d8" letter-spacing="0.3">COMPON-</text>
+          <text x="142" y="126" text-anchor="middle" font-family="sans-serif" font-size="8" font-weight="900" fill="#8888d8" letter-spacing="0.3">ENTS</text>
+          <!-- Vertical divider -->
+          <line x1="193" y1="8" x2="193" y2="132" stroke="#1a4a20" stroke-width="1" opacity="0.6"/>
+          <!-- Right panel header -->
+          <text x="298" y="20" text-anchor="middle" font-family="sans-serif" font-size="8" font-weight="900" fill="#3a8a40" letter-spacing="2">FOUND IN EVERY</text>
+          <!-- Domain tags: 2-column grid -->
+          <!-- Row 1 -->
+          <rect x="200" y="26" width="82" height="17" rx="4" fill="#0a2810" stroke="#62b517" stroke-width="1"/>
+          <text x="241" y="38" text-anchor="middle" font-family="sans-serif" font-size="7.5" font-weight="900" fill="#62b517">BUSINESS</text>
+          <rect x="290" y="26" width="96" height="17" rx="4" fill="#181806" stroke="#aaaa20" stroke-width="1"/>
+          <text x="338" y="38" text-anchor="middle" font-family="sans-serif" font-size="7.5" font-weight="900" fill="#c8c820">ECONOMICS</text>
+          <!-- Row 2 -->
+          <rect x="200" y="49" width="82" height="17" rx="4" fill="#08081e" stroke="#5a5ab0" stroke-width="1"/>
+          <text x="241" y="61" text-anchor="middle" font-family="sans-serif" font-size="7.5" font-weight="900" fill="#8888d8">WEB / TECH</text>
+          <rect x="290" y="49" width="96" height="17" rx="4" fill="#0a180a" stroke="#4a9a4a" stroke-width="1"/>
+          <text x="338" y="61" text-anchor="middle" font-family="sans-serif" font-size="7.5" font-weight="900" fill="#6ab870">ECOLOGY</text>
+          <!-- Row 3 -->
+          <rect x="200" y="72" width="82" height="17" rx="4" fill="#1a0a06" stroke="#c07820" stroke-width="1"/>
+          <text x="241" y="84" text-anchor="middle" font-family="sans-serif" font-size="7.5" font-weight="900" fill="#d4a030">SALES</text>
+          <rect x="290" y="72" width="96" height="17" rx="4" fill="#0a1818" stroke="#2a8a8a" stroke-width="1"/>
+          <text x="338" y="84" text-anchor="middle" font-family="sans-serif" font-size="7.5" font-weight="900" fill="#3aaaa0">HEALTHCARE</text>
+          <!-- Row 4 -->
+          <rect x="200" y="95" width="82" height="17" rx="4" fill="#100a1a" stroke="#7a5aaa" stroke-width="1"/>
+          <text x="241" y="107" text-anchor="middle" font-family="sans-serif" font-size="7.5" font-weight="900" fill="#aa80d0">EDUCATION</text>
+          <rect x="290" y="95" width="96" height="17" rx="4" fill="#0a1010" stroke="#2a6060" stroke-width="1"/>
+          <text x="338" y="107" text-anchor="middle" font-family="sans-serif" font-size="7.5" font-weight="900" fill="#4a9898">GOVERNMENT</text>
+          <!-- Row 5 (centered) -->
+          <rect x="245" y="118" width="90" height="17" rx="4" fill="#1a1208" stroke="#c8a830" stroke-width="1"/>
+          <text x="290" y="130" text-anchor="middle" font-family="sans-serif" font-size="7.5" font-weight="900" fill="#d4b840">ART &amp; CULTURE</text>
+          <!-- Bottom bar -->
+          <rect x="0" y="144" width="400" height="26" fill="rgba(0,0,0,0.7)"/>
+          <text x="200" y="161" text-anchor="middle" font-family="sans-serif" font-size="9" font-weight="900" fill="#62b517" letter-spacing="1">EVERY SYSTEM HAS THE SAME SHAPE</text>
         </svg>
       </div>
       <div class="blog-card-body">
         <div class="blog-card-meta">
           <span class="blog-card-tag tag-insights">Insights</span>
-          <span class="blog-card-tag tag-org-upskilling">Org Upskilling</span>
+          <span class="blog-card-tag tag-org">Org Upskilling</span>
         </div>
-        <div class="blog-card-title">People, Process, and Tools: What Board Games Teach Us About Running a Business</div>
-        <div class="blog-card-excerpt">A deck of cards on an empty table is just furniture. But put people around it with shared rules and it becomes something worth showing up for. The same hierarchy governs every organization that has ever succeeded or failed.</div>
+        <div class="blog-card-title">Every System Has the Same Shape: Agents, Components, and Interactions</div>
+        <div class="blog-card-excerpt">Whether you're looking at a business, an ecosystem, or an economy, the underlying structure is the same. Agents carry intent. Components hold resources. Interactions carry incentives. Align the incentives and the system is stable. Misalign them and it degrades, no matter how well-designed the rest is.</div>
         <div class="blog-card-read">Read more →</div>
       </div>
     </a>
@@ -1167,74 +1188,53 @@
       </div>
     </a>
 
-<!-- Post: Agents, Components, and Interactions -->
-    <a href="/blog/agents-components-interactions" class="blog-card" data-reveal data-delay="2" data-topic="insights org-upskilling" data-audience="technical non-technical" data-readtime="9 min read">
+<!-- Post: People, Process, and Tools -->
+    <a href="/blog/people-process-tools" class="blog-card" data-reveal data-delay="2" data-topic="insights org-upskilling" data-audience="technical non-technical" data-readtime="7 min read">
       <div class="blog-card-img">
         <svg viewBox="0 0 400 170" xmlns="http://www.w3.org/2000/svg">
-          <rect width="400" height="170" fill="#071a0e"/>
-          <!-- Subtle grid -->
-          <line x1="0" y1="42" x2="190" y2="42" stroke="#0d2814" stroke-width="0.5"/>
-          <line x1="0" y1="84" x2="190" y2="84" stroke="#0d2814" stroke-width="0.5"/>
-          <line x1="0" y1="126" x2="190" y2="126" stroke="#0d2814" stroke-width="0.5"/>
-          <!-- Triangle connecting lines (behind nodes) -->
-          <line x1="95" y1="57" x2="52" y2="100" stroke="#1e4828" stroke-width="2" stroke-dasharray="5,3"/>
-          <line x1="95" y1="57" x2="138" y2="100" stroke="#1e4828" stroke-width="2" stroke-dasharray="5,3"/>
-          <line x1="68" y1="120" x2="122" y2="120" stroke="#1e4828" stroke-width="2" stroke-dasharray="5,3"/>
-          <!-- Arrow heads -->
-          <polygon points="50,98 56,106 44,106" fill="#1e4828" opacity="0.8"/>
-          <polygon points="140,98 136,106 148,106" fill="#1e4828" opacity="0.8"/>
-          <!-- Agents node (top, green) -->
-          <circle cx="95" cy="40" r="24" fill="#0a2810" stroke="#62b517" stroke-width="2.5"/>
-          <text x="95" y="37" text-anchor="middle" font-family="sans-serif" font-size="8" font-weight="900" fill="#62b517" letter-spacing="0.5">AGENTS</text>
-          <text x="95" y="48" text-anchor="middle" font-family="sans-serif" font-size="6.5" fill="#4a8c11">intent · decisions</text>
-          <!-- Interactions node (bottom-left, yellow) -->
-          <circle cx="48" cy="118" r="24" fill="#181806" stroke="#aaaa20" stroke-width="2.5"/>
-          <text x="48" y="115" text-anchor="middle" font-family="sans-serif" font-size="8" font-weight="900" fill="#c8c820" letter-spacing="0.3">INTER-</text>
-          <text x="48" y="126" text-anchor="middle" font-family="sans-serif" font-size="8" font-weight="900" fill="#c8c820" letter-spacing="0.3">ACTIONS</text>
-          <!-- Components node (bottom-right, blue) -->
-          <circle cx="142" cy="118" r="24" fill="#08081e" stroke="#5a5ab0" stroke-width="2.5"/>
-          <text x="142" y="115" text-anchor="middle" font-family="sans-serif" font-size="8" font-weight="900" fill="#8888d8" letter-spacing="0.3">COMPON-</text>
-          <text x="142" y="126" text-anchor="middle" font-family="sans-serif" font-size="8" font-weight="900" fill="#8888d8" letter-spacing="0.3">ENTS</text>
-          <!-- Vertical divider -->
-          <line x1="193" y1="8" x2="193" y2="132" stroke="#1a4a20" stroke-width="1" opacity="0.6"/>
-          <!-- Right panel header -->
-          <text x="298" y="20" text-anchor="middle" font-family="sans-serif" font-size="8" font-weight="900" fill="#3a8a40" letter-spacing="2">FOUND IN EVERY</text>
-          <!-- Domain tags: 2-column grid -->
-          <!-- Row 1 -->
-          <rect x="200" y="26" width="82" height="17" rx="4" fill="#0a2810" stroke="#62b517" stroke-width="1"/>
-          <text x="241" y="38" text-anchor="middle" font-family="sans-serif" font-size="7.5" font-weight="900" fill="#62b517">BUSINESS</text>
-          <rect x="290" y="26" width="96" height="17" rx="4" fill="#181806" stroke="#aaaa20" stroke-width="1"/>
-          <text x="338" y="38" text-anchor="middle" font-family="sans-serif" font-size="7.5" font-weight="900" fill="#c8c820">ECONOMICS</text>
-          <!-- Row 2 -->
-          <rect x="200" y="49" width="82" height="17" rx="4" fill="#08081e" stroke="#5a5ab0" stroke-width="1"/>
-          <text x="241" y="61" text-anchor="middle" font-family="sans-serif" font-size="7.5" font-weight="900" fill="#8888d8">WEB / TECH</text>
-          <rect x="290" y="49" width="96" height="17" rx="4" fill="#0a180a" stroke="#4a9a4a" stroke-width="1"/>
-          <text x="338" y="61" text-anchor="middle" font-family="sans-serif" font-size="7.5" font-weight="900" fill="#6ab870">ECOLOGY</text>
-          <!-- Row 3 -->
-          <rect x="200" y="72" width="82" height="17" rx="4" fill="#1a0a06" stroke="#c07820" stroke-width="1"/>
-          <text x="241" y="84" text-anchor="middle" font-family="sans-serif" font-size="7.5" font-weight="900" fill="#d4a030">SALES</text>
-          <rect x="290" y="72" width="96" height="17" rx="4" fill="#0a1818" stroke="#2a8a8a" stroke-width="1"/>
-          <text x="338" y="84" text-anchor="middle" font-family="sans-serif" font-size="7.5" font-weight="900" fill="#3aaaa0">HEALTHCARE</text>
-          <!-- Row 4 -->
-          <rect x="200" y="95" width="82" height="17" rx="4" fill="#100a1a" stroke="#7a5aaa" stroke-width="1"/>
-          <text x="241" y="107" text-anchor="middle" font-family="sans-serif" font-size="7.5" font-weight="900" fill="#aa80d0">EDUCATION</text>
-          <rect x="290" y="95" width="96" height="17" rx="4" fill="#0a1010" stroke="#2a6060" stroke-width="1"/>
-          <text x="338" y="107" text-anchor="middle" font-family="sans-serif" font-size="7.5" font-weight="900" fill="#4a9898">GOVERNMENT</text>
-          <!-- Row 5 (centered) -->
-          <rect x="245" y="118" width="90" height="17" rx="4" fill="#1a1208" stroke="#c8a830" stroke-width="1"/>
-          <text x="290" y="130" text-anchor="middle" font-family="sans-serif" font-size="7.5" font-weight="900" fill="#d4b840">ART &amp; CULTURE</text>
-          <!-- Bottom bar -->
-          <rect x="0" y="144" width="400" height="26" fill="rgba(0,0,0,0.7)"/>
-          <text x="200" y="161" text-anchor="middle" font-family="sans-serif" font-size="9" font-weight="900" fill="#62b517" letter-spacing="1">EVERY SYSTEM HAS THE SAME SHAPE</text>
+          <rect width="400" height="170" fill="#f0f5e8"/>
+          <circle cx="80" cy="54" r="16" fill="#62b517" opacity="0.85"/>
+          <ellipse cx="80" cy="88" rx="22" ry="14" fill="#62b517" opacity="0.55"/>
+          <circle cx="118" cy="58" r="13" fill="#4a8c11" opacity="0.7"/>
+          <ellipse cx="118" cy="89" rx="18" ry="12" fill="#4a8c11" opacity="0.4"/>
+          <rect x="56" y="108" width="84" height="16" rx="5" fill="#62b517" opacity="0.18"/>
+          <text x="98" y="120" text-anchor="middle" font-family="sans-serif" font-size="9" font-weight="900" fill="#2a7a0a" letter-spacing="1">PEOPLE</text>
+          <line x1="168" y1="24" x2="168" y2="146" stroke="#dde8c8" stroke-width="1.5"/>
+          <circle cx="230" cy="72" r="28" fill="none" stroke="#b0b820" stroke-width="3" opacity="0.5"/>
+          <circle cx="230" cy="72" r="16" fill="#fafaf0" stroke="#b0b820" stroke-width="2" opacity="0.7"/>
+          <circle cx="230" cy="72" r="6"  fill="#d1db24" opacity="0.9"/>
+          <rect x="224" y="36" width="12" height="10" rx="3" fill="#d1db24" opacity="0.6"/>
+          <rect x="224" y="98" width="12" height="10" rx="3" fill="#d1db24" opacity="0.6"/>
+          <rect x="194" y="66" width="10" height="12" rx="3" fill="#d1db24" opacity="0.6"/>
+          <rect x="256" y="66" width="10" height="12" rx="3" fill="#d1db24" opacity="0.6"/>
+          <rect x="202" y="43" width="10" height="10" rx="3" fill="#d1db24" opacity="0.5" transform="rotate(45,207,48)"/>
+          <rect x="248" y="43" width="10" height="10" rx="3" fill="#d1db24" opacity="0.5" transform="rotate(45,253,48)"/>
+          <rect x="202" y="91" width="10" height="10" rx="3" fill="#d1db24" opacity="0.5" transform="rotate(45,207,96)"/>
+          <rect x="248" y="91" width="10" height="10" rx="3" fill="#d1db24" opacity="0.5" transform="rotate(45,253,96)"/>
+          <rect x="194" y="108" width="72" height="16" rx="5" fill="#d1db24" opacity="0.2"/>
+          <text x="230" y="120" text-anchor="middle" font-family="sans-serif" font-size="9" font-weight="900" fill="#7a7a00" letter-spacing="1">PROCESS</text>
+          <line x1="294" y1="24" x2="294" y2="146" stroke="#dde8c8" stroke-width="1.5"/>
+          <rect x="310" y="36" width="42" height="58" rx="5" fill="#fff" stroke="#8080c0" stroke-width="2" opacity="0.8"/>
+          <rect x="316" y="44" width="30" height="5" rx="2" fill="#8080c0" opacity="0.4"/>
+          <rect x="316" y="54" width="22" height="4" rx="2" fill="#8080c0" opacity="0.25"/>
+          <rect x="316" y="63" width="26" height="4" rx="2" fill="#8080c0" opacity="0.25"/>
+          <rect x="318" y="100" width="26" height="26" rx="5" fill="#5a5aaa" opacity="0.75"/>
+          <circle cx="326" cy="108" r="2.5" fill="#fff" opacity="0.9"/>
+          <circle cx="334" cy="108" r="2.5" fill="#fff" opacity="0.9"/>
+          <circle cx="330" cy="116" r="2.5" fill="#fff" opacity="0.9"/>
+          <circle cx="326" cy="124" r="2.5" fill="#fff" opacity="0.9"/>
+          <circle cx="334" cy="124" r="2.5" fill="#fff" opacity="0.9"/>
+          <rect x="304" y="133" width="58" height="16" rx="5" fill="#5a5aaa" opacity="0.15"/>
+          <text x="333" y="145" text-anchor="middle" font-family="sans-serif" font-size="9" font-weight="900" fill="#3a3a8c" letter-spacing="1">TOOLS</text>
         </svg>
       </div>
       <div class="blog-card-body">
         <div class="blog-card-meta">
           <span class="blog-card-tag tag-insights">Insights</span>
-          <span class="blog-card-tag tag-org">Org Upskilling</span>
+          <span class="blog-card-tag tag-org-upskilling">Org Upskilling</span>
         </div>
-        <div class="blog-card-title">Every System Has the Same Shape: Agents, Components, and Interactions</div>
-        <div class="blog-card-excerpt">Whether you're looking at a business, an ecosystem, or an economy — the underlying structure is the same. Agents carry intent. Components hold resources. Interactions carry incentives. Align the incentives and the system is stable. Misalign them and it degrades, no matter how well-designed the rest is.</div>
+        <div class="blog-card-title">People, Process, and Tools: What Board Games Teach Us About Running a Business</div>
+        <div class="blog-card-excerpt">A deck of cards on an empty table is just furniture. But put people around it with shared rules and it becomes something worth showing up for. The same hierarchy governs every organization that has ever succeeded or failed.</div>
         <div class="blog-card-read">Read more →</div>
       </div>
     </a>
