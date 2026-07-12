@@ -1,0 +1,184 @@
+/* Page-specific styles */
+
+/* ===== HERO ===== */
+.hero {
+  background: linear-gradient(160deg, #f8faf2 0%, #edf2e0 100%);
+  border-bottom: 1px solid #dde8c8;
+  padding: 56px 24px 48px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; inset: -56px;
+  background-image: radial-gradient(circle, rgba(98,181,23,0.13) 1.5px, transparent 1.5px);
+  background-size: 30px 30px;
+  animation: hero-drift 22s linear infinite;
+  pointer-events: none; z-index: 0;
+}
+.hero h1 {
+  font-size: clamp(28px, 5vw, 42px); font-weight: 900;
+  color: #1a1a1a; line-height: 1.1; margin-bottom: 12px;
+  position: relative; z-index: 1;
+  animation: fade-up 0.45s ease both;
+}
+.hero h1 em { font-style: normal; color: #62b517; position: relative; }
+.hero h1 em::after {
+  content: ''; position: absolute;
+  left: 0; right: 0; bottom: -2px; height: 4px;
+  background: #d1db24; border-radius: 3px;
+  transform: scaleX(0); transform-origin: left center;
+  animation: underline-grow 0.4s 0.5s ease forwards;
+}
+.hero p {
+  font-size: 16px; color: #666; line-height: 1.65;
+  max-width: 640px; margin: 0 auto;
+  position: relative; z-index: 1;
+  animation: fade-up 0.45s 0.15s ease both;
+}
+
+/* ===== STORY / CONTENT SECTIONS ===== */
+.about-section { padding: 72px 24px; }
+.about-container { max-width: 760px; margin: 0 auto; }
+.section-label {
+  font-size: 10px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 2.5px;
+  color: #62b517;
+  border-left: 4px solid #d1db24; padding-left: 10px;
+  margin-bottom: 18px;
+}
+.about-headline {
+  font-size: clamp(24px, 3.5vw, 32px);
+  font-weight: 900; color: #1a1a1a;
+  line-height: 1.2; margin-bottom: 28px;
+}
+.about-headline em { font-style: normal; color: #62b517; }
+.about-body p {
+  font-size: 16px; color: #444;
+  line-height: 1.8; margin-bottom: 18px;
+}
+.about-body p strong { color: #1a3a00; font-weight: 800; }
+.about-body p:last-child { margin-bottom: 0; }
+
+.about-section.bg-white { background: #fff; }
+.about-section.bg-cool { background: #f0f4f8; }
+
+/* ===== WORKSHOP GUIDE CARDS ===== */
+.workshop-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  margin-top: 32px;
+}
+.blog-card {
+  background: #fff;
+  border: 2px solid #a8c96a;
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+.blog-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 32px rgba(98,181,23,0.18);
+  border-color: #62b517;
+}
+.blog-card-img {
+  width: 100%;
+  height: 170px;
+  background: #f0f5e8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.blog-card-img svg { width: 100%; height: 100%; display: block; }
+.blog-card-body {
+  padding: 22px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 10px;
+}
+.blog-card-meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.blog-card-tag {
+  font-size: 9px; font-weight: 900; text-transform: uppercase;
+  letter-spacing: 1.8px; color: #fff;
+  padding: 3px 8px; border-radius: 5px;
+}
+/* Tag palette — matches /blog/blog.css so cards look identical to the blog index */
+.tag-type-workshop-guide { background: #1a6a5a; }
+.tag-ai                  { background: #4a6a20; }
+.tag-cybersecurity       { background: #2a5c0a; }
+.tag-philosophy          { background: #2a4a8a; }
+.tag-rhetoric            { background: #6a2a6a; }
+.blog-card-title { font-size: 18px; font-weight: 900; color: #1a1a1a; line-height: 1.3; }
+.blog-card-excerpt { font-size: 13px; color: #555; line-height: 1.65; flex: 1; }
+.blog-card-read {
+  font-size: 12px; font-weight: 800; color: #62b517;
+  letter-spacing: 0.04em; text-transform: uppercase;
+  padding-top: 10px; border-top: 1px solid #e8f0d8;
+}
+@media (max-width: 960px) {
+  .workshop-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 600px) {
+  .workshop-grid { grid-template-columns: 1fr; }
+}
+
+/* ===== CUSTOM CURRICULUM CALLOUT ===== */
+.custom-callout {
+  margin-top: 32px;
+  background: #fff;
+  border: 2px dashed #a8c96a;
+  border-radius: 16px;
+  padding: 28px 30px;
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  gap: 22px;
+  align-items: start;
+}
+.custom-callout-icon {
+  width: 56px; height: 56px;
+  display: flex; align-items: center; justify-content: center;
+  background: #f4fae8;
+  border-radius: 12px;
+}
+.custom-callout-icon svg { width: 32px; height: 32px; }
+.custom-callout h3 { font-size: 18px; font-weight: 900; color: #1a3a00; margin-bottom: 8px; }
+.custom-callout p { font-size: 15px; color: #444; line-height: 1.7; margin: 0; }
+@media (max-width: 600px) {
+  .custom-callout { grid-template-columns: 1fr; gap: 14px; padding: 22px; }
+}
+
+/* ===== CTA ===== */
+.about-cta { background: #1a3a00; padding: 56px 24px; text-align: center; }
+.about-cta h2 { font-size: 26px; font-weight: 900; color: #fff; margin-bottom: 12px; line-height: 1.2; }
+.about-cta p { font-size: 15px; color: rgba(255,255,255,0.7); max-width: 540px; margin: 0 auto 28px; line-height: 1.6; }
+.cta-btn-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.btn-about {
+  display: inline-flex; align-items: center;
+  background: #d1db24; color: #1a3a00;
+  font-size: 16px; font-weight: 800;
+  padding: 13px 32px; border-radius: 10px;
+  text-decoration: none; letter-spacing: 0.5px;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+.btn-about:hover { background: #c4cc1e; transform: scale(1.02); }
+.btn-about--secondary {
+  background: transparent; color: #d1db24;
+  border: 2px solid #d1db24;
+}
+.btn-about--secondary:hover { background: rgba(209,219,36,0.12); transform: scale(1.02); }
+
+/* ===== REVEAL ===== */
+[data-reveal] { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+[data-reveal].is-visible { opacity: 1; transform: translateY(0); }
+
+@media (max-width: 600px) {
+  .about-section { padding: 56px 20px; }
+}
