@@ -34,11 +34,22 @@
   color: #888;
   white-space: nowrap;
 }
+.blog-filter-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
 .blog-filter-row {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 8px;
+}
+@media (min-width: 901px) {
+  .blog-filter-top { justify-content: space-between; }
+  .blog-search { max-width: 480px; }
+  .blog-filter-rows { flex-direction: row; align-items: flex-start; gap: 40px; }
+  .blog-filter-row { flex: 1 1 0; min-width: 0; }
 }
 .blog-filter-label {
   font-size: 11px;
