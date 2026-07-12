@@ -1327,6 +1327,7 @@ a.who-item:hover { border-color: #62b517; background: #f0fae0; transform: transl
 .blog-card-meta {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 10px;
 }
 .blog-card-tag {
@@ -1339,13 +1340,18 @@ a.who-item:hover { border-color: #62b517; background: #f0fae0; transform: transl
   padding: 3px 8px;
   border-radius: 5px;
 }
-.blog-card-tag.tag-cyber    { background: #2a5c0a; }
-.blog-card-tag.tag-ai       { background: #4a6a20; }
-.blog-card-tag.tag-learn    { background: #6a8c30; }
-.blog-card-tag.tag-workshop { background: #1a6a5a; }
-.blog-card-tag.tag-quantum  { background: #5a20a0; }
-.blog-card-tag.tag-career        { background: #2a4a8a; }
-.blog-card-tag.tag-org-upskilling{ background: #7a4a10; }
+/* Tag palette — kept in sync with blog.css. Every blog carries exactly
+   one Type tag plus zero or more Skill tags from these two categories. */
+.blog-card-tag.tag-type-workshop-guide { background: #1a6a5a; }
+.blog-card-tag.tag-type-insight        { background: #5a3a10; }
+.blog-card-tag.tag-ai                  { background: #4a6a20; }
+.blog-card-tag.tag-cybersecurity       { background: #2a5c0a; }
+.blog-card-tag.tag-quantum-computing   { background: #5a20a0; }
+.blog-card-tag.tag-literature          { background: #7a2a4a; }
+.blog-card-tag.tag-philosophy          { background: #2a4a8a; }
+.blog-card-tag.tag-history             { background: #4a5a2a; }
+.blog-card-tag.tag-rhetoric            { background: #6a2a6a; }
+.blog-card-tag.tag-learn               { background: #6a8c30; }
 .blog-card-img-auto {
   display: flex;
   align-items: center;

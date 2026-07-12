@@ -63,10 +63,23 @@ const server = http.createServer((req, res) => {
           const data = JSON.parse(match[1]);
           if (data['@type'] !== 'Article') continue;
           const urlPath = (data.url || '').replace(/^https?:\/\/[^/]+/, '') || '/blog/' + file.replace('.html', '');
+          // Read the real, currently-displayed tags straight from the article's own
+          // tag row, so the homepage carousel can never drift from what the blog
+          // post itself shows (unlike the old, hand-maintained articleSection field).
+          const tags = [];
+          const tagRowMatch = content.match(/<div class="article-tag-row">([\s\S]*?)<\/div>/);
+          if (tagRowMatch) {
+            const tagRe = /<span class="article-tag ([a-z0-9-]+)">([^<]*)<\/span>/g;
+            let tm;
+            while ((tm = tagRe.exec(tagRowMatch[1]))) {
+              tags.push({ cls: tm[1], label: tm[2] });
+            }
+          }
           posts.push({
             headline:    data.headline    || '',
             description: data.description || '',
             section:     data.articleSection || '',
+            tags:        tags,
             url:         urlPath,
             date:        data.datePublished || '1970-01-01'
           });
