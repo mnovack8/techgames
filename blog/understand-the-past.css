@@ -3,8 +3,6 @@
 /* ===== HERO THEME ===== */
 .article-hero { background: linear-gradient(160deg, #0d1220 0%, #121a35 55%, #0f1428 100%); }
 .article-tag-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px; }
-.tag-insights { background: #1a2a5a; }
-.tag-career   { background: #2a5a9a; }
 .article-hero-sub { color: #8a9acc; }
 .article-meta-read { color: #5a6a9a; }
 .article-cta { background: linear-gradient(135deg, #0d1220 0%, #121a35 100%); border: 2px solid #2a3a7a; }

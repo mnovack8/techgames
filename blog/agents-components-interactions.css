@@ -4,7 +4,6 @@
 .article-hero { background: linear-gradient(160deg, #071a0e 0%, #0d2015 55%, #122818 100%); }
 .article-tag-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px; }
 .tag-systems    { background: #1a4a20; }
-.tag-insights   { background: #2a5a10; }
 .article-hero-sub { color: #7ec89a; }
 .article-meta-date, .article-meta-read { color: #4a8a5a; }
 .article-meta-sep { color: #2a4a2a; }

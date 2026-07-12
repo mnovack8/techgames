@@ -266,14 +266,20 @@
   padding: 3px 8px;
   border-radius: 5px;
 }
-.blog-card-tag.tag-cyber         { background: #2a5c0a; }
-.blog-card-tag.tag-ai            { background: #4a6a20; }
-.blog-card-tag.tag-learn         { background: #6a8c30; }
-.blog-card-tag.tag-train         { background: #3a7010; }
-.blog-card-tag.tag-workshop      { background: #1a6a5a; }
-.blog-card-tag.tag-career        { background: #2a4a8a; }
-.blog-card-tag.tag-audience      { background: #555; }
-.article-tag.tag-audience        { background: #555; }
+/* Tag palette — shared by article hero tags (.article-tag) and index
+   cards (.blog-card-tag). Every blog carries exactly one Type tag plus
+   zero or more Skill tags from these two categories, nothing else. */
+.tag-type-workshop-guide { background: #1a6a5a; }
+.tag-type-insight        { background: #5a3a10; }
+/* STEM skills (for Humanities Thinkers) */
+.tag-ai                  { background: #4a6a20; }
+.tag-cybersecurity       { background: #2a5c0a; }
+.tag-quantum-computing   { background: #5a20a0; }
+/* Humanities skills (for STEM Thinkers) */
+.tag-literature          { background: #7a2a4a; }
+.tag-philosophy          { background: #2a4a8a; }
+.tag-history             { background: #4a5a2a; }
+.tag-rhetoric            { background: #6a2a6a; }
 .blog-card-date  { font-size: 11px; font-weight: 600; color: #888; }
 .blog-card-title { font-size: 18px; font-weight: 900; color: #1a1a1a; line-height: 1.3; }
 .blog-card-excerpt { font-size: 13px; color: #555; line-height: 1.65; flex: 1; }
@@ -346,6 +352,45 @@
   margin: 8px 0;
 }
 
+/* Thinkers row: The STEM Thinker + The Humanities Thinker as two wide columns */
+.thinkers-row {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+}
+
+/* Explore header row, above the randomized rest-of-posts grid */
+.explore-header {
+  grid-column: 1 / -1;
+  padding: 10px 0 2px;
+  margin-top: 4px;
+}
+.explore-header-label {
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #8a9a6a;
+  border-bottom: 1px solid #e8f0d8;
+  padding-bottom: 6px;
+  display: block;
+}
+
+/* Filtered view: flat, uniform 3-column grid — no featured card, no
+   Start Here ribbon, no sectioning. Toggled on #blog-main-grid via JS
+   whenever any filter/search is active. */
+#blog-main-grid.is-filtered .blog-card.featured { grid-column: auto; flex-direction: column; }
+#blog-main-grid.is-filtered .blog-card.featured .blog-card-img { width: 100%; height: 170px; min-height: 0; }
+#blog-main-grid.is-filtered .blog-card.featured .blog-card-title { font-size: 18px; }
+#blog-main-grid.is-filtered .blog-card.featured .blog-card-excerpt { font-size: 13px; }
+#blog-main-grid.is-filtered .blog-card.start-here {
+  border-color: #a8c96a;
+  border-width: 2px;
+  box-shadow: none;
+}
+#blog-main-grid.is-filtered .blog-card.start-here::before { display: none; }
+
 /* ===== BLOG INDEX HERO ===== */
 .hero {
   text-align: center;
@@ -364,6 +409,7 @@
 }
 @media (max-width: 600px) {
   .blog-grid { grid-template-columns: 1fr; }
+  .thinkers-row { grid-template-columns: 1fr; }
 }
 
 /* ===== SIMPLE FOOTER (overrides main.css full footer for blog pages) ===== */

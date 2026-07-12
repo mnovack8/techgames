@@ -13,78 +13,76 @@
   // when more than one post links to the same node, the Start Here
   // hub (or the earliest-linking post) wins so the tree stays a
   // clean single hierarchy instead of duplicating nodes.
-  // Every post on the site is a descendant of the single root below,
-  // which is one of the four Start Here posts (marked startHere: true).
+  // Every post on the site is a descendant of the single root below.
+  // noToggle: true means the node has no collapse control of its own —
+  // its children always render, so descendants can never be hidden.
   var TREE = [
     {
-      slug: 'where-systems-actually-break',
-      title: 'Competence Is Local, Coherence Is Designed',
-      startHere: true,
+      slug: 'stem-humanities-bridge',
+      title: 'The Missing Language',
+      noToggle: true,
       defaultOpen: true,
       children: [
         {
-          slug: 'agents-components-interactions',
-          title: 'Every System Has the Same Shape',
-          startHere: true,
+          slug: 'be-the-bridge-stem-thinker',
+          title: 'The STEM Thinker',
+          defaultOpen: true,
           children: [
-            { slug: 'people-process-tools', title: 'People, Process & Tools', children: [] },
-            { slug: 'how-to-run-a-culture-audit-workshop', title: 'Culture Audit Workshop', children: [] },
             {
-              slug: 'influence-and-authority',
-              title: 'Authority vs. Influence',
+              folder: true, slug: '__folder-literature', title: 'Literature',
               children: [
-                {
-                  slug: 'heart-of-a-teacher',
-                  title: 'The Heart of a Teacher',
-                  children: [
-                    { slug: 'your-first-industry-conference-talk', title: 'Your First Conference Talk', children: [] }
-                  ]
-                }
+                { slug: 'your-first-industry-conference-talk', title: 'Your First Conference Talk', children: [] }
+              ]
+            },
+            {
+              folder: true, slug: '__folder-philosophy', title: 'Philosophy',
+              children: [
+                { slug: 'improving-spocks-eq', title: "Improving Spock's EQ", children: [] },
+                { slug: 'people-process-tools', title: 'People, Process & Tools', children: [] },
+                { slug: 'how-to-run-a-culture-audit-workshop', title: 'Culture Audit Workshop', children: [] },
+                { slug: 'agents-components-interactions', title: 'Every System Has the Same Shape', children: [] }
+              ]
+            },
+            {
+              folder: true, slug: '__folder-history', title: 'History',
+              children: [
+                { slug: 'understand-the-past', title: 'Start With the History', children: [] }
+              ]
+            },
+            {
+              folder: true, slug: '__folder-rhetoric', title: 'Rhetoric',
+              children: [
+                { slug: 'communication-skills-workshop-for-technical-teams', title: 'Communication Skills Workshop', children: [] },
+                { slug: 'influence-and-authority', title: 'Authority vs. Influence', children: [] },
+                { slug: 'heart-of-a-teacher', title: 'The Heart of a Teacher', children: [] }
               ]
             }
           ]
         },
         {
-          slug: 'stem-humanities-bridge',
-          title: 'The Missing Language',
-          startHere: true,
-          children: [
-            { slug: 'be-the-bridge-stem-thinker', title: 'The STEM Thinker', children: [
-              { slug: 'be-the-bridge-humanities-thinker', title: 'The Humanities Thinker', children: [] }
-            ] },
-            { slug: 'communication-skills-workshop-for-technical-teams', title: 'Communication Skills Workshop', children: [] },
-            {
-              slug: 'understand-the-past',
-              title: 'Start With the History',
-              children: [
-                { slug: 'improving-spocks-eq', title: "Improving Spock's EQ", children: [] }
-              ]
-            }
-          ]
-        },
-        {
-          slug: 'ai-security-workshop',
-          title: 'AI Security Workshop Guide',
-          startHere: true,
+          slug: 'be-the-bridge-humanities-thinker',
+          title: 'The Humanities Thinker',
+          defaultOpen: true,
           children: [
             {
-              slug: 'how-to-facilitate-an-ai-literacy-workshop',
-              title: 'AI Literacy Workshop Guide',
+              folder: true, slug: '__folder-ai', title: 'AI',
               children: [
+                { slug: 'ai-security-workshop', title: 'AI Security Workshop Guide', children: [] },
+                { slug: 'how-to-facilitate-an-ai-literacy-workshop', title: 'AI Literacy Workshop Guide', children: [] },
                 { slug: 'principles-of-ai-data-science', title: 'Principles of AI & Data Science', children: [] }
               ]
             },
             {
-              slug: 'cybersecurity-awareness-workshop',
-              title: 'Cybersecurity Awareness Workshop',
+              folder: true, slug: '__folder-cybersecurity', title: 'Cybersecurity',
               children: [
+                { slug: 'cybersecurity-awareness-workshop', title: 'Cybersecurity Awareness Workshop', children: [] },
                 { slug: 'cybersecurity-mindset-critical-thinking', title: 'Cybersecurity Mindset', children: [] }
               ]
             },
             {
-              slug: 'quantum-computing-basics',
-              title: 'Quantum Computing Basics',
+              folder: true, slug: '__folder-quantum-computing', title: 'Quantum Computing',
               children: [
+                { slug: 'quantum-computing-basics', title: 'Quantum Computing Basics', children: [] }
               ]
             }
           ]
@@ -144,9 +142,11 @@
       + 'color:#4a5a3a;text-decoration:none;padding:5px 6px;border-radius:6px;line-height:1.3;}'
       + '.blog-tree-link:hover{background:#f4fae8;color:#4a8c11;}'
       + '.blog-tree-link.active{background:#eaf5d8;color:#2a6a0a;font-weight:900;}'
-      + '.blog-tree-star{color:#d1a000;font-size:10px;flex-shrink:0;}'
+      + '.blog-tree-folder-label{display:flex;align-items:center;flex:1;font-size:10.5px;font-weight:900;'
+      + 'text-transform:uppercase;letter-spacing:0.06em;color:#8a9a6a;padding:5px 6px;}'
       + '.blog-tree-children{display:none;}'
       + '.blog-tree-children.open{display:block;}'
+      + '.blog-tree-children.blog-tree-locked-open{display:block!important;}'
       + '.blog-tree-toggle-btn{position:absolute;left:14px;z-index:150;margin:0;'
       + 'background:#62b517;color:#fff;border:none;border-radius:8px;padding:8px 12px;font-weight:900;'
       + 'font-size:12px;cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,0.2);}'
@@ -176,10 +176,10 @@
 
     var hasChildren = node.children && node.children.length > 0;
     var onPath = openPath.indexOf(node.slug) !== -1;
-    var isOpen = onPath || !!node.defaultOpen;
+    var isOpen = onPath || !!node.defaultOpen || !!node.noToggle;
     var defaultCls = node.defaultOpen ? ' blog-tree-default' : '';
 
-    if (hasChildren) {
+    if (hasChildren && !node.noToggle) {
       var toggle = document.createElement('button');
       toggle.className = 'blog-tree-toggle' + defaultCls + (isOpen ? ' open' : '');
       toggle.setAttribute('aria-label', 'Toggle section');
@@ -191,30 +191,34 @@
       row.appendChild(spacer);
     }
 
-    var a = document.createElement('a');
-    a.className = 'blog-tree-link' + (node.slug === active ? ' active' : '');
-    a.href = '/blog/' + node.slug;
-    if (node.startHere) {
-      var star = document.createElement('span');
-      star.className = 'blog-tree-star';
-      star.textContent = '★';
-      a.appendChild(star);
+    if (node.folder) {
+      var label = document.createElement('span');
+      label.className = 'blog-tree-folder-label';
+      label.appendChild(document.createTextNode(node.title));
+      row.appendChild(label);
+    } else {
+      var a = document.createElement('a');
+      a.className = 'blog-tree-link' + (node.slug === active ? ' active' : '');
+      a.href = '/blog/' + node.slug;
+      a.appendChild(document.createTextNode(node.title));
+      row.appendChild(a);
     }
-    a.appendChild(document.createTextNode(node.title));
-    row.appendChild(a);
     li.appendChild(row);
 
     if (hasChildren) {
       var childWrap = document.createElement('div');
-      childWrap.className = 'blog-tree-children' + defaultCls + (isOpen ? ' open' : '');
+      childWrap.className = 'blog-tree-children' + defaultCls + (isOpen ? ' open' : '') +
+        (node.noToggle ? ' blog-tree-locked-open' : '');
       childWrap.appendChild(buildList(node.children, openPath, active));
       li.appendChild(childWrap);
 
-      row.querySelector('.blog-tree-toggle').addEventListener('click', function () {
-        var t = row.querySelector('.blog-tree-toggle');
-        t.classList.toggle('open');
-        childWrap.classList.toggle('open');
-      });
+      if (!node.noToggle) {
+        row.querySelector('.blog-tree-toggle').addEventListener('click', function () {
+          var t = row.querySelector('.blog-tree-toggle');
+          t.classList.toggle('open');
+          childWrap.classList.toggle('open');
+        });
+      }
     }
 
     return li;
