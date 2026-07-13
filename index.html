@@ -861,7 +861,7 @@ function trackClick(button) {
   var track = showcase.querySelector('.community-small-track');
   if (!heroBox || heroLayers.length < 2 || !smallRow || !track) return;
 
-  var ROTATE_MS = 2000;     // time between rotations - tune freely
+  var ROTATE_MS = 1500;     // time between rotations - tune freely
   var TRANSITION_MS = 600;  // must match the CSS transition duration on .community-hero-layer / .community-small-track
 
   function slotCount() {
@@ -901,12 +901,18 @@ function trackClick(button) {
     return a;
   }
 
-  // Random starting order each page load, cycling through without repeats until exhausted
+  // Shuffle once per page load, then cycle through that same fixed order
+  // forever (wrapping, not reshuffling). Reshuffling on wrap would risk
+  // placing an already-on-screen photo early in the new order, causing a
+  // duplicate within the same visible set; a single fixed cycle can't do
+  // that as long as the pool (14 photos) is bigger than the number shown
+  // at once (5: hero + 3 small + 1 incoming) - which it always is here.
   var pool = shuffle(COMMUNITY_IMAGES);
   var poolPtr = 0;
   function nextImage() {
-    if (poolPtr >= pool.length) { pool = shuffle(COMMUNITY_IMAGES); poolPtr = 0; }
-    return pool[poolPtr++];
+    var img = pool[poolPtr % pool.length];
+    poolPtr++;
+    return img;
   }
 
   var currentSlots = slotCount();
