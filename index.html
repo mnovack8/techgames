@@ -253,33 +253,14 @@
       </div>
     </div>
 
-    <!-- COMMUNITY PHOTO STRIP. Infinite scroll -->
-    <div class="community-strip" data-reveal>
-      <div class="community-track">
-        <!-- Set A -->
-        <div class="community-photo"><img src="/images/homepage/community-1.jpeg" alt="Tech CoLab session" loading="lazy"></div>
-        <div class="community-photo"><img src="/images/homepage/community-2.jpeg" alt="Tech CoLab session" loading="lazy"></div>
-        <div class="community-photo"><img src="/images/homepage/community-3.jpeg" alt="Tech CoLab session" loading="lazy"></div>
-        <div class="community-photo"><img src="/images/homepage/community-4.jpeg" alt="Tech CoLab session" loading="lazy"></div>
-        <div class="community-photo"><img src="/images/homepage/community-5.jpeg" alt="Tech CoLab session" loading="lazy"></div>
-        <div class="community-photo"><img src="/images/homepage/community-6.jpeg" alt="Tech CoLab session" loading="lazy"></div>
-        <div class="community-photo"><img src="/images/homepage/community-7.jpeg" alt="Tech CoLab session" loading="lazy"></div>
-        <div class="community-photo"><img src="/images/homepage/community-8.jpeg" alt="Tech CoLab session" loading="lazy"></div>
-        <div class="community-photo"><img src="/images/homepage/community-9.jpg" alt="Tech CoLab session" loading="lazy"></div>
-        <div class="community-photo"><img src="/images/homepage/community-10.jpeg" alt="Tech CoLab session" loading="lazy"></div>
-        <div class="community-photo"><img src="/images/homepage/community-11.jpeg" alt="Tech CoLab session" loading="lazy"></div>
-        <!-- Set B (duplicate for seamless loop) -->
-        <div class="community-photo" aria-hidden="true"><img src="/images/homepage/community-1.jpeg" alt="" loading="lazy"></div>
-        <div class="community-photo" aria-hidden="true"><img src="/images/homepage/community-2.jpeg" alt="" loading="lazy"></div>
-        <div class="community-photo" aria-hidden="true"><img src="/images/homepage/community-3.jpeg" alt="" loading="lazy"></div>
-        <div class="community-photo" aria-hidden="true"><img src="/images/homepage/community-4.jpeg" alt="" loading="lazy"></div>
-        <div class="community-photo" aria-hidden="true"><img src="/images/homepage/community-5.jpeg" alt="" loading="lazy"></div>
-        <div class="community-photo" aria-hidden="true"><img src="/images/homepage/community-6.jpeg" alt="" loading="lazy"></div>
-        <div class="community-photo" aria-hidden="true"><img src="/images/homepage/community-7.jpeg" alt="" loading="lazy"></div>
-        <div class="community-photo" aria-hidden="true"><img src="/images/homepage/community-8.jpeg" alt="" loading="lazy"></div>
-        <div class="community-photo" aria-hidden="true"><img src="/images/homepage/community-9.jpg" alt="" loading="lazy"></div>
-        <div class="community-photo" aria-hidden="true"><img src="/images/homepage/community-10.jpeg" alt="" loading="lazy"></div>
-        <div class="community-photo" aria-hidden="true"><img src="/images/homepage/community-11.jpeg" alt="" loading="lazy"></div>
+    <!-- COMMUNITY SHOWCASE: rotating hero photo + upcoming thumbnails -->
+    <div class="community-showcase" data-reveal>
+      <div class="community-hero">
+        <img class="community-hero-layer" alt="Tech CoLab session">
+        <img class="community-hero-layer" alt="Tech CoLab session">
+      </div>
+      <div class="community-small-row">
+        <div class="community-small-track"></div>
       </div>
     </div>
 
@@ -853,29 +834,174 @@ function trackClick(button) {
     body: JSON.stringify({ type:'button_click', button }) }).catch(()=>{});
 }
 
-// Shuffle community photos on every page load
+// Community showcase: rotating hero photo + upcoming thumbnail strip
 (function() {
-  var track = document.querySelector('.community-track');
-  if (!track) return;
-  var photos = Array.from(track.querySelectorAll('.community-photo'));
-  if (photos.length < 2) return;
-  // The track contains Set A + Set B (duplicate). Halve to get unique set.
-  var half = photos.length / 2;
-  var unique = photos.slice(0, half);
-  // Fisher-Yates shuffle
-  for (var i = unique.length - 1; i > 0; i--) {
-    var j = Math.floor(Math.random() * (i + 1));
-    var tmp = unique[i]; unique[i] = unique[j]; unique[j] = tmp;
+  var COMMUNITY_IMAGES = [
+    '/images/homepage/community-1.jpeg',
+    '/images/homepage/community-2.jpeg',
+    '/images/homepage/community-3.jpeg',
+    '/images/homepage/community-4.jpeg',
+    '/images/homepage/community-5.jpeg',
+    '/images/homepage/community-6.jpeg',
+    '/images/homepage/community-7.jpeg',
+    '/images/homepage/community-8.jpeg',
+    '/images/homepage/community-9.jpg',
+    '/images/homepage/community-10.jpeg',
+    '/images/homepage/community-11.jpeg',
+    '/images/homepage/community-12.jpg',
+    '/images/homepage/community-13.jpg',
+    '/images/homepage/community-14.jpg'
+  ];
+
+  var showcase = document.querySelector('.community-showcase');
+  if (!showcase) return;
+  var heroBox = showcase.querySelector('.community-hero');
+  var heroLayers = Array.prototype.slice.call(showcase.querySelectorAll('.community-hero-layer'));
+  var smallRow = showcase.querySelector('.community-small-row');
+  var track = showcase.querySelector('.community-small-track');
+  if (!heroBox || heroLayers.length < 2 || !smallRow || !track) return;
+
+  var ROTATE_MS = 2000;     // time between rotations - tune freely
+  var TRANSITION_MS = 600;  // must match the CSS transition duration on .community-hero-layer / .community-small-track
+
+  function slotCount() {
+    return window.matchMedia('(max-width: 600px)').matches ? 2 : 3;
   }
-  // Clear track and re-append: shuffled set, then a duplicate for the seamless loop
-  track.innerHTML = '';
-  unique.forEach(function(el) { track.appendChild(el); });
-  unique.forEach(function(el) {
-    var clone = el.cloneNode(true);
-    clone.setAttribute('aria-hidden', 'true');
-    var img = clone.querySelector('img');
-    if (img) img.setAttribute('alt', '');
-    track.appendChild(clone);
+  // Wide screens lay the thumbnails out as a column beside the hero instead
+  // of a row below it (matches the min-width: 601px breakpoint in index.css).
+  function isWide() {
+    return window.matchMedia('(min-width: 601px)').matches;
+  }
+  // In wide/column mode the track's height has to match the hero's rendered
+  // height exactly (a percentage-of-itself trick, like the row layout uses,
+  // doesn't work cleanly across a stretch + percentage-height chain), so
+  // measure it in pixels instead. Measuring the hero box itself (not the
+  // small-row) matters: the hero's height comes purely from its own
+  // aspect-ratio CSS (its photo layers are position:absolute, so they can't
+  // inflate it), whereas the small-row's height is circular - it depends on
+  // the track, which is what we're trying to size.
+  function layoutVertical() {
+    var heroHeight = heroBox.getBoundingClientRect().height;
+    if (!heroHeight) return;
+    // Constrain the row itself to the hero's height so its overflow:hidden
+    // actually clips the track's extra (incoming) slot, instead of the row
+    // growing to match the taller track.
+    smallRow.style.height = heroHeight + 'px';
+    var slotHeight = heroHeight / currentSlots;
+    track.style.height = (slotHeight * track.children.length) + 'px';
+    track.style.transform = 'translateY(' + (-slotHeight) + 'px)';
+  }
+
+  function shuffle(arr) {
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+    }
+    return a;
+  }
+
+  // Random starting order each page load, cycling through without repeats until exhausted
+  var pool = shuffle(COMMUNITY_IMAGES);
+  var poolPtr = 0;
+  function nextImage() {
+    if (poolPtr >= pool.length) { pool = shuffle(COMMUNITY_IMAGES); poolPtr = 0; }
+    return pool[poolPtr++];
+  }
+
+  var currentSlots = slotCount();
+  var heroSrc = nextImage();
+  var smallSrcs = [];
+  for (var i = 0; i < currentSlots; i++) smallSrcs.push(nextImage());
+  var incomingSrc = nextImage();
+  var activeLayer = 0;
+
+  function renderTrack() {
+    // Instantly reset to the steady state (no transition) before re-enabling animation
+    track.style.transition = 'none';
+    track.className = 'community-small-track slots-' + currentSlots;
+    track.innerHTML = '';
+    [incomingSrc].concat(smallSrcs).forEach(function(src) {
+      var cell = document.createElement('div');
+      cell.className = 'community-small';
+      var card = document.createElement('div');
+      card.className = 'community-small-card';
+      var img = document.createElement('img');
+      img.src = src;
+      img.alt = 'Tech CoLab session';
+      img.loading = 'lazy';
+      card.appendChild(img);
+      cell.appendChild(card);
+      track.appendChild(cell);
+    });
+    if (isWide()) {
+      track.style.width = '';
+      layoutVertical();
+    } else {
+      smallRow.style.height = '';
+      track.style.height = '';
+      track.style.transform = '';
+    }
+    void track.offsetWidth; // force reflow so the "none" transition actually applies
+    track.style.transition = '';
+  }
+
+  function cycle() {
+    // Rebuild (without animating) if the slot count or layout mode changed
+    var newSlots = slotCount();
+    if (newSlots !== currentSlots) {
+      currentSlots = newSlots;
+      while (smallSrcs.length < currentSlots) smallSrcs.push(nextImage());
+      while (smallSrcs.length > currentSlots) smallSrcs.pop();
+      renderTrack();
+      return;
+    }
+
+    // The last small image (rightmost in a row / bottommost in a column)
+    // is promoted to become the new hero.
+    var promoted = smallSrcs[smallSrcs.length - 1];
+    var newLayerIdx = 1 - activeLayer;
+    var newLayer = heroLayers[newLayerIdx];
+    var oldLayer = heroLayers[activeLayer];
+    newLayer.src = promoted;
+    void newLayer.offsetWidth;
+    newLayer.classList.add('is-active');
+    oldLayer.classList.remove('is-active');
+    activeLayer = newLayerIdx;
+
+    // Slide the small row forward by one slot; a new image enters at the start
+    if (isWide()) {
+      track.style.transform = 'translateY(0px)';
+    } else {
+      track.classList.add('is-shifting');
+    }
+
+    setTimeout(function() {
+      smallSrcs = [incomingSrc].concat(smallSrcs.slice(0, smallSrcs.length - 1));
+      incomingSrc = nextImage();
+      renderTrack();
+    }, TRANSITION_MS);
+  }
+
+  heroLayers[0].src = heroSrc;
+  heroLayers[0].classList.add('is-active');
+  renderTrack();
+
+  setInterval(cycle, ROTATE_MS);
+
+  // Wide/column mode needs its pixel measurements refreshed as the viewport
+  // (and therefore the hero's rendered height) changes size.
+  var resizeTimer;
+  window.addEventListener('resize', function() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function() {
+      if (isWide()) {
+        track.style.transition = 'none';
+        layoutVertical();
+        void track.offsetWidth;
+        track.style.transition = '';
+      }
+    }, 150);
   });
 })();
 </script>

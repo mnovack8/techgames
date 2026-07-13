@@ -545,51 +545,109 @@
   margin-top: 36px;
 }
 
-/* ===== COMMUNITY PHOTO STRIP (infinite scroll) ===== */
-.community-strip {
-  margin-top: 56px;
-  margin-left: calc(50% - 50vw);
-  margin-right: calc(50% - 50vw);
-  width: 100vw;
-  overflow: hidden;
-  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 80px, #000 calc(100% - 80px), transparent 100%);
-          mask-image: linear-gradient(to right, transparent 0, #000 80px, #000 calc(100% - 80px), transparent 100%);
+/* ===== COMMUNITY SHOWCASE (hero + upcoming thumbnails) =====
+   Mobile-first: hero on top, thumbnails in a row below.
+   Wide screens (see media query below): thumbnails move into a column
+   beside the hero so the section uses the full section width instead
+   of sitting narrow in the middle of the page. */
+.community-showcase {
+  margin: 56px auto 0;
+  max-width: 420px;
 }
-.community-track {
-  display: flex;
-  gap: 18px;
-  width: max-content;
-  animation: community-scroll 45s linear infinite;
-}
-.community-strip:hover .community-track {
-  animation-play-state: paused;
-}
-.community-photo {
-  flex: 0 0 auto;
-  width: 320px;
-  height: 220px;
-  border-radius: 14px;
+.community-hero {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: 18px;
   overflow: hidden;
   background: #1a3a00;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  box-shadow: 0 10px 36px rgba(0,0,0,0.2);
 }
-.community-photo img {
+.community-hero-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.community-hero-layer.is-active {
+  opacity: 1;
+  transform: scale(1);
+  z-index: 2;
+}
+.community-small-row {
+  margin-top: 14px;
+  overflow: hidden;
+}
+.community-small-track {
+  display: flex;
+  flex-direction: row;
+  transition: transform 0.6s ease;
+}
+/* Track is one slot wider/taller than the visible row (the extra slot
+   holds the incoming photo, parked just out of view). Percentage math
+   keeps this pixel-exact regardless of viewport width. On wide screens
+   the track switches to a column and JS drives height/transform in
+   pixels instead (see index.html), since it needs to match the hero's
+   stretched height rather than a percentage of itself. */
+.community-small-track.slots-3 { width: 133.334%; transform: translateX(-25%); }
+.community-small-track.slots-2 { width: 150%; transform: translateX(-33.334%); }
+.community-small-track.slots-3.is-shifting { transform: translateX(0); }
+.community-small-track.slots-2.is-shifting { transform: translateX(0); }
+.community-small {
+  flex: 1 0 0;
+  box-sizing: border-box;
+  padding: 0 7px;
+}
+.community-small-card {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #1a3a00;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.14);
+}
+.community-small-card img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
 }
-@keyframes community-scroll {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
 @media (max-width: 600px) {
-  .community-strip { margin-top: 40px; }
-  .community-photo { width: 240px; height: 170px; }
-  .community-track { gap: 12px; animation-duration: 35s; }
+  .community-showcase { margin-top: 40px; }
+}
+@media (min-width: 601px) {
+  /* align-items: flex-start (not stretch) is deliberate: stretch would let
+     the hero and the thumbnail column inflate each other's height in a
+     feedback loop (the column's natural height is driven by raw photo
+     aspect ratios before JS constrains it). Keeping them decoupled means
+     the hero's height comes purely from its own aspect-ratio, and JS then
+     copies that measured height onto the thumbnail track explicitly. */
+  .community-showcase {
+    max-width: 1100px;
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  .community-hero { flex: 2 1 0; min-width: 0; }
+  .community-small-row { flex: 1 1 0; min-width: 0; margin-top: 0; overflow: hidden; }
+  .community-small-track.slots-3,
+  .community-small-track.slots-2 {
+    flex-direction: column;
+    width: 100%;
+  }
+  .community-small {
+    padding: 7px 0;
+    min-height: 0; /* flex items default to min-height:auto, which lets a tall photo's
+                      intrinsic size act as a floor and blow past its 1/4 share - override it */
+  }
+  .community-small-card { aspect-ratio: auto; height: 100%; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .community-track { animation: none; }
+  .community-hero-layer, .community-small-track { transition: none; }
 }
 .approach-pillar {
   background: #fff;
