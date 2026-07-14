@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Any system mirrors the communication structure of the organization that built it. Not the org chart on paper, the one people actually use. Here's what Conway's Law means and how to use it on purpose.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Conway's Law: Why Your Org Chart Is Also Your System Diagram | Tech CoLab">
+<meta property="og:description" content="Any system mirrors the communication structure of the organization that built it. Not the org chart on paper, the one people actually use. Here's what Conway's Law means and how to use it on purpose.">
+<meta property="og:image" content="https://cybersecgames.com/images/logo.png">
+<meta property="og:url" content="https://cybersecgames.com/blog/conways-law">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Conway's Law: Why Your Org Chart Is Also Your System Diagram | Tech CoLab">
+<meta name="twitter:description" content="Any system mirrors the communication structure of the organization that built it. Not the org chart on paper, the one people actually use. Here's what Conway's Law means and how to use it on purpose.">
+<meta name="twitter:image" content="https://cybersecgames.com/images/logo.png">
+<meta name="robots" content="index, follow">
+<meta name="author" content="Tech CoLab">
+<meta name="keywords" content="Conway's Law, organizational communication, software architecture, team topologies, inverse Conway maneuver, systems thinking, rhetoric">
+<meta property="og:site_name" content="Tech CoLab">
+<meta property="og:locale" content="en_US">
+<meta name="theme-color" content="#62b517">
+<link rel="icon" type="image/png" href="/images/logo.png">
+<link rel="apple-touch-icon" href="/images/logo.png">
+<link rel="canonical" href="https://cybersecgames.com/blog/conways-law">
+<title>Conway's Law: Why Your Org Chart Is Also Your System Diagram | Tech CoLab</title>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Conway's Law: Why Your Org Chart Is Also Your System Diagram",
+  "description": "Any system mirrors the communication structure of the organization that built it. Not the org chart on paper, the one people actually use. Here's what Conway's Law means and how to use it on purpose.",
+  "author": { "@type": "Person", "name": "Tech CoLab" },
+  "publisher": { "@type": "Organization", "name": "Tech CoLab", "logo": { "@type": "ImageObject", "url": "https://cybersecgames.com/images/logo.png" } },
+  "datePublished": "2026-07-14",
+  "dateModified": "2026-07-14",
+  "url": "https://cybersecgames.com/blog/conways-law",
+  "mainEntityOfPage": "https://cybersecgames.com/blog/conways-law",
+  "keywords": ["Conway's Law", "organizational communication", "software architecture", "team topologies", "systems thinking"],
+  "articleSection": "Rhetoric"
+}
+</script>
+<link rel="stylesheet" href="/nav.css">
+<link rel="stylesheet" href="/main.css">
+<link rel="stylesheet" href="/blog/blog.css">
+<link rel="stylesheet" href="/blog/conways-law.css">
+</head>
+<body>
+
+<header>
+  <a class="header-logo" href="/">
+    <img src="/images/logo.png" alt="Tech CoLab logo" width="56" height="56" fetchpriority="high" decoding="async">
+    <div>
+      <span class="logo-text">Tech Co<span class="logo-text-accent">Lab</span></span>
+      <span class="logo-sub">Bridge the Gap.<br>Empower their Decisions.</span>
+    </div>
+  </a>
+  <nav>
+    <a href="/">Home</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-trigger">Use Cases ▾</button>
+      <div class="nav-dropdown-menu">
+        <a href="/board-culture-change">Broad Culture Change</a>
+        <a href="/focused-deep-work">Focused, Deep Work</a>
+      </div>
+    </div>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-trigger">Products ▾</button>
+      <div class="nav-dropdown-menu">
+        <a href="/cybersecurity">Cybersecurity</a>
+        <a href="/ai?v=1">Artificial Intelligence</a>
+        <a href="/quantumcomputing">Quantum Computing</a>
+      </div>
+    </div>
+    <a href="/services">Services</a>
+    <a href="/blog" class="active">Blog</a>
+    <a href="/contact">Contact</a>
+    <a href="/buy-now" class="nav-cta-buy">Buy Now</a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="article-hero">
+  <div class="article-tag-row">
+    <span class="article-tag tag-type-insight">Insight</span>
+    <span class="article-tag tag-rhetoric">Rhetoric</span>
+  </div>
+  <h1>Conway's Law:<br><em>Why Your Org Chart Is Also Your System Diagram</em></h1>
+  <p class="article-hero-sub">Any system a group designs will mirror the way that group actually talks to itself, not the org chart on the wall, the channels people really use. Draw the real communication map, and you've drawn the architecture before a line of it exists.</p>
+  <div class="article-meta">
+    <span class="article-meta-read">8 min read</span>
+  </div>
+</section>
+
+<!-- BODY -->
+<div class="article-wrap">
+
+  <a href="/blog" class="back-link">← Back to Blog</a>
+
+  <p class="article-intro">
+    In 1967, a programmer named Melvin Conway noticed something that still holds up in almost every organization that builds anything complex: the structure of what gets built copies the structure of the people who build it. Two teams that don't talk to each other will ship two systems with a rigid, badly negotiated wall between them, no matter what the architecture diagram says the interface is supposed to look like. One team that talks constantly and informally will ship one tightly coupled thing, even if the org chart insists it's three separate services owned by three separate groups.
+  </p>
+  <p class="article-intro">
+    This is usually filed under "software architecture," but it's really a claim about rhetoric: about who talks to whom, how often, and through what channel. The communication structure is the actual spec. Everything else, the design doc, the architecture review, the RFC, is just an attempt to describe a decision the org chart already made for you.
+  </p>
+
+  <div class="article-body">
+
+    <h2>The Law in One Sentence</h2>
+
+    <p>Conway's original formulation was blunt: any organization that designs a system will produce a design whose structure mirrors the organization's structure of communication. Not its intended structure. Not the one in the slide deck from the last reorg. The one that's actually in use, day to day, measured by who's in whose Slack channel and whose calendar overlaps with whose.</p>
+
+    <p>This is not a metaphor. It is closer to a physical law, in the sense that it doesn't care whether you believe in it. A designer can draw four clean microservices on a whiteboard, but if the four teams building them share one Slack channel, sit in the same standup, and constantly informally sync, what actually ships is closer to one system wearing four folders. And a designer can draw one clean monolith, but if it gets built by five teams that never talk except through a quarterly planning doc, what ships is five badly-stitched modules wearing one folder.</p>
+
+    <div class="mirror-block" data-reveal>
+      <div class="mirror-header">
+        <div class="mirror-col-label">How the Org Talks</div>
+        <div class="mirror-eq">≈</div>
+        <div class="mirror-col-label">How the System Is Shaped</div>
+      </div>
+      <div class="mirror-rows">
+        <div class="mirror-cell">Two teams share a channel, a standup, and constant informal back-and-forth.</div>
+        <div class="mirror-arrow">→</div>
+        <div class="mirror-cell">One tightly coupled system, whatever the diagram calls it. Changes on one side routinely require changes on the other.</div>
+      </div>
+      <div class="mirror-rows" style="margin-top:10px">
+        <div class="mirror-cell">Two teams only interact through a quarterly planning doc and a shared Jira board.</div>
+        <div class="mirror-arrow">→</div>
+        <div class="mirror-cell">A rigid, narrow interface between two systems, negotiated slowly and defended fiercely, because that's how the teams themselves interact.</div>
+      </div>
+    </div>
+
+    <h2>Communication Structure Is the Real Spec</h2>
+
+    <p>Every architecture review asks the same implicit question, "where does this module end and that one begin," and treats it as a technical decision. It usually isn't. The boundary that survives contact with real deadlines is almost never the one on the diagram. It's the one that matches how the two teams actually reach each other. A clean interface requires two groups willing to have an ongoing, slightly annoying conversation about the messy edge cases between them. If that conversation isn't happening, no diagram forces it into existence. The interface just gets uglier until it matches the silence.</p>
+
+    <p>This is why "just write better documentation" so rarely fixes a bad interface. Documentation is one-directional and asynchronous. It describes a decision; it doesn't negotiate one. The parts of a system that stay clean over time are almost always the parts where the humans on either side of the boundary are still talking, not just where someone once wrote the interface down correctly.</p>
+
+    <h2>The Interface Is Wherever the Silence Is</h2>
+
+    <p>Flip the law around and it becomes a diagnostic instead of just an observation. Instead of asking "where should the module boundary go," ask "where in this organization does communication actually drop off." That's where the real interface already is, whether anyone designed it or not, and it's usually the worst-behaved part of the system: the part with the most surprising bugs, the most defensive error handling, the most "please don't change this without asking" comments.</p>
+
+    <div class="silence-block" data-reveal>
+      <div class="silence-row">
+        <div class="silence-tag">Observed</div>
+        <div class="silence-text">Team A and Team B haven't had a working session together in four months. They coordinate through a shared ticket queue.</div>
+      </div>
+      <div class="silence-row">
+        <div class="silence-tag">Predicted</div>
+        <div class="silence-text">The API between their two systems will be brittle, over-defended, and will change only through a formal request process neither team is happy with.</div>
+      </div>
+      <hr class="silence-divider">
+      <div class="silence-row silence-final">
+        <div class="silence-tag">Conway's Law</div>
+        <div class="silence-text">You don't need to read the code to know this. You already know it from the meeting invites.</div>
+      </div>
+    </div>
+
+    <p>This is also why reorgs are so much more disruptive to software than they look on the announcement slide. Moving a box on an org chart changes who sits in whose standup, and that change eventually reaches into the codebase itself, redrawing module boundaries whether or not anyone meant to. The org chart isn't a description of the system. It is, with a lag, a forecast of it.</p>
+
+    <div class="callout">
+      <div class="callout-icon">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="11" cy="11" r="9" stroke="#4a8c11" stroke-width="1.5"/>
+          <line x1="11" y1="10" x2="11" y2="15" stroke="#4a8c11" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="11" cy="7.5" r="1.2" fill="#4a8c11"/>
+        </svg>
+      </div>
+      <div class="callout-text">Before blaming a bad interface on bad engineering, check the meeting calendar first. It's a faster and often more accurate diagnostic than reading the code.</div>
+    </div>
+
+    <h2>You Can Reverse It</h2>
+
+    <p>If communication structure predicts system structure, the useful move is to stop treating that as fate and start treating it as a lever. This is usually called the inverse Conway maneuver: instead of designing the system you want and hoping the org catches up, design the org you'd need in order for that system to fall out naturally. Want two services with a genuinely clean, minimal interface between them? Put the two teams building them in separate rooms, on separate schedules, talking only through a defined channel. The distance will do more to enforce the boundary than any code review ever will. Want one deeply integrated feature? Put everyone building it in one room, on one channel, and stop pretending the org chart's separate boxes mean anything.</p>
+
+    <p>The maneuver also works as a warning. If a reorg is about to put two previously separate teams into constant daily contact, expect the clean boundary between their systems to start dissolving within a quarter, whether that was the intent or not. That's not a failure of discipline. It's the same law running in the direction nobody was watching for.</p>
+
+    <div class="conway-tactics">
+
+      <div class="tactic">
+        <div class="tactic-num">01</div>
+        <div class="tactic-body">
+          <div class="tactic-title">Read the meeting calendar before the architecture diagram</div>
+          <div class="tactic-detail">Who actually talks to whom, and how often, predicts the real system boundaries better than any design doc.</div>
+        </div>
+      </div>
+
+      <div class="tactic">
+        <div class="tactic-num">02</div>
+        <div class="tactic-body">
+          <div class="tactic-title">Find the silence, not the seam</div>
+          <div class="tactic-detail">The ugliest, most brittle part of a system is usually sitting exactly where communication between two groups quietly stopped.</div>
+        </div>
+      </div>
+
+      <div class="tactic">
+        <div class="tactic-num">03</div>
+        <div class="tactic-body">
+          <div class="tactic-title">Design the org before the system, when you can</div>
+          <div class="tactic-detail">If you want a specific architecture, set up the team structure that would produce it naturally, rather than fighting the org chart after the fact.</div>
+        </div>
+      </div>
+
+      <div class="tactic">
+        <div class="tactic-num">04</div>
+        <div class="tactic-body">
+          <div class="tactic-title">Treat a reorg as an architecture change</div>
+          <div class="tactic-detail">Merging two teams' communication will eventually merge their systems too, whether or not that was the plan. Expect it, don't discover it.</div>
+        </div>
+      </div>
+
+      <div class="tactic">
+        <div class="tactic-num">05</div>
+        <div class="tactic-body">
+          <div class="tactic-title">A clean interface needs an ongoing conversation, not a one-time doc</div>
+          <div class="tactic-detail">Documentation describes a boundary. Only a live channel between the two sides actually maintains one.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="article-cta">
+      <h3>Bridge the Gap. Empower Their Decisions.</h3>
+      <p>Seeing the org chart as the real architecture diagram is a systems-thinking move as much as a technical one. Tech CoLab's games build that same cross-team reading skill for technical and non-technical audiences alike.</p>
+      <div class="article-cta-btns">
+        <a href="/blog/agents-components-interactions" class="primary">Read: Every System Has the Same Shape →</a>
+        <a href="/blog/influence-and-authority" class="secondary">Read: Authority vs. Influence →</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <p>© 2026 Tech CoLab. All rights reserved.</p>
+</footer>
+
+<script>
+(function() {
+  var els = document.querySelectorAll('[data-reveal]');
+  if (!els.length || !('IntersectionObserver' in window)) {
+    els.forEach(function(el) { el.classList.add('is-visible'); });
+    return;
+  }
+  var io = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+  els.forEach(function(el) { io.observe(el); });
+})();
+</script>
+<script src="/blog/blog-nav-tree.js" defer></script>
+<script src="/nav.js"></script>
+</body>
+</html>

@@ -59,7 +59,8 @@
               children: [
                 { slug: 'your-first-industry-conference-talk', title: 'Your First Conference Talk', children: [] },
                 { slug: 'communication-skills-workshop-for-technical-teams', title: 'Communication Skills Workshop', children: [] },
-                { slug: 'influence-and-authority', title: 'Authority vs. Influence', children: [] }
+                { slug: 'influence-and-authority', title: 'Authority vs. Influence', children: [] },
+                { slug: 'conways-law', title: "Conway's Law", children: [] }
               ]
             },
             {
