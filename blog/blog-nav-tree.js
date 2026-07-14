@@ -31,7 +31,7 @@
             {
               folder: true, slug: '__folder-literature', title: 'Literature',
               children: [
-                { slug: 'your-first-industry-conference-talk', title: 'Your First Conference Talk', children: [] }
+                { slug: 'shape-of-a-developed-idea', title: 'The Shape of a Developed Idea', children: [] }
               ]
             },
             {
@@ -53,6 +53,7 @@
             {
               folder: true, slug: '__folder-rhetoric', title: 'Rhetoric',
               children: [
+                { slug: 'your-first-industry-conference-talk', title: 'Your First Conference Talk', children: [] },
                 { slug: 'communication-skills-workshop-for-technical-teams', title: 'Communication Skills Workshop', children: [] },
                 { slug: 'influence-and-authority', title: 'Authority vs. Influence', children: [] },
                 { slug: 'heart-of-a-teacher', title: 'The Heart of a Teacher', children: [] }

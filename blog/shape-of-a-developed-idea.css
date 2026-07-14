@@ -1,0 +1,143 @@
+/* Page-specific styles for The Shape of a Developed Idea */
+
+/* ===== HERO THEME ===== */
+.article-hero { background: linear-gradient(160deg, #10131c 0%, #1a1f2e 55%, #131722 100%); }
+.article-tag-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px; }
+.article-hero-sub { color: #8a92ac; }
+.article-meta-read { color: #5a6284; }
+.article-cta { background: linear-gradient(135deg, #10131c 0%, #1a1f2e 100%); border: 2px solid #2a3050; }
+.article-cta p { color: #8a92ac; }
+.article-cta a.secondary { color: #8a92ac; border: 2px solid #2a3050; }
+
+/* ===== H3 OVERRIDE ===== */
+.article-body h3 {
+  font-size: 19px;
+  font-weight: 900;
+  color: #12141c;
+  text-transform: none;
+  letter-spacing: 0;
+  margin: 40px 0 10px;
+}
+
+/* ===== CC COMPOUND ===== */
+.cc-compound {
+  background: #f0f5e8;
+  border-left: 4px solid #62b517;
+  border-radius: 0 8px 8px 0;
+  padding: 16px 20px;
+  margin: 24px 0;
+}
+.cc-compound-label {
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #62b517;
+  margin-bottom: 8px;
+}
+.cc-compound-body {
+  font-size: 15px;
+  color: #1a2a10;
+  line-height: 1.7;
+}
+
+/* ===== DIRECTION SPLIT ===== */
+.direction-split {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: stretch;
+  gap: 16px;
+  margin: 26px 0 32px;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.direction-split.is-visible { opacity: 1; transform: translateY(0); }
+.direction-card {
+  border-radius: 12px;
+  padding: 20px 22px;
+  border: 2px solid;
+}
+.direction-up   { background: #f0f7ec; border-color: #8fbf6a; }
+.direction-down { background: #eef1fa; border-color: #7a8fc0; }
+.direction-label {
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 4px;
+}
+.direction-up   .direction-label { color: #3a7a2a; }
+.direction-down .direction-label { color: #3a4a8a; }
+.direction-sub { font-size: 20px; font-weight: 900; color: #12141c; margin-bottom: 10px; }
+.direction-desc { font-size: 14px; line-height: 1.6; color: #3a4050; }
+.direction-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  color: #8a92ac;
+  font-weight: 900;
+}
+
+/* ===== IDEA PIPELINE (stage cards) ===== */
+.idea-pipeline {
+  margin: 28px 0;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.idea-pipeline.is-visible { opacity: 1; transform: translateY(0); }
+.idea-stage {
+  display: flex;
+  gap: 18px;
+  padding: 18px 0;
+  border-top: 1px solid #e6e8f0;
+}
+.idea-stage:last-child { border-bottom: 1px solid #e6e8f0; }
+.idea-stage-num {
+  flex-shrink: 0;
+  width: 30px;
+  font-size: 13px;
+  font-weight: 900;
+  font-family: 'Courier New', monospace;
+  color: #62b517;
+  padding-top: 2px;
+}
+.idea-pipeline-reverse .idea-stage-num { color: #4a6ab0; }
+.idea-stage-title { font-size: 16px; font-weight: 900; color: #12141c; margin-bottom: 2px; }
+.idea-stage-format {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #8a92ac;
+  margin-bottom: 8px;
+}
+.idea-stage-desc { font-size: 14.5px; line-height: 1.65; color: #3a4050; }
+
+/* ===== START POINT GRID ===== */
+.start-point-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 28px 0;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.start-point-grid.is-visible { opacity: 1; transform: translateY(0); }
+.start-point-card {
+  background: #f7f8fb;
+  border: 1px solid #e2e5ef;
+  border-radius: 10px;
+  padding: 20px 22px;
+}
+.start-point-title { font-size: 15.5px; font-weight: 900; color: #12141c; margin-bottom: 8px; }
+.start-point-body { font-size: 14px; line-height: 1.65; color: #3a4050; }
+
+@media (max-width: 640px) {
+  .direction-split { grid-template-columns: 1fr; }
+  .direction-arrow { transform: rotate(90deg); padding: 4px 0; }
+  .start-point-grid { grid-template-columns: 1fr; }
+}
