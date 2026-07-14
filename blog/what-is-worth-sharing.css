@@ -1,0 +1,190 @@
+/* Page-specific styles for What Is Worth Sharing */
+
+/* ===== HERO THEME ===== */
+.article-hero { background: linear-gradient(160deg, #1f0f18 0%, #2e1524 55%, #200f19 100%); }
+.article-tag-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px; }
+.article-hero-sub { color: #c090a8; }
+.article-meta-read { color: #8a5a70; }
+.article-cta { background: linear-gradient(135deg, #1f0f18 0%, #2e1524 100%); border: 2px solid #5a2a42; }
+.article-cta p { color: #c090a8; }
+.article-cta a.secondary { color: #c090a8; border: 2px solid #5a2a42; }
+
+/* ===== SECTION SUBHEADER h3 OVERRIDE ===== */
+.article-body h3 {
+  font-size: 19px;
+  font-weight: 900;
+  color: #1f0f18;
+  text-transform: none;
+  letter-spacing: 0;
+  margin: 40px 0 10px;
+}
+.article-body h3::before {
+  content: '';
+  display: block;
+  width: 24px;
+  height: 3px;
+  background: #a03a5a;
+  border-radius: 2px;
+  margin-bottom: 10px;
+}
+
+/* ===== MYTH LABELS ===== */
+.myth-label {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #fff;
+  background: #b83030;
+  padding: 3px 9px;
+  border-radius: 4px;
+  margin-right: 9px;
+  vertical-align: middle;
+  position: relative;
+  top: -1px;
+}
+
+/* ===== CC COMPOUND ===== */
+.cc-compound {
+  background: #f7eef2;
+  border-left: 4px solid #a03a5a;
+  border-radius: 0 8px 8px 0;
+  padding: 16px 20px;
+  margin: 24px 0;
+}
+.cc-compound-label {
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #a03a5a;
+  margin-bottom: 8px;
+}
+.cc-compound-body {
+  font-size: 15px;
+  color: #2a1420;
+  line-height: 1.7;
+}
+
+/* ===== TALK TYPES ===== */
+.talk-types {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin: 24px 0;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.talk-types.is-visible { opacity: 1; transform: translateY(0); }
+.talk-type {
+  background: #fdf7fa;
+  border: 1px solid #e8d0dc;
+  border-radius: 12px;
+  padding: 20px 20px;
+}
+.tt-num {
+  font-size: 11px;
+  font-weight: 900;
+  color: #a03a5a;
+  font-family: 'Courier New', monospace;
+  margin-bottom: 8px;
+}
+.tt-title { font-size: 15.5px; font-weight: 900; color: #2a1420; margin-bottom: 8px; }
+.tt-desc { font-size: 13.5px; color: #5a3a48; line-height: 1.65; }
+
+/* ===== SME EXAMPLES TABLE ===== */
+.sme-examples {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 24px 0;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.sme-examples.is-visible { opacity: 1; transform: translateY(0); }
+.sme-role {
+  border: 1px solid #e6dde2;
+  border-radius: 12px;
+  padding: 18px 20px;
+  background: #fff;
+}
+.sme-role-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+.sme-role-tag {
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 4px 10px;
+  border-radius: 6px;
+  color: #fff;
+}
+.sme-tag-ds  { background: #5a3a9a; }
+.sme-tag-swe { background: #2a5a9a; }
+.sme-tag-sec { background: #9a3a2a; }
+.sme-type-badge {
+  font-size: 11px;
+  font-weight: 800;
+  color: #a03a5a;
+  background: #f7eef2;
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+.sme-row { display: flex; gap: 10px; padding: 6px 0; align-items: baseline; }
+.sme-row-label {
+  flex-shrink: 0;
+  width: 84px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.sme-bad  .sme-row-label { color: #b04040; }
+.sme-mid  .sme-row-label { color: #a08020; }
+.sme-good .sme-row-label { color: #2a8a4a; }
+.sme-row-text { font-size: 14px; color: #333; }
+.sme-good .sme-row-text { font-weight: 800; color: #1a1a1a; }
+
+/* ===== AUDIENCE GRID ===== */
+.audience-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin: 24px 0;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.audience-grid.is-visible { opacity: 1; transform: translateY(0); }
+.audience-card {
+  background: #fdf7fa;
+  border: 1px solid #e8d0dc;
+  border-radius: 12px;
+  padding: 20px 18px;
+}
+.audience-icon { margin-bottom: 10px; }
+.audience-title { font-size: 15px; font-weight: 900; color: #2a1420; margin-bottom: 8px; }
+.audience-desc { font-size: 13px; color: #5a3a48; line-height: 1.6; margin-bottom: 10px; }
+.audience-tip {
+  font-size: 12px;
+  font-weight: 800;
+  color: #a03a5a;
+  background: #f7eef2;
+  padding: 8px 10px;
+  border-radius: 0 6px 6px 0;
+  border-left: 3px solid #a03a5a;
+  line-height: 1.5;
+}
+
+@media (max-width: 780px) {
+  .talk-types { grid-template-columns: 1fr; }
+  .audience-grid { grid-template-columns: 1fr; }
+}

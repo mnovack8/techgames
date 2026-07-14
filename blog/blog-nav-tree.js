@@ -31,7 +31,9 @@
             {
               folder: true, slug: '__folder-literature', title: 'Literature',
               children: [
-                { slug: 'shape-of-a-developed-idea', title: 'The Shape of a Developed Idea', children: [] }
+                { slug: 'what-is-worth-sharing', title: 'What Is Worth Sharing?', children: [] },
+                { slug: 'shape-of-a-developed-idea', title: 'The Shape of a Developed Idea', children: [] },
+                { slug: 'heart-of-a-teacher', title: 'The Heart of a Teacher', children: [] }
               ]
             },
             {
@@ -55,8 +57,7 @@
               children: [
                 { slug: 'your-first-industry-conference-talk', title: 'Your First Conference Talk', children: [] },
                 { slug: 'communication-skills-workshop-for-technical-teams', title: 'Communication Skills Workshop', children: [] },
-                { slug: 'influence-and-authority', title: 'Authority vs. Influence', children: [] },
-                { slug: 'heart-of-a-teacher', title: 'The Heart of a Teacher', children: [] }
+                { slug: 'influence-and-authority', title: 'Authority vs. Influence', children: [] }
               ]
             }
           ]
