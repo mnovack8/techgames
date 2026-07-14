@@ -33,6 +33,22 @@ const SELF_PING_URL = (process.env.RENDER_EXTERNAL_URL || process.env.SERVER_URL
 const PING_INTERVAL_MS  = 4 * 60 * 1000;   // every 4 minutes
 const ACTIVITY_WINDOW_MS = 60 * 60 * 1000; // stop pinging after 1 hour of silence
 
+// Parses blog/index.html once and returns { '/blog/slug': '<svg>...</svg>' }
+// for every card, so callers never have to hand-maintain a second copy of
+// each post's thumbnail image.
+function readBlogCardImages(blogDir) {
+  const images = {};
+  try {
+    const html = fs.readFileSync(path.join(blogDir, 'index.html'), 'utf8');
+    const cardRe = /<a href="(\/blog\/[^"]+)"[^>]*class="blog-card[^"]*"[^>]*>[\s\S]*?<div class="blog-card-img"[^>]*>([\s\S]*?)<\/div>\s*<div class="blog-card-body">/g;
+    let m;
+    while ((m = cardRe.exec(html))) {
+      images[m[1]] = m[2].trim();
+    }
+  } catch (_) {}
+  return images;
+}
+
 const server = http.createServer((req, res) => {
   if (req.url === '/health' && req.method === 'GET') {
     const idleSec = lastActivityAt ? Math.floor((Date.now() - lastActivityAt) / 1000) : null;
@@ -54,6 +70,11 @@ const server = http.createServer((req, res) => {
     const blogDir = path.join(__dirname, 'blog');
     const posts = [];
     try {
+      // Card thumbnails already exist once, hand-authored on each card in
+      // blog/index.html. Read them here instead of keeping a second,
+      // hand-maintained image map on the homepage that can drift out of sync.
+      const cardImages = readBlogCardImages(blogDir);
+
       const files = fs.readdirSync(blogDir).filter(f => f.endsWith('.html') && f !== 'index.html');
       for (const file of files) {
         try {
@@ -81,6 +102,7 @@ const server = http.createServer((req, res) => {
             section:     data.articleSection || '',
             tags:        tags,
             url:         urlPath,
+            image:       cardImages[urlPath] || null,
             date:        data.datePublished || '1970-01-01'
           });
         } catch (_) {}

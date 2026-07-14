@@ -10,6 +10,22 @@ const siteRouting = require('../site-routing');
 
 const PORT = process.env.PORT || 7711;
 
+// Parses blog/index.html once and returns { '/blog/slug': '<svg>...</svg>' }
+// for every card, so callers never have to hand-maintain a second copy of
+// each post's thumbnail image. Mirrored in ../server.js.
+function readBlogCardImages(blogDir) {
+  const images = {};
+  try {
+    const html = fs.readFileSync(path.join(blogDir, 'index.html'), 'utf8');
+    const cardRe = /<a href="(\/blog\/[^"]+)"[^>]*class="blog-card[^"]*"[^>]*>[\s\S]*?<div class="blog-card-img"[^>]*>([\s\S]*?)<\/div>\s*<div class="blog-card-body">/g;
+    let m;
+    while ((m = cardRe.exec(html))) {
+      images[m[1]] = m[2].trim();
+    }
+  } catch (_) {}
+  return images;
+}
+
 http.createServer((req, res) => {
   const pathname = decodeURIComponent(req.url.split('?')[0]);
 
@@ -19,6 +35,7 @@ http.createServer((req, res) => {
     const blogDir = path.join(__dirname, '..', 'blog');
     const posts = [];
     try {
+      const cardImages = readBlogCardImages(blogDir);
       const files = fs.readdirSync(blogDir).filter(f => f.endsWith('.html') && f !== 'index.html');
       for (const file of files) {
         try {
@@ -43,6 +60,7 @@ http.createServer((req, res) => {
             section: data.articleSection || '',
             tags: tags,
             url: urlPath,
+            image: cardImages[urlPath] || null,
             date: data.datePublished || '1970-01-01'
           });
         } catch (_) {}
