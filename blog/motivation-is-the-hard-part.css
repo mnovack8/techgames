@@ -1,0 +1,153 @@
+/* Page-specific styles for Motivation Is the Hard Part */
+
+/* ===== HERO THEME ===== */
+.article-hero { background: linear-gradient(160deg, #0d1a17 0%, #163530 55%, #101f1c 100%); }
+.article-tag-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px; }
+.article-hero-sub { color: #8ab0a8; }
+.article-meta-read { color: #5a7a70; }
+.article-cta { background: linear-gradient(135deg, #0d1a17 0%, #163530 100%); border: 2px solid #2a5a4a; }
+.article-cta p { color: #8ab0a8; }
+.article-cta a.secondary { color: #8ab0a8; border: 2px solid #2a5a4a; }
+
+/* ===== H3 OVERRIDE ===== */
+.article-body h3 {
+  font-size: 19px;
+  font-weight: 900;
+  color: #0d1a17;
+  text-transform: none;
+  letter-spacing: 0;
+  margin: 40px 0 10px;
+}
+
+/* ===== CC COMPOUND ===== */
+.cc-compound {
+  background: #eef6f2;
+  border-left: 4px solid #3a7a6a;
+  border-radius: 0 8px 8px 0;
+  padding: 16px 20px;
+  margin: 24px 0;
+}
+.cc-compound-label {
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #3a7a6a;
+  margin-bottom: 8px;
+}
+.cc-compound-body {
+  font-size: 15px;
+  color: #10201a;
+  line-height: 1.7;
+}
+
+/* ===== U-CURVE CHART ===== */
+.u-curve-chart {
+  margin: 28px 0 16px;
+  padding: 20px 20px 12px;
+  background: #fbfdfb;
+  border: 1px solid #dbe8e2;
+  border-radius: 14px;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.u-curve-chart.is-visible { opacity: 1; transform: translateY(0); }
+.u-curve-svg { width: 100%; height: auto; display: block; }
+.u-curve-legend {
+  display: flex;
+  gap: 22px;
+  justify-content: center;
+  margin-top: 4px;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  font-weight: 800;
+  color: #3a4a44;
+}
+.legend-swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  display: inline-block;
+}
+.legend-motivation { background: #d1a44a; }
+.legend-content    { background: #3a7a6a; }
+
+/* ===== U-CURVE STAGES (beginning / middle / end) ===== */
+.u-curve-stages {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin: 24px 0 30px;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.u-curve-stages.is-visible { opacity: 1; transform: translateY(0); }
+.u-stage {
+  background: #fff;
+  border: 1px solid #dde5e0;
+  border-radius: 12px;
+  padding: 18px 18px;
+}
+.u-stage-label {
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #d1a44a;
+  margin-bottom: 6px;
+}
+.u-stage-title { font-size: 15px; font-weight: 900; color: #10201a; margin-bottom: 8px; }
+.u-stage-desc { font-size: 13px; color: #4a5a54; line-height: 1.6; }
+
+/* ===== BUILD STAGES (Tech CoLab's 3-step approach) ===== */
+.build-stages {
+  margin: 26px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 2px solid #cfe0d8;
+  border-radius: 14px;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.build-stages.is-visible { opacity: 1; transform: translateY(0); }
+.build-stage {
+  display: flex;
+  gap: 18px;
+  padding: 22px 24px;
+  border-bottom: 1px solid #e0ebe4;
+}
+.build-stage:last-child { border-bottom: none; }
+.build-stage:nth-child(odd)  { background: #fbfdfb; }
+.build-stage:nth-child(even) { background: #fff; }
+.build-num {
+  flex-shrink: 0;
+  width: 32px;
+  font-size: 13px;
+  font-weight: 900;
+  font-family: 'Courier New', monospace;
+  color: #3a7a6a;
+  padding-top: 2px;
+}
+.build-title { font-size: 16px; font-weight: 900; color: #10201a; margin-bottom: 4px; }
+.build-phase {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #d1a44a;
+  margin-bottom: 8px;
+}
+.build-desc { font-size: 14px; color: #444; line-height: 1.65; }
+
+@media (max-width: 720px) {
+  .u-curve-stages { grid-template-columns: 1fr; }
+}

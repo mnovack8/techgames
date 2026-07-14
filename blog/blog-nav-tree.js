@@ -33,7 +33,8 @@
               children: [
                 { slug: 'what-is-worth-sharing', title: 'What Is Worth Sharing?', children: [] },
                 { slug: 'shape-of-a-developed-idea', title: 'The Shape of a Developed Idea', children: [] },
-                { slug: 'heart-of-a-teacher', title: 'The Heart of a Teacher', children: [] }
+                { slug: 'heart-of-a-teacher', title: 'The Heart of a Teacher', children: [] },
+                { slug: 'motivation-is-the-hard-part', title: 'Motivation Is the Hard Part', children: [] }
               ]
             },
             {
