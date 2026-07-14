@@ -61,6 +61,14 @@
                 { slug: 'communication-skills-workshop-for-technical-teams', title: 'Communication Skills Workshop', children: [] },
                 { slug: 'influence-and-authority', title: 'Authority vs. Influence', children: [] }
               ]
+            },
+            {
+              folder: true, slug: '__folder-art', title: 'Art',
+              children: [
+                { slug: 'constraints-are-the-medium', title: 'Constraints Are the Medium', children: [] },
+                { slug: 'taste-is-a-hypothesis', title: 'Taste Is a Hypothesis', children: [] },
+                { slug: 'how-to-run-a-creative-constraints-workshop', title: 'Creative Constraints Workshop', children: [] }
+              ]
             }
           ]
         },

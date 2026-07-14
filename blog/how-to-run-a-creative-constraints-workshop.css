@@ -1,0 +1,69 @@
+/* Page-specific styles for How to Run a Creative Constraints Workshop */
+
+/* ===== HERO THEME ===== */
+.article-hero { background: linear-gradient(160deg, #1a0f08 0%, #2a1608 55%, #1f1206 100%); }
+.article-tag-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px; }
+.article-hero-sub { color: #c8a888; }
+.article-meta-read { color: #8a6a4a; }
+.article-cta { background: linear-gradient(135deg, #1a0f08 0%, #2a1608 100%); border: 2px solid #4a2a10; }
+.article-cta p { color: #c8a888; }
+.article-cta a.secondary { color: #c8a888; border: 2px solid #4a2a10; }
+
+/* ===== 3-STEP FLOW (reused pattern from culture audit) ===== */
+.workshop-flow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin: 34px 0 10px;
+}
+.wf-step {
+  background: #fafaf6;
+  border: 2px solid #e6d8c8;
+  border-radius: 12px;
+  padding: 18px 16px 16px;
+  text-align: center;
+  position: relative;
+}
+.wf-num {
+  position: absolute;
+  top: -12px;
+  left: 16px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #a0451a;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.wf-step-icon { margin: 6px 0 10px; }
+.wf-step-title { font-size: 15px; font-weight: 900; color: #1a1006; margin-bottom: 4px; }
+.wf-step-desc { font-size: 12.5px; color: #5a4a3a; line-height: 1.5; margin-bottom: 8px; }
+.wf-step-time { font-size: 11px; font-weight: 800; color: #a0451a; }
+
+/* ===== TWO-BOX COMPARE (Group A vs Group B outputs) ===== */
+.compare-block { margin: 28px 0; opacity: 0; transform: translateY(16px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.compare-block.is-visible { opacity: 1; transform: translateY(0); }
+.compare-header { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 4px; }
+.cmp-col-label { font-size: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; padding: 8px 4px; text-align: center; border-radius: 8px 8px 0 0; }
+.cmp-col-label.cmp-open { background: #eee6da; color: #6a5a48; }
+.cmp-col-label.cmp-constrained { background: #a0451a; color: #fff; }
+.compare-rows { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.cmp-cell { background: #fafaf6; border: 1.5px solid #e6d8c8; border-radius: 0 0 8px 8px; padding: 14px 16px; font-size: 13.5px; color: #2a2016; line-height: 1.55; }
+.cmp-cell.cmp-constrained-cell { border-color: #a0451a; }
+
+/* ===== COMMIT BLOCK (reused pattern) ===== */
+.constraint-commit-block { margin: 22px 0; background: #fafaf6; border: 2px solid #e6d8c8; border-radius: 12px; padding: 20px 24px; }
+.constraint-commit-lines { display: flex; flex-direction: column; gap: 10px; }
+.constraint-commit-line { display: flex; gap: 12px; }
+.constraint-commit-line-num { flex-shrink: 0; width: 20px; height: 20px; border-radius: 50%; background: #a0451a; color: #fff; font-size: 11px; font-weight: 900; display: flex; align-items: center; justify-content: center; margin-top: 1px; }
+.constraint-commit-line-text { font-size: 14.5px; color: #2a2016; line-height: 1.6; }
+.constraint-commit-line-text em { color: #a0451a; font-style: normal; font-weight: 800; }
+
+@media (max-width: 640px) {
+  .workshop-flow { grid-template-columns: 1fr; }
+  .compare-header, .compare-rows { grid-template-columns: 1fr; }
+}
