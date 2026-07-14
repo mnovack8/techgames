@@ -49,7 +49,8 @@
             {
               folder: true, slug: '__folder-history', title: 'History',
               children: [
-                { slug: 'understand-the-past', title: 'Start With the History', children: [] }
+                { slug: 'understand-the-past', title: 'Start With the History', children: [] },
+                { slug: 'principles-over-headlines', title: 'The Principles Rarely Do', children: [] }
               ]
             },
             {
