@@ -1,0 +1,200 @@
+/* Page-specific styles for The Logic of a Problem, the Logic of a Person */
+
+/* ===== HERO THEME ===== */
+.article-hero { background: linear-gradient(160deg, #0d0f1a 0%, #141828 55%, #0f1120 100%); }
+.article-tag-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px; }
+.article-hero-sub { color: #8a90b8; }
+.article-meta-read { color: #5a608a; }
+.article-cta { background: linear-gradient(135deg, #0d0f1a 0%, #141828 100%); border: 2px solid #2a2a5a; }
+.article-cta p { color: #8a90b8; }
+.article-cta a.secondary { color: #8a90b8; border: 2px solid #2a2a5a; }
+
+/* ===== H3 OVERRIDE ===== */
+.article-body h3 {
+  font-size: 19px;
+  font-weight: 900;
+  color: #0d0f1a;
+  text-transform: none;
+  letter-spacing: 0;
+  margin: 40px 0 10px;
+}
+
+/* ===== CC COMPOUND (reused for the Principle of Charity callout) ===== */
+.cc-compound {
+  background: #f0f5e8;
+  border-left: 4px solid #62b517;
+  border-radius: 0 8px 8px 0;
+  padding: 16px 20px;
+  margin: 24px 0;
+}
+.cc-compound-label {
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #62b517;
+  margin-bottom: 8px;
+}
+.cc-compound-body {
+  font-size: 15px;
+  color: #1a2a10;
+  line-height: 1.7;
+}
+
+/* ===== CLAIM GRID (conjunction decomposition, hover to reveal falsification test) ===== */
+.claim-grid {
+  margin: 28px 0;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.claim-grid.is-visible { opacity: 1; transform: translateY(0); }
+.claim-grid-bundle {
+  font-size: 13px;
+  font-weight: 800;
+  color: #5a608a;
+  margin-bottom: 12px;
+  font-family: 'Courier New', monospace;
+}
+.claim-grid-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+.claim-card {
+  display: flex;
+  flex-direction: column;
+  background: #fafcf6;
+  border: 1px solid #dde6c8;
+  border-radius: 10px;
+  padding: 16px 18px;
+  cursor: default;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.claim-card:hover { border-color: #62b517; box-shadow: 0 4px 14px rgba(98,181,23,0.14); }
+.claim-tag {
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #62b517;
+  margin-bottom: 8px;
+}
+.claim-text { font-size: 14.5px; font-weight: 700; color: #1a2a10; line-height: 1.5; }
+.claim-falsify {
+  display: none;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed #cdd8b0;
+  font-size: 13px;
+  font-style: italic;
+  color: #5a6448;
+  line-height: 1.5;
+}
+.claim-card:hover .claim-falsify { display: block; }
+
+/* ===== PROOF BLOCK (natural-deduction style inference rule) ===== */
+.proof-block {
+  margin: 26px 0;
+  background: #0d0f1a;
+  border: 1px solid #2a2a5a;
+  border-radius: 10px;
+  padding: 22px 26px 20px;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.proof-block.is-visible { opacity: 1; transform: translateY(0); }
+.proof-premises {
+  font-size: 14px;
+  color: #8a90b8;
+  font-family: 'Courier New', monospace;
+}
+.proof-premises div { margin: 3px 0; }
+.proof-bar {
+  border: none;
+  border-top: 1.5px solid #4a4a8a;
+  margin: 14px 0 12px;
+  position: relative;
+}
+.proof-rule-name {
+  position: absolute;
+  right: 0;
+  top: 6px;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #5a608a;
+  font-family: 'Courier New', monospace;
+}
+.proof-conclusion { font-size: 16px; font-weight: 800; color: #fff; }
+.proof-therefore { color: #d1db24; font-family: 'Courier New', monospace; margin-right: 8px; }
+
+/* ===== VENN (problem / person overlap) ===== */
+.venn-block {
+  position: relative;
+  width: 320px;
+  height: 190px;
+  margin: 34px auto 26px;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.venn-block.is-visible { opacity: 1; transform: translateY(0); }
+.venn-circle {
+  position: absolute;
+  top: 0;
+  width: 190px;
+  height: 190px;
+  border-radius: 50%;
+  background: rgba(98,181,23,0.14);
+  border: 1.5px solid rgba(98,181,23,0.5);
+  mix-blend-mode: multiply;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #2a5a0a;
+  padding-top: 18px;
+}
+.venn-a { left: 0; text-align: left; padding-left: 22px; }
+.venn-b { right: 0; text-align: right; padding-right: 22px; }
+.venn-label {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 130px;
+  text-align: center;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #1a2a10;
+  line-height: 1.4;
+}
+
+/* ===== TACTICS LIST (closing checklist, reused pattern) ===== */
+.influence-tactics { margin: 30px 0 10px; }
+.tactic {
+  display: flex;
+  gap: 18px;
+  padding: 16px 0;
+  border-top: 1px solid #e4e9d4;
+}
+.tactic:last-child { border-bottom: 1px solid #e4e9d4; }
+.tactic-num {
+  font-size: 13px;
+  font-weight: 900;
+  color: #62b517;
+  font-family: 'Courier New', monospace;
+  flex-shrink: 0;
+  width: 26px;
+  padding-top: 2px;
+}
+.tactic-title { font-size: 15.5px; font-weight: 800; color: #1a2a10; margin-bottom: 4px; }
+.tactic-detail { font-size: 14px; color: #445032; line-height: 1.6; }
+
+@media (max-width: 640px) {
+  .claim-grid-row { grid-template-columns: 1fr; }
+  .venn-block { width: 260px; height: 170px; }
+  .venn-circle { width: 150px; height: 150px; }
+}

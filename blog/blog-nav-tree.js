@@ -38,6 +38,7 @@
               folder: true, slug: '__folder-philosophy', title: 'Philosophy',
               children: [
                 { slug: 'improving-spocks-eq', title: "Improving Spock's EQ", children: [] },
+                { slug: 'logic-of-problem-and-person', title: 'The Logic of a Problem, the Logic of a Person', children: [] },
                 { slug: 'people-process-tools', title: 'People, Process & Tools', children: [] },
                 { slug: 'how-to-run-a-culture-audit-workshop', title: 'Culture Audit Workshop', children: [] },
                 { slug: 'agents-components-interactions', title: 'Every System Has the Same Shape', children: [] }
@@ -121,8 +122,13 @@
       + '.blog-tree-nav.open{transform:translateX(0);}'
       + '.blog-tree-nav-title-row{display:flex;align-items:center;justify-content:space-between;'
       + 'padding:0 4px 8px 8px;border-bottom:2px solid #f0f5e4;}'
+      + '.blog-tree-nav-title-group{display:flex;align-items:center;gap:8px;}'
       + '.blog-tree-nav-title{font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:0.08em;'
       + 'color:#4a8c11;}'
+      + '.blog-tree-home-btn{display:flex;align-items:center;justify-content:center;width:22px;height:22px;'
+      + 'flex-shrink:0;border-radius:6px;color:#4a8c11;background:#f4fae8;border:1px solid #dde8c8;'
+      + 'text-decoration:none;transition:background 0.15s,color 0.15s;}'
+      + '.blog-tree-home-btn:hover{background:#62b517;color:#fff;}'
       + '.blog-tree-close-btn{background:none;border:none;color:#8a9a6a;font-size:15px;font-weight:900;'
       + 'cursor:pointer;padding:2px 6px;flex-shrink:0;display:none;line-height:1;}'
       + '.blog-tree-close-btn:hover{color:#4a8c11;}'
@@ -255,10 +261,23 @@
     var titleRow = document.createElement('div');
     titleRow.className = 'blog-tree-nav-title-row';
 
+    var titleGroup = document.createElement('div');
+    titleGroup.className = 'blog-tree-nav-title-group';
+
+    var homeBtn = document.createElement('a');
+    homeBtn.className = 'blog-tree-home-btn';
+    homeBtn.href = '/blog';
+    homeBtn.setAttribute('aria-label', 'Back to blog home');
+    homeBtn.title = 'Back to blog home';
+    homeBtn.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9a1 1 0 0 0 1 1H9a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h2.5a1 1 0 0 0 1-1v-9"/></svg>';
+    titleGroup.appendChild(homeBtn);
+
     var title = document.createElement('div');
     title.className = 'blog-tree-nav-title';
     title.textContent = 'Explore the Blog';
-    titleRow.appendChild(title);
+    titleGroup.appendChild(title);
+
+    titleRow.appendChild(titleGroup);
 
     var closeBtn = document.createElement('button');
     closeBtn.className = 'blog-tree-close-btn';
