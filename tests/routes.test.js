@@ -130,7 +130,7 @@ describe('Route Coverage', () => {
       '/blog/cybersecurity-mindset-critical-thinking',
       '/blog/how-to-facilitate-an-ai-literacy-workshop',
       '/blog/how-to-run-an-ai-literacy-workshop-online',
-      '/blog/people-process-tools',
+      '/blog/people-process-tools-board-game-example',
       '/blog/principles-of-ai-data-science',
       '/blog/quantum-computing-basics',
       '/blog/why-we-learn-better-through-play',

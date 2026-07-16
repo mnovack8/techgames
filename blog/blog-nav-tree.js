@@ -42,7 +42,7 @@
               children: [
                 { slug: 'improving-spocks-eq', title: "Improving Spock's EQ", children: [] },
                 { slug: 'logic-of-problem-and-person', title: 'The Logic of a Problem, the Logic of a Person', children: [] },
-                { slug: 'people-process-tools', title: 'People, Process & Tools', children: [] },
+                { slug: 'people-process-tools-board-game-example', title: 'People, Process & Tools', children: [] },
                 { slug: 'how-to-run-a-culture-audit-workshop', title: 'Culture Audit Workshop', children: [] },
                 { slug: 'agents-components-interactions', title: 'Every System Has the Same Shape', children: [] }
               ]
