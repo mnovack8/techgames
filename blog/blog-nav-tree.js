@@ -29,6 +29,12 @@
           defaultOpen: true,
           children: [
             {
+              folder: true, slug: '__folder-general', title: 'General',
+              children: [
+                { slug: 'engineering-approach-to-human-systems', title: 'An Engineering Approach to Human Systems', children: [] }
+              ]
+            },
+            {
               folder: true, slug: '__folder-literature', title: 'Literature',
               children: [
                 { slug: 'what-is-worth-sharing', title: 'What Is Worth Sharing?', children: [] },
