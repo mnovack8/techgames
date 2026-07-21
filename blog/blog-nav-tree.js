@@ -31,7 +31,8 @@
             {
               folder: true, slug: '__folder-general', title: 'General',
               children: [
-                { slug: 'engineering-approach-to-human-systems', title: 'An Engineering Approach to Human Systems', children: [] }
+                { slug: 'engineering-approach-to-human-systems', title: 'An Engineering Approach to Human Systems', children: [] },
+                { slug: 'compounding-return-on-human-skills', title: 'The Compounding Return on Human Skills', children: [] }
               ]
             },
             {
@@ -68,7 +69,8 @@
                 { slug: 'communication-skills-workshop-for-technical-teams', title: 'Communication Skills Workshop', children: [] },
                 { slug: 'influence-and-authority', title: 'Authority vs. Influence', children: [] },
                 { slug: 'confrontation-to-cooperation', title: 'Confrontation Is a Game. Change the Rules.', children: [] },
-                { slug: 'conways-law', title: "Conway's Law", children: [] }
+                { slug: 'conways-law', title: "Conway's Law", children: [] },
+                { slug: 'trust-as-a-compounding-asset', title: 'Trust as a Compounding Asset', children: [] }
               ]
             },
             {
