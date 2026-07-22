@@ -264,12 +264,12 @@ const GAME_REGISTRY = {
     onDisconnect(room, playerIdx) {
       const s = room.state;
       if (!s || s.gameOver) return;
-      // Always reset any mid-phase state so disconnecting mid-action doesn't freeze the game
-      s.actionsLeft = 0;
-      s.phase = 'idle';
-      s.testAnimal = -1; s.testPath = []; s.overfitEdges = [];
-      s.pathClickable = []; s.pathOptions = []; s.backpropSource = -1;
       if (s.currentPlayer === playerIdx) {
+        // Reset any mid-phase state so a mid-action disconnect doesn't freeze the game
+        s.actionsLeft = 0;
+        s.phase = 'idle';
+        s.testAnimal = -1; s.testPath = []; s.overfitEdges = [];
+        s.pathClickable = []; s.pathOptions = []; s.backpropSource = -1;
         fnNextTurn(room);
       }
       fnBroadcastState(room);

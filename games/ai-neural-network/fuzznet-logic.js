@@ -535,14 +535,22 @@ function nextTurn(room) {
     s.roundScores = {};
   }
 
-  // Skip disconnected players
+  // Skip disconnected players, but never end the game just because everyone is
+  // transiently disconnected (a brief network hiccup should not kill a live game).
+  // leaveRoom() already deletes the room when players truly leave with no session.
   let attempts = 0;
-  while (!room.players[s.currentPlayer].connected && attempts < s.players.length) {
+  while (!room.players[s.currentPlayer].connected
+      && !room.players[s.currentPlayer].isBot
+      && attempts < s.players.length) {
     s.currentPlayer = (s.currentPlayer + 1) % s.players.length;
     if (s.currentPlayer === 0) { s.round++; s.roundScores = {}; }
     attempts++;
   }
-  if (attempts >= s.players.length) { endGame(room); return; }
+  // If we lapped all players and none are connected or bots, hold the turn —
+  // don't end the game. They are mid-reconnect; the rejoin flow will resume play.
+  if (attempts >= s.players.length && !room.players.some(p => p.connected || p.isBot)) {
+    return;
+  }
 
   const p = curPlayer(s);
   s.actionsLeft = p.firstTurnDone ? 1 : 3;
