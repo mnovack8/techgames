@@ -91,42 +91,22 @@
 }
 .fit-card p { font-size: 13px; color: #555; line-height: 1.6; }
 
-/* ===== AUDIENCE CARDS ===== */
-.audience-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
-  margin-top: 32px;
+/* ===== AUDIENCE FLAT ===== */
+.audience-flat { margin-top: 28px; }
+.audience-flat-title {
+  font-size: clamp(22px, 2.8vw, 32px);
+  font-weight: 900;
+  color: #f0f7e6;
+  margin-bottom: 14px;
+  line-height: 1.2;
 }
-.audience-card {
-  background: rgba(209,219,36,0.1);
-  border: 1.5px solid rgba(209,219,36,0.4);
-  border-radius: 12px;
-  padding: 20px 22px;
-  display: flex;
-  align-items: flex-start;
-  gap: 14px;
+.bg-cool .audience-flat-title {
+  color: #62b517;
+  text-decoration: underline;
+  text-decoration-color: #d1db24;
+  text-underline-offset: 6px;
+  text-decoration-thickness: 3px;
 }
-.audience-icon {
-  width: 32px; height: 32px; flex-shrink: 0;
-  background: rgba(209,219,36,0.2);
-  border-radius: 8px;
-  display: flex; align-items: center; justify-content: center;
-}
-.audience-icon svg { width: 18px; height: 18px; }
-.audience-card strong { display: block; font-size: 13px; font-weight: 800; color: #f0f7e6; margin-bottom: 4px; }
-.audience-card p { font-size: 12px; color: rgba(240,247,230,0.7); line-height: 1.5; }
-
-/* Audience grid on light background (bg-cool) */
-.bg-cool .audience-card {
-  background: #fff;
-  border-color: rgba(98,181,23,0.3);
-}
-.bg-cool .audience-icon { background: rgba(98,181,23,0.1); }
-.bg-cool .audience-card strong { color: #1a3a00; }
-.bg-cool .audience-card p { color: #4a5a3a; }
-.bg-cool .audience-icon svg * { stroke: #4a8c11; fill: none; }
-.bg-cool .audience-icon svg [fill="#d1db24"] { fill: rgba(98,181,23,0.2); stroke: #4a8c11; }
 
 /* ===== MINI GAME CARDS ===== */
 .plan-mini-cards { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 24px; }
@@ -218,7 +198,6 @@
 @media (max-width: 900px) {
   .approach-pillars { grid-template-columns: 1fr; }
   .fit-grid { grid-template-columns: 1fr; }
-  .audience-grid { grid-template-columns: 1fr; }
 }
 @media (max-width: 600px) {
   .story-section { padding: 48px 20px; }
