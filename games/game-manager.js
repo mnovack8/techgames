@@ -41,6 +41,11 @@ function _serializeRooms() {
       observers: (room.observers || []).map(o => ({ ...o, ws: undefined, connected: false })),
       eventOrganizers: undefined,
       _botRunning: false,
+      _cfBotRunning: false,
+      _bcBotRunning: false,
+      _fnBotWatchdog: undefined,
+      _cfBotWatchdog: undefined,
+      _bcBotWatchdog: undefined,
     };
     out.rooms.push([code, saved]);
   }
@@ -86,29 +91,36 @@ function generateToken() {
   return t;
 }
 
-// Clean up rooms older than 24 hours every hour
-const ROOM_MAX_AGE = 24 * 60 * 60 * 1000;
+// Clean up rooms that have been idle (all players disconnected) for 1 hour,
+// or that are older than 24 hours regardless of activity.
+const ROOM_MAX_AGE      = 24 * 60 * 60 * 1000;
+const ROOM_IDLE_TIMEOUT =       60 * 60 * 1000; // 1 hour all-disconnected
 setInterval(() => {
   const now = Date.now();
   for (const [code, room] of rooms.entries()) {
-    if (now - room.createdAt > ROOM_MAX_AGE) {
-      for (const [token, s] of sessions.entries()) {
-        if (s.roomCode === code) sessions.delete(token);
-      }
-      for (const p of room.players) {
-        if (p.connected && p.ws) {
-          try { send(p.ws, { type: 'error', msg: 'This game expired after 24 hours.' }); } catch {}
-          wsData.delete(p.ws);
-        }
-      }
-      for (const o of (room.observers || [])) {
-        if (o.connected && o.ws) {
-          try { send(o.ws, { type: 'error', msg: 'This game expired after 24 hours.' }); } catch {}
-          wsData.delete(o.ws);
-        }
-      }
-      rooms.delete(code);
+    const anyoneConnected = room.players.some(p => p.connected)
+      || (room.observers || []).some(o => o.connected);
+    const lastSeen = room.lastActivity || room.createdAt;
+    const tooOld  = now - room.createdAt  > ROOM_MAX_AGE;
+    const tooIdle = !anyoneConnected && now - lastSeen > ROOM_IDLE_TIMEOUT;
+    if (!tooOld && !tooIdle) continue;
+    const expiredMsg = tooOld ? 'This game expired after 24 hours.' : 'This game closed after 1 hour of inactivity.';
+    for (const [token, s] of sessions.entries()) {
+      if (s.roomCode === code) sessions.delete(token);
     }
+    for (const p of room.players) {
+      if (p.connected && p.ws) {
+        try { send(p.ws, { type: 'error', msg: expiredMsg }); } catch {}
+        wsData.delete(p.ws);
+      }
+    }
+    for (const o of (room.observers || [])) {
+      if (o.connected && o.ws) {
+        try { send(o.ws, { type: 'error', msg: expiredMsg }); } catch {}
+        wsData.delete(o.ws);
+      }
+    }
+    rooms.delete(code);
   }
 }, 60 * 60 * 1000);
 
@@ -250,12 +262,17 @@ const GAME_REGISTRY = {
     broadcastState(room)      { fnBroadcastState(room); },
     onRejoin(room)            { fnBroadcastState(room); },
     onDisconnect(room, playerIdx) {
-      if (room.state && room.state.currentPlayer === playerIdx && !room.state.gameOver) {
-        room.state.actionsLeft = 0;
-        room.state.phase = 'idle';
+      const s = room.state;
+      if (!s || s.gameOver) return;
+      // Always reset any mid-phase state so disconnecting mid-action doesn't freeze the game
+      s.actionsLeft = 0;
+      s.phase = 'idle';
+      s.testAnimal = -1; s.testPath = []; s.overfitEdges = [];
+      s.pathClickable = []; s.pathOptions = []; s.backpropSource = -1;
+      if (s.currentPlayer === playerIdx) {
         fnNextTurn(room);
-        fnBroadcastState(room);
       }
+      fnBroadcastState(room);
     },
     isGameOver(room) { return !!(room.state && room.state.gameOver); },
   },
@@ -275,6 +292,13 @@ function getGame(room) {
 function handleMessage(ws, raw) {
   let msg;
   try { msg = JSON.parse(raw); } catch { return send(ws, {type:'error',msg:'Bad JSON'}); }
+
+  // Refresh inactivity clock on every valid message
+  const _info = wsData.get(ws);
+  if (_info?.roomCode) {
+    const _room = rooms.get(_info.roomCode);
+    if (_room) _room.lastActivity = Date.now();
+  }
 
   switch (msg.type) {
     case 'create_room': {

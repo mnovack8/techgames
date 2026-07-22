@@ -440,6 +440,20 @@ function broadcastState(room) {
   for (const o of (room.observers || [])) {
     if (o.connected && o.ws) send(o.ws, { ...base, yourId: -1, isObserver: true });
   }
+
+  // Bot inactivity watchdog — if a bot is the current player and 5 s pass with
+  // no further broadcast, reset the lock and re-trigger so the game never freezes.
+  clearTimeout(room._fnBotWatchdog);
+  if (!s.gameOver && room.players[s.currentPlayer]?.isBot) {
+    const watchBotIdx = s.currentPlayer;
+    room._fnBotWatchdog = setTimeout(() => {
+      if (!room.state || room.state.gameOver || room.state.currentPlayer !== watchBotIdx) return;
+      console.log(`[FuzzNet watchdog] player ${watchBotIdx} inactive 5 s — resetting bot lock`);
+      room._botRunning = false;
+      executeBotTurn(room);
+    }, 5000);
+    if (room._fnBotWatchdog.unref) room._fnBotWatchdog.unref();
+  }
 }
 
 // ==================== GAME STATE INIT ====================

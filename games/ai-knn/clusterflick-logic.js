@@ -212,10 +212,18 @@ function cfAdvanceTurn(room) {
   s.phase='flicking';
   // If every player has used all their flicks, end the round
   if(s.players.every(pl=>pl.flicksThisRound>=CF_FLICKS_PER_PLAYER)){cfScoreRound(room);return;}
-  // Cycle to the next player who still has flicks remaining
+  // Cycle to the next player who still has flicks remaining and is connected
   const n=room.players.length;
-  do{s.currentPlayer=(s.currentPlayer+1)%n;}
-  while(s.players[s.currentPlayer].flicksThisRound>=CF_FLICKS_PER_PLAYER);
+  let cfSkip=0;
+  do{
+    s.currentPlayer=(s.currentPlayer+1)%n;
+    cfSkip++;
+    // If a disconnected player still has flicks, count them as used so we skip them cleanly
+    if(!room.players[s.currentPlayer].connected&&s.players[s.currentPlayer].flicksThisRound<CF_FLICKS_PER_PLAYER){
+      s.players[s.currentPlayer].flicksThisRound=CF_FLICKS_PER_PLAYER;
+    }
+  }while(s.players[s.currentPlayer].flicksThisRound>=CF_FLICKS_PER_PLAYER&&cfSkip<n);
+  if(cfSkip>=n){cfScoreRound(room);return;}
   s.flicksLeft=CF_FLICKS_PER_PLAYER-s.players[s.currentPlayer].flicksThisRound;
   // Reset incoming player's action mode to identify at the start of their turn
   s.players[s.currentPlayer].actionMode='identify';
@@ -295,6 +303,20 @@ function cfBroadcastState(room, flickWaypoints=null) {
   }};
   for(let i=0;i<room.players.length;i++){const p=room.players[i];if(p.connected&&p.ws)send(p.ws,{...base,yourId:i});}
   for(const o of(room.observers||[])){if(o.connected&&o.ws)send(o.ws,{...base,yourId:-1,isObserver:true});}
+
+  // Bot inactivity watchdog — if a bot is due to flick and 5 s pass with no
+  // further broadcast, reset the lock and re-trigger so the game never freezes.
+  clearTimeout(room._cfBotWatchdog);
+  if(!s.gameOver && s.phase==='flicking' && room.players[s.currentPlayer]?.isBot){
+    const watchBotIdx=s.currentPlayer;
+    room._cfBotWatchdog=setTimeout(()=>{
+      if(!room.cfState||room.cfState.gameOver||room.cfState.currentPlayer!==watchBotIdx)return;
+      console.log(`[ClusterFlick watchdog] player ${watchBotIdx} inactive 5 s — resetting bot lock`);
+      room._cfBotRunning=false;
+      executeCFBotTurn(room);
+    },5000);
+    if(room._cfBotWatchdog.unref)room._cfBotWatchdog.unref();
+  }
 }
 
 function processCFAction(room, playerIdx, msg) {

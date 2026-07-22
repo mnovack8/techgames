@@ -272,6 +272,7 @@ const CF_FLICK_ZONES = [
 ];
 const COLOR_HEX = {blue:'#4a9eff',red:'#ff4a4a',green:'#3aaa6a',purple:'#a060dd'};
 const SESSION_KEY = 'cf_session';
+const LS_SESSION_PREFIX = 'techgames_cf_ls_';
 
 // ==================== PHYSICS (client mirror) ====================
 function cfGetZone(x,y) {
@@ -1303,7 +1304,7 @@ function handleMsg(msg){
       break;
     case 'room_created':
       roomCode=msg.code;myId=msg.yourId;isHost=true;isObserver=false;
-      if(msg.token)sessionStorage.setItem(SESSION_KEY,msg.token);
+      if(msg.token){sessionStorage.setItem(SESSION_KEY,msg.token);localStorage.setItem(LS_SESSION_PREFIX+(msg.code||roomCode),msg.token);}
       if(cftTutPendingStart){
         // Tutorial auto-flow: silently add a bot
         send({type:'toggle_bot'});
@@ -1316,7 +1317,7 @@ function handleMsg(msg){
       break;
     case 'room_joined':
       roomCode=msg.code;myId=msg.yourId;isHost=false;isObserver=false;
-      if(msg.token)sessionStorage.setItem(SESSION_KEY,msg.token);
+      if(msg.token){sessionStorage.setItem(SESSION_KEY,msg.token);localStorage.setItem(LS_SESSION_PREFIX+(msg.code||roomCode),msg.token);}
       document.getElementById('room-code-display').textContent=roomCode;
       showScreen('waiting');
       break;
@@ -1329,12 +1330,14 @@ function handleMsg(msg){
       break;
     case 'room_rejoined':
       roomCode=msg.code;myId=msg.yourId;isHost=msg.isHost;isObserver=false;
-      if(msg.token)sessionStorage.setItem(SESSION_KEY,msg.token);
+      if(msg.token){sessionStorage.setItem(SESSION_KEY,msg.token);localStorage.setItem(LS_SESSION_PREFIX+(msg.code||roomCode),msg.token);}
       if(msg.started){showScreen('game');document.getElementById('btn-end-game').style.display=isHost?'inline-block':'none';}
       else{showScreen('waiting');document.getElementById('room-code-display').textContent=roomCode;}
       break;
     case 'rejoin_failed':
-      sessionStorage.removeItem(SESSION_KEY);showScreen('lobby');break;
+      sessionStorage.removeItem(SESSION_KEY);
+      if(roomCode)localStorage.removeItem(LS_SESSION_PREFIX+roomCode);
+      showScreen('lobby');break;
     case 'lobby_update':
       if(cftTutPendingStart){
         // Tutorial auto-flow: start game once bot is in the room
@@ -1369,10 +1372,10 @@ function handleMsg(msg){
       if(cftTutMode && G) cftTutCheckAdvance(G);
       break;
     case 'left_room':
-      sessionStorage.removeItem(SESSION_KEY);roomCode='';myId=-1;G=null;isObserver=false;
+      sessionStorage.removeItem(SESSION_KEY);if(roomCode)localStorage.removeItem(LS_SESSION_PREFIX+roomCode);roomCode='';myId=-1;G=null;isObserver=false;
       document.body.classList.remove('observer-active');showScreen('lobby');break;
     case 'game_cancelled':
-      sessionStorage.removeItem(SESSION_KEY);roomCode='';myId=-1;G=null;isHost=false;isObserver=false;
+      sessionStorage.removeItem(SESSION_KEY);if(roomCode)localStorage.removeItem(LS_SESSION_PREFIX+roomCode);roomCode='';myId=-1;G=null;isHost=false;isObserver=false;
       document.body.classList.remove('observer-active');hideCancelModal();showScreen('lobby');
       document.getElementById('create-error').textContent='The host ended the game.';break;
     case 'room_info':
@@ -1904,7 +1907,12 @@ window.addEventListener('DOMContentLoaded',()=>{
     reconnectMs  : 2500,
     onConnect    : function () {
       const token = sessionStorage.getItem(SESSION_KEY);
-      if (token) hub.send({ type: 'rejoin_room', token });
+      if (token) { hub.send({ type: 'rejoin_room', token }); }
+      else if (roomCode) {
+        // Tab was reloaded — sessionStorage is gone but localStorage may have a token
+        const lsToken = localStorage.getItem(LS_SESSION_PREFIX + roomCode);
+        if (lsToken) hub.send({ type: 'rejoin_room', token: lsToken });
+      }
       if (_hubFirstConnect) {
         _hubFirstConnect = false;
         const params = new URLSearchParams(location.search);
