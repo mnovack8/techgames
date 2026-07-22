@@ -83,8 +83,8 @@ function resolvePathname(pathname) {
   else if (pathname === '/services' || pathname === '/services.html') pathname = '/singlepage/services.html';
   else if (pathname === '/contact' || pathname === '/contact.html') pathname = '/singlepage/contact.html';
   else if (pathname === '/about' || pathname === '/about.html') pathname = '/singlepage/about.html';
-  else if (pathname === '/board-culture-change' || pathname === '/board-culture-change.html' || pathname === '/corporate-training' || pathname === '/corporate-training.html') pathname = '/use-cases/board-culture-change.html';
-  else if (pathname === '/focused-deep-work' || pathname === '/focused-deep-work.html' || pathname === '/specialized-training' || pathname === '/specialized-training.html') pathname = '/use-cases/focused-deep-work.html';
+  else if (pathname === '/cybersecurity-literacy-use-case' || pathname === '/cybersecurity-literacy-use-case.html' || pathname === '/corporate-training' || pathname === '/corporate-training.html') pathname = '/cybersecurity-literacy-use-case.html';
+  else if (pathname === '/ai-literacy-use-case' || pathname === '/ai-literacy-use-case.html' || pathname === '/specialized-training' || pathname === '/specialized-training.html') pathname = '/ai-literacy-use-case.html';
   else if (pathname === '/buy-now' || pathname === '/buy-now.html') pathname = '/singlepage/buy-now.html';
   else if (pathname === '/admin' || pathname === '/admin.html') pathname = '/singlepage/admin.html';
   else if (pathname === '/blog' || pathname === '/blog.html') pathname = '/blog/index.html';

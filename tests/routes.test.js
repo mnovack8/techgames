@@ -109,8 +109,8 @@ describe('Route Coverage', () => {
   // ── Use-case pages ─────────────────────────────────────────────────────────
   describe('Use case pages', () => {
     const useCases = [
-      ['/board-culture-change', 'Board culture change'],
-      ['/focused-deep-work',    'Focused deep work'],
+      ['/cybersecurity-literacy-use-case', 'Board culture change'],
+      ['/ai-literacy-use-case',    'Focused deep work'],
     ];
 
     for (const [path, label] of useCases) {

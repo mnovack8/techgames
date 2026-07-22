@@ -1,7 +1,7 @@
 'use strict';
 // Lightweight static preview server for local development.
 // Reuses the site's real routing table (site-routing.js) so clean URLs
-// like /contact, /board-culture-change, /blog/<slug> all resolve the
+// like /contact, /cybersecurity-literacy-use-case, /blog/<slug> all resolve the
 // same way they do in production, instead of guessing at path mappings.
 const http = require('http');
 const fs = require('fs');
