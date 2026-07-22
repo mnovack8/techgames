@@ -678,7 +678,7 @@ body.obs-actions-hidden .gm-actions-section{display:none !important;}
 .card-emoji{font-size:16px;margin-bottom:2px;}
 
 /* ACTION BUTTONS */
-.action-bar{display:flex;gap:8px;padding:7px 16px;background:#060f02;border-top:2px solid #62b517;align-items:center;flex-wrap:nowrap;flex-shrink:0;box-shadow:0 -2px 16px rgba(98,181,23,0.12);}
+.action-bar{display:flex;gap:8px;padding:7px 16px 57px;background:#060f02;border-top:2px solid #62b517;align-items:center;flex-wrap:nowrap;flex-shrink:0;box-shadow:0 -2px 16px rgba(98,181,23,0.12);}
 .action-btn{padding:6px 14px;border-radius:7px;border:none;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.15s;}
 .action-btn:hover:not(:disabled){filter:brightness(1.1);}
 .action-btn:disabled{opacity:0.35;cursor:not-allowed;}
