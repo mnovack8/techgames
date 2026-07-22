@@ -62,6 +62,61 @@
 
 .about-section.bg-white { background: #fff; }
 .about-section.bg-cool { background: #f0f4f8; }
+.about-section.bg-train { background: #1a3a00; }
+.about-section.bg-train .section-label { color: #a8c96a; border-color: #d1db24; }
+.about-section.bg-train .about-headline { color: #f0f7e6; }
+.about-section.bg-train .about-headline em { color: #d1db24; }
+.about-section.bg-train .about-body p { color: rgba(240,247,230,0.78); }
+.about-section.bg-train .about-body p strong { color: #d1db24; }
+
+.ttt-features {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 28px;
+}
+.ttt-feature {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(168,201,106,0.25);
+  border-radius: 12px;
+  padding: 18px 20px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+.ttt-feature-icon {
+  width: 32px; height: 32px;
+  background: rgba(209,219,36,0.15);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  font-size: 16px;
+}
+.ttt-feature-text strong {
+  display: block;
+  font-size: 13px; font-weight: 800;
+  color: #d1db24;
+  margin-bottom: 4px;
+}
+.ttt-feature-text span {
+  font-size: 12px;
+  color: rgba(240,247,230,0.6);
+  line-height: 1.5;
+}
+.ttt-best-for {
+  margin-top: 28px;
+  background: rgba(209,219,36,0.1);
+  border: 1px solid rgba(209,219,36,0.3);
+  border-radius: 10px;
+  padding: 16px 20px;
+  font-size: 14px;
+  color: rgba(240,247,230,0.75);
+  line-height: 1.6;
+}
+.ttt-best-for strong { color: #d1db24; font-weight: 800; }
+@media (max-width: 600px) {
+  .ttt-features { grid-template-columns: 1fr; }
+}
 
 /* ===== WORKSHOP GUIDE CARDS ===== */
 .workshop-grid {

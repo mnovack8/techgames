@@ -12,24 +12,27 @@ nav a.nav-cta-buy { background: #62b517; color: #fff; margin-left: 4px; box-shad
 nav a.nav-cta-buy:hover { background: #4a8c11; color: #fff; }
 
 /* Primary dropdowns */
-.nav-dropdown { position: static; display: flex; align-items: center; }
+.nav-dropdown { position: relative; display: flex; align-items: center; }
 .nav-dropdown-trigger { font-size: 15px; font-weight: 700; color: #4a4a4a; background: none; border: none; padding: 8px 18px; border-radius: 8px; cursor: pointer; font-family: inherit; line-height: inherit; transition: background 0.15s, color 0.15s; }
 .nav-dropdown-trigger.open { background: #f4fae8; color: #4a8c11; }
 
-/* Full-width expansion bar — anchors to the sticky header (positioned ancestor) */
+/* Dropdown panel — positioned under the trigger */
 .nav-dropdown-menu {
   position: absolute;
   top: 100%;
-  left: 0;
-  right: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 200px;
   background: #fff;
+  border: 1.5px solid #e0ecc8;
   border-top: 2px solid #f0f5e4;
   border-bottom: 3px solid #d1db24;
+  border-radius: 0 0 10px 10px;
   box-shadow: 0 8px 24px rgba(98,181,23,0.12);
-  padding: 14px 40px;
+  padding: 8px;
   display: none;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
   z-index: 200;
 }
 .nav-dropdown-menu.open { display: flex; }
@@ -45,6 +48,7 @@ nav a.nav-cta-buy:hover { background: #4a8c11; color: #fff; }
   white-space: nowrap;
 }
 .nav-dropdown-menu a:hover, .nav-dropdown-menu a.active { background: #f4fae8; color: #4a8c11; }
+.nav-dropdown-menu a.nav-all-products { display: inline-block; background: rgba(209,219,36,0.18); border-radius: 4px; }
 
 /* Sub-dropdowns: also inline in the expansion bar */
 .nav-sub-dropdown { position: static; }
