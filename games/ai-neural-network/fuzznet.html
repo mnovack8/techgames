@@ -55,6 +55,32 @@
 </head>
 <body>
 
+<!-- SVG filter defs for reliable player-color tinting of animal icons -->
+<svg style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- blue #4a9eff → R=0.290 G=0.620 B=1.0 -->
+    <filter id="fn-colorize-blue" color-interpolation-filters="sRGB">
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer><feFuncR type="linear" slope="0.290"/><feFuncG type="linear" slope="0.620"/><feFuncB type="linear" slope="1.0"/></feComponentTransfer>
+    </filter>
+    <!-- red #ff4a4a → R=1.0 G=0.290 B=0.290 -->
+    <filter id="fn-colorize-red" color-interpolation-filters="sRGB">
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer><feFuncR type="linear" slope="1.0"/><feFuncG type="linear" slope="0.290"/><feFuncB type="linear" slope="0.290"/></feComponentTransfer>
+    </filter>
+    <!-- yellow #ffd700 → R=1.0 G=0.843 B=0.0 -->
+    <filter id="fn-colorize-yellow" color-interpolation-filters="sRGB">
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer><feFuncR type="linear" slope="1.0"/><feFuncG type="linear" slope="0.843"/><feFuncB type="linear" slope="0.0"/></feComponentTransfer>
+    </filter>
+    <!-- purple #c880ff → R=0.784 G=0.502 B=1.0 -->
+    <filter id="fn-colorize-purple" color-interpolation-filters="sRGB">
+      <feColorMatrix type="saturate" values="0"/>
+      <feComponentTransfer><feFuncR type="linear" slope="0.784"/><feFuncG type="linear" slope="0.502"/><feFuncB type="linear" slope="1.0"/></feComponentTransfer>
+    </filter>
+  </defs>
+</svg>
+
 <!-- Thematic observer "scan eye" icon. Used in lobby + observer game banner -->
 <svg style="display:none" xmlns="http://www.w3.org/2000/svg">
   <symbol id="icon-obs-eye" viewBox="0 0 24 24">
@@ -693,7 +719,7 @@ function flashCopied(btnId) {
 
 // ==================== WAITING ROOM ====================
 function getHex(color) {
-  return {blue:'#4a9eff',red:'#ff4a4a',green:'#4aff8a',purple:'#c880ff'}[color]||'#888';
+  return {blue:'#4a9eff',red:'#ff4a4a',green:'#ffd700',purple:'#c880ff'}[color]||'#888';
 }
 function renderLobbyPlayers(players, observers = []) {
   const hasBot = players.some(p => p.isBot);
@@ -847,10 +873,10 @@ function setView(id) { viewingPlayer = id; renderGame(); }
 
 function colorizeFilter(hex) {
   const map = {
-    '#4a9eff': 'grayscale(1) sepia(1) hue-rotate(180deg) saturate(3) brightness(0.95)',
-    '#ff4a4a': 'grayscale(1) sepia(1) hue-rotate(330deg) saturate(4) brightness(0.9)',
-    '#4aff8a': 'grayscale(1) sepia(1) hue-rotate(115deg) saturate(3) brightness(0.9)',
-    '#c880ff': 'grayscale(1) sepia(1) hue-rotate(250deg) saturate(3) brightness(0.9)',
+    '#4a9eff': 'url(#fn-colorize-blue)',
+    '#ff4a4a': 'url(#fn-colorize-red)',
+    '#ffd700': 'url(#fn-colorize-yellow)',
+    '#c880ff': 'url(#fn-colorize-purple)',
   };
   return map[hex] || 'grayscale(1)';
 }

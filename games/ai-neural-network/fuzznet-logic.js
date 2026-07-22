@@ -12,7 +12,7 @@ function init({ rooms, broadcastToRoom, trackEvent }) {
 const COLOR_INFO = {
   blue:   { hex: '#4a9eff', name: 'Blue' },
   red:    { hex: '#ff4a4a', name: 'Red' },
-  green:  { hex: '#4aff8a', name: 'Green' },
+  green:  { hex: '#ffd700', name: 'Yellow' },
   purple: { hex: '#c880ff', name: 'Purple' },
 };
 const CLEAN_PENALTIES = [0, -1, -2, -4, -6];
@@ -549,6 +549,10 @@ function nextTurn(room) {
   // If we lapped all players and none are connected or bots, hold the turn —
   // don't end the game. They are mid-reconnect; the rejoin flow will resume play.
   if (attempts >= s.players.length && !room.players.some(p => p.connected || p.isBot)) {
+    const p = curPlayer(s);
+    s.actionsLeft = p.firstTurnDone ? 1 : 3;
+    p.firstTurnDone = true;
+    s.phase = 'idle';
     return;
   }
 

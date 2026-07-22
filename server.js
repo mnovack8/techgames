@@ -212,7 +212,25 @@ const server = http.createServer((req, res) => {
 
 const wss = new WebSocketServer({ server });
 
+// Heartbeat: ping every 25 s to prevent NAT/proxy idle-connection kills.
+// Render's load balancer drops WebSocket connections silent after ~60 s of no
+// traffic; keeping pings under 30 s guarantees the connection stays alive.
+// If a client misses two consecutive pings (50 s) we terminate it so the
+// player's rejoin flow takes over rather than leaving a zombie socket.
+const HEARTBEAT_MS = 25_000;
+const heartbeatTimer = setInterval(() => {
+  wss.clients.forEach(ws => {
+    if (ws.isAlive === false) { ws.terminate(); return; }
+    ws.isAlive = false;
+    ws.ping();
+  });
+}, HEARTBEAT_MS);
+if (heartbeatTimer.unref) heartbeatTimer.unref();
+
 wss.on('connection', (ws, req) => {
+  ws.isAlive = true;
+  ws.on('pong', () => { ws.isAlive = true; });
+
   // Capture visitor key at connection time for session attribution
   const ip  = (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || req.socket.remoteAddress || 'unknown';
   const day = new Date().toISOString().slice(0, 10);
