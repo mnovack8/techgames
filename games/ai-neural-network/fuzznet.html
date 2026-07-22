@@ -78,6 +78,10 @@
       <feColorMatrix type="saturate" values="0"/>
       <feComponentTransfer><feFuncR type="linear" slope="0.784"/><feFuncG type="linear" slope="0.502"/><feFuncB type="linear" slope="1.0"/></feComponentTransfer>
     </filter>
+    <!-- grayscale — more reliable than CSS filter:grayscale(1) on SVG <image> -->
+    <filter id="fn-grayscale" color-interpolation-filters="sRGB">
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
   </defs>
 </svg>
 
@@ -918,7 +922,7 @@ function renderBoard() {
     // Bright border when clickable in non-tutorial mode
     if (test && !tutAnimalHL) html += `<rect x="${bx}" y="${by}" width="${bw}" height="${bh}" rx="4" fill="none" stroke="white" stroke-width="2.5" stroke-dasharray="6,3" opacity="0.9"/>`;
     // Grayscale animal image
-    html += `<image href="/images/animals/${ANIMAL_IMGS[i]}.png" x="${cx-sz/2}" y="${cy-sz/2}" width="${sz}" height="${sz}" style="filter:grayscale(1)"${oc}/>`;
+    html += `<image href="/images/animals/${ANIMAL_IMGS[i]}.png" x="${cx-sz/2}" y="${cy-sz/2}" width="${sz}" height="${sz}" style="filter:url(#fn-grayscale)"${oc}/>`;
     html += `<text class="input-label" x="${x}" y="${y+26}" text-anchor="middle" font-size="10" fill="${playerHex}">${ANIMALS[i]}</text>`;
   }
 
@@ -1387,7 +1391,7 @@ function playerBoardSVGContent(p, animalOrder) {
     const {x,y}=INP[i];
     const sz=34, cx=x, cy=y-6;
     h += `<rect x="${cx-sz/2-4}" y="${cy-sz/2-4}" width="${sz+8}" height="${sz+8}" rx="3" fill="${p.hex}" opacity="0.85"/>`;
-    h += `<image href="/images/animals/${ANIMAL_IMGS[i]}.png" x="${cx-sz/2}" y="${cy-sz/2}" width="${sz}" height="${sz}" style="filter:grayscale(1)"/>`;
+    h += `<image href="/images/animals/${ANIMAL_IMGS[i]}.png" x="${cx-sz/2}" y="${cy-sz/2}" width="${sz}" height="${sz}" style="filter:url(#fn-grayscale)"/>`;
     h += `<text x="${x}" y="${y+24}" text-anchor="middle" font-size="9" fill="${p.hex}">${ANIMALS[i]}</text>`;
   }
   // Output animals (colorized; dimmed if untested)
