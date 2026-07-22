@@ -670,6 +670,8 @@ function showScreen(id) {
   const el = document.getElementById(id);
   el.classList.add('active');
   el.scrollTop = 0;
+  // Prevent body scroll during the game so the status bar is always visible.
+  document.body.style.overflow = (id === 'game') ? 'hidden' : '';
   // Sync URL with game state:
   //   waiting → /lobby (game created, not started)
   //   game / gameover → /activegame (active play)
