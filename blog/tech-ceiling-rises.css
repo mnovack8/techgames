@@ -1,0 +1,83 @@
+/* Page-specific styles for The Ceiling Keeps Rising article */
+
+/* ===== HERO THEME ===== */
+.article-hero { background: linear-gradient(160deg, #1a1200 0%, #2a1e00 55%, #301a00 100%); }
+.article-tag-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px; }
+.article-hero-sub { color: #d4b870; }
+.article-meta-read { color: #9a7a30; }
+.article-cta { background: linear-gradient(135deg, #1a1200 0%, #2a1e00 100%); border: 2px solid #7a5a00; }
+.article-cta h3 { color: #ffffff; }
+.article-cta p { color: #d4b870; }
+.article-cta a.secondary { color: #d4b870; border: 2px solid #7a5a00; }
+
+/* ===== ERA SPLIT (Before / After agriculture) ===== */
+.era-split {
+  display: grid;
+  grid-template-columns: 1fr 64px 1fr;
+  border: 2px solid #e8d8a0;
+  border-radius: 12px;
+  overflow: hidden;
+  align-items: stretch;
+  margin: 36px 0;
+}
+.era-panel { padding: 22px 22px; }
+.era-panel.ep-before { background: #fdf8e0; border-right: 1px solid #e8d8a0; }
+.era-panel.ep-after  { background: #f4fae8; border-left: 1px solid #e8d8a0; }
+.era-label {
+  font-size: 10px; font-weight: 900; text-transform: uppercase;
+  letter-spacing: 1.5px; margin-bottom: 12px; display: block;
+}
+.ep-before .era-label { color: #7a5c00; }
+.ep-after  .era-label { color: #2a7a0a; }
+.era-stat {
+  font-size: 32px; font-weight: 900; margin-bottom: 6px; line-height: 1;
+}
+.ep-before .era-stat { color: #b38a00; }
+.ep-after  .era-stat { color: #62b517; }
+.era-desc { font-size: 13px; color: #555; line-height: 1.6; }
+.era-center {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  background: #fff; padding: 12px 4px; gap: 5px;
+}
+.era-arrow { font-size: 18px; color: #f0c830; font-weight: 900; }
+.era-arrow-label {
+  font-size: 7px; font-weight: 900; text-transform: uppercase;
+  letter-spacing: 1.5px; color: #aaa; text-align: center;
+}
+.era-items { margin-top: 14px; display: flex; flex-direction: column; gap: 5px; }
+.era-item {
+  font-size: 12px; color: #444; line-height: 1.5;
+  padding-left: 16px; position: relative;
+}
+.ep-before .era-item::before { content: '→'; position: absolute; left: 0; color: #b38a00; font-weight: 900; }
+.ep-after  .era-item::before { content: '→'; position: absolute; left: 0; color: #62b517; font-weight: 900; }
+@media (max-width: 620px) {
+  .era-split { grid-template-columns: 1fr; }
+  .era-panel.ep-before { border-right: none; border-bottom: 1px solid #e8d8a0; }
+  .era-center { flex-direction: row; padding: 10px 16px; border-top: 1px solid #e8d8a0; border-bottom: 1px solid #e8d8a0; }
+}
+
+/* ===== SHORT / LONG TERM SPLIT ===== */
+.time-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 32px 0;
+}
+.time-card {
+  border-radius: 12px;
+  padding: 22px 22px;
+  border: 2px solid;
+}
+.time-card.tc-short { background: #fff8f0; border-color: #e0a060; }
+.time-card.tc-long  { background: #f0f8e8; border-color: #90c060; }
+.time-label {
+  font-size: 10px; font-weight: 900; text-transform: uppercase;
+  letter-spacing: 2px; color: #aaa; margin-bottom: 6px; display: block;
+}
+.time-title { font-size: 16px; font-weight: 900; margin-bottom: 10px; }
+.tc-short .time-title { color: #8a4a00; }
+.tc-long  .time-title { color: #2a6a00; }
+.time-desc { font-size: 13px; color: #555; line-height: 1.7; }
+@media (max-width: 600px) { .time-split { grid-template-columns: 1fr; } }

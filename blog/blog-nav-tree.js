@@ -89,6 +89,12 @@
           defaultOpen: true,
           children: [
             {
+              folder: true, slug: '__folder-ht-general', title: 'General',
+              children: [
+                { slug: 'tech-ceiling-rises', title: 'The Ceiling Keeps Rising', children: [] }
+              ]
+            },
+            {
               folder: true, slug: '__folder-ai', title: 'AI',
               children: [
                 { slug: 'ai-security-workshop', title: 'AI Security Workshop Guide', children: [] },

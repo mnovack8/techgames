@@ -118,6 +118,13 @@
           <button class="blog-chip" data-dim="humanities-skill" data-filter="art" data-tooltip="Posts drawing on craft, constraint, and aesthetic judgment.">Art</button>
         </div>
       </div>
+      <div class="blog-filter-row">
+        <span class="blog-filter-label">Section</span>
+        <div class="blog-chips" role="group" aria-label="Filter by section">
+          <button class="blog-chip active" data-dim="section" data-filter="all">All</button>
+          <button class="blog-chip" data-dim="section" data-filter="general" data-tooltip="General Humanities Thinker posts applying the humanities lens to technology's biggest questions.">General</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -305,6 +312,68 @@
         <div class="blog-card-read">Read more →</div>
       </div>
     </a>
+    </div>
+
+    <div class="humanities-thinker-section" id="humanities-thinker-section">
+      <div class="humanities-thinker-header">
+        <span class="humanities-thinker-header-label">General Humanities Thinker</span>
+        <span class="humanities-thinker-header-sub">The humanities lens applied to technology's biggest questions.</span>
+      </div>
+      <div class="humanities-thinker-cards" id="humanities-thinker-cards">
+
+        <a href="/blog/tech-ceiling-rises" class="blog-card" data-reveal data-type="insight" data-humanities-skill="history" data-stem-skill="ai" data-section="general" data-readtime="9 min read">
+          <div class="blog-card-img">
+            <svg viewBox="0 0 400 170" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="tcr-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#1a1200"/>
+                  <stop offset="100%" stop-color="#2a1e00"/>
+                </linearGradient>
+                <linearGradient id="tcr-fill" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stop-color="#f0c830" stop-opacity="0.18"/>
+                  <stop offset="100%" stop-color="#f0c830" stop-opacity="0.03"/>
+                </linearGradient>
+              </defs>
+              <rect width="400" height="170" fill="url(#tcr-bg)"/>
+              <!-- Era dividers -->
+              <line x1="130" y1="18" x2="130" y2="132" stroke="#2a1e00" stroke-width="1" stroke-dasharray="4,3" opacity="0.8"/>
+              <line x1="265" y1="18" x2="265" y2="132" stroke="#2a1e00" stroke-width="1" stroke-dasharray="4,3" opacity="0.8"/>
+              <!-- Era labels -->
+              <text x="65"  y="144" text-anchor="middle" font-family="sans-serif" font-size="8" fill="#6a5020">AGRICULTURE</text>
+              <text x="198" y="144" text-anchor="middle" font-family="sans-serif" font-size="8" fill="#6a5020">INDUSTRIAL</text>
+              <text x="333" y="144" text-anchor="middle" font-family="sans-serif" font-size="8" fill="#6a5020">AI</text>
+              <!-- Shaded gap between the two lines -->
+              <polygon points="18,128 382,42 382,14 18,128" fill="url(#tcr-fill)"/>
+              <!-- Technology line (green, less steep) -->
+              <line x1="18" y1="128" x2="382" y2="42" stroke="#62b517" stroke-width="2.5" stroke-dasharray="7,3"/>
+              <!-- Human Expectations line (gold, steeper) -->
+              <line x1="18" y1="128" x2="382" y2="14" stroke="#f0c830" stroke-width="3"/>
+              <!-- Gap annotation -->
+              <text x="298" y="88"  text-anchor="middle" font-family="sans-serif" font-size="8"   fill="#d4b030" font-style="italic">work lives</text>
+              <text x="298" y="100" text-anchor="middle" font-family="sans-serif" font-size="8"   fill="#d4b030" font-style="italic">in this gap</text>
+              <!-- Legend -->
+              <line x1="22" y1="24" x2="46" y2="24" stroke="#f0c830" stroke-width="2"/>
+              <text x="50"  y="28" font-family="sans-serif" font-size="7.5" fill="#f0c830" font-weight="900">EXPECTATIONS</text>
+              <line x1="22" y1="38" x2="46" y2="38" stroke="#62b517" stroke-width="2" stroke-dasharray="5,3"/>
+              <text x="50"  y="42" font-family="sans-serif" font-size="7.5" fill="#62b517"  font-weight="900">TECHNOLOGY</text>
+              <!-- Bottom bar -->
+              <rect x="0" y="150" width="400" height="20" fill="rgba(0,0,0,0.5)"/>
+              <text x="200" y="164" text-anchor="middle" font-family="sans-serif" font-size="9" font-weight="900" fill="#f0c830" letter-spacing="1.5">THE CEILING ALWAYS RISES</text>
+            </svg>
+          </div>
+          <div class="blog-card-body">
+            <div class="blog-card-meta">
+              <span class="blog-card-tag tag-type-insight">Insight</span>
+              <span class="blog-card-tag tag-history">History</span>
+              <span class="blog-card-tag tag-ai">AI</span>
+            </div>
+            <div class="blog-card-title">The Ceiling Keeps Rising: Why Technology Expands Human Work Rather Than Ending It</div>
+            <div class="blog-card-excerpt">Technology is fast and disruptive, and skills will need to adjust — sometimes faster than is comfortable. But it won't make people obsolete in the long run, because human expectations always move faster. History, starting with the invention of agriculture, already answered this.</div>
+            <div class="blog-card-read">Read more →</div>
+          </div>
+        </a>
+
+      </div>
     </div>
 
     <div class="explore-header" id="explore-header">
@@ -1782,13 +1851,16 @@
   var thinkersRow = document.getElementById('thinkers-row');
   var startHereHeader = document.querySelector('.start-here-header');
   var exploreHeader = document.getElementById('explore-header');
+  var humanitiesThinkerSection = document.getElementById('humanities-thinker-section');
+  var humanitiesThinkerCardsEl = document.getElementById('humanities-thinker-cards');
   var stemThinkerCard = document.querySelector('.blog-card[href="/blog/be-the-bridge-stem-thinker"]');
   var humanitiesThinkerCard = document.querySelector('.blog-card[href="/blog/be-the-bridge-humanities-thinker"]');
   var missingLanguageCard = document.querySelector('.blog-card[href="/blog/stem-humanities-bridge"]');
+  var techCeilingCard = document.querySelector('.blog-card[href="/blog/tech-ceiling-rises"]');
 
   var cards = Array.from(document.querySelectorAll('.blog-card'));
   var exploreCards = cards.filter(function(c) {
-    return c !== missingLanguageCard && c !== stemThinkerCard && c !== humanitiesThinkerCard;
+    return c !== missingLanguageCard && c !== stemThinkerCard && c !== humanitiesThinkerCard && c !== techCeilingCard;
   });
 
   var chips = Array.from(document.querySelectorAll('.blog-chip'));
@@ -1798,6 +1870,7 @@
   var activeType = 'all';
   var activeStemSkill = 'all';
   var activeHumanitiesSkill = 'all';
+  var activeSection = 'all';
   var wasDefaultView = null; // null = not yet rendered
   var lastVisibleKey = null;
 
@@ -1835,9 +1908,11 @@
     var type = overrideDim === 'type' ? overrideFilter : activeType;
     var stemSkill = overrideDim === 'stem-skill' ? overrideFilter : activeStemSkill;
     var humanitiesSkill = overrideDim === 'humanities-skill' ? overrideFilter : activeHumanitiesSkill;
+    var section = overrideDim === 'section' ? overrideFilter : activeSection;
     return typeMatch(card, type) &&
       skillMatch(card, 'stemSkill', stemSkill) &&
-      skillMatch(card, 'humanitiesSkill', humanitiesSkill);
+      skillMatch(card, 'humanitiesSkill', humanitiesSkill) &&
+      skillMatch(card, 'section', section);
   }
 
   function updateChipAvailability() {
@@ -1853,7 +1928,7 @@
   }
 
   function isDefaultView(query) {
-    return !query && activeType === 'all' && activeStemSkill === 'all' && activeHumanitiesSkill === 'all';
+    return !query && activeType === 'all' && activeStemSkill === 'all' && activeHumanitiesSkill === 'all' && activeSection === 'all';
   }
 
   function applyFilters() {
@@ -1874,13 +1949,15 @@
 
     if (defaultView) {
       // Sectioned layout: Start Here (Missing Language, full width) → Thinkers
-      // (2 columns) → Explore (randomized 3-column grid of everything else).
+      // (2 columns) → General Humanities Thinker → Explore (randomized 3-column grid of everything else).
       grid.classList.remove('is-filtered');
       if (startHereHeader) startHereHeader.style.display = '';
       if (thinkersRow) thinkersRow.style.display = '';
+      if (humanitiesThinkerSection) humanitiesThinkerSection.style.display = '';
       if (exploreHeader) exploreHeader.style.display = '';
       if (stemThinkerCard && stemThinkerCard.parentElement !== thinkersRow) thinkersRow.appendChild(stemThinkerCard);
       if (humanitiesThinkerCard && humanitiesThinkerCard.parentElement !== thinkersRow) thinkersRow.appendChild(humanitiesThinkerCard);
+      if (techCeilingCard && humanitiesThinkerCardsEl && techCeilingCard.parentElement !== humanitiesThinkerCardsEl) humanitiesThinkerCardsEl.appendChild(techCeilingCard);
 
       if (wasDefaultView !== true) {
         // Just entered (or re-entered) the default view — deal a fresh shuffle.
@@ -1891,9 +1968,11 @@
       grid.classList.add('is-filtered');
       if (startHereHeader) startHereHeader.style.display = 'none';
       if (thinkersRow) thinkersRow.style.display = 'none';
+      if (humanitiesThinkerSection) humanitiesThinkerSection.style.display = 'none';
       if (exploreHeader) exploreHeader.style.display = 'none';
       if (stemThinkerCard && stemThinkerCard.parentElement === thinkersRow) grid.appendChild(stemThinkerCard);
       if (humanitiesThinkerCard && humanitiesThinkerCard.parentElement === thinkersRow) grid.appendChild(humanitiesThinkerCard);
+      if (techCeilingCard && humanitiesThinkerCardsEl && techCeilingCard.parentElement === humanitiesThinkerCardsEl) grid.appendChild(techCeilingCard);
 
       var visibleKey = visibleSlugs.slice().sort().join(',');
       if (visibleKey !== lastVisibleKey) {
@@ -1918,6 +1997,7 @@
       if (dim === 'type') activeType = chip.dataset.filter;
       if (dim === 'stem-skill') activeStemSkill = chip.dataset.filter;
       if (dim === 'humanities-skill') activeHumanitiesSkill = chip.dataset.filter;
+      if (dim === 'section') activeSection = chip.dataset.filter;
       applyFilters();
     });
   });
