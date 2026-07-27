@@ -277,6 +277,8 @@
 .tag-ai                  { background: #4a6a20; }
 .tag-cybersecurity       { background: #2a5c0a; }
 .tag-quantum-computing   { background: #5a20a0; }
+/* Thinker role tags */
+.tag-humanities-thinker  { background: #3a2a00; color: #f0c830; border: 1.5px solid #7a5a00; }
 /* Humanities skills (for STEM Thinkers) */
 .tag-literature          { background: #7a2a4a; }
 .tag-philosophy          { background: #2a4a8a; }

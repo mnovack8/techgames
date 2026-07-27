@@ -116,13 +116,7 @@
           <button class="blog-chip" data-dim="humanities-skill" data-filter="history" data-tooltip="Posts giving context and the why behind the what.">History</button>
           <button class="blog-chip" data-dim="humanities-skill" data-filter="rhetoric" data-tooltip="Posts on persuasion, communication, and influence.">Rhetoric</button>
           <button class="blog-chip" data-dim="humanities-skill" data-filter="art" data-tooltip="Posts drawing on craft, constraint, and aesthetic judgment.">Art</button>
-        </div>
-      </div>
-      <div class="blog-filter-row">
-        <span class="blog-filter-label">Section</span>
-        <div class="blog-chips" role="group" aria-label="Filter by section">
-          <button class="blog-chip active" data-dim="section" data-filter="all">All</button>
-          <button class="blog-chip" data-dim="section" data-filter="general" data-tooltip="General Humanities Thinker posts applying the humanities lens to technology's biggest questions.">General</button>
+          <button class="blog-chip" data-dim="humanities-skill" data-filter="general" data-tooltip="General Humanities Thinker posts applying the humanities lens to technology's biggest questions.">General</button>
         </div>
       </div>
     </div>
@@ -321,7 +315,7 @@
       </div>
       <div class="humanities-thinker-cards" id="humanities-thinker-cards">
 
-        <a href="/blog/tech-ceiling-rises" class="blog-card" data-reveal data-type="insight" data-humanities-skill="history" data-stem-skill="ai" data-section="general" data-readtime="9 min read">
+        <a href="/blog/tech-ceiling-rises" class="blog-card" data-reveal data-type="insight" data-humanities-skill="history general" data-stem-skill="ai" data-readtime="9 min read">
           <div class="blog-card-img">
             <svg viewBox="0 0 400 170" xmlns="http://www.w3.org/2000/svg">
               <defs>
@@ -1870,7 +1864,6 @@
   var activeType = 'all';
   var activeStemSkill = 'all';
   var activeHumanitiesSkill = 'all';
-  var activeSection = 'all';
   var wasDefaultView = null; // null = not yet rendered
   var lastVisibleKey = null;
 
@@ -1908,11 +1901,9 @@
     var type = overrideDim === 'type' ? overrideFilter : activeType;
     var stemSkill = overrideDim === 'stem-skill' ? overrideFilter : activeStemSkill;
     var humanitiesSkill = overrideDim === 'humanities-skill' ? overrideFilter : activeHumanitiesSkill;
-    var section = overrideDim === 'section' ? overrideFilter : activeSection;
     return typeMatch(card, type) &&
       skillMatch(card, 'stemSkill', stemSkill) &&
-      skillMatch(card, 'humanitiesSkill', humanitiesSkill) &&
-      skillMatch(card, 'section', section);
+      skillMatch(card, 'humanitiesSkill', humanitiesSkill);
   }
 
   function updateChipAvailability() {
@@ -1928,7 +1919,7 @@
   }
 
   function isDefaultView(query) {
-    return !query && activeType === 'all' && activeStemSkill === 'all' && activeHumanitiesSkill === 'all' && activeSection === 'all';
+    return !query && activeType === 'all' && activeStemSkill === 'all' && activeHumanitiesSkill === 'all';
   }
 
   function applyFilters() {
@@ -1997,7 +1988,6 @@
       if (dim === 'type') activeType = chip.dataset.filter;
       if (dim === 'stem-skill') activeStemSkill = chip.dataset.filter;
       if (dim === 'humanities-skill') activeHumanitiesSkill = chip.dataset.filter;
-      if (dim === 'section') activeSection = chip.dataset.filter;
       applyFilters();
     });
   });
