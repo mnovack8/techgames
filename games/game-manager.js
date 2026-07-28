@@ -7,6 +7,7 @@ const { trackEvent, isRematch } = require('../analytics');
 const fuzznet      = require('./ai-neural-network/fuzznet-logic');
 const clusterflick = require('./ai-knn/clusterflick-logic');
 const byteclub     = require('./cybersecurity/byteclub-logic');
+const qubit        = require('./quantumcomputing/qubit-logic');
 
 // ==================== CONSTANTS (shared) ====================
 const COLOR_INFO = {
@@ -14,7 +15,13 @@ const COLOR_INFO = {
   red:    { hex: '#ff4a4a', name: 'Red' },
   green:  { hex: '#4aff8a', name: 'Green' },
   purple: { hex: '#c880ff', name: 'Purple' },
+  yellow: { hex: '#facc15', name: 'Yellow' },
+  orange: { hex: '#f97316', name: 'Orange' },
 };
+
+// The colour set the original four-player games ship with. Games that seat more
+// players declare their own `colors` in GAME_REGISTRY.
+const DEFAULT_COLORS = ['blue', 'red', 'green', 'purple'];
 
 // ==================== ROOM MANAGEMENT ====================
 const rooms    = new Map();
@@ -33,7 +40,8 @@ function _serializeRooms() {
     // Only persist in-progress games that aren't over yet
     const isOver = (room.state && room.state.gameOver)
       || (room.cfState && room.cfState.gameOver)
-      || (room.bcState && room.bcState.phase === 'game_over');
+      || (room.bcState && room.bcState.phase === 'game_over')
+      || (room.qbState && room.qbState.gameOver);
     if (!room.started || isOver) continue;
     const saved = {
       ...room,
@@ -172,7 +180,8 @@ function sendEventStatus(room) {
   if (room.started) {
     const isOver = (room.bcState && room.bcState.phase === 'game_over')
       || (room.cfState && room.cfState.gameOver)
-      || (room.state && room.state.gameOver);
+      || (room.state && room.state.gameOver)
+      || (room.qbState && room.qbState.gameOver);
     status = isOver ? 'completed' : 'in_progress';
   }
   const playerCount = room.players.filter(p => !p.isBot).length;
@@ -193,11 +202,13 @@ fuzznet.init({ rooms, broadcastToRoom, trackEvent });
 clusterflick.init({ rooms, broadcastToRoom, trackEvent });
 byteclub.init({ rooms, broadcastToRoom, trackEvent });
 byteclub.setSendEventStatus(sendEventStatus);
+qubit.init({ rooms, broadcastToRoom, trackEvent });
 
 // ── Destructure helpers from game-logic modules ───────────────────────────────
 const { createGameState, processAction, broadcastState: fnBroadcastState, executeBotTurn, nextTurn: fnNextTurn } = fuzznet;
 const { createCFGameState, processCFAction, cfBroadcastState, cfAdvanceTurn, executeCFBotTurn } = clusterflick;
 const { initBCGame, bcHandleAction, bcBroadcastState, bcEndTurn } = byteclub;
+const { initQBGame, qbHandleAction, qbBroadcastState, maybeScheduleBotTurn: qbMaybeScheduleBotTurn } = qubit;
 
 // ==================== GAME REGISTRY ====================
 // Single source of truth for per-game behaviour.
@@ -205,6 +216,7 @@ const { initBCGame, bcHandleAction, bcBroadcastState, bcEndTurn } = byteclub;
 
 const GAME_REGISTRY = {
   byteclub: {
+    minPlayers: 2, maxPlayers: 4, colors: DEFAULT_COLORS,
     startGame(room) {
       initBCGame(room);
       broadcastToRoom(room, { type: 'bc_game_started' });
@@ -231,6 +243,7 @@ const GAME_REGISTRY = {
   },
 
   clusterflick: {
+    minPlayers: 2, maxPlayers: 4, colors: DEFAULT_COLORS,
     startGame(room) {
       room.cfState = createCFGameState(room.players.length);
       broadcastToRoom(room, { type: 'game_started' });
@@ -252,6 +265,7 @@ const GAME_REGISTRY = {
   },
 
   fuzznet: {
+    minPlayers: 2, maxPlayers: 4, colors: DEFAULT_COLORS,
     startGame(room) {
       room.state = createGameState(room.players.length);
       room.state.players[0].firstTurnDone = true;
@@ -276,6 +290,21 @@ const GAME_REGISTRY = {
     },
     isGameOver(room) { return !!(room.state && room.state.gameOver); },
   },
+
+  qubit: {
+    minPlayers: 3, maxPlayers: 6, maxBots: 2,
+    colors: ['blue', 'red', 'green', 'purple', 'yellow', 'orange'],
+    startGame(room) {
+      initQBGame(room);
+      broadcastToRoom(room, { type: 'qb_game_started' });
+      qbBroadcastState(room);
+      qbMaybeScheduleBotTurn(room);
+    },
+    broadcastState(room)           { qbBroadcastState(room); },
+    onRejoin(room)                 { qbBroadcastState(room); },
+    onDisconnect(room)             { qbBroadcastState(room); },
+    isGameOver(room) { return !!(room.qbState && room.qbState.gameOver); },
+  },
 };
 
 /** Resolve an incoming gameType string to a known registry key, defaulting to fuzznet. */
@@ -286,6 +315,23 @@ function resolveGameType(raw) {
 /** Get the registry entry for a room, with fuzznet as safe fallback. */
 function getGame(room) {
   return GAME_REGISTRY[room.gameType] || GAME_REGISTRY.fuzznet;
+}
+
+/** Colours a given game seats players in. */
+function gameColors(gameType) {
+  return (GAME_REGISTRY[gameType] && GAME_REGISTRY[gameType].colors) || DEFAULT_COLORS;
+}
+
+/** Maximum / minimum player count for a given game. */
+function gameMaxPlayers(gameType) {
+  return (GAME_REGISTRY[gameType] && GAME_REGISTRY[gameType].maxPlayers) || 4;
+}
+function gameMinPlayers(gameType) {
+  return (GAME_REGISTRY[gameType] && GAME_REGISTRY[gameType].minPlayers) || 2;
+}
+/** How many bot seats a game supports at once (1 for the original solo-vs-bot games). */
+function gameMaxBots(gameType) {
+  return (GAME_REGISTRY[gameType] && GAME_REGISTRY[gameType].maxBots) || 1;
 }
 
 // ==================== WEBSOCKET HANDLING ====================
@@ -302,14 +348,15 @@ function handleMessage(ws, raw) {
 
   switch (msg.type) {
     case 'create_room': {
-      const color = msg.color;
-      if (!COLOR_INFO[color]) return send(ws, {type:'error',msg:'Invalid color'});
+      const color    = msg.color;
+      const gameType = resolveGameType(msg.gameType);
+      if (!gameColors(gameType).includes(color)) return send(ws, {type:'error',msg:'Invalid color'});
       // Leave existing room
       leaveRoom(ws, true);
       const code = generateCode();
       const room = {
         code, hostIdx: 0,
-        gameType: resolveGameType(msg.gameType),
+        gameType,
         players: [{ color, name: sanitizeName(msg.playerName, COLOR_INFO[color].name), ws, connected: true }],
         observers: [],
         started: false, state: null, bcState: null,
@@ -393,11 +440,11 @@ function handleMessage(ws, raw) {
         return send(ws, { type:'room_info', exists:true, started:true, rejoinColors, observerCount, canObserve });
       }
       const humanCount = room.players.filter(p => !p.isBot).length;
-      // Full when 4 humans are already present (bots are always displaceable)
-      if (humanCount >= 4) return send(ws, {type:'room_info', exists:true, full:true, observerCount, canObserve});
+      // Full when every seat is taken by a human (bots are always displaceable)
+      if (humanCount >= gameMaxPlayers(room.gameType)) return send(ws, {type:'room_info', exists:true, full:true, observerCount, canObserve});
       // Available = all colors not held by human players (bots can be displaced)
       const humanColors = room.players.filter(p => !p.isBot).map(p => p.color);
-      const available   = Object.keys(COLOR_INFO).filter(c => !humanColors.includes(c));
+      const available   = gameColors(room.gameType).filter(c => !humanColors.includes(c));
       send(ws, { type:'room_info', exists:true, started:false, full:false, availableColors: available, observerCount, canObserve });
       break;
     }
@@ -405,9 +452,9 @@ function handleMessage(ws, raw) {
     case 'join_room': {
       const code = (msg.code||'').toUpperCase();
       const color = msg.color;
-      if (!COLOR_INFO[color]) return send(ws, {type:'error',msg:'Invalid color'});
       const room = rooms.get(code);
       if (!room) return send(ws, {type:'error',msg:'Room not found'});
+      if (!gameColors(room.gameType).includes(color)) return send(ws, {type:'error',msg:'Invalid color'});
 
       // Rejoin a started game by matching color — allow even if the slot still
       // appears connected (old tab may not have closed yet after a crash).
@@ -433,7 +480,7 @@ function handleMessage(ws, raw) {
       // If a human already holds this color, reject
       if (room.players.some(p => !p.isBot && p.color === color)) {
         const humanColors = room.players.filter(p => !p.isBot).map(p => p.color);
-        const available = Object.keys(COLOR_INFO).filter(c => !humanColors.includes(c));
+        const available = gameColors(room.gameType).filter(c => !humanColors.includes(c));
         return send(ws, {type:'error',msg:'Color already taken',availableColors:available});
       }
       // When a human joins, drop all bots — humans only from here on
@@ -449,7 +496,7 @@ function handleMessage(ws, raw) {
           if (s.roomCode === code) { /* bots have no sessions, nothing to reindex */ }
         }
       }
-      if (room.players.length >= 4) return send(ws, {type:'error',msg:'Room is full'});
+      if (room.players.length >= gameMaxPlayers(room.gameType)) return send(ws, {type:'error',msg:'Room is full'});
       leaveRoom(ws, true);
       const idx = room.players.length;
       room.players.push({ color, name: sanitizeName(msg.playerName, COLOR_INFO[color].name), ws, connected: true });
@@ -526,23 +573,47 @@ function handleMessage(ws, raw) {
       const isPlayerHost = !info.isObserver && info.playerIdx === room.hostIdx;
       const isObsHost = info.isObserver && info.observerIdx === 0;
       if (!isPlayerHost && !isObsHost) return send(ws, {type:'error',msg:'Only host can add bot'});
-      // Count humans
-      const humans = room.players.filter(p => !p.isBot).length;
-      if (humans > 1) return send(ws, {type:'error',msg:'Bot only available for single player'});
-      // Toggle: remove existing bot or add one
-      const botIdx = room.players.findIndex(p => p.isBot);
-      if (botIdx !== -1) {
-        room.players.splice(botIdx, 1);
-        // Fix wsData indices
-        for (const [w, d] of wsData.entries()) {
-          if (d.roomCode === room.code && d.playerIdx > botIdx) d.playerIdx--;
+
+      const maxBots = gameMaxBots(room.gameType);
+      const bots    = room.players.filter(p => p.isBot);
+      const humans  = room.players.length - bots.length;
+
+      if (maxBots <= 1) {
+        // Original single-bot toggle: solo-vs-bot only, one bot in or out.
+        if (humans > 1) return send(ws, {type:'error',msg:'Bot only available for single player'});
+        const botIdx = room.players.findIndex(p => p.isBot);
+        if (botIdx !== -1) {
+          room.players.splice(botIdx, 1);
+          for (const [w, d] of wsData.entries()) {
+            if (d.roomCode === room.code && d.playerIdx > botIdx) d.playerIdx--;
+          }
+        } else {
+          const taken = room.players.map(p => p.color);
+          const available = gameColors(room.gameType).filter(c => !taken.includes(c));
+          if (available.length === 0) return;
+          const botColor = available[Math.floor(Math.random() * available.length)];
+          room.players.push({ color: botColor, name: COLOR_INFO[botColor].name + ' (Bot)', ws: null, connected: true, isBot: true });
         }
       } else {
-        const taken = room.players.map(p => p.color);
-        const available = Object.keys(COLOR_INFO).filter(c => !taken.includes(c));
-        if (available.length === 0) return;
-        const botColor = available[Math.floor(Math.random() * available.length)];
-        room.players.push({ color: botColor, name: COLOR_INFO[botColor].name + ' (Bot)', ws: null, connected: true, isBot: true });
+        // Multi-bot cycle: click adds one bot at a time up to maxBots, then
+        // the next click clears them all back to zero.
+        if (bots.length < maxBots && room.players.length < gameMaxPlayers(room.gameType)) {
+          const taken = room.players.map(p => p.color);
+          const available = gameColors(room.gameType).filter(c => !taken.includes(c));
+          if (available.length === 0) return;
+          const botColor = available[Math.floor(Math.random() * available.length)];
+          room.players.push({ color: botColor, name: COLOR_INFO[botColor].name + ' (Bot)', ws: null, connected: true, isBot: true });
+        } else if (bots.length > 0) {
+          // Remove bots from the end so player indices held by earlier bots
+          // (and any humans) are undisturbed.
+          for (let i = room.players.length - 1; i >= 0; i--) {
+            if (!room.players[i].isBot) continue;
+            room.players.splice(i, 1);
+            for (const [w, d] of wsData.entries()) {
+              if (d.roomCode === room.code && d.playerIdx > i) d.playerIdx--;
+            }
+          }
+        }
       }
       broadcastLobby(room);
       break;
@@ -556,14 +627,14 @@ function handleMessage(ws, raw) {
       const isPlayerHost = !info.isObserver && info.playerIdx === room.hostIdx;
       const isObsHost = info.isObserver && info.observerIdx === 0;
       if (!isPlayerHost && !isObsHost) return send(ws, {type:'error',msg:'Only host can start'});
-      if (room.players.length < 2) return send(ws, {type:'error',msg:'Need at least 2 players'});
+      const _minPlayers = gameMinPlayers(room.gameType);
+      if (room.players.length < _minPlayers) return send(ws, {type:'error',msg:`Need at least ${_minPlayers} players`});
       if (room.started) return send(ws, {type:'error',msg:'Already started'});
       room.started = true;
       room.sessionStartedAt = Date.now();
       room.uvKey = wsUvKey.get(ws) || '';
       const _startMode = room.players.some(p => p.isBot) ? '1p_bot'
-        : room.players.length === 2 ? '2p'
-        : room.players.length === 3 ? '3p' : '4p';
+        : room.players.length + 'p';
       const _rematch = isRematch(room.uvKey, room.gameType);
       trackEvent('session_started', { gameType: room.gameType, mode: _startMode, uvKey: room.uvKey, rematch: _rematch });
       getGame(room).startGame(room);
@@ -580,6 +651,8 @@ function handleMessage(ws, raw) {
       try {
         if (room.gameType === 'byteclub') {
           bcHandleAction(room, info.playerIdx, msg);
+        } else if (room.gameType === 'qubit') {
+          qbHandleAction(room, info.playerIdx, msg);
         } else if (room.gameType === 'clusterflick') {
           const err = processCFAction(room, info.playerIdx, msg);
           if (err) return send(ws, {type:'error',msg:err});
@@ -629,6 +702,7 @@ function handleMessage(ws, raw) {
       if (room.state)   room.state.gameOver   = true;
       if (room.bcState) room.bcState.phase     = 'game_over';
       if (room.cfState) room.cfState.gameOver  = true;
+      if (room.qbState) room.qbState.gameOver  = true;
       // Notify event organizers before the room is deleted
       if (room.isEventRoom && room.eventOrganizers?.length > 0) {
         const update = { type: 'event_status_update', code: room.code, playerCount: 0, status: 'cancelled' };

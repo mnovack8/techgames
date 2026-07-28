@@ -10,14 +10,20 @@
  *   {{name}}              → substitute data[name] as raw HTML
  *   {{#array}}…{{/array}} → iterate array, inner placeholders resolve against
  *                            the current item; parent scope is also reachable
+ *   {{#flag}}…{{/flag}}   → if data[flag] is truthy (and not an array), render
+ *                            the inner block once against the parent scope —
+ *                            standard Mustache-style boolean section, for
+ *                            toggling a whole block of markup on/off per game
  */
 
 function renderTemplate(tpl, data) {
-  // Section iterators first: {{#array}}…{{/array}}
+  // Section iterators/conditionals first: {{#key}}…{{/key}}
   tpl = tpl.replace(/\{\{#(\w+)\}\}([\s\S]*?)\{\{\/\1\}\}/g, (_, key, inner) => {
-    const arr = data[key];
-    if (!Array.isArray(arr)) return '';
-    return arr.map(item => renderTemplate(inner, { ...data, ...item })).join('');
+    const val = data[key];
+    if (Array.isArray(val)) {
+      return val.map(item => renderTemplate(inner, { ...data, ...item })).join('');
+    }
+    return val ? renderTemplate(inner, data) : '';
   });
   // Simple placeholders: {{key}}
   tpl = tpl.replace(/\{\{(\w+)\}\}/g, (_, key) => {

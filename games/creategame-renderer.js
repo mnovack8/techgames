@@ -38,6 +38,38 @@ function loadTemplate() {
   return _templateCache;
 }
 
+// The four-colour lobby palette every game used before colours became
+// configurable. A game only needs a "colors" array in its creategame.json when
+// it seats more (or different) players than this.
+const DEFAULT_COLORS = [
+  { key: 'blue',   label: 'Blue',   swatch_css: 'background:#4a9eff' },
+  { key: 'red',    label: 'Red',    swatch_css: 'background:#ff4a4a' },
+  { key: 'green',  label: 'Yellow', swatch_css: 'background:#ffd700;color:#1a1a1a' },
+  { key: 'purple', label: 'Purple', swatch_css: 'background:#a060dd' },
+];
+
+const DEFAULT_PLAYERS_TEXT = '2–4 Players';
+
+/**
+ * Fill in the derived fields the template iterates over. `create_colors`
+ * carries the `selected` class on the first swatch (the create form defaults to
+ * it); `join_colors` starts with nothing selected.
+ */
+function withDefaults(data) {
+  const colors = Array.isArray(data.colors) && data.colors.length ? data.colors : DEFAULT_COLORS;
+  return {
+    ...data,
+    players_text : data.players_text || DEFAULT_PLAYERS_TEXT,
+    create_colors: colors.map((c, i) => ({ ...c, sel_css: i === 0 ? ' selected' : '' })),
+    join_colors  : colors.map(c => ({ ...c, sel_css: '' })),
+    // Each defaults on (existing games all ship these) — a game opts OUT by
+    // setting the flag to false in its creategame.json, not by omitting data.
+    show_hero_ctas: data.show_hero_ctas !== false,
+    show_event_hub: data.show_event_hub !== false,
+    show_workshop:  data.show_workshop  !== false,
+  };
+}
+
 function loadGameData(gameKey) {
   if (!_dataCache[gameKey]) {
     const file = path.join(__dirname, gameKey, 'creategame.json');
@@ -94,7 +126,7 @@ function getRegisteredKeys() {
 /** Render the create-game fragment for the given gameKey. Cached per key. */
 function renderCreateGame(gameKey) {
   if (_renderCache[gameKey]) return _renderCache[gameKey];
-  _renderCache[gameKey] = renderTemplate(loadTemplate(), loadGameData(gameKey));
+  _renderCache[gameKey] = renderTemplate(loadTemplate(), withDefaults(loadGameData(gameKey)));
   return _renderCache[gameKey];
 }
 

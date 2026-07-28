@@ -1,0 +1,55 @@
+{
+  "routes": [],
+
+  "meta_description": "Qubit is a cooperative quantum deduction game for 3–6 players. Decode the hidden Quantum Code using partial wavelength clues before your quantum state decoheres.",
+  "og_title": "Qubit — Cooperative Quantum Deduction | Tech CoLab",
+  "og_description": "Work as a team to identify an 8-qubit quantum code from partial clues. Avoid decoherence. One measurement — make it count.",
+  "og_image": "/images/qubit/qubit-og.png",
+
+  "hero_badge": "QUANTUM COMPUTING",
+  "hero_h1": "Decode the <em>Quantum Code</em>",
+  "hero_sub": "A cooperative deduction game where each teammate holds a different wavelength clue. Combine partial information to locate the hidden qubit state — before environmental noise collapses everything.",
+  "hero_cta_label": "Play Free Online",
+  "hero_cta_href": "/quantumcomputing/qubit",
+  "hero_img": "/images/qubit/qubit.png",
+  "hero_img_alt": "Qubit board game box",
+
+  "features": [
+    {
+      "icon": "⚛",
+      "title": "16×16 Quantum Matrix",
+      "body": "256 cells. Each represents an 8-qubit state. Row nibble × 16 + column nibble = decimal. Navigate the lattice with region boundaries, dark/light shading, and digit-sum constraints."
+    },
+    {
+      "icon": "🔬",
+      "title": "Partial Information Deduction",
+      "body": "Each player holds a private wavelength clue from one of 6 color-coded sheets. No player can solve it alone — only by combining perspectives can the team narrow to one cell."
+    },
+    {
+      "icon": "🌊",
+      "title": "Environment Deck Pressure",
+      "body": "Every proposed cell draws an environment card. CASCADE forces all players to verify. NOISE advances decoherence. Three noise events = mission failure."
+    },
+    {
+      "icon": "🏆",
+      "title": "Cooperative Teamwork",
+      "body": "Unlike competitive games, everyone wins or loses together. There is no traitor — only the quantum system working against you."
+    }
+  ],
+
+  "how_it_works": [
+    { "step": "1", "label": "Receive Your Clue",       "body": "Each player privately sees clues from one wavelength color. You know which cells match your clue — but not your teammates'." },
+    { "step": "2", "label": "Propose & Token",          "body": "The active player proposes a cell. They place a circle token if it matches their clue, or a square if it doesn't. Then an environment card is drawn." },
+    { "step": "3", "label": "Cascade or Pass",          "body": "A CASCADE card means all other players also verify the cell against their clue, leaving their own tokens. Together the board fills with evidence." },
+    { "step": "4", "label": "Call Measurement",         "body": "When the team is confident, the active player calls Measurement. Correct = mission accomplished. Wrong = immediate failure." }
+  ],
+
+  "testimonials": [],
+
+  "faq": [
+    { "q": "How many players?",              "a": "3 to 6 players. Each player count uses a different setup card with different clue assignments." },
+    { "q": "How long does a game take?",     "a": "About 20–30 minutes once players understand the clue types." },
+    { "q": "Is there hidden information?",  "a": "Yes — each player's wavelength clue is private. You can discuss which cells match your clue but not the clue text itself." },
+    { "q": "What does 'decoherence' mean?",  "a": "In quantum computing, decoherence is when a qubit loses its quantum state due to environmental interference. In the game, three NOISE cards mean your quantum state has collapsed — mission failure." }
+  ]
+}

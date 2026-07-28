@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Qubit is a cooperative quantum computing deduction game. Work as a team to decode the hidden Quantum Code. 3–6 players. Free to play online.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Qubit — Quantum Deduction Game | Tech CoLab">
+<meta property="og:description" content="A cooperative deduction game where your team decodes an 8-qubit quantum state using partial clues. 3–6 players.">
+<meta property="og:image" content="https://cybersecgames.com/images/qubit/qubit.png">
+<meta property="og:url" content="https://cybersecgames.com/quantumcomputing/qubit">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#8b5cf6">
+<link rel="icon" type="image/png" href="/images/logo.png">
+<link rel="apple-touch-icon" href="/images/logo.png">
+<title>Qubit — Quantum Deduction Game | Tech CoLab</title>
+<link rel="stylesheet" href="/nav.css">
+<script src="/games/lobby.js"></script>
+<script src="/games/observer.js"></script>
+<script src="/games/socket.js"></script>
+<link rel="stylesheet" href="/main.css">
+<link rel="stylesheet" href="/games/hub.css">
+<link rel="stylesheet" href="/games/quantumcomputing/qubit.css">
+</head>
+<body>
+
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="icon-obs-eye" viewBox="0 0 24 24">
+    <path d="M2 12C4 6.5 7.5 4 12 4s8 2.5 10 8c-2 5.5-5.5 8-10 8S4 17.5 2 12z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+    <circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.4"/>
+    <circle cx="12" cy="12" r="2.2" fill="none" stroke="currentColor" stroke-width="1"/>
+    <circle cx="12" cy="12" r="1" fill="currentColor"/>
+    <path d="M12 1.2V3M12 21v1.8M1.2 12H3M21 12h1.8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+  </symbol>
+</svg>
+
+<div id="observer-banner">
+  <svg class="obs-eye-icon obs-eye-xl obs-eye-pulse"><use href="#icon-obs-eye"/></svg>
+  <span>Observer Mode</span>
+  <span class="obs-pill">Read Only · All clues visible</span>
+</div>
+
+<header>
+  <a class="header-logo" href="/">
+    <img src="/images/logo.png" alt="Tech CoLab logo" width="56" height="56" fetchpriority="high" decoding="async">
+    <div>
+      <span class="logo-text">Tech Co<span class="logo-text-accent">Lab</span></span>
+      <span class="logo-sub">Bridge the Gap.<br>Empower their Decisions.</span>
+    </div>
+  </a>
+  <nav>
+    <a href="/">Home</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-trigger">Use Cases ▾</button>
+      <div class="nav-dropdown-menu">
+        <a href="/cybersecurity-literacy-use-case">Cybersecurity Literacy</a>
+        <a href="/ai-literacy-use-case">AI Literacy</a>
+      </div>
+    </div>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-trigger">Products ▾</button>
+      <div class="nav-dropdown-menu">
+        <a href="/buy-now" class="nav-all-products">All Products</a>
+        <a href="/cybersecurity">Cybersecurity</a>
+        <a href="/ai?v=1">Artificial Intelligence</a>
+        <a href="/quantumcomputing" class="active">Quantum Computing</a>
+      </div>
+    </div>
+    <a href="/services">Services</a>
+    <a href="/blog">Blog</a>
+    <a href="/contact">Contact</a>
+    <a href="/services" class="nav-cta-buy">Work With Us</a>
+  </nav>
+  <div id="nav-game-btns">
+    <button id="btn-cancel-game" onclick="showCancelModal()" style="display:none">✕ Cancel Game</button>
+  </div>
+</header>
+
+<!-- SCREEN: LOBBY -->
+<!-- CREATEGAME_HTML -->
+
+<!-- SCREEN: WAITING ROOM -->
+<!-- LOBBY_HTML -->
+
+<!-- SCREEN: GAME -->
+<div class="screen" id="game">
+
+  <!-- CANCEL MODAL -->
+  <div id="qb-cancel-modal" class="qb-modal-overlay" style="display:none">
+    <div class="qb-modal">
+      <h3>Cancel Game?</h3>
+      <p>This will end the game for all players.</p>
+      <div class="qb-modal-btns">
+        <button class="qb-btn qb-btn-danger" onclick="confirmCancel()">Yes, Cancel</button>
+        <button class="qb-btn" onclick="hideCancelModal()">No, Keep Playing</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MEASUREMENT MODAL -->
+  <div id="qb-measure-modal" class="qb-modal-overlay" style="display:none">
+    <div class="qb-modal">
+      <div class="qb-modal-icon">⚛</div>
+      <h3>Call Measurement</h3>
+      <p>Declare this as the Quantum Code. <strong>If wrong, the mission fails.</strong></p>
+      <div class="qb-measure-cell-display">
+        <div class="qb-measure-binary" id="qb-measure-binary">00000000</div>
+        <div class="qb-measure-decimal" id="qb-measure-decimal">0</div>
+      </div>
+      <div class="qb-modal-btns">
+        <button class="qb-btn qb-btn-measure" onclick="confirmMeasurement()">Confirm Measurement</button>
+        <button class="qb-btn" onclick="cancelMeasurement()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAME OVER OVERLAY -->
+  <div id="qb-gameover" class="qb-gameover-overlay" style="display:none">
+    <div class="qb-gameover-card">
+      <div class="qb-gameover-icon" id="qb-gameover-icon">⚛</div>
+      <div class="qb-gameover-title" id="qb-gameover-title">Mission Complete</div>
+      <div class="qb-gameover-sub" id="qb-gameover-sub"></div>
+      <div class="qb-gameover-answer" id="qb-gameover-answer" style="display:none">
+        <div class="qb-answer-label">The Quantum Code was:</div>
+        <div class="qb-answer-binary" id="qb-answer-binary">00000000</div>
+        <div class="qb-answer-decimal" id="qb-answer-decimal">0</div>
+      </div>
+      <button class="qb-btn qb-btn-back" onclick="backToLobby()">Back to Lobby</button>
+    </div>
+  </div>
+
+  <!-- PLAYERS BAR -->
+  <div class="qb-players-bar" id="qb-players-bar"></div>
+
+  <!-- MAIN CONTENT -->
+  <div class="qb-main">
+
+    <!-- BOARD SECTION -->
+    <div class="qb-board-section">
+      <div class="qb-board-header">
+        <span class="qb-board-title">Quantum Matrix</span>
+        <span class="qb-board-hint" id="qb-board-hint">Click a cell to propose it</span>
+      </div>
+      <div class="qb-board-wrap">
+        <div class="qb-board-grid-wrap" id="qb-board-grid-wrap">
+          <div class="qb-board-corner"></div>
+          <div class="qb-board-colheads" id="qb-board-colheads"></div>
+          <div class="qb-board-rowheads" id="qb-board-rowheads"></div>
+          <div class="qb-board" id="qb-board"></div>
+        </div>
+      </div>
+      <div class="qb-cell-zoom" id="qb-cell-zoom" style="display:none"></div>
+      <div class="qb-board-legend">
+        <span class="qb-legend-item"><span class="qb-leg-circle">✓</span>Clue match</span>
+        <span class="qb-legend-item"><span class="qb-leg-square">✗</span>No match</span>
+      </div>
+    </div>
+
+    <!-- CONTROL PANEL -->
+    <div class="qb-panel">
+
+      <!-- MY CLUE -->
+      <div class="qb-panel-section" id="qb-clue-section">
+        <div class="qb-section-title">My Wavelength Clue</div>
+        <div class="qb-clue-color" id="qb-clue-color">
+          <span class="qb-color-dot" id="qb-color-dot"></span>
+          <span id="qb-color-name">—</span>
+        </div>
+        <div class="qb-clue-list" id="qb-clue-list">
+          <div class="qb-clue-placeholder">Waiting for game to start…</div>
+        </div>
+        <label class="qb-match-toggle">
+          <input type="checkbox" id="qb-show-valid" onchange="toggleAllValidHighlight()">
+          <span>Highlight valid cells (must match ALL my clues)</span>
+        </label>
+        <div class="qb-valid-legend">
+          <span class="qb-legend-item"><span class="qb-leg-valid-all"></span>Valid — matches every clue</span>
+        </div>
+      </div>
+
+      <!-- ENVIRONMENT -->
+      <div class="qb-panel-section">
+        <div class="qb-section-title">Environment</div>
+        <div class="qb-noise-row">
+          <span class="qb-noise-label">Decoherence:</span>
+          <span class="qb-noise-dots" id="qb-noise-dots">
+            <span class="qb-noise-dot"></span>
+            <span class="qb-noise-dot"></span>
+            <span class="qb-noise-dot"></span>
+          </span>
+        </div>
+        <div class="qb-deck-row">
+          <span>Deck:</span>
+          <span id="qb-deck-count">46 cards</span>
+        </div>
+        <div class="qb-card-display" id="qb-card-display" style="display:none">
+          <div class="qb-card-type" id="qb-card-type"></div>
+          <div class="qb-card-effect" id="qb-card-effect"></div>
+        </div>
+      </div>
+
+      <!-- TURN -->
+      <div class="qb-panel-section">
+        <div class="qb-section-title">Turn</div>
+        <div class="qb-turn-status" id="qb-turn-status">Waiting to start…</div>
+        <div class="qb-turn-actions" id="qb-turn-actions"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+// ==================== CONSTANTS ====================
+var GAME_COLOR_HEX = {
+  red:'#ef4444', blue:'#3b82f6', green:'#22c55e',
+  yellow:'#eab308', purple:'#a855f7', orange:'#f97316'
+};
+
+var CARD_INFO = {
+  maintained:    { label:'COHERENCE MAINTAINED', effect:'No special effect. Turn passes.' },
+  cascade:       { label:'CONSTRUCTIVE CASCADE', effect:'All other players also verify this cell!' },
+  noise:         { label:'NOISE / DECOHERENCE',  effect:'Decoherence strike! Three strikes = mission fails.' },
+};
+
+// ==================== STATE ====================
+var hub, gs = null;
+var myIdx = -1, roomCode = null, isHost = false, isObserver = false;
+var cellEls = {};
+var boardReady = false;
+var measureMode = false;
+var measurePending = -1;
+// Which of my own clues (by id) are currently toggled on for board highlight.
+// Keyed by clue id rather than array index so it's stable across re-renders.
+var checkedClueIds = {};
+// "Highlight valid cells" — the combined AND-of-all-clues view, separate
+// from the per-clue toggles above.
+var showAllValid = false;
+
+var SESSION_KEY     = 'techgames_qubit_session';
+var OBS_SESSION_KEY = 'techgames_qubit_observer';
+var QB_BASE_PATH    = '/quantumcomputing/qubit';
+
+function send(msg) { hub.send(msg); }
+
+// Lobby swatch colours — these are the seat colours players pick in the lobby,
+// distinct from GAME_COLOR_HEX which colours the six clue wavelengths.
+var LOBBY_COLOR_HEX = {
+  blue:'#4a9eff', red:'#ff4a4a', green:'#3fbf5f',
+  purple:'#a060dd', yellow:'#facc15', orange:'#f97316'
+};
+
+var QB_MIN_PLAYERS = 3;
+var QB_MAX_BOTS     = 2;
+
+// ==================== WAITING ROOM ====================
+function copyCode() {
+  var btn = event && event.target;
+  navigator.clipboard.writeText(roomCode).then(function(){
+    if (!btn) return;
+    btn.textContent = 'Copied!'; btn.classList.add('copied');
+    setTimeout(function(){ btn.textContent = 'Copy Code'; btn.classList.remove('copied'); }, 1500);
+  });
+}
+
+function copyLink() {
+  var btn = event && event.target;
+  navigator.clipboard.writeText(location.origin + QB_BASE_PATH + '?room=' + roomCode).then(function(){
+    if (!btn) return;
+    btn.textContent = 'Copied!'; btn.classList.add('copied');
+    setTimeout(function(){ btn.textContent = 'Copy Link'; btn.classList.remove('copied'); }, 1500);
+  });
+}
+
+function startGame() { send({ type: 'start_game' }); }
+function toggleBot()  { send({ type: 'toggle_bot' }); }
+
+function leaveRoom() {
+  sessionStorage.removeItem(SESSION_KEY);
+  sessionStorage.removeItem(OBS_SESSION_KEY);
+  send({ type: 'leave_room' });
+  roomCode = null; myIdx = -1; gs = null; isHost = false; isObserver = false;
+  boardReady = false; measureMode = false;
+  document.body.classList.remove('observer-active');
+  try { history.replaceState(null, '', QB_BASE_PATH); } catch(_) {}
+  showScreen('lobby');
+}
+
+function renderLobbyPlayers(players, observers) {
+  players   = players   || [];
+  observers = observers || [];
+  var el = document.getElementById('player-list');
+  if (!el) return;
+  el.innerHTML = '';
+
+  var section = document.createElement('div');
+  section.style.cssText = 'width:100%;max-width:320px;margin-bottom:4px;';
+  var label = document.createElement('div');
+  label.className = 'waiting-observer-label';
+  label.textContent = 'Players (' + players.length + '/6)';
+  section.appendChild(label);
+
+  players.forEach(function(p, pi) {
+    var isMe = !isObserver && pi === myIdx;
+    var row = document.createElement('div');
+    row.className = 'waiting-player' + (isMe ? ' waiting-player-me' : '');
+    row.innerHTML = '<div class="waiting-player-dot" style="background:' + (LOBBY_COLOR_HEX[p.color] || '#888') + '"></div>'
+      + '<span class="waiting-player-name">' + esc(p.name) + (isMe ? ' <span class="you-tag">You</span>' : '') + '</span>'
+      + (p.isHost ? '<span class="host-badge">HOST</span>' : '')
+      + (p.isBot  ? '<span class="host-badge" style="background:#374151;color:#9ca3af">BOT</span>' : '');
+    section.appendChild(row);
+  });
+
+  if (players.length === 0) {
+    var empty = document.createElement('div');
+    empty.style.cssText = 'font-size:12px;color:#374151;padding:6px 14px;font-style:italic;';
+    empty.textContent = 'No players yet. Share the code to invite.';
+    section.appendChild(empty);
+  }
+  el.appendChild(section);
+
+  if (window.ObserverUI && ObserverUI.renderWaitingObservers) {
+    ObserverUI.renderWaitingObservers(observers);
+  }
+
+  // Up to QB_MAX_BOTS bots can fill empty seats — they only ever Propose a
+  // cell from their own clue; a human always has to call the Measurement.
+  var botCount = players.filter(function(p){ return p.isBot; }).length;
+  var botBtn   = document.getElementById('btn-bot-toggle');
+  if (botBtn) {
+    if (isHost && !isObserver && players.length < 6) {
+      botBtn.style.display = 'block';
+      if (botCount === 0) {
+        botBtn.textContent = 'Add Bot (fills a seat)';
+        botBtn.classList.remove('active');
+      } else if (botCount < QB_MAX_BOTS) {
+        botBtn.textContent = 'Add Another Bot (' + botCount + '/' + QB_MAX_BOTS + ')';
+        botBtn.classList.add('active');
+      } else {
+        botBtn.textContent = 'Remove Bots (' + botCount + '/' + QB_MAX_BOTS + ')';
+        botBtn.classList.add('active');
+      }
+    } else {
+      botBtn.style.display = 'none';
+    }
+  }
+
+  var startBtn = document.getElementById('btn-start-game');
+  if (startBtn) {
+    startBtn.style.display = isHost ? 'inline-block' : 'none';
+    startBtn.disabled = players.length < QB_MIN_PLAYERS;
+  }
+
+  var short = QB_MIN_PLAYERS - players.length;
+  var errMsg;
+  if (players.length < QB_MIN_PLAYERS) {
+    errMsg = 'Need ' + short + ' more player' + (short === 1 ? '' : 's') + ' — Qubit needs at least ' + QB_MIN_PLAYERS + '.';
+  } else {
+    errMsg = isHost ? '' : 'Waiting for host to start...';
+  }
+  var errEl = document.getElementById('waiting-error');
+  if (errEl) errEl.textContent = errMsg;
+}
+
+function enterWaiting() {
+  var disp = document.getElementById('room-code-display');
+  if (disp) disp.textContent = roomCode || '----';
+  showScreen('waiting');
+}
+
+// ==================== SCREEN MGMT ====================
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.classList.add('active');
+  el.scrollTop = 0;
+  document.body.classList.remove('rejoin-pending');
+  var suffix = '';
+  if (id === 'waiting') suffix = '/lobby';
+  else if (id === 'game') suffix = '/activegame';
+  var qs = roomCode ? ('?room=' + encodeURIComponent(roomCode)) : '';
+  try { history.replaceState(null, '', QB_BASE_PATH + suffix + qs); } catch(_) {}
+}
+
+// ==================== CANCEL GAME ====================
+function showCancelModal() {
+  document.getElementById('qb-cancel-modal').style.display = 'flex';
+}
+function hideCancelModal() {
+  document.getElementById('qb-cancel-modal').style.display = 'none';
+}
+function confirmCancel() {
+  send({ type: 'cancel_game' });
+  hideCancelModal();
+}
+
+// ==================== BOARD INIT ====================
+function initBoard() {
+  var board = document.getElementById('qb-board');
+  board.innerHTML = '';
+  cellEls = {};
+
+  for (var r = 0; r < 16; r++) {
+    for (var c = 0; c < 16; c++) {
+      var d      = r * 16 + c;
+      var binary = d.toString(2).padStart(8, '0');
+      var isDark = (Math.floor(r/4) + Math.floor(c/4)) % 2 === 0;
+      // Fine per-cell checkerboard, independent of the big 4x4-block one:
+      // decimal 0 light, 1 dark, 2 light, 3 dark, ... i.e. (row+col) parity.
+      var isFineA = (r + c) % 2 === 0;
+
+      var el = document.createElement('div');
+      el.className = 'qb-cell ' + (isDark ? 'qb-dark' : 'qb-light') + ' ' + (isFineA ? 'qb-fine-a' : 'qb-fine-b');
+      el.dataset.decimal = d;
+
+      if (r === 7)         el.classList.add('qb-rb');
+      if (c === 4 || c === 9) el.classList.add('qb-rr');
+
+      el.innerHTML = '<div class="qb-bin">' + binary + '</div>'
+        + '<div class="qb-dec">' + d + '</div>'
+        + '<div class="qb-toks" id="tok-' + d + '"></div>';
+
+      el.addEventListener('click', (function(dec){ return function(){ cellClicked(dec); }; })(d));
+      board.appendChild(el);
+      cellEls[d] = el;
+    }
+  }
+
+  buildBoardHeaders();
+
+  boardReady = true;
+  sizeBoard();
+  initCellZoom();
+}
+
+// Row/col headers show each row/column's 4-bit binary nibble plus its decimal
+// index — the same axis labels the physical board prints — so a player can
+// read off row-nibble + col-nibble instead of counting cells to find a code.
+function buildBoardHeaders() {
+  var colHeads = document.getElementById('qb-board-colheads');
+  var rowHeads = document.getElementById('qb-board-rowheads');
+  if (!colHeads || !rowHeads) return;
+  colHeads.innerHTML = '';
+  rowHeads.innerHTML = '';
+  for (var i = 0; i < 16; i++) {
+    var nibble = i.toString(2).padStart(4, '0');
+    var colEl = document.createElement('div');
+    colEl.className = 'qb-axis-head qb-colhead';
+    colEl.innerHTML = '<span class="qb-axis-nibble">' + nibble + '</span><span class="qb-axis-dec">' + i + '</span>';
+    colHeads.appendChild(colEl);
+
+    var rowEl = document.createElement('div');
+    rowEl.className = 'qb-axis-head qb-rowhead';
+    rowEl.innerHTML = '<span class="qb-axis-nibble">' + nibble + '</span><span class="qb-axis-dec">' + i + '</span>';
+    rowHeads.appendChild(rowEl);
+  }
+}
+
+// ==================== HOVER ZOOM ====================
+// Cells are ~30px at typical sizes — too small to read the binary/ket/token
+// detail at a glance, so hovering pops an enlarged preview of that one cell.
+function initCellZoom() {
+  var wrap = document.querySelector('.qb-board-wrap');
+  var zoom = document.getElementById('qb-cell-zoom');
+  if (!wrap || !zoom || wrap._qbZoomWired) return;
+  wrap._qbZoomWired = true;
+
+  wrap.addEventListener('mousemove', function(e){
+    var cellEl = e.target.closest ? e.target.closest('.qb-cell') : null;
+    if (!cellEl) { zoom.style.display = 'none'; return; }
+    renderCellZoom(Number(cellEl.dataset.decimal), e.clientX, e.clientY);
+  });
+  wrap.addEventListener('mouseleave', function(){ zoom.style.display = 'none'; });
+}
+
+function renderCellZoom(d, clientX, clientY) {
+  var zoom = document.getElementById('qb-cell-zoom');
+  if (!zoom) return;
+  var binary = d.toString(2).padStart(8, '0');
+
+  // Deliberately no ket lookup here: a ket sits on the vertex shared by four
+  // cells, not inside any single one of them. Tagging "this cell has a ket"
+  // for whichever cell happens to own that corner in (row,col) terms would
+  // misrepresent it as belonging to one square. The board's own ket markers
+  // are already visible at their true vertex position.
+  var toksHtml = '';
+  var toks = (gs && gs.tokens && gs.tokens[d]) || [];
+  for (var i = 0; i < toks.length; i++) {
+    var t   = toks[i];
+    var hex = GAME_COLOR_HEX[t.gameColor] || '#888';
+    toksHtml += '<span class="qb-zoom-tok qb-tok-' + t.result + '" style="background:' + hex + ';border-color:' + hex + '" title="' + esc(t.gameColor) + '">'
+      + (t.result === 'circle' ? '✓' : '✗') + '</span>';
+  }
+
+  var matchHtml = '';
+  if (gs && gs.myMatchingCells && gs.myMatchingCells.indexOf(d) !== -1) {
+    matchHtml = '<div class="qb-zoom-match">✓ matches your clue</div>';
+  }
+
+  zoom.innerHTML = '<div class="qb-zoom-bin">' + binary + '</div>'
+    + '<div class="qb-zoom-dec">Cell ' + d + '</div>'
+    + (toksHtml ? '<div class="qb-zoom-toks">' + toksHtml + '</div>' : '')
+    + matchHtml;
+
+  // Keep the preview on-screen near the cursor, flipping to whichever side
+  // has room rather than running off the viewport edge.
+  zoom.style.display = 'block';
+  var pad = 18, zw = zoom.offsetWidth || 130, zh = zoom.offsetHeight || 110;
+  var left = clientX + pad, top = clientY + pad;
+  if (left + zw > window.innerWidth)  left = clientX - zw - pad;
+  if (top  + zh > window.innerHeight) top  = clientY - zh - pad;
+  zoom.style.left = Math.max(4, left) + 'px';
+  zoom.style.top  = Math.max(4, top)  + 'px';
+}
+
+// The board is a square grid; CSS alone can't size one axis off the other's
+// available space (min(width, height) of the wrap), so we set explicit pixel
+// dimensions here and re-run on resize. The row/col header strips eat into
+// that available space, so their fixed thickness comes off first.
+var QB_HEAD_W = 28, QB_HEAD_H = 20;
+function sizeBoard() {
+  var wrap  = document.querySelector('.qb-board-wrap');
+  var board = document.getElementById('qb-board');
+  var colHeads = document.getElementById('qb-board-colheads');
+  var rowHeads = document.getElementById('qb-board-rowheads');
+  if (!wrap || !board) return;
+  var availW = wrap.clientWidth  - QB_HEAD_W - 10;
+  var availH = wrap.clientHeight - QB_HEAD_H - 10;
+  // A small shrink factor (rather than fitting the exact available space)
+  // leaves deliberate headroom so the board + headers reliably fit within
+  // the viewport with no vertical scroll, instead of sizing right up to the
+  // edge and tipping over into a scrollbar on the next line of text.
+  var side = Math.max(220, Math.min(availW, availH) * 0.94);
+  board.style.width  = side + 'px';
+  board.style.height = side + 'px';
+  if (colHeads) colHeads.style.width  = side + 'px';
+  if (rowHeads) rowHeads.style.height = side + 'px';
+}
+window.addEventListener('resize', function(){ if (boardReady) sizeBoard(); });
+
+// ==================== CELL CLICK ====================
+function cellClicked(decimal) {
+  if (!gs || gs.gameOver) return;
+  if (isObserver) return;
+  if (gs.myPlayerIdx !== gs.currentPlayerIdx) return;
+  if (gs.phase !== 'propose') return;
+
+  // Remove prior selection highlight
+  document.querySelectorAll('.qb-selected').forEach(function(e){ e.classList.remove('qb-selected'); });
+
+  if (measureMode) {
+    // A Measurement can name any code — it's not limited to your own clue.
+    measurePending = decimal;
+    cellEls[decimal].classList.add('qb-selected');
+    document.getElementById('qb-measure-binary').textContent  = decimal.toString(2).padStart(8,'0');
+    document.getElementById('qb-measure-decimal').textContent = decimal;
+    document.getElementById('qb-measure-modal').style.display = 'flex';
+  } else {
+    // A Proposal must be consistent with your own clue — the server enforces
+    // this too, but checking here avoids a round trip just to get rejected.
+    if (!gs.myMatchingCells || gs.myMatchingCells.indexOf(decimal) === -1) {
+      showToast('Choose a cell that matches your own clue');
+      return;
+    }
+    cellEls[decimal].classList.add('qb-selected');
+    send({ type: 'game_action', action: 'qb_propose', decimal: decimal });
+  }
+}
+
+// ==================== MEASUREMENT ====================
+function startMeasurement() {
+  if (!gs || gs.gameOver) return;
+  if (gs.myPlayerIdx !== gs.currentPlayerIdx) return;
+  measureMode = true;
+  document.getElementById('qb-board-hint').textContent = 'Select the cell you believe is the Quantum Code…';
+  document.querySelectorAll('.qb-cell').forEach(function(e){ e.classList.add('qb-measure-mode'); });
+}
+
+function cancelMeasurement() {
+  measureMode = false;
+  measurePending = -1;
+  document.getElementById('qb-measure-modal').style.display = 'none';
+  document.querySelectorAll('.qb-cell').forEach(function(e){
+    e.classList.remove('qb-measure-mode', 'qb-selected');
+  });
+  document.getElementById('qb-board-hint').textContent = isMyTurn() ? 'Click a cell to propose it' : '';
+}
+
+function confirmMeasurement() {
+  if (measurePending < 0) return;
+  send({ type: 'game_action', action: 'qb_measure', decimal: measurePending });
+  document.getElementById('qb-measure-modal').style.display = 'none';
+  measureMode = false;
+  measurePending = -1;
+  document.querySelectorAll('.qb-cell').forEach(function(e){
+    e.classList.remove('qb-measure-mode', 'qb-selected');
+  });
+}
+
+function isMyTurn() {
+  return gs && !gs.gameOver && gs.phase === 'propose' && gs.myPlayerIdx === gs.currentPlayerIdx;
+}
+
+function chooseVerifier(targetIdx) {
+  if (!gs || gs.gameOver || gs.phase !== 'choose_verifier') return;
+  if (gs.myPlayerIdx !== gs.currentPlayerIdx) return;
+  send({ type: 'game_action', action: 'qb_verify', targetIdx: targetIdx });
+}
+
+// ==================== MATCH HIGHLIGHT ====================
+// Each clue in "My Wavelength Clue" has its own checkbox, independent of the
+// others — checking clue #1 shows only the cells consistent with clue #1,
+// checking both shows the union, so a player can inspect each clue on its
+// own rather than only ever seeing the combined AND of their whole hand.
+function toggleClueHighlight(clueId, checked) {
+  if (checked) checkedClueIds[clueId] = true;
+  else delete checkedClueIds[clueId];
+  updateMatchHighlights();
+}
+
+// "Highlight valid cells" — separate from the per-clue toggles: shows only
+// the cells that are actually valid, i.e. consistent with EVERY one of my
+// clues at once (gs.myMatchingCells, the AND across the whole hand).
+function toggleAllValidHighlight() {
+  showAllValid = document.getElementById('qb-show-valid').checked;
+  updateMatchHighlights();
+}
+
+function updateMatchHighlights() {
+  document.querySelectorAll('.qb-match, .qb-valid-all').forEach(function(e){
+    e.classList.remove('qb-match', 'qb-valid-all');
+  });
+  if (!gs || !gs.myClues) return;
+
+  gs.myClues.forEach(function(clue){
+    if (!checkedClueIds[clue.id]) return;
+    (clue.matchingCells || []).forEach(function(d){
+      if (cellEls[d]) cellEls[d].classList.add('qb-match');
+    });
+  });
+
+  if (showAllValid) {
+    (gs.myMatchingCells || []).forEach(function(d){
+      if (cellEls[d]) cellEls[d].classList.add('qb-valid-all');
+    });
+  }
+}
+
+// ==================== RENDER STATE ====================
+function renderGame(state) {
+  gs = state;
+  if (!boardReady) { initBoard(); }
+
+  renderTokens(state.tokens || {});
+  updateMatchHighlights();
+  renderPlayers(state);
+  renderCluePanel(state);
+  renderEnvPanel(state);
+  renderTurnPanel(state);
+
+  if (state.proposedCell) highlightProposed(state.proposedCell.decimal);
+
+  if (state.gameOver) {
+    setTimeout(function(){ showGameOver(state); }, state.won ? 800 : 400);
+  }
+
+  // nav cancel button
+  var cancelBtn = document.getElementById('btn-cancel-game');
+  if (cancelBtn) cancelBtn.style.display = (isHost && !state.gameOver) ? '' : 'none';
+}
+
+function highlightProposed(decimal) {
+  document.querySelectorAll('.qb-proposed').forEach(function(e){ e.classList.remove('qb-proposed'); });
+  if (decimal != null && cellEls[decimal]) cellEls[decimal].classList.add('qb-proposed');
+}
+
+// ==================== RENDER TOKENS ====================
+function renderTokens(tokens) {
+  document.querySelectorAll('.qb-toks').forEach(function(t){ t.innerHTML = ''; });
+  for (var d in tokens) {
+    var container = document.getElementById('tok-' + d);
+    if (!container) continue;
+    var toks = tokens[d];
+    for (var i = 0; i < toks.length; i++) {
+      var tok = toks[i];
+      var el  = document.createElement('div');
+      el.className  = 'qb-tok qb-tok-' + tok.result;
+      el.textContent = tok.result === 'circle' ? '✓' : '✗';
+      el.style.background    = GAME_COLOR_HEX[tok.gameColor] || '#888';
+      el.style.borderColor   = GAME_COLOR_HEX[tok.gameColor] || '#888';
+      el.title = tok.gameColor + ': ' + (tok.result === 'circle' ? '✓ match' : '✗ no match');
+      container.appendChild(el);
+    }
+  }
+}
+
+// ==================== RENDER PLAYERS BAR ====================
+function renderPlayers(state) {
+  var bar = document.getElementById('qb-players-bar');
+  if (!bar) return;
+  var html = '';
+  for (var i = 0; i < state.players.length; i++) {
+    var p   = state.players[i];
+    var gc  = state.playerGameColors ? state.playerGameColors[i] : '';
+    var hex = GAME_COLOR_HEX[gc] || '#888';
+    var isCur = i === state.currentPlayerIdx;
+    var isMe  = i === state.myPlayerIdx;
+    html += '<div class="qb-player-chip' + (isCur ? ' qb-player-active' : '') + (isMe ? ' qb-player-me' : '') + '">'
+      + '<span class="qb-player-swatch" style="background:' + hex + '"></span>'
+      + '<span class="qb-player-name">' + esc(p.name) + (isMe ? ' (me)' : '') + '</span>'
+      + (p.connected ? '' : '<span class="qb-player-dc">●</span>')
+      + '</div>';
+  }
+  bar.innerHTML = html;
+}
+
+// ==================== RENDER CLUE PANEL ====================
+function renderCluePanel(state) {
+  var gc   = state.myGameColor;
+  var hex  = gc ? (GAME_COLOR_HEX[gc] || '#888') : '#888';
+  var dot  = document.getElementById('qb-color-dot');
+  var name = document.getElementById('qb-color-name');
+  if (dot)  dot.style.background = hex;
+  if (name) name.textContent = gc ? (gc.charAt(0).toUpperCase() + gc.slice(1)) : '—';
+
+  var list = document.getElementById('qb-clue-list');
+  if (!list) return;
+  if (!state.myClues || state.myClues.length === 0) {
+    list.innerHTML = '<div class="qb-clue-placeholder">No clue assigned.</div>';
+    return;
+  }
+  var html = '';
+  for (var i = 0; i < state.myClues.length; i++) {
+    var clue    = state.myClues[i];
+    var checked = !!checkedClueIds[clue.id];
+    html += '<div class="qb-clue-item">'
+      + '<label class="qb-clue-highlight-toggle" title="Highlight cells matching this clue alone">'
+      + '<input type="checkbox" ' + (checked ? 'checked' : '') + ' onchange="toggleClueHighlight(' + clue.id + ', this.checked)">'
+      + '</label>'
+      + '<span class="qb-clue-id">#' + clue.id + '</span>'
+      + '<span class="qb-clue-text">' + esc(clue.text) + '</span>'
+      + '</div>';
+  }
+  list.innerHTML = html;
+  var validCb = document.getElementById('qb-show-valid');
+  if (validCb) validCb.checked = showAllValid;
+  updateMatchHighlights();
+}
+
+// ==================== RENDER ENV PANEL ====================
+function renderEnvPanel(state) {
+  var noise = state.noiseCount || 0;
+  var dots  = document.getElementById('qb-noise-dots');
+  if (dots) {
+    var dotEls = dots.querySelectorAll('.qb-noise-dot');
+    for (var i = 0; i < dotEls.length; i++) {
+      dotEls[i].classList.toggle('qb-noise-active', i < noise);
+    }
+  }
+  var deckEl = document.getElementById('qb-deck-count');
+  if (deckEl) deckEl.textContent = (state.deckCount || 0) + ' cards';
+
+  var cardDisplay = document.getElementById('qb-card-display');
+  var cardType    = document.getElementById('qb-card-type');
+  var cardEffect  = document.getElementById('qb-card-effect');
+  if (state.currentCard && CARD_INFO[state.currentCard]) {
+    var info = CARD_INFO[state.currentCard];
+    if (cardType)   cardType.textContent   = info.label;
+    if (cardEffect) cardEffect.textContent = info.effect;
+    if (cardDisplay) {
+      cardDisplay.style.display = '';
+      cardDisplay.className = 'qb-card-display qb-card-' + state.currentCard;
+    }
+  } else {
+    if (cardDisplay) cardDisplay.style.display = 'none';
+  }
+}
+
+// ==================== RENDER TURN PANEL ====================
+function renderTurnPanel(state) {
+  var statusEl  = document.getElementById('qb-turn-status');
+  var actionsEl = document.getElementById('qb-turn-actions');
+  var hintEl    = document.getElementById('qb-board-hint');
+
+  if (state.gameOver) {
+    if (statusEl) statusEl.textContent = state.won ? 'Mission accomplished!' : 'Mission failed.';
+    if (actionsEl) actionsEl.innerHTML = '';
+    if (hintEl)   hintEl.textContent = '';
+    return;
+  }
+
+  var curPlayer = state.players[state.currentPlayerIdx];
+  var curColor  = state.playerGameColors ? state.playerGameColors[state.currentPlayerIdx] : '';
+  var curHex    = GAME_COLOR_HEX[curColor] || '#888';
+  var isMe      = state.myPlayerIdx === state.currentPlayerIdx;
+
+  if (statusEl) {
+    statusEl.innerHTML = '<span class="qb-turn-swatch" style="background:' + curHex + '"></span>'
+      + '<span>' + esc(curPlayer ? curPlayer.name : '?') + (isMe ? " — it's your turn!" : "'s turn") + '</span>';
+  }
+
+  if (actionsEl) {
+    if (isMe && !isObserver && state.phase === 'propose') {
+      actionsEl.innerHTML = '<div class="qb-turn-tip">Click a cell on the board to propose it, then an environment card will be drawn automatically.</div>'
+        + '<button class="qb-btn qb-btn-measure" onclick="startMeasurement()" style="margin-top:8px">⚛ Call Measurement</button>';
+    } else if (isMe && !isObserver && state.phase === 'choose_verifier') {
+      actionsEl.innerHTML = renderVerifierChoices(state);
+    } else if (!isMe && state.phase === 'choose_verifier') {
+      actionsEl.innerHTML = '<div class="qb-turn-tip">' + esc(curPlayer ? curPlayer.name : '?') + ' is choosing another player to Verify the proposed cell against.</div>';
+    } else if (!isMe) {
+      actionsEl.innerHTML = '<div class="qb-turn-tip">Wait for ' + esc(curPlayer ? curPlayer.name : '?') + ' to propose a cell.</div>';
+    } else {
+      actionsEl.innerHTML = '';
+    }
+  }
+
+  if (hintEl) {
+    if (isMe && !isObserver && state.phase === 'choose_verifier') {
+      hintEl.textContent = 'Choose a player to Verify against';
+    } else if (isMe && !isObserver) {
+      hintEl.textContent = measureMode ? 'Select the cell you believe is the Quantum Code…' : 'Click a cell to propose it';
+    } else {
+      hintEl.textContent = '';
+    }
+  }
+
+  // Clickability — during a Proposal, only cells consistent with my own
+  // clue are selectable (a Measurement, however, can name any cell).
+  var isProposeTurn = isMe && !isObserver && state.phase === 'propose';
+  document.querySelectorAll('.qb-cell').forEach(function(e){
+    var clickable = false;
+    if (isProposeTurn) {
+      if (measureMode) {
+        clickable = true;
+      } else {
+        var d = Number(e.dataset.decimal);
+        clickable = (state.myMatchingCells || []).indexOf(d) !== -1;
+      }
+    }
+    e.classList.toggle('qb-clickable', clickable);
+  });
+
+  maybeToastVerifyResult(state);
+}
+
+// ==================== VERIFY STEP ====================
+function renderVerifierChoices(state) {
+  var cell = state.proposedCell;
+  var html = '<div class="qb-turn-tip">Proposed cell '
+    + (cell ? ('<strong>' + cell.decimal + '</strong> (' + cell.binary + ')') : '')
+    + ' — choose another player to Verify it against their clue.</div>'
+    + '<div class="qb-verify-choices">';
+  for (var i = 0; i < state.players.length; i++) {
+    if (i === state.currentPlayerIdx) continue;
+    var p   = state.players[i];
+    var hex = GAME_COLOR_HEX[state.playerGameColors[i]] || '#888';
+    html += '<button class="qb-btn qb-verify-choice" style="border-color:' + hex + '" onclick="chooseVerifier(' + i + ')">'
+      + '<span class="qb-player-swatch" style="background:' + hex + '"></span>' + esc(p.name)
+      + '</button>';
+  }
+  html += '</div>';
+  return html;
+}
+
+var _lastVerifyToastKey = null;
+function maybeToastVerifyResult(state) {
+  if (!state.lastVerify || !state.proposedCell) { return; }
+  var key = state.proposedCell.decimal + ':' + state.lastVerify.targetIdx + ':' + state.lastVerify.result;
+  if (key === _lastVerifyToastKey) return;
+  _lastVerifyToastKey = key;
+  var target = state.players[state.lastVerify.targetIdx];
+  var verb = state.lastVerify.result === 'circle' ? 'matches' : 'does not match';
+  showToast((target ? target.name : 'A player') + "'s clue " + verb + ' that cell');
+}
+
+// ==================== GAME OVER ====================
+function showGameOver(state) {
+  var el = document.getElementById('qb-gameover');
+  if (!el) return;
+  var icon  = document.getElementById('qb-gameover-icon');
+  var title = document.getElementById('qb-gameover-title');
+  var sub   = document.getElementById('qb-gameover-sub');
+  var ans   = document.getElementById('qb-gameover-answer');
+
+  if (state.won) {
+    if (icon)  icon.textContent  = '✓';
+    if (title) title.textContent = 'Measurement Confirmed!';
+    if (sub)   sub.textContent   = 'The team successfully identified the Quantum Code.';
+    el.classList.add('qb-gameover-win');
+    el.classList.remove('qb-gameover-lose');
+  } else {
+    var noiseEnd = (state.noiseCount || 0) >= 3;
+    if (icon)  icon.textContent  = noiseEnd ? '✗' : '✗';
+    if (title) title.textContent = noiseEnd ? 'System Decoherence' : 'Measurement Failed';
+    if (sub)   sub.textContent   = noiseEnd
+      ? 'Three decoherence events occurred. The quantum state collapsed.'
+      : 'The measurement was incorrect. The quantum state was lost.';
+    el.classList.add('qb-gameover-lose');
+    el.classList.remove('qb-gameover-win');
+  }
+
+  if (state.answerDecimal != null && ans) {
+    ans.style.display = '';
+    var binEl = document.getElementById('qb-answer-binary');
+    var decEl = document.getElementById('qb-answer-decimal');
+    if (binEl) binEl.textContent = state.answerBinary || state.answerDecimal.toString(2).padStart(8,'0');
+    if (decEl) decEl.textContent = state.answerDecimal;
+    // Highlight answer cell on board
+    if (cellEls[state.answerDecimal]) {
+      cellEls[state.answerDecimal].classList.add('qb-answer-cell');
+    }
+  }
+
+  el.style.display = 'flex';
+}
+
+function backToLobby() {
+  sessionStorage.removeItem(SESSION_KEY);
+  sessionStorage.removeItem(OBS_SESSION_KEY);
+  document.getElementById('qb-gameover').style.display = 'none';
+  document.getElementById('btn-cancel-game').style.display = 'none';
+  document.body.classList.remove('observer-active');
+  roomCode = null; myIdx = -1; gs = null; isHost = false; isObserver = false;
+  boardReady = false; measureMode = false;
+  try { history.replaceState(null, '', QB_BASE_PATH); } catch(_) {}
+  showScreen('lobby');
+}
+
+// ==================== UTILS ====================
+function esc(s) {
+  return String(s || '').replace(/[&<>"']/g, function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+  });
+}
+
+function showToast(msg) {
+  var t = document.createElement('div');
+  t.className = 'qb-toast';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(function(){ t.classList.add('show'); }, 10);
+  setTimeout(function(){ t.classList.remove('show'); setTimeout(function(){ t.remove(); }, 400); }, 3000);
+}
+
+// ==================== MESSAGE HANDLER ====================
+function handleMsg(msg) {
+  switch (msg.type) {
+
+    case 'room_created':
+      roomCode = msg.code;
+      myIdx    = msg.yourId;
+      isHost   = true;
+      sessionStorage.setItem(SESSION_KEY, msg.token);
+      enterWaiting();
+      break;
+
+    case 'room_joined':
+      roomCode = msg.code;
+      myIdx    = msg.yourId;
+      isHost   = msg.isHost || false;
+      sessionStorage.setItem(SESSION_KEY, msg.token);
+      enterWaiting();
+      break;
+
+    case 'joined_as_observer':
+    case 'observer_joined':
+      roomCode     = msg.code;
+      isObserver   = true;
+      myIdx        = -1;
+      isHost       = !!msg.isHost;
+      sessionStorage.setItem(OBS_SESSION_KEY, JSON.stringify({ roomCode: msg.code, name: msg.name || '' }));
+      document.body.classList.add('observer-active');
+      if (!msg.started) enterWaiting();
+      break;
+
+    case 'rejoin_ok':
+    case 'room_rejoined':
+      roomCode   = msg.code;
+      myIdx      = msg.yourId;
+      isHost     = !!msg.isHost;
+      isObserver = !!msg.isObserver;
+      sessionStorage.setItem(SESSION_KEY, msg.token);
+      // A rejoin into a game that has not started yet lands in the waiting room;
+      // otherwise the qb_state broadcast that follows switches to the board.
+      if (msg.started === false) enterWaiting();
+      else document.body.classList.add('rejoin-pending');
+      break;
+
+    case 'rejoin_failed':
+      sessionStorage.removeItem(SESSION_KEY);
+      sessionStorage.removeItem(OBS_SESSION_KEY);
+      showScreen('lobby');
+      break;
+
+    case 'lobby_update':
+      if (msg.code) roomCode = msg.code;
+      var disp = document.getElementById('room-code-display');
+      if (disp && roomCode) disp.textContent = roomCode;
+      renderLobbyPlayers(msg.players, msg.observers);
+      break;
+
+    case 'room_info':
+      LobbyUI.handleRoomInfo(msg);
+      break;
+
+    case 'qb_game_started':
+      showScreen('game');
+      if (!boardReady) initBoard();
+      if (isHost) document.getElementById('btn-cancel-game').style.display = '';
+      break;
+
+    case 'qb_state':
+      showScreen('game');
+      if (!boardReady) initBoard();
+      else sizeBoard();
+      renderGame(msg);
+      if (isObserver) {
+        document.getElementById('observer-banner').style.display = '';
+        document.body.classList.add('observer-active');
+      }
+      break;
+
+    case 'player_disconnected':
+      showToast((msg.name || 'A player') + (msg.explicit ? ' left the game' : ' disconnected'));
+      break;
+
+    case 'game_cancelled':
+      sessionStorage.removeItem(SESSION_KEY);
+      sessionStorage.removeItem(OBS_SESSION_KEY);
+      roomCode = null; myIdx = -1; gs = null; isHost = false;
+      showScreen('lobby');
+      showToast('The game was cancelled by the host');
+      break;
+
+    case 'error':
+      if (msg.msg) showToast('⚠ ' + msg.msg);
+      break;
+  }
+}
+
+// ==================== INIT ====================
+var _hubFirstConnect = true;
+var urlParams = new URLSearchParams(location.search);
+var urlRoom   = urlParams.get('room') || '';
+
+hub = SocketHub.create({
+  reconnectMs: 2000,
+  onConnect: function() {
+    var token = sessionStorage.getItem(SESSION_KEY);
+    if (token) { hub.send({ type: 'rejoin_room', token: token }); return; }
+    var obsSession = sessionStorage.getItem(OBS_SESSION_KEY);
+    if (obsSession) {
+      try {
+        var parsed = JSON.parse(obsSession);
+        hub.send({ type: 'join_as_observer', code: parsed.roomCode, name: parsed.name });
+      } catch(e) { sessionStorage.removeItem(OBS_SESSION_KEY); }
+      return;
+    }
+    if (_hubFirstConnect) {
+      _hubFirstConnect = false;
+      if (urlRoom) hub.send({ type: 'check_room', code: urlRoom.toUpperCase() });
+    }
+  },
+  sendFilter: function(msg) {
+    if (isObserver && msg.type === 'game_action') return false;
+  }
+});
+
+hub.on('*', handleMsg);
+
+LobbyUI.init({
+  gameType: 'qubit',
+  sendFn: send,
+  checkFn: send,
+  onCreateAsObserver: function() {},
+  onJoinAsObserver: function(opts) {
+    sessionStorage.setItem(OBS_SESSION_KEY, JSON.stringify({ roomCode: opts.code, name: opts.name || '' }));
+  }
+});
+
+hub.connect();
+</script>
+<script src="/nav.js"></script>
+</body>
+</html>

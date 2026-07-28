@@ -35,7 +35,8 @@ const REDIRECTS = {
   '/ai-knn/clusterflick.html':    '/ai/knn/clusterflick',
   '/knn':       '/ai/knn/clusterflick',
   '/knn.html':  '/ai/knn/clusterflick',
-  '/qubit-waitlist': '/quantumcomputing', '/qubit-waitlist.html': '/quantumcomputing',
+  '/qubit-waitlist': '/quantumcomputing/qubit', '/qubit-waitlist.html': '/quantumcomputing/qubit',
+  '/quantumcomputing': '/quantumcomputing/qubit', '/quantumcomputing.html': '/quantumcomputing/qubit',
   '/cybersecurity': '/cybersecurity/byteclub', '/cybersecurity.html': '/cybersecurity/byteclub',
 };
 
@@ -79,7 +80,13 @@ function resolvePathname(pathname) {
     pathname === '/cybersecurity/byteclub/activegame' ||
     pathname === '/cybersecurity/byteclub/tutorial'
   ) pathname = '/games/cybersecurity/byteclub.html';
-  else if (pathname === '/quantumcomputing' || pathname === '/quantumcomputing.html') pathname = '/games/quantumcomputing.html';
+  else if (
+    pathname === '/quantumcomputing/qubit' ||
+    pathname === '/quantumcomputing/qubit.html' ||
+    pathname === '/quantumcomputing/qubit/lobby' ||
+    pathname === '/quantumcomputing/qubit/activegame' ||
+    pathname === '/quantumcomputing/qubit/tutorial'
+  ) pathname = '/games/quantumcomputing/qubit.html';
   else if (pathname === '/services' || pathname === '/services.html') pathname = '/singlepage/services.html';
   else if (pathname === '/contact' || pathname === '/contact.html') pathname = '/singlepage/contact.html';
   else if (pathname === '/about' || pathname === '/about.html') pathname = '/singlepage/about.html';

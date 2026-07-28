@@ -1,0 +1,50 @@
+{
+  "mount": "/games/quantumcomputing/qubit.html",
+
+  "show_hero_ctas": false,
+  "show_event_hub": false,
+  "show_workshop": false,
+
+  "game_display_name": "QUBIT",
+  "hero_visual_html": "<div class=\"lobby-hero-img-wrap\"><img src=\"/images/qubit/qubit.png\" alt=\"Qubit game box\" width=\"280\" height=\"280\" loading=\"eager\"></div>",
+  "hero_subtitle": "A cooperative quantum deduction game. Your team receives partial wavelength clues — work together to identify the hidden Quantum Code before the system decoheres.",
+  "time_text": "25 Min",
+  "players_text": "3–6 Players",
+
+  "colors": [
+    { "key": "blue",   "label": "Blue",   "swatch_css": "background:#4a9eff" },
+    { "key": "red",    "label": "Red",    "swatch_css": "background:#ff4a4a" },
+    { "key": "green",  "label": "Green",  "swatch_css": "background:#3fbf5f" },
+    { "key": "purple", "label": "Purple", "swatch_css": "background:#a060dd" },
+    { "key": "yellow", "label": "Yellow", "swatch_css": "background:#facc15;color:#1a1a1a" },
+    { "key": "orange", "label": "Orange", "swatch_css": "background:#f97316" }
+  ],
+
+
+  "learning_objectives": [
+    {
+      "icon_svg": "<svg viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"12\" cy=\"12\" r=\"9\" stroke=\"#8b5cf6\" stroke-width=\"1.8\"/><path d=\"M4.5 9c3-2.4 12-2.4 15 0M4.5 15c3 2.4 12 2.4 15 0\" stroke=\"#c4b5fd\" stroke-width=\"1.5\"/><circle cx=\"12\" cy=\"12\" r=\"2\" fill=\"#8b5cf6\"/></svg>",
+      "title": "Quantum Bits (Qubits)",
+      "description": "A classical bit is 0 or 1. A qubit holds both at once (superposition) until measured — which is why 256 possible codes can be searched in far fewer steps than checking them one at a time"
+    },
+    {
+      "icon_svg": "<svg viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M2 8c2 0 2 4 4 4s2-4 4-4 2 4 4 4 2-4 4-4 2 4 4 4\" stroke=\"#8b5cf6\" stroke-width=\"1.8\" stroke-linecap=\"round\"/><path d=\"M2 16c2 0 2-4 4-4s2 4 4 4 2-4 4-4 2 4 4 4 2-4 4-4\" stroke=\"#c4b5fd\" stroke-width=\"1.8\" stroke-linecap=\"round\"/></svg>",
+      "title": "Constructive & Destructive Interference",
+      "description": "Every Verify either reinforces or cancels out the proposed cell's evidence — the same way overlapping wave amplitudes combine or cancel in a real quantum circuit"
+    },
+    {
+      "icon_svg": "<svg viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"7\" cy=\"12\" r=\"4\" stroke=\"#8b5cf6\" stroke-width=\"1.8\"/><circle cx=\"17\" cy=\"12\" r=\"4\" stroke=\"#c4b5fd\" stroke-width=\"1.8\"/><path d=\"M11 12h2\" stroke=\"#8b5cf6\" stroke-width=\"1.8\" stroke-linecap=\"round\"/></svg>",
+      "title": "Entanglement",
+      "description": "Some clues ask whether two qubits in the code match or differ — a simple, tangible stand-in for entangled qubits whose states are correlated no matter how far apart they are"
+    },
+    {
+      "icon_svg": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#8b5cf6\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M22 11.08V12a10 10 0 1 1-5.93-9.14\" stroke=\"#c4b5fd\"/><polyline points=\"22 4 12 14.01 9 11.01\" stroke=\"#8b5cf6\"/></svg>",
+      "title": "Measurement & Decoherence",
+      "description": "Why quantum measurements are irreversible and how environmental noise collapses the quantum state"
+    }
+  ],
+
+  "observer_subtitle": "Read-only · all wavelength clues visible",
+
+  "footer_cta_html": ""
+}
