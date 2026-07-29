@@ -42,8 +42,8 @@ const NR  = (lo,hi)=> ({ text: `(Row + column) of your cell is between ${lo} and
 const NM  = (n)    => ({ text: `(Row + column) of your cell is ${n} or more.`,                             eval: c => c.nibbleSum >= n });
 const BC  = (vs)   => ({ text: `Your 8-qubit code contains exactly ${vs.join(' or ')} ones.`,               eval: c => vs.includes(c.bitCount) });
 const R   = (rs)   => ({ text: `Your code's cell is inside region ${rs.join(', or ')}.`,                    eval: c => rs.includes(c.region) });
-const DAR = ()     => ({ text: `Your code's cell is in a dark-shaded (warm tan) quadrant.`,                 eval: c => c.isDark });
-const LIT = ()     => ({ text: `Your code's cell is in a light-shaded (cool gray) quadrant.`,               eval: c => !c.isDark });
+const DAR = ()     => ({ text: `Your code's cell is in a yellow-shaded quadrant.`,                          eval: c => c.isDark });
+const LIT = ()     => ({ text: `Your code's cell is in a blue-shaded quadrant.`,                            eval: c => !c.isDark });
 
 // Entanglement clues: whether two distinct qubit positions carry the same
 // value or differ. `n` and `m` are 1-indexed from the left, matching B(n,v).
@@ -195,7 +195,7 @@ const SETUP_CARDS = {
   }},
   // Answer 215 = 11010111
   5: { answerIdx: 5, clues: {
-    '3p': { colors: { red:[2,53,16], blue:[11,6,16], green:[20,12,11] }, public: 64 },
+    '3p': { colors: { red:[2,53], blue:[11,6], green:[20,12] }, public: 64 },
     '4p': { colors: { red:[2,8], blue:[11,12], green:[20,12], yellow:[20,2] }, public: 64 },
     '5p': { colors: { red:[2,16], blue:[11,48], green:[20,11], yellow:[20,2], purple:[20,1] }, public: 61 },
     '6p': { colors: { red:[2,40], blue:[11,16], green:[20,11], yellow:[20,2], purple:[20,1], orange:[17,16] }, public: 61 },
@@ -216,7 +216,7 @@ const SETUP_CARDS = {
   }},
   // Answer 122 = 01111010
   8: { answerIdx: 8, clues: {
-    '3p': { colors: { red:[3,19,42], blue:[7,31,20], green:[17,50,10] }, public: 62 },
+    '3p': { colors: { red:[3,19], blue:[7,31], green:[17,50] }, public: 62 },
     '4p': { colors: { red:[3,32], blue:[7,2], green:[17,10], yellow:[27,33] }, public: 62 },
     '5p': { colors: { red:[3,6], blue:[7,20], green:[17,10], yellow:[27,33], purple:[13,3] }, public: 62 },
     '6p': { colors: { red:[3,6], blue:[7,20], green:[17,10], yellow:[27,33], purple:[13,3], orange:[6,47] }, public: 62 },
@@ -320,13 +320,20 @@ function drawCard(gs) {
   return card;
 }
 
+// Draws the Environment card for whoever is about to act and opens their
+// Propose step — called at game start and again at the top of every turn, so
+// the card is always known BEFORE a cell is proposed, not after.
+// proposedCell deliberately persists past the turn boundary: it's the record
+// of what the previous player just did, and the next propose overwrites it.
+function startTurn(gs) {
+  gs.currentCard = drawCard(gs);
+  gs.phase = 'propose';
+}
+
 function advanceTurn(gs, room) {
-  // proposedCell and currentCard deliberately persist past the turn boundary:
-  // they are the record of what just happened, and the next propose overwrites
-  // both. Clearing them here would blank the card before anyone saw it drawn.
   if (!gs.gameOver) {
     gs.currentPlayerIdx = (gs.currentPlayerIdx + 1) % room.players.length;
-    gs.phase = 'propose';
+    startTurn(gs);
   }
 }
 
@@ -389,6 +396,8 @@ function initQBGame(room) {
     gameOver:     false,
     won:          false,
   };
+  // Draw the first turn's Environment card before anyone has proposed anything.
+  startTurn(room.qbState);
 }
 
 function processPropose(room, playerIdx, decimal) {
@@ -411,21 +420,21 @@ function processPropose(room, playerIdx, decimal) {
   // circle, since the check above guarantees the cell matches their clue.
   placeToken(gs, playerIdx, decimal);
 
-  const card = drawCard(gs);
-  gs.currentCard = card;
+  // The Environment card for this turn was already drawn by startTurn(), so
+  // it's known to the player before they propose — not revealed after.
+  const card = gs.currentCard;
 
   if (card === 'noise') {
     gs.noiseCount++;
     if (gs.noiseCount >= 3) {
+      // Third strike ends the mission immediately — no Verify this turn.
       gs.gameOver = true;
       gs.won      = false;
       gs.phase    = 'game_over';
-    } else {
-      // A revealed Noise card ends the turn before Verify — "there's no point
-      // proposing a clue the team will never get to use."
-      advanceTurn(gs, room);
+      return null;
     }
-    return null;
+    // A non-fatal Noise strike doesn't otherwise interrupt the turn — the
+    // player still chooses a Verify target exactly as on a Maintained card.
   }
   if (card === 'cascade') {
     // Constructive Cascade replaces the usual single-player Verify: every
@@ -436,8 +445,8 @@ function processPropose(room, playerIdx, decimal) {
     advanceTurn(gs, room);
     return null;
   }
-  // 'maintained': still needs its Verify — the active player must choose one
-  // other player to check the cell against their clue.
+  // 'maintained' and non-fatal 'noise': still needs its Verify — the active
+  // player must choose one other player to check the cell against their clue.
   gs.phase = 'choose_verifier';
   return null;
 }
