@@ -2,7 +2,7 @@
   "mount": "/games/ai-neural-network/fuzznet.html",
   "tutorial_url": "/ai/neural-network/fuzznet/tutorial",
 
-  "game_display_name": "FuzzNet Labs",
+  "game_display_name": "<span class=\"fn-name-fuzz\">Fuzz</span>Net Labs",
   "hero_visual_html": "<div class=\"hero-video-wrap\"><video src=\"/images/fuzznet/fuzznet-teaser.mp4\" poster=\"/images/fuzznet/fuzznet_cover.png\" playsinline controls></video><p class=\"hero-video-caption\">45-sec overview video</p></div>",
   "hero_subtitle": "Build a neural network to classify animal photos. And finally understand what's actually happening inside an AI.",
   "time_text": "30 Min",

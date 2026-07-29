@@ -1,5 +1,26 @@
 /* Page-specific styles */
 
+/* ===== FUZZNET LABS BRAND PALETTE ===== */
+:root {
+  --fn-green: #0a9e04;
+  --fn-green-dark: #0a7a03;
+  --fn-pink: #f2636a;
+  --fn-pink-dark: #c93f46;
+  --fn-pink-soft: #fdedee;
+  --fn-brown: #c97a44;
+  --fn-brown-dark: #8a5527;
+  --fn-brown-soft: #f7ece2;
+}
+
+/* ===== TOP NAV. FuzzNet Labs brand stripe ===== */
+header {
+  background: #fff;
+  border-bottom: 4px solid transparent;
+  border-image: linear-gradient(to right, var(--fn-green), var(--fn-pink), var(--fn-brown)) 1;
+  box-shadow: 0 2px 16px rgba(10,158,4,0.12);
+}
+.logo-text { color: var(--fn-green); }
+
 /* ===== LAST ROOM BANNER (item 10) ===== */
 #fn-last-room-banner { display:flex; align-items:center; gap:12px; flex-wrap:wrap; background:#f0f6ff; border:1.5px solid #b8d0f0; border-radius:10px; padding:10px 16px; margin:16px 16px 0; font-size:13px; color:#2a4a80; }
 #fn-last-room-banner span { flex:1; min-width:160px; }
@@ -17,10 +38,10 @@ html.tutorial-loading #tutorial-overlay * { visibility: visible; }
 html.tutorial-loading { background: #1a3a00; }
 
 /* ===== LOBBY COLORS ===== */
-#lobby { flex-direction: column; align-items: center; overflow-y: auto; overflow-x: hidden; min-height: calc(100vh - 68px); padding: 0 20px 52px; background: linear-gradient(160deg, #f8faf2 0%, #edf2e0 100%); }
-.lobby-hero img { width: 280px; max-width: 100%; height: auto; object-fit: contain; background: #fff; border-radius: 16px; box-shadow: 0 8px 32px rgba(98,181,23,0.2), 0 0 0 1px rgba(98,181,23,0.12); }
+#lobby { flex-direction: column; align-items: center; overflow-y: auto; overflow-x: hidden; min-height: calc(100vh - 68px); padding: 0 20px 52px; background: linear-gradient(160deg, #ffffff 0%, #fdf1f0 45%, #f7ece2 100%); }
+.lobby-hero img { width: 280px; max-width: 100%; height: auto; object-fit: contain; background: #fff; border-radius: 16px; box-shadow: 0 8px 32px rgba(242,99,106,0.2), 0 0 0 1px rgba(10,158,4,0.15); }
 .hero-video-wrap { width: 420px; max-width: 100%; display: flex; flex-direction: column; gap: 10px; }
-.hero-video-wrap video { width: 100%; aspect-ratio: 16 / 9; height: auto; display: block; object-fit: contain; background: #fff; border-radius: 16px; box-shadow: 0 8px 32px rgba(98,181,23,0.2), 0 0 0 1px rgba(98,181,23,0.12); }
+.hero-video-wrap video { width: 100%; aspect-ratio: 16 / 9; height: auto; display: block; object-fit: contain; background: #fff; border-radius: 16px; box-shadow: 0 8px 32px rgba(242,99,106,0.2), 0 0 0 1px rgba(10,158,4,0.15); }
 .hero-video-caption { margin: 0; font-size: 12.5px; line-height: 1.5; color: #6b7280; }
 #play-now-mobile-notice { display: none; }
 @media (max-width: 780px) {
@@ -35,21 +56,22 @@ html.tutorial-loading { background: #1a3a00; }
   #play-now-mobile-notice { display: block; text-align: center; color: #4a7a1a; background: rgba(98,181,23,0.08); border: 1px solid rgba(98,181,23,0.25); border-radius: 10px; padding: 16px 20px; font-size: 14px; line-height: 1.5; max-width: 480px; margin: 0 auto; }
   #event-hub-section { display: none; }
 }
-#lobby h1 { font-size: 42px; color: #62b517; letter-spacing: 2px; font-weight: 800; margin: 0; line-height: 1.1; width: fit-content; background-image: linear-gradient(#d1db24, #d1db24); background-size: 0% 4px; background-position: 0 100%; background-repeat: no-repeat; animation: h1-underline-draw 0.8s 0.35s ease-out forwards; }
+#lobby h1 { font-size: 42px; color: var(--fn-green); letter-spacing: 2px; font-weight: 800; margin: 0; line-height: 1.1; width: fit-content; background-image: linear-gradient(var(--fn-pink), var(--fn-pink)); background-size: 0% 4px; background-position: 0 100%; background-repeat: no-repeat; animation: h1-underline-draw 0.8s 0.35s ease-out forwards; }
+#lobby h1 .fn-name-fuzz { color: var(--fn-brown); }
 @keyframes h1-underline-draw { to { background-size: 100% 4px; } }
 #lobby .subtitle { font-size: 15px; color: #555; margin: 0; line-height: 1.55; }
-.lobby-meta-item { background: #f0f7e6; border: 1px solid #a8c96a; color: #4a8c11; }
-.lobby-tutorial-cta { background: linear-gradient(135deg, #62b517 0%, #4a8e10 100%); color: #fff; box-shadow: 0 4px 18px rgba(98,181,23,0.32); }
-.lobby-tutorial-cta:hover { box-shadow: 0 6px 24px rgba(98,181,23,0.48); }
-.lobby-section-head::before, .lobby-section-head::after { background: linear-gradient(to right, transparent, rgba(98,181,23,0.35), transparent); }
-.lobby-section-label { color: #62b517; }
+.lobby-meta-item { background: var(--fn-brown-soft); border: 1px solid var(--fn-brown); color: var(--fn-brown-dark); }
+.lobby-tutorial-cta { background: linear-gradient(135deg, var(--fn-green) 0%, var(--fn-green-dark) 100%); color: #fff; box-shadow: 0 4px 18px rgba(242,99,106,0.35); }
+.lobby-tutorial-cta:hover { box-shadow: 0 6px 24px rgba(242,99,106,0.5); }
+.lobby-section-head::before, .lobby-section-head::after { background: linear-gradient(to right, transparent, rgba(242,99,106,0.35), transparent); }
+.lobby-section-label { color: var(--fn-green); }
 .lo-strip { border: 1px solid #dde8c8; background: #fff; }
 .lo-item { background: #fff; border-right: 1px solid #edf2e4; }
-.lo-item-icon { background: #f4fae8; border: 1.5px solid #a8c96a; color: #62b517; }
+.lo-item-icon { background: var(--fn-pink-soft); border: 1.5px solid var(--fn-pink); color: var(--fn-pink-dark); }
 .lo-item-title { color: #2a3a10; }
 .lo-item-desc { color: #777; }
 .lobby-card { background: #fff; border: 1.5px solid #dde8c8; box-shadow: 0 2px 16px rgba(98,181,23,0.08); }
-.lobby-card h3 { color: #4a8c11; }
+.lobby-card h3 { color: var(--fn-green-dark); }
 .lobby-card .card-desc { color: #888; }
 @keyframes invitedPulse { 0%,100% { box-shadow: 0 0 0 2px rgba(98,181,23,0.45), 0 0 22px rgba(98,181,23,0.18), 0 4px 16px rgba(98,181,23,0.1); } 50% { box-shadow: 0 0 0 2px rgba(98,181,23,0.75), 0 0 38px rgba(98,181,23,0.32), 0 4px 16px rgba(98,181,23,0.18); } }
 .lobby-card.lobby-card-focus { border-color: #62b517; background: linear-gradient(180deg, #f0fae4 0%, #fff 100%); animation: invitedPulse 2.6s ease-in-out infinite; }
@@ -101,8 +123,8 @@ body.observer-active #game { height: calc(100vh - 68px - 36px - 4px); }
 /* ===== LOBBY BUY BUTTON ===== */
 .lobby-hero-ctas { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 8px; }
 .lobby-tutorial-cta { margin-top: 0; }
-.lobby-buy-btn { display: inline-flex; flex-direction: row; align-items: center; padding: 10px 20px; border-radius: 10px; cursor: pointer; text-decoration: none; background: transparent; border: 2px solid rgba(98,181,23,0.5); color: #4a8c11; transition: all 0.15s; font-family: inherit; gap: 12px; }
-.lobby-buy-btn:hover { border-color: #62b517; background: #f4fae8; }
+.lobby-buy-btn { display: inline-flex; flex-direction: row; align-items: center; padding: 10px 20px; border-radius: 10px; cursor: pointer; text-decoration: none; background: transparent; border: 2px solid rgba(201,122,68,0.5); color: var(--fn-brown-dark); transition: all 0.15s; font-family: inherit; gap: 12px; }
+.lobby-buy-btn:hover { border-color: var(--fn-brown); background: var(--fn-brown-soft); }
 .lobby-buy-label { font-size: 14px; font-weight: 700; letter-spacing: 0.4px; line-height: 1; }
 .lobby-buy-powered { display: flex; align-items: center; gap: 5px; font-size: 10px; font-weight: 500; opacity: 0.75; letter-spacing: 0.3px; line-height: 1; border-left: 1px solid rgba(98,181,23,0.3); padding-left: 12px; }
 .lobby-buy-brand { color: #2a3a10; font-size: 11px; font-weight: 600; letter-spacing: 0.2px; }
@@ -372,8 +394,8 @@ body:has(#game.active) { overflow: hidden; }
 .go-mini-board-svg { width: 100%; height: auto; display: block; background: #e8edd8; border-radius: 6px; border: 1px solid #e0dbd3; }
 #play-again-btn { padding: 12px 36px; font-size: 16px; border: none; border-radius: 8px; background: #62b517; color: white; cursor: pointer; font-weight: 700; flex-shrink: 0; }
 .go-upsell { background: #fff; border-radius: 12px; padding: 16px 24px; min-width: 340px; max-width: 580px; width: 90vw; text-align: center; box-shadow: 0 4px 24px rgba(0,0,0,0.15); flex-shrink: 0; }
-.go-upsell p { font-size: 14px; color: #4a8c11; margin: 0 0 10px; font-weight: 600; }
-.go-upsell a { display: inline-block; background: #d1db24; color: #0f172a; text-decoration: none; padding: 10px 24px; border-radius: 8px; font-size: 14px; font-weight: 800; }
+.go-upsell p { font-size: 14px; color: var(--fn-green-dark); margin: 0 0 10px; font-weight: 600; }
+.go-upsell a { display: inline-block; background: var(--fn-pink); color: #fff; text-decoration: none; padding: 10px 24px; border-radius: 8px; font-size: 14px; font-weight: 800; }
 .go-upsell a:hover { filter: brightness(1.08); }
 
 /* ===== INFO SYSTEM ===== */
