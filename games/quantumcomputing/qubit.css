@@ -118,8 +118,23 @@ body.rejoin-pending .screen.active { visibility: hidden; }
 .btn-join:hover:not(:disabled) { background: #e2e8f0; }
 .lobby-input { background: #f8fafc; border-color: #bfdbfe; color: #1e293b; font-family: 'Share Tech Mono', monospace; }
 .lobby-input::placeholder { color: #94a3b8; }
-.lobby-buy-btn { border-color: #eab308; color: #a16207; }
+.lobby-buy-btn { display: inline-flex; flex-direction: row; align-items: center; padding: 10px 20px; border-radius: 10px; cursor: default; background: transparent; border: 2px solid #eab308; color: #a16207; font-family: inherit; gap: 12px; }
 .lobby-buy-btn:hover { border-color: #facc15; background: #fefce8; }
+.lobby-buy-label { font-size: 14px; font-weight: 700; letter-spacing: 0.4px; line-height: 1; }
+.lobby-hero-img-wrap { width: 280px; max-width: 100%; flex-shrink: 0; border-radius: 16px; overflow: hidden; box-shadow: 0 12px 40px rgba(37,99,235,0.18), 0 0 0 1px rgba(37,99,235,0.12); }
+.lobby-hero-img-wrap svg { display: block; width: 100%; height: auto; }
+@media (min-width: 781px) {
+  .lobby-hero { flex-direction: row; align-items: stretch; text-align: left; gap: 32px; }
+  .lobby-hero-text { align-items: flex-start; flex: 1; }
+  .lobby-hero-img-wrap { align-self: stretch; height: auto; }
+  .lobby-hero-ctas { margin-top: auto; flex-direction: column; align-items: stretch; }
+  .lobby-tutorial-cta { justify-content: center; align-self: auto; min-height: 46px; }
+  .lobby-buy-btn { justify-content: center; min-height: 46px; }
+}
+@media (max-width: 780px) {
+  .lobby-hero-img-wrap { margin: 0 auto; }
+  #lobby h1 { font-size: 36px; }
+}
 
 /* ===== "HOW TO PLAY" (lobby, full-rules popup) ===== */
 .qb-htp-btn {
