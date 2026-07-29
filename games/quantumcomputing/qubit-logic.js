@@ -35,20 +35,20 @@ for (const cell of BOARD) CELL[cell.decimal] = cell;
 // 60 clues per color. CLUES[color][id] = { text, eval }
 
 // Clue builder helpers
-const B   = (n, v) => ({ text: `Is qubit ${n} (from left) of your code a ${v}?`,                           eval: c => c.bits[n-1] === v });
-const DR  = (lo,hi)=> ({ text: `Is the decimal digit-sum of your code between ${lo} and ${hi}?`,           eval: c => c.digitSum >= lo && c.digitSum <= hi });
-const DM  = (n)    => ({ text: `Is the decimal digit-sum of your code ${n} or more?`,                      eval: c => c.digitSum >= n });
-const NR  = (lo,hi)=> ({ text: `Is (row + column) of your cell between ${lo} and ${hi}?`,                  eval: c => c.nibbleSum >= lo && c.nibbleSum <= hi });
-const NM  = (n)    => ({ text: `Is (row + column) of your cell ${n} or more?`,                             eval: c => c.nibbleSum >= n });
-const BC  = (vs)   => ({ text: `Does your 8-qubit code contain exactly ${vs.join(' or ')} ones?`,          eval: c => vs.includes(c.bitCount) });
-const R   = (rs)   => ({ text: `Is your code's cell inside region ${rs.join(', or ')}?`,                   eval: c => rs.includes(c.region) });
-const DAR = ()     => ({ text: `Is your code's cell in a dark-shaded (warm tan) quadrant?`,                eval: c => c.isDark });
-const LIT = ()     => ({ text: `Is your code's cell in a light-shaded (cool gray) quadrant?`,              eval: c => !c.isDark });
+const B   = (n, v) => ({ text: `Qubit ${n} (from left) of your code is a ${v}.`,                           eval: c => c.bits[n-1] === v });
+const DR  = (lo,hi)=> ({ text: `The decimal digit-sum of your code is between ${lo} and ${hi}.`,           eval: c => c.digitSum >= lo && c.digitSum <= hi });
+const DM  = (n)    => ({ text: `The decimal digit-sum of your code is ${n} or more.`,                      eval: c => c.digitSum >= n });
+const NR  = (lo,hi)=> ({ text: `(Row + column) of your cell is between ${lo} and ${hi}.`,                  eval: c => c.nibbleSum >= lo && c.nibbleSum <= hi });
+const NM  = (n)    => ({ text: `(Row + column) of your cell is ${n} or more.`,                             eval: c => c.nibbleSum >= n });
+const BC  = (vs)   => ({ text: `Your 8-qubit code contains exactly ${vs.join(' or ')} ones.`,               eval: c => vs.includes(c.bitCount) });
+const R   = (rs)   => ({ text: `Your code's cell is inside region ${rs.join(', or ')}.`,                    eval: c => rs.includes(c.region) });
+const DAR = ()     => ({ text: `Your code's cell is in a dark-shaded (warm tan) quadrant.`,                 eval: c => c.isDark });
+const LIT = ()     => ({ text: `Your code's cell is in a light-shaded (cool gray) quadrant.`,               eval: c => !c.isDark });
 
 // Entanglement clues: whether two distinct qubit positions carry the same
 // value or differ. `n` and `m` are 1-indexed from the left, matching B(n,v).
-const EQ  = (n, m) => ({ text: `Look at binary digits #${n} and #${m} (from the left). Are they the SAME (both 0 or both 1)?`, eval: c => c.bits[n-1] === c.bits[m-1] });
-const NE  = (n, m) => ({ text: `Look at binary digits #${n} and #${m} (from the left). Are they DIFFERENT (one 0, one 1)?`,    eval: c => c.bits[n-1] !== c.bits[m-1] });
+const EQ  = (n, m) => ({ text: `Position ${n} and ${m} are the SAME (both 0 or both 1).`,                eval: c => c.bits[n-1] === c.bits[m-1] });
+const NE  = (n, m) => ({ text: `Position ${n} and ${m} are DIFFERENT (one is 0 and the other is 1).`,     eval: c => c.bits[n-1] !== c.bits[m-1] });
 
 // 60 clues per color (mirrored across colors for balance)
 const CLUES = {
@@ -167,66 +167,66 @@ const ANSWERS = { 1:60, 2:163, 3:52, 4:114, 5:215, 6:251, 7:225, 8:122, 9:1 };
 const SETUP_CARDS = {
   // Answer 60 = 00111100
   1: { answerIdx: 1, clues: {
-    '3p': { red:[3,19], blue:[7,2], green:[23,2] },
-    '4p': { red:[3,1], blue:[7,2], green:[23,10], yellow:[38,33] },
-    '5p': { red:[3,6], blue:[7,20], green:[23,10], yellow:[38,33], purple:[16,3] },
-    '6p': { red:[3,1], blue:[7,20], green:[23,10], yellow:[38,33], purple:[16,3], orange:[6,47] },
+    '3p': { colors: { red:[3,19], blue:[7,2], green:[23,2] }, public: 61 },
+    '4p': { colors: { red:[3,1], blue:[7,2], green:[23,10], yellow:[38,33] }, public: 61 },
+    '5p': { colors: { red:[3,6], blue:[7,20], green:[23,10], yellow:[38,33], purple:[16,3] }, public: 61 },
+    '6p': { colors: { red:[3,1], blue:[7,20], green:[23,10], yellow:[38,33], purple:[16,3], orange:[6,47] }, public: 61 },
   }},
   // Answer 163 = 10100011
   2: { answerIdx: 2, clues: {
-    '3p': { red:[26,53], blue:[35,53], green:[6,14] },
-    '4p': { red:[26,9], blue:[35,36], green:[6,14], yellow:[20,13] },
-    '5p': { red:[26,33], blue:[35,36], green:[6,14], yellow:[20,13], purple:[51,1] },
-    '6p': { red:[26,33], blue:[35,36], green:[6,14], yellow:[20,13], purple:[51,1], orange:[34,37] },
+    '3p': { colors: { red:[26,53], blue:[35,53], green:[6,14] }, public: 63 },
+    '4p': { colors: { red:[26,9], blue:[35,36], green:[6,14], yellow:[20,13] }, public: 63 },
+    '5p': { colors: { red:[26,33], blue:[35,36], green:[6,14], yellow:[20,13], purple:[51,1] }, public: 63 },
+    '6p': { colors: { red:[26,33], blue:[35,36], green:[6,14], yellow:[20,13], purple:[51,1], orange:[34,37] }, public: 63 },
   }},
   // Answer 52 = 00110100
   3: { answerIdx: 3, clues: {
-    '3p': { red:[3,23], blue:[52,46], green:[16,10] },
-    '4p': { red:[3,33], blue:[52,20], green:[16,10], yellow:[57,33] },
-    '5p': { red:[3,2], blue:[52,20], green:[16,10], yellow:[57,33], purple:[1,3] },
-    '6p': { red:[3,2], blue:[52,20], green:[16,10], yellow:[57,33], purple:[1,3], orange:[47,16] },
+    '3p': { colors: { red:[3,23], blue:[52,46], green:[16,10] }, public: 61 },
+    '4p': { colors: { red:[3,33], blue:[52,20], green:[16,10], yellow:[57,33] }, public: 61 },
+    '5p': { colors: { red:[3,2], blue:[52,20], green:[16,10], yellow:[57,33], purple:[1,3] }, public: 61 },
+    '6p': { colors: { red:[3,2], blue:[52,20], green:[16,10], yellow:[57,33], purple:[1,3], orange:[47,16] }, public: 61 },
   }},
   // Answer 114 = 01110010
   4: { answerIdx: 4, clues: {
-    '3p': { red:[3,32], blue:[46,6], green:[2,11] },
-    '4p': { red:[3,8], blue:[46,16], green:[2,10], yellow:[45,33] },
-    '5p': { red:[3,2], blue:[46,20], green:[2,10], yellow:[45,33], purple:[35,3] },
-    '6p': { red:[3,2], blue:[46,20], green:[2,10], yellow:[45,33], purple:[35,3], orange:[16,47] },
+    '3p': { colors: { red:[3,32], blue:[46,6], green:[2,11] }, public: 64 },
+    '4p': { colors: { red:[3,8], blue:[46,16], green:[2,10], yellow:[45,33] }, public: 64 },
+    '5p': { colors: { red:[3,2], blue:[46,20], green:[2,10], yellow:[45,33], purple:[35,3] }, public: 64 },
+    '6p': { colors: { red:[3,2], blue:[46,20], green:[2,10], yellow:[45,33], purple:[35,3], orange:[16,47] }, public: 64 },
   }},
   // Answer 215 = 11010111
   5: { answerIdx: 5, clues: {
-    '3p': { red:[2,53], blue:[11,76], green:[20,19] },
-    '4p': { red:[2,76], blue:[11,12], green:[20,11], yellow:[20,2] },
-    '5p': { red:[2,16], blue:[11,48], green:[20,11], yellow:[20,2], purple:[20,1] },
-    '6p': { red:[2,40], blue:[11,16], green:[20,11], yellow:[20,2], purple:[20,1], orange:[17,16] },
+    '3p': { colors: { red:[2,53,16], blue:[11,6,16], green:[20,12,11] }, public: 64 },
+    '4p': { colors: { red:[2,8], blue:[11,12], green:[20,12], yellow:[20,2] }, public: 64 },
+    '5p': { colors: { red:[2,16], blue:[11,48], green:[20,11], yellow:[20,2], purple:[20,1] }, public: 61 },
+    '6p': { colors: { red:[2,40], blue:[11,16], green:[20,11], yellow:[20,2], purple:[20,1], orange:[17,16] }, public: 61 },
   }},
   // Answer 251 = 11111011
   6: { answerIdx: 6, clues: {
-    '3p': { red:[53,4], blue:[11,48], green:[60,19] },
-    '4p': { red:[53,42], blue:[11,12], green:[60,40], yellow:[8,20] },
-    '5p': { red:[53,16], blue:[11,26], green:[60,40], yellow:[8,20], purple:[37,54] },
-    '6p': { red:[53,4], blue:[11,26], green:[60,40], yellow:[8,20], purple:[37,54], orange:[17,29] },
+    '3p': { colors: { red:[53,4], blue:[11,48], green:[60,19] }, public: 61 },
+    '4p': { colors: { red:[53,42], blue:[11,12], green:[60,40], yellow:[8,20] }, public: 61 },
+    '5p': { colors: { red:[53,16], blue:[11,26], green:[60,40], yellow:[8,20], purple:[37,54] }, public: 61 },
+    '6p': { colors: { red:[53,4], blue:[11,26], green:[60,40], yellow:[8,20], purple:[37,54], orange:[17,29] }, public: 61 },
   }},
   // Answer 225 = 11100001
   7: { answerIdx: 7, clues: {
-    '3p': { red:[26,22], blue:[55,6], green:[18,14] },
-    '4p': { red:[26,4], blue:[55,36], green:[18,14], yellow:[53,13] },
-    '5p': { red:[26,33], blue:[55,36], green:[18,14], yellow:[53,13], purple:[21,1] },
-    '6p': { red:[26,33], blue:[55,36], green:[18,14], yellow:[53,13], purple:[21,1], orange:[34,37] },
+    '3p': { colors: { red:[26,22], blue:[55,6], green:[18,14] }, public: 63 },
+    '4p': { colors: { red:[26,4], blue:[55,36], green:[18,14], yellow:[53,13] }, public: 61 },
+    '5p': { colors: { red:[26,33], blue:[55,36], green:[18,14], yellow:[53,13], purple:[21,1] }, public: 61 },
+    '6p': { colors: { red:[26,33], blue:[55,36], green:[18,14], yellow:[53,13], purple:[21,1], orange:[34,37] }, public: 61 },
   }},
   // Answer 122 = 01111010
   8: { answerIdx: 8, clues: {
-    '3p': { red:[3,69], blue:[7,48], green:[17,50] },
-    '4p': { red:[3,69], blue:[7,2], green:[17,10], yellow:[27,33] },
-    '5p': { red:[3,6], blue:[7,20], green:[17,10], yellow:[27,33], purple:[13,3] },
-    '6p': { red:[3,6], blue:[7,20], green:[17,10], yellow:[27,33], purple:[13,3], orange:[6,47] },
+    '3p': { colors: { red:[3,19,42], blue:[7,31,20], green:[17,50,10] }, public: 62 },
+    '4p': { colors: { red:[3,32], blue:[7,2], green:[17,10], yellow:[27,33] }, public: 62 },
+    '5p': { colors: { red:[3,6], blue:[7,20], green:[17,10], yellow:[27,33], purple:[13,3] }, public: 62 },
+    '6p': { colors: { red:[3,6], blue:[7,20], green:[17,10], yellow:[27,33], purple:[13,3], orange:[6,47] }, public: 62 },
   }},
   // Answer 1 = 00000001
   9: { answerIdx: 9, clues: {
-    '3p': { red:[3,63], blue:[46,8], green:[19,37] },
-    '4p': { red:[3,40], blue:[46,51], green:[19,10], yellow:[21,33] },
-    '5p': { red:[3,10], blue:[46,20], green:[19,10], yellow:[21,33], purple:[48,3] },
-    '6p': { red:[3,2], blue:[46,20], green:[19,10], yellow:[21,33], purple:[48,3], orange:[57,47] },
+    '3p': { colors: { red:[3,5], blue:[46,57], green:[19,37] }, public: 61 },
+    '4p': { colors: { red:[3,40], blue:[46,51], green:[19,10], yellow:[21,33] }, public: 61 },
+    '5p': { colors: { red:[3,10], blue:[46,20], green:[19,10], yellow:[21,33], purple:[48,3] }, public: 61 },
+    '6p': { colors: { red:[3,2], blue:[46,20], green:[19,10], yellow:[21,33], purple:[48,3], orange:[57,47] }, public: 61 },
   }},
 };
 
@@ -332,12 +332,17 @@ function advanceTurn(gs, room) {
 
 // ==================== ACTION HANDLERS ====================
 
+// Entanglement clue text is identical across every colour's book — this is
+// just a canonical place to read the public clue's text from.
+const PUBLIC_CLUE_BOOK = 'red';
+
 function initQBGame(room) {
   const n     = room.players.length;
   const pk    = pcKey(n);
   const cardId = Math.floor(Math.random() * 9) + 1;
   const card   = SETUP_CARDS[cardId];
-  const clueMap = card.clues[pk];
+  const tier   = card.clues[pk];
+  const clueMap = tier.colors;
   const playerGameColors = room.players.map((_, i) => GAME_COLORS[i]);
   const playerClues = room.players.map((_, i) => {
     const gc  = playerGameColors[i];
@@ -357,6 +362,13 @@ function initQBGame(room) {
     return BOARD.filter(cell => clueItems.every(({ id }) => evalClue(gc, id, cell))).map(c => c.decimal);
   });
 
+  // The one entanglement clue is never private — it's announced to the whole
+  // team (players and observers alike) from the start of the game.
+  const publicClue = {
+    id: tier.public,
+    text: CLUES[PUBLIC_CLUE_BOOK]?.[tier.public]?.text || '?',
+  };
+
   room.qbState = {
     setupCardId: cardId,
     answerIdx:   card.answerIdx,
@@ -364,6 +376,7 @@ function initQBGame(room) {
     playerGameColors,
     playerClues,
     playerMatchingCells,
+    publicClue,
     deck:         buildDeck(),
     discardPile:  [],
     noiseCount:   0,
@@ -546,6 +559,7 @@ function qbBroadcastState(room) {
     setupCardId: gs.setupCardId,
     currentPlayerIdx: gs.currentPlayerIdx,
     playerGameColors: gs.playerGameColors,
+    publicClue:  gs.publicClue,
     noiseCount:  gs.noiseCount,
     deckCount:   gs.deck.length,
     proposedCell: gs.proposedCell,
@@ -583,7 +597,8 @@ function qbBroadcastState(room) {
       myGameColor: null,
       myClues:     null,
       myMatchingCells: [],
-      allClues:    gs.playerClues,
+      allClues:          gs.playerClues,
+      allMatchingCells:  gs.playerMatchingCells,
     });
   }
 }

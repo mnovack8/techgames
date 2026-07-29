@@ -1,4 +1,49 @@
 /* ===== QUBIT — Blue & Yellow theme ===== */
+
+/* ===== NAV BAR (site-wide green re-themed to Qubit's blue/yellow) =====
+   This file loads after nav.css/main.css, so same-specificity selectors here
+   win the cascade — scoped to this page only, the shared files (and every
+   other game) are untouched. */
+header {
+  background: #0a1528;
+  border-bottom: 3px solid #facc15;
+  box-shadow: 0 2px 16px rgba(37,99,235,0.3);
+}
+.logo-text { color: #60a5fa; }
+.logo-text-accent { color: #facc15; }
+.logo-sub { color: #93c5fd; }
+
+nav a { color: #93c5fd; }
+nav a:hover { background: rgba(37,99,235,0.15); color: #facc15; }
+nav a.active { color: #facc15; background: rgba(37,99,235,0.15); }
+nav a.nav-cta-buy { background: #2563eb; color: #fff; box-shadow: 0 2px 6px rgba(37,99,235,0.4); }
+nav a.nav-cta-buy:hover { background: #1d4ed8; color: #facc15; }
+
+.nav-dropdown-trigger { color: #93c5fd; }
+.nav-dropdown-trigger.open { background: rgba(37,99,235,0.15); color: #facc15; }
+.nav-dropdown-menu {
+  background: #0d1a35;
+  border: 1.5px solid rgba(37,99,235,0.3);
+  border-top: 2px solid rgba(37,99,235,0.2);
+  border-bottom: 3px solid #facc15;
+  box-shadow: 0 8px 24px rgba(37,99,235,0.3);
+}
+.nav-dropdown-menu a { color: #93c5fd; }
+.nav-dropdown-menu a:hover, .nav-dropdown-menu a.active { background: rgba(37,99,235,0.15); color: #facc15; }
+.nav-dropdown-menu a.nav-all-products { background: rgba(250,204,21,0.18); }
+
+.nav-sub-trigger { color: #93c5fd; }
+.nav-sub-trigger:hover, .nav-sub-dropdown:hover .nav-sub-trigger { background: rgba(37,99,235,0.15); color: #facc15; }
+
+.nav-hamburger:hover { background: rgba(37,99,235,0.15); }
+.nav-hamburger span { background: #93c5fd; }
+
+@media (max-width: 768px) {
+  nav { border-top: 1px solid rgba(37,99,235,0.25); }
+  .nav-dropdown-menu { border-left: 3px solid #facc15; }
+  .nav-sub-menu { border-left: 3px solid rgba(37,99,235,0.25); }
+}
+
 body {
   font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif;
   background: #060e1f;
@@ -52,6 +97,22 @@ body.rejoin-pending .screen.active { visibility: hidden; }
 .color-btn.selected { border-color: #facc15; box-shadow: 0 0 0 3px rgba(250,204,21,0.25); }
 .player-role-box { border-color: #374151; }
 .player-role-box.active { border-color: #2563eb; }
+/* Observer role button has no selected-state colour of its own by default —
+   it just falls back to a plain white border/check, which barely reads
+   against this page's dark background. Give it the same blue/yellow accent
+   as everything else once picked. */
+.observer-role-btn.selected {
+  border-color: #2563eb;
+  background: rgba(37,99,235,0.1);
+  color: #93c5fd;
+  box-shadow: 0 0 0 1px rgba(37,99,235,0.3), inset 0 0 12px rgba(37,99,235,0.1);
+}
+.observer-role-btn.selected .obs-role-sub { color: #60a5fa; }
+.observer-role-btn.selected .obs-role-check {
+  border-color: #facc15;
+  background: #facc15;
+  box-shadow: 0 0 8px rgba(250,204,21,0.6);
+}
 .btn-create { background: #2563eb; color: #fff; }
 .btn-join { background: #374151; color: #e2e8f0; border: 1px solid #4b5563; }
 .btn-join:hover:not(:disabled) { background: #4b5563; }
@@ -452,7 +513,7 @@ body.rejoin-pending .screen.active { visibility: hidden; }
 
 /* ===== CONTROL PANEL ===== */
 .qb-panel {
-  width: 280px;
+  width: 420px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
@@ -489,6 +550,21 @@ body.rejoin-pending .screen.active { visibility: hidden; }
   color: #e2e8f0;
 }
 .qb-color-dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+
+/* ===== PUBLIC ENTANGLEMENT CLUE ===== */
+/* Shared team knowledge, not part of anyone's private hand — a distinct
+   amber accent (vs. the blue used everywhere else) keeps it visually
+   separate from "My Wavelength Clue" so it doesn't read as one more clue in
+   that private list. */
+.qb-public-clue-section { border-bottom: 1px solid rgba(250,204,21,0.15); }
+.qb-public-clue-item {
+  background: rgba(250,204,21,0.06);
+  border: 1px solid rgba(250,204,21,0.25);
+  border-radius: 6px;
+  padding: 7px 10px;
+}
+.qb-public-clue-item .qb-clue-text { color: #fde68a; }
+.qb-public-clue-note { font-size: 10px; color: #6b7280; margin-top: 6px; font-style: italic; }
 
 .qb-clue-list { display: flex; flex-direction: column; gap: 6px; }
 .qb-clue-placeholder { font-size: 12px; color: #6b7280; font-style: italic; }
@@ -650,6 +726,24 @@ body.rejoin-pending .screen.active { visibility: hidden; }
 .qb-modal p  { font-size: 13px; color: #9ca3af; margin: 0 0 16px; line-height: 1.5; }
 .qb-modal-icon { font-size: 32px; margin-bottom: 10px; }
 .qb-modal-btns { display: flex; flex-direction: column; gap: 8px; }
+
+/* Decoherence alert — every player has to see and dismiss this themselves,
+   so it reads as more urgent than the routine modals above: red accent,
+   bigger, no way to click outside to dismiss (it's an overlay with its own
+   button, same pattern as the others, but visually louder). */
+.qb-noise-alert-modal { border-color: rgba(239,68,68,0.5); max-width: 440px; }
+.qb-noise-alert-icon { font-size: 44px; color: #f87171; filter: drop-shadow(0 0 14px rgba(239,68,68,0.6)); }
+.qb-noise-alert-modal h3 { color: #fca5a5; font-size: 20px; }
+#qb-noise-alert-count { font-size: 14px; color: #e2e8f0; }
+.qb-noise-alert-urgent {
+  background: rgba(239,68,68,0.12);
+  border: 1px solid rgba(239,68,68,0.4);
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: #fca5a5 !important;
+  font-weight: 700;
+  font-size: 13px !important;
+}
 .qb-measure-cell-display {
   background: rgba(0,0,0,0.3);
   border: 1px solid rgba(250,204,21,0.3);
@@ -740,14 +834,19 @@ body.rejoin-pending .screen.active { visibility: hidden; }
 .qb-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
 /* ===== OBSERVER BANNER ===== */
+/* hub.css's shared default pins this at top:44px, but this page's real
+   <header> is 68px tall (see main.css) — at 44px the banner's top ~24px sit
+   underneath the header, which also sits at a higher z-index, so the banner
+   reads as "covered" by the nav bar. Match the actual header height here. */
 #observer-banner {
   display: none;
+  top: 68px;
   align-items: center;
   justify-content: center;
   gap: 10px;
   padding: 8px 16px;
-  background: rgba(37,99,235,0.12);
-  border-bottom: 1px solid rgba(37,99,235,0.3);
+  background: rgba(37,99,235,0.16);
+  border-bottom: 1px solid rgba(37,99,235,0.35);
   font-size: 13px;
   font-weight: 600;
   color: #93c5fd;

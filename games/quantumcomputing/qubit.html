@@ -114,6 +114,19 @@
     </div>
   </div>
 
+  <!-- DECOHERENCE (NOISE) ALERT -->
+  <div id="qb-noise-modal" class="qb-modal-overlay" style="display:none">
+    <div class="qb-modal qb-noise-alert-modal">
+      <div class="qb-modal-icon qb-noise-alert-icon">⚠</div>
+      <h3 id="qb-noise-alert-title">Decoherence Detected!</h3>
+      <p id="qb-noise-alert-count"></p>
+      <p id="qb-noise-alert-urgent" class="qb-noise-alert-urgent" style="display:none"></p>
+      <div class="qb-modal-btns">
+        <button class="qb-btn qb-btn-danger" onclick="hideNoiseModal()">Understood</button>
+      </div>
+    </div>
+  </div>
+
   <!-- GAME OVER OVERLAY -->
   <div id="qb-gameover" class="qb-gameover-overlay" style="display:none">
     <div class="qb-gameover-card">
@@ -159,23 +172,19 @@
     <!-- CONTROL PANEL -->
     <div class="qb-panel">
 
-      <!-- MY CLUE -->
+      <!-- PUBLIC ENTANGLEMENT CLUE -->
+      <div class="qb-panel-section qb-public-clue-section">
+        <div class="qb-section-title">Team Clue — Entanglement (Public)</div>
+        <div class="qb-clue-item qb-public-clue-item">
+          <span class="qb-clue-text" id="qb-public-clue-text">Waiting for game to start…</span>
+        </div>
+        <div class="qb-public-clue-note">Known to the whole team — not part of anyone's private hand.</div>
+      </div>
+
+      <!-- MY CLUE / (observer) ALL PLAYER CLUES -->
       <div class="qb-panel-section" id="qb-clue-section">
-        <div class="qb-section-title">My Wavelength Clue</div>
-        <div class="qb-clue-color" id="qb-clue-color">
-          <span class="qb-color-dot" id="qb-color-dot"></span>
-          <span id="qb-color-name">—</span>
-        </div>
-        <div class="qb-clue-list" id="qb-clue-list">
-          <div class="qb-clue-placeholder">Waiting for game to start…</div>
-        </div>
-        <label class="qb-match-toggle">
-          <input type="checkbox" id="qb-show-valid" onchange="toggleAllValidHighlight()">
-          <span>Highlight valid cells (must match ALL my clues)</span>
-        </label>
-        <div class="qb-valid-legend">
-          <span class="qb-legend-item"><span class="qb-leg-valid-all"></span>Valid — matches every clue</span>
-        </div>
+        <div class="qb-section-title" id="qb-clue-section-title">My Wavelength Clue</div>
+        <div id="qb-clue-body"></div>
       </div>
 
       <!-- ENVIRONMENT -->
@@ -236,6 +245,11 @@ var checkedClueIds = {};
 // "Highlight valid cells" — the combined AND-of-all-clues view, separate
 // from the per-clue toggles above.
 var showAllValid = false;
+// Observer view: same two ideas, but per player — keyed by "playerIdx:clueId"
+// (clue ids can repeat across different players' colour books) and by
+// playerIdx respectively.
+var obsCheckedClueKeys = {};
+var obsValidPlayers = {};
 
 var SESSION_KEY     = 'techgames_qubit_session';
 var OBS_SESSION_KEY = 'techgames_qubit_observer';
@@ -627,12 +641,43 @@ function toggleAllValidHighlight() {
   updateMatchHighlights();
 }
 
+// Observer equivalents — same idea, one instance per player being inspected.
+function toggleObsClueHighlight(playerIdx, clueId, checked) {
+  var key = playerIdx + ':' + clueId;
+  if (checked) obsCheckedClueKeys[key] = true;
+  else delete obsCheckedClueKeys[key];
+  updateMatchHighlights();
+}
+function toggleObsValidHighlight(playerIdx, checked) {
+  if (checked) obsValidPlayers[playerIdx] = true;
+  else delete obsValidPlayers[playerIdx];
+  updateMatchHighlights();
+}
+
 function updateMatchHighlights() {
   document.querySelectorAll('.qb-match, .qb-valid-all').forEach(function(e){
     e.classList.remove('qb-match', 'qb-valid-all');
   });
-  if (!gs || !gs.myClues) return;
+  if (!gs) return;
 
+  if (isObserver) {
+    (gs.allClues || []).forEach(function(clues, playerIdx){
+      clues.forEach(function(clue){
+        if (!obsCheckedClueKeys[playerIdx + ':' + clue.id]) return;
+        (clue.matchingCells || []).forEach(function(d){
+          if (cellEls[d]) cellEls[d].classList.add('qb-match');
+        });
+      });
+      if (obsValidPlayers[playerIdx]) {
+        ((gs.allMatchingCells || [])[playerIdx] || []).forEach(function(d){
+          if (cellEls[d]) cellEls[d].classList.add('qb-valid-all');
+        });
+      }
+    });
+    return;
+  }
+
+  if (!gs.myClues) return;
   gs.myClues.forEach(function(clue){
     if (!checkedClueIds[clue.id]) return;
     (clue.matchingCells || []).forEach(function(d){
@@ -655,11 +700,13 @@ function renderGame(state) {
   renderTokens(state.tokens || {});
   updateMatchHighlights();
   renderPlayers(state);
+  renderPublicClue(state);
   renderCluePanel(state);
   renderEnvPanel(state);
   renderTurnPanel(state);
 
   if (state.proposedCell) highlightProposed(state.proposedCell.decimal);
+  maybeShowNoiseAlert(state);
 
   if (state.gameOver) {
     setTimeout(function(){ showGameOver(state); }, state.won ? 800 : 400);
@@ -668,6 +715,49 @@ function renderGame(state) {
   // nav cancel button
   var cancelBtn = document.getElementById('btn-cancel-game');
   if (cancelBtn) cancelBtn.style.display = (isHost && !state.gameOver) ? '' : 'none';
+}
+
+// ==================== DECOHERENCE (NOISE) ALERT ====================
+// A Noise card is a real event every player at the table needs to notice —
+// not just a line in the environment panel — so it interrupts everyone with
+// a modal they have to explicitly dismiss. Tracked by noiseCount rather than
+// currentCard alone so a re-render of the same state (e.g. a late-joining
+// rejoin) doesn't re-pop the same strike that's already been acknowledged.
+var _lastSeenNoiseCount = 0;
+function maybeShowNoiseAlert(state) {
+  var count = state.noiseCount || 0;
+  if (count <= _lastSeenNoiseCount) { _lastSeenNoiseCount = count; return; }
+  _lastSeenNoiseCount = count;
+  // The game-over overlay already covers the 3rd strike ending the mission —
+  // showing this alert too would just stack two modals on top of each other.
+  if (state.gameOver) return;
+
+  var remaining = 3 - count;
+  document.getElementById('qb-noise-alert-count').textContent =
+    'Decoherence strike ' + count + ' of 3. ' + remaining + ' more and the mission fails immediately.';
+
+  var urgentEl = document.getElementById('qb-noise-alert-urgent');
+  if (count === 2) {
+    urgentEl.textContent = 'One more strike ends the game at any moment — call a Measurement now, on your best guess, before it happens.';
+    urgentEl.style.display = '';
+  } else {
+    urgentEl.style.display = 'none';
+  }
+
+  document.getElementById('qb-noise-modal').style.display = 'flex';
+}
+
+function hideNoiseModal() {
+  document.getElementById('qb-noise-modal').style.display = 'none';
+}
+
+// ==================== RENDER PUBLIC CLUE ====================
+// The one entanglement clue is announced to the whole team from turn one —
+// unlike myClues, it's the same for every player and for observers too.
+function renderPublicClue(state) {
+  var el = document.getElementById('qb-public-clue-text');
+  if (!el) return;
+  el.textContent = (state.publicClue && state.publicClue.text) || '—';
 }
 
 function highlightProposed(decimal) {
@@ -717,34 +807,78 @@ function renderPlayers(state) {
 
 // ==================== RENDER CLUE PANEL ====================
 function renderCluePanel(state) {
-  var gc   = state.myGameColor;
-  var hex  = gc ? (GAME_COLOR_HEX[gc] || '#888') : '#888';
-  var dot  = document.getElementById('qb-color-dot');
-  var name = document.getElementById('qb-color-name');
-  if (dot)  dot.style.background = hex;
-  if (name) name.textContent = gc ? (gc.charAt(0).toUpperCase() + gc.slice(1)) : '—';
+  var titleEl = document.getElementById('qb-clue-section-title');
+  var body    = document.getElementById('qb-clue-body');
+  if (!body) return;
 
-  var list = document.getElementById('qb-clue-list');
-  if (!list) return;
-  if (!state.myClues || state.myClues.length === 0) {
-    list.innerHTML = '<div class="qb-clue-placeholder">No clue assigned.</div>';
+  if (isObserver) {
+    if (titleEl) titleEl.textContent = 'All Player Clues';
+    var players = state.players || [];
+    var allClues = state.allClues || [];
+    var allValid = state.allMatchingCells || [];
+    var html = '';
+    for (var pi = 0; pi < players.length; pi++) {
+      var p   = players[pi];
+      var gc2 = state.playerGameColors ? state.playerGameColors[pi] : '';
+      var hex2 = GAME_COLOR_HEX[gc2] || '#888';
+      var clues = allClues[pi] || [];
+      var clueHtml = '';
+      for (var ci = 0; ci < clues.length; ci++) {
+        var clue = clues[ci];
+        var checked = !!obsCheckedClueKeys[pi + ':' + clue.id];
+        clueHtml += '<div class="qb-clue-item">'
+          + '<label class="qb-clue-highlight-toggle" title="Highlight cells matching this clue alone">'
+          + '<input type="checkbox" ' + (checked ? 'checked' : '') + ' onchange="toggleObsClueHighlight(' + pi + ',' + clue.id + ', this.checked)">'
+          + '</label>'
+          + '<span class="qb-clue-id">#' + clue.id + '</span>'
+          + '<span class="qb-clue-text">' + esc(clue.text) + '</span>'
+          + '</div>';
+      }
+      if (!clues.length) clueHtml = '<div class="qb-clue-placeholder">No clue assigned.</div>';
+      var validChecked = !!obsValidPlayers[pi];
+      html += '<div class="qb-obs-player-block">'
+        + '<div class="qb-clue-color"><span class="qb-color-dot" style="background:' + hex2 + '"></span><span>' + esc(p.name) + '</span></div>'
+        + '<div class="qb-clue-list">' + clueHtml + '</div>'
+        + '<label class="qb-match-toggle">'
+        + '<input type="checkbox" ' + (validChecked ? 'checked' : '') + ' onchange="toggleObsValidHighlight(' + pi + ', this.checked)">'
+        + '<span>Highlight valid cells (must match ALL their clues)</span>'
+        + '</label>'
+        + '</div>';
+    }
+    body.innerHTML = html || '<div class="qb-clue-placeholder">Waiting for game to start…</div>';
+    updateMatchHighlights();
     return;
   }
-  var html = '';
-  for (var i = 0; i < state.myClues.length; i++) {
-    var clue    = state.myClues[i];
-    var checked = !!checkedClueIds[clue.id];
-    html += '<div class="qb-clue-item">'
+
+  if (titleEl) titleEl.textContent = 'My Wavelength Clue';
+  var gc   = state.myGameColor;
+  var hex  = gc ? (GAME_COLOR_HEX[gc] || '#888') : '#888';
+  var clueHtml2 = '';
+  var clues2 = state.myClues || [];
+  for (var i = 0; i < clues2.length; i++) {
+    var clue2    = clues2[i];
+    var checked2 = !!checkedClueIds[clue2.id];
+    clueHtml2 += '<div class="qb-clue-item">'
       + '<label class="qb-clue-highlight-toggle" title="Highlight cells matching this clue alone">'
-      + '<input type="checkbox" ' + (checked ? 'checked' : '') + ' onchange="toggleClueHighlight(' + clue.id + ', this.checked)">'
+      + '<input type="checkbox" ' + (checked2 ? 'checked' : '') + ' onchange="toggleClueHighlight(' + clue2.id + ', this.checked)">'
       + '</label>'
-      + '<span class="qb-clue-id">#' + clue.id + '</span>'
-      + '<span class="qb-clue-text">' + esc(clue.text) + '</span>'
+      + '<span class="qb-clue-id">#' + clue2.id + '</span>'
+      + '<span class="qb-clue-text">' + esc(clue2.text) + '</span>'
       + '</div>';
   }
-  list.innerHTML = html;
-  var validCb = document.getElementById('qb-show-valid');
-  if (validCb) validCb.checked = showAllValid;
+  if (!clues2.length) clueHtml2 = '<div class="qb-clue-placeholder">No clue assigned.</div>';
+
+  body.innerHTML =
+    '<div class="qb-clue-color"><span class="qb-color-dot" style="background:' + hex + '"></span>'
+    + '<span>' + (gc ? (gc.charAt(0).toUpperCase() + gc.slice(1)) : '—') + '</span></div>'
+    + '<div class="qb-clue-list">' + clueHtml2 + '</div>'
+    + '<label class="qb-match-toggle">'
+    + '<input type="checkbox" id="qb-show-valid" ' + (showAllValid ? 'checked' : '') + ' onchange="toggleAllValidHighlight()">'
+    + '<span>Highlight valid cells (must match ALL my clues)</span>'
+    + '</label>'
+    + '<div class="qb-valid-legend">'
+    + '<span class="qb-legend-item"><span class="qb-leg-valid-all"></span>Valid — matches every clue</span>'
+    + '</div>';
   updateMatchHighlights();
 }
 
@@ -923,6 +1057,8 @@ function backToLobby() {
   document.body.classList.remove('observer-active');
   roomCode = null; myIdx = -1; gs = null; isHost = false; isObserver = false;
   boardReady = false; measureMode = false;
+  _lastSeenNoiseCount = 0;
+  hideNoiseModal();
   try { history.replaceState(null, '', QB_BASE_PATH); } catch(_) {}
   showScreen('lobby');
 }
@@ -1008,6 +1144,7 @@ function handleMsg(msg) {
       showScreen('game');
       if (!boardReady) initBoard();
       if (isHost) document.getElementById('btn-cancel-game').style.display = '';
+      _lastSeenNoiseCount = 0;
       break;
 
     case 'qb_state':
@@ -1043,6 +1180,32 @@ function handleMsg(msg) {
 var _hubFirstConnect = true;
 var urlParams = new URLSearchParams(location.search);
 var urlRoom   = urlParams.get('room') || '';
+var _hasPendingRejoin = !!(sessionStorage.getItem(SESSION_KEY) || sessionStorage.getItem(OBS_SESSION_KEY));
+
+// "Copy Link" invite (?room=CODE): auto-fill the join code, highlight the
+// Join card, dim Create, and show the invitation banner — same as every
+// other game's lobby, instead of silently doing nothing until the player
+// types the code in by hand.
+if (urlRoom && !_hasPendingRejoin) {
+  (function(){
+    var code = urlRoom.toUpperCase();
+    var codeEl = document.getElementById('join-code');
+    if (codeEl) codeEl.value = code;
+    var joinCard   = document.getElementById('lobby-join-card');
+    var createCard = document.getElementById('lobby-create-card');
+    var banner     = document.getElementById('invited-banner');
+    var bannerCode = document.getElementById('invited-banner-code');
+    if (joinCard)   joinCard.classList.add('lobby-card-focus');
+    if (createCard) createCard.classList.add('lobby-card-dim');
+    if (banner)     banner.classList.add('show');
+    if (bannerCode) bannerCode.textContent = code;
+    setTimeout(function(){
+      var nameInput = document.getElementById('join-name');
+      if (nameInput) nameInput.focus({ preventScroll: true });
+      if (joinCard) joinCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 250);
+  })();
+}
 
 hub = SocketHub.create({
   reconnectMs: 2000,

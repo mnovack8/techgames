@@ -37,14 +37,67 @@ const COUNTS = [
 
 // Entanglement clues (ids 61-80: EQ/NE — "are digits #X and #Y the same or
 // different?") only ever say something about a RELATIONSHIP between two
-// bits, never a bit's actual value. A player holding one in isolation has no
-// anchor at all — they'd know e.g. "bit 3 and bit 5 match" but not what
-// either one IS, so they could never say with certainty which cells are
-// consistent with their own clue in a way that helps the team. It's only
-// useful bolted onto an anchoring clue the player already has, narrowing an
-// already-known set further. So: never a player's first clue, only a later
-// (second, third, ...) one.
+// bits, never a bit's actual value. A player holding one privately has no
+// anchor at all to reason from — they'd know e.g. "bit 3 and bit 5 match"
+// but not what either one IS. So entanglement is never handed to a player as
+// part of their private hand; instead every card gets exactly one
+// entanglement clue that's announced to the WHOLE team as a public fact
+// (see qb_state.publicClue). Its two bit positions are chosen to avoid
+// whichever bits the players' own B(n,v) clues already pin down directly, so
+// it always contributes genuinely new information rather than restating
+// something a player's hand already nails down.
 const ENTANGLEMENT_MIN_ID = 61;
+
+/** Bit position(s) a clue's text refers to directly, or [] if it's not a
+ *  bit-anchored clue (B() gives one position, EQ/NE gives two). */
+function parseBitPositions(text) {
+  let m = /^Qubit (\d+) \(from left\)/.exec(text);
+  if (m) return [Number(m[1])];
+  m = /^Position (\d+) and (\d+) are/.exec(text);
+  if (m) return [Number(m[1]), Number(m[2])];
+  return [];
+}
+
+/** Every bit position referenced by any player's assigned clues this tier. */
+function usedBitPositions(assignment) {
+  const used = new Set();
+  for (const color of Object.keys(assignment)) {
+    for (const id of assignment[color]) {
+      for (const bp of parseBitPositions(CLUES[color][id].text)) used.add(bp);
+    }
+  }
+  return used;
+}
+
+// Entanglement clue content is identical across every colour's book (see
+// qubit-logic.js) — 'red' is just a canonical place to read it from.
+const ENTANGLEMENT_BOOK = 'red';
+
+/**
+ * Pick the one public entanglement clue for this card/tier: true for the
+ * answer, and preferring zero overlap with bits the players' own clues
+ * already cover (falls back to least overlap if none is perfectly clean).
+ * Also prefers whichever remaining choice narrows `candidates` further.
+ */
+function pickPublicEntanglementClue(answer, usedBits, candidates) {
+  const entIds = Object.keys(CLUES[ENTANGLEMENT_BOOK])
+    .map(Number)
+    .filter(id => id >= ENTANGLEMENT_MIN_ID)
+    .filter(id => matches(ENTANGLEMENT_BOOK, id).has(answer));
+
+  let best = null, bestOverlap = Infinity, bestSize = Infinity;
+  for (const id of entIds) {
+    const [n, m] = parseBitPositions(CLUES[ENTANGLEMENT_BOOK][id].text);
+    const overlap = (usedBits.has(n) ? 1 : 0) + (usedBits.has(m) ? 1 : 0);
+    const mSet = matches(ENTANGLEMENT_BOOK, id);
+    let size = 0;
+    for (const d of candidates) if (mSet.has(d)) size++;
+    if (overlap < bestOverlap || (overlap === bestOverlap && size < bestSize)) {
+      bestOverlap = overlap; bestSize = size; best = id;
+    }
+  }
+  return best;
+}
 
 /** Cells matching a clue, as a Set of decimals. */
 const matchCache = new Map();
@@ -68,7 +121,7 @@ function trueClues(color, answer) {
 
 /**
  * Build one card's clue assignment for a given player count.
- * Returns { assignment: {color: [ids]}, remaining: number }.
+ * Returns { assignment: {color: [ids]}, publicClueId, remaining, candidates }.
  */
 function buildAssignment(answer, nPlayers) {
   const colors = GAME_COLORS.slice(0, nPlayers);
@@ -81,8 +134,9 @@ function buildAssignment(answer, nPlayers) {
       let best = null, bestSize = Infinity, bestGlobal = Infinity;
       for (const id of trueClues(color, answer)) {
         if (assignment[color].includes(id)) continue;
-        // Never hand out an entanglement clue as a player's first/only clue.
-        if (assignment[color].length === 0 && id >= ENTANGLEMENT_MIN_ID) continue;
+        // Entanglement is never a player's private clue — it's always the
+        // one public fact announced to the whole team instead (below).
+        if (id >= ENTANGLEMENT_MIN_ID) continue;
         const m = matches(color, id);
         let size = 0;
         for (const d of candidates) if (m.has(d)) size++;
@@ -110,13 +164,23 @@ function buildAssignment(answer, nPlayers) {
   // rounds (fewer clues in play). Keep handing out one more clue per colour,
   // round-robin, until it's uniquely solvable or the clue pool runs dry.
   let extraRounds = 0;
-  while (candidates.size > 1 && extraRounds < 6) {
+  while (candidates.size > 1 && extraRounds < 10) {
     const before = candidates.size;
     assignOneRound();
     extraRounds++;
     if (candidates.size === before) break; // no colour had a narrowing clue left
   }
-  return { assignment, remaining: candidates.size, candidates: [...candidates] };
+
+  // The one public entanglement clue: always present, chosen to avoid the
+  // bit positions the players' own clues already pin down, and folded into
+  // the same uniqueness check since the whole team knows it from turn one.
+  const publicClueId = pickPublicEntanglementClue(answer, usedBitPositions(assignment), candidates);
+  if (publicClueId != null) {
+    const m = matches(ENTANGLEMENT_BOOK, publicClueId);
+    candidates = new Set([...candidates].filter(d => m.has(d)));
+  }
+
+  return { assignment, publicClueId, remaining: candidates.size, candidates: [...candidates] };
 }
 
 // ── Build all nine cards ──────────────────────────────────────────────────────
@@ -127,27 +191,27 @@ for (const cardId of Object.keys(ANSWERS).map(Number).sort((a, b) => a - b)) {
   cards[cardId] = { answerIdx: cardId, clues: {} };
   const row = { cardId, answer, counts: {} };
   for (const [key, n] of COUNTS) {
-    const { assignment, remaining, candidates } = buildAssignment(answer, n);
-    cards[cardId].clues[key] = assignment;
-    row.counts[key] = { remaining, ok: candidates.includes(answer) };
+    const { assignment, publicClueId, remaining, candidates } = buildAssignment(answer, n);
+    cards[cardId].clues[key] = { colors: assignment, public: publicClueId };
+    row.counts[key] = { remaining, ok: candidates.includes(answer), hasPublic: publicClueId != null };
   }
   report.push(row);
 }
 
 // ── Report ────────────────────────────────────────────────────────────────────
 let allGood = true;
-console.log('card  answer   ' + COUNTS.map(([k]) => k.padEnd(6)).join(''));
+console.log('card  answer   ' + COUNTS.map(([k]) => k.padEnd(9)).join(''));
 for (const r of report) {
   const cells = COUNTS.map(([k]) => {
     const c = r.counts[k];
-    if (!c.ok) { allGood = false; return 'BAD'.padEnd(6); }
+    if (!c.ok || !c.hasPublic) { allGood = false; return 'BAD'.padEnd(9); }
     if (c.remaining !== 1) allGood = false;
-    return String(c.remaining).padEnd(6);
+    return String(c.remaining).padEnd(9);
   });
   console.log(String(r.cardId).padEnd(6) + String(r.answer).padEnd(9) + cells.join(''));
 }
-console.log('\n(value = candidate cells left after intersecting all clues; 1 = uniquely solvable)');
-console.log(allGood ? '\nAll cards uniquely solvable at every player count.' : '\nSome cards are not uniquely solvable.');
+console.log('\n(value = candidate cells left after intersecting all clues + the public entanglement fact; 1 = uniquely solvable)');
+console.log(allGood ? '\nAll cards uniquely solvable at every player count, every card has its public clue.' : '\nSome cards are not uniquely solvable, or missing a public clue.');
 
 // ── Emit ──────────────────────────────────────────────────────────────────────
 function fmtCard(cardId) {
@@ -158,11 +222,11 @@ function fmtCard(cardId) {
   lines.push(`  // Answer ${answer} = ${bin}`);
   lines.push(`  ${cardId}: { answerIdx: ${cardId}, clues: {`);
   for (const [key] of COUNTS) {
-    const a = card.clues[key];
+    const a = card.clues[key].colors;
     const parts = GAME_COLORS
       .filter(c => a[c])
       .map(c => `${c}:[${a[c].join(',')}]`);
-    lines.push(`    '${key}': { ${parts.join(', ')} },`);
+    lines.push(`    '${key}': { colors: { ${parts.join(', ')} }, public: ${card.clues[key].public} },`);
   }
   lines.push('  }},');
   return lines.join('\n');
