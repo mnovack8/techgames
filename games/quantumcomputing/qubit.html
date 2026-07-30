@@ -14,6 +14,16 @@
 <link rel="icon" type="image/png" href="/images/logo.png">
 <link rel="apple-touch-icon" href="/images/logo.png">
 <title>Qubit — Quantum Deduction Game | Tech CoLab</title>
+<script>
+// Run before body parses: if ?tutorial=1 OR path ends in /tutorial, hide everything until tutorial mounts.
+(function(){
+  try {
+    if (new URLSearchParams(location.search).get('tutorial') === '1' || /\/tutorial\/?$/.test(location.pathname)) {
+      document.documentElement.classList.add('tutorial-loading');
+    }
+  } catch(e){}
+})();
+</script>
 <link rel="stylesheet" href="/nav.css">
 <script src="/games/lobby.js"></script>
 <script src="/games/observer.js"></script>
@@ -106,11 +116,11 @@
         <p>Players may talk freely about strategy and about anything visibly on the board — including reasoning out loud about other players' tokens. Three things are never allowed:</p>
         <ul>
           <li>Never state, describe, or hint at the content of your own Wavelength Clue.</li>
-          <li>Never confirm or deny anything about your clue except through the formal Verify step of an active player's turn — no answering side questions about it outside of being properly asked.</li>
+          <li>Never confirm or deny anything about your clue except through the formal Read Interference step of an active player's turn — no answering side questions about it outside of being properly asked.</li>
           <li>Never reference or explain the tokens <i>you</i> personally placed on the board — though everyone else is free to observe, discuss, and reason about any tokens on the board, including yours.</li>
         </ul>
       </div>
-      <button class="qb-btn qb-htp-close" style="background:#2563eb;color:#fff;border-color:#2563eb" onclick="document.getElementById('qb-comms-modal').style.display='none'">Got it, let's play</button>
+      <button class="qb-btn qb-htp-close" style="background:#2563eb;color:#fff;border-color:#2563eb" onclick="document.getElementById('qb-comms-modal').style.display='none';qbtCheckAction('comms')">Got it, let's play</button>
     </div>
   </div>
 
@@ -139,7 +149,7 @@
       <p id="qb-noise-alert-count"></p>
       <p id="qb-noise-alert-urgent" class="qb-noise-alert-urgent" style="display:none"></p>
       <div class="qb-modal-btns">
-        <button class="qb-btn qb-btn-danger" onclick="hideNoiseModal()">Understood</button>
+        <button class="qb-btn qb-btn-danger" onclick="hideNoiseModal();qbtCheckAction('noise')">Understood</button>
       </div>
     </div>
   </div>
@@ -166,10 +176,10 @@
   <div class="qb-main">
 
     <!-- BOARD SECTION -->
-    <div class="qb-board-section">
+    <div class="qb-board-section" id="qb-board-section">
       <div class="qb-board-header">
         <span class="qb-board-title">Quantum Matrix</span>
-        <span class="qb-board-hint" id="qb-board-hint">Click a cell to propose it</span>
+        <span class="qb-board-hint" id="qb-board-hint">Click a cell to apply a gate</span>
       </div>
       <div class="qb-board-wrap">
         <div class="qb-board-grid-wrap" id="qb-board-grid-wrap">
@@ -181,8 +191,8 @@
       </div>
       <div class="qb-cell-zoom" id="qb-cell-zoom" style="display:none"></div>
       <div class="qb-board-legend">
-        <span class="qb-legend-item"><span class="qb-leg-circle">✓</span>Clue match</span>
-        <span class="qb-legend-item"><span class="qb-leg-square">✗</span>No match</span>
+        <span class="qb-legend-item"><span class="qb-leg-circle">✓</span>Constructive interference</span>
+        <span class="qb-legend-item"><span class="qb-leg-square">✗</span>Destructive interference</span>
       </div>
     </div>
 
@@ -205,33 +215,33 @@
             <p>Your team shares one secret <b>Quantum Code</b> — a single cell hidden somewhere on the 16&times;16 Quantum Matrix. Work together to deduce it and call a correct Measurement before the system decoheres.</p>
             <h4>Your Clues</h4>
             <ul>
-              <li>Each player is dealt <b>1&ndash;2 private Wavelength Clues</b> — only true for the hidden code, and only visible to you.</li>
+              <li>Each player is dealt <b>1&ndash;2 private Wavelength Clues</b> — think of these as your qubit's own frequency: only true for the hidden code, and only visible to you.</li>
               <li>Everyone shares one public <b>Entanglement Clue</b>, comparing two qubit positions (same or different).</li>
             </ul>
             <h4>Communication Rules</h4>
             <p>Players may talk freely about strategy and about anything visibly on the board — including reasoning out loud about other players' tokens. Three things are never allowed:</p>
             <ul>
               <li>Never state, describe, or hint at the content of your own Wavelength Clue.</li>
-              <li>Never confirm or deny anything about your clue except through the formal Verify step of an active player's turn — no answering side questions about it outside of being properly asked.</li>
+              <li>Never confirm or deny anything about your clue except through the formal Read Interference step of an active player's turn — no answering side questions about it outside of being properly asked.</li>
               <li>Never reference or explain the tokens <i>you</i> personally placed on the board — though everyone else is free to observe, discuss, and reason about any tokens on the board, including yours.</li>
             </ul>
             <h4>On Your Turn</h4>
             <ol>
-              <li><b>Draw an Environment card.</b> Revealed automatically at the start of your turn, before you propose:
+              <li><b>Draw an Environment card.</b> Revealed automatically at the start of your turn, before you apply your gate:
                 <ul>
-                  <li><b>Coherence (Maintained).</b> Play continues as normal — you'll choose a teammate to Verify after proposing.</li>
-                  <li><b>Constructive Cascade.</b> Every other player will verify the cell at once after you propose — no need to choose.</li>
-                  <li><b>Noise.</b> A decoherence strike. Otherwise your turn plays out as normal — you'll still choose a teammate to Verify. Only the <b>3rd</b> Noise card ends the mission immediately, before Verify.</li>
+                  <li><b>Coherence (Maintained).</b> Play continues as normal — you'll choose a teammate to Read Interference after applying your gate.</li>
+                  <li><b>Constructive Cascade.</b> Every other player reads the interference at once after you apply your gate — no need to choose.</li>
+                  <li><b>Noise.</b> A decoherence strike. Otherwise your turn plays out as normal — you'll still choose a teammate to Read Interference. Only the <b>3rd</b> Noise card ends the mission immediately, before that reading.</li>
                 </ul>
               </li>
-              <li><b>Propose.</b> Pick any cell that matches ALL of your own clues. Your token lands there — always your player color in a circle with a checkmark, since it's guaranteed to match.</li>
-              <li><b>Verify by another player.</b> Choose one teammate to Verify — they place a token on that same cell: a circle with a checkmark if it matches their clue, a square with an X if it doesn't. (Automatic for everyone on Cascade; skipped only if the 3rd Noise card just ended the game.)</li>
+              <li><b>Apply a Gate.</b> Pick any cell that matches ALL of your own clues — like running a logic gate on your qubit to test it. Your token lands there — always your player color in a circle, since it's guaranteed to be constructive.</li>
+              <li><b>Read Interference (another player).</b> Choose one teammate — they place a token on that same cell: a circle if their clue's frequency <em>constructively</em> interferes with it, a square with an X if it's <em>destructive</em>. (Automatic for everyone on Cascade; skipped only if the 3rd Noise card just ended the game.)</li>
               <li>Play passes to the next player, who immediately draws the next Environment card.</li>
             </ol>
             <h4>Deduction</h4>
-            <p>Use the growing pattern of circle checkmarks (match) and square X's (no match) tokens across the board, plus your own “Highlight valid cells” toggle, to narrow down which cell must be the true code.</p>
+            <p>Use the growing pattern of constructive (circle) and destructive (square X) tokens across the board, plus your own “Highlight valid cells” toggle, to narrow down which cell must be the true code.</p>
             <h4>Calling a Measurement</h4>
-            <p>On your turn, instead of proposing, any human player may call a <b>Measurement</b> on the cell they believe is the answer.</p>
+            <p>On your turn, instead of applying a gate, any human player may call a <b>Measurement</b> on the cell they believe is the answer.</p>
             <div class="qb-htp-highlight">Measurement is final. Guess right and the team wins instantly. Guess wrong and the team loses instantly.</div>
             <h4>Win or Lose</h4>
             <ul>
@@ -244,8 +254,8 @@
       </div>
 
       <!-- PUBLIC ENTANGLEMENT CLUE -->
-      <div class="qb-panel-section qb-public-clue-section">
-        <div class="qb-section-title">Team Clue — Entanglement (Public)</div>
+      <div class="qb-panel-section qb-public-clue-section" id="qb-public-clue-section">
+        <div class="qb-section-title">Team Clue: Entanglement (Public)</div>
         <div class="qb-clue-item qb-public-clue-item">
           <span class="qb-clue-text" id="qb-public-clue-text">Waiting for game to start…</span>
         </div>
@@ -255,7 +265,7 @@
       <!-- MY CLUE / (observer) ALL PLAYER CLUES -->
       <div class="qb-panel-section" id="qb-clue-section">
         <div class="qb-section-title" id="qb-clue-section-title">My Wavelength Clue</div>
-        <button class="qb-ref-btn" onclick="renderAllCluesReference();document.getElementById('qb-allclues-overlay').style.display='flex'">📖 All Possible Clues</button>
+        <button class="qb-ref-btn" onclick="renderAllCluesReference();document.getElementById('qb-allclues-overlay').style.display='flex';qbtCheckAction('allclues')">📖 All Possible Clues</button>
         <div id="qb-clue-body"></div>
       </div>
 
@@ -270,7 +280,7 @@
       </div>
 
       <!-- ENVIRONMENT -->
-      <div class="qb-panel-section">
+      <div class="qb-panel-section" id="qb-env-section">
         <div class="qb-section-title">Environment</div>
         <div class="qb-noise-row">
           <span class="qb-noise-label">Decoherence:</span>
@@ -291,7 +301,7 @@
       </div>
 
       <!-- TURN -->
-      <div class="qb-panel-section">
+      <div class="qb-panel-section" id="qb-turn-section">
         <div class="qb-section-title">Turn</div>
         <div class="qb-turn-status" id="qb-turn-status">Waiting to start…</div>
         <div class="qb-turn-actions" id="qb-turn-actions"></div>
@@ -299,6 +309,34 @@
 
     </div>
   </div>
+</div>
+
+<!-- ===== TUTORIAL PHASE 1: CONCEPT INTRO OVERLAY ===== -->
+<div id="qti-intro">
+  <div id="qti-intro-card">
+    <div class="qti-header">
+      <span class="qti-label" id="qti-label">Concept 1 of 4</span>
+      <div class="qti-progress"><div id="qti-prog-fill" style="width:25%"></div></div>
+      <div id="qti-title"></div>
+    </div>
+    <div id="qti-body"></div>
+    <div class="qti-footer">
+      <button id="qti-exit" onclick="qtiExit()">Skip Tutorial</button>
+      <button id="qti-next" onclick="qtiNext()">Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TUTORIAL PHASE 2: IN-GAME SIDEBAR ===== -->
+<div id="qbt-panel">
+  <!-- INTERACTIVE_TUTORIAL_HTML -->
+</div>
+
+<!-- ===== TUTORIAL LOADING OVERLAY ===== -->
+<div id="qbt-loading">
+  <div class="qbt-loading-spinner"></div>
+  <div class="qbt-loading-text">Setting up tutorial game&hellip;</div>
+  <div class="qbt-loading-sub">Starting a practice match vs 2 bots</div>
 </div>
 
 <script>
@@ -310,7 +348,7 @@ var GAME_COLOR_HEX = {
 
 var CARD_INFO = {
   maintained:    { label:'COHERENCE MAINTAINED', effect:'No special effect. Turn passes.' },
-  cascade:       { label:'CONSTRUCTIVE CASCADE', effect:'All other players also verify this cell!' },
+  cascade:       { label:'CONSTRUCTIVE CASCADE', effect:'All other players also read interference on this cell!' },
   noise:         { label:'NOISE / DECOHERENCE',  effect:'Decoherence strike! Three strikes = mission fails.' },
 };
 
@@ -784,7 +822,7 @@ function cancelMeasurement() {
   document.querySelectorAll('.qb-cell').forEach(function(e){
     e.classList.remove('qb-measure-mode', 'qb-selected');
   });
-  document.getElementById('qb-board-hint').textContent = isMyTurn() ? 'Click a cell to propose it' : '';
+  document.getElementById('qb-board-hint').textContent = isMyTurn() ? 'Click a cell to apply a gate' : '';
 }
 
 function confirmMeasurement() {
@@ -825,6 +863,7 @@ function toggleClueHighlight(clueId, checked) {
 function toggleAllValidHighlight() {
   showAllValid = document.getElementById('qb-show-valid').checked;
   updateMatchHighlights();
+  if (showAllValid) qbtCheckAction('highlight');
 }
 
 // Observer equivalents — same idea, one instance per player being inspected.
@@ -924,7 +963,7 @@ function maybeShowNoiseAlert(state) {
 
   var urgentEl = document.getElementById('qb-noise-alert-urgent');
   if (count === 2) {
-    urgentEl.textContent = 'One more strike ends the game at any moment — call a Measurement now, on your best guess, before it happens.';
+    urgentEl.textContent = 'One more strike ends the game at any moment: call a Measurement now, on your best guess, before it happens.';
     urgentEl.style.display = '';
   } else {
     urgentEl.style.display = 'none';
@@ -1121,14 +1160,14 @@ function renderTurnPanel(state) {
 
   if (actionsEl) {
     if (isMe && !isObserver && state.phase === 'propose') {
-      actionsEl.innerHTML = '<div class="qb-turn-tip">An Environment card has been drawn (see below) — click a cell on the board that matches your clue to propose it.</div>'
+      actionsEl.innerHTML = '<div class="qb-turn-tip">An Environment card has been drawn (see below) — click a cell on the board that matches your clue to apply a gate.</div>'
         + '<button class="qb-btn qb-btn-measure" onclick="startMeasurement()" style="margin-top:8px">⚛ Call Measurement</button>';
     } else if (isMe && !isObserver && state.phase === 'choose_verifier') {
       actionsEl.innerHTML = renderVerifierChoices(state);
     } else if (!isMe && state.phase === 'choose_verifier') {
-      actionsEl.innerHTML = '<div class="qb-turn-tip">' + esc(curPlayer ? curPlayer.name : '?') + ' is choosing another player to Verify the proposed cell against.</div>';
+      actionsEl.innerHTML = '<div class="qb-turn-tip">' + esc(curPlayer ? curPlayer.name : '?') + ' is choosing a teammate to read the interference on the gated cell.</div>';
     } else if (!isMe) {
-      actionsEl.innerHTML = '<div class="qb-turn-tip">Wait for ' + esc(curPlayer ? curPlayer.name : '?') + ' to propose a cell.</div>';
+      actionsEl.innerHTML = '<div class="qb-turn-tip">Wait for ' + esc(curPlayer ? curPlayer.name : '?') + ' to apply a gate.</div>';
     } else {
       actionsEl.innerHTML = '';
     }
@@ -1136,9 +1175,9 @@ function renderTurnPanel(state) {
 
   if (hintEl) {
     if (isMe && !isObserver && state.phase === 'choose_verifier') {
-      hintEl.textContent = 'Choose a player to Verify against';
+      hintEl.textContent = 'Choose a teammate to read interference with';
     } else if (isMe && !isObserver) {
-      hintEl.textContent = measureMode ? 'Select the cell you believe is the Quantum Code…' : 'Click a cell to propose it';
+      hintEl.textContent = measureMode ? 'Select the cell you believe is the Quantum Code…' : 'Click a cell to apply a gate';
     } else {
       hintEl.textContent = '';
     }
@@ -1163,12 +1202,12 @@ function renderTurnPanel(state) {
   maybeToastVerifyResult(state);
 }
 
-// ==================== VERIFY STEP ====================
+// ==================== READ INTERFERENCE STEP ====================
 function renderVerifierChoices(state) {
   var cell = state.proposedCell;
-  var html = '<div class="qb-turn-tip">Proposed cell '
+  var html = '<div class="qb-turn-tip">Gated cell '
     + (cell ? ('<strong>' + cell.decimal + '</strong> (' + cell.binary + ')') : '')
-    + ' — choose another player to Verify it against their clue.</div>'
+    + ' — choose a teammate to read the interference against their clue.</div>'
     + '<div class="qb-verify-choices">';
   for (var i = 0; i < state.players.length; i++) {
     if (i === state.currentPlayerIdx) continue;
@@ -1189,8 +1228,8 @@ function maybeToastVerifyResult(state) {
   if (key === _lastVerifyToastKey) return;
   _lastVerifyToastKey = key;
   var target = state.players[state.lastVerify.targetIdx];
-  var verb = state.lastVerify.result === 'circle' ? 'matches' : 'does not match';
-  showToast((target ? target.name : 'A player') + "'s clue " + verb + ' that cell');
+  var verb = state.lastVerify.result === 'circle' ? 'constructive' : 'destructive';
+  showToast((target ? target.name : "A player") + "'s clue produces " + verb + ' interference on that cell');
 }
 
 // ==================== GAME OVER ====================
@@ -1244,8 +1283,381 @@ function backToLobby() {
   boardReady = false; measureMode = false;
   _lastSeenNoiseCount = 0;
   hideNoiseModal();
+  document.querySelectorAll('.qbt-glow').forEach(function (el) { el.classList.remove('qbt-glow'); });
+  document.body.classList.remove('qbt-panel-active', 'qbt-loading-active');
+  qbtTutMode = false; qbtActive = false;
   try { history.replaceState(null, '', QB_BASE_PATH); } catch(_) {}
   showScreen('lobby');
+}
+
+// ==================== TUTORIAL (TWO-PHASE) ====================
+var QBT_BASE_PATH = '/quantumcomputing/qubit';
+
+// ── Phase 1: Concept intro steps ──────────────────────────────────────────
+var QTI_INTRO_STEPS = [
+  {
+    title: 'From Switches to Particles',
+    body: '<p>A classical computer is built from electrical circuits: transistors that are always definitely <strong>on or off</strong>, giving you a bit that\'s always definitely 0 or 1.</p>'
+      + '<div style="display:flex;gap:14px;margin:12px 0;align-items:flex-start">'
+      + '<div style="flex:1;text-align:center"><svg viewBox="0 0 140 115" width="100%" height="115" style="margin-bottom:6px"><rect x="20" y="20" width="100" height="50" rx="4" fill="none" stroke="#a39cc4" stroke-width="2"/><text x="70" y="52" text-anchor="middle" font-size="22" font-weight="bold" fill="#facc15">0</text><text x="70" y="95" text-anchor="middle" font-size="10" fill="#cbd5e1" font-weight="600">Transistor OFF</text></svg></div>'
+      + '<div style="flex:1;text-align:center"><svg viewBox="0 0 140 115" width="100%" height="115" style="margin-bottom:6px"><rect x="20" y="20" width="100" height="50" rx="4" fill="none" stroke="#a39cc4" stroke-width="2"/><text x="70" y="52" text-anchor="middle" font-size="22" font-weight="bold" fill="#facc15">1</text><text x="70" y="95" text-anchor="middle" font-size="10" fill="#cbd5e1" font-weight="600">Transistor ON</text></svg></div>'
+      + '</div>'
+      + '<p>A quantum computer instead uses the state of an <strong>elementary particle</strong>, such as an electron, a trapped ion, or a photon of light. That particle\'s position, spin, or polarization can hold a mix of 0 and 1 <em>at the same time</em>, a state called <strong>superposition</strong>, until the moment it\'s measured.</p>'
+      + '<div style="text-align:center;margin:12px 0"><svg viewBox="0 0 220 115" width="100%" height="115" style="margin-bottom:6px"><defs><linearGradient id="qti-prob" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:#4a9eff;stop-opacity:0.3"/><stop offset="50%" style="stop-color:#facc15;stop-opacity:1"/><stop offset="100%" style="stop-color:#f87171;stop-opacity:0.3"/></linearGradient></defs><rect x="10" y="20" width="200" height="50" rx="4" fill="url(#qti-prob)" stroke="#facc15" stroke-width="2"/><text x="110" y="52" text-anchor="middle" font-size="18" font-weight="bold" fill="#fff">0 ↔ 1</text><text x="110" y="95" text-anchor="middle" font-size="10" fill="#cbd5e1" font-weight="600">Qubit: Probability Cloud</text></svg></div>'
+      + '<p>Qubit (the game) borrows that core idea: your team is searching for one hidden 8-qubit code among <strong>256 possibilities</strong>, using indirect clues instead of ever being told the answer outright.</p>'
+      + '<p>The board is a 16×16 grid: every cell is one possible code, laid out by its row and column nibble (4 bits each).</p>'
+  },
+  {
+    title: "Grover's Algorithm: Real Quantum Search",
+    body: '<p><strong>Grover\'s Algorithm</strong> is how real quantum computers search for the answer in an unsorted list by using interference to amplify the right answer\'s odds while suppressing the wrong ones.</p>'
+      + '<div style="display:flex;gap:10px;margin:12px 0;font-size:12px">'
+      + '<div style="flex:1;background:rgba(72,188,201,0.1);border:1px solid rgba(72,188,201,0.3);border-radius:8px;padding:10px;text-align:center"><div style="font-weight:800;color:#22d3ee;margin-bottom:4px">Classical</div><div style="color:#cbd5e1;font-size:11px">256 items<br><strong style="color:#f1f5f9">~128 guesses</strong><br><em style="font-size:10px">(random average)</em></div></div>'
+      + '<div style="flex:1;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);border-radius:8px;padding:10px;text-align:center"><div style="font-weight:800;color:#22c55e;margin-bottom:4px">Quantum</div><div style="color:#cbd5e1;font-size:11px">256 items<br><strong style="color:#f1f5f9">~12 steps</strong><br><em style="font-size:10px">(Grover speedup)</em></div></div>'
+      + '<div style="flex:1;background:rgba(59,90,138,0.15);border:1px solid rgba(93,197,253,0.4);border-radius:8px;padding:10px;text-align:center"><div style="font-weight:800;color:#93c5fd;margin-bottom:4px">This Game</div><div style="color:#cbd5e1;font-size:11px">256 cells<br><strong style="color:#f1f5f9">Much faster than 128 guesses</strong><br><em style="font-size:10px">(team clues)</em></div></div>'
+      + '</div>'
+      + '<p><strong>In the game:</strong> Each player applies gates and reads interference, using logic to narrow the search space collectively, much closer to how a quantum computer works than checking all 256 possibilities one at a time.</p>'
+  },
+  {
+    title: 'Interference: How Qubits Combine',
+    body: '<p>In Grover\'s Algorithm, <strong>logic gates</strong> create <em>planned interference</em>, a way of mathematically amplifying or cancelling answers.</p>'
+      + '<p>A <strong>Wavelength Clue</strong> is like a qubit\'s own frequency, a wave. When two waves meet, they combine:</p>'
+      + '<div class="qti-wave-row">'
+      + '<div class="qti-wave-box">'
+      + '<svg viewBox="0 0 320 110" width="100%" height="80">'
+        + '<path d="M0,30 Q13.75,15 27.5,30 T55,30 T82.5,30" fill="none" stroke="#60a5fa" stroke-width="2"/>'
+        + '<path d="M0,70 Q13.75,55 27.5,70 T55,70 T82.5,70" fill="none" stroke="#facc15" stroke-width="2" stroke-dasharray="1 3" opacity="0.9"/>'
+        + '<text x="97" y="55" text-anchor="middle" font-size="20" fill="#94a3b8">+</text>'
+        + '<line x1="115" y1="55" x2="140" y2="55" stroke="#94a3b8" stroke-width="2"/><polygon points="140,48 150,55 140,62" fill="#94a3b8"/>'
+        + '<path d="M160,55 Q173.75,15 187.5,55 T215,55 T242.5,55 T270,55" fill="none" stroke="#22c55e" stroke-width="3"/>'
+      + '</svg>'
+      + '<div class="qti-wave-label good">Constructive: In Phase</div>'
+      + '<div class="qti-wave-text">Aligned frequencies reinforce and <strong>amplify the right answer</strong>, like a quantum gate boosting odds.</div>'
+      + '</div>'
+      + '<div class="qti-wave-box">'
+      + '<svg viewBox="0 0 300 110" width="100%" height="80">'
+        + '<path d="M0,55 Q13.75,35 27.5,55 T55,55 T82.5,55 T110,55" fill="none" stroke="#60a5fa" stroke-width="2"/>'
+        + '<path d="M0,55 Q13.75,75 27.5,55 T55,55 T82.5,55 T110,55" fill="none" stroke="#f87171" stroke-width="2" stroke-dasharray="1 3" opacity="0.85"/>'
+        + '<line x1="122" y1="55" x2="150" y2="55" stroke="#94a3b8" stroke-width="2"/><polygon points="150,48 160,55 150,62" fill="#94a3b8"/>'
+        + '<line x1="170" y1="55" x2="280" y2="55" stroke="#f87171" stroke-width="2" stroke-dasharray="4 3"/>'
+      + '</svg>'
+      + '<div class="qti-wave-label bad">Destructive: Out of Phase</div>'
+      + '<div class="qti-wave-text">Opposite frequencies cancel and <strong>rule the answer out</strong>, like a gate suppressing wrong answers.</div>'
+      + '</div>'
+      + '</div>'
+      + '<p style="margin-top:12px">When a teammate <strong>reads the interference</strong> on a gated cell, a matching clue is <em>constructive</em> (circle) and reinforces that cell; a mismatched clue is <em>destructive</em> (square with an X) and cancels it out.</p>'
+  },
+  {
+    title: 'You Are a Logic Gate',
+    body: '<p>A real quantum computer runs <strong>logic gates</strong>: operations that create interference patterns to solve the problem.</p>'
+      + '<p><strong>In this game, you and your teammates ARE the gates.</strong> Each time you <strong>Apply a Gate</strong> (test a cell against your clue) and a teammate <strong>Reads the Interference</strong> (checks it against theirs), you\'re creating constructive and destructive interference patterns on the board, just like a quantum computer does.</p>'
+      + '<p>Your Wavelength Clue is your gate\'s unique frequency. Together, your team\'s interference pattern narrows the search from 256 possibilities down to the one hidden code, the exact principle Grover\'s Algorithm uses.</p>'
+      + '<p>The stronger your deduction (more clues confirming), the stronger the constructive interference. The more wrong options ruled out (destructive interference), the faster you converge on the answer.</p>'
+  },
+  {
+    title: 'Noise, Decoherence & Measurement',
+    body: '<p>Two more real quantum ideas show up every game: one working against you, one ending it.</p>'
+      + '<div style="display:flex;gap:10px;margin:12px 0">'
+      + '<div style="flex:1;background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.3);border-radius:8px;padding:10px">'
+        + '<div style="font-weight:800;color:#f87171;margin-bottom:4px">Noise / Decoherence</div>'
+        + '<div style="color:#cbd5e1;font-size:12px">A real qubit\'s superposition is fragile: stray interactions with its environment (heat, vibration, stray photons) corrupt it before it can be used. In the game, a <strong>Noise card</strong> is that environmental interference: three strikes and the fragile system decoheres, ending the mission before you ever get to measure.</div>'
+      + '</div>'
+      + '<div style="flex:1;background:rgba(96,165,250,0.1);border:1px solid rgba(96,165,250,0.3);border-radius:8px;padding:10px">'
+        + '<div style="font-weight:800;color:#60a5fa;margin-bottom:4px">Measurement</div>'
+        + '<div style="color:#cbd5e1;font-size:12px">Measuring a real qubit collapses its superposition into one definite 0 or 1, permanently, with no undo. In the game, calling <strong>Measurement</strong> on a cell is that same irreversible collapse: the team commits to one final answer, and the mission is instantly won or lost.</div>'
+      + '</div>'
+      + '</div>'
+      + '<p>That\'s why timing matters: gather enough constructive and destructive interference to be confident <em>before</em> you collapse the state, you don\'t get a second measurement.</p>'
+  },
+  {
+    title: 'How Qubit Represents Quantum Concepts',
+    body: '<p>Everything in the game maps to a real quantum computing concept. Understanding these connections reveals why the game feels like a quantum computer in action:</p>'
+      + '<div class="qti-map">'
+      + '<div class="qti-map-row"><span class="qti-map-left">Hidden cell</span><span class="qti-map-arrow">→</span><span class="qti-map-right">The one true quantum state: not known in advance even by the "quantum computer"; it only emerges through gates and exploration by the players</span></div>'
+      + '<div class="qti-map-row"><span class="qti-map-left">Wavelength Clue</span><span class="qti-map-arrow">→</span><span class="qti-map-right">Your qubit\'s frequency, a constraint you can use to detect interference</span></div>'
+      + '<div class="qti-map-row"><span class="qti-map-left">Entanglement Clue</span><span class="qti-map-arrow">→</span><span class="qti-map-right">A fixed, maintained relationship between two qubits, like entangled qubits whose states stay correlated no matter what</span></div>'
+      + '<div class="qti-map-row"><span class="qti-map-left">Apply a Gate</span><span class="qti-map-arrow">→</span><span class="qti-map-right">Running a logic gate operation to test a qubit\'s state</span></div>'
+      + '<div class="qti-map-row"><span class="qti-map-left">Read Interference ✓ / ✗</span><span class="qti-map-arrow">→</span><span class="qti-map-right">Detecting constructive vs. destructive interference patterns</span></div>'
+      + '<div class="qti-map-row"><span class="qti-map-left">Noise / Decoherence</span><span class="qti-map-arrow">→</span><span class="qti-map-right">Environmental interference collapsing the system before you\'re ready</span></div>'
+      + '<div class="qti-map-row"><span class="qti-map-left">Measurement</span><span class="qti-map-arrow">→</span><span class="qti-map-right">The irreversible act of committing to one final answer</span></div>'
+      + '</div>'
+      + '<p style="margin-top:12px"><strong>Now let\'s walk through how to play by actually doing it.</strong> The next part of the tutorial will guide you through applying gates, reading interference, and making deductions in real-time on a practice board.</p>'
+      + '<p>Click <strong>Start Playing →</strong> to dive in.</p>'
+  }
+];
+
+// ── Phase 2: In-game sidebar steps ──────────────────────────────────────────
+var QBT_GAME_STEPS = [
+  {
+    title: 'The Quantum Matrix',
+    body: '<p>The 16×16 grid is the <strong>Quantum Matrix</strong>. One cell is the secret <strong>Quantum Code</strong> your team must identify.</p>'
+      + '<p>Each cell shows its 8-bit binary value and decimal index. Row and column headers show the 4-bit nibble for that row/column.</p>',
+    hint: 'This is the whole search space: 256 possible codes.',
+    hl: 'qb-board-section'
+  },
+  {
+    title: 'Communication Rules',
+    body: '<p>Before you play, one ground rule: your team can talk freely about strategy and about anything visibly on the board, but never state, hint at, or confirm/deny the content of your own private clue outside the formal Read Interference step, and never explain the tokens <em>you</em> personally placed.</p>'
+      + '<p>Basically, <strong>the only "legal" way to communicate your qubit\'s state is through a logic gate.</strong> Everything else is just vibes and pointing at the board.</p>'
+      + '<p style="margin-top:10px;padding:8px 10px;background:rgba(37,99,235,0.08);border-radius:6px;border-left:3px solid #2563eb;"><strong>The real Communication Rules popup will appear now: read it and close it to continue.</strong></p>',
+    hint: 'Close the Communication Rules popup to continue.',
+    hl: null,
+    forced: true,
+    requireAction: 'comms',
+    showModal: 'qb-comms-modal'
+  },
+  {
+    title: 'Your Wavelength Clue',
+    body: '<p>You have one or two private <strong>Wavelength Clues</strong>, only true for the hidden code, and only visible to you.</p>'
+      + '<p>Any cell you apply a gate to must match <em>all</em> of your own clues. Toggle <strong>"Highlight valid cells"</strong> below to shade every cell that\'s still possible for you.</p>'
+      + '<p style="margin-top:10px;padding:8px 10px;background:rgba(37,99,235,0.08);border-radius:6px;border-left:3px solid #2563eb;"><strong>Check "Highlight valid cells" in the panel below to continue.</strong></p>',
+    hint: 'Toggle "Highlight valid cells" in the panel below.',
+    hl: 'qb-clue-section',
+    forced: true,
+    requireAction: 'highlight'
+  },
+  {
+    title: 'Team Clue: Entanglement',
+    body: '<p>Everyone shares one public <strong>Entanglement Clue</strong>, the real quantum idea of <strong>entanglement</strong> in action.</p>'
+      + '<p>It doesn\'t reveal either qubit\'s value on its own. Instead it locks in a <strong>fixed, maintained relationship</strong> between two positions in the code, that they\'re the <em>same</em> or that they\'re <em>different</em>, a relationship that holds no matter which cell turns out to be the answer, exactly like two entangled qubits whose states stay correlated no matter how far apart they are.</p>'
+      + '<p>Unlike your private clue, this one is known to the whole team from turn one, use it together.</p>',
+    hint: 'This clue is visible to every player, all game.',
+    hl: 'qb-public-clue-section'
+  },
+  {
+    title: 'Environment Cards',
+    body: '<p>At the start of every turn, an <strong>Environment card</strong> is drawn automatically:</p>'
+      + '<ul><li><strong>Coherence (Maintained).</strong> Normal turn: you\'ll choose one teammate to Read Interference.</li>'
+      + '<li><strong>Constructive Cascade.</strong> Every other player reads the interference at once, no need to choose.</li>'
+      + '<li><strong>Noise.</strong> A decoherence strike. Play still continues as normal, except the <strong>3rd</strong> Noise card ends the mission immediately.</li></ul>',
+    hint: 'Watch the Decoherence dots here: 3 strikes ends the game.',
+    hl: 'qb-env-section'
+  },
+  {
+    title: 'Apply a Gate',
+    body: '<p>It\'s your turn. <strong>Apply a Gate</strong> to any cell that matches all of your own clues: click a highlighted cell on the board, like running a logic gate on your qubit to test it.</p>'
+      + '<p>Your token lands there as a circle, since it\'s guaranteed to be constructive with your own clue.</p>'
+      + '<p style="margin-top:10px;padding:8px 10px;background:rgba(37,99,235,0.08);border-radius:6px;border-left:3px solid #2563eb;"><strong>Click a highlighted cell on the board now to continue.</strong></p>',
+    hint: 'Click any cell that\'s highlighted as matching your clue.',
+    hl: 'qb-board-section',
+    forced: true
+  },
+  {
+    title: 'Choose Who Reads the Interference',
+    body: '<p>Pick one teammate to <strong>Read the Interference</strong> on your gated cell. They\'ll place their own token there: a circle if their clue\'s frequency is <em>constructive</em> with it, a square with an X if it\'s <em>destructive</em>.</p>'
+      + '<p style="margin-top:10px;padding:8px 10px;background:rgba(37,99,235,0.08);border-radius:6px;border-left:3px solid #2563eb;"><strong>Choose a player below to continue.</strong></p>',
+    hint: 'Pick any teammate button in the Turn panel.',
+    hl: 'qb-turn-section',
+    forced: true
+  },
+  {
+    title: 'Deduction',
+    body: '<p>Play now passes around the table: the bots on your team will apply gates and read interference automatically, just like a human would.</p>'
+      + '<p>Watch the pattern of constructive (✓) and destructive (✗) tokens build up on the board. Combined with your own clue, that\'s enough to start ruling cells in or out.</p>'
+      + '<p>Every clue in the game is drawn from the same known list, nothing is truly secret math, you just don\'t know which entries your teammates were dealt. Click <strong>📖 All Possible Clues</strong> below to see every clue that could exist, and use it to think through what your teammates\' private clues could be as you deduce the answer together.</p>'
+      + '<p style="margin-top:10px;padding:8px 10px;background:rgba(37,99,235,0.08);border-radius:6px;border-left:3px solid #2563eb;"><strong>Click "📖 All Possible Clues" in the panel below to continue.</strong></p>',
+    hint: 'Click "📖 All Possible Clues" in the panel below.',
+    hl: 'qb-clue-section',
+    forced: true,
+    requireAction: 'allclues'
+  },
+  {
+    title: 'Decoherence Strikes',
+    body: '<p>A Noise card just came up again, that\'s <strong>two</strong> decoherence strikes now.</p>'
+      + '<p>One more and the mission fails instantly, whether or not your team has settled on an answer. This is exactly the moment a real quantum computation has to fight against: the system doesn\'t wait for you to be ready.</p>'
+      + '<p style="margin-top:10px;padding:8px 10px;background:rgba(37,99,235,0.08);border-radius:6px;border-left:3px solid #2563eb;"><strong>The Decoherence alert will appear now: close it to continue.</strong></p>',
+    hint: 'Close the Decoherence alert to continue.',
+    hl: 'qb-env-section',
+    forced: true,
+    requireAction: 'noise',
+    simulateNoise: true
+  },
+  {
+    title: 'Calling a Measurement',
+    body: '<p>On your turn, instead of applying a gate, you may call a <strong>Measurement</strong> on the cell you believe is the true Quantum Code.</p>'
+      + '<div class="qti-highlight">Measurement is final. Guess right and the team wins instantly. Guess wrong, or 3 Noise cards are drawn, and the mission fails.</div>'
+      + '<p>Only a human can call it, bots never will, so the final decision is always yours. With decoherence already at 2 strikes, don\'t wait for a perfect answer: <strong>measure soon</strong>, since the mission should end sooner rather than later.</p>',
+    hint: 'The ⚛ Call Measurement button appears on your turn.',
+    hl: 'qb-turn-section'
+  },
+  {
+    title: 'You\'re Ready',
+    body: '<p>That\'s everything: apply gates, read interference, watch the board, and call Measurement when your team is confident.</p>'
+      + '<p>Keep playing this practice game as long as you like, or exit any time.</p>',
+    hint: 'Close this panel any time to keep playing freely.',
+    hl: null
+  }
+];
+
+var qtiIntroStep = 0;
+var qbtGameStep  = 0;
+var qbtActive    = false;
+var qbtTutMode   = false;   // Phase 2 is live (game running)
+
+function startTutorial() {
+  qtiIntroStep = 0;
+  qbtActive = true;
+  document.body.classList.add('qti-intro-active');
+  qtiRenderIntro();
+  try { history.replaceState(null, '', QBT_BASE_PATH + '/tutorial'); } catch(_) {}
+}
+
+function qtiRenderIntro() {
+  var s = QTI_INTRO_STEPS[qtiIntroStep];
+  var total = QTI_INTRO_STEPS.length;
+  document.getElementById('qti-label').textContent = 'Concept ' + (qtiIntroStep + 1) + ' of ' + total;
+  document.getElementById('qti-prog-fill').style.width = ((qtiIntroStep + 1) / total * 100) + '%';
+  document.getElementById('qti-title').textContent = s.title;
+  document.getElementById('qti-body').innerHTML = s.body;
+  document.getElementById('qti-next').textContent = (qtiIntroStep === total - 1) ? 'Start Playing →' : 'Next →';
+}
+
+function qtiNext() {
+  qtiIntroStep++;
+  if (qtiIntroStep >= QTI_INTRO_STEPS.length) {
+    document.body.classList.remove('qti-intro-active');
+    qbtStartGamePhase();
+    return;
+  }
+  qtiRenderIntro();
+}
+
+function qtiExit() {
+  document.body.classList.remove('qti-intro-active');
+  document.body.classList.remove('qbt-loading-active');
+  qbtTutMode = false;
+  qbtActive = false;
+  showScreen('lobby');
+}
+
+function qbtStartGamePhase() {
+  qbtGameStep = 0;
+  qbtTutMode = true;
+  document.body.classList.add('qbt-loading-active');
+  send({ type: 'create_room', gameType: 'qubit', playerName: 'You', color: 'blue' });
+  // Fill the other two seats with bots (Qubit needs 3+ players) then start.
+  setTimeout(function () { send({ type: 'toggle_bot' }); }, 400);
+  setTimeout(function () { send({ type: 'toggle_bot' }); }, 800);
+  setTimeout(function () { send({ type: 'start_game' }); }, 1300);
+}
+
+function qbtRenderGame() {
+  var s = QBT_GAME_STEPS[qbtGameStep];
+  var total = QBT_GAME_STEPS.length;
+  document.getElementById('tut-step').textContent = 'Step ' + (qbtGameStep + 1) + ' of ' + total;
+  document.getElementById('tut-progress-fill').style.width = ((qbtGameStep + 1) / total * 100) + '%';
+  document.getElementById('tut-title').textContent = s.title;
+  document.getElementById('tut-body').innerHTML = s.body;
+
+  var nextBtn = document.getElementById('tut-next');
+  var hint    = document.getElementById('tut-hint');
+  if (s.forced) {
+    nextBtn.style.display = 'none';
+    hint.innerHTML = '<em style="color:#facc15">👆 Complete the action above to continue</em>';
+  } else {
+    nextBtn.style.display = 'block';
+    nextBtn.textContent = (qbtGameStep === total - 1) ? 'Back to Lobby' : 'Next →';
+    hint.innerHTML = s.hint ? '<em>↑</em> ' + s.hint : '';
+  }
+
+  document.querySelectorAll('.qbt-glow').forEach(function (el) { el.classList.remove('qbt-glow'); });
+  if (s.hl) {
+    var el = document.getElementById(s.hl);
+    if (el) el.classList.add('qbt-glow');
+  }
+  if (s.showModal) {
+    var modal = document.getElementById(s.showModal);
+    if (modal) modal.style.display = 'flex';
+  }
+  if (s.simulateNoise) {
+    // Actually sets the practice game's own state to a 2nd Noise card draw
+    // (not just a modal with copy pasted in) so the Decoherence dots and
+    // current-card display in the Environment panel update for real too,
+    // then reuses the real alert function so the popup text can't drift
+    // from what an actual 2nd strike would show.
+    if (gs) {
+      gs.noiseCount = 2;
+      gs.currentCard = 'noise';
+      renderEnvPanel(gs);
+    }
+    _lastSeenNoiseCount = 1;
+    maybeShowNoiseAlert({ noiseCount: 2, gameOver: false });
+  }
+}
+
+function tutNext() {
+  document.querySelectorAll('.qbt-glow').forEach(function (el) { el.classList.remove('qbt-glow'); });
+  qbtGameStep++;
+  if (qbtGameStep >= QBT_GAME_STEPS.length) { qbtGameExit(); return; }
+  qbtRenderGame();
+}
+
+// UI-only forced steps (no server round-trip to detect) call this directly
+// from their onclick/onchange handler once the required action happens.
+function qbtCheckAction(actionKey) {
+  if (!qbtTutMode) return;
+  var s = QBT_GAME_STEPS[qbtGameStep];
+  if (s && s.forced && s.requireAction === actionKey) {
+    setTimeout(tutNext, 400);
+  }
+}
+
+function qbtGameExit() {
+  document.querySelectorAll('.qbt-glow').forEach(function (el) { el.classList.remove('qbt-glow'); });
+  document.body.classList.remove('qbt-panel-active');
+  document.body.classList.remove('qbt-loading-active');
+  qbtTutMode = false;
+  qbtActive = false;
+  sessionStorage.removeItem(SESSION_KEY);
+  gs = null;
+  var cancelBtn = document.getElementById('btn-cancel-game');
+  if (cancelBtn) cancelBtn.style.display = 'none';
+  try { if (hub) send({ type: 'leave_room' }); } catch (_) {}
+  showScreen('lobby');
+}
+
+function qbtAdvanceTo(step) {
+  if (!qbtTutMode) return;
+  if (qbtGameStep >= step) return;
+  qbtGameStep = step;
+  qbtRenderGame();
+}
+
+// Inspect the propose/verify transition between two consecutive qb_state
+// broadcasts to auto-advance forced steps — the human's own action already
+// happened server-side by the time this state arrives, so we just detect it.
+function qbtTutCheckAdvance(prev, next) {
+  if (!qbtTutMode || !next) return;
+  if (next.gameOver) { setTimeout(qbtGameExit, 1200); return; }
+  if (!prev) return;
+
+  // Step 5 forced (Apply a Gate): the human just applied their gate once either
+  // the phase left 'propose' (Maintained/Noise → awaiting Verify) or the
+  // turn already moved past them (Cascade auto-verified for everyone).
+  if (qbtGameStep === 5 && prev.phase === 'propose' && prev.currentPlayerIdx === myIdx) {
+    var proposalResolved = next.phase !== 'propose' || next.currentPlayerIdx !== myIdx;
+    if (proposalResolved) {
+      if (next.phase === 'choose_verifier' && next.currentPlayerIdx === myIdx) {
+        setTimeout(function () { qbtAdvanceTo(6); }, 500);
+      } else {
+        // Cascade resolved verification automatically — skip the Verify step.
+        setTimeout(function () { qbtAdvanceTo(7); }, 500);
+      }
+    }
+  }
+
+  // Step 6 forced (Choose Who Reads the Interference): advance once the turn moves on.
+  if (qbtGameStep === 6 && prev.phase === 'choose_verifier' && prev.currentPlayerIdx === myIdx) {
+    if (next.phase !== 'choose_verifier' || next.currentPlayerIdx !== myIdx) {
+      setTimeout(function () { qbtAdvanceTo(7); }, 500);
+    }
+  }
+
+}
+
+function endTutorial() {
+  qbtGameExit();
+  qtiExit();
+  try { history.replaceState(null, '', QBT_BASE_PATH); } catch (_) {}
 }
 
 // ==================== UTILS ====================
@@ -1330,18 +1742,29 @@ function handleMsg(msg) {
       if (!boardReady) initBoard();
       if (isHost) document.getElementById('btn-cancel-game').style.display = '';
       _lastSeenNoiseCount = 0;
-      document.getElementById('qb-comms-modal').style.display = 'flex';
+      if (qbtTutMode) {
+        // Tutorial games surface the Communication Rules modal as its own
+        // walkthrough step (right after "The Quantum Matrix"), not here —
+        // stacking it with the loading transition is confusing.
+        document.body.classList.remove('qbt-loading-active');
+        document.body.classList.add('qbt-panel-active');
+        qbtRenderGame();
+      } else {
+        document.getElementById('qb-comms-modal').style.display = 'flex';
+      }
       break;
 
     case 'qb_state':
       showScreen('game');
       if (!boardReady) initBoard();
       else sizeBoard();
+      var _qbtPrevState = gs;
       renderGame(msg);
       if (isObserver) {
         document.getElementById('observer-banner').style.display = '';
         document.body.classList.add('observer-active');
       }
+      if (qbtTutMode) qbtTutCheckAdvance(_qbtPrevState, msg);
       break;
 
     case 'player_disconnected':
@@ -1429,6 +1852,22 @@ LobbyUI.init({
 });
 
 hub.connect();
+
+// Auto-start tutorial via ?tutorial=1 OR /tutorial path — start ASAP, hide page until ready
+if (urlParams.get('tutorial') === '1' || /\/tutorial\/?$/.test(location.pathname)) {
+  var __startTut = function(){
+    try { startTutorial(); } catch (e) {}
+    // Reveal the page now that the tutorial overlay is mounted on top.
+    requestAnimationFrame(function(){
+      document.documentElement.classList.remove('tutorial-loading');
+    });
+  };
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', __startTut, { once: true });
+  } else {
+    __startTut();
+  }
+}
 </script>
 <script src="/nav.js"></script>
 </body>
