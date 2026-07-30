@@ -71,14 +71,15 @@ body.rejoin-pending .screen.active { visibility: hidden; }
   background-size: auto, auto, 80px 80px;
 }
 #lobby h1 {
-  font-size: 46px;
+  font-size: 32px;
   color: #1d4ed8;
-  letter-spacing: 3px;
+  letter-spacing: 1.5px;
   font-weight: 800;
   font-family: 'Share Tech Mono', monospace;
   line-height: 1;
   margin: 0;
   width: fit-content;
+  white-space: nowrap;
   padding-bottom: 6px;
   border-bottom: 5px solid #facc15;
 }
@@ -135,7 +136,7 @@ body.rejoin-pending .screen.active { visibility: hidden; }
 }
 @media (max-width: 780px) {
   .lobby-hero-img-wrap { margin: 0 auto; }
-  #lobby h1 { font-size: 36px; }
+  #lobby h1 { font-size: 24px; letter-spacing: 1px; white-space: normal; }
 }
 
 /* ===== "HOW TO PLAY" (lobby, full-rules popup) ===== */
