@@ -3,17 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Qubit is a cooperative quantum computing deduction game. Work as a team to decode the hidden Quantum Code. 3–6 players. Free to play online.">
+<meta name="description" content="Ask Grover: Quantum Computing, Explained by a Very Good Dog. A cooperative quantum computing deduction game. Work as a team to decode the hidden Quantum Code. 3–6 players. Free to play online.">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Qubit: Quantum Deduction Game | Tech CoLab">
-<meta property="og:description" content="A cooperative deduction game where your team decodes an 8 qubit quantum state using partial clues. 3–6 players.">
+<meta property="og:title" content="Ask Grover: Quantum Computing, Explained by a Very Good Dog | Tech CoLab">
+<meta property="og:description" content="A cooperative deduction game where your team decodes an 8 qubit quantum state using partial clues, while Grover the dog explains quantum computing along the way. 3–6 players.">
 <meta property="og:image" content="https://cybersecgames.com/images/qubit/qubit.png">
 <meta property="og:url" content="https://cybersecgames.com/quantumcomputing/qubit">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#8b5cf6">
 <link rel="icon" type="image/png" href="/images/logo.png">
 <link rel="apple-touch-icon" href="/images/logo.png">
-<title>Qubit: Quantum Deduction Game | Tech CoLab</title>
+<title>Ask Grover: Quantum Computing, Explained by a Very Good Dog | Tech CoLab</title>
 <script>
 // Run before body parses: if ?tutorial=1 OR path ends in /tutorial, hide everything until tutorial mounts.
 (function(){
@@ -1300,7 +1300,8 @@ var QBT_BASE_PATH = '/quantumcomputing/qubit';
 var QTI_INTRO_STEPS = [
   {
     title: 'From Switches to Particles',
-    body: '<p>A classical computer is built from electrical circuits: transistors that are always definitely <strong>on or off</strong>, giving you a bit that\'s always definitely 0 or 1.</p>'
+    body: '<div class="qti-grover-quote"><span class="qti-grover-paw">🐾</span><span><strong>Grover says:</strong> "Hi, I\'m Grover, yes, like Grover\'s Algorithm. Stick with me and I\'ll show you how a quantum computer actually thinks."</span></div>'
+      + '<p>A classical computer is built from electrical circuits: transistors that are always definitely <strong>on or off</strong>, giving you a bit that\'s always definitely 0 or 1.</p>'
       + '<div style="display:flex;gap:14px;margin:12px 0;align-items:flex-start">'
       + '<div style="flex:1;text-align:center"><svg viewBox="0 0 140 115" width="100%" height="115" style="margin-bottom:6px"><rect x="20" y="20" width="100" height="50" rx="4" fill="none" stroke="#a39cc4" stroke-width="2"/><text x="70" y="52" text-anchor="middle" font-size="22" font-weight="bold" fill="#facc15">0</text><text x="70" y="95" text-anchor="middle" font-size="10" fill="#cbd5e1" font-weight="600">Transistor OFF</text></svg></div>'
       + '<div style="flex:1;text-align:center"><svg viewBox="0 0 140 115" width="100%" height="115" style="margin-bottom:6px"><rect x="20" y="20" width="100" height="50" rx="4" fill="none" stroke="#a39cc4" stroke-width="2"/><text x="70" y="52" text-anchor="middle" font-size="22" font-weight="bold" fill="#facc15">1</text><text x="70" y="95" text-anchor="middle" font-size="10" fill="#cbd5e1" font-weight="600">Transistor ON</text></svg></div>'
@@ -1312,7 +1313,8 @@ var QTI_INTRO_STEPS = [
   },
   {
     title: "Grover's Algorithm: Real Quantum Search",
-    body: '<p><strong>Grover\'s Algorithm</strong> is how real quantum computers search for the answer in an unsorted list by using interference to amplify the right answer\'s odds while suppressing the wrong ones.</p>'
+    body: '<div class="qti-grover-quote"><span class="qti-grover-paw">🐾</span><span><strong>Grover says:</strong> "This is my signature move. I can sniff out one answer among 256 in about 12 tries, instead of plodding through 128 guesses one at a time."</span></div>'
+      + '<p><strong>Grover\'s Algorithm</strong> is how real quantum computers search for the answer in an unsorted list by using interference to amplify the right answer\'s odds while suppressing the wrong ones.</p>'
       + '<div style="display:flex;gap:10px;margin:12px 0;font-size:12px">'
       + '<div style="flex:1;background:rgba(72,188,201,0.1);border:1px solid rgba(72,188,201,0.3);border-radius:8px;padding:10px;text-align:center"><div style="font-weight:800;color:#22d3ee;margin-bottom:4px">Classical</div><div style="color:#cbd5e1;font-size:11px">256 items<br><strong style="color:#f1f5f9">~128 guesses</strong><br><em style="font-size:10px">(random average)</em></div></div>'
       + '<div style="flex:1;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);border-radius:8px;padding:10px;text-align:center"><div style="font-weight:800;color:#22c55e;margin-bottom:4px">Quantum</div><div style="color:#cbd5e1;font-size:11px">256 items<br><strong style="color:#f1f5f9">~12 steps</strong><br><em style="font-size:10px">(Grover speedup)</em></div></div>'
@@ -1322,7 +1324,8 @@ var QTI_INTRO_STEPS = [
   },
   {
     title: 'Interference: How Qubits Combine',
-    body: '<p>In Grover\'s Algorithm, <strong>logic gates</strong> create <em>planned interference</em>, a way of mathematically amplifying or cancelling answers.</p>'
+    body: '<div class="qti-grover-quote"><span class="qti-grover-paw">🐾</span><span><strong>Grover says:</strong> "Two scents that agree get stronger together. Two that disagree cancel each other out. That\'s how I narrow a whole yard down to one spot."</span></div>'
+      + '<p>In Grover\'s Algorithm, <strong>logic gates</strong> create <em>planned interference</em>, a way of mathematically amplifying or cancelling answers.</p>'
       + '<p>A <strong>Wavelength Clue</strong> is like a qubit\'s own frequency, a wave. When two waves meet, they combine:</p>'
       + '<div class="qti-wave-row">'
       + '<div class="qti-wave-box">'
@@ -1351,14 +1354,16 @@ var QTI_INTRO_STEPS = [
   },
   {
     title: 'You Are a Logic Gate',
-    body: '<p>A real quantum computer runs <strong>logic gates</strong>: operations that create interference patterns to solve the problem.</p>'
+    body: '<div class="qti-grover-quote"><span class="qti-grover-paw">🐾</span><span><strong>Grover says:</strong> "You and your team are doing the sniffing now. Every gate you apply is basically a little piece of me, working the search."</span></div>'
+      + '<p>A real quantum computer runs <strong>logic gates</strong>: operations that create interference patterns to solve the problem.</p>'
       + '<p><strong>In this game, you and your teammates ARE the gates.</strong> Each time you <strong>Apply a Gate</strong> (test a cell against your clue) and a teammate <strong>Reads the Interference</strong> (checks it against theirs), you\'re creating constructive and destructive interference patterns on the board, just like a quantum computer does.</p>'
       + '<p>Your Wavelength Clue is your gate\'s unique frequency. Together, your team\'s interference pattern narrows the search from 256 possibilities down to the one hidden code, the exact principle Grover\'s Algorithm uses.</p>'
       + '<p>The stronger your deduction (more clues confirming), the stronger the constructive interference. The more wrong options ruled out (destructive interference), the faster you converge on the answer.</p>'
   },
   {
     title: 'Noise, Decoherence & Measurement',
-    body: '<p>Two more real quantum ideas show up every game: one working against you, one ending it.</p>'
+    body: '<div class="qti-grover-quote"><span class="qti-grover-paw">🐾</span><span><strong>Grover says:</strong> "Watch out for squirrels, I mean, noise. They\'ll throw me off the scent. And once I dig, that\'s it, no take-backs."</span></div>'
+      + '<p>Two more real quantum ideas show up every game: one working against you, one ending it.</p>'
       + '<div style="display:flex;gap:10px;margin:12px 0">'
       + '<div style="flex:1;background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.3);border-radius:8px;padding:10px">'
         + '<div style="font-weight:800;color:#f87171;margin-bottom:4px">Noise / Decoherence</div>'
@@ -1373,7 +1378,8 @@ var QTI_INTRO_STEPS = [
   },
   {
     title: 'How Qubit Represents Quantum Concepts',
-    body: '<p>Everything in the game maps to a real quantum computing concept. Understanding these connections reveals why the game feels like a quantum computer in action:</p>'
+    body: '<div class="qti-grover-quote"><span class="qti-grover-paw">🐾</span><span><strong>Grover says:</strong> "Look at that, every one of my tricks maps to something a real quantum computer does. Not bad for a dog."</span></div>'
+      + '<p>Everything in the game maps to a real quantum computing concept. Understanding these connections reveals why the game feels like a quantum computer in action:</p>'
       + '<div class="qti-map">'
       + '<div class="qti-map-row"><span class="qti-map-left">Hidden cell</span><span class="qti-map-arrow">→</span><span class="qti-map-right">The one true quantum state: not known in advance even by the "quantum computer"; it only emerges through gates and exploration by the players</span></div>'
       + '<div class="qti-map-row"><span class="qti-map-left">Wavelength Clue</span><span class="qti-map-arrow">→</span><span class="qti-map-right">Your qubit\'s frequency, a constraint you can use to detect interference</span></div>'
@@ -1484,7 +1490,8 @@ var QBT_GAME_STEPS = [
   },
   {
     title: 'You\'re Ready',
-    body: '<p>That\'s everything: apply gates, read interference, watch the board, and call Measurement when your team is confident.</p>'
+    body: '<div class="qti-grover-quote"><span class="qti-grover-paw">🐾</span><span><strong>Grover says:</strong> "That\'s the whole trick. Go on, my nose is itching, let\'s see if your team can beat me to it!"</span></div>'
+      + '<p>That\'s everything: apply gates, read interference, watch the board, and call Measurement when your team is confident.</p>'
       + '<p>Keep playing this practice game as long as you like, or exit any time.</p>',
     hint: 'Close this panel any time to keep playing freely.',
     hl: null
@@ -1611,7 +1618,16 @@ function qbtGameExit() {
   qbtTutMode = false;
   qbtActive = false;
   sessionStorage.removeItem(SESSION_KEY);
+  // Match leaveRoom()'s full reset so a late-arriving qb_state/qb_game_started
+  // broadcast (already in flight when we left) can't re-open the game screen
+  // or re-show the cancel button behind the lobby — see the roomCode guard
+  // at the top of those message handlers.
   gs = null;
+  roomCode = null;
+  myIdx = -1;
+  isHost = false;
+  isObserver = false;
+  boardReady = false;
   var cancelBtn = document.getElementById('btn-cancel-game');
   if (cancelBtn) cancelBtn.style.display = 'none';
   try { if (hub) send({ type: 'leave_room' }); } catch (_) {}
@@ -1741,6 +1757,11 @@ function handleMsg(msg) {
       break;
 
     case 'qb_game_started':
+      // Guards against a broadcast that was already in flight when the
+      // player left (tutorial exit, cancel, leave room) — without this,
+      // it would snap the screen back to the game and re-show the cancel
+      // button on top of the lobby the player just returned to.
+      if (!roomCode) break;
       showScreen('game');
       if (!boardReady) initBoard();
       if (isHost) document.getElementById('btn-cancel-game').style.display = '';
@@ -1758,6 +1779,9 @@ function handleMsg(msg) {
       break;
 
     case 'qb_state':
+      // Same guard as qb_game_started above — ignore state broadcasts that
+      // arrive after the player has already left this room.
+      if (!roomCode) break;
       showScreen('game');
       if (!boardReady) initBoard();
       else sizeBoard();
