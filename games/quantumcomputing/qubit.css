@@ -123,7 +123,7 @@ body.rejoin-pending .screen.active { visibility: hidden; }
 .lobby-buy-btn { display: inline-flex; flex-direction: row; align-items: center; padding: 10px 20px; border-radius: 10px; cursor: default; background: transparent; border: 2px solid #eab308; color: #a16207; font-family: inherit; gap: 12px; }
 .lobby-buy-btn:hover { border-color: #facc15; background: #fefce8; }
 .lobby-buy-label { font-size: 14px; font-weight: 700; letter-spacing: 0.4px; line-height: 1; }
-.lobby-hero-img-wrap { width: 280px; max-width: 100%; flex-shrink: 0; border-radius: 16px; overflow: hidden; box-shadow: 0 12px 40px rgba(37,99,235,0.18), 0 0 0 1px rgba(37,99,235,0.12); }
+.lobby-hero-img-wrap { position: relative; width: 280px; max-width: 100%; flex-shrink: 0; border-radius: 16px; overflow: hidden; box-shadow: 0 12px 40px rgba(37,99,235,0.18), 0 0 0 1px rgba(37,99,235,0.12); }
 .lobby-hero-img-wrap svg { display: block; width: 100%; height: auto; }
 @media (min-width: 781px) {
   .lobby-hero { flex-direction: row; align-items: stretch; text-align: left; gap: 32px; }
