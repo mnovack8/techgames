@@ -5,15 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Qubit is a cooperative quantum computing deduction game. Work as a team to decode the hidden Quantum Code. 3–6 players. Free to play online.">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Qubit — Quantum Deduction Game | Tech CoLab">
-<meta property="og:description" content="A cooperative deduction game where your team decodes an 8-qubit quantum state using partial clues. 3–6 players.">
+<meta property="og:title" content="Qubit: Quantum Deduction Game | Tech CoLab">
+<meta property="og:description" content="A cooperative deduction game where your team decodes an 8 qubit quantum state using partial clues. 3–6 players.">
 <meta property="og:image" content="https://cybersecgames.com/images/qubit/qubit.png">
 <meta property="og:url" content="https://cybersecgames.com/quantumcomputing/qubit">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#8b5cf6">
 <link rel="icon" type="image/png" href="/images/logo.png">
 <link rel="apple-touch-icon" href="/images/logo.png">
-<title>Qubit — Quantum Deduction Game | Tech CoLab</title>
+<title>Qubit: Quantum Deduction Game | Tech CoLab</title>
 <script>
 // Run before body parses: if ?tutorial=1 OR path ends in /tutorial, hide everything until tutorial mounts.
 (function(){
@@ -113,11 +113,11 @@
     <div class="qb-modal qb-htp-modal">
       <h3>Communication Rules</h3>
       <div class="qb-htp-body">
-        <p>Players may talk freely about strategy and about anything visibly on the board — including reasoning out loud about other players' tokens. Three things are never allowed:</p>
+        <p>Players may talk freely about strategy and about anything visibly on the board, including reasoning out loud about other players' tokens. Three things are never allowed:</p>
         <ul>
           <li>Never state, describe, or hint at the content of your own Wavelength Clue.</li>
-          <li>Never confirm or deny anything about your clue except through the formal Read Interference step of an active player's turn — no answering side questions about it outside of being properly asked.</li>
-          <li>Never reference or explain the tokens <i>you</i> personally placed on the board — though everyone else is free to observe, discuss, and reason about any tokens on the board, including yours.</li>
+          <li>Never confirm or deny anything about your clue except through the formal Read Interference step of an active player's turn, no answering side questions about it outside of being properly asked.</li>
+          <li>Never reference or explain the tokens <i>you</i> personally placed on the board, though everyone else is free to observe, discuss, and reason about any tokens on the board, including yours.</li>
         </ul>
       </div>
       <button class="qb-btn qb-htp-close" style="background:#2563eb;color:#fff;border-color:#2563eb" onclick="document.getElementById('qb-comms-modal').style.display='none';qbtCheckAction('comms')">Got it, let's play</button>
@@ -212,30 +212,30 @@
           <p style="color:#64748b;font-size:12px;margin-bottom:10px">A cooperative quantum deduction game</p>
           <div class="qb-htp-body">
             <h4>The Goal</h4>
-            <p>Your team shares one secret <b>Quantum Code</b> — a single cell hidden somewhere on the 16&times;16 Quantum Matrix. Work together to deduce it and call a correct Measurement before the system decoheres.</p>
+            <p>Your team shares one secret <b>Quantum Code</b>, a single cell hidden somewhere on the 16&times;16 Quantum Matrix. Work together to deduce it and call a correct Measurement before the system decoheres.</p>
             <h4>Your Clues</h4>
             <ul>
-              <li>Each player is dealt <b>1&ndash;2 private Wavelength Clues</b> — think of these as your qubit's own frequency: only true for the hidden code, and only visible to you.</li>
+              <li>Each player is dealt <b>1&ndash;2 private Wavelength Clues</b>, think of these as your qubit's own frequency: only true for the hidden code, and only visible to you.</li>
               <li>Everyone shares one public <b>Entanglement Clue</b>, comparing two qubit positions (same or different).</li>
             </ul>
             <h4>Communication Rules</h4>
-            <p>Players may talk freely about strategy and about anything visibly on the board — including reasoning out loud about other players' tokens. Three things are never allowed:</p>
+            <p>Players may talk freely about strategy and about anything visibly on the board, including reasoning out loud about other players' tokens. Three things are never allowed:</p>
             <ul>
               <li>Never state, describe, or hint at the content of your own Wavelength Clue.</li>
-              <li>Never confirm or deny anything about your clue except through the formal Read Interference step of an active player's turn — no answering side questions about it outside of being properly asked.</li>
-              <li>Never reference or explain the tokens <i>you</i> personally placed on the board — though everyone else is free to observe, discuss, and reason about any tokens on the board, including yours.</li>
+              <li>Never confirm or deny anything about your clue except through the formal Read Interference step of an active player's turn, no answering side questions about it outside of being properly asked.</li>
+              <li>Never reference or explain the tokens <i>you</i> personally placed on the board, though everyone else is free to observe, discuss, and reason about any tokens on the board, including yours.</li>
             </ul>
             <h4>On Your Turn</h4>
             <ol>
               <li><b>Draw an Environment card.</b> Revealed automatically at the start of your turn, before you apply your gate:
                 <ul>
-                  <li><b>Coherence (Maintained).</b> Play continues as normal — you'll choose a teammate to Read Interference after applying your gate.</li>
-                  <li><b>Constructive Cascade.</b> Every other player reads the interference at once after you apply your gate — no need to choose.</li>
-                  <li><b>Noise.</b> A decoherence strike. Otherwise your turn plays out as normal — you'll still choose a teammate to Read Interference. Only the <b>3rd</b> Noise card ends the mission immediately, before that reading.</li>
+                  <li><b>Coherence (Maintained).</b> Play continues as normal, you'll choose a teammate to Read Interference after applying your gate.</li>
+                  <li><b>Constructive Cascade.</b> Every other player reads the interference at once after you apply your gate, no need to choose.</li>
+                  <li><b>Noise.</b> A decoherence strike. Otherwise your turn plays out as normal, you'll still choose a teammate to Read Interference. Only the <b>3rd</b> Noise card ends the mission immediately, before that reading.</li>
                 </ul>
               </li>
-              <li><b>Apply a Gate.</b> Pick any cell that matches ALL of your own clues — like running a logic gate on your qubit to test it. Your token lands there — always your player color in a circle, since it's guaranteed to be constructive.</li>
-              <li><b>Read Interference (another player).</b> Choose one teammate — they place a token on that same cell: a circle if their clue's frequency <em>constructively</em> interferes with it, a square with an X if it's <em>destructive</em>. (Automatic for everyone on Cascade; skipped only if the 3rd Noise card just ended the game.)</li>
+              <li><b>Apply a Gate.</b> Pick any cell that matches ALL of your own clues, like running a logic gate on your qubit to test it. Your token lands there, always your player color in a circle, since it's guaranteed to be constructive.</li>
+              <li><b>Read Interference (another player).</b> Choose one teammate, they place a token on that same cell: a circle if their clue's frequency <em>constructively</em> interferes with it, a square with an X if it's <em>destructive</em>. (Automatic for everyone on Cascade; skipped only if the 3rd Noise card just ended the game.)</li>
               <li>Play passes to the next player, who immediately draws the next Environment card.</li>
             </ol>
             <h4>Deduction</h4>
@@ -259,7 +259,7 @@
         <div class="qb-clue-item qb-public-clue-item">
           <span class="qb-clue-text" id="qb-public-clue-text">Waiting for game to start…</span>
         </div>
-        <div class="qb-public-clue-note">Known to the whole team — not part of anyone's private hand.</div>
+        <div class="qb-public-clue-note">Known to the whole team, not part of anyone's private hand.</div>
       </div>
 
       <!-- MY CLUE / (observer) ALL PLAYER CLUES -->
@@ -273,7 +273,7 @@
       <div class="qb-modal-overlay" id="qb-allclues-overlay" style="display:none" onclick="if(event.target===this)this.style.display='none'">
         <div class="qb-modal qb-htp-modal qb-allclues-modal">
           <h3>Every Possible Clue</h3>
-          <p style="color:#64748b;font-size:12px;margin-bottom:10px">Your Wavelength Clue is always one of the entries below. Each mini board shades the cells that clue matches. No card ID is shown — those only exist on the physical cards.</p>
+          <p style="color:#64748b;font-size:12px;margin-bottom:10px">Your Wavelength Clue is always one of the entries below. Each mini board shades the cells that clue matches. No card ID is shown: those only exist on the physical cards.</p>
           <div class="qb-htp-body" id="qb-allclues-body"></div>
           <button class="qb-btn qb-htp-close" onclick="document.getElementById('qb-allclues-overlay').style.display='none'">Close</button>
         </div>
@@ -392,8 +392,8 @@ function qbBuildClueRefGroups() {
   var digitSumSpecs = [[0,7],[10,null],[7,12],[1,9],[5,10]];
   groups.push({ category: 'Digit Sum', items: digitSumSpecs.map(function(s){
     var lo = s[0], hi = s[1];
-    if (hi == null) return { text: 'The decimal digit-sum of your code is ' + lo + ' or more.', test: function(c){ return c.digitSum >= lo; } };
-    return { text: 'The decimal digit-sum of your code is between ' + lo + ' and ' + hi + '.', test: function(c){ return c.digitSum >= lo && c.digitSum <= hi; } };
+    if (hi == null) return { text: 'The decimal digit sum of your code is ' + lo + ' or more.', test: function(c){ return c.digitSum >= lo; } };
+    return { text: 'The decimal digit sum of your code is between ' + lo + ' and ' + hi + '.', test: function(c){ return c.digitSum >= lo && c.digitSum <= hi; } };
   })});
 
   var rowColSpecs = [[4,15],[15,null],[13,22],[8,17]];
@@ -406,7 +406,7 @@ function qbBuildClueRefGroups() {
   var bitCountSpecs = [[4,5],[3,4]];
   groups.push({ category: 'Bit Count', items: bitCountSpecs.map(function(s){
     var a = s[0], b = s[1];
-    return { text: 'Your 8-qubit code contains exactly ' + a + ' or ' + b + ' ones.', test: function(c){ return c.bitCount === a || c.bitCount === b; } };
+    return { text: 'Your 8 qubit code contains exactly ' + a + ' or ' + b + ' ones.', test: function(c){ return c.bitCount === a || c.bitCount === b; } };
   })});
 
   var regionCombos = [];
@@ -416,8 +416,8 @@ function qbBuildClueRefGroups() {
   })});
 
   groups.push({ category: 'Quadrant Shading', items: [
-    { text: "Your code's cell is in a yellow-shaded quadrant.", test: function(c){ return c.isDark; } },
-    { text: "Your code's cell is in a blue-shaded quadrant.", test: function(c){ return !c.isDark; } },
+    { text: "Your code's cell is in a yellow shaded quadrant.", test: function(c){ return c.isDark; } },
+    { text: "Your code's cell is in a blue shaded quadrant.", test: function(c){ return !c.isDark; } },
   ]});
 
   return groups;
@@ -592,7 +592,7 @@ function renderLobbyPlayers(players, observers) {
   var short = QB_MIN_PLAYERS - players.length;
   var errMsg;
   if (players.length < QB_MIN_PLAYERS) {
-    errMsg = 'Need ' + short + ' more player' + (short === 1 ? '' : 's') + ' — Qubit needs at least ' + QB_MIN_PLAYERS + '.';
+    errMsg = 'Need ' + short + ' more player' + (short === 1 ? '' : 's') + ', Qubit needs at least ' + QB_MIN_PLAYERS + '.';
   } else {
     errMsg = isHost ? '' : 'Waiting for host to start...';
   }
@@ -962,7 +962,10 @@ function maybeShowNoiseAlert(state) {
     'Decoherence strike ' + count + ' of 3. ' + remaining + ' more and the mission fails immediately.';
 
   var urgentEl = document.getElementById('qb-noise-alert-urgent');
-  if (count === 2) {
+  if (count === 1) {
+    urgentEl.textContent = 'Two more strikes and the game is over. Hurry, start your deduction!';
+    urgentEl.style.display = '';
+  } else if (count === 2) {
     urgentEl.textContent = 'One more strike ends the game at any moment: call a Measurement now, on your best guess, before it happens.';
     urgentEl.style.display = '';
   } else {
@@ -982,7 +985,7 @@ function hideNoiseModal() {
 function renderPublicClue(state) {
   var el = document.getElementById('qb-public-clue-text');
   if (!el) return;
-  el.textContent = (state.publicClue && state.publicClue.text) || '—';
+  el.textContent = (state.publicClue && state.publicClue.text) || '-';
 }
 
 function highlightProposed(decimal) {
@@ -1093,7 +1096,7 @@ function renderCluePanel(state) {
 
   body.innerHTML =
     '<div class="qb-clue-color"><span class="qb-color-dot" style="background:' + hex + '"></span>'
-    + '<span>' + (gc ? (gc.charAt(0).toUpperCase() + gc.slice(1)) : '—') + '</span></div>'
+    + '<span>' + (gc ? (gc.charAt(0).toUpperCase() + gc.slice(1)) : '-') + '</span></div>'
     + '<div class="qb-clue-list">' + clueHtml2 + '</div>'
     + '<label class="qb-match-toggle">'
     + '<input type="checkbox" id="qb-show-valid" ' + (showAllValid ? 'checked' : '') + ' onchange="toggleAllValidHighlight()">'
@@ -1101,7 +1104,7 @@ function renderCluePanel(state) {
     + '</label>'
     + '<div class="qb-valid-legend">'
     + '<span class="qb-legend-item"><span class="qb-leg-match"></span>Matches a clue, not valid</span>'
-    + '<span class="qb-legend-item"><span class="qb-leg-valid-all"></span>Valid — matches every clue</span>'
+    + '<span class="qb-legend-item"><span class="qb-leg-valid-all"></span>Valid: matches every clue</span>'
     + '</div>';
   updateMatchHighlights();
 }
@@ -1155,12 +1158,12 @@ function renderTurnPanel(state) {
 
   if (statusEl) {
     statusEl.innerHTML = '<span class="qb-turn-swatch" style="background:' + curHex + '"></span>'
-      + '<span>' + esc(curPlayer ? curPlayer.name : '?') + (isMe ? " — it's your turn!" : "'s turn") + '</span>';
+      + '<span>' + esc(curPlayer ? curPlayer.name : '?') + (isMe ? ", it's your turn!" : "'s turn") + '</span>';
   }
 
   if (actionsEl) {
     if (isMe && !isObserver && state.phase === 'propose') {
-      actionsEl.innerHTML = '<div class="qb-turn-tip">An Environment card has been drawn (see below) — click a cell on the board that matches your clue to apply a gate.</div>'
+      actionsEl.innerHTML = '<div class="qb-turn-tip">An Environment card has been drawn (see below), click a cell on the board that matches your clue to apply a gate.</div>'
         + '<button class="qb-btn qb-btn-measure" onclick="startMeasurement()" style="margin-top:8px">⚛ Call Measurement</button>';
     } else if (isMe && !isObserver && state.phase === 'choose_verifier') {
       actionsEl.innerHTML = renderVerifierChoices(state);
@@ -1207,7 +1210,7 @@ function renderVerifierChoices(state) {
   var cell = state.proposedCell;
   var html = '<div class="qb-turn-tip">Gated cell '
     + (cell ? ('<strong>' + cell.decimal + '</strong> (' + cell.binary + ')') : '')
-    + ' — choose a teammate to read the interference against their clue.</div>'
+    + ', choose a teammate to read the interference against their clue.</div>'
     + '<div class="qb-verify-choices">';
   for (var i = 0; i < state.players.length; i++) {
     if (i === state.currentPlayerIdx) continue;
@@ -1250,9 +1253,9 @@ function showGameOver(state) {
   } else {
     var noiseEnd = (state.noiseCount || 0) >= 3;
     if (icon)  icon.textContent  = noiseEnd ? '✗' : '✗';
-    if (title) title.textContent = noiseEnd ? 'System Decoherence' : 'Measurement Failed';
+    if (title) title.textContent = noiseEnd ? 'System Decoherence, Game Over' : 'Measurement Failed';
     if (sub)   sub.textContent   = noiseEnd
-      ? 'Three decoherence events occurred. The quantum state collapsed.'
+      ? 'Three decoherence strikes. The game is over, the quantum state collapsed.'
       : 'The measurement was incorrect. The quantum state was lost.';
     el.classList.add('qb-gameover-lose');
     el.classList.remove('qb-gameover-win');
@@ -1304,7 +1307,7 @@ var QTI_INTRO_STEPS = [
       + '</div>'
       + '<p>A quantum computer instead uses the state of an <strong>elementary particle</strong>, such as an electron, a trapped ion, or a photon of light. That particle\'s position, spin, or polarization can hold a mix of 0 and 1 <em>at the same time</em>, a state called <strong>superposition</strong>, until the moment it\'s measured.</p>'
       + '<div style="text-align:center;margin:12px 0"><svg viewBox="0 0 220 115" width="100%" height="115" style="margin-bottom:6px"><defs><linearGradient id="qti-prob" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:#4a9eff;stop-opacity:0.3"/><stop offset="50%" style="stop-color:#facc15;stop-opacity:1"/><stop offset="100%" style="stop-color:#f87171;stop-opacity:0.3"/></linearGradient></defs><rect x="10" y="20" width="200" height="50" rx="4" fill="url(#qti-prob)" stroke="#facc15" stroke-width="2"/><text x="110" y="52" text-anchor="middle" font-size="18" font-weight="bold" fill="#fff">0 ↔ 1</text><text x="110" y="95" text-anchor="middle" font-size="10" fill="#cbd5e1" font-weight="600">Qubit: Probability Cloud</text></svg></div>'
-      + '<p>Qubit (the game) borrows that core idea: your team is searching for one hidden 8-qubit code among <strong>256 possibilities</strong>, using indirect clues instead of ever being told the answer outright.</p>'
+      + '<p>Qubit (the game) borrows that core idea: your team is searching for one hidden 8 qubit code among <strong>256 possibilities</strong>, using indirect clues instead of ever being told the answer outright.</p>'
       + '<p>The board is a 16×16 grid: every cell is one possible code, laid out by its row and column nibble (4 bits each).</p>'
   },
   {
@@ -1380,7 +1383,7 @@ var QTI_INTRO_STEPS = [
       + '<div class="qti-map-row"><span class="qti-map-left">Noise / Decoherence</span><span class="qti-map-arrow">→</span><span class="qti-map-right">Environmental interference collapsing the system before you\'re ready</span></div>'
       + '<div class="qti-map-row"><span class="qti-map-left">Measurement</span><span class="qti-map-arrow">→</span><span class="qti-map-right">The irreversible act of committing to one final answer</span></div>'
       + '</div>'
-      + '<p style="margin-top:12px"><strong>Now let\'s walk through how to play by actually doing it.</strong> The next part of the tutorial will guide you through applying gates, reading interference, and making deductions in real-time on a practice board.</p>'
+      + '<p style="margin-top:12px"><strong>Now let\'s walk through how to play by actually doing it.</strong> The next part of the tutorial will guide you through applying gates, reading interference, and making deductions live on a practice board.</p>'
       + '<p>Click <strong>Start Playing →</strong> to dive in.</p>'
   }
 ];
@@ -1390,7 +1393,7 @@ var QBT_GAME_STEPS = [
   {
     title: 'The Quantum Matrix',
     body: '<p>The 16×16 grid is the <strong>Quantum Matrix</strong>. One cell is the secret <strong>Quantum Code</strong> your team must identify.</p>'
-      + '<p>Each cell shows its 8-bit binary value and decimal index. Row and column headers show the 4-bit nibble for that row/column.</p>',
+      + '<p>Each cell shows its 8 bit binary value and decimal index. Row and column headers show the 4 bit nibble for that row/column.</p>',
     hint: 'This is the whole search space: 256 possible codes.',
     hl: 'qb-board-section'
   },
