@@ -50,6 +50,47 @@ const LIT = ()     => ({ text: `Your code's cell is in a blue-shaded quadrant.`,
 const EQ  = (n, m) => ({ text: `Position ${n} and ${m} are the SAME (both 0 or both 1).`,                eval: c => c.bits[n-1] === c.bits[m-1] });
 const NE  = (n, m) => ({ text: `Position ${n} and ${m} are DIFFERENT (one is 0 and the other is 1).`,     eval: c => c.bits[n-1] !== c.bits[m-1] });
 
+// Ket Proximity clues (Advance mode): "distance" is king-move steps from the
+// cell to the nearest touching corner of a qualifying ket vertex — 0 for the
+// (up to) 4 cells that actually touch that vertex, 1 for the ring around
+// those, etc. KETS is declared further down this file; that's fine, this
+// closure only reads it when eval() actually runs (well after module load).
+function cellVertexDist(row, col, vRow, vCol) {
+  const rowDist = Math.max(0, vRow - (row + 1), row - vRow);
+  const colDist = Math.max(0, vCol - (col + 1), col - vCol);
+  return Math.max(rowDist, colDist);
+}
+function ketMinDist(c, predicate) {
+  let min = Infinity;
+  for (const k of KETS) {
+    if (!predicate(k)) continue;
+    const d = cellVertexDist(c.row, c.col, k.row, k.col);
+    if (d < min) min = d;
+  }
+  return min;
+}
+const KP = (n, label, predicate) => ({
+  text: `Your code's cell is within ${n} space${n === 1 ? '' : 's'} of ${label}.`,
+  eval: c => ketMinDist(c, predicate) <= n,
+});
+
+// Ket Proximity clues (Advance mode): identical across every color's book,
+// same pattern as the Entanglement clues (61-80) above — mirrored in by
+// spreading this shared object into each color, rather than retyping it six
+// times. See qbBuildClueRefGroups() in qubit.html for the client-side mirror
+// of this same category.
+const KET_PROXIMITY_CLUES = {
+  81: KP(1, 'any ket', () => true),
+  82: KP(2, 'any Ket 1 (either color)', k => k.type.endsWith('1')),
+  83: KP(2, 'any Ket 0 (either color)', k => k.type.endsWith('0')),
+  84: KP(2, 'any Blue Ket (either value)', k => k.type.indexOf('blue') === 0),
+  85: KP(2, 'any Amber Ket (either value)', k => k.type.indexOf('amber') === 0),
+  86: KP(3, 'an Amber Ket 0', k => k.type === 'amber0'),
+  87: KP(3, 'an Amber Ket 1', k => k.type === 'amber1'),
+  88: KP(3, 'a Blue Ket 0', k => k.type === 'blue0'),
+  89: KP(3, 'a Blue Ket 1', k => k.type === 'blue1'),
+};
+
 // 60 clues per color (mirrored across colors for balance)
 const CLUES = {
   red: {
@@ -67,7 +108,7 @@ const CLUES = {
     65: EQ(1,4), 66: NE(1,4), 67: EQ(1,5), 68: NE(1,5), 69: EQ(1,6),
     70: NE(1,6), 71: EQ(1,7), 72: NE(1,7), 73: EQ(1,8), 74: NE(1,8),
     75: EQ(2,3), 76: NE(2,3), 77: EQ(2,4), 78: NE(2,4), 79: EQ(2,5),
-    80: NE(2,5),
+    80: NE(2,5), ...KET_PROXIMITY_CLUES,
   },
   blue: {
     1: LIT(), 2: BC([4,5]), 3: BC([3,4]), 4: R([2,3,6]), 5: R([1,4,6]),
@@ -84,7 +125,7 @@ const CLUES = {
     65: EQ(1,4), 66: NE(1,4), 67: EQ(1,5), 68: NE(1,5), 69: EQ(1,6),
     70: NE(1,6), 71: EQ(1,7), 72: NE(1,7), 73: EQ(1,8), 74: NE(1,8),
     75: EQ(2,3), 76: NE(2,3), 77: EQ(2,4), 78: NE(2,4), 79: EQ(2,5),
-    80: NE(2,5),
+    80: NE(2,5), ...KET_PROXIMITY_CLUES,
   },
   green: {
     1: B(5,1), 2: BC([3,4]), 3: B(2,1), 5: B(8,0), 6: B(2,0),
@@ -101,7 +142,7 @@ const CLUES = {
     65: EQ(1,4), 66: NE(1,4), 67: EQ(1,5), 68: NE(1,5), 69: EQ(1,6),
     70: NE(1,6), 71: EQ(1,7), 72: NE(1,7), 73: EQ(1,8), 74: NE(1,8),
     75: EQ(2,3), 76: NE(2,3), 77: EQ(2,4), 78: NE(2,4), 79: EQ(2,5),
-    80: NE(2,5),
+    80: NE(2,5), ...KET_PROXIMITY_CLUES,
   },
   yellow: {
     1: B(1,1), 2: R([1,2,5]), 3: R([2,3,5]), 4: NR(8,17), 5: R([1,5,6]),
@@ -118,7 +159,7 @@ const CLUES = {
     65: EQ(1,4), 66: NE(1,4), 67: EQ(1,5), 68: NE(1,5), 69: EQ(1,6),
     70: NE(1,6), 71: EQ(1,7), 72: NE(1,7), 73: EQ(1,8), 74: NE(1,8),
     75: EQ(2,3), 76: NE(2,3), 77: EQ(2,4), 78: NE(2,4), 79: EQ(2,5),
-    80: NE(2,5),
+    80: NE(2,5), ...KET_PROXIMITY_CLUES,
   },
   purple: {
     1: R([1,4,5]), 2: B(7,0), 3: DR(0,7), 5: R([1,2,5]), 6: R([1,3,5]),
@@ -135,7 +176,7 @@ const CLUES = {
     65: EQ(1,4), 66: NE(1,4), 67: EQ(1,5), 68: NE(1,5), 69: EQ(1,6),
     70: NE(1,6), 71: EQ(1,7), 72: NE(1,7), 73: EQ(1,8), 74: NE(1,8),
     75: EQ(2,3), 76: NE(2,3), 77: EQ(2,4), 78: NE(2,4), 79: EQ(2,5),
-    80: NE(2,5),
+    80: NE(2,5), ...KET_PROXIMITY_CLUES,
   },
   orange: {
     1: B(2,1), 2: R([2,3,5]), 3: B(5,0), 4: R([1,3,4]), 5: R([1,3,5]),
@@ -152,7 +193,7 @@ const CLUES = {
     65: EQ(1,4), 66: NE(1,4), 67: EQ(1,5), 68: NE(1,5), 69: EQ(1,6),
     70: NE(1,6), 71: EQ(1,7), 72: NE(1,7), 73: EQ(1,8), 74: NE(1,8),
     75: EQ(2,3), 76: NE(2,3), 77: EQ(2,4), 78: NE(2,4), 79: EQ(2,5),
-    80: NE(2,5),
+    80: NE(2,5), ...KET_PROXIMITY_CLUES,
   },
 };
 
@@ -263,21 +304,18 @@ function buildDeck() {
 }
 
 // ==================== KETS (Advance mode) ====================
-// 12 decorative kets sitting on board VERTICES (grid line intersections,
+// 8 decorative kets sitting on board VERTICES (grid line intersections,
 // 0-16 on each axis), not inside any single cell. 4 evenly-spaced vertices
-// per row — top border (row 0), the region-boundary row (row 8, where two
-// region rows meet), and bottom border (row 16). Columns 0 and 16 are the
-// board's own left/right border; columns 5 and 10 are the region-boundary
-// columns (see getRegion), so every vertex here is either a board edge or a
-// point where 4 of the 6 regions meet, per the design brief. Fixed layout —
-// same 12 positions/types every game.
+// per row — one row on the boundary between row 3 and row 4, one on the
+// boundary between row 11 and row 12 (no middle/center row). Columns 0 and
+// 16 are the board's own left/right border; columns 5 and 10 are the
+// region-boundary columns (see getRegion). Fixed layout — same 8
+// positions/types every game.
 const KETS = [
-  { row: 0,  col: 0,  type: 'amber1' }, { row: 0,  col: 5,  type: 'blue0'  },
-  { row: 0,  col: 10, type: 'amber0' }, { row: 0,  col: 16, type: 'blue1'  },
-  { row: 8,  col: 0,  type: 'blue1'  }, { row: 8,  col: 5,  type: 'amber0' },
-  { row: 8,  col: 10, type: 'blue1'  }, { row: 8,  col: 16, type: 'amber0' },
-  { row: 16, col: 0,  type: 'amber0' }, { row: 16, col: 5,  type: 'blue1'  },
-  { row: 16, col: 10, type: 'amber1' }, { row: 16, col: 16, type: 'blue0'  },
+  { row: 4,  col: 0,  type: 'amber1' }, { row: 4,  col: 5,  type: 'blue0'  },
+  { row: 4,  col: 10, type: 'amber1' }, { row: 4,  col: 16, type: 'blue0'  },
+  { row: 12, col: 0,  type: 'amber0' }, { row: 12, col: 5,  type: 'blue1'  },
+  { row: 12, col: 10, type: 'amber0' }, { row: 12, col: 16, type: 'blue1'  },
 ];
 
 // ==================== GAME COLORS ====================

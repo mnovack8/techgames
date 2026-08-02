@@ -346,17 +346,14 @@ var GAME_COLOR_HEX = {
   yellow:'#eab308', purple:'#a855f7', orange:'#f97316'
 };
 
-// Advance mode: 12 decorative kets on board VERTICES (grid-line
+// Advance mode: 8 decorative kets on board VERTICES (grid-line
 // intersections, 0-16), mirroring the KETS constant in qubit-logic.js purely
-// for display. Fixed layout, same every game — see that file for why these
-// particular row/col values are either a board edge or a 4-region vertex.
+// for display. Fixed layout, same every game.
 var KETS = [
-  { row: 0,  col: 0,  type: 'amber1' }, { row: 0,  col: 5,  type: 'blue0'  },
-  { row: 0,  col: 10, type: 'amber0' }, { row: 0,  col: 16, type: 'blue1'  },
-  { row: 8,  col: 0,  type: 'blue1'  }, { row: 8,  col: 5,  type: 'amber0' },
-  { row: 8,  col: 10, type: 'blue1'  }, { row: 8,  col: 16, type: 'amber0' },
-  { row: 16, col: 0,  type: 'amber0' }, { row: 16, col: 5,  type: 'blue1'  },
-  { row: 16, col: 10, type: 'amber1' }, { row: 16, col: 16, type: 'blue0'  },
+  { row: 4,  col: 0,  type: 'amber1' }, { row: 4,  col: 5,  type: 'blue0'  },
+  { row: 4,  col: 10, type: 'amber1' }, { row: 4,  col: 16, type: 'blue0'  },
+  { row: 12, col: 0,  type: 'amber0' }, { row: 12, col: 5,  type: 'blue1'  },
+  { row: 12, col: 10, type: 'amber0' }, { row: 12, col: 16, type: 'blue1'  },
 ];
 var KET_LABEL = { amber1: '|1⟩', amber0: '|0⟩', blue1: '|1⟩', blue0: '|0⟩' };
 
@@ -400,15 +397,33 @@ function qbRefCellInfo(d) {
   var rowHalf = row < 8 ? 0 : 1;
   var colZone = col <= 4 ? 0 : (col <= 9 ? 1 : 2);
   var region = rowHalf * 3 + colZone + 1;
-  return { bits: bits, digitSum: digitSum, nibbleSum: nibbleSum, bitCount: bitCount, isDark: isDark, region: region };
+  return { row: row, col: col, bits: bits, digitSum: digitSum, nibbleSum: nibbleSum, bitCount: bitCount, isDark: isDark, region: region };
+}
+
+// Same king-move cell-to-vertex distance as cellVertexDist()/ketMinDist() in
+// qubit-logic.js — see that file for why 0 means "touches this ket".
+function qbKetDist(row, col, vRow, vCol) {
+  var rowDist = Math.max(0, vRow - (row + 1), row - vRow);
+  var colDist = Math.max(0, vCol - (col + 1), col - vCol);
+  return Math.max(rowDist, colDist);
+}
+function qbKetMinDist(c, predicate) {
+  var min = Infinity;
+  for (var i = 0; i < KETS.length; i++) {
+    var k = KETS[i];
+    if (!predicate(k)) continue;
+    var d = qbKetDist(c.row, c.col, k.row, k.col);
+    if (d < min) min = d;
+  }
+  return min;
 }
 
 // Every distinct clue that actually exists in the CLUES bank (see
-// qubit-logic.js), minus Entanglement (public-only in this digital version)
-// and the "Ket" proximity clues (removed from the clue bank entirely).
+// qubit-logic.js), minus Entanglement (public-only in this digital version).
 // Bit Position and Region are exhaustive combinatorics (8 qubits × 2 values;
 // all C(6,3) region triples) so those are generated; Digit Sum, Row+Column
 // Sum, and Bit Count use the specific values actually printed in the bank.
+// Ket Proximity mirrors the KET_PROXIMITY_CLUES bank exactly (same 9 clues).
 function qbBuildClueRefGroups() {
   var groups = [];
 
@@ -452,6 +467,27 @@ function qbBuildClueRefGroups() {
   groups.push({ category: 'Quadrant Shading', items: [
     { text: "Your code's cell is in a yellow shaded quadrant.", test: function(c){ return c.isDark; } },
     { text: "Your code's cell is in a blue shaded quadrant.", test: function(c){ return !c.isDark; } },
+  ]});
+
+  groups.push({ category: 'Ket Proximity', items: [
+    { text: "Your code's cell is within 1 space of any ket.",
+      test: function(c){ return qbKetMinDist(c, function(){ return true; }) <= 1; } },
+    { text: "Your code's cell is within 2 spaces of any Ket 1 (either color).",
+      test: function(c){ return qbKetMinDist(c, function(k){ return k.type.slice(-1) === '1'; }) <= 2; } },
+    { text: "Your code's cell is within 2 spaces of any Ket 0 (either color).",
+      test: function(c){ return qbKetMinDist(c, function(k){ return k.type.slice(-1) === '0'; }) <= 2; } },
+    { text: "Your code's cell is within 2 spaces of any Blue Ket (either value).",
+      test: function(c){ return qbKetMinDist(c, function(k){ return k.type.indexOf('blue') === 0; }) <= 2; } },
+    { text: "Your code's cell is within 2 spaces of any Amber Ket (either value).",
+      test: function(c){ return qbKetMinDist(c, function(k){ return k.type.indexOf('amber') === 0; }) <= 2; } },
+    { text: "Your code's cell is within 3 spaces of an Amber Ket 0.",
+      test: function(c){ return qbKetMinDist(c, function(k){ return k.type === 'amber0'; }) <= 3; } },
+    { text: "Your code's cell is within 3 spaces of an Amber Ket 1.",
+      test: function(c){ return qbKetMinDist(c, function(k){ return k.type === 'amber1'; }) <= 3; } },
+    { text: "Your code's cell is within 3 spaces of a Blue Ket 0.",
+      test: function(c){ return qbKetMinDist(c, function(k){ return k.type === 'blue0'; }) <= 3; } },
+    { text: "Your code's cell is within 3 spaces of a Blue Ket 1.",
+      test: function(c){ return qbKetMinDist(c, function(k){ return k.type === 'blue1'; }) <= 3; } },
   ]});
 
   return groups;
