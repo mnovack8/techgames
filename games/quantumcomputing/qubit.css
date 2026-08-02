@@ -549,6 +549,41 @@ body.rejoin-pending .screen.active { visibility: hidden; }
   .qb-tok { width: 13px; height: 13px; font-size: 10px; }
 }
 
+/* ===== KETS (Advance mode) ===== */
+/* A SIBLING of #qb-board (not a child) sharing its grid cell (grid-column:2,
+   grid-row:2 in .qb-board-grid-wrap) so it's exactly the same size/position
+   as the board, but isn't subject to #qb-board's own overflow:hidden — a ket
+   sitting on an edge vertex (row/col 0 or 16) needs to visibly hang half
+   outside the board's blue border frame, not get clipped at the edge.
+   pointer-events:none lets clicks pass through to the cell underneath. */
+.qb-ket-layer {
+  grid-column: 2;
+  grid-row: 2;
+  position: relative;
+  z-index: 4;
+  pointer-events: none;
+}
+.qb-ket {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 7px;
+  font-weight: 900;
+  line-height: 1;
+  padding: 1px 2px;
+  border-radius: 3px;
+  border: 1px solid rgba(0,0,0,0.35);
+  color: #1e293b;
+  background: rgba(255,255,255,0.85);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.35);
+  white-space: nowrap;
+}
+.qb-ket-amber { color: #92400e; border-color: #d97706; background: rgba(253,230,138,0.9); }
+.qb-ket-blue  { color: #1e3a8a; border-color: #2563eb; background: rgba(191,219,254,0.9); }
+@media (min-width: 700px) {
+  .qb-ket { font-size: 10px; padding: 1px 3px; }
+}
+
 /* ===== BOARD LEGEND ===== */
 /* ===== CELL HOVER ZOOM ===== */
 .qb-cell-zoom {

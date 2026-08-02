@@ -346,6 +346,40 @@ var GAME_COLOR_HEX = {
   yellow:'#eab308', purple:'#a855f7', orange:'#f97316'
 };
 
+// Advance mode: 12 decorative kets on board VERTICES (grid-line
+// intersections, 0-16), mirroring the KETS constant in qubit-logic.js purely
+// for display. Fixed layout, same every game — see that file for why these
+// particular row/col values are either a board edge or a 4-region vertex.
+var KETS = [
+  { row: 0,  col: 0,  type: 'amber1' }, { row: 0,  col: 5,  type: 'blue0'  },
+  { row: 0,  col: 10, type: 'amber0' }, { row: 0,  col: 16, type: 'blue1'  },
+  { row: 8,  col: 0,  type: 'blue1'  }, { row: 8,  col: 5,  type: 'amber0' },
+  { row: 8,  col: 10, type: 'blue1'  }, { row: 8,  col: 16, type: 'amber0' },
+  { row: 16, col: 0,  type: 'amber0' }, { row: 16, col: 5,  type: 'blue1'  },
+  { row: 16, col: 10, type: 'amber1' }, { row: 16, col: 16, type: 'blue0'  },
+];
+var KET_LABEL = { amber1: '|1⟩', amber0: '|0⟩', blue1: '|1⟩', blue0: '|0⟩' };
+
+function renderKetLayer() {
+  var wrap = document.getElementById('qb-board-grid-wrap');
+  if (!wrap) return;
+  var existing = document.getElementById('qb-ket-layer');
+  if (existing) existing.remove();
+  var layer = document.createElement('div');
+  layer.id = 'qb-ket-layer';
+  layer.className = 'qb-ket-layer';
+  for (var i = 0; i < KETS.length; i++) {
+    var k = KETS[i];
+    var el = document.createElement('div');
+    el.className = 'qb-ket ' + (k.type.indexOf('amber') === 0 ? 'qb-ket-amber' : 'qb-ket-blue');
+    el.style.left = (k.col / 16 * 100) + '%';
+    el.style.top  = (k.row / 16 * 100) + '%';
+    el.textContent = KET_LABEL[k.type];
+    layer.appendChild(el);
+  }
+  wrap.appendChild(layer);
+}
+
 var CARD_INFO = {
   maintained:    { label:'COHERENCE MAINTAINED', effect:'No special effect. Turn passes.' },
   cascade:       { label:'CONSTRUCTIVE CASCADE', effect:'All other players also read interference on this cell!' },
@@ -666,6 +700,7 @@ function initBoard() {
   }
 
   buildBoardHeaders();
+  renderKetLayer();
 
   boardReady = true;
   sizeBoard();

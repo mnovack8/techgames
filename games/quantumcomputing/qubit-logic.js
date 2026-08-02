@@ -262,6 +262,24 @@ function buildDeck() {
   return [...riskPile, ...safePile];
 }
 
+// ==================== KETS (Advance mode) ====================
+// 12 decorative kets sitting on board VERTICES (grid line intersections,
+// 0-16 on each axis), not inside any single cell. 4 evenly-spaced vertices
+// per row — top border (row 0), the region-boundary row (row 8, where two
+// region rows meet), and bottom border (row 16). Columns 0 and 16 are the
+// board's own left/right border; columns 5 and 10 are the region-boundary
+// columns (see getRegion), so every vertex here is either a board edge or a
+// point where 4 of the 6 regions meet, per the design brief. Fixed layout —
+// same 12 positions/types every game.
+const KETS = [
+  { row: 0,  col: 0,  type: 'amber1' }, { row: 0,  col: 5,  type: 'blue0'  },
+  { row: 0,  col: 10, type: 'amber0' }, { row: 0,  col: 16, type: 'blue1'  },
+  { row: 8,  col: 0,  type: 'blue1'  }, { row: 8,  col: 5,  type: 'amber0' },
+  { row: 8,  col: 10, type: 'blue1'  }, { row: 8,  col: 16, type: 'amber0' },
+  { row: 16, col: 0,  type: 'amber0' }, { row: 16, col: 5,  type: 'blue1'  },
+  { row: 16, col: 10, type: 'amber1' }, { row: 16, col: 16, type: 'blue0'  },
+];
+
 // ==================== GAME COLORS ====================
 const GAME_COLORS = ['red', 'blue', 'green', 'yellow', 'purple', 'orange'];
 const GAME_COLOR_HEX = {
@@ -620,6 +638,7 @@ module.exports = {
   maybeScheduleBotTurn,
   BOARD,
   CELL,
+  KETS,
   GAME_COLORS,
   GAME_COLOR_HEX,
   // Exposed for the setup-card generator and solvability tests.
