@@ -325,79 +325,29 @@ const CLUES = {
   },
 };
 
-// ==================== ANSWERS ====================
-// 9 secret answers (decimal values)
-const ANSWERS = { 1:60, 2:163, 3:52, 4:114, 5:215, 6:251, 7:225, 8:122, 9:1 };
+// ==================== GAME SETUPS ====================
+// 4 setups per mode, one secret answer per board quadrant. initQBGame()
+// picks a random one of the 4 matching the room's mode at game start, then
+// builds that game's actual clue hands live (see buildClueAssignment below)
+// for whichever colors the seated players actually picked — players choose
+// their own color freely in the lobby, so a fixed per-player-count color
+// list can't be baked in ahead of time the way the answer/quadrant can.
+// Every answer here has been verified (see tools/gen-mode-setups.js) to be
+// uniquely solvable for every possible 3-to-6-color combination of seated
+// players, not just a specific count, since color choice is free-form.
+const NORMAL_SETUPS = [
+  { quadrant: 'top-left', answerDecimal: 68 },
+  { quadrant: 'top-right', answerDecimal: 29 },
+  { quadrant: 'bottom-left', answerDecimal: 212 },
+  { quadrant: 'bottom-right', answerDecimal: 250 },
+];
 
-// ==================== SETUP CARDS ====================
-// Each card assigns clue IDs to player colors based on player count.
-// All listed clues MUST evaluate TRUE for the card's answer.
-// Verified against each answer's binary/property values.
-const SETUP_CARDS = {
-  // Answer 60 = 00111100
-  1: { answerIdx: 1, clues: {
-    '3p': { colors: { red:[3,19], blue:[7,2], green:[23,2] }, public: 61 },
-    '4p': { colors: { red:[3,1], blue:[7,2], green:[23,10], yellow:[38,33] }, public: 61 },
-    '5p': { colors: { red:[3,6], blue:[7,20], green:[23,10], yellow:[38,33], purple:[16,3] }, public: 61 },
-    '6p': { colors: { red:[3,1], blue:[7,20], green:[23,10], yellow:[38,33], purple:[16,3], orange:[6,47] }, public: 61 },
-  }},
-  // Answer 163 = 10100011
-  2: { answerIdx: 2, clues: {
-    '3p': { colors: { red:[26,53], blue:[21,53], green:[6,14] }, public: 63 },
-    '4p': { colors: { red:[26,9], blue:[21,36], green:[6,14], yellow:[20,13] }, public: 63 },
-    '5p': { colors: { red:[26,33], blue:[21,36], green:[6,14], yellow:[20,13], purple:[51,1] }, public: 63 },
-    '6p': { colors: { red:[26,33], blue:[21,36], green:[6,14], yellow:[20,13], purple:[51,1], orange:[34,37] }, public: 63 },
-  }},
-  // Answer 52 = 00110100
-  3: { answerIdx: 3, clues: {
-    '3p': { colors: { red:[3,23], blue:[52,46], green:[16,10] }, public: 61 },
-    '4p': { colors: { red:[3,33], blue:[52,20], green:[16,10], yellow:[57,33] }, public: 61 },
-    '5p': { colors: { red:[3,2], blue:[52,20], green:[16,10], yellow:[57,33], purple:[1,3] }, public: 61 },
-    '6p': { colors: { red:[3,2], blue:[52,20], green:[16,10], yellow:[57,33], purple:[1,3], orange:[47,16] }, public: 61 },
-  }},
-  // Answer 114 = 01110010
-  4: { answerIdx: 4, clues: {
-    '3p': { colors: { red:[3,32], blue:[46,6], green:[2,11] }, public: 64 },
-    '4p': { colors: { red:[3,8], blue:[46,16], green:[2,10], yellow:[45,33] }, public: 64 },
-    '5p': { colors: { red:[3,2], blue:[46,20], green:[2,10], yellow:[45,33], purple:[35,3] }, public: 64 },
-    '6p': { colors: { red:[3,2], blue:[46,20], green:[2,10], yellow:[45,33], purple:[35,3], orange:[16,47] }, public: 64 },
-  }},
-  // Answer 215 = 11010111
-  5: { answerIdx: 5, clues: {
-    '3p': { colors: { red:[2,53], blue:[27,6], green:[20,12] }, public: 64 },
-    '4p': { colors: { red:[2,8], blue:[27,12], green:[20,12], yellow:[20,2] }, public: 64 },
-    '5p': { colors: { red:[2,16], blue:[27,48], green:[20,11], yellow:[20,2], purple:[20,1] }, public: 61 },
-    '6p': { colors: { red:[2,40], blue:[27,16], green:[20,11], yellow:[20,2], purple:[20,1], orange:[17,16] }, public: 61 },
-  }},
-  // Answer 251 = 11111011
-  6: { answerIdx: 6, clues: {
-    '3p': { colors: { red:[53,4], blue:[1,48], green:[60,19] }, public: 61 },
-    '4p': { colors: { red:[53,42], blue:[1,12], green:[60,40], yellow:[8,20] }, public: 61 },
-    '5p': { colors: { red:[53,16], blue:[1,26], green:[60,40], yellow:[8,20], purple:[37,54] }, public: 61 },
-    '6p': { colors: { red:[53,4], blue:[1,26], green:[60,40], yellow:[8,20], purple:[37,54], orange:[17,29] }, public: 61 },
-  }},
-  // Answer 225 = 11100001
-  7: { answerIdx: 7, clues: {
-    '3p': { colors: { red:[26,22], blue:[55,6], green:[18,14] }, public: 63 },
-    '4p': { colors: { red:[26,4], blue:[55,36], green:[18,14], yellow:[53,13] }, public: 61 },
-    '5p': { colors: { red:[26,33], blue:[55,36], green:[18,14], yellow:[53,13], purple:[21,1] }, public: 61 },
-    '6p': { colors: { red:[26,33], blue:[55,36], green:[18,14], yellow:[53,13], purple:[21,1], orange:[34,37] }, public: 61 },
-  }},
-  // Answer 122 = 01111010
-  8: { answerIdx: 8, clues: {
-    '3p': { colors: { red:[3,19], blue:[7,31], green:[17,50] }, public: 62 },
-    '4p': { colors: { red:[3,32], blue:[7,2], green:[17,10], yellow:[27,33] }, public: 62 },
-    '5p': { colors: { red:[3,6], blue:[7,20], green:[17,10], yellow:[27,33], purple:[13,3] }, public: 62 },
-    '6p': { colors: { red:[3,6], blue:[7,20], green:[17,10], yellow:[27,33], purple:[13,3], orange:[6,47] }, public: 62 },
-  }},
-  // Answer 1 = 00000001
-  9: { answerIdx: 9, clues: {
-    '3p': { colors: { red:[3,16], blue:[46,57], green:[19,37] }, public: 61 },
-    '4p': { colors: { red:[3,40], blue:[46,51], green:[19,10], yellow:[21,33] }, public: 61 },
-    '5p': { colors: { red:[3,10], blue:[46,20], green:[19,10], yellow:[21,33], purple:[48,3] }, public: 61 },
-    '6p': { colors: { red:[3,2], blue:[46,20], green:[19,10], yellow:[21,33], purple:[48,3], orange:[57,47] }, public: 61 },
-  }},
-};
+const ADVANCED_SETUPS = [
+  { quadrant: 'top-left', answerDecimal: 4 },
+  { quadrant: 'top-right', answerDecimal: 73 },
+  { quadrant: 'bottom-left', answerDecimal: 194 },
+  { quadrant: 'bottom-right', answerDecimal: 238 },
+];
 
 // ==================== ENVIRONMENT DECK ====================
 // 27 Coherence cards (3 of them Constructive Cascade, 24 plain Maintained)
@@ -453,6 +403,140 @@ const GAME_COLOR_HEX = {
   yellow: '#eab308', purple: '#a855f7', orange: '#f97316',
 };
 
+// ==================== CLUE ASSIGNMENT ====================
+// Builds one game's actual clue hands, live, for whichever colors are
+// actually seated (players pick their own color freely in the lobby, so
+// this can't be pre-baked per player count the way the answer/quadrant is —
+// see gen-mode-setups.js for the offline version of this same algorithm
+// used to verify every GAME_SETUPS answer ahead of time).
+//
+// Greedy set-cover: for each seated color in turn, pick the clue from that
+// color's book that's true for the answer and eliminates the most
+// still-standing candidates. Round-robin so no single player holds all the
+// narrowing power; keeps handing out extra clues per color until the whole
+// group's clues (plus the public entanglement fact) narrow the board down
+// to exactly one candidate cell — the answer.
+const CLUES_PER_PLAYER  = 2;
+const MAX_EXTRA_ROUNDS  = 40;
+const ENTANGLEMENT_MIN_ID = 61;
+const ENTANGLEMENT_MAX_ID = 80;
+// Entanglement clue text is identical across every colour's book — this is
+// just a canonical place to read it from.
+const ENTANGLEMENT_BOOK = 'red';
+
+function parseBitPositions(text) {
+  let m = /^Qubit (\d+) \(from left\)/.exec(text);
+  if (m) return [Number(m[1])];
+  m = /^Position (\d+) and (\d+) are/.exec(text);
+  if (m) return [Number(m[1]), Number(m[2])];
+  return [];
+}
+
+function usedBitPositions(assignment) {
+  const used = new Set();
+  for (const color of Object.keys(assignment)) {
+    for (const id of assignment[color]) {
+      for (const bp of parseBitPositions(CLUES[color][id].text)) used.add(bp);
+    }
+  }
+  return used;
+}
+
+const _clueMatchCache = new Map();
+function clueMatches(color, id) {
+  const key = color + ':' + id;
+  let s = _clueMatchCache.get(key);
+  if (!s) {
+    s = new Set(BOARD.filter(c => evalClue(color, id, c)).map(c => c.decimal));
+    _clueMatchCache.set(key, s);
+  }
+  return s;
+}
+
+/** Clue ids on a colour's sheet true for `answer`, respecting mode's allowed categories. */
+function trueClues(color, answer, mode) {
+  return Object.keys(CLUES[color] || {})
+    .map(Number)
+    .filter(id => mode === 'advanced' || !CLUES[color][id].advancedOnly)
+    .filter(id => clueMatches(color, id).has(answer));
+}
+
+/**
+ * Pick the one public entanglement clue: true for the answer, preferring
+ * zero overlap with bit positions the players' own clues already cover
+ * (falls back to least overlap), and preferring whichever choice narrows
+ * `candidates` further.
+ */
+function pickPublicEntanglementClue(answer, usedBits, candidates) {
+  const entIds = Object.keys(CLUES[ENTANGLEMENT_BOOK])
+    .map(Number)
+    .filter(id => id >= ENTANGLEMENT_MIN_ID && id <= ENTANGLEMENT_MAX_ID)
+    .filter(id => clueMatches(ENTANGLEMENT_BOOK, id).has(answer));
+
+  let best = null, bestOverlap = Infinity, bestSize = Infinity;
+  for (const id of entIds) {
+    const [n, m] = parseBitPositions(CLUES[ENTANGLEMENT_BOOK][id].text);
+    const overlap = (usedBits.has(n) ? 1 : 0) + (usedBits.has(m) ? 1 : 0);
+    const mSet = clueMatches(ENTANGLEMENT_BOOK, id);
+    let size = 0;
+    for (const d of candidates) if (mSet.has(d)) size++;
+    if (overlap < bestOverlap || (overlap === bestOverlap && size < bestSize)) {
+      bestOverlap = overlap; bestSize = size; best = id;
+    }
+  }
+  return best;
+}
+
+/**
+ * Build a uniquely-solvable clue assignment for `answer` across exactly
+ * `colors` (the actual seated players' colors — any subset/order of the 6).
+ * Returns { assignment: {color: [ids]}, publicClueId, remaining }.
+ */
+function buildClueAssignment(answer, colors, mode) {
+  let candidates = new Set(BOARD.map(c => c.decimal));
+  const assignment = {};
+  colors.forEach(c => { assignment[c] = []; });
+
+  function assignOneRound() {
+    for (const color of colors) {
+      let best = null, bestSize = Infinity, bestGlobal = Infinity;
+      for (const id of trueClues(color, answer, mode)) {
+        if (assignment[color].includes(id)) continue;
+        if (id >= ENTANGLEMENT_MIN_ID && id <= ENTANGLEMENT_MAX_ID) continue;
+        const m = clueMatches(color, id);
+        let size = 0;
+        for (const d of candidates) if (m.has(d)) size++;
+        const global = m.size;
+        if (size < bestSize || (size === bestSize && global < bestGlobal)) {
+          bestSize = size; bestGlobal = global; best = id;
+        }
+      }
+      if (best == null) continue;
+      assignment[color].push(best);
+      const m = clueMatches(color, best);
+      candidates = new Set([...candidates].filter(d => m.has(d)));
+    }
+  }
+
+  for (let round = 0; round < CLUES_PER_PLAYER; round++) assignOneRound();
+
+  let extraRounds = 0;
+  while (candidates.size > 1 && extraRounds < MAX_EXTRA_ROUNDS) {
+    const before = candidates.size;
+    assignOneRound();
+    extraRounds++;
+    if (candidates.size === before) break; // no colour had a narrowing clue left
+  }
+
+  const publicClueId = pickPublicEntanglementClue(answer, usedBitPositions(assignment), candidates);
+  if (publicClueId != null) {
+    const m = clueMatches(ENTANGLEMENT_BOOK, publicClueId);
+    candidates = new Set([...candidates].filter(d => m.has(d)));
+  }
+
+  return { assignment, publicClueId, remaining: candidates.size };
+}
+
 // ==================== STATE MANAGEMENT ====================
 let _rooms, _broadcastToRoom, _trackEvent;
 
@@ -464,13 +548,6 @@ function init({ rooms, broadcastToRoom, trackEvent }) {
 
 function send(ws, msg) {
   if (ws && ws.readyState === 1) ws.send(JSON.stringify(msg));
-}
-
-function pcKey(n) {
-  if (n <= 3) return '3p';
-  if (n === 4) return '4p';
-  if (n === 5) return '5p';
-  return '6p';
 }
 
 function evalClue(gameColor, clueId, cell) {
@@ -550,51 +627,27 @@ function advanceTurn(gs, room) {
 const PUBLIC_CLUE_BOOK = 'red';
 
 function initQBGame(room) {
-  const n     = room.players.length;
-  const pk    = pcKey(n);
-  const cardId = Math.floor(Math.random() * 9) + 1;
-  const card   = SETUP_CARDS[cardId];
-  const tier   = card.clues[pk];
-  const clueMap = tier.colors;
-  // Beginner boards show no bits or kets, so Bit Position / Bit Count /
-  // Ket Proximity clues (tagged advancedOnly) aren't playable — drop them
-  // from each player's hand rather than dealing an unusable clue.
-  const mode = room.mode === 'advanced' ? 'advanced' : 'beginner';
-  const answerCell = CELL[ANSWERS[card.answerIdx]];
+  // Normal boards show no bits or kets, so their 4 setups are built only
+  // from clues that don't require reading either off the board; Advanced's
+  // 4 setups draw from the full clue bank instead (see gen-mode-setups.js).
+  // Each mode's 4 setups sit one per board quadrant, so which quadrant the
+  // secret code lands in varies game to game even within a single mode.
+  const mode   = room.mode === 'advanced' ? 'advanced' : 'beginner';
+  const setups = mode === 'advanced' ? ADVANCED_SETUPS : NORMAL_SETUPS;
+  const setupIdx = Math.floor(Math.random() * setups.length);
+  const setup    = setups[setupIdx];
   // Use each player's own lobby seat color as their in-game clue/token color
   // (the two color sets are identical) rather than assigning by seat
   // position — a positional assignment could give a player a badge color
   // that doesn't match the color already shown in their name/seat elsewhere
-  // in the UI (e.g. a bot named "Purple (Bot)" showing green tokens).
+  // in the UI (e.g. a bot named "Purple (Bot)" showing green tokens). Since
+  // color is a free lobby pick (not tied to player count), the clue hands
+  // are built live for whichever colors actually showed up, not pre-baked.
   const playerGameColors = room.players.map(p => p.color);
+  const { assignment: clueMap, publicClueId } = buildClueAssignment(setup.answerDecimal, playerGameColors, mode);
   const playerClues = room.players.map((_, i) => {
     const gc  = playerGameColors[i];
-    let ids = (clueMap[gc] || []).filter(id => mode === 'advanced' || !CLUES[gc]?.[id]?.advancedOnly);
-    // A hand whose only dealt clues were all advancedOnly would otherwise be
-    // left with zero clues in beginner mode — every player needs at least
-    // one, so backfill with any other non-bit clue from their own color's
-    // book that still holds true for this game's actual answer.
-    if (ids.length === 0) {
-      const fallbackId = Object.keys(CLUES[gc] || {})
-        .map(Number)
-        .find(id => !CLUES[gc][id].advancedOnly && evalClue(gc, id, answerCell));
-      if (fallbackId != null) ids = [fallbackId];
-    }
-    // Advanced games should actually put the fuller clue bank to use rather
-    // than only ever dealing the same base pair SETUP_CARDS hard-codes (which
-    // never reaches the Bit Position / Bit Count / Ket Proximity categories) —
-    // add one more clue from those categories, picked from whichever are
-    // still true for this game's real answer, so a player sometimes gets a
-    // clue type beginner mode can never show.
-    if (mode === 'advanced') {
-      const dealt = new Set(ids);
-      const advancedExtras = Object.keys(CLUES[gc] || {})
-        .map(Number)
-        .filter(id => CLUES[gc][id].advancedOnly && !dealt.has(id) && evalClue(gc, id, answerCell));
-      if (advancedExtras.length) {
-        ids = [...ids, advancedExtras[Math.floor(Math.random() * advancedExtras.length)]];
-      }
-    }
+    const ids = clueMap[gc] || [];
     // Each clue's own matching-cell list (not just the AND of the whole
     // hand) lets a player highlight one clue at a time in the UI.
     return ids.map(id => ({
@@ -613,15 +666,15 @@ function initQBGame(room) {
   // The one entanglement clue is never private — it's announced to the whole
   // team (players and observers alike) from the start of the game.
   const publicClue = {
-    id: tier.public,
-    text: CLUES[PUBLIC_CLUE_BOOK]?.[tier.public]?.text || '?',
+    id: publicClueId,
+    text: CLUES[PUBLIC_CLUE_BOOK]?.[publicClueId]?.text || '?',
   };
 
   room.qbState = {
     mode,
-    setupCardId: cardId,
-    answerIdx:   card.answerIdx,
-    answerDecimal: ANSWERS[card.answerIdx],
+    setupIdx,
+    quadrant: setup.quadrant,
+    answerDecimal: setup.answerDecimal,
     playerGameColors,
     playerClues,
     playerMatchingCells,
@@ -825,7 +878,8 @@ function qbBroadcastState(room) {
     type: 'qb_state',
     phase: gs.phase,
     mode: gs.mode,
-    setupCardId: gs.setupCardId,
+    setupIdx: gs.setupIdx,
+    quadrant: gs.quadrant,
     currentPlayerIdx: gs.currentPlayerIdx,
     playerGameColors: gs.playerGameColors,
     publicClue:  gs.publicClue,
@@ -884,9 +938,10 @@ module.exports = {
   KETS,
   GAME_COLORS,
   GAME_COLOR_HEX,
-  // Exposed for the setup-card generator and solvability tests.
+  // Exposed for the setup generator (tools/gen-mode-setups.js) and solvability tests.
   CLUES,
-  ANSWERS,
-  SETUP_CARDS,
+  NORMAL_SETUPS,
+  ADVANCED_SETUPS,
   evalClue,
+  buildClueAssignment,
 };
