@@ -567,6 +567,23 @@ function qbMiniBoardSvg(testFn) {
   return '<svg width="' + size + '" height="' + size + '" viewBox="0 0 ' + size + ' ' + size + '" xmlns="http://www.w3.org/2000/svg" style="background:#eef2f9;display:block">' + rects + '</svg>';
 }
 
+// Same rendering as qbMiniBoardSvg() above, but from an explicit list of
+// matching decimals (gs.myClues[i].matchingCells, sent by the server) rather
+// than re-running a test function over all 256 cells — used for the small
+// per-clue thumbnail in the player's own "My Wavelength Clue" panel.
+function qbMiniBoardSvgFromCells(cells) {
+  var cell = 2.5, size = cell * 16;
+  var set = {};
+  for (var i = 0; i < cells.length; i++) set[cells[i]] = true;
+  var rects = '';
+  for (var d = 0; d < 256; d++) {
+    if (!set[d]) continue;
+    var row = Math.floor(d / 16), col = d % 16;
+    rects += '<rect x="' + (col * cell) + '" y="' + (row * cell) + '" width="' + cell + '" height="' + cell + '" fill="#2563eb"/>';
+  }
+  return '<svg width="' + size + '" height="' + size + '" viewBox="0 0 ' + size + ' ' + size + '" xmlns="http://www.w3.org/2000/svg" style="background:#eef2f9;display:block;flex-shrink:0;border:1px solid #cbd5e1;border-radius:2px">' + rects + '</svg>';
+}
+
 function renderAllCluesReference() {
   var body = document.getElementById('qb-allclues-body');
   if (!body || body.dataset.built) return;
@@ -1188,6 +1205,7 @@ function renderCluePanel(state) {
         var clue = clues[ci];
         var checked = !!obsCheckedClueKeys[pi + ':' + clue.id];
         clueHtml += '<div class="qb-clue-item">'
+          + qbMiniBoardSvgFromCells(clue.matchingCells || [])
           + '<label class="qb-clue-highlight-toggle" title="Highlight cells matching this clue alone">'
           + '<input type="checkbox" ' + (checked ? 'checked' : '') + ' onchange="toggleObsClueHighlight(' + pi + ',' + clue.id + ', this.checked)">'
           + '</label>'
@@ -1219,6 +1237,7 @@ function renderCluePanel(state) {
     var clue2    = clues2[i];
     var checked2 = !!checkedClueIds[clue2.id];
     clueHtml2 += '<div class="qb-clue-item">'
+      + qbMiniBoardSvgFromCells(clue2.matchingCells || [])
       + '<label class="qb-clue-highlight-toggle" title="Highlight cells matching this clue alone">'
       + '<input type="checkbox" ' + (checked2 ? 'checked' : '') + ' onchange="toggleClueHighlight(' + clue2.id + ', this.checked)">'
       + '</label>'
