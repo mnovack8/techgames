@@ -200,7 +200,7 @@
     <div class="qb-panel">
 
       <!-- HOW TO PLAY (in-game) -->
-      <div class="qb-panel-section">
+      <div class="qb-panel-section" id="qb-htp-section">
         <button class="qb-btn" onclick="document.getElementById('qb-htp-overlay-game').style.display='flex'" style="border-color:#93c5fd;background:#eff6ff;color:#1d4ed8;font-weight:700">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.3-1.2 1.8-2 2.6-.4.4-.5.7-.5 1.4"/><circle cx="12" cy="17" r="0.6" fill="currentColor" stroke="none"/></svg>
           How to Play
@@ -308,6 +308,12 @@
         <div class="qb-section-title">Turn</div>
         <div class="qb-turn-status" id="qb-turn-status">Waiting to start…</div>
         <div class="qb-turn-actions" id="qb-turn-actions"></div>
+      </div>
+
+      <!-- HISTORY -->
+      <div class="qb-panel-section" id="qb-log-section">
+        <div class="qb-section-title">History</div>
+        <div class="qb-log-body" id="qb-log-body"></div>
       </div>
 
     </div>
@@ -1078,6 +1084,7 @@ function renderGame(state) {
   renderPublicClue(state);
   renderCluePanel(state);
   renderEnvPanel(state);
+  renderHistoryPanel(state);
   renderTurnPanel(state);
 
   if (state.proposedCell) highlightProposed(state.proposedCell.decimal);
@@ -1288,6 +1295,23 @@ function renderEnvPanel(state) {
   } else {
     if (cardDisplay) cardDisplay.style.display = 'none';
   }
+}
+
+// ==================== RENDER HISTORY (ACTIVITY LOG) ====================
+// state.log is server-authoritative (see qbLog() in qubit-logic.js) — public
+// information only, newest entry first, so it's safe to show to players and
+// observers alike exactly as received, no client-side diffing needed.
+function renderHistoryPanel(state) {
+  var body = document.getElementById('qb-log-body');
+  if (!body) return;
+  var log = state.log || [];
+  if (!log.length) {
+    body.innerHTML = '<div class="qb-log-placeholder">Nothing has happened yet.</div>';
+    return;
+  }
+  body.innerHTML = log.map(function(entry){
+    return '<div class="qb-log-entry">' + esc(entry) + '</div>';
+  }).join('');
 }
 
 // ==================== RENDER TURN PANEL ====================

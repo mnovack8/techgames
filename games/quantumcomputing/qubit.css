@@ -639,18 +639,55 @@ body.rejoin-pending .screen.active { visibility: hidden; }
 .qb-leg-square { border-radius: 2px; border: 2px solid #64748b; background: rgba(100,116,139,0.2); }
 
 /* ===== CONTROL PANEL ===== */
+/* Two-column layout on wide screens: How to Play / Team Clue / Environment
+   stack in a narrow left column, My Wavelength Clue takes a tall right
+   column alongside them (it's the section most likely to grow, now that
+   each clue shows a mini board thumbnail), and Turn spans full width
+   underneath both — it needs the room for however many action buttons
+   (e.g. one per teammate to choose as Verifier) a given turn requires.
+   This fits the whole panel in the viewport instead of stacking all 5
+   sections vertically and scrolling. Falls back to the original single
+   stacked column (assigned via the same grid-area rules degrading to one
+   column) below 900px, alongside the board reflowing above/below it. */
 .qb-panel {
-  width: 420px;
+  width: 680px;
   flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: minmax(230px, 320px) 1fr;
+  grid-template-areas:
+    "htp    clue"
+    "public clue"
+    "env    clue"
+    "turn   turn"
+    "log    log";
+  align-content: start;
   gap: 0;
   border-left: 1px solid #e2e8f0;
   overflow-y: auto;
   background: #f8fafc;
 }
+#qb-htp-section          { grid-area: htp; }
+#qb-public-clue-section  { grid-area: public; }
+#qb-clue-section         { grid-area: clue; border-left: 1px solid #e2e8f0; display: flex; flex-direction: column; min-height: 0; }
+#qb-env-section          { grid-area: env; }
+#qb-turn-section         { grid-area: turn; }
+/* History (the activity log) gets its own full-width row below Turn —
+   spanning both columns gives its entries the room to actually read as
+   sentences instead of wrapping awkwardly in the narrow left column. It's
+   also the one section with genuinely unbounded content (a long game keeps
+   adding entries), so it still gets an internal scroll capped by height —
+   the same trick Byte Club's Activity feed uses — rather than letting it
+   grow and push the whole panel taller. */
+#qb-log-section          { grid-area: log; display: flex; flex-direction: column; min-height: 0; border-bottom: none; }
 @media (max-width: 900px) {
-  .qb-panel { width: 100%; border-left: none; border-top: 1px solid #e2e8f0; }
+  .qb-panel {
+    width: 100%;
+    grid-template-columns: 1fr;
+    grid-template-areas: "htp" "public" "clue" "env" "turn" "log";
+    border-left: none;
+    border-top: 1px solid #e2e8f0;
+  }
+  #qb-clue-section { border-left: none; }
 }
 
 .qb-panel-section {
@@ -782,6 +819,45 @@ body.rejoin-pending .screen.active { visibility: hidden; }
 .qb-card-noise { border-color: rgba(239,68,68,0.4); background: #fef2f2; }
 .qb-card-noise .qb-card-type { color: #b91c1c; }
 .qb-card-maintained { border-color: #e2e8f0; }
+
+/* ===== HISTORY (ACTIVITY LOG) ===== */
+/* Newest entry first and most prominent, fading down in size/weight for
+   older ones — same idea as Byte Club's Activity feed, so returning players
+   get a familiar pattern. Capped height + internal scroll keeps this section
+   from pushing the rest of the panel (or the whole page) taller. */
+.qb-log-body {
+  flex: 1;
+  min-height: 60px;
+  max-height: 260px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.qb-log-entry {
+  border-left: 3px solid #cbd5e1;
+  border-radius: 0 6px 6px 0;
+  padding: 5px 9px;
+  color: #64748b;
+  font-size: 10.5px;
+  line-height: 1.4;
+  background: #ffffff;
+}
+.qb-log-entry:first-child {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #1e293b;
+  padding: 8px 11px;
+  border-left-color: #2563eb;
+  background: #eff6ff;
+}
+.qb-log-entry:nth-child(2) {
+  font-size: 11px;
+  font-weight: 600;
+  color: #334155;
+  border-left-color: #93c5fd;
+}
+.qb-log-placeholder { font-size: 11px; color: #94a3b8; font-style: italic; }
 
 /* ===== TURN PANEL ===== */
 .qb-turn-status {

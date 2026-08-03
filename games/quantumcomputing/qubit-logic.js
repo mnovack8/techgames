@@ -338,10 +338,10 @@ const SETUP_CARDS = {
   }},
   // Answer 163 = 10100011
   2: { answerIdx: 2, clues: {
-    '3p': { colors: { red:[26,53], blue:[35,53], green:[6,14] }, public: 63 },
-    '4p': { colors: { red:[26,9], blue:[35,36], green:[6,14], yellow:[20,13] }, public: 63 },
-    '5p': { colors: { red:[26,33], blue:[35,36], green:[6,14], yellow:[20,13], purple:[51,1] }, public: 63 },
-    '6p': { colors: { red:[26,33], blue:[35,36], green:[6,14], yellow:[20,13], purple:[51,1], orange:[34,37] }, public: 63 },
+    '3p': { colors: { red:[26,53], blue:[21,53], green:[6,14] }, public: 63 },
+    '4p': { colors: { red:[26,9], blue:[21,36], green:[6,14], yellow:[20,13] }, public: 63 },
+    '5p': { colors: { red:[26,33], blue:[21,36], green:[6,14], yellow:[20,13], purple:[51,1] }, public: 63 },
+    '6p': { colors: { red:[26,33], blue:[21,36], green:[6,14], yellow:[20,13], purple:[51,1], orange:[34,37] }, public: 63 },
   }},
   // Answer 52 = 00110100
   3: { answerIdx: 3, clues: {
@@ -359,17 +359,17 @@ const SETUP_CARDS = {
   }},
   // Answer 215 = 11010111
   5: { answerIdx: 5, clues: {
-    '3p': { colors: { red:[2,53], blue:[11,6], green:[20,12] }, public: 64 },
-    '4p': { colors: { red:[2,8], blue:[11,12], green:[20,12], yellow:[20,2] }, public: 64 },
-    '5p': { colors: { red:[2,16], blue:[11,48], green:[20,11], yellow:[20,2], purple:[20,1] }, public: 61 },
-    '6p': { colors: { red:[2,40], blue:[11,16], green:[20,11], yellow:[20,2], purple:[20,1], orange:[17,16] }, public: 61 },
+    '3p': { colors: { red:[2,53], blue:[27,6], green:[20,12] }, public: 64 },
+    '4p': { colors: { red:[2,8], blue:[27,12], green:[20,12], yellow:[20,2] }, public: 64 },
+    '5p': { colors: { red:[2,16], blue:[27,48], green:[20,11], yellow:[20,2], purple:[20,1] }, public: 61 },
+    '6p': { colors: { red:[2,40], blue:[27,16], green:[20,11], yellow:[20,2], purple:[20,1], orange:[17,16] }, public: 61 },
   }},
   // Answer 251 = 11111011
   6: { answerIdx: 6, clues: {
-    '3p': { colors: { red:[53,4], blue:[11,48], green:[60,19] }, public: 61 },
-    '4p': { colors: { red:[53,42], blue:[11,12], green:[60,40], yellow:[8,20] }, public: 61 },
-    '5p': { colors: { red:[53,16], blue:[11,26], green:[60,40], yellow:[8,20], purple:[37,54] }, public: 61 },
-    '6p': { colors: { red:[53,4], blue:[11,26], green:[60,40], yellow:[8,20], purple:[37,54], orange:[17,29] }, public: 61 },
+    '3p': { colors: { red:[53,4], blue:[1,48], green:[60,19] }, public: 61 },
+    '4p': { colors: { red:[53,42], blue:[1,12], green:[60,40], yellow:[8,20] }, public: 61 },
+    '5p': { colors: { red:[53,16], blue:[1,26], green:[60,40], yellow:[8,20], purple:[37,54] }, public: 61 },
+    '6p': { colors: { red:[53,4], blue:[1,26], green:[60,40], yellow:[8,20], purple:[37,54], orange:[17,29] }, public: 61 },
   }},
   // Answer 225 = 11100001
   7: { answerIdx: 7, clues: {
@@ -387,7 +387,7 @@ const SETUP_CARDS = {
   }},
   // Answer 1 = 00000001
   9: { answerIdx: 9, clues: {
-    '3p': { colors: { red:[3,5], blue:[46,57], green:[19,37] }, public: 61 },
+    '3p': { colors: { red:[3,16], blue:[46,57], green:[19,37] }, public: 61 },
     '4p': { colors: { red:[3,40], blue:[46,51], green:[19,10], yellow:[21,33] }, public: 61 },
     '5p': { colors: { red:[3,10], blue:[46,20], green:[19,10], yellow:[21,33], purple:[48,3] }, public: 61 },
     '6p': { colors: { red:[3,2], blue:[46,20], green:[19,10], yellow:[21,33], purple:[48,3], orange:[57,47] }, public: 61 },
@@ -499,20 +499,42 @@ function drawCard(gs) {
   return card;
 }
 
+// ==================== ACTIVITY LOG ====================
+// A running history of what happened, newest first — public information
+// only (no clue contents), so it's safe to broadcast to every player and
+// observer alike. Capped so the payload/UI list never grows unbounded.
+const QB_LOG_MAX = 40;
+function qbLog(gs, msg) {
+  // Defensive: a room's persisted qbState from before this field existed
+  // (loaded back in via the server's state-persistence-across-restarts) would
+  // otherwise crash every action taken on it with "Cannot read properties of
+  // undefined (reading 'unshift')".
+  if (!Array.isArray(gs.log)) gs.log = [];
+  gs.log.unshift(msg);
+  if (gs.log.length > QB_LOG_MAX) gs.log.length = QB_LOG_MAX;
+}
+const CARD_LOG_LABEL = {
+  maintained: 'Coherence Maintained',
+  cascade:    'Constructive Cascade',
+  noise:      'Noise',
+};
+
 // Draws the Environment card for whoever is about to act and opens their
 // Propose step — called at game start and again at the top of every turn, so
 // the card is always known BEFORE a cell is proposed, not after.
 // proposedCell deliberately persists past the turn boundary: it's the record
 // of what the previous player just did, and the next propose overwrites it.
-function startTurn(gs) {
+function startTurn(gs, room) {
   gs.currentCard = drawCard(gs);
   gs.phase = 'propose';
+  const name = room.players[gs.currentPlayerIdx]?.name || 'A player';
+  qbLog(gs, `${name}'s turn — ${CARD_LOG_LABEL[gs.currentCard] || gs.currentCard} drawn.`);
 }
 
 function advanceTurn(gs, room) {
   if (!gs.gameOver) {
     gs.currentPlayerIdx = (gs.currentPlayerIdx + 1) % room.players.length;
-    startTurn(gs);
+    startTurn(gs, room);
   }
 }
 
@@ -529,7 +551,12 @@ function initQBGame(room) {
   const card   = SETUP_CARDS[cardId];
   const tier   = card.clues[pk];
   const clueMap = tier.colors;
-  const playerGameColors = room.players.map((_, i) => GAME_COLORS[i]);
+  // Use each player's own lobby seat color as their in-game clue/token color
+  // (the two color sets are identical) rather than assigning by seat
+  // position — a positional assignment could give a player a badge color
+  // that doesn't match the color already shown in their name/seat elsewhere
+  // in the UI (e.g. a bot named "Purple (Bot)" showing green tokens).
+  const playerGameColors = room.players.map(p => p.color);
   const playerClues = room.players.map((_, i) => {
     const gc  = playerGameColors[i];
     const ids = clueMap[gc] || [];
@@ -574,9 +601,10 @@ function initQBGame(room) {
     tokens:       {},
     gameOver:     false,
     won:          false,
+    log:          [],
   };
   // Draw the first turn's Environment card before anyone has proposed anything.
-  startTurn(room.qbState);
+  startTurn(room.qbState, room);
 }
 
 function processPropose(room, playerIdx, decimal) {
@@ -598,6 +626,8 @@ function processPropose(room, playerIdx, decimal) {
   // Active player always places their own token immediately — always a
   // circle, since the check above guarantees the cell matches their clue.
   placeToken(gs, playerIdx, decimal);
+  const name = room.players[playerIdx]?.name || 'A player';
+  qbLog(gs, `${name} guessed cell ${decimal}.`);
 
   // The Environment card for this turn was already drawn by startTurn(), so
   // it's known to the player before they propose — not revealed after.
@@ -610,17 +640,25 @@ function processPropose(room, playerIdx, decimal) {
       gs.gameOver = true;
       gs.won      = false;
       gs.phase    = 'game_over';
+      qbLog(gs, `⚠ Decoherence card! Third strike — mission failed.`);
       return null;
     }
+    qbLog(gs, `⚠ Decoherence card drawn (strike ${gs.noiseCount}/3).`);
     // A non-fatal Noise strike doesn't otherwise interrupt the turn — the
     // player still chooses a Verify target exactly as on a Maintained card.
   }
   if (card === 'cascade') {
     // Constructive Cascade replaces the usual single-player Verify: every
     // other player checks the cell against their own clue.
+    const results = [];
     for (let i = 0; i < room.players.length; i++) {
-      if (i !== playerIdx) placeToken(gs, i, decimal);
+      if (i === playerIdx) continue;
+      placeToken(gs, i, decimal);
+      const tok = gs.tokens[decimal].find(t => t.playerIdx === i);
+      const pname = room.players[i]?.name || 'Player';
+      results.push(`${pname} ${tok.result === 'circle' ? 'matched ✓' : 'did not match ✗'}`);
     }
+    qbLog(gs, `Cascade — everyone verified cell ${decimal}: ${results.join(', ')}.`);
     advanceTurn(gs, room);
     return null;
   }
@@ -641,6 +679,8 @@ function processVerify(room, playerIdx, targetIdx) {
   placeToken(gs, targetIdx, gs.proposedCell.decimal);
   const tok = gs.tokens[gs.proposedCell.decimal].find(t => t.playerIdx === targetIdx);
   gs.lastVerify = { targetIdx, result: tok.result };
+  const targetName = room.players[targetIdx]?.name || 'Player';
+  qbLog(gs, `${targetName} verified cell ${gs.proposedCell.decimal}: ${tok.result === 'circle' ? 'matched ✓' : 'did not match ✗'}.`);
   advanceTurn(gs, room);
   return null;
 }
@@ -661,6 +701,10 @@ function processMeasurement(room, playerIdx, decimal) {
   gs.won      = correct;
   gs.phase    = 'game_over';
   gs.proposedCell = { decimal, row: CELL[decimal].row, col: CELL[decimal].col, binary: CELL[decimal].binary, wasMeasurement: true };
+  const name = room.players[playerIdx]?.name || 'A player';
+  qbLog(gs, correct
+    ? `⚛ ${name} called Measurement on cell ${decimal} — CORRECT! Mission complete.`
+    : `⚛ ${name} called Measurement on cell ${decimal} — WRONG. Mission failed.`);
   return null;
 }
 
@@ -758,6 +802,7 @@ function qbBroadcastState(room) {
     won:          gs.won,
     answerDecimal: gs.gameOver ? gs.answerDecimal : null,
     answerBinary:  gs.gameOver ? CELL[gs.answerDecimal]?.binary : null,
+    log: gs.log,
     players: room.players.map((p, i) => ({
       name: p.name, lobbyColor: p.color,
       gameColor: gs.playerGameColors[i],
