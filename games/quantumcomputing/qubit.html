@@ -558,6 +558,11 @@ function qbBuildClueRefGroups() {
       test: function(c){ return (c.decimal >= lo1 && c.decimal <= hi1) || (c.decimal >= lo2 && c.decimal <= hi2); } };
   })});
 
+  if (qbMode !== 'advanced') {
+    var beginnerExcluded = ['Bit Position', 'Bit Count', 'Ket Proximity'];
+    groups = groups.filter(function(g){ return beginnerExcluded.indexOf(g.category) === -1; });
+  }
+
   return groups;
 }
 
@@ -614,6 +619,7 @@ function renderAllCluesReference() {
 // ==================== STATE ====================
 var hub, gs = null;
 var myIdx = -1, roomCode = null, isHost = false, isObserver = false;
+var qbMode = 'beginner';
 var cellEls = {};
 var boardReady = false;
 var measureMode = false;
@@ -667,6 +673,49 @@ function copyLink() {
 
 function startGame() { send({ type: 'start_game' }); }
 function toggleBot()  { send({ type: 'toggle_bot' }); }
+
+function applyQbModeClass() {
+  document.body.classList.toggle('qb-mode-advanced', qbMode === 'advanced');
+  document.body.classList.toggle('qb-mode-beginner', qbMode !== 'advanced');
+}
+
+var QB_MODE_INFO_HTML = '<div class="mode-info-row"><strong>Normal</strong> — simpler board (decimal + row/column numbers only, no bits or kets), and a smaller pool of possible clues.</div>'
+  + '<div class="mode-info-row"><strong>Advanced</strong> — full board (adds bits and kets), and a larger pool of possible clues.</div>';
+
+function toggleModeInfo() {
+  var el = document.getElementById('qb-mode-info');
+  if (!el) return;
+  el.style.display = (el.style.display === 'block') ? 'none' : 'block';
+}
+
+// Host sees two clickable buttons; everyone else sees a readonly label —
+// same host-gating pattern as the bot toggle in renderLobbyPlayers().
+function renderModeSection() {
+  var el = document.getElementById('game-mode-section');
+  if (!el) return;
+  el.style.display = 'block';
+  var isAdv = qbMode === 'advanced';
+  var labelRow = '<div class="mode-select-label-row">'
+    + '<div class="mode-select-label">Game Mode</div>'
+    + '<button type="button" class="mode-info-btn" aria-label="What\'s the difference?" title="What\'s the difference?" onclick="toggleModeInfo()">i</button>'
+    + '</div>'
+    + '<div class="mode-info-box" id="qb-mode-info" style="display:none">' + QB_MODE_INFO_HTML + '</div>';
+  if (isHost) {
+    el.innerHTML = labelRow
+      + '<div class="mode-toggle-group">'
+      + '<button type="button" class="mode-toggle-btn' + (!isAdv ? ' active' : '') + '" onclick="setQbMode(\'beginner\')">Normal</button>'
+      + '<button type="button" class="mode-toggle-btn' + (isAdv ? ' active' : '') + '" onclick="setQbMode(\'advanced\')">Advanced</button>'
+      + '</div>';
+  } else {
+    el.innerHTML = labelRow
+      + '<div class="mode-readonly">' + (isAdv ? 'Advanced' : 'Normal') + '</div>';
+  }
+}
+
+function setQbMode(m) {
+  if (!isHost) return;
+  send({ type: 'set_qb_mode', mode: m });
+}
 
 function leaveRoom() {
   sessionStorage.removeItem(SESSION_KEY);
@@ -1925,6 +1974,9 @@ function handleMsg(msg) {
       if (msg.code) roomCode = msg.code;
       var disp = document.getElementById('room-code-display');
       if (disp && roomCode) disp.textContent = roomCode;
+      qbMode = msg.mode || 'beginner';
+      applyQbModeClass();
+      renderModeSection();
       renderLobbyPlayers(msg.players, msg.observers);
       break;
 
@@ -1958,6 +2010,7 @@ function handleMsg(msg) {
       // Same guard as qb_game_started above — ignore state broadcasts that
       // arrive after the player has already left this room.
       if (!roomCode) break;
+      if (msg.mode) { qbMode = msg.mode; applyQbModeClass(); }
       showScreen('game');
       if (!boardReady) initBoard();
       else sizeBoard();
@@ -1978,6 +2031,7 @@ function handleMsg(msg) {
       sessionStorage.removeItem(SESSION_KEY);
       sessionStorage.removeItem(OBS_SESSION_KEY);
       roomCode = null; myIdx = -1; gs = null; isHost = false;
+      document.getElementById('btn-cancel-game').style.display = 'none';
       showScreen('lobby');
       showToast('The game was cancelled by the host');
       break;

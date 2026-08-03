@@ -156,6 +156,7 @@ function broadcastLobby(room) {
   const lobbyInfo = {
     type: 'lobby_update',
     code: room.code,
+    mode: room.mode || 'beginner',
     players: room.players.map((p, i) => ({
       color: p.color, name: p.name, connected: p.connected, isHost: i === room.hostIdx, isBot: !!p.isBot,
     })),
@@ -359,7 +360,7 @@ function handleMessage(ws, raw) {
         gameType,
         players: [{ color, name: sanitizeName(msg.playerName, COLOR_INFO[color].name), ws, connected: true }],
         observers: [],
-        started: false, state: null, bcState: null,
+        started: false, state: null, bcState: null, mode: 'beginner',
         createdAt: Date.now(),
       };
       rooms.set(code, room);
@@ -382,7 +383,7 @@ function handleMessage(ws, raw) {
         gameType: resolveGameType(msg.gameType),
         players: [],
         observers: [{ ws, name, connected: true }],
-        started: false, state: null, bcState: null,
+        started: false, state: null, bcState: null, mode: 'beginner',
         createdAt: Date.now(),
       };
       rooms.set(code, room);
@@ -615,6 +616,20 @@ function handleMessage(ws, raw) {
           }
         }
       }
+      broadcastLobby(room);
+      break;
+    }
+
+    case 'set_qb_mode': {
+      const info = wsData.get(ws);
+      if (!info) return send(ws, {type:'error',msg:'Not in a room'});
+      const room = rooms.get(info.roomCode);
+      if (!room || room.started) return;
+      const isPlayerHost = !info.isObserver && info.playerIdx === room.hostIdx;
+      const isObsHost = info.isObserver && info.observerIdx === 0;
+      if (!isPlayerHost && !isObsHost) return send(ws, {type:'error',msg:'Only host can change game mode'});
+      if (msg.mode !== 'beginner' && msg.mode !== 'advanced') return;
+      room.mode = msg.mode;
       broadcastLobby(room);
       break;
     }

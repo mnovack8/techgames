@@ -39,7 +39,11 @@ for (const cell of BOARD) CELL[cell.decimal] = cell;
 // 60 clues per color. CLUES[color][id] = { text, eval }
 
 // Clue builder helpers
-const B   = (n, v) => ({ text: `Qubit ${n} (from left) of your code is a ${v}.`,                           eval: c => c.bits[n-1] === v });
+// `advancedOnly` marks clues from the Bit Position / Bit Count / Ket
+// Proximity categories — these require reading bits or kets off the board,
+// which Beginner-mode boards don't show, so initQBGame() strips any clue id
+// carrying this flag when a room is running in beginner mode.
+const B   = (n, v) => ({ text: `Qubit ${n} (from left) of your code is a ${v}.`,                           eval: c => c.bits[n-1] === v, advancedOnly: true });
 const DR  = (lo,hi)=> ({ text: `The decimal digit-sum of your code is between ${lo} and ${hi}.`,           eval: c => c.digitSum >= lo && c.digitSum <= hi });
 const DM  = (n)    => ({ text: `The decimal digit-sum of your code is ${n} or more.`,                      eval: c => c.digitSum >= n });
 const NR  = (lo,hi)=> ({ text: `(Row + column) of your cell is between ${lo} and ${hi}.`,                  eval: c => c.nibbleSum >= lo && c.nibbleSum <= hi });
@@ -54,7 +58,7 @@ const NM  = (n)    => ({ text: `(Row + column) of your cell is ${n} or more.`,  
 // further without a second rule.
 const CD  = ()     => ({ text: `(Column minus row) of your cell is 0 or more.`,                             eval: c => (c.col - c.row) >= 0 });
 const RD  = ()     => ({ text: `(Row minus column) of your cell is 0 or more.`,                             eval: c => (c.row - c.col) >= 0 });
-const BC  = (vs)   => ({ text: `Your 8-qubit code contains exactly ${vs.join(' or ')} ones.`,               eval: c => vs.includes(c.bitCount) });
+const BC  = (vs)   => ({ text: `Your 8-qubit code contains exactly ${vs.join(' or ')} ones.`,               eval: c => vs.includes(c.bitCount), advancedOnly: true });
 const R   = (rs)   => ({ text: `Your code's cell is inside region ${rs.join(', or ')}.`,                    eval: c => rs.includes(c.region) });
 const DAR = ()     => ({ text: `Your code's cell is in a yellow-shaded quadrant.`,                          eval: c => c.isDark });
 const LIT = ()     => ({ text: `Your code's cell is in a blue-shaded quadrant.`,                            eval: c => !c.isDark });
@@ -117,6 +121,7 @@ function ketMinDist(c, predicate) {
 const KP = (n, label, predicate) => ({
   text: `Your code's cell is within ${n} space${n === 1 ? '' : 's'} of ${label}.`,
   eval: c => ketMinDist(c, predicate) <= n,
+  advancedOnly: true,
 });
 
 // Ket Proximity clues (Advance mode): identical across every color's book,
@@ -551,6 +556,11 @@ function initQBGame(room) {
   const card   = SETUP_CARDS[cardId];
   const tier   = card.clues[pk];
   const clueMap = tier.colors;
+  // Beginner boards show no bits or kets, so Bit Position / Bit Count /
+  // Ket Proximity clues (tagged advancedOnly) aren't playable — drop them
+  // from each player's hand rather than dealing an unusable clue.
+  const mode = room.mode === 'advanced' ? 'advanced' : 'beginner';
+  const answerCell = CELL[ANSWERS[card.answerIdx]];
   // Use each player's own lobby seat color as their in-game clue/token color
   // (the two color sets are identical) rather than assigning by seat
   // position — a positional assignment could give a player a badge color
@@ -559,7 +569,32 @@ function initQBGame(room) {
   const playerGameColors = room.players.map(p => p.color);
   const playerClues = room.players.map((_, i) => {
     const gc  = playerGameColors[i];
-    const ids = clueMap[gc] || [];
+    let ids = (clueMap[gc] || []).filter(id => mode === 'advanced' || !CLUES[gc]?.[id]?.advancedOnly);
+    // A hand whose only dealt clues were all advancedOnly would otherwise be
+    // left with zero clues in beginner mode — every player needs at least
+    // one, so backfill with any other non-bit clue from their own color's
+    // book that still holds true for this game's actual answer.
+    if (ids.length === 0) {
+      const fallbackId = Object.keys(CLUES[gc] || {})
+        .map(Number)
+        .find(id => !CLUES[gc][id].advancedOnly && evalClue(gc, id, answerCell));
+      if (fallbackId != null) ids = [fallbackId];
+    }
+    // Advanced games should actually put the fuller clue bank to use rather
+    // than only ever dealing the same base pair SETUP_CARDS hard-codes (which
+    // never reaches the Bit Position / Bit Count / Ket Proximity categories) —
+    // add one more clue from those categories, picked from whichever are
+    // still true for this game's real answer, so a player sometimes gets a
+    // clue type beginner mode can never show.
+    if (mode === 'advanced') {
+      const dealt = new Set(ids);
+      const advancedExtras = Object.keys(CLUES[gc] || {})
+        .map(Number)
+        .filter(id => CLUES[gc][id].advancedOnly && !dealt.has(id) && evalClue(gc, id, answerCell));
+      if (advancedExtras.length) {
+        ids = [...ids, advancedExtras[Math.floor(Math.random() * advancedExtras.length)]];
+      }
+    }
     // Each clue's own matching-cell list (not just the AND of the whole
     // hand) lets a player highlight one clue at a time in the UI.
     return ids.map(id => ({
@@ -583,6 +618,7 @@ function initQBGame(room) {
   };
 
   room.qbState = {
+    mode,
     setupCardId: cardId,
     answerIdx:   card.answerIdx,
     answerDecimal: ANSWERS[card.answerIdx],
@@ -788,6 +824,7 @@ function qbBroadcastState(room) {
   const base = {
     type: 'qb_state',
     phase: gs.phase,
+    mode: gs.mode,
     setupCardId: gs.setupCardId,
     currentPlayerIdx: gs.currentPlayerIdx,
     playerGameColors: gs.playerGameColors,
