@@ -160,7 +160,10 @@ body.rejoin-pending .screen.active { visibility: hidden; }
 
 /* ===== "ALL POSSIBLE CLUES" reference (in-panel button + mini boards) ===== */
 .qb-ref-btn {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
   width: 100%;
   margin: 6px 0 10px;
   padding: 6px 10px;
@@ -174,6 +177,7 @@ body.rejoin-pending .screen.active { visibility: hidden; }
   cursor: pointer;
   transition: all 0.15s;
 }
+.qb-ref-btn svg { flex-shrink: 0; }
 .qb-ref-btn:hover { background: #dbeafe; border-color: #1d4ed8; }
 .qb-htp-modal.qb-allclues-modal { max-width: 960px; }
 .qb-clueref-count { color: #64748b; font-weight: 600; text-transform: none; letter-spacing: 0; }

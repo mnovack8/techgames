@@ -22,8 +22,12 @@ function buildCell(row, col) {
   const blockRow  = Math.floor(row / 4);
   const blockCol  = Math.floor(col / 4);
   const isDark    = (blockRow + blockCol) % 2 === 0;
+  // Fine per-cell checkerboard (independent of the big 4x4-block one above) —
+  // matches the client's qb-fine-a/qb-fine-b classes: (row+col) odd is the
+  // darker overlay, even is the lighter one.
+  const fineDark  = (row + col) % 2 === 1;
   const region    = getRegion(row, col);
-  return { row, col, decimal, binary, bits, digitSum, nibbleSum, bitCount, isDark, region };
+  return { row, col, decimal, binary, bits, digitSum, nibbleSum, bitCount, isDark, fineDark, region };
 }
 
 const BOARD = [];
@@ -40,10 +44,51 @@ const DR  = (lo,hi)=> ({ text: `The decimal digit-sum of your code is between ${
 const DM  = (n)    => ({ text: `The decimal digit-sum of your code is ${n} or more.`,                      eval: c => c.digitSum >= n });
 const NR  = (lo,hi)=> ({ text: `(Row + column) of your cell is between ${lo} and ${hi}.`,                  eval: c => c.nibbleSum >= lo && c.nibbleSum <= hi });
 const NM  = (n)    => ({ text: `(Row + column) of your cell is ${n} or more.`,                             eval: c => c.nibbleSum >= n });
+// Anti-diagonal counterparts of NR/NM: row+col only distinguishes the
+// top-left corner (low sum) from the bottom-right corner (high sum) — these
+// two use (column - row) and (row - column) instead, covering the other two
+// corners (top-right, bottom-left). Same triangular-distribution math as
+// row+col, so >=0 lands at 136 matches (just over half), not exactly 128 —
+// there's no integer threshold on either axis that splits the board exactly
+// in half, since the middle diagonal is a 16-cell band that can't be divided
+// further without a second rule.
+const CD  = ()     => ({ text: `(Column minus row) of your cell is 0 or more.`,                             eval: c => (c.col - c.row) >= 0 });
+const RD  = ()     => ({ text: `(Row minus column) of your cell is 0 or more.`,                             eval: c => (c.row - c.col) >= 0 });
 const BC  = (vs)   => ({ text: `Your 8-qubit code contains exactly ${vs.join(' or ')} ones.`,               eval: c => vs.includes(c.bitCount) });
 const R   = (rs)   => ({ text: `Your code's cell is inside region ${rs.join(', or ')}.`,                    eval: c => rs.includes(c.region) });
 const DAR = ()     => ({ text: `Your code's cell is in a yellow-shaded quadrant.`,                          eval: c => c.isDark });
 const LIT = ()     => ({ text: `Your code's cell is in a blue-shaded quadrant.`,                            eval: c => !c.isDark });
+// Fine per-cell checkerboard (independent of the big 4x4-block shading
+// above) — a dark/light overlay that alternates every single cell, so it
+// applies within BOTH the yellow and blue quadrants, not one or the other.
+const FDAR = ()    => ({ text: `Your code's cell is in a dark square (yellow or blue).`,                    eval: c => c.fineDark });
+const FLIT = ()    => ({ text: `Your code's cell is in a light square (yellow or blue).`,                   eval: c => !c.fineDark });
+// Coarsest checkerboard level: the board's actual 4 quadrants (8x8 each,
+// 2 rows x 2 cols of the 4x4-block grid) — top-left+bottom-right (diagonal
+// pair) vs top-right+bottom-left (the other diagonal pair). Each of these
+// two clues matches exactly 128 cells.
+const quadParity = c => (Math.floor(c.row / 8) + Math.floor(c.col / 8)) % 2;
+const QTL = ()     => ({ text: `Your code's cell is in the top-left or bottom-right quadrant.`,              eval: c => quadParity(c) === 0 });
+const QTR = ()     => ({ text: `Your code's cell is in the top-right or bottom-left quadrant.`,              eval: c => quadParity(c) === 1 });
+// Adjacent-pair versions (128 cells each, never just a single 64-cell
+// quarter) — pairing two quadrants that share a row (top/bottom) or a
+// column (left/right), as opposed to QTL/QTR's diagonal pairing above.
+const quadRow = c => Math.floor(c.row / 8);
+const quadCol = c => Math.floor(c.col / 8);
+const QUAD_TOP    = () => ({ text: `Your code's cell is in the top-left or top-right quadrant.`,         eval: c => quadRow(c) === 0 });
+const QUAD_BOTTOM = () => ({ text: `Your code's cell is in the bottom-left or bottom-right quadrant.`,   eval: c => quadRow(c) === 1 });
+const QUAD_LEFT   = () => ({ text: `Your code's cell is in the top-left or bottom-left quadrant.`,       eval: c => quadCol(c) === 0 });
+const QUAD_RIGHT  = () => ({ text: `Your code's cell is in the top-right or bottom-right quadrant.`,     eval: c => quadCol(c) === 1 });
+// Back to the finest (4x4-block) checkerboard grid, but a different split:
+// of the 16 blocks, 8 form an "X" across the board — the 4 corner blocks
+// (blockRow===blockCol on the main diagonal, blockRow+blockCol===3 on the
+// anti-diagonal) plus the 4 center blocks (where the two diagonals cross).
+// The other 8 blocks (off both diagonals) are the complement. 128 cells each.
+const blockRow = c => Math.floor(c.row / 4);
+const blockCol = c => Math.floor(c.col / 4);
+const isXBlock = c => blockRow(c) === blockCol(c) || blockRow(c) + blockCol(c) === 3;
+const XIN  = () => ({ text: `Your code's cell is in one of the 8 blocks forming an X across the board (the 4 corners and the 4 center blocks).`, eval: c => isXBlock(c) });
+const XOUT = () => ({ text: `Your code's cell is in one of the 8 blocks NOT in the X pattern (not a corner or center block).`,                    eval: c => !isXBlock(c) });
 
 // Entanglement clues: whether two distinct qubit positions carry the same
 // value or differ. `n` and `m` are 1-indexed from the left, matching B(n,v).
@@ -79,79 +124,157 @@ const KP = (n, label, predicate) => ({
 // spreading this shared object into each color, rather than retyping it six
 // times. See qbBuildClueRefGroups() in qubit.html for the client-side mirror
 // of this same category.
+// Labels say "Black"/"White" (the ket's rendered color), not the internal
+// 'amber'/'blue' type keys — those are just data, the board itself no longer
+// shows amber/blue.
 const KET_PROXIMITY_CLUES = {
   81: KP(1, 'any ket', () => true),
   82: KP(2, 'any Ket 1 (either color)', k => k.type.endsWith('1')),
   83: KP(2, 'any Ket 0 (either color)', k => k.type.endsWith('0')),
-  84: KP(2, 'any Blue Ket (either value)', k => k.type.indexOf('blue') === 0),
-  85: KP(2, 'any Amber Ket (either value)', k => k.type.indexOf('amber') === 0),
-  86: KP(3, 'an Amber Ket 0', k => k.type === 'amber0'),
-  87: KP(3, 'an Amber Ket 1', k => k.type === 'amber1'),
-  88: KP(3, 'a Blue Ket 0', k => k.type === 'blue0'),
-  89: KP(3, 'a Blue Ket 1', k => k.type === 'blue1'),
+  84: KP(2, 'any White Ket (either value)', k => k.type.indexOf('blue') === 0),
+  85: KP(2, 'any Black Ket (either value)', k => k.type.indexOf('amber') === 0),
+  86: KP(3, 'a Black Ket 0', k => k.type === 'amber0'),
+  87: KP(3, 'a Black Ket 1', k => k.type === 'amber1'),
+  88: KP(3, 'a White Ket 0', k => k.type === 'blue0'),
+  89: KP(3, 'a White Ket 1', k => k.type === 'blue1'),
+};
+
+// Decimal Value Range clues (Beginner-mode candidate category): the cell's
+// own printed decimal number (0-255), no binary/digit-sum math required.
+// Every clue is an "or" of two of the seven 64-wide blocks below — four
+// row-aligned quarters (Q1-Q4, bounds are multiples of 16, so each reads as
+// a clean band of whole board rows) plus three 64-wide offsets straddling
+// the quarter boundaries (O1-O3). Only pairs that don't overlap are used, so
+// every clue matches exactly 128 of the 256 cells — the same "half the
+// board" weight for every entry in this category, none stronger than another.
+//   Q1=[0,63] Q2=[64,127] Q3=[128,191] Q4=[192,255]
+//   O1=[32,95] O2=[96,159] O3=[160,223]
+const DVU = (lo1, hi1, lo2, hi2) => ({
+  text: `Your code's decimal value is between ${lo1} and ${hi1}, or between ${lo2} and ${hi2}.`,
+  eval: c => (c.decimal >= lo1 && c.decimal <= hi1) || (c.decimal >= lo2 && c.decimal <= hi2),
+});
+const DECIMAL_RANGE_CLUES = {
+  // Quarter + Quarter (4) — Q1+Q2 ("127 or less") and Q3+Q4 ("128 or more")
+  // are dropped: those are exactly Region's top-half (1,2,3) vs bottom-half
+  // (4,5,6) split, so they'd be a pure duplicate of an existing Region clue.
+  91: DVU(0,63, 128,191),    // Q1+Q3
+  92: DVU(0,63, 192,255),    // Q1+Q4
+  93: DVU(64,127, 128,191),  // Q2+Q3
+  94: DVU(64,127, 192,255),  // Q2+Q4
+  // Offset + Offset (3) — any two offsets are disjoint by construction.
+  96: DVU(32,95, 96,159),    // O1+O2
+  97: DVU(32,95, 160,223),   // O1+O3
+  98: DVU(96,159, 160,223),  // O2+O3
+  // Quarter + Offset (6) — only the non-adjacent combos avoid a 32-cell overlap.
+  99:  DVU(0,63, 96,159),    // Q1+O2
+  100: DVU(0,63, 160,223),   // Q1+O3
+  101: DVU(64,127, 160,223), // Q2+O3
+  102: DVU(32,95, 128,191),  // Q3+O1
+  103: DVU(32,95, 192,255),  // Q4+O1
+  104: DVU(96,159, 192,255), // Q4+O2
+};
+
+// Extra Bit Count clue: identical across every color's book.
+const BIT_COUNT_EXTRA_CLUES = {
+  105: BC([0,1,2,6,7,8]),
+};
+
+// Extra Quadrant Shading clues (fine per-cell checkerboard): identical
+// across every color's book.
+const FINE_CHECKER_CLUES = {
+  106: FDAR(),
+  107: FLIT(),
+};
+
+// Extra Row + Column Sum clues (anti-diagonal corners): identical across
+// every color's book.
+const CORNER_SUM_CLUES = {
+  108: CD(),
+  109: RD(),
+};
+
+// Extra Quadrant Shading clues (coarse quadrant checkerboard): identical
+// across every color's book.
+const QUADRANT_DIAGONAL_CLUES = {
+  110: QTL(),
+  111: QTR(),
+};
+
+// Adjacent-quadrant-pair clues: identical across every color's book.
+const QUADRANT_HALF_CLUES = {
+  112: QUAD_TOP(),
+  113: QUAD_BOTTOM(),
+  114: QUAD_LEFT(),
+  115: QUAD_RIGHT(),
+};
+
+// X-pattern block clues: identical across every color's book.
+const CHECKERBOARD_X_CLUES = {
+  116: XIN(),
+  117: XOUT(),
 };
 
 // 60 clues per color (mirrored across colors for balance)
 const CLUES = {
   red: {
-    1: NR(4,15), 2: R([1,2,5]), 3: DR(0,7), 4: B(6,0), 5: R([1,2,3]),
+    1: NR(0,15), 2: R([1,2,5]), 3: DR(0,7), 4: B(6,0),
     6: BC([4,5]), 7: B(3,1), 8: B(2,1), 9: DM(10), 10: B(7,0),
-    12: R([1,2,6]), 13: R([2,3,4]), 14: R([2,5,6]), 16: B(8,1), 17: B(5,0),
-    18: R([4,5,6]), 19: LIT(), 20: R([2,4,6]), 22: DR(7,12), 23: B(6,1),
-    24: B(1,1), 26: R([1,2,4]), 27: NM(15), 28: BC([3,4]), 29: R([3,4,5]),
-    30: DAR(), 31: B(5,1), 32: B(7,1), 33: R([1,4,5]), 35: R([3,4,6]),
-    36: R([2,4,5]), 37: B(1,0), 38: B(4,0), 40: B(3,0), 41: R([2,3,5]),
-    42: B(4,1), 43: DR(1,9), 44: R([1,4,6]), 45: NR(13,22), 46: R([1,3,5]),
+    12: R([1,2,6]), 13: R([2,3,4]), 14: R([2,5,6]), 16: B(8,1),
+    19: LIT(), 20: R([2,4,6]), 22: DR(7,12), 23: B(6,1),
+    26: R([1,2,4]), 27: NM(15), 28: BC([3,4]), 29: R([3,4,5]),
+    30: DAR(), 32: B(7,1), 33: R([1,4,5]), 35: R([3,4,6]),
+    36: R([2,4,5]), 38: B(4,0), 40: B(3,0), 41: R([2,3,5]),
+    42: B(4,1), 43: DR(1,9), 44: R([1,4,6]), 46: R([1,3,5]),
     47: R([1,5,6]), 48: R([2,3,6]), 50: B(2,0), 51: R([3,5,6]), 52: R([1,3,4]),
-    53: DR(5,10), 55: LIT(), 56: R([1,3,6]), 57: NR(8,17), 59: DAR(),
+    53: DR(5,10), 55: LIT(), 56: R([1,3,6]), 59: DAR(),
     60: B(8,0), 61: EQ(1,2), 62: NE(1,2), 63: EQ(1,3), 64: NE(1,3),
     65: EQ(1,4), 66: NE(1,4), 67: EQ(1,5), 68: NE(1,5), 69: EQ(1,6),
     70: NE(1,6), 71: EQ(1,7), 72: NE(1,7), 73: EQ(1,8), 74: NE(1,8),
     75: EQ(2,3), 76: NE(2,3), 77: EQ(2,4), 78: NE(2,4), 79: EQ(2,5),
-    80: NE(2,5), ...KET_PROXIMITY_CLUES,
+    80: NE(2,5), ...KET_PROXIMITY_CLUES, ...DECIMAL_RANGE_CLUES, ...BIT_COUNT_EXTRA_CLUES, ...FINE_CHECKER_CLUES, ...CORNER_SUM_CLUES, ...QUADRANT_DIAGONAL_CLUES, ...QUADRANT_HALF_CLUES, ...CHECKERBOARD_X_CLUES,
   },
   blue: {
     1: LIT(), 2: BC([4,5]), 3: BC([3,4]), 4: R([2,3,6]), 5: R([1,4,6]),
     6: B(2,1), 7: B(3,1), 8: R([1,2,6]), 9: DAR(), 10: R([2,4,6]),
-    11: R([4,5,6]), 12: B(8,1), 13: B(5,0), 14: B(5,1), 16: R([1,2,5]),
-    17: NR(8,17), 18: B(1,1), 19: R([2,3,4]), 20: DR(0,7), 21: NR(4,15),
+    12: B(8,1), 16: R([1,2,5]),
+    19: R([2,3,4]), 20: DR(0,7), 21: NR(0,15),
     22: R([3,5,6]), 23: R([1,5,6]), 26: DR(5,10), 27: DR(1,9), 28: R([2,3,5]),
-    29: B(8,0), 31: B(7,1), 33: R([3,4,5]), 34: R([1,3,6]), 35: NR(13,22),
+    29: B(8,0), 31: B(7,1), 33: R([3,4,5]), 34: R([1,3,6]),
     36: R([1,2,4]), 38: B(6,0), 39: R([2,4,5]), 40: LIT(), 41: DAR(),
-    42: R([2,5,6]), 44: B(1,0), 45: B(2,0), 46: R([1,4,5]), 48: B(4,1),
+    42: R([2,5,6]), 45: B(2,0), 46: R([1,4,5]), 48: B(4,1),
     49: B(6,1), 50: B(4,0), 51: B(7,0), 52: DR(7,12), 53: DM(10),
     54: R([1,3,5]), 55: NM(15), 56: R([1,3,4]), 57: B(3,0), 58: R([3,4,6]),
-    59: R([1,2,3]), 61: EQ(1,2), 62: NE(1,2), 63: EQ(1,3), 64: NE(1,3),
+    61: EQ(1,2), 62: NE(1,2), 63: EQ(1,3), 64: NE(1,3),
     65: EQ(1,4), 66: NE(1,4), 67: EQ(1,5), 68: NE(1,5), 69: EQ(1,6),
     70: NE(1,6), 71: EQ(1,7), 72: NE(1,7), 73: EQ(1,8), 74: NE(1,8),
     75: EQ(2,3), 76: NE(2,3), 77: EQ(2,4), 78: NE(2,4), 79: EQ(2,5),
-    80: NE(2,5), ...KET_PROXIMITY_CLUES,
+    80: NE(2,5), ...KET_PROXIMITY_CLUES, ...DECIMAL_RANGE_CLUES, ...BIT_COUNT_EXTRA_CLUES, ...FINE_CHECKER_CLUES, ...CORNER_SUM_CLUES, ...QUADRANT_DIAGONAL_CLUES, ...QUADRANT_HALF_CLUES, ...CHECKERBOARD_X_CLUES,
   },
   green: {
-    1: B(5,1), 2: BC([3,4]), 3: B(2,1), 5: B(8,0), 6: B(2,0),
+    2: BC([3,4]), 3: B(2,1), 5: B(8,0), 6: B(2,0),
     7: DAR(), 8: R([3,4,5]), 10: DR(0,7), 11: R([1,2,5]), 12: B(4,1),
-    13: R([2,5,6]), 14: R([2,4,5]), 16: R([1,2,4]), 17: R([3,4,6]), 18: NR(4,15),
+    13: R([2,5,6]), 14: R([2,4,5]), 16: R([1,2,4]), 17: R([3,4,6]), 18: NR(0,15),
     19: B(8,1), 20: B(7,1), 21: R([2,3,6]), 23: B(6,1), 24: R([1,3,4]),
-    25: B(1,0), 26: B(1,1), 27: R([2,4,6]), 28: NM(15), 29: NR(8,17),
-    30: R([1,5,6]), 32: R([4,5,6]), 33: R([2,3,5]), 35: R([1,4,6]), 37: B(7,0),
-    38: NR(13,22), 39: B(4,0), 40: DR(5,10), 41: B(3,0), 42: LIT(),
+    27: R([2,4,6]), 28: NM(15),
+    30: R([1,5,6]), 33: R([2,3,5]), 35: R([1,4,6]), 37: B(7,0),
+    39: B(4,0), 40: DR(5,10), 41: B(3,0), 42: LIT(),
     44: R([3,5,6]), 45: R([1,3,6]), 46: DAR(), 47: R([1,4,5]), 48: R([1,3,5]),
     50: BC([4,5]), 51: DR(7,12), 52: LIT(), 53: DR(1,9), 54: B(3,1),
-    55: DM(10), 56: B(5,0), 57: B(6,0), 58: R([1,2,3]), 59: R([2,3,4]),
+    55: DM(10), 57: B(6,0), 59: R([2,3,4]),
     60: R([1,2,6]), 61: EQ(1,2), 62: NE(1,2), 63: EQ(1,3), 64: NE(1,3),
     65: EQ(1,4), 66: NE(1,4), 67: EQ(1,5), 68: NE(1,5), 69: EQ(1,6),
     70: NE(1,6), 71: EQ(1,7), 72: NE(1,7), 73: EQ(1,8), 74: NE(1,8),
     75: EQ(2,3), 76: NE(2,3), 77: EQ(2,4), 78: NE(2,4), 79: EQ(2,5),
-    80: NE(2,5), ...KET_PROXIMITY_CLUES,
+    80: NE(2,5), ...KET_PROXIMITY_CLUES, ...DECIMAL_RANGE_CLUES, ...BIT_COUNT_EXTRA_CLUES, ...FINE_CHECKER_CLUES, ...CORNER_SUM_CLUES, ...QUADRANT_DIAGONAL_CLUES, ...QUADRANT_HALF_CLUES, ...CHECKERBOARD_X_CLUES,
   },
   yellow: {
-    1: B(1,1), 2: R([1,2,5]), 3: R([2,3,5]), 4: NR(8,17), 5: R([1,5,6]),
-    7: B(5,1), 8: B(6,0), 9: BC([3,4]), 10: R([1,3,4]), 11: B(5,0),
-    12: R([3,5,6]), 13: R([2,4,5]), 14: NM(15), 15: R([4,5,6]), 17: NR(4,15),
+    2: R([1,2,5]), 3: R([2,3,5]), 5: R([1,5,6]),
+    8: B(6,0), 9: BC([3,4]), 10: R([1,3,4]),
+    12: R([3,5,6]), 13: R([2,4,5]), 14: NM(15), 17: NR(0,15),
     18: B(8,0), 19: R([1,4,6]), 20: DR(5,10), 21: R([1,2,6]), 25: R([3,4,5]),
-    26: R([2,5,6]), 27: B(4,1), 28: DAR(), 29: B(1,0), 30: B(3,0),
-    31: B(4,0), 32: BC([4,5]), 33: DR(0,7), 35: R([1,2,3]), 36: DAR(),
-    37: R([2,3,4]), 38: LIT(), 39: B(2,0), 40: R([3,4,6]), 41: NR(13,22),
+    26: R([2,5,6]), 27: B(4,1), 28: DAR(), 30: B(3,0),
+    31: B(4,0), 32: BC([4,5]), 33: DR(0,7), 36: DAR(),
+    37: R([2,3,4]), 38: LIT(), 39: B(2,0), 40: R([3,4,6]),
     43: B(8,1), 44: LIT(), 45: B(7,1), 46: DM(10), 47: R([1,3,5]),
     48: R([2,4,6]), 49: B(2,1), 51: DR(1,9), 52: B(7,0), 53: DR(7,12),
     54: R([1,2,4]), 55: R([1,3,6]), 56: R([2,3,6]), 57: B(6,1), 58: R([1,4,5]),
@@ -159,41 +282,41 @@ const CLUES = {
     65: EQ(1,4), 66: NE(1,4), 67: EQ(1,5), 68: NE(1,5), 69: EQ(1,6),
     70: NE(1,6), 71: EQ(1,7), 72: NE(1,7), 73: EQ(1,8), 74: NE(1,8),
     75: EQ(2,3), 76: NE(2,3), 77: EQ(2,4), 78: NE(2,4), 79: EQ(2,5),
-    80: NE(2,5), ...KET_PROXIMITY_CLUES,
+    80: NE(2,5), ...KET_PROXIMITY_CLUES, ...DECIMAL_RANGE_CLUES, ...BIT_COUNT_EXTRA_CLUES, ...FINE_CHECKER_CLUES, ...CORNER_SUM_CLUES, ...QUADRANT_DIAGONAL_CLUES, ...QUADRANT_HALF_CLUES, ...CHECKERBOARD_X_CLUES,
   },
   purple: {
     1: R([1,4,5]), 2: B(7,0), 3: DR(0,7), 5: R([1,2,5]), 6: R([1,3,5]),
-    7: R([1,4,6]), 8: B(3,1), 10: DR(7,12), 11: B(5,1), 12: B(1,1),
-    13: B(7,1), 14: R([1,3,4]), 15: B(2,0), 16: BC([3,4]), 18: B(1,0),
+    7: R([1,4,6]), 8: B(3,1), 10: DR(7,12),
+    13: B(7,1), 14: R([1,3,4]), 15: B(2,0), 16: BC([3,4]),
     20: DAR(), 21: B(4,0), 22: LIT(), 23: R([2,3,5]), 24: R([3,4,5]),
-    25: B(8,1), 26: B(8,0), 27: R([1,5,6]), 29: NR(13,22), 30: R([2,4,6]),
-    32: R([2,3,6]), 33: R([1,2,3]), 34: R([1,2,6]), 35: B(2,1), 36: R([1,2,4]),
+    25: B(8,1), 26: B(8,0), 27: R([1,5,6]), 30: R([2,4,6]),
+    32: R([2,3,6]), 34: R([1,2,6]), 35: B(2,1), 36: R([1,2,4]),
     37: B(4,1), 39: R([2,4,5]), 40: DAR(), 41: BC([4,5]), 42: R([3,5,6]),
-    43: B(5,0), 44: NR(8,17), 46: R([1,3,6]), 48: B(3,0), 49: B(6,1),
-    50: B(6,0), 51: DM(10), 52: R([4,5,6]), 53: NR(4,15), 54: DR(5,10),
+    46: R([1,3,6]), 48: B(3,0), 49: B(6,1),
+    50: B(6,0), 51: DM(10), 53: NR(0,15), 54: DR(5,10),
     55: NM(15), 56: R([2,5,6]), 57: R([3,4,6]), 58: DR(1,9), 59: LIT(),
     60: R([2,3,4]), 61: EQ(1,2), 62: NE(1,2), 63: EQ(1,3), 64: NE(1,3),
     65: EQ(1,4), 66: NE(1,4), 67: EQ(1,5), 68: NE(1,5), 69: EQ(1,6),
     70: NE(1,6), 71: EQ(1,7), 72: NE(1,7), 73: EQ(1,8), 74: NE(1,8),
     75: EQ(2,3), 76: NE(2,3), 77: EQ(2,4), 78: NE(2,4), 79: EQ(2,5),
-    80: NE(2,5), ...KET_PROXIMITY_CLUES,
+    80: NE(2,5), ...KET_PROXIMITY_CLUES, ...DECIMAL_RANGE_CLUES, ...BIT_COUNT_EXTRA_CLUES, ...FINE_CHECKER_CLUES, ...CORNER_SUM_CLUES, ...QUADRANT_DIAGONAL_CLUES, ...QUADRANT_HALF_CLUES, ...CHECKERBOARD_X_CLUES,
   },
   orange: {
-    1: B(2,1), 2: R([2,3,5]), 3: B(5,0), 4: R([1,3,4]), 5: R([1,3,5]),
-    6: BC([4,5]), 8: NR(8,17), 10: R([1,5,6]), 11: B(4,0), 12: LIT(),
-    13: B(6,0), 14: DAR(), 15: B(5,1), 16: R([1,2,5]), 17: B(8,1),
-    18: B(7,1), 19: DM(10), 20: DR(1,9), 23: R([3,4,5]), 25: R([4,5,6]),
-    26: NR(4,15), 27: B(3,0), 28: B(8,0), 29: DR(5,10), 30: R([1,2,6]),
+    1: B(2,1), 2: R([2,3,5]), 4: R([1,3,4]), 5: R([1,3,5]),
+    6: BC([4,5]), 10: R([1,5,6]), 11: B(4,0), 12: LIT(),
+    13: B(6,0), 14: DAR(), 16: R([1,2,5]), 17: B(8,1),
+    18: B(7,1), 19: DM(10), 20: DR(1,9), 23: R([3,4,5]),
+    26: NR(0,15), 27: B(3,0), 28: B(8,0), 29: DR(5,10), 30: R([1,2,6]),
     31: R([3,5,6]), 32: NM(15), 34: R([1,4,5]), 35: R([1,4,6]), 37: R([1,2,4]),
-    39: R([2,4,6]), 40: B(4,1), 41: B(6,1), 42: R([1,2,3]), 44: B(2,0),
+    39: R([2,4,6]), 40: B(4,1), 41: B(6,1), 44: B(2,0),
     45: R([2,5,6]), 46: R([2,3,4]), 47: DR(0,7), 48: BC([3,4]), 49: DAR(),
-    50: LIT(), 51: B(1,1), 52: B(1,0), 53: R([1,3,6]), 54: R([2,3,6]),
-    55: NR(13,22), 56: B(3,1), 57: B(7,0), 58: R([2,4,5]), 59: DR(7,12),
+    50: LIT(), 53: R([1,3,6]), 54: R([2,3,6]),
+    56: B(3,1), 57: B(7,0), 58: R([2,4,5]), 59: DR(7,12),
     60: R([3,4,6]), 61: EQ(1,2), 62: NE(1,2), 63: EQ(1,3), 64: NE(1,3),
     65: EQ(1,4), 66: NE(1,4), 67: EQ(1,5), 68: NE(1,5), 69: EQ(1,6),
     70: NE(1,6), 71: EQ(1,7), 72: NE(1,7), 73: EQ(1,8), 74: NE(1,8),
     75: EQ(2,3), 76: NE(2,3), 77: EQ(2,4), 78: NE(2,4), 79: EQ(2,5),
-    80: NE(2,5), ...KET_PROXIMITY_CLUES,
+    80: NE(2,5), ...KET_PROXIMITY_CLUES, ...DECIMAL_RANGE_CLUES, ...BIT_COUNT_EXTRA_CLUES, ...FINE_CHECKER_CLUES, ...CORNER_SUM_CLUES, ...QUADRANT_DIAGONAL_CLUES, ...QUADRANT_HALF_CLUES, ...CHECKERBOARD_X_CLUES,
   },
 };
 
