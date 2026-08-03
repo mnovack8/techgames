@@ -1018,6 +1018,17 @@ body.qb-mode-beginner #qb-ket-layer { display: none; }
   color: #64748b;
   margin-top: 4px;
 }
+/* Normal mode never shows bits on the board, so the Measurement confirm
+   step and the final answer reveal shouldn't show one either — just the
+   decimal number, promoted to the size/weight the binary used to have. */
+body.qb-mode-beginner .qb-measure-binary,
+body.qb-mode-beginner .qb-answer-binary { display: none; }
+body.qb-mode-beginner .qb-measure-decimal {
+  font-size: 28px; font-weight: 700; color: #a16207; margin-top: 0;
+}
+body.qb-mode-beginner .qb-answer-decimal {
+  font-size: 22px; font-weight: 700; color: #a16207; margin-top: 0;
+}
 
 /* ===== GAME OVER OVERLAY ===== */
 .qb-gameover-overlay {

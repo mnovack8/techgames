@@ -165,7 +165,7 @@
         <div class="qb-answer-binary" id="qb-answer-binary">00000000</div>
         <div class="qb-answer-decimal" id="qb-answer-decimal">0</div>
       </div>
-      <button class="qb-btn qb-btn-back" onclick="backToLobby()">Back to Lobby</button>
+      <button class="qb-btn qb-btn-back" id="qb-gameover-btn" onclick="backToLobby()">Back to Lobby</button>
     </div>
   </div>
 
@@ -1498,7 +1498,30 @@ function showGameOver(state) {
     }
   }
 
+  // Mid-tutorial, this popup shouldn't dump the player straight back to the
+  // lobby — it should hold here until they explicitly close it, then the
+  // tutorial continues on to its closing Advanced Mode step.
+  var btn = document.getElementById('qb-gameover-btn');
+  if (btn) {
+    if (qbtTutMode) {
+      btn.textContent = 'Continue';
+      btn.onclick = qbtCloseGameOver;
+    } else {
+      btn.textContent = 'Back to Lobby';
+      btn.onclick = backToLobby;
+    }
+  }
+
   el.style.display = 'flex';
+}
+
+// Tutorial-only: closing the game-over popup (rather than backToLobby()
+// tearing the whole room down) advances straight to the tutorial's closing
+// Advanced Mode step, wherever the player happened to be when the real
+// game ended.
+function qbtCloseGameOver() {
+  document.getElementById('qb-gameover').style.display = 'none';
+  qbtAdvanceTo(QBT_GAME_STEPS.length - 1);
 }
 
 function backToLobby() {
@@ -1717,9 +1740,19 @@ var QBT_GAME_STEPS = [
     title: 'You\'re Ready',
     body: '<div class="qti-grover-quote"><span class="qti-grover-paw">🐾</span><span><strong>Grover says:</strong> "That\'s the whole trick. Go on, my nose is itching, let\'s see if your team can beat me to it!"</span></div>'
       + '<p>That\'s everything: apply gates, read interference, watch the board, and call Measurement when your team is confident.</p>'
-      + '<p>Keep playing this practice game as long as you like, or exit any time.</p>',
+      + '<p>Keep playing this practice game as long as you like. Once the mission ends (win or lose), close that popup to see what\'s next.</p>',
     hint: 'Close this panel any time to keep playing freely.',
     hl: null
+  },
+  {
+    title: 'Try Advanced Mode',
+    body: '<div class="qti-grover-quote"><span class="qti-grover-paw">🐾</span><span><strong>Grover says:</strong> "Not bad! But I\'ve still got a few tricks up my sleeve, if your team wants a real challenge."</span></div>'
+      + '<p>This tutorial ran on <strong>Normal</strong> mode: a simplified board (decimal + row/column numbers only, no bits or kets) and a smaller pool of possible clues.</p>'
+      + '<p><strong>Advanced</strong> mode adds bits and kets to the board and draws from a larger pool of possible clues (Bit Position, Bit Count, Ket Proximity), for a tougher, richer deduction game.</p>'
+      + '<p>When you host a real game, look for the <strong>Game Mode</strong> toggle in the waiting room, while everyone else is joining, the host can switch it between Normal and Advanced before starting.</p>',
+    hint: 'Click "Exit Tutorial" below when you\'re ready to finish.',
+    hl: null,
+    finalStep: true
   }
 ];
 
@@ -1769,6 +1802,10 @@ function qbtStartGamePhase() {
   qbtTutMode = true;
   document.body.classList.add('qbt-loading-active');
   send({ type: 'create_room', gameType: 'qubit', playerName: 'You', color: 'blue' });
+  // Tutorial always teaches on the simpler Normal-mode board (no bits/kets,
+  // smaller clue pool) — explicit rather than relying on the server's
+  // current default, so this stays true even if that default ever changes.
+  send({ type: 'set_qb_mode', mode: 'beginner' });
   // Fill the other two seats with bots (Qubit needs 3+ players) then start.
   setTimeout(function () { send({ type: 'toggle_bot' }); }, 400);
   setTimeout(function () { send({ type: 'toggle_bot' }); }, 800);
@@ -1788,9 +1825,14 @@ function qbtRenderGame() {
   if (s.forced) {
     nextBtn.style.display = 'none';
     hint.innerHTML = '<em style="color:#facc15">👆 Complete the action above to continue</em>';
+  } else if (s.finalStep) {
+    // The tutorial's true closing step — only "Exit Tutorial" in the footer
+    // ends it here, no separate Next/Back-to-Lobby button competing with it.
+    nextBtn.style.display = 'none';
+    hint.innerHTML = s.hint ? '<em>↑</em> ' + s.hint : '';
   } else {
     nextBtn.style.display = 'block';
-    nextBtn.textContent = (qbtGameStep === total - 1) ? 'Back to Lobby' : 'Next →';
+    nextBtn.textContent = 'Next →';
     hint.innerHTML = s.hint ? '<em>↑</em> ' + s.hint : '';
   }
 
@@ -1871,7 +1913,11 @@ function qbtAdvanceTo(step) {
 // happened server-side by the time this state arrives, so we just detect it.
 function qbtTutCheckAdvance(prev, next) {
   if (!qbtTutMode || !next) return;
-  if (next.gameOver) { setTimeout(qbtGameExit, 1200); return; }
+  // renderGame() already pops up the game-over overlay regardless of
+  // tutorial mode; qbtCloseGameOver() (wired up by showGameOver() while
+  // qbtTutMode is true) is what advances the tutorial once the player
+  // closes it — don't also race that by force-exiting here.
+  if (next.gameOver) return;
   if (!prev) return;
 
   // Step 5 forced (Apply a Gate): the human just applied their gate once either
