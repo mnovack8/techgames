@@ -941,8 +941,14 @@ function renderCellZoom(d, clientX, clientY) {
     matchHtml = '<div class="qb-zoom-match">✓ matches your clue</div>';
   }
 
-  zoom.innerHTML = '<div class="qb-zoom-bin">' + binary + '</div>'
-    + '<div class="qb-zoom-dec">Cell ' + d + '</div>'
+  // Normal mode never shows bits on the board itself, so the hover preview
+  // shouldn't call one out either — just the decimal value, promoted to the
+  // size/weight the binary line normally has. Advanced mode is unchanged.
+  var headHtml = (qbMode === 'advanced')
+    ? '<div class="qb-zoom-bin">' + binary + '</div><div class="qb-zoom-dec">Cell ' + d + '</div>'
+    : '<div class="qb-zoom-bin">' + d + '</div>';
+
+  zoom.innerHTML = headHtml
     + (toksHtml ? '<div class="qb-zoom-toks">' + toksHtml + '</div>' : '')
     + matchHtml;
 
