@@ -23,9 +23,20 @@ html.tutorial-loading { background: #060d03; }
 /* ===== LOBBY COLORS ===== */
 #lobby { flex-direction: column; align-items: center; justify-content: flex-start; min-height: calc(100vh - 44px); overflow-y: auto; padding: 0 20px 40px; background: radial-gradient(ellipse 1100px 600px at 50% 0%, rgba(98,181,23,0.18) 0%, rgba(6,13,3,0) 70%), #060d03 url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg stroke='%2362b517' stroke-opacity='0.07' stroke-width='1.5' fill='none' stroke-linecap='round'%3E%3Cpolyline points='0,30 40,30 40,75'/%3E%3Ccircle cx='40' cy='30' r='3' fill='%2362b517' fill-opacity='0.07'/%3E%3Ccircle cx='40' cy='75' r='3' fill='%2362b517' fill-opacity='0.07'/%3E%3Cline x1='40' y1='75' x2='100' y2='75'/%3E%3Cline x1='70' y1='0' x2='70' y2='30'/%3E%3Ccircle cx='70' cy='30' r='2.5' fill='%2362b517' fill-opacity='0.07'/%3E%3Cline x1='70' y1='30' x2='100' y2='30'/%3E%3Cline x1='0' y1='55' x2='15' y2='55'/%3E%3Ccircle cx='15' cy='55' r='2.5' fill='%2362b517' fill-opacity='0.07'/%3E%3Cline x1='15' y1='55' x2='15' y2='100'/%3E%3C/g%3E%3C/svg%3E") repeat; background-size: auto, 100px 100px; }
 .lobby-hero img { width: 280px; max-width: 100%; height: auto; object-fit: contain; background: #fff; border-radius: 16px; box-shadow: 0 12px 40px rgba(0,0,0,0.55), 0 0 0 1px rgba(98,181,23,0.15); }
-.hero-video-wrap { width: 420px; max-width: 100%; display: flex; flex-direction: column; gap: 10px; }
-.hero-video-wrap video { width: 100%; aspect-ratio: 16 / 9; height: auto; display: block; object-fit: contain; background: #060d03; border-radius: 16px; box-shadow: 0 12px 40px rgba(0,0,0,0.55), 0 0 0 1px rgba(98,181,23,0.15); }
+.hero-video-wrap { width: 420px; max-width: 100%; position: relative; display: flex; flex-direction: column; gap: 10px; }
+.hero-video-frame { position: relative; width: 100%; height: 0; padding-top: 56.25%; overflow: hidden; border-radius: 16px; }
+.hero-video-frame video { position: absolute; inset: 0; width: 100%; height: 100%; display: block; object-fit: contain; background: #060d03; border-radius: 16px; box-shadow: 0 12px 40px rgba(0,0,0,0.55), 0 0 0 1px rgba(98,181,23,0.15); }
+img.hero-poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: #060d03; border-radius: 16px; box-shadow: 0 12px 40px rgba(0,0,0,0.55), 0 0 0 1px rgba(98,181,23,0.15); z-index: 1; pointer-events: none; }
+.hero-poster.is-hidden { display: none; }
+.hero-controls { position: absolute; left: 0; right: 0; bottom: 0; height: 38px; z-index: 2; display: flex; align-items: center; gap: 10px; padding: 0 12px; border-radius: 0 0 16px 16px; background: linear-gradient(to top, rgba(0,0,0,0.75), rgba(0,0,0,0)); }
+.hero-play-btn { flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%; border: none; background: rgba(255,255,255,0.92); color: #060d03; display: flex; align-items: center; justify-content: center; font-size: 11px; cursor: pointer; padding: 0; }
+.hero-play-btn:hover { background: #fff; }
+.hero-progress-track { flex: 1; height: 4px; border-radius: 2px; background: rgba(255,255,255,0.3); cursor: pointer; overflow: hidden; }
+.hero-progress-fill { height: 100%; width: 0%; background: #62b517; }
 .hero-video-caption { margin: 0; font-size: 12.5px; line-height: 1.5; color: #6b7280; }
+@media (min-width: 781px) {
+  .hero-video-caption { position: absolute; left: 0; top: 100%; width: 100%; margin-top: 10px; }
+}
 #lobby h1 { font-size: 46px; color: #62b517; letter-spacing: 3px; font-weight: 800; text-shadow: 0 0 28px rgba(98,181,23,0.5), 0 0 8px rgba(98,181,23,0.3); font-family: 'Share Tech Mono', monospace; line-height: 1; margin: 0; width: fit-content; background-image: linear-gradient(#d1db24, #d1db24); background-size: 0% 4px; background-position: 0 100%; background-repeat: no-repeat; animation: h1-underline-draw 0.8s 0.35s ease-out forwards; }
 @keyframes h1-underline-draw { to { background-size: 100% 4px; } }
 #lobby .subtitle { font-size: 15px; color: rgba(255,255,255,0.65); margin: 0; line-height: 1.5; }
@@ -34,10 +45,11 @@ html.tutorial-loading { background: #060d03; }
 .lobby-hero-ctas { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: center; margin-top: 8px; }
 .lobby-tutorial-cta { margin-top: 0; background: linear-gradient(135deg, #62b517 0%, #4a8e10 100%); color: #fff; box-shadow: 0 4px 18px rgba(98,181,23,0.35); }
 @media (min-width: 781px) {
-  .lobby-hero { flex-direction: row; align-items: stretch; text-align: left; gap: 32px; }
-  .lobby-hero-text { align-items: flex-start; flex: 1; }
+  .lobby-hero { flex-direction: row; align-items: flex-start; text-align: left; gap: 32px; }
+  .lobby-hero-text { align-items: flex-start; flex: 1; gap: 6px; min-height: 236.25px; }
   .lobby-hero img { height: 100%; align-self: stretch; }
-  .hero-video-wrap { align-self: stretch; justify-content: center; }
+  .hero-video-wrap { align-self: flex-start; }
+  .lobby-meta { margin-top: 0; }
   .lobby-hero-ctas { margin-top: auto; flex-direction: column; align-items: stretch; }
   .lobby-tutorial-cta { justify-content: center; align-self: auto; min-height: 46px; }
   .lobby-buy-btn { justify-content: center; }
@@ -99,7 +111,7 @@ body.observer-active #game .game-layout { height: calc(100vh - 68px - 36px - 10p
 .rules-banner a { color: #62b517; }
 #play-now-mobile-notice { display: none; }
 @media (max-width: 780px) {
-  .lobby-hero img { max-width: 240px; margin: 0 auto; }
+  .lobby-hero img:not(.hero-poster) { max-width: 240px; margin: 0 auto; }
   .hero-video-wrap { max-width: 100%; margin: 0 auto; }
   #play-now-section .invited-banner, #play-now-section .lobby-play-grid { display: none; }
   #event-hub-section { display: none; }

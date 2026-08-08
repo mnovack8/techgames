@@ -40,13 +40,24 @@ html.tutorial-loading { background: #1a3a00; }
 /* ===== LOBBY COLORS ===== */
 #lobby { flex-direction: column; align-items: center; overflow-y: auto; overflow-x: hidden; min-height: calc(100vh - 68px); padding: 0 20px 52px; background: linear-gradient(160deg, #ffffff 0%, #fdf1f0 45%, #f7ece2 100%); }
 .lobby-hero img { width: 280px; max-width: 100%; height: auto; object-fit: contain; background: #fff; border-radius: 16px; box-shadow: 0 8px 32px rgba(242,99,106,0.2), 0 0 0 1px rgba(10,158,4,0.15); }
-.hero-video-wrap { width: 420px; max-width: 100%; display: flex; flex-direction: column; gap: 10px; }
-.hero-video-wrap video { width: 100%; aspect-ratio: 16 / 9; height: auto; display: block; object-fit: contain; background: #fff; border-radius: 16px; box-shadow: 0 8px 32px rgba(242,99,106,0.2), 0 0 0 1px rgba(10,158,4,0.15); }
+.hero-video-wrap { width: 420px; max-width: 100%; position: relative; display: flex; flex-direction: column; gap: 10px; }
+.hero-video-frame { position: relative; width: 100%; height: 0; padding-top: 56.25%; overflow: hidden; border-radius: 16px; }
+.hero-video-frame video { position: absolute; inset: 0; width: 100%; height: 100%; display: block; object-fit: contain; background: #fff; border-radius: 16px; box-shadow: 0 8px 32px rgba(242,99,106,0.2), 0 0 0 1px rgba(10,158,4,0.15); }
+img.hero-poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: #fff; border-radius: 16px; box-shadow: 0 8px 32px rgba(242,99,106,0.2), 0 0 0 1px rgba(10,158,4,0.15); z-index: 1; pointer-events: none; }
+.hero-poster.is-hidden { display: none; }
+.hero-controls { position: absolute; left: 0; right: 0; bottom: 0; height: 38px; z-index: 2; display: flex; align-items: center; gap: 10px; padding: 0 12px; border-radius: 0 0 16px 16px; background: linear-gradient(to top, rgba(0,0,0,0.75), rgba(0,0,0,0)); }
+.hero-play-btn { flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%; border: none; background: rgba(255,255,255,0.92); color: #1a1a1a; display: flex; align-items: center; justify-content: center; font-size: 11px; cursor: pointer; padding: 0; }
+.hero-play-btn:hover { background: #fff; }
+.hero-progress-track { flex: 1; height: 4px; border-radius: 2px; background: rgba(255,255,255,0.3); cursor: pointer; overflow: hidden; }
+.hero-progress-fill { height: 100%; width: 0%; background: var(--fn-green); }
 .hero-video-caption { margin: 0; font-size: 12.5px; line-height: 1.5; color: #6b7280; }
+@media (min-width: 781px) {
+  .hero-video-caption { position: absolute; left: 0; top: 100%; width: 100%; margin-top: 10px; }
+}
 #play-now-mobile-notice { display: none; }
 @media (max-width: 780px) {
   .lobby-hero { text-align: center; gap: 20px; }
-  .lobby-hero img { width: 180px; margin: 0 auto; }
+  .lobby-hero img:not(.hero-poster) { width: 180px; margin: 0 auto; }
   .hero-video-wrap { max-width: 100%; margin: 0 auto; }
   #lobby h1 { font-size: clamp(28px, 7vw, 42px); }
   .lobby-tutorial-cta { align-self: center; }
@@ -129,16 +140,17 @@ body.observer-active #game { height: calc(100vh - 68px - 36px - 4px); }
 .lobby-buy-powered { display: flex; align-items: center; gap: 5px; font-size: 10px; font-weight: 500; opacity: 0.75; letter-spacing: 0.3px; line-height: 1; border-left: 1px solid rgba(98,181,23,0.3); padding-left: 12px; }
 .lobby-buy-brand { color: #2a3a10; font-size: 11px; font-weight: 600; letter-spacing: 0.2px; }
 @media (min-width: 781px) {
-  .lobby-hero { flex-direction: row; align-items: stretch; text-align: left; gap: 32px; }
-  .lobby-hero-text { align-items: flex-start; flex: 1; }
+  .lobby-hero { flex-direction: row; align-items: flex-start; text-align: left; gap: 32px; }
+  .lobby-hero-text { align-items: flex-start; flex: 1; gap: 6px; min-height: 236.25px; }
   .lobby-hero img { height: 100%; align-self: stretch; }
-  .hero-video-wrap { align-self: stretch; justify-content: center; }
+  .hero-video-wrap { align-self: flex-start; }
+  .lobby-meta { margin-top: 0; }
   .lobby-hero-ctas { margin-top: auto; flex-direction: column; align-items: stretch; }
   .lobby-tutorial-cta { justify-content: center; align-self: auto; min-height: 46px; }
   .lobby-buy-btn { justify-content: center; }
 }
 @media (max-width: 780px) {
-  .lobby-hero img { max-width: 200px; margin: 0 auto; }
+  .lobby-hero img:not(.hero-poster) { max-width: 200px; margin: 0 auto; }
   .hero-video-wrap { max-width: 100%; margin: 0 auto; }
   .lobby-meta { justify-content: center; }
   #lobby h1 { font-size: 34px; }

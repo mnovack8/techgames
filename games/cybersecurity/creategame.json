@@ -3,7 +3,7 @@
   "tutorial_url": "/cybersecurity/byteclub/tutorial",
 
   "game_display_name": "BYTE CLUB",
-  "hero_visual_html": "<div class=\"hero-video-wrap\"><video src=\"/images/byteclub/byteclub-teaser.mp4\" poster=\"/images/byteclub/byteclub.png\" playsinline controls></video><p class=\"hero-video-caption\">45-sec overview video</p></div>",
+  "hero_visual_html": "<div class=\"hero-video-wrap\"><div class=\"hero-video-frame\"><video src=\"/images/byteclub/byteclub-teaser.mp4\" poster=\"/images/byteclub/byteclub.png\" playsinline></video><img class=\"hero-poster\" src=\"/images/byteclub/byteclub.png\" alt=\"\"><div class=\"hero-controls\"><button class=\"hero-play-btn\" type=\"button\" aria-label=\"Play video\">&#9654;</button><div class=\"hero-progress-track\"><div class=\"hero-progress-fill\"></div></div></div></div><p class=\"hero-video-caption\">45-sec overview video</p></div>",
   "hero_subtitle": "Experience the Cycle of Cyberwarfare from both sides. Race to steal the Data Flag while defending your own.",
   "time_text": "20 Min",
 

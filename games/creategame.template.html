@@ -173,3 +173,37 @@
 
   </div>
 </div>
+<script>
+(function () {
+  document.querySelectorAll('.hero-video-frame').forEach(function (frame) {
+    var video = frame.querySelector('video');
+    var btn = frame.querySelector('.hero-play-btn');
+    var fill = frame.querySelector('.hero-progress-fill');
+    var track = frame.querySelector('.hero-progress-track');
+    var poster = frame.querySelector('.hero-poster');
+    if (!video || !btn) return;
+    function setIcon() { btn.innerHTML = video.paused ? '&#9654;' : '&#10074;&#10074;'; }
+    btn.addEventListener('click', function () {
+      if (video.paused) video.play(); else video.pause();
+    });
+    if (poster) {
+      video.addEventListener('play', function () { poster.classList.add('is-hidden'); }, { once: true });
+    }
+    video.addEventListener('play', setIcon);
+    video.addEventListener('pause', setIcon);
+    video.addEventListener('ended', setIcon);
+    video.addEventListener('timeupdate', function () {
+      if (!video.duration || !fill) return;
+      fill.style.width = (video.currentTime / video.duration * 100) + '%';
+    });
+    if (track) {
+      track.addEventListener('click', function (e) {
+        var rect = track.getBoundingClientRect();
+        var pct = (e.clientX - rect.left) / rect.width;
+        if (video.duration) video.currentTime = pct * video.duration;
+      });
+    }
+    setIcon();
+  });
+})();
+</script>
