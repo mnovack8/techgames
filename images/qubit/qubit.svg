@@ -1,0 +1,33 @@
+<svg width="400" height="360" viewBox="0 0 400 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bold blue and yellow icon of a dog's head facing forward, encircled by two orbiting qubit rings">
+  <rect x="0" y="0" width="400" height="360" fill="#ffffff"/>
+  <defs>
+    <clipPath id="qdClipTop"><rect x="0" y="0" width="400" height="200"/></clipPath>
+    <clipPath id="qdClipBottom"><rect x="0" y="200" width="400" height="160"/></clipPath>
+  </defs>
+  <g clip-path="url(#qdClipTop)">
+    <ellipse cx="200" cy="200" rx="175" ry="58" fill="none" stroke="#FFC72C" stroke-width="4" stroke-dasharray="2 14" stroke-linecap="round" transform="rotate(-18 200 200)"/>
+  </g>
+  <g clip-path="url(#qdClipTop)">
+    <ellipse cx="200" cy="200" rx="175" ry="58" fill="none" stroke="#1E5FCC" stroke-width="4" stroke-dasharray="2 14" stroke-linecap="round" transform="rotate(18 200 200)"/>
+  </g>
+  <path d="M 108 145 C 88 88, 68 58, 58 38 C 88 44, 128 68, 148 108 Q 128 128, 108 145 Z" fill="#ffffff" stroke="#1E5FCC" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 292 145 C 312 88, 332 58, 342 38 C 312 44, 272 68, 252 108 Q 272 128, 292 145 Z" fill="#ffffff" stroke="#1E5FCC" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M 200 78 C 250 78, 292 108, 300 155 C 306 185, 300 205, 304 225 C 308 245, 298 260, 296 270 C 290 305, 250 318, 200 318 C 150 318, 110 305, 104 270 C 102 260, 92 245, 96 225 C 100 205, 94 185, 100 155 C 108 108, 150 78, 200 78 Z" fill="#ffffff" stroke="#1E5FCC" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="160" cy="175" r="14" fill="#1E5FCC"/>
+  <circle cx="240" cy="175" r="14" fill="#1E5FCC"/>
+  <circle cx="164" cy="170" r="4" fill="#ffffff"/>
+  <circle cx="244" cy="170" r="4" fill="#ffffff"/>
+  <path d="M 138 150 C 148 143, 158 143, 168 151" fill="none" stroke="#FFC72C" stroke-width="6" stroke-linecap="round"/>
+  <path d="M 232 151 C 242 143, 252 143, 262 150" fill="none" stroke="#FFC72C" stroke-width="6" stroke-linecap="round"/>
+  <path d="M 170 210 C 178 200, 222 200, 230 210 C 236 220, 236 240, 230 253 C 222 267, 178 267, 170 253 C 164 240, 164 220, 170 210 Z" fill="#ffffff" stroke="#1E5FCC" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+  <ellipse cx="200" cy="220" rx="14" ry="10" fill="#FFC72C"/>
+  <path d="M 200 230 L 200 245" fill="none" stroke="#1E5FCC" stroke-width="7" stroke-linecap="round"/>
+  <path d="M 200 245 C 190 257, 178 257, 172 249" fill="none" stroke="#1E5FCC" stroke-width="7" stroke-linecap="round"/>
+  <path d="M 200 245 C 210 257, 222 257, 228 249" fill="none" stroke="#1E5FCC" stroke-width="7" stroke-linecap="round"/>
+  <g clip-path="url(#qdClipBottom)">
+    <ellipse cx="200" cy="200" rx="175" ry="58" fill="none" stroke="#1E5FCC" stroke-width="4" stroke-dasharray="2 14" stroke-linecap="round" transform="rotate(18 200 200)"/>
+  </g>
+  <g clip-path="url(#qdClipBottom)">
+    <ellipse cx="200" cy="200" rx="175" ry="58" fill="none" stroke="#FFC72C" stroke-width="4" stroke-dasharray="2 14" stroke-linecap="round" transform="rotate(-18 200 200)"/>
+  </g>
+</svg>

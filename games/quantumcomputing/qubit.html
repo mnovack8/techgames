@@ -1149,9 +1149,9 @@ function renderGame(state) {
     setTimeout(function(){ showGameOver(state); }, state.won ? 800 : 400);
   }
 
-  // nav cancel button
+  // nav cancel button (never shown during the practice tutorial)
   var cancelBtn = document.getElementById('btn-cancel-game');
-  if (cancelBtn) cancelBtn.style.display = (isHost && !state.gameOver) ? '' : 'none';
+  if (cancelBtn) cancelBtn.style.display = (isHost && !state.gameOver && !qbtTutMode) ? '' : 'none';
 }
 
 // ==================== DECOHERENCE (NOISE) ALERT ====================
@@ -2044,7 +2044,7 @@ function handleMsg(msg) {
       if (!roomCode) break;
       showScreen('game');
       if (!boardReady) initBoard();
-      if (isHost) document.getElementById('btn-cancel-game').style.display = '';
+      if (isHost && !qbtTutMode) document.getElementById('btn-cancel-game').style.display = '';
       _lastSeenNoiseCount = 0;
       if (qbtTutMode) {
         // Tutorial games surface the Communication Rules modal as its own

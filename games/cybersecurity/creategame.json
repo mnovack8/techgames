@@ -3,7 +3,7 @@
   "tutorial_url": "/cybersecurity/byteclub/tutorial",
 
   "game_display_name": "BYTE CLUB",
-  "hero_visual_html": "<div class=\"hero-video-wrap\"><div class=\"hero-video-frame\"><video src=\"/images/byteclub/byteclub-teaser.mp4\" poster=\"/images/byteclub/byteclub.png\" playsinline preload=\"auto\" muted></video><img class=\"hero-poster\" src=\"/images/byteclub/byteclub.png\" alt=\"\"><div class=\"hero-controls\"><button class=\"hero-play-btn\" type=\"button\" aria-label=\"Play video\">&#9654;</button><div class=\"hero-progress-track\"><div class=\"hero-progress-fill\"></div></div></div></div></div>",
+  "hero_visual_html": "<div class=\"hero-video-wrap\"><div class=\"hero-video-frame\"><video src=\"/images/byteclub/byteclub-teaser.mp4\" poster=\"/images/byteclub/byteclub.png\" playsinline preload=\"auto\" muted></video><img class=\"hero-poster\" src=\"/images/byteclub/byteclub.png\" alt=\"\"><div class=\"hero-controls\"><button class=\"hero-play-btn\" type=\"button\" aria-label=\"Play video\">&#9654;</button><div class=\"hero-progress-track\"><div class=\"hero-progress-fill\"></div></div><button class=\"hero-fullscreen-btn\" type=\"button\" aria-label=\"Expand to full screen\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M8 3H5a2 2 0 0 0-2 2v3\"/><path d=\"M16 3h3a2 2 0 0 1 2 2v3\"/><path d=\"M8 21H5a2 2 0 0 1-2-2v-3\"/><path d=\"M16 21h3a2 2 0 0 0 2-2v-3\"/></svg></button></div></div></div>",
   "hero_subtitle": "Experience the Cycle of Cyberwarfare from both sides. Race to steal the Data Flag while defending your own.",
   "time_text": "20 Min",
 
