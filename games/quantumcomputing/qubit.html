@@ -113,12 +113,13 @@
     <div class="qb-modal qb-htp-modal">
       <h3>Communication Rules</h3>
       <div class="qb-htp-body">
-        <p>Players may talk freely about strategy and about anything visibly on the board, including reasoning out loud about other players' tokens. Three things are never allowed:</p>
+        <p>No table talk. Players may not discuss the board, their clues, or strategy in any way outside the game's own formal actions:</p>
         <ul>
           <li>Never state, describe, or hint at the content of your own Wavelength Clue.</li>
           <li>Never confirm or deny anything about your clue except through the formal Read Interference step of an active player's turn, no answering side questions about it outside of being properly asked.</li>
-          <li>Never reference or explain the tokens <i>you</i> personally placed on the board, though everyone else is free to observe, discuss, and reason about any tokens on the board, including yours.</li>
+          <li>Never reference or explain the tokens <i>you</i> personally placed on the board, and never reason out loud about strategy or deduction with a teammate.</li>
         </ul>
+        <p>One paid exception: on your turn, before applying your gate, you may <b>Ask a Question</b>. Draw an extra Environment card (it counts toward decoherence like any other), then ask any one player a single question, they may answer only <b>"Yes"</b> or <b>"No."</b></p>
       </div>
       <button class="qb-btn qb-htp-close" style="background:#2563eb;color:#fff;border-color:#2563eb" onclick="document.getElementById('qb-comms-modal').style.display='none';qbtCheckAction('comms')">Got it, let's play</button>
     </div>
@@ -137,6 +138,33 @@
       <div class="qb-modal-btns">
         <button class="qb-btn qb-btn-measure" onclick="confirmMeasurement()">Confirm Measurement</button>
         <button class="qb-btn" onclick="cancelMeasurement()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ASK A QUESTION -->
+  <div id="qb-ask-modal" class="qb-modal-overlay" style="display:none">
+    <div class="qb-modal">
+      <h3>Ask a Question</h3>
+      <p>Draw an extra Environment card to unlock one Yes/No question. It counts toward decoherence like any other draw.</p>
+      <div id="qb-ask-target-choices" class="qb-verify-choices"></div>
+      <input type="text" id="qb-ask-text" maxlength="200" placeholder="Type a yes/no question…" style="width:100%;box-sizing:border-box;margin-top:10px;padding:8px;border:1px solid #cbd5e1;border-radius:6px" />
+      <div class="qb-modal-btns" style="margin-top:10px">
+        <button class="qb-btn qb-btn-danger" onclick="submitAskQuestion()">Draw Card &amp; Ask</button>
+        <button class="qb-btn" onclick="cancelAskQuestion()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ANSWER A QUESTION -->
+  <div id="qb-answer-modal" class="qb-modal-overlay" style="display:none">
+    <div class="qb-modal">
+      <h3>You've Been Asked a Question</h3>
+      <p id="qb-answer-question-text"></p>
+      <p style="color:#64748b;font-size:12px">You may answer only Yes or No, no elaboration.</p>
+      <div class="qb-modal-btns">
+        <button class="qb-btn qb-btn-measure" onclick="answerQuestion(true)">Yes</button>
+        <button class="qb-btn qb-btn-danger" onclick="answerQuestion(false)">No</button>
       </div>
     </div>
   </div>
@@ -234,6 +262,7 @@
                   <li><b>Noise.</b> A decoherence strike. Otherwise your turn plays out as normal, you'll still choose a teammate to Read Interference. Only the <b>3rd</b> Noise card ends the mission immediately, before that reading.</li>
                 </ul>
               </li>
+              <li><b>(Optional) Ask a Question.</b> Once per turn, instead of applying your gate right away, you may pay to break the silence: draw one extra Environment card (it counts toward decoherence just like any other draw, including a possible game-ending 3rd Noise strike), then ask any one player a single question. They must answer only "Yes" or "No."</li>
               <li><b>Apply a Gate.</b> Pick any cell that matches ALL of your own clues, like running a logic gate on your qubit to test it. Your token lands there, always your player color in a circle, since it's guaranteed to be constructive.</li>
               <li><b>Read Interference (another player).</b> Choose one teammate, they place a token on that same cell: a circle if their clue's frequency <em>constructively</em> interferes with it, a square with an X if it's <em>destructive</em>. (Automatic for everyone on Cascade; skipped only if the 3rd Noise card just ended the game.)</li>
               <li>Play passes to the next player, who immediately draws the next Environment card.</li>
@@ -1057,6 +1086,68 @@ function chooseVerifier(targetIdx) {
   send({ type: 'game_action', action: 'qb_verify', targetIdx: targetIdx });
 }
 
+// ==================== ASK A QUESTION ====================
+var askTargetIdx = -1;
+function openAskModal() {
+  if (!gs || gs.gameOver || gs.phase !== 'propose') return;
+  if (gs.myPlayerIdx !== gs.currentPlayerIdx || gs.askUsed) return;
+  askTargetIdx = -1;
+  var choicesEl = document.getElementById('qb-ask-target-choices');
+  var html = '';
+  for (var i = 0; i < gs.players.length; i++) {
+    if (i === gs.myPlayerIdx) continue;
+    var p   = gs.players[i];
+    var hex = GAME_COLOR_HEX[gs.playerGameColors[i]] || '#888';
+    html += '<button class="qb-btn qb-verify-choice" data-idx="' + i + '" style="border-color:' + hex + '" onclick="selectAskTarget(' + i + ')">'
+      + '<span class="qb-player-swatch" style="background:' + hex + '"></span>' + esc(p.name)
+      + '</button>';
+  }
+  choicesEl.innerHTML = html;
+  document.getElementById('qb-ask-text').value = '';
+  document.getElementById('qb-ask-modal').style.display = 'flex';
+}
+
+function selectAskTarget(idx) {
+  askTargetIdx = idx;
+  document.querySelectorAll('#qb-ask-target-choices .qb-verify-choice').forEach(function(b){
+    b.classList.toggle('qb-selected', Number(b.dataset.idx) === idx);
+  });
+}
+
+function cancelAskQuestion() {
+  document.getElementById('qb-ask-modal').style.display = 'none';
+}
+
+function submitAskQuestion() {
+  var text = document.getElementById('qb-ask-text').value.trim();
+  if (askTargetIdx < 0) { showToast('Choose who to ask'); return; }
+  if (!text) { showToast('Type a yes/no question'); return; }
+  send({ type: 'game_action', action: 'qb_ask', targetIdx: askTargetIdx, question: text });
+  document.getElementById('qb-ask-modal').style.display = 'none';
+}
+
+var _answerModalShownFor = null;
+function maybeShowAnswerModal(state) {
+  var modal = document.getElementById('qb-answer-modal');
+  if (!modal) return;
+  var showFor = (state.phase === 'awaiting_answer' && state.pendingQuestion && state.myPlayerIdx === state.pendingQuestion.targetIdx)
+    ? state.pendingQuestion.askerIdx + ':' + state.pendingQuestion.text
+    : null;
+  if (showFor && showFor !== _answerModalShownFor) {
+    document.getElementById('qb-answer-question-text').textContent = '“' + state.pendingQuestion.text + '”';
+    modal.style.display = 'flex';
+  } else if (!showFor) {
+    modal.style.display = 'none';
+  }
+  _answerModalShownFor = showFor;
+}
+
+function answerQuestion(yes) {
+  send({ type: 'game_action', action: 'qb_answer', answer: yes });
+  document.getElementById('qb-answer-modal').style.display = 'none';
+  _answerModalShownFor = null;
+}
+
 // ==================== MATCH HIGHLIGHT ====================
 // Each clue in "My Wavelength Clue" has its own checkbox, independent of the
 // others — checking clue #1 shows only the cells consistent with clue #1,
@@ -1395,9 +1486,17 @@ function renderTurnPanel(state) {
   if (actionsEl) {
     if (isMe && !isObserver && state.phase === 'propose') {
       actionsEl.innerHTML = '<div class="qb-turn-tip">An Environment card has been drawn (see below), click a cell on the board that matches your clue to apply a gate.</div>'
-        + '<button class="qb-btn qb-btn-measure" onclick="startMeasurement()" style="margin-top:8px">⚛ Call Measurement</button>';
+        + '<button class="qb-btn qb-btn-measure" onclick="startMeasurement()" style="margin-top:8px">⚛ Call Measurement</button>'
+        + (state.askUsed ? '' : '<button class="qb-btn" onclick="openAskModal()" style="margin-top:8px">❓ Ask a Question (draw extra card)</button>');
     } else if (isMe && !isObserver && state.phase === 'choose_verifier') {
       actionsEl.innerHTML = renderVerifierChoices(state);
+    } else if (state.phase === 'awaiting_answer' && state.pendingQuestion && state.myPlayerIdx === state.pendingQuestion.targetIdx) {
+      actionsEl.innerHTML = '<div class="qb-turn-tip">You were asked: “' + esc(state.pendingQuestion.text) + '” — answer below.</div>';
+    } else if (state.phase === 'awaiting_answer') {
+      var qp = state.pendingQuestion;
+      var askerName  = qp ? (state.players[qp.askerIdx]  ? state.players[qp.askerIdx].name  : '?') : '?';
+      var targetName = qp ? (state.players[qp.targetIdx] ? state.players[qp.targetIdx].name : '?') : '?';
+      actionsEl.innerHTML = '<div class="qb-turn-tip">Waiting for ' + esc(targetName) + ' to answer ' + esc(askerName) + "'s question.</div>";
     } else if (!isMe && state.phase === 'choose_verifier') {
       actionsEl.innerHTML = '<div class="qb-turn-tip">' + esc(curPlayer ? curPlayer.name : '?') + ' is choosing a teammate to read the interference on the gated cell.</div>';
     } else if (!isMe) {
@@ -1406,6 +1505,8 @@ function renderTurnPanel(state) {
       actionsEl.innerHTML = '';
     }
   }
+
+  maybeShowAnswerModal(state);
 
   if (hintEl) {
     if (isMe && !isObserver && state.phase === 'choose_verifier') {
@@ -1659,8 +1760,9 @@ var QBT_GAME_STEPS = [
   },
   {
     title: 'Communication Rules',
-    body: '<p>Before you play, one ground rule: your team can talk freely about strategy and about anything visibly on the board, but never state, hint at, or confirm/deny the content of your own private clue outside the formal Read Interference step, and never explain the tokens <em>you</em> personally placed.</p>'
+    body: '<p>Before you play, one ground rule: no table talk. Never state, hint at, or confirm/deny the content of your own private clue outside the formal Read Interference step, never explain the tokens <em>you</em> personally placed, and never discuss strategy or deduction with a teammate.</p>'
       + '<p>Basically, <strong>the only "legal" way to communicate your qubit\'s state is through a logic gate.</strong> Everything else is just vibes and pointing at the board.</p>'
+      + '<p>One paid exception: once per turn you may <strong>Ask a Question</strong>, drawing an extra Environment card (it counts toward decoherence) to buy a single Yes/No exchange with any one player.</p>'
       + '<p style="margin-top:10px;padding:8px 10px;background:rgba(37,99,235,0.08);border-radius:6px;border-left:3px solid #2563eb;"><strong>The real Communication Rules popup will appear now: read it and close it to continue.</strong></p>',
     hint: 'Close the Communication Rules popup to continue.',
     hl: null,
@@ -1694,6 +1796,13 @@ var QBT_GAME_STEPS = [
       + '<li><strong>Noise.</strong> A decoherence strike. Play still continues as normal, except the <strong>3rd</strong> Noise card ends the mission immediately.</li></ul>',
     hint: 'Watch the Decoherence dots here: 3 strikes ends the game.',
     hl: 'qb-env-section'
+  },
+  {
+    title: 'Ask a Question',
+    body: '<p>Since table talk is banned, the only relief valve is a paid <strong>Ask a Question</strong>: once per turn, before applying your gate, you may draw one extra Environment card to unlock a single question to any one player.</p>'
+      + '<p>That extra card counts toward decoherence exactly like any other draw, so it can even end the game, and the player you ask may answer only <strong>"Yes"</strong> or <strong>"No,"</strong> nothing more.</p>',
+    hint: 'Look for the ❓ Ask a Question button on your turn.',
+    hl: 'qb-turn-section'
   },
   {
     title: 'Apply a Gate',

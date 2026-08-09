@@ -609,6 +609,8 @@ const CARD_LOG_LABEL = {
 function startTurn(gs, room) {
   gs.currentCard = drawCard(gs);
   gs.phase = 'propose';
+  gs.askUsed = false;
+  gs.pendingQuestion = null;
   const name = room.players[gs.currentPlayerIdx]?.name || 'A player';
   qbLog(gs, `${name}'s turn — ${CARD_LOG_LABEL[gs.currentCard] || gs.currentCard} drawn.`);
 }
@@ -691,6 +693,8 @@ function initQBGame(room) {
     gameOver:     false,
     won:          false,
     log:          [],
+    askUsed:         false,
+    pendingQuestion: null,
   };
   // Draw the first turn's Environment card before anyone has proposed anything.
   startTurn(room.qbState, room);
@@ -797,6 +801,70 @@ function processMeasurement(room, playerIdx, decimal) {
   return null;
 }
 
+// Communication is otherwise silent: no free-text chat exists in this game,
+// and the rulebook forbids talking through clues/strategy out of band. This
+// is the one paid exception — spend the risk of an extra Environment draw
+// (which counts toward the same 3-strike decoherence clock as any other
+// card) to buy a single yes/or/no exchange with any one player.
+function processAskQuestion(room, playerIdx, targetIdx, question) {
+  const gs = room.qbState;
+  if (!gs || gs.gameOver)                return 'Game is over';
+  if (gs.currentPlayerIdx !== playerIdx) return 'Not your turn';
+  if (gs.phase !== 'propose')            return 'Not in propose phase';
+  if (gs.askUsed)                        return 'Already asked a question this turn';
+  if (!room.players[targetIdx])          return 'Invalid player';
+  if (targetIdx === playerIdx)           return 'Choose a different player to ask';
+  const text = String(question || '').trim().slice(0, 200);
+  if (!text)                             return 'Enter a question';
+
+  gs.askUsed = true;
+  const askerName = room.players[playerIdx]?.name || 'A player';
+
+  const extraCard = drawCard(gs);
+  qbLog(gs, `${askerName} paid an extra Environment card to ask a question — ${CARD_LOG_LABEL[extraCard] || extraCard} drawn.`);
+  if (extraCard === 'noise') {
+    gs.noiseCount++;
+    if (gs.noiseCount >= 3) {
+      gs.gameOver = true;
+      gs.won      = false;
+      gs.phase    = 'game_over';
+      qbLog(gs, `⚠ Decoherence card! Third strike — mission failed.`);
+      return null;
+    }
+  }
+
+  const targetName = room.players[targetIdx]?.name || 'A player';
+  qbLog(gs, `${askerName} asks ${targetName}: "${text}" (yes/no only)`);
+
+  if (room.players[targetIdx]?.isBot) {
+    // A bot target has no strategy to protect, so it answers immediately
+    // rather than stalling the turn on a reply that will never come.
+    const yes = Math.random() < 0.5;
+    qbLog(gs, `${targetName} answers: ${yes ? 'Yes' : 'No'}.`);
+    gs.phase = 'propose';
+    return null;
+  }
+
+  gs.phase = 'awaiting_answer';
+  gs.pendingQuestion = { askerIdx: playerIdx, targetIdx, text };
+  return null;
+}
+
+function processAnswerQuestion(room, playerIdx, answer) {
+  const gs = room.qbState;
+  if (!gs || gs.gameOver)             return 'Game is over';
+  if (gs.phase !== 'awaiting_answer') return 'No question is pending';
+  if (!gs.pendingQuestion || gs.pendingQuestion.targetIdx !== playerIdx) {
+    return 'You were not asked a question';
+  }
+  const yes = !!answer;
+  const targetName = room.players[playerIdx]?.name || 'A player';
+  qbLog(gs, `${targetName} answers: ${yes ? 'Yes' : 'No'}.`);
+  gs.pendingQuestion = null;
+  gs.phase = 'propose';
+  return null;
+}
+
 function qbHandleAction(room, playerIdx, msg) {
   const gs = room.qbState;
   if (!gs) return;
@@ -807,6 +875,10 @@ function qbHandleAction(room, playerIdx, msg) {
     err = processVerify(room, playerIdx, Number(msg.targetIdx));
   } else if (msg.action === 'qb_measure') {
     err = processMeasurement(room, playerIdx, Number(msg.decimal));
+  } else if (msg.action === 'qb_ask') {
+    err = processAskQuestion(room, playerIdx, Number(msg.targetIdx), msg.question);
+  } else if (msg.action === 'qb_answer') {
+    err = processAnswerQuestion(room, playerIdx, !!msg.answer);
   } else {
     return;
   }
@@ -888,6 +960,8 @@ function qbBroadcastState(room) {
     proposedCell: gs.proposedCell,
     currentCard:  gs.currentCard,
     lastVerify:   gs.lastVerify,
+    askUsed:         gs.askUsed,
+    pendingQuestion: gs.pendingQuestion,
     tokens:       gs.tokens,
     gameOver:     gs.gameOver,
     won:          gs.won,
