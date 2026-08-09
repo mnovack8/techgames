@@ -65,10 +65,28 @@ html.tutorial-loading { background: #040a02; }
 #lobby { flex-direction: column; align-items: center; overflow-y: auto; min-height: calc(100vh - 44px); padding: 0 20px 52px; background: radial-gradient(120% 100% at 50% 0%, var(--cf-bg2) 0%, var(--cf-bg0) 60%); }
 .lobby-hero-board-wrap { width: 280px; border-radius: 16px; box-shadow: 0 8px 32px rgba(122,91,255,0.25), 0 0 0 1px rgba(255,255,255,0.08); background: #100c20; display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; }
 .lobby-hero-board { width: 220px; height: 220px; display: block; flex-shrink: 0; }
+.hero-video-wrap { width: 420px; max-width: 100%; position: relative; display: flex; flex-direction: column; gap: 10px; }
+.hero-video-frame { position: relative; width: 100%; height: 0; padding-top: 56.25%; overflow: hidden; border-radius: 16px; }
+.hero-video-frame video { position: absolute; inset: 0; width: 100%; height: 100%; display: block; object-fit: contain; background: #100c20; border-radius: 16px; box-shadow: 0 8px 32px rgba(122,91,255,0.25), 0 0 0 1px rgba(255,255,255,0.08); }
+img.hero-poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; background: #100c20; border-radius: 16px; box-shadow: 0 8px 32px rgba(122,91,255,0.25), 0 0 0 1px rgba(255,255,255,0.08); z-index: 1; pointer-events: none; }
+.hero-poster.is-hidden { display: none; }
+.hero-controls { position: absolute; left: 0; right: 0; bottom: 0; height: 38px; z-index: 2; display: flex; align-items: center; gap: 10px; padding: 0 12px; border-radius: 0 0 16px 16px; background: linear-gradient(to top, rgba(0,0,0,0.75), rgba(0,0,0,0)); }
+.hero-play-btn { flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%; border: none; background: rgba(255,255,255,0.92); color: #100c20; display: flex; align-items: center; justify-content: center; font-size: 11px; cursor: pointer; padding: 0; }
+.hero-play-btn:hover { background: #fff; }
+.hero-progress-track { flex: 1; height: 4px; border-radius: 2px; background: rgba(255,255,255,0.3); cursor: pointer; overflow: hidden; }
+.hero-progress-fill { height: 100%; width: 0%; background: #7a5bff; }
+.hero-fullscreen-btn { flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%; border: none; background: rgba(255,255,255,0.92); color: #100c20; display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; }
+.hero-fullscreen-btn svg { width: 14px; height: 14px; }
+.hero-fullscreen-btn:hover { background: #fff; }
+.hero-video-frame:fullscreen { padding-top: 0; height: 100%; border-radius: 0; background: #100c20; }
+.hero-video-frame:-webkit-full-screen { padding-top: 0; height: 100%; border-radius: 0; background: #100c20; }
+.hero-video-frame:fullscreen video, .hero-video-frame:fullscreen img.hero-poster { border-radius: 0; }
+.hero-video-frame:-webkit-full-screen video, .hero-video-frame:-webkit-full-screen img.hero-poster { border-radius: 0; }
+.hero-video-frame:fullscreen .hero-controls, .hero-video-frame:-webkit-full-screen .hero-controls { border-radius: 0; height: 48px; }
 #lobby h1 { font-size: 42px; letter-spacing: 2px; font-weight: 800; margin: 0; line-height: 1.1; width: fit-content; background-image: var(--cf-rainbow); -webkit-background-clip: text; background-clip: text; color: transparent; }
-.lobby-hero-ctas { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: center; margin-top: 8px; }
-.lobby-tutorial-cta { margin-top: 0; }
-.lobby-buy-btn { display: inline-flex; flex-direction: row; align-items: center; padding: 10px 20px; border-radius: 10px; cursor: default; background: rgba(255,255,255,0.03); border: 2px solid rgba(122,91,255,0.5); color: #a58bff; font-family: inherit; gap: 12px; }
+.lobby-hero-ctas { display: flex; flex-direction: column; align-items: stretch; gap: 10px; margin-top: 8px; }
+.lobby-tutorial-cta { margin-top: 0; justify-content: center; min-height: 46px; }
+.lobby-buy-btn { display: inline-flex; flex-direction: row; flex-shrink: 0; align-items: center; justify-content: center; padding: 10px 20px; border-radius: 10px; cursor: default; background: rgba(255,255,255,0.03); border: 2px solid rgba(122,91,255,0.5); color: #a58bff; font-family: inherit; gap: 12px; min-height: 46px; }
 .lobby-buy-label { font-size: 14px; font-weight: 700; letter-spacing: 0.4px; line-height: 1; }
 #lobby .subtitle { font-size: 15px; color: var(--cf-text-dim); margin: 0; line-height: 1.55; }
 .lobby-meta-item { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,157,59,0.4); color: #ff9d3b; }
@@ -129,6 +147,7 @@ html.tutorial-loading { background: #040a02; }
   .lobby-hero { flex-direction: row; align-items: stretch; text-align: left; gap: 32px; }
   .lobby-hero-text { align-items: flex-start; flex: 1; }
   .lobby-hero-board-wrap { align-self: stretch; height: auto; }
+  .hero-video-wrap { align-self: flex-start; flex-shrink: 0; }
   .lobby-hero-ctas { margin-top: auto; flex-direction: column; align-items: stretch; }
   .lobby-tutorial-cta { justify-content: center; align-self: auto; min-height: 46px; }
   .lobby-buy-btn { justify-content: center; min-height: 46px; }
