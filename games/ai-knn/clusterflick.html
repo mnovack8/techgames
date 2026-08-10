@@ -1868,6 +1868,18 @@ function showInfo(key){
 }
 function closeInfo(e){if(!e||e.target===document.getElementById('info-overlay'))document.getElementById('info-overlay').classList.remove('show');}
 
+// Interactive tutorial isn't supported on small/mobile screens — mirror the
+// #play-now-mobile-notice treatment: hide the CTA, show an explainer instead.
+(function () {
+  var cta = document.querySelector('.lobby-tutorial-cta');
+  if (cta) {
+    var notice = document.createElement('p');
+    notice.id = 'tutorial-mobile-notice';
+    notice.textContent = 'The interactive tutorial is only available on larger screens. Switch to a tablet, laptop, or desktop to try it.';
+    cta.insertAdjacentElement('beforebegin', notice);
+  }
+})();
+
 // ==================== SCREEN MANAGEMENT ====================
 const CF_BASE_PATH = '/ai/knn/clusterflick';
 function syncUrlForScreen(id){
@@ -1926,7 +1938,14 @@ window.addEventListener('DOMContentLoaded',()=>{
           document.getElementById('lobby-create-card').classList.add('lobby-card-dim');
           checkRoom();
         }
-        if (params.get('tutorial') === '1' || /\/tutorial\/?$/.test(location.pathname)) startTutorial();
+        if (params.get('tutorial') === '1' || /\/tutorial\/?$/.test(location.pathname)) {
+          if (window.matchMedia('(max-width: 780px)').matches) {
+            // Mobile: bounce back to the lobby instead of mounting the tutorial overlay.
+            try { history.replaceState(null, '', CF_BASE_PATH); } catch (_) {}
+          } else {
+            startTutorial();
+          }
+        }
         // Event Hub: restore prior organizer name + tables from localStorage
         const savedName = localStorage.getItem('clusterflick_event_name');
         if (savedName) {

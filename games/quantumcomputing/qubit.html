@@ -2479,8 +2479,25 @@ LobbyUI.init({
 
 hub.connect();
 
+// Interactive tutorial isn't supported on small/mobile screens — mirror the
+// #play-now-mobile-notice treatment: hide the CTA, show an explainer instead.
+(function () {
+  var cta = document.querySelector('.lobby-tutorial-cta');
+  if (cta) {
+    var notice = document.createElement('p');
+    notice.id = 'tutorial-mobile-notice';
+    notice.textContent = 'The interactive tutorial is only available on larger screens. Switch to a tablet, laptop, or desktop to try it.';
+    cta.insertAdjacentElement('beforebegin', notice);
+  }
+})();
+
 // Auto-start tutorial via ?tutorial=1 OR /tutorial path — start ASAP, hide page until ready
 if (urlParams.get('tutorial') === '1' || /\/tutorial\/?$/.test(location.pathname)) {
+  if (window.matchMedia('(max-width: 640px)').matches) {
+    // Mobile: bounce back to the lobby instead of mounting the tutorial overlay.
+    try { history.replaceState(null, '', QB_BASE_PATH); } catch (_) {}
+    document.documentElement.classList.remove('tutorial-loading');
+  } else {
   var __startTut = function(){
     try { startTutorial(); } catch (e) {}
     // Reveal the page now that the tutorial overlay is mounted on top.
@@ -2492,6 +2509,7 @@ if (urlParams.get('tutorial') === '1' || /\/tutorial\/?$/.test(location.pathname
     document.addEventListener('DOMContentLoaded', __startTut, { once: true });
   } else {
     __startTut();
+  }
   }
 }
 </script>
