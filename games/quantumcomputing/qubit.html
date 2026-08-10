@@ -121,7 +121,7 @@
         </ul>
         <p>One paid exception: on your turn, before applying your gate, you may <b>Ask a Question</b>. Draw an extra Environment card (it counts toward decoherence like any other), then ask any one player a single question, they may answer only <b>"Yes"</b> or <b>"No."</b></p>
       </div>
-      <button class="qb-btn qb-htp-close" style="background:#2563eb;color:#fff;border-color:#2563eb" onclick="document.getElementById('qb-comms-modal').style.display='none';qbtCheckAction('comms')">Got it, let's play</button>
+      <button id="qb-comms-modal-close" class="qb-btn qb-htp-close" style="background:#2563eb;color:#fff;border-color:#2563eb" onclick="document.getElementById('qb-comms-modal').style.display='none';qbtCheckAction('comms')">Got it, let's play</button>
     </div>
   </div>
 
@@ -177,7 +177,7 @@
       <p id="qb-noise-alert-count"></p>
       <p id="qb-noise-alert-urgent" class="qb-noise-alert-urgent" style="display:none"></p>
       <div class="qb-modal-btns">
-        <button class="qb-btn qb-btn-danger" onclick="hideNoiseModal();qbtCheckAction('noise')">Understood</button>
+        <button id="qb-noise-modal-close" class="qb-btn qb-btn-danger" onclick="hideNoiseModal();qbtCheckAction('noise')">Understood</button>
       </div>
     </div>
   </div>
@@ -294,7 +294,7 @@
       <!-- MY CLUE / (observer) ALL PLAYER CLUES -->
       <div class="qb-panel-section" id="qb-clue-section">
         <div class="qb-section-title" id="qb-clue-section-title">My Wavelength Clue</div>
-        <button class="qb-ref-btn" onclick="renderAllCluesReference();document.getElementById('qb-allclues-overlay').style.display='flex';qbtCheckAction('allclues')">
+        <button class="qb-ref-btn" onclick="renderAllCluesReference();document.getElementById('qb-allclues-overlay').style.display='flex'">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 7c-1.8-1.3-4.8-2-8-2v13c3.2 0 6.2.7 8 2 1.8-1.3 4.8-2 8-2V5c-3.2 0-6.2.7-8 2z"/><path d="M12 7v13"/></svg>
           All Possible Clues
         </button>
@@ -302,12 +302,12 @@
       </div>
 
       <!-- ALL POSSIBLE CLUES (reference) -->
-      <div class="qb-modal-overlay" id="qb-allclues-overlay" style="display:none" onclick="if(event.target===this)this.style.display='none'">
+      <div class="qb-modal-overlay" id="qb-allclues-overlay" style="display:none" onclick="if(event.target===this){this.style.display='none';qbtCheckAction('allclues')}">
         <div class="qb-modal qb-htp-modal qb-allclues-modal">
           <h3>Every Possible Clue</h3>
           <p style="color:#64748b;font-size:12px;margin-bottom:10px">Your Wavelength Clue is always one of the entries below. Each mini board shades the cells that clue matches. No card ID is shown: those only exist on the physical cards.</p>
           <div class="qb-htp-body" id="qb-allclues-body"></div>
-          <button class="qb-btn qb-htp-close" onclick="document.getElementById('qb-allclues-overlay').style.display='none'">Close</button>
+          <button id="qb-allclues-modal-close" class="qb-btn qb-htp-close" onclick="document.getElementById('qb-allclues-overlay').style.display='none';qbtCheckAction('allclues')">Close</button>
         </div>
       </div>
 
@@ -1035,6 +1035,14 @@ function cellClicked(decimal) {
     document.getElementById('qb-measure-decimal').textContent = decimal;
     document.getElementById('qb-measure-modal').style.display = 'flex';
   } else {
+    // Tutorial mode: don't let a premature click on the board (before the
+    // Ask a Question step is done) skip straight past it into a real
+    // proposal — that desync is exactly what used to let a player pick a
+    // Read Interference target before the tutorial had caught up to it.
+    if (qbtActionLocked(QBT_STEP.applyGate)) {
+      showToast('Finish the current tutorial step first');
+      return;
+    }
     // A Proposal must be consistent with your own clue — the server enforces
     // this too, but checking here avoids a round trip just to get rejected.
     if (!gs.myMatchingCells || gs.myMatchingCells.indexOf(decimal) === -1) {
@@ -1050,6 +1058,10 @@ function cellClicked(decimal) {
 function startMeasurement() {
   if (!gs || gs.gameOver) return;
   if (gs.myPlayerIdx !== gs.currentPlayerIdx) return;
+  if (qbtActionLocked(QBT_STEP.measurement)) {
+    showToast('Finish the current tutorial step first');
+    return;
+  }
   measureMode = true;
   document.getElementById('qb-board-hint').textContent = 'Select the cell you believe is the Quantum Code…';
   document.querySelectorAll('.qb-cell').forEach(function(e){ e.classList.add('qb-measure-mode'); });
@@ -1091,6 +1103,10 @@ var askTargetIdx = -1;
 function openAskModal() {
   if (!gs || gs.gameOver || gs.phase !== 'propose') return;
   if (gs.myPlayerIdx !== gs.currentPlayerIdx || gs.askUsed) return;
+  if (qbtActionLocked(QBT_STEP.askQuestion)) {
+    showToast('Finish the current tutorial step first');
+    return;
+  }
   askTargetIdx = -1;
   var choicesEl = document.getElementById('qb-ask-target-choices');
   var html = '';
@@ -1485,9 +1501,17 @@ function renderTurnPanel(state) {
 
   if (actionsEl) {
     if (isMe && !isObserver && state.phase === 'propose') {
+      // Locked actions stay visible but disabled rather than disappearing —
+      // an empty panel on a forced step (e.g. nothing at all showing on
+      // "Apply a Gate" once Ask a Question is already used up) reads as
+      // broken/stuck, when the real next step is just clicking the board.
+      var measureLocked = qbtActionLocked(QBT_STEP.measurement);
+      var askLocked     = state.askUsed || qbtActionLocked(QBT_STEP.askQuestion);
       actionsEl.innerHTML = '<div class="qb-turn-tip">An Environment card has been drawn (see below), click a cell on the board that matches your clue to apply a gate.</div>'
-        + '<button class="qb-btn qb-btn-measure" onclick="startMeasurement()" style="margin-top:8px">⚛ Call Measurement</button>'
-        + (state.askUsed ? '' : '<button class="qb-btn" onclick="openAskModal()" style="margin-top:8px">❓ Ask a Question (draw extra card)</button>');
+        + '<button class="qb-btn qb-btn-measure' + (measureLocked ? ' qb-btn-locked' : '') + '"'
+          + (measureLocked ? ' disabled' : ' onclick="startMeasurement()"') + ' style="margin-top:8px">⚛ Call Measurement</button>'
+        + '<button class="qb-btn' + (askLocked ? ' qb-btn-locked' : '') + '"'
+          + (askLocked ? ' disabled' : ' onclick="openAskModal()"') + ' style="margin-top:8px">❓ Ask a Question (draw extra card)</button>';
     } else if (isMe && !isObserver && state.phase === 'choose_verifier') {
       actionsEl.innerHTML = renderVerifierChoices(state);
     } else if (state.phase === 'awaiting_answer' && state.pendingQuestion && state.myPlayerIdx === state.pendingQuestion.targetIdx) {
@@ -1641,7 +1665,8 @@ function backToLobby() {
   boardReady = false; measureMode = false;
   _lastSeenNoiseCount = 0;
   hideNoiseModal();
-  document.querySelectorAll('.qbt-glow').forEach(function (el) { el.classList.remove('qbt-glow'); });
+  if (qbtGlowTimer) { clearTimeout(qbtGlowTimer); qbtGlowTimer = null; }
+  document.querySelectorAll('.qbt-glow, .qbt-dim, .qbt-spotlight').forEach(function (el) { el.classList.remove('qbt-glow', 'qbt-dim', 'qbt-spotlight'); });
   document.body.classList.remove('qbt-panel-active', 'qbt-loading-active');
   qbtTutMode = false; qbtActive = false;
   try { history.replaceState(null, '', QB_BASE_PATH); } catch(_) {}
@@ -1768,7 +1793,8 @@ var QBT_GAME_STEPS = [
     hl: null,
     forced: true,
     requireAction: 'comms',
-    showModal: 'qb-comms-modal'
+    showModal: 'qb-comms-modal',
+    glowTarget: '#qb-comms-modal-close'
   },
   {
     title: 'Your Wavelength Clue',
@@ -1800,9 +1826,12 @@ var QBT_GAME_STEPS = [
   {
     title: 'Ask a Question',
     body: '<p>Since table talk is banned, the only relief valve is a paid <strong>Ask a Question</strong>: once per turn, before applying your gate, you may draw one extra Environment card to unlock a single question to any one player.</p>'
-      + '<p>That extra card counts toward decoherence exactly like any other draw, so it can even end the game, and the player you ask may answer only <strong>"Yes"</strong> or <strong>"No,"</strong> nothing more.</p>',
-    hint: 'Look for the ❓ Ask a Question button on your turn.',
-    hl: 'qb-turn-section'
+      + '<p>That extra card counts toward decoherence exactly like any other draw, so it can even end the game, and the player you ask may answer only <strong>"Yes"</strong> or <strong>"No,"</strong> nothing more.</p>'
+      + '<p style="margin-top:10px;padding:8px 10px;background:rgba(37,99,235,0.08);border-radius:6px;border-left:3px solid #2563eb;"><strong>Click ❓ Ask a Question below, pick a teammate, and send a question to continue.</strong></p>',
+    hint: 'Click ❓ Ask a Question in the Turn panel.',
+    hl: 'qb-turn-section',
+    forced: true,
+    glowTarget: '.qb-turn-actions .qb-btn:not(.qb-btn-measure)'
   },
   {
     title: 'Apply a Gate',
@@ -1826,11 +1855,12 @@ var QBT_GAME_STEPS = [
     body: '<p>Play now passes around the table: the bots on your team will apply gates and read interference automatically, just like a human would.</p>'
       + '<p>Watch the pattern of constructive (✓) and destructive (✗) tokens build up on the board. Combined with your own clue, that\'s enough to start ruling cells in or out.</p>'
       + '<p>Every clue in the game is drawn from the same known list, nothing is truly secret math, you just don\'t know which entries your teammates were dealt. Click <strong>📖 All Possible Clues</strong> below to see every clue that could exist, and use it to think through what your teammates\' private clues could be as you deduce the answer together.</p>'
-      + '<p style="margin-top:10px;padding:8px 10px;background:rgba(37,99,235,0.08);border-radius:6px;border-left:3px solid #2563eb;"><strong>Click "📖 All Possible Clues" in the panel below to continue.</strong></p>',
-    hint: 'Click "📖 All Possible Clues" in the panel below.',
+      + '<p style="margin-top:10px;padding:8px 10px;background:rgba(37,99,235,0.08);border-radius:6px;border-left:3px solid #2563eb;"><strong>Click "📖 All Possible Clues" in the panel below, then Close it to continue.</strong></p>',
+    hint: 'Click "📖 All Possible Clues," then Close it, in the panel below.',
     hl: 'qb-clue-section',
     forced: true,
-    requireAction: 'allclues'
+    requireAction: 'allclues',
+    glowTarget: '.qb-ref-btn'
   },
   {
     title: 'Decoherence Strikes',
@@ -1841,15 +1871,19 @@ var QBT_GAME_STEPS = [
     hl: 'qb-env-section',
     forced: true,
     requireAction: 'noise',
-    simulateNoise: true
+    simulateNoise: true,
+    glowTarget: '#qb-noise-modal-close'
   },
   {
     title: 'Calling a Measurement',
     body: '<p>On your turn, instead of applying a gate, you may call a <strong>Measurement</strong> on the cell you believe is the true Quantum Code.</p>'
       + '<div class="qti-highlight">Measurement is final. Guess right and the team wins instantly. Guess wrong, or 3 Noise cards are drawn, and the mission fails.</div>'
-      + '<p>Only a human can call it, bots never will, so the final decision is always yours. With decoherence already at 2 strikes, don\'t wait for a perfect answer: <strong>measure soon</strong>, since the mission should end sooner rather than later.</p>',
+      + '<p>Only a human can call it, bots never will, so the final decision is always yours. With decoherence already at 2 strikes, don\'t wait for a perfect answer: <strong>measure soon</strong>, since the mission should end sooner rather than later.</p>'
+      + '<p style="margin-top:10px;padding:8px 10px;background:rgba(37,99,235,0.08);border-radius:6px;border-left:3px solid #2563eb;"><strong>Click ⚛ Call Measurement below and confirm a cell to continue.</strong></p>',
     hint: 'The ⚛ Call Measurement button appears on your turn.',
-    hl: 'qb-turn-section'
+    hl: 'qb-turn-section',
+    forced: true,
+    glowTarget: '.qb-btn-measure'
   },
   {
     title: 'You\'re Ready',
@@ -1864,23 +1898,109 @@ var QBT_GAME_STEPS = [
     body: '<div class="qti-grover-quote"><span class="qti-grover-paw">🐾</span><span><strong>Grover says:</strong> "Not bad! But I\'ve still got a few tricks up my sleeve, if your team wants a real challenge."</span></div>'
       + '<p>This tutorial ran on <strong>Normal</strong> mode: a simplified board (decimal + row/column numbers only, no bits or kets) and a smaller pool of possible clues.</p>'
       + '<p><strong>Advanced</strong> mode adds bits and kets to the board and draws from a larger pool of possible clues (Bit Position, Bit Count, Ket Proximity), for a tougher, richer deduction game.</p>'
+      + '<p style="margin-top:10px;padding:8px 10px;background:rgba(37,99,235,0.08);border-radius:6px;border-left:3px solid #2563eb;"><strong>Take a look at the board now</strong>, it\'s been switched to show exactly what Advanced mode looks like: bit strings inside every cell, plus the 8 decorative kets.</p>'
       + '<p>When you host a real game, look for the <strong>Game Mode</strong> toggle in the waiting room, while everyone else is joining, the host can switch it between Normal and Advanced before starting.</p>',
     hint: 'Click "Exit Tutorial" below when you\'re ready to finish.',
-    hl: null,
-    finalStep: true
+    hl: 'qb-board-section',
+    finalStep: true,
+    revealAdvanced: true
   }
 ];
+
+// Named lookups for the steps qbtTutCheckAdvance auto-advances between —
+// computed once from the array above (rather than hardcoded indices) so
+// inserting/reordering a step here can't silently desync the auto-advance
+// logic below, like it did when the Ask a Question step was added.
+function qbtStepIndex(title) {
+  for (var i = 0; i < QBT_GAME_STEPS.length; i++) {
+    if (QBT_GAME_STEPS[i].title === title) return i;
+  }
+  return -1;
+}
+var QBT_STEP = {
+  askQuestion:    qbtStepIndex('Ask a Question'),
+  applyGate:      qbtStepIndex('Apply a Gate'),
+  chooseVerifier: qbtStepIndex('Choose Who Reads the Interference'),
+  deduction:      qbtStepIndex('Deduction'),
+  measurement:    qbtStepIndex('Calling a Measurement'),
+};
+
+// Actions a player could otherwise trigger out of turn-order relative to the
+// tutorial's own script (e.g. proposing a cell while still on the "Ask a
+// Question" step) — gating these prevents the same step/game-state desync
+// that used to let a player pick a Read Interference target before the
+// tutorial had caught up to it.
+function qbtActionLocked(unlockStep) {
+  return qbtTutMode && unlockStep >= 0 && qbtGameStep < unlockStep;
+}
 
 var qtiIntroStep = 0;
 var qbtGameStep  = 0;
 var qbtActive    = false;
 var qbtTutMode   = false;   // Phase 2 is live (game running)
 
+// ── Phase 0: Before-You-Play section select ─────────────────────────────────
+// Both sections on by default; toggling the last one on is blocked (same
+// minimum-1 rule the other games' tutorials use) rather than silently no-op,
+// so the player gets an explicit reason instead of a mysteriously stuck box.
+var qtiSections = { context: true, howto: true };
+var qtiSelectError = false;
+var qtiPhase = 'select'; // 'select' | 'concept'
+
+function qtiToggleSection(key) {
+  if (qtiSections[key]) {
+    var count = (qtiSections.context ? 1 : 0) + (qtiSections.howto ? 1 : 0);
+    if (count <= 1) {
+      qtiSelectError = true;
+      qtiRenderSelect();
+      return;
+    }
+  }
+  qtiSelectError = false;
+  qtiSections[key] = !qtiSections[key];
+  qtiRenderSelect();
+}
+
+function qtiSelectRow(key, label, sublabel) {
+  var on = qtiSections[key];
+  return '<label class="qti-select-row' + (on ? ' qti-select-on' : '') + '" onclick="qtiToggleSection(\'' + key + '\')">'
+    + '<div class="qti-select-check">' + (on
+        ? '<svg width="11" height="11" viewBox="0 0 11 11" fill="none"><polyline points="1.5,5.5 4.5,8.5 9.5,2.5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+        : '') + '</div>'
+    + '<div><div class="qti-select-label">' + label + '</div><div class="qti-select-sub">' + sublabel + '</div></div>'
+    + '</label>';
+}
+
+function qtiRenderSelect() {
+  document.getElementById('qti-label').textContent = 'Before You Play';
+  document.getElementById('qti-prog-fill').style.width = '0%';
+  document.getElementById('qti-title').textContent = 'Customize Your Tutorial';
+  document.getElementById('qti-body').innerHTML = '<p style="margin-bottom:12px">Choose which parts of the tutorial to include:</p>'
+    + '<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px">'
+    + qtiSelectRow('context', 'Context for Learning Objectives', 'Key quantum computing concepts (superposition, entanglement, decoherence) that explain why the game works the way it does.')
+    + qtiSelectRow('howto', 'Interactive Gameplay Tutorial', 'A hands-on walkthrough of every action in the game, played out in a live practice match against bots.')
+    + '</div>'
+    + (qtiSelectError ? '<div class="qti-select-error"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="#fca5a5" stroke-width="1.5"/><line x1="8" y1="4.5" x2="8" y2="8.5" stroke="#fca5a5" stroke-width="2" stroke-linecap="round"/><circle cx="8" cy="11" r="1" fill="#fca5a5"/></svg>At least one section must be selected.</div>' : '');
+  document.getElementById('qti-next').textContent = 'Start →';
+}
+
+// Reached once the Learning Objective slides finish, or immediately if that
+// section was deselected — either starts the live practice-game walkthrough
+// or, if that section was also deselected, ends the tutorial outright.
+function qtiFinishIntroOrStart() {
+  if (qtiSections.howto) {
+    qbtStartGamePhase();
+  } else {
+    qtiExit();
+  }
+}
+
 function startTutorial() {
-  qtiIntroStep = 0;
   qbtActive = true;
+  qtiPhase = 'select';
+  qtiSelectError = false;
   document.body.classList.add('qti-intro-active');
-  qtiRenderIntro();
+  qtiRenderSelect();
   try { history.replaceState(null, '', QBT_BASE_PATH + '/tutorial'); } catch(_) {}
 }
 
@@ -1895,10 +2015,21 @@ function qtiRenderIntro() {
 }
 
 function qtiNext() {
+  if (qtiPhase === 'select') {
+    qtiPhase = 'concept';
+    if (qtiSections.context) {
+      qtiIntroStep = 0;
+      qtiRenderIntro();
+    } else {
+      document.body.classList.remove('qti-intro-active');
+      qtiFinishIntroOrStart();
+    }
+    return;
+  }
   qtiIntroStep++;
   if (qtiIntroStep >= QTI_INTRO_STEPS.length) {
     document.body.classList.remove('qti-intro-active');
-    qbtStartGamePhase();
+    qtiFinishIntroOrStart();
     return;
   }
   qtiRenderIntro();
@@ -1927,6 +2058,57 @@ function qbtStartGamePhase() {
   setTimeout(function () { send({ type: 'start_game' }); }, 1300);
 }
 
+// Glowing everything the instant a step renders is noisy for a player who's
+// already reading the body text and about to act on their own — the glow is
+// meant as a nudge for someone who's stalled, so it only lights up after 5s
+// of no progress on the CURRENT step (any step change cancels the pending
+// timer via the clearTimeout below).
+var QBT_GLOW_DELAY_MS = 5000;
+var qbtGlowTimer = null;
+function qbtScheduleGlow(s) {
+  if (qbtGlowTimer) { clearTimeout(qbtGlowTimer); qbtGlowTimer = null; }
+  qbtGlowTimer = setTimeout(function () {
+    // Forced steps: glow whatever action actually unblocks progress (an
+    // explicit glowTarget selector, or the highlighted panel as a
+    // fallback). Everything else progresses via a plain button — Exit on
+    // the closing step, Next everywhere else — so that's what should glow.
+    var target;
+    if (s.forced) {
+      target = s.glowTarget ? document.querySelector(s.glowTarget)
+        : s.hl ? document.getElementById(s.hl)
+        : null;
+    } else if (s.finalStep) {
+      target = document.getElementById('tut-exit');
+    } else {
+      target = document.getElementById('tut-next');
+    }
+    if (target) target.classList.add('qbt-glow');
+  }, QBT_GLOW_DELAY_MS);
+}
+
+// Plain "Next"-only steps (informational, no action required) spotlight
+// whichever panel section the copy is actually about — board, Entanglement
+// clue, Environment, etc. — and dim the rest, the same section-focus
+// pattern the other games' tutorials use. Forced steps skip this: they
+// already get the delayed qbt-glow nudge on the actual actionable control,
+// and dimming everything else there would fight with that.
+var QBT_SECTION_IDS = [
+  'qb-board-section', 'qb-htp-section', 'qb-public-clue-section',
+  'qb-clue-section', 'qb-env-section', 'qb-turn-section', 'qb-log-section',
+];
+function qbtApplySpotlight(s) {
+  QBT_SECTION_IDS.forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) el.classList.remove('qbt-dim', 'qbt-spotlight');
+  });
+  if (s.forced || s.finalStep || !s.hl) return;
+  QBT_SECTION_IDS.forEach(function (id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.classList.add(id === s.hl ? 'qbt-spotlight' : 'qbt-dim');
+  });
+}
+
 function qbtRenderGame() {
   var s = QBT_GAME_STEPS[qbtGameStep];
   var total = QBT_GAME_STEPS.length;
@@ -1952,13 +2134,21 @@ function qbtRenderGame() {
   }
 
   document.querySelectorAll('.qbt-glow').forEach(function (el) { el.classList.remove('qbt-glow'); });
-  if (s.hl) {
-    var el = document.getElementById(s.hl);
-    if (el) el.classList.add('qbt-glow');
-  }
+  qbtScheduleGlow(s);
+  qbtApplySpotlight(s);
   if (s.showModal) {
     var modal = document.getElementById(s.showModal);
     if (modal) modal.style.display = 'flex';
+  }
+  if (s.revealAdvanced) {
+    // Cosmetic-only: flips the same body classes the real Game Mode toggle
+    // uses, so bit strings + kets appear on the actual practice board
+    // instead of asking the player to just imagine it from a paragraph.
+    // Purely client-side rendering — no server message, no change to the
+    // still-Normal-mode setup/clues underneath.
+    qbMode = 'advanced';
+    applyQbModeClass();
+    renderKetLayer();
   }
   if (s.simulateNoise) {
     // Actually sets the practice game's own state to a 2nd Noise card draw
@@ -1974,6 +2164,15 @@ function qbtRenderGame() {
     _lastSeenNoiseCount = 1;
     maybeShowNoiseAlert({ noiseCount: 2, gameOver: false });
   }
+
+  // The Turn panel's action buttons (Ask a Question, Call Measurement) are
+  // gated by qbtActionLocked(), which reads the CURRENT qbtGameStep — but
+  // renderTurnPanel() only normally runs off a fresh server broadcast.
+  // Advancing the tutorial step here doesn't produce one, so without this
+  // the buttons stay stuck showing whatever the PREVIOUS step's gating was
+  // (e.g. still hidden on "Ask a Question" itself) until some unrelated
+  // state update happens to re-render them.
+  if (gs) renderTurnPanel(gs);
 }
 
 function tutNext() {
@@ -1994,7 +2193,8 @@ function qbtCheckAction(actionKey) {
 }
 
 function qbtGameExit() {
-  document.querySelectorAll('.qbt-glow').forEach(function (el) { el.classList.remove('qbt-glow'); });
+  if (qbtGlowTimer) { clearTimeout(qbtGlowTimer); qbtGlowTimer = null; }
+  document.querySelectorAll('.qbt-glow, .qbt-dim, .qbt-spotlight').forEach(function (el) { el.classList.remove('qbt-glow', 'qbt-dim', 'qbt-spotlight'); });
   document.body.classList.remove('qbt-panel-active');
   document.body.classList.remove('qbt-loading-active');
   qbtTutMode = false;
@@ -2035,25 +2235,33 @@ function qbtTutCheckAdvance(prev, next) {
   if (next.gameOver) return;
   if (!prev) return;
 
-  // Step 5 forced (Apply a Gate): the human just applied their gate once either
+  // Ask-a-Question step (forced): every other seat is a bot in this practice
+  // game, so a bot target always answers synchronously — the round-trip
+  // never lingers in 'awaiting_answer' from this client's point of view,
+  // it just flips askUsed true and lands back on 'propose'.
+  if (qbtGameStep === QBT_STEP.askQuestion && prev.currentPlayerIdx === myIdx && !prev.askUsed && next.askUsed) {
+    setTimeout(function () { qbtAdvanceTo(QBT_STEP.applyGate); }, 500);
+  }
+
+  // Apply-a-Gate step (forced): the human just applied their gate once either
   // the phase left 'propose' (Maintained/Noise → awaiting Verify) or the
   // turn already moved past them (Cascade auto-verified for everyone).
-  if (qbtGameStep === 5 && prev.phase === 'propose' && prev.currentPlayerIdx === myIdx) {
+  if (qbtGameStep === QBT_STEP.applyGate && prev.phase === 'propose' && prev.currentPlayerIdx === myIdx) {
     var proposalResolved = next.phase !== 'propose' || next.currentPlayerIdx !== myIdx;
     if (proposalResolved) {
       if (next.phase === 'choose_verifier' && next.currentPlayerIdx === myIdx) {
-        setTimeout(function () { qbtAdvanceTo(6); }, 500);
+        setTimeout(function () { qbtAdvanceTo(QBT_STEP.chooseVerifier); }, 500);
       } else {
         // Cascade resolved verification automatically — skip the Verify step.
-        setTimeout(function () { qbtAdvanceTo(7); }, 500);
+        setTimeout(function () { qbtAdvanceTo(QBT_STEP.deduction); }, 500);
       }
     }
   }
 
-  // Step 6 forced (Choose Who Reads the Interference): advance once the turn moves on.
-  if (qbtGameStep === 6 && prev.phase === 'choose_verifier' && prev.currentPlayerIdx === myIdx) {
+  // Choose-Verifier step (forced): advance once the turn moves on.
+  if (qbtGameStep === QBT_STEP.chooseVerifier && prev.phase === 'choose_verifier' && prev.currentPlayerIdx === myIdx) {
     if (next.phase !== 'choose_verifier' || next.currentPlayerIdx !== myIdx) {
-      setTimeout(function () { qbtAdvanceTo(7); }, 500);
+      setTimeout(function () { qbtAdvanceTo(QBT_STEP.deduction); }, 500);
     }
   }
 

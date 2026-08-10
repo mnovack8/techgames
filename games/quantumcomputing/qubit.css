@@ -977,6 +977,12 @@ body.qb-mode-beginner #qb-ket-layer { display: none; }
   color: #854d0e;
 }
 .qb-btn-measure:hover { background: #fef08a; }
+.qb-btn-locked {
+  opacity: 0.45;
+  cursor: not-allowed;
+  filter: grayscale(0.4);
+}
+.qb-btn-locked:hover { background: inherit; }
 .qb-btn-danger  { background: #fef2f2; border-color: rgba(239,68,68,0.5); color: #b91c1c; }
 .qb-btn-danger:hover { background: #fee2e2; }
 .qb-btn-back    { background: #eff6ff; border-color: #93c5fd; color: #1d4ed8; margin-top: 16px; }
@@ -1202,6 +1208,41 @@ body.qti-intro-active #qti-intro { display: flex; }
 #qti-next { padding: 12px 32px; background: #2563eb; color: #fff; border: none; border-radius: 8px; font-size: 14px; font-weight: 800; cursor: pointer; font-family: inherit; transition: filter 0.12s; box-shadow: 0 4px 16px rgba(37,99,235,0.4); }
 #qti-next:hover { filter: brightness(1.12); }
 
+/* ---------- PHASE 0: BEFORE-YOU-PLAY SECTION SELECT ---------- */
+.qti-select-row {
+  display: flex; align-items: flex-start; gap: 12px;
+  background: rgba(37,99,235,0.06);
+  border: 1.5px solid rgba(96,165,250,0.25);
+  border-radius: 10px;
+  padding: 12px 14px;
+  cursor: pointer; user-select: none;
+  transition: background 0.15s, border-color 0.15s;
+}
+.qti-select-row.qti-select-on {
+  background: rgba(37,99,235,0.16);
+  border-color: #2563eb;
+}
+.qti-select-check {
+  flex-shrink: 0; width: 20px; height: 20px; margin-top: 2px;
+  border-radius: 5px; border: 2px solid rgba(96,165,250,0.4);
+  background: transparent;
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: none;
+}
+.qti-select-row.qti-select-on .qti-select-check {
+  border-color: #2563eb; background: #2563eb;
+}
+.qti-select-label { font-size: 13px; font-weight: 800; color: #f1f5f9; line-height: 1.3; pointer-events: none; }
+.qti-select-sub { font-size: 11px; color: #94a3b8; margin-top: 3px; line-height: 1.4; pointer-events: none; }
+.qti-select-error {
+  display: flex; align-items: center; gap: 7px;
+  background: rgba(239,68,68,0.12);
+  border: 1.5px solid rgba(239,68,68,0.5);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 12px; font-weight: 700; color: #fca5a5;
+}
+
 /* Grover narrator quote (concept intro slides) */
 .qti-grover-quote {
   display: flex;
@@ -1310,6 +1351,15 @@ body.qbt-panel-active .qb-main { padding-left: 280px; }
   50% { outline-color: #2563eb; box-shadow: 0 0 0 3px #2563eb, 0 0 22px 8px rgba(250,204,21,0.5); }
 }
 .qbt-glow { outline: 2px solid #facc15 !important; outline-offset: 3px; animation: qbt-pulse 1.1s ease-in-out infinite !important; border-radius: 6px; }
+
+/* Plain "Next"-only tutorial steps: spotlight whichever section the copy is
+   actually talking about (the board, the Entanglement clue, etc.) and dim
+   everything else, so it's obvious at a glance what to look at — matching
+   the same section-focus pattern the other games' tutorials use. Forced
+   steps (which need an actual click) rely on qbt-glow instead, so they're
+   left at full brightness here. */
+.qbt-dim { opacity: 0.4; filter: saturate(0.55) brightness(0.9); transition: opacity 0.25s ease, filter 0.25s ease; }
+.qbt-spotlight { outline: 2px solid rgba(37,99,235,0.55); outline-offset: 3px; border-radius: 8px; position: relative; z-index: 2; transition: outline 0.25s ease; }
 
 @media (max-width: 900px) {
   #qbt-panel { top: auto; bottom: 0; left: 0; right: 0; width: auto; height: auto; max-height: 46vh; border-right: none; border-top: 2px solid #2563eb; box-shadow: 0 -4px 24px rgba(0,0,0,0.65); }
