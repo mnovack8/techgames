@@ -29,30 +29,21 @@
   .journey-divider::after  { background: #c8dca0; clip-path: polygon(0 0, 100% 100%, 0 100%); }
 }
 
-/* ===== STORY SECTIONS ===== */
+/* ===== STORY SECTIONS =====
+   Two-color rhythm matching the homepage: pale yellow is the default,
+   pale green marks the alternate section. */
 .story-section {
   padding: 72px 24px;
+  background: #fefce8;
 }
-.story-section.bg-problem {
-  background: #1a3a00;
-}
-.story-section.bg-problem .story-eyebrow { color: #d1db24; border-color: #d1db24; }
-.story-section.bg-problem .story-headline { color: #f0f7e6; }
-.story-section.bg-problem .story-body { color: rgba(240,247,230,0.75); }
-.story-section.bg-problem .pull-quote {
-  background: rgba(209,219,36,0.12);
-  border-color: #d1db24;
-}
-.story-section.bg-problem .pull-quote p { color: #d1db24; }
-
 .story-section.bg-warm { background: #fefce8; }
 .story-section.bg-warm .who-item {
   background: #fff;
   border-color: #e8d84a;
 }
 
-.story-section.bg-cool { background: #f0f4f8; }
-.story-section.bg-tint { background: #dff0c8; }
+.story-section.bg-cool { background: #eef5e8; }
+.story-section.bg-tint { background: #eef5e8; }
 .story-section.bg-cool .approach-pillar {
   background: #fff;
   border-color: #c8d8e8;
@@ -348,17 +339,17 @@
 .btn-play-alt {
   display: inline-block;
   background: transparent;
-  color: #d1db24;
+  color: #4a8c11;
   text-decoration: none;
   text-align: center;
   padding: 12px 28px;
   border-radius: 10px;
   font-size: 15px;
   font-weight: 800;
-  border: 2px solid #d1db24;
+  border: 2px solid #62b517;
   transition: all 0.15s;
 }
-.btn-play-alt:hover { background: rgba(209,219,36,0.15); border-color: #fff; color: #fff; }
+.btn-play-alt:hover { background: rgba(98,181,23,0.12); border-color: #4a8c11; color: #2a5a06; }
 
 /* ===== HERO VISUAL ===== */
 .hero-layout {
@@ -370,7 +361,7 @@
 .hero-headline-full {
   font-size: clamp(36px, 5.8vw, 70px);
   font-weight: 900;
-  color: #f0f7e6;
+  color: #1a1a1a;
   line-height: 1.1;
   margin-bottom: 36px;
 }
