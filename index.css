@@ -490,11 +490,12 @@
   gap: 16px;
   margin: 32px 0;
 }
+/* Supporting detail. Deliberately quiet: no accent bar and no accent-tinted
+   outline, so the yellow accent belongs to the eyebrow and pull quote alone. */
 .stakes-card {
-  background: rgba(0,0,0,0.25);
-  border: 1px solid rgba(209,219,36,0.25);
-  border-left: 4px solid #d1db24;
-  border-radius: 0 10px 10px 0;
+  background: rgba(0,0,0,0.22);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
   padding: 20px 22px;
 }
 .stakes-label {
@@ -509,7 +510,6 @@
   font-size: 15px;
   color: rgba(255,255,255,0.82);
   line-height: 1.65;
-  font-style: italic;
   margin: 0;
 }
 @media (max-width: 700px) { .stakes-grid { grid-template-columns: 1fr; } }
