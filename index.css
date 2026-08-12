@@ -1261,22 +1261,24 @@ a.who-item:hover { border-color: #62b517; background: #f0fae0; transform: transl
   font-style: normal;
 }
 
-/* ===== ABOUT CTA STRIP ===== */
+/* ===== ABOUT CTA STRIP =====
+   Pale green, continuing the homepage's two-color rhythm instead of a
+   third dark color. */
 .about-cta {
-  background: #1a3a00;
+  background: #eef5e8;
   padding: 56px 24px;
   text-align: center;
 }
 .about-cta h2 {
   font-size: 26px;
   font-weight: 900;
-  color: #fff;
+  color: #1a1a1a;
   margin-bottom: 12px;
   line-height: 1.2;
 }
 .about-cta p {
   font-size: 15px;
-  color: rgba(255,255,255,0.7);
+  color: #444;
   max-width: 500px;
   margin: 0 auto 28px;
   line-height: 1.6;
@@ -1290,21 +1292,21 @@ a.who-item:hover { border-color: #62b517; background: #f0fae0; transform: transl
 .btn-about {
   display: inline-block;
   padding: 13px 32px;
-  background: #d1db24;
-  color: #1a3a00;
+  background: #62b517;
+  color: #fff;
   font-size: 15px;
   font-weight: 800;
   border-radius: 10px;
   text-decoration: none;
   transition: background 0.15s, transform 0.15s;
 }
-.btn-about:hover { background: #c4cc1e; transform: scale(1.02); }
+.btn-about:hover { background: #4a8c11; transform: scale(1.02); }
 .btn-about--secondary {
   background: transparent;
-  color: #fff;
-  border: 2px solid rgba(255,255,255,0.45);
+  color: #4a8c11;
+  border: 2px solid #62b517;
 }
-.btn-about--secondary:hover { background: rgba(255,255,255,0.1); border-color: #fff; }
+.btn-about--secondary:hover { background: rgba(98,181,23,0.12); border-color: #4a8c11; }
 
 /* ===== BLOG SECTION ===== */
 .blog-section {

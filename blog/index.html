@@ -308,13 +308,6 @@
     </a>
     </div>
 
-    <div class="humanities-thinker-section" id="humanities-thinker-section">
-      <div class="humanities-thinker-header">
-        <span class="humanities-thinker-header-label">General Humanities Thinker</span>
-        <span class="humanities-thinker-header-sub">The humanities lens applied to technology's biggest questions.</span>
-      </div>
-      <div class="humanities-thinker-cards" id="humanities-thinker-cards">
-
         <a href="/blog/tech-ceiling-rises" class="blog-card" data-reveal data-type="insight" data-humanities-skill="history general" data-stem-skill="ai" data-readtime="9 min read">
           <div class="blog-card-img">
             <svg viewBox="0 0 400 170" xmlns="http://www.w3.org/2000/svg">
@@ -366,9 +359,6 @@
             <div class="blog-card-read">Read more →</div>
           </div>
         </a>
-
-      </div>
-    </div>
 
     <div class="explore-header" id="explore-header">
       <span class="explore-header-label">Explore</span>
@@ -1845,16 +1835,13 @@
   var thinkersRow = document.getElementById('thinkers-row');
   var startHereHeader = document.querySelector('.start-here-header');
   var exploreHeader = document.getElementById('explore-header');
-  var humanitiesThinkerSection = document.getElementById('humanities-thinker-section');
-  var humanitiesThinkerCardsEl = document.getElementById('humanities-thinker-cards');
   var stemThinkerCard = document.querySelector('.blog-card[href="/blog/be-the-bridge-stem-thinker"]');
   var humanitiesThinkerCard = document.querySelector('.blog-card[href="/blog/be-the-bridge-humanities-thinker"]');
   var missingLanguageCard = document.querySelector('.blog-card[href="/blog/stem-humanities-bridge"]');
-  var techCeilingCard = document.querySelector('.blog-card[href="/blog/tech-ceiling-rises"]');
 
   var cards = Array.from(document.querySelectorAll('.blog-card'));
   var exploreCards = cards.filter(function(c) {
-    return c !== missingLanguageCard && c !== stemThinkerCard && c !== humanitiesThinkerCard && c !== techCeilingCard;
+    return c !== missingLanguageCard && c !== stemThinkerCard && c !== humanitiesThinkerCard;
   });
 
   var chips = Array.from(document.querySelectorAll('.blog-chip'));
@@ -1940,15 +1927,13 @@
 
     if (defaultView) {
       // Sectioned layout: Start Here (Missing Language, full width) → Thinkers
-      // (2 columns) → General Humanities Thinker → Explore (randomized 3-column grid of everything else).
+      // (2 columns) → Explore (randomized 3-column grid of everything else).
       grid.classList.remove('is-filtered');
       if (startHereHeader) startHereHeader.style.display = '';
       if (thinkersRow) thinkersRow.style.display = '';
-      if (humanitiesThinkerSection) humanitiesThinkerSection.style.display = '';
       if (exploreHeader) exploreHeader.style.display = '';
       if (stemThinkerCard && stemThinkerCard.parentElement !== thinkersRow) thinkersRow.appendChild(stemThinkerCard);
       if (humanitiesThinkerCard && humanitiesThinkerCard.parentElement !== thinkersRow) thinkersRow.appendChild(humanitiesThinkerCard);
-      if (techCeilingCard && humanitiesThinkerCardsEl && techCeilingCard.parentElement !== humanitiesThinkerCardsEl) humanitiesThinkerCardsEl.appendChild(techCeilingCard);
 
       if (wasDefaultView !== true) {
         // Just entered (or re-entered) the default view — deal a fresh shuffle.
@@ -1959,11 +1944,9 @@
       grid.classList.add('is-filtered');
       if (startHereHeader) startHereHeader.style.display = 'none';
       if (thinkersRow) thinkersRow.style.display = 'none';
-      if (humanitiesThinkerSection) humanitiesThinkerSection.style.display = 'none';
       if (exploreHeader) exploreHeader.style.display = 'none';
       if (stemThinkerCard && stemThinkerCard.parentElement === thinkersRow) grid.appendChild(stemThinkerCard);
       if (humanitiesThinkerCard && humanitiesThinkerCard.parentElement === thinkersRow) grid.appendChild(humanitiesThinkerCard);
-      if (techCeilingCard && humanitiesThinkerCardsEl && techCeilingCard.parentElement === humanitiesThinkerCardsEl) grid.appendChild(techCeilingCard);
 
       var visibleKey = visibleSlugs.slice().sort().join(',');
       if (visibleKey !== lastVisibleKey) {

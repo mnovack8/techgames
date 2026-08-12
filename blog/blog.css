@@ -365,40 +365,6 @@
   gap: 28px;
 }
 
-/* General Humanities Thinker section */
-.humanities-thinker-section {
-  grid-column: 1 / -1;
-  margin: 8px 0;
-}
-.humanities-thinker-header {
-  padding: 10px 0 2px;
-  margin-bottom: 20px;
-}
-.humanities-thinker-header-label {
-  font-size: 11px;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  color: #7a5c00;
-  border-bottom: 1px solid #e8d8a0;
-  padding-bottom: 6px;
-  display: block;
-}
-.humanities-thinker-header-sub {
-  font-size: 12px;
-  color: #9a7a30;
-  font-weight: 500;
-  margin-top: 5px;
-  display: block;
-}
-.humanities-thinker-cards {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 28px;
-}
-@media (max-width: 960px) { .humanities-thinker-cards { grid-template-columns: 1fr 1fr; } }
-@media (max-width: 600px) { .humanities-thinker-cards { grid-template-columns: 1fr; } }
-
 /* Explore header row, above the randomized rest-of-posts grid */
 .explore-header {
   grid-column: 1 / -1;
@@ -430,11 +396,12 @@
 }
 #blog-main-grid.is-filtered .blog-card.start-here::before { display: none; }
 
-/* ===== BLOG INDEX HERO ===== */
+/* ===== BLOG INDEX HERO =====
+   Pale yellow, same token used elsewhere on the homepage. */
 .hero {
   text-align: center;
   padding: 56px 24px 48px;
-  background: linear-gradient(160deg, #f8faf2 0%, #edf2e0 100%);
+  background: #fefce8;
   border-bottom: 1px solid #dde8c8;
 }
 .hero h1 { font-size: clamp(32px, 5vw, 52px); font-weight: 900; color: #2a2a2a; line-height: 1.1; margin-bottom: 14px; animation: fade-up 0.45s ease both; }
