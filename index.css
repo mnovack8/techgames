@@ -389,7 +389,7 @@
   background: #1a3a00;
 }
 .story-section.bg-problem .story-eyebrow { color: #d1db24; border-color: #d1db24; }
-.story-section.bg-problem .story-headline { color: #f0f7e6; font-size: clamp(24px, 3.8vw, 48px); white-space: nowrap; }
+.story-section.bg-problem .story-headline { color: #f0f7e6; font-size: clamp(30px, 4.7vw, 60px); white-space: nowrap; }
 @media (max-width: 900px) { .story-section.bg-problem .story-headline { white-space: normal; } }
 .story-section.bg-problem .story-container { max-width: 1200px; }
 .story-section.bg-problem .story-body { color: rgba(240,247,230,0.75); }
@@ -401,7 +401,7 @@
 
 /* Who It's For. Warm yellow */
 .story-section.bg-warm { background: #fefce8; }
-.story-section.bg-warm .story-headline { white-space: nowrap; font-size: clamp(20px, 3.2vw, 42px); }
+.story-section.bg-warm .story-headline { white-space: nowrap; font-size: clamp(22px, 3vw, 36px); }
 .story-section.bg-warm .story-container { max-width: 1200px; }
 @media (max-width: 900px) { .story-section.bg-warm .story-headline { white-space: normal; } }
 .story-section.bg-warm .who-item {
@@ -446,7 +446,8 @@
 /* Our Approach. Slate blue-gray */
 .story-section.bg-cool { background: #eef5e8; }
 .story-section.bg-cool .story-container { max-width: 1200px; }
-.story-section.bg-cool .story-body { max-width: 100%; }
+.story-section.bg-cool .story-eyebrow { color: #4a8c11; }
+.story-section.bg-cool .story-body { max-width: 100%; color: #5a6558; }
 .story-section.bg-cool .approach-pillar {
   background: #fff;
   border-color: #c8d8e8;
@@ -457,31 +458,37 @@
   max-width: 900px;
   margin: 0 auto;
 }
+/* Type scale: headline sits at ~3x the body size and a full weight step
+   above it, with the eyebrow a small quiet label — so every section reads
+   label -> headline -> body top to bottom instead of three similar sizes. */
 .story-eyebrow {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 2.5px;
+  letter-spacing: 3px;
   color: #62b517;
   border-left: 4px solid #d1db24;
   padding-left: 10px;
   margin-bottom: 20px;
 }
 .story-headline {
-  font-size: clamp(28px, 4vw, 42px);
+  font-size: clamp(32px, 4.8vw, 52px);
   font-weight: 900;
+  letter-spacing: -0.01em;
   color: #1a1a1a;
   line-height: 1.15;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 .story-headline em { font-style: normal; color: #62b517; }
 .story-body {
-  font-size: 16px;
-  color: #444;
-  line-height: 1.8;
+  font-size: 17px;
+  font-weight: 400;
+  color: #4d4d4d;
+  line-height: 1.75;
   max-width: 720px;
   margin-bottom: 32px;
 }
+.story-body em { font-weight: 700 !important; }
 
 /* ===== PULL QUOTE ===== */
 .stakes-grid {
