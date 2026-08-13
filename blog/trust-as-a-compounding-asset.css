@@ -18,7 +18,7 @@
 }
 .article-hero h1 em {
   font-style: italic;
-  color: #c87028;
+  color: var(--brand-green-dark);
 }
 .article-hero-sub {
   max-width: 640px;
