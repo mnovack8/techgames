@@ -1,7 +1,6 @@
 /* Page-specific styles for Two Levels of the Same Question */
 
 /* ===== HERO THEME ===== */
-.article-hero { background: #f4fae8; }
 .article-tag-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px; }
 .article-hero-sub { color: #3a4a2a; }
 .article-meta-read { color: #4a6a2c; }
