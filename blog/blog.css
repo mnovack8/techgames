@@ -108,7 +108,7 @@
   gap: 6px;
   font-size: 13px;
   font-weight: 800;
-  color: #4a8c11;
+  color: var(--brand-green-dark);
   text-decoration: none;
   margin-bottom: 40px;
   padding: 7px 14px;
@@ -141,7 +141,7 @@
   padding: 32px 36px;
   background: #fff;
   border-radius: 14px;
-  border-left: 5px solid #4a8c11;
+  border-left: 5px solid var(--brand-green-dark);
   box-shadow: 0 2px 12px rgba(98,181,23,0.08);
 }
 .sources-title {
@@ -149,7 +149,7 @@
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 2px;
-  color: #4a8c11;
+  color: var(--brand-green-dark);
   margin-bottom: 20px;
 }
 .sources-list {
@@ -160,7 +160,7 @@
   gap: 10px;
 }
 .sources-list li { font-size: 13px; color: #555; line-height: 1.55; }
-.sources-list a { color: #4a8c11; font-weight: 700; text-decoration: none; }
+.sources-list a { color: var(--brand-green-dark); font-weight: 700; text-decoration: none; }
 .sources-list a:hover { text-decoration: underline; }
 
 /* ===== ARTICLE CTA ===== */
@@ -211,7 +211,7 @@
   text-transform: uppercase;
   letter-spacing: 2.5px;
   color: #fff;
-  background: #4a8c11;
+  background: var(--brand-green-dark);
   padding: 5px 14px;
   border-radius: 6px;
   white-space: nowrap;
@@ -238,7 +238,7 @@
 .blog-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 10px 32px rgba(98,181,23,0.18);
-  border-color: #62b517;
+  border-color: var(--brand-green);
 }
 .blog-card-img {
   width: 100%;
@@ -291,7 +291,7 @@
 .blog-card-read {
   font-size: 12px;
   font-weight: 800;
-  color: #62b517;
+  color: var(--brand-green);
   letter-spacing: 0.04em;
   text-transform: uppercase;
   padding-top: 10px;
@@ -310,7 +310,7 @@
   align-items: center;
   gap: 16px;
   padding-bottom: 4px;
-  border-bottom: 2px solid #62b517;
+  border-bottom: 2px solid var(--brand-green);
 }
 .start-here-header-label {
   font-size: 11px;
@@ -328,7 +328,7 @@
 
 /* Start Here cards */
 .blog-card.start-here {
-  border-color: #62b517;
+  border-color: var(--brand-green);
   border-width: 2px;
   box-shadow: 0 4px 18px rgba(98,181,23,0.13);
   position: relative;
@@ -405,7 +405,7 @@
   border-bottom: 1px solid #dde8c8;
 }
 .hero h1 { font-size: clamp(32px, 5vw, 52px); font-weight: 900; color: #2a2a2a; line-height: 1.1; margin-bottom: 14px; animation: fade-up 0.45s ease both; }
-.hero h1 em { font-style: normal; color: #62b517; }
+.hero h1 em { font-style: normal; color: var(--brand-green); }
 .hero p { font-size: 17px; color: #555; line-height: 1.6; max-width: 520px; margin: 0 auto; animation: fade-up 0.45s 0.12s ease both; }
 
 @media (max-width: 960px) {

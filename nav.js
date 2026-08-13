@@ -29,6 +29,13 @@
   // ── Primary dropdown toggles ─────────────────────────────────
   var dropdowns = document.querySelectorAll('.nav-dropdown');
 
+  function closeDropdown(dd) {
+    var menu    = dd.querySelector('.nav-dropdown-menu');
+    var trigger = dd.querySelector('.nav-dropdown-trigger');
+    if (menu)    menu.classList.remove('open');
+    if (trigger) trigger.classList.remove('open');
+  }
+
   dropdowns.forEach(function (dd) {
     var trigger = dd.querySelector('.nav-dropdown-trigger');
     var menu    = dd.querySelector('.nav-dropdown-menu');
@@ -38,12 +45,7 @@
       e.stopPropagation();
       // Close every other open dropdown first
       dropdowns.forEach(function (other) {
-        if (other !== dd) {
-          var om = other.querySelector('.nav-dropdown-menu');
-          var ot = other.querySelector('.nav-dropdown-trigger');
-          if (om) om.classList.remove('open');
-          if (ot) ot.classList.remove('open');
-        }
+        if (other !== dd) closeDropdown(other);
       });
       var isOpen = menu.classList.toggle('open');
       trigger.classList.toggle('open', isOpen);
@@ -52,12 +54,7 @@
 
   // ── Close everything on outside click ───────────────────────
   document.addEventListener('click', function () {
-    dropdowns.forEach(function (dd) {
-      var om = dd.querySelector('.nav-dropdown-menu');
-      var ot = dd.querySelector('.nav-dropdown-trigger');
-      if (om) om.classList.remove('open');
-      if (ot) ot.classList.remove('open');
-    });
+    dropdowns.forEach(closeDropdown);
     // Also close hamburger menu
     if (nav && btn) {
       nav.classList.remove('nav-open');

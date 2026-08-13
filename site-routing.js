@@ -18,6 +18,59 @@ const MIME_TYPES = {
   '.ico':  'image/x-icon',
 };
 
+// ── URL aliases → canonical file path ────────────────────────────────────────
+const PATH_ALIASES = {
+  '/ai':      '/games/ai/index.html',
+  '/ai.html': '/games/ai/index.html',
+
+  '/ai/neural-network/fuzznet':            '/games/ai-neural-network/fuzznet.html',
+  '/ai/neural-network/fuzznet.html':       '/games/ai-neural-network/fuzznet.html',
+  '/ai/neural-network/fuzznet/lobby':      '/games/ai-neural-network/fuzznet.html',
+  '/ai/neural-network/fuzznet/activegame': '/games/ai-neural-network/fuzznet.html',
+  '/ai/neural-network/fuzznet/tutorial':   '/games/ai-neural-network/fuzznet.html',
+
+  '/ai/knn/clusterflick':            '/games/ai-knn/clusterflick.html',
+  '/ai/knn/clusterflick.html':       '/games/ai-knn/clusterflick.html',
+  '/ai/knn/clusterflick/lobby':      '/games/ai-knn/clusterflick.html',
+  '/ai/knn/clusterflick/activegame': '/games/ai-knn/clusterflick.html',
+  '/ai/knn/clusterflick/tutorial':   '/games/ai-knn/clusterflick.html',
+
+  '/cybersecurity/byteclub':            '/games/cybersecurity/byteclub.html',
+  '/cybersecurity/byteclub.html':       '/games/cybersecurity/byteclub.html',
+  '/cybersecurity/byteclub/lobby':      '/games/cybersecurity/byteclub.html',
+  '/cybersecurity/byteclub/activegame': '/games/cybersecurity/byteclub.html',
+  '/cybersecurity/byteclub/tutorial':   '/games/cybersecurity/byteclub.html',
+
+  '/quantumcomputing/qubit':            '/games/quantumcomputing/qubit.html',
+  '/quantumcomputing/qubit.html':       '/games/quantumcomputing/qubit.html',
+  '/quantumcomputing/qubit/lobby':      '/games/quantumcomputing/qubit.html',
+  '/quantumcomputing/qubit/activegame': '/games/quantumcomputing/qubit.html',
+  '/quantumcomputing/qubit/tutorial':   '/games/quantumcomputing/qubit.html',
+
+  '/services':      '/singlepage/services.html',
+  '/services.html': '/singlepage/services.html',
+  '/contact':        '/singlepage/contact.html',
+  '/contact.html':   '/singlepage/contact.html',
+  '/about':          '/singlepage/about.html',
+  '/about.html':     '/singlepage/about.html',
+  '/buy-now':        '/singlepage/buy-now.html',
+  '/buy-now.html':   '/singlepage/buy-now.html',
+  '/admin':          '/singlepage/admin.html',
+  '/admin.html':     '/singlepage/admin.html',
+  '/blog':           '/blog/index.html',
+  '/blog.html':      '/blog/index.html',
+
+  '/cybersecurity-literacy-use-case':      '/cybersecurity-literacy-use-case.html',
+  '/cybersecurity-literacy-use-case.html': '/cybersecurity-literacy-use-case.html',
+  '/corporate-training':                   '/cybersecurity-literacy-use-case.html',
+  '/corporate-training.html':              '/cybersecurity-literacy-use-case.html',
+
+  '/ai-literacy-use-case':      '/ai-literacy-use-case.html',
+  '/ai-literacy-use-case.html': '/ai-literacy-use-case.html',
+  '/specialized-training':      '/ai-literacy-use-case.html',
+  '/specialized-training.html': '/ai-literacy-use-case.html',
+};
+
 // ── Legacy-URL redirects (301) ───────────────────────────────────────────────
 const REDIRECTS = {
   // Legacy AI paths → new nested structure under /ai
@@ -58,43 +111,7 @@ function resolvePathname(pathname) {
 
   // ── URL → file path ───────────────────────────────────────────────────────
 
-  if (pathname === '/ai' || pathname === '/ai.html') pathname = '/games/ai/index.html';
-  else if (
-    pathname === '/ai/neural-network/fuzznet' ||
-    pathname === '/ai/neural-network/fuzznet.html' ||
-    pathname === '/ai/neural-network/fuzznet/lobby' ||
-    pathname === '/ai/neural-network/fuzznet/activegame' ||
-    pathname === '/ai/neural-network/fuzznet/tutorial'
-  ) pathname = '/games/ai-neural-network/fuzznet.html';
-  else if (
-    pathname === '/ai/knn/clusterflick' ||
-    pathname === '/ai/knn/clusterflick.html' ||
-    pathname === '/ai/knn/clusterflick/lobby' ||
-    pathname === '/ai/knn/clusterflick/activegame' ||
-    pathname === '/ai/knn/clusterflick/tutorial'
-  ) pathname = '/games/ai-knn/clusterflick.html';
-  else if (
-    pathname === '/cybersecurity/byteclub' ||
-    pathname === '/cybersecurity/byteclub.html' ||
-    pathname === '/cybersecurity/byteclub/lobby' ||
-    pathname === '/cybersecurity/byteclub/activegame' ||
-    pathname === '/cybersecurity/byteclub/tutorial'
-  ) pathname = '/games/cybersecurity/byteclub.html';
-  else if (
-    pathname === '/quantumcomputing/qubit' ||
-    pathname === '/quantumcomputing/qubit.html' ||
-    pathname === '/quantumcomputing/qubit/lobby' ||
-    pathname === '/quantumcomputing/qubit/activegame' ||
-    pathname === '/quantumcomputing/qubit/tutorial'
-  ) pathname = '/games/quantumcomputing/qubit.html';
-  else if (pathname === '/services' || pathname === '/services.html') pathname = '/singlepage/services.html';
-  else if (pathname === '/contact' || pathname === '/contact.html') pathname = '/singlepage/contact.html';
-  else if (pathname === '/about' || pathname === '/about.html') pathname = '/singlepage/about.html';
-  else if (pathname === '/cybersecurity-literacy-use-case' || pathname === '/cybersecurity-literacy-use-case.html' || pathname === '/corporate-training' || pathname === '/corporate-training.html') pathname = '/cybersecurity-literacy-use-case.html';
-  else if (pathname === '/ai-literacy-use-case' || pathname === '/ai-literacy-use-case.html' || pathname === '/specialized-training' || pathname === '/specialized-training.html') pathname = '/ai-literacy-use-case.html';
-  else if (pathname === '/buy-now' || pathname === '/buy-now.html') pathname = '/singlepage/buy-now.html';
-  else if (pathname === '/admin' || pathname === '/admin.html') pathname = '/singlepage/admin.html';
-  else if (pathname === '/blog' || pathname === '/blog.html') pathname = '/blog/index.html';
+  if (PATH_ALIASES[pathname]) pathname = PATH_ALIASES[pathname];
   else if (pathname.startsWith('/blog/') && !path.extname(pathname)) pathname = pathname + '.html';
   else if (pathname === '/') pathname = '/index.html';
 

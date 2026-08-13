@@ -23,7 +23,7 @@
   display: inline-block;
   background: rgba(209,219,36,0.25);
   border: 1px solid #d1db24;
-  color: #4a8c11;
+  color: var(--brand-green-dark);
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 2px;
@@ -46,7 +46,7 @@
   animation: fade-up 0.45s 0.1s ease both;
 }
 .hero h1 .game-name {
-  color: #62b517;
+  color: var(--brand-green);
   position: relative;
 }
 .hero h1 .game-name::after {

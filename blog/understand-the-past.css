@@ -186,7 +186,7 @@
 }
 .tl-marker-internet::before { border-color: #4a6aaa; background: #edf0fa; }
 .tl-marker-coding::before   { border-color: #c07820; background: #fdf5e8; }
-.tl-marker-ai::before       { border-color: #62b517; background: #f0f8e8; }
+.tl-marker-ai::before       { border-color: var(--brand-green); background: #f0f8e8; }
 
 .tl-body {
   flex: 1;
@@ -204,7 +204,7 @@
 }
 .tl-marker-internet ~ .tl-body .tl-year { color: #4a6aaa; }
 .tl-marker-coding   ~ .tl-body .tl-year { color: #c07820; }
-.tl-marker-ai       ~ .tl-body .tl-year { color: #62b517; }
+.tl-marker-ai       ~ .tl-body .tl-year { color: var(--brand-green); }
 
 .tl-event {
   font-size: 15px;

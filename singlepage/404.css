@@ -70,8 +70,8 @@
   border-bottom: none;
   box-shadow: 0 -2px 12px rgba(98,181,23,0.10);
 }
-.hud-score { color: #62b517; }
-.hud-deploys { color: #4a8c11; }
+.hud-score { color: var(--brand-green); }
+.hud-deploys { color: var(--brand-green-dark); }
 .hud-lives { color: #c0392b; letter-spacing: 2px; }
 
 .canvas-wrap {
@@ -120,7 +120,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: #62b517;
+  background: var(--brand-green);
   color: #fff;
   font-size: 16px;
   font-weight: 800;
@@ -131,7 +131,7 @@
   transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
 }
 .home-btn:hover {
-  background: #4a8c11;
+  background: var(--brand-green-dark);
   transform: translateY(-2px);
   box-shadow: 0 8px 22px rgba(98,181,23,0.4);
 }

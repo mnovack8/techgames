@@ -18,7 +18,7 @@
 }
 .article-hero h1 em {
   font-style: italic;
-  color: #62b517;
+  color: var(--brand-green);
 }
 .article-hero-sub {
   max-width: 640px;
@@ -71,7 +71,7 @@
   text-decoration: none;
   margin-bottom: 32px;
 }
-.back-link:hover { color: #62b517; }
+.back-link:hover { color: var(--brand-green); }
 
 /* SECTION QUESTION */
 .section-question {
@@ -129,7 +129,7 @@
   font-weight: 900;
 }
 .tk-techne    .tk-name { color: #c87028; }
-.tk-phronesis .tk-name { color: #62b517; }
+.tk-phronesis .tk-name { color: var(--brand-green); }
 
 .tk-def {
   font-size: 13px;
@@ -176,7 +176,7 @@
   font-style: italic;
 }
 .tk-techne    .tk-dyn-body { color: #c87028; }
-.tk-phronesis .tk-dyn-body { color: #62b517; }
+.tk-phronesis .tk-dyn-body { color: var(--brand-green); }
 
 /* DEPRECIATION TRACK */
 .depreciation-track {
@@ -269,7 +269,7 @@
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 1.5px;
-  color: #62b517;
+  color: var(--brand-green);
 }
 .cv-rows {
   padding: 16px 20px;
@@ -302,7 +302,7 @@
   transition: width 0.8s ease;
 }
 .cv-bar-tech  { background: #c87028; }
-.cv-bar-human { background: #62b517; }
+.cv-bar-human { background: var(--brand-green); }
 .cv-legend {
   grid-column: 1 / -1;
   display: flex;
@@ -332,7 +332,7 @@
   width: 14px;
   height: 4px;
   border-radius: 2px;
-  background: #62b517;
+  background: var(--brand-green);
 }
 .cv-note {
   padding: 12px 20px;
@@ -387,7 +387,7 @@
   border-radius: 4px;
   align-self: flex-start;
 }
-.ac-closeable { background: rgba(98,181,23,0.15); color: #62b517; }
+.ac-closeable { background: rgba(98,181,23,0.15); color: var(--brand-green); }
 .ac-permanent { background: rgba(200,64,64,0.15); color: #c84040; }
 
 /* PRACTICE AREAS */
@@ -413,7 +413,7 @@
 .pa-name {
   font-size: 15px;
   font-weight: 900;
-  color: #62b517;
+  color: var(--brand-green);
 }
 .pa-body {
   font-size: 13.5px;
@@ -425,7 +425,7 @@
   color: rgba(255,255,255,0.35);
 }
 .pa-related a {
-  color: #62b517;
+  color: var(--brand-green);
   text-decoration: none;
   font-weight: 700;
 }
@@ -444,7 +444,7 @@
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 1.5px;
-  color: #62b517;
+  color: var(--brand-green);
   margin-bottom: 10px;
 }
 .naming-callout-text {
@@ -491,5 +491,5 @@
   transition: opacity 0.15s;
 }
 .article-cta-btns a:hover { opacity: 0.85; }
-.article-cta-btns .primary   { background: #62b517; color: #fff; }
+.article-cta-btns .primary   { background: var(--brand-green); color: #fff; }
 .article-cta-btns .secondary { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.7); }

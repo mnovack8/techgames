@@ -16,6 +16,7 @@ const analytics    = require('./analytics');
 const auth         = require('./auth');
 const gameManager  = require('./games/game-manager');
 const siteRouting  = require('./site-routing');
+const posts        = require('./posts');
 const hubRenderer  = require('./games/marketing-hub-renderer');
 const creategameRenderer = require('./games/creategame-renderer');
 const lobbyRenderer       = require('./games/lobby-renderer');
@@ -32,22 +33,6 @@ let lastActivityAt = 0;
 const SELF_PING_URL = (process.env.RENDER_EXTERNAL_URL || process.env.SERVER_URL || '').replace(/\/$/, '');
 const PING_INTERVAL_MS  = 4 * 60 * 1000;   // every 4 minutes
 const ACTIVITY_WINDOW_MS = 60 * 60 * 1000; // stop pinging after 1 hour of silence
-
-// Parses blog/index.html once and returns { '/blog/slug': '<svg>...</svg>' }
-// for every card, so callers never have to hand-maintain a second copy of
-// each post's thumbnail image.
-function readBlogCardImages(blogDir) {
-  const images = {};
-  try {
-    const html = fs.readFileSync(path.join(blogDir, 'index.html'), 'utf8');
-    const cardRe = /<a href="(\/blog\/[^"]+)"[^>]*class="blog-card[^"]*"[^>]*>[\s\S]*?<div class="blog-card-img"[^>]*>([\s\S]*?)<\/div>\s*<div class="blog-card-body">/g;
-    let m;
-    while ((m = cardRe.exec(html))) {
-      images[m[1]] = m[2].trim();
-    }
-  } catch (_) {}
-  return images;
-}
 
 const server = http.createServer((req, res) => {
   if (req.url === '/health' && req.method === 'GET') {
@@ -68,49 +53,8 @@ const server = http.createServer((req, res) => {
   // ── Blog posts metadata API ──
   if (pathname === '/api/posts' && req.method === 'GET') {
     const blogDir = path.join(__dirname, 'blog');
-    const posts = [];
-    try {
-      // Card thumbnails already exist once, hand-authored on each card in
-      // blog/index.html. Read them here instead of keeping a second,
-      // hand-maintained image map on the homepage that can drift out of sync.
-      const cardImages = readBlogCardImages(blogDir);
-
-      const files = fs.readdirSync(blogDir).filter(f => f.endsWith('.html') && f !== 'index.html');
-      for (const file of files) {
-        try {
-          const content = fs.readFileSync(path.join(blogDir, file), 'utf8');
-          const match = content.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/);
-          if (!match) continue;
-          const data = JSON.parse(match[1]);
-          if (data['@type'] !== 'Article') continue;
-          const urlPath = (data.url || '').replace(/^https?:\/\/[^/]+/, '') || '/blog/' + file.replace('.html', '');
-          // Read the real, currently-displayed tags straight from the article's own
-          // tag row, so the homepage carousel can never drift from what the blog
-          // post itself shows (unlike the old, hand-maintained articleSection field).
-          const tags = [];
-          const tagRowMatch = content.match(/<div class="article-tag-row">([\s\S]*?)<\/div>/);
-          if (tagRowMatch) {
-            const tagRe = /<span class="article-tag ([a-z0-9-]+)">([^<]*)<\/span>/g;
-            let tm;
-            while ((tm = tagRe.exec(tagRowMatch[1]))) {
-              tags.push({ cls: tm[1], label: tm[2] });
-            }
-          }
-          posts.push({
-            headline:    data.headline    || '',
-            description: data.description || '',
-            section:     data.articleSection || '',
-            tags:        tags,
-            url:         urlPath,
-            image:       cardImages[urlPath] || null,
-            date:        data.datePublished || '1970-01-01'
-          });
-        } catch (_) {}
-      }
-      posts.sort((a, b) => b.date.localeCompare(a.date));
-    } catch (_) {}
     res.writeHead(200, { 'Content-Type': 'application/json', 'Cache-Control': 'no-cache' });
-    res.end(JSON.stringify(posts));
+    res.end(JSON.stringify(posts.getBlogPosts(blogDir)));
     return;
   }
 

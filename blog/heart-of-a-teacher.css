@@ -23,7 +23,7 @@
   display: block;
   width: 24px;
   height: 3px;
-  background: #62b517;
+  background: var(--brand-green);
   border-radius: 2px;
   margin-bottom: 10px;
 }
@@ -63,7 +63,7 @@
 }
 .lev-row-highlight {
   background: #f0f8e8;
-  border-top: 2px solid #62b517;
+  border-top: 2px solid var(--brand-green);
 }
 .lev-activity { font-weight: 700; color: #1a3a0a; }
 .lev-who { color: #3a5a20; }
@@ -77,7 +77,7 @@
 .lev-low  { background: #f5e8e8; color: #7a3030; }
 .lev-mid  { background: #faeeda; color: #7a5010; }
 .lev-high { background: #e8f0d8; color: #3a6a10; }
-.lev-max  { background: #62b517; color: #fff; }
+.lev-max  { background: var(--brand-green); color: #fff; }
 
 /* ===== TREE CALLOUT ===== */
 .tree-callout {
@@ -104,8 +104,8 @@
   flex-shrink: 0;
   margin-top: 3px;
 }
-.tree-dot-green { background: #62b517; }
-.tree-dot-mid   { background: #4a8c11; }
+.tree-dot-green { background: var(--brand-green); }
+.tree-dot-mid   { background: var(--brand-green-dark); }
 .tree-dot-gold  { background: #d1db24; border: 2px solid #8a9a10; }
 
 .tree-content {}
@@ -203,7 +203,7 @@
 .form-effort {
   font-size: 11px;
   font-weight: 700;
-  color: #62b517;
+  color: var(--brand-green);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -229,7 +229,7 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: #62b517;
+  background: var(--brand-green);
   color: #fff;
   font-size: 13px;
   font-weight: 900;
@@ -254,7 +254,7 @@
 /* ===== CC COMPOUND (matches blog.css class) ===== */
 .cc-compound {
   background: #f0f8e8;
-  border-left: 4px solid #62b517;
+  border-left: 4px solid var(--brand-green);
   border-radius: 0 8px 8px 0;
   padding: 16px 20px;
   margin: 24px 0;
@@ -264,7 +264,7 @@
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: #62b517;
+  color: var(--brand-green);
   margin-bottom: 8px;
 }
 .cc-compound-body {

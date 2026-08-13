@@ -52,7 +52,7 @@
 }
 .e-agents       { background: #f4fae8; }
 .e-agents       .element-name { color: #2a7a0a; }
-.e-agents       .element-tag  { background: #62b517; }
+.e-agents       .element-tag  { background: var(--brand-green); }
 .e-interactions { background: #fafaf0; }
 .e-interactions .element-name { color: #6a7a00; }
 .e-interactions .element-tag  { background: #aaaa20; }
@@ -113,7 +113,7 @@
 /* Highlight rows that link out to the people-process-tools deep dive */
 .systems-table tr.row-ppt td, .systems-table tr.row-game td { background: #f4fae8; }
 .systems-table tr.row-ppt td.col-domain, .systems-table tr.row-game td.col-domain {
-  color: #4a8c11;
+  color: var(--brand-green-dark);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -125,7 +125,7 @@
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 1px;
-  background: #62b517;
+  background: var(--brand-green);
   color: #fff;
   padding: 2px 6px;
   border-radius: 4px;
@@ -193,7 +193,7 @@
   font-size: 9px; font-weight: 900; text-transform: uppercase;
   letter-spacing: 2px; margin-bottom: 6px;
 }
-.fm-structural .fm-type { color: #4a8c11; }
+.fm-structural .fm-type { color: var(--brand-green-dark); }
 .fm-incentive  .fm-type { color: #c07820; }
 .fm-title { font-size: 15px; font-weight: 900; color: #1a1a1a; margin-bottom: 8px; line-height: 1.3; }
 .fm-desc  { font-size: 13px; color: #444; line-height: 1.65; }
@@ -201,7 +201,7 @@
   font-size: 11px; font-weight: 800; margin-top: 10px;
   padding-top: 10px; border-top: 1px solid rgba(0,0,0,0.08);
 }
-.fm-structural .fm-signature { color: #4a8c11; }
+.fm-structural .fm-signature { color: var(--brand-green-dark); }
 .fm-incentive  .fm-signature { color: #c07820; }
 @media (max-width: 600px) {
   .failure-modes { grid-template-columns: 1fr; }
@@ -260,7 +260,7 @@
   font-size: 9px; font-weight: 900; text-transform: uppercase;
   letter-spacing: 2px; margin-bottom: 6px;
 }
-.aligned    .align-label { color: #4a8c11; }
+.aligned    .align-label { color: var(--brand-green-dark); }
 .misaligned .align-label { color: #c04040; }
 .align-title { font-size: 15px; font-weight: 900; color: #1a1a1a; margin-bottom: 8px; }
 .align-desc  { font-size: 13px; color: #555; line-height: 1.6; }
@@ -271,7 +271,7 @@
   letter-spacing: 1px; color: #fff;
   padding: 4px 12px; border-radius: 5px;
 }
-.aligned    .align-result { background: #62b517; }
+.aligned    .align-result { background: var(--brand-green); }
 .misaligned .align-result { background: #c04040; }
 @media (max-width: 600px) {
   .alignment-visual { grid-template-columns: 1fr; }

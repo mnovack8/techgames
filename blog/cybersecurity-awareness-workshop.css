@@ -24,7 +24,7 @@
   left: calc(16.66% + 10px);
   right: calc(16.66% + 10px);
   height: 2px;
-  background: linear-gradient(90deg, #62b517, #d1db24, #62b517);
+  background: linear-gradient(90deg, var(--brand-green), #d1db24, var(--brand-green));
   z-index: 0;
 }
 .ws-step {
@@ -38,7 +38,7 @@
 }
 .ws-num {
   width: 52px; height: 52px;
-  background: #62b517; color: #fff;
+  background: var(--brand-green); color: #fff;
   font-size: 22px; font-weight: 900; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   margin: 0 auto 18px;
@@ -64,7 +64,7 @@
 }
 .step-list-num {
   flex-shrink: 0; width: 32px; height: 32px;
-  background: #62b517; color: #fff;
+  background: var(--brand-green); color: #fff;
   font-size: 14px; font-weight: 900; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   margin-top: 1px;
@@ -79,8 +79,8 @@
   gap: 16px; margin: 24px 0;
 }
 .option-card { background: #fff; border: 2px solid #dde8c8; border-radius: 14px; padding: 22px 20px; }
-.option-card.primary { border-color: #62b517; background: #f4fae8; }
-.option-label { font-size: 9px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; color: #62b517; margin-bottom: 8px; }
+.option-card.primary { border-color: var(--brand-green); background: #f4fae8; }
+.option-label { font-size: 9px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; color: var(--brand-green); margin-bottom: 8px; }
 .option-card.secondary .option-label { color: #888; }
 .option-title { font-size: 15px; font-weight: 900; color: #1a2a0a; margin-bottom: 8px; }
 .option-desc  { font-size: 13px; color: #555; line-height: 1.65; }
@@ -91,15 +91,15 @@
 .step-cta {
   display: inline-flex; align-items: center; gap: 8px;
   margin-top: 16px; padding: 12px 22px;
-  background: #62b517; color: #fff;
+  background: var(--brand-green); color: #fff;
   font-size: 14px; font-weight: 900;
   text-decoration: none; border-radius: 9px;
   transition: background 0.15s, transform 0.15s;
   box-shadow: 0 3px 10px rgba(98,181,23,0.3);
 }
-.step-cta:hover { background: #4a8c11; transform: translateY(-2px); }
+.step-cta:hover { background: var(--brand-green-dark); transform: translateY(-2px); }
 .step-cta-wrap { margin-top: 24px; padding: 20px 24px; background: #f4fae8; border: 1.5px solid #a8c96a; border-radius: 12px; }
-.step-cta-label { font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 1.5px; color: #62b517; margin-bottom: 8px; }
+.step-cta-label { font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 1.5px; color: var(--brand-green); margin-bottom: 8px; }
 .step-cta-desc { font-size: 13px; color: #3a5a10; line-height: 1.6; margin-bottom: 12px; }
 
 /* ===== BREACH CARDS ===== */
@@ -112,10 +112,10 @@
   border-radius: 14px; padding: 20px 20px;
   cursor: pointer; transition: border-color 0.15s, box-shadow 0.15s;
 }
-.breach-card:hover { border-color: #62b517; box-shadow: 0 4px 16px rgba(98,181,23,0.12); }
+.breach-card:hover { border-color: var(--brand-green); box-shadow: 0 4px 16px rgba(98,181,23,0.12); }
 .breach-year { font-size: 9px; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; color: #888; margin-bottom: 6px; }
 .breach-name { font-size: 16px; font-weight: 900; color: #1a2a0a; margin-bottom: 6px; }
-.breach-type { font-size: 12px; font-weight: 700; color: #62b517; margin-bottom: 10px; }
+.breach-type { font-size: 12px; font-weight: 700; color: var(--brand-green); margin-bottom: 10px; }
 .breach-desc { font-size: 13px; color: #555; line-height: 1.6; }
 @media (max-width: 560px) { .breach-cards { grid-template-columns: 1fr; } }
 
@@ -128,7 +128,7 @@
 }
 .killchain-title {
   font-size: 10px; font-weight: 900; text-transform: uppercase;
-  letter-spacing: 2.5px; color: #62b517; margin-bottom: 20px;
+  letter-spacing: 2.5px; color: var(--brand-green); margin-bottom: 20px;
 }
 .killchain-stages {
   display: flex; gap: 0; overflow-x: auto;
@@ -144,7 +144,7 @@
 .kc-stage:first-child { border-radius: 8px 0 0 8px; }
 .kc-stage:last-child  { border-radius: 0 8px 8px 0; }
 .kc-stage + .kc-stage { border-left: none; }
-.kc-num  { font-size: 9px; font-weight: 900; color: #62b517; opacity: 0.7; margin-bottom: 4px; }
+.kc-num  { font-size: 9px; font-weight: 900; color: var(--brand-green); opacity: 0.7; margin-bottom: 4px; }
 .kc-name { font-size: 10px; font-weight: 900; color: #d1db24; line-height: 1.3; }
 .killchain-sentence {
   background: rgba(255,255,255,0.06);

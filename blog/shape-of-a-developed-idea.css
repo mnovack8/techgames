@@ -22,7 +22,7 @@
 /* ===== CC COMPOUND ===== */
 .cc-compound {
   background: #f0f5e8;
-  border-left: 4px solid #62b517;
+  border-left: 4px solid var(--brand-green);
   border-radius: 0 8px 8px 0;
   padding: 16px 20px;
   margin: 24px 0;
@@ -32,7 +32,7 @@
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: #62b517;
+  color: var(--brand-green);
   margin-bottom: 8px;
 }
 .cc-compound-body {
@@ -100,8 +100,8 @@
   width: 30px;
   font-size: 13px;
   font-weight: 900;
-  font-family: 'Courier New', monospace;
-  color: #62b517;
+  font-family: var(--font-mono);
+  color: var(--brand-green);
   padding-top: 2px;
 }
 .idea-pipeline-reverse .idea-stage-num { color: #4a6ab0; }

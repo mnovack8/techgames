@@ -140,9 +140,9 @@
   justify-content: center;
   flex-shrink: 0;
   font-size: 12px;
-  color: #62b517;
+  color: var(--brand-green);
 }
-.check-box.checked { background: #62b517; border-color: #62b517; color: #fff; }
+.check-box.checked { background: var(--brand-green); border-color: var(--brand-green); color: #fff; }
 .checklist-note {
   font-size: 11px;
   font-weight: 600;

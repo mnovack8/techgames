@@ -24,7 +24,7 @@
   left: calc(16.66% + 10px);
   right: calc(16.66% + 10px);
   height: 2px;
-  background: linear-gradient(90deg, #2a4a8a, #62b517, #2a4a8a);
+  background: linear-gradient(90deg, #2a4a8a, var(--brand-green), #2a4a8a);
   z-index: 0;
 }
 .ws-step {
@@ -262,7 +262,7 @@
   color: #fff;
 }
 .scoring-row.high     .scoring-pip { background: #2a7a10; }
-.scoring-row.mid-high .scoring-pip { background: #4a8c11; }
+.scoring-row.mid-high .scoring-pip { background: var(--brand-green-dark); }
 .scoring-row.mid      .scoring-pip { background: #8a8a00; }
 .scoring-row.low      .scoring-pip { background: #b05a10; }
 .scoring-row.very-low .scoring-pip { background: #9a1a1a; }

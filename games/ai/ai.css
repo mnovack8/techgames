@@ -33,7 +33,7 @@ body { background: #fff; color: #2a2a2a; }
   display: inline-block;
   background: rgba(209,219,36,0.25);
   border: 1px solid #d1db24;
-  color: #4a8c11;
+  color: var(--brand-green-dark);
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 2px;
@@ -56,7 +56,7 @@ body { background: #fff; color: #2a2a2a; }
   animation: ai-fade-up 0.45s 0.1s ease both;
 }
 .ai-hero-accent {
-  color: #62b517;
+  color: var(--brand-green);
   position: relative;
   text-decoration: underline;
   text-decoration-color: transparent;
@@ -108,7 +108,7 @@ body { background: #fff; color: #2a2a2a; }
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 1.5px;
-  color: #62b517;
+  color: var(--brand-green);
 }
 .ai-hero-divider {
   font-size: 22px;
@@ -165,7 +165,7 @@ body { background: #fff; color: #2a2a2a; }
   line-height: 1.7;
 }
 .ai-explainer-block p strong { color: #2a3a10; }
-.ai-explainer-block p em { color: #4a8c11; font-style: italic; }
+.ai-explainer-block p em { color: var(--brand-green-dark); font-style: italic; }
 
 /* Section label (small uppercase eyebrow) */
 .ai-section-label {
@@ -173,8 +173,8 @@ body { background: #fff; color: #2a2a2a; }
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 2px;
-  color: #62b517;
-  border-left: 4px solid #62b517;
+  color: var(--brand-green);
+  border-left: 4px solid var(--brand-green);
   padding-left: 10px;
   margin-bottom: 8px;
 }
@@ -184,7 +184,7 @@ body { background: #fff; color: #2a2a2a; }
   color: #2a3a10;
   margin-bottom: 8px;
 }
-.ai-section-title em { font-style: normal; color: #62b517; }
+.ai-section-title em { font-style: normal; color: var(--brand-green); }
 .ai-section-desc {
   font-size: 14px;
   color: #666;
@@ -264,7 +264,7 @@ body { background: #fff; color: #2a2a2a; }
 .ai-game-card--nn .ai-game-card-tag {
   background: rgba(98,181,23,0.15);
   border: 1px solid rgba(98,181,23,0.4);
-  color: #4a8c11;
+  color: var(--brand-green-dark);
 }
 .ai-game-card--knn .ai-game-card-tag {
   background: rgba(98,181,23,0.18);
@@ -300,7 +300,7 @@ body { background: #fff; color: #2a2a2a; }
   position: relative;
   z-index: 1;
 }
-.ai-game-card--nn .ai-game-card-tagline { color: #62b517; }
+.ai-game-card--nn .ai-game-card-tagline { color: var(--brand-green); }
 .ai-game-card--knn .ai-game-card-tagline { color: #d1db24; }
 
 /* Card body */
@@ -332,12 +332,12 @@ body { background: #fff; color: #2a2a2a; }
 .ai-game-card--nn .ai-game-card-learn-pill {
   background: #f4fae8;
   border: 1px solid #a8c96a;
-  color: #4a8c11;
+  color: var(--brand-green-dark);
 }
 .ai-game-card--knn .ai-game-card-learn-pill {
   background: rgba(98,181,23,0.08);
   border: 1px solid rgba(98,181,23,0.25);
-  color: #62b517;
+  color: var(--brand-green);
 }
 
 /* Meta row: players, time */
@@ -354,8 +354,8 @@ body { background: #fff; color: #2a2a2a; }
   font-size: 12px;
   font-weight: 700;
 }
-.ai-game-card--nn .ai-game-card-meta-item { color: #4a8c11; }
-.ai-game-card--knn .ai-game-card-meta-item { color: #62b517; }
+.ai-game-card--nn .ai-game-card-meta-item { color: var(--brand-green-dark); }
+.ai-game-card--knn .ai-game-card-meta-item { color: var(--brand-green); }
 
 /* Card actions */
 .ai-game-card-actions {
@@ -379,21 +379,21 @@ body { background: #fff; color: #2a2a2a; }
   justify-content: center;
 }
 .ai-game-card--nn .ai-game-card-play {
-  background: #62b517;
+  background: var(--brand-green);
   color: #fff;
   box-shadow: 0 4px 14px rgba(98,181,23,0.28);
 }
 .ai-game-card--nn .ai-game-card-play:hover {
-  background: #4a8c11;
+  background: var(--brand-green-dark);
   box-shadow: 0 6px 18px rgba(98,181,23,0.4);
 }
 .ai-game-card--knn .ai-game-card-play {
-  background: #62b517;
+  background: var(--brand-green);
   color: #fff;
   box-shadow: 0 4px 14px rgba(98,181,23,0.3);
 }
 .ai-game-card--knn .ai-game-card-play:hover {
-  background: #4a8c11;
+  background: var(--brand-green-dark);
   box-shadow: 0 6px 18px rgba(98,181,23,0.45);
 }
 .ai-game-card-more {
@@ -410,19 +410,19 @@ body { background: #fff; color: #2a2a2a; }
 }
 .ai-game-card--nn .ai-game-card-more {
   border-color: #a8c96a;
-  color: #4a8c11;
+  color: var(--brand-green-dark);
 }
 .ai-game-card--nn .ai-game-card-more:hover {
   background: #f4fae8;
-  border-color: #62b517;
+  border-color: var(--brand-green);
 }
 .ai-game-card--knn .ai-game-card-more {
   border-color: rgba(98,181,23,0.4);
-  color: #62b517;
+  color: var(--brand-green);
 }
 .ai-game-card--knn .ai-game-card-more:hover {
   background: rgba(98,181,23,0.06);
-  border-color: #62b517;
+  border-color: var(--brand-green);
 }
 
 /* ===== TOGETHER SECTION ===== */

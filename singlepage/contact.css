@@ -33,7 +33,7 @@
 }
 .hero h1 em {
   font-style: normal;
-  color: #62b517;
+  color: var(--brand-green);
   position: relative;
 }
 .hero h1 em::after {
@@ -85,7 +85,7 @@
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 2.5px;
-  color: #62b517;
+  color: var(--brand-green);
   border-left: 4px solid #d1db24;
   padding-left: 10px;
   margin-bottom: 20px;

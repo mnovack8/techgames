@@ -21,7 +21,7 @@
   --gn-bg:          rgba(255,255,255,0.92);
   --gn-border:      #d1db24;
   --gn-shadow:      0 1px 6px rgba(0,0,0,0.04);
-  --gn-link:        #4a8c11;
+  --gn-link:        var(--brand-green-dark);
   --gn-link-hover:  #f4fae8;
   --gn-divider:     #ccc;
   --gn-current:     #888;

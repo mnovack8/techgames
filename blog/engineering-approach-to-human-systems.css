@@ -27,7 +27,7 @@
   letter-spacing: 1.8px;
 }
 .sp-tech .system-panel-header { background: #0e1f3a; color: #4a9abb; }
-.sp-human .system-panel-header { background: #1a2e0a; color: #62b517; }
+.sp-human .system-panel-header { background: #1a2e0a; color: var(--brand-green); }
 .system-panel-body {
   background: #fff;
   border: 2px solid;
@@ -161,7 +161,7 @@
 }
 .flt-num {
   width: 28px; height: 28px; flex-shrink: 0;
-  background: #62b517; border-radius: 50%;
+  background: var(--brand-green); border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   font-size: 12px; font-weight: 900; color: #fff;
 }
@@ -179,7 +179,7 @@
 }
 .naming-callout-label {
   font-size: 10px; font-weight: 900; text-transform: uppercase;
-  letter-spacing: 2px; color: #62b517; margin-bottom: 10px;
+  letter-spacing: 2px; color: var(--brand-green); margin-bottom: 10px;
 }
 .naming-callout-text {
   font-size: 14px; color: #7ac87a; line-height: 1.7;
@@ -226,7 +226,7 @@
   display: block;
 }
 .sys-arch-arrow {
-  font-size: 20px; color: #62b517; font-weight: 900;
+  font-size: 20px; color: var(--brand-green); font-weight: 900;
   flex-shrink: 0; padding: 0 6px;
 }
 .sys-arch-feedback-row {

@@ -20,14 +20,14 @@ body { font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif; background: #ff
 .hero-badge {
   background: rgba(209,219,36,0.25);
   border: 1px solid #d1db24;
-  color: #4a8c11;
+  color: var(--brand-green-dark);
 }
 .hero h1 { color: #2a2a2a; }
 
 /* Secondary subtitle (the "Sister game" line) */
 .hero-subtitle { color: #555; }
 .hero-subtitle.secondary { font-size: 13px; opacity: 0.85; max-width: 560px; color: #666; }
-.hero-subtitle a { color: #4a8c11; font-weight: 800; }
+.hero-subtitle a { color: var(--brand-green-dark); font-weight: 800; }
 .hero-subtitle strong { color: #2a3a10; }
 
 /* ===== LEARNING SECTION (light bg + K-NN dot/edge pattern) ===== */
@@ -37,10 +37,10 @@ body { font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif; background: #ff
 }
 /* Override hub.css dark-theme text colors back to light-on-light */
 .learning-bg .info-col h2 { color: #2a3a10; }
-.learning-bg .info-col h2 em { color: #62b517; }
+.learning-bg .info-col h2 em { color: var(--brand-green); }
 .learning-bg .info-col > p { color: #555; }
 .learn-section-label,
-.learning-bg .learn-section-label { color: #62b517; border-left-color: #62b517; }
+.learning-bg .learn-section-label { color: var(--brand-green); border-left-color: var(--brand-green); }
 .learning-bg .concept-card {
   background: #fff;
   border: 2px solid #dde8c8;
@@ -48,7 +48,7 @@ body { font-family: 'Nunito', 'Segoe UI', system-ui, sans-serif; background: #ff
 }
 .learning-bg .concept-card-top strong { color: #2a3a10; }
 .concept-explain em,
-.learning-bg .concept-explain em { color: #4a8c11; font-style: italic; }
+.learning-bg .concept-explain em { color: var(--brand-green-dark); font-style: italic; }
 .concept-explain strong,
 .learning-bg .concept-explain strong { color: #2a3a10; }
 .learning-bg .concept-explain { color: #555; }

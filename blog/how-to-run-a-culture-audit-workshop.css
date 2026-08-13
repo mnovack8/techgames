@@ -25,7 +25,7 @@
   left: calc(16.67% + 10px);
   right: calc(16.67% + 10px);
   height: 2px;
-  background: linear-gradient(90deg, #2a5a2a, #62b517, #2a5a2a);
+  background: linear-gradient(90deg, #2a5a2a, var(--brand-green), #2a5a2a);
   z-index: 0;
 }
 .af-step {
@@ -173,7 +173,7 @@
   letter-spacing: 2px;
 }
 .mc-col.mc-surveys .mc-col-sub { color: #6a8aaa; }
-.mc-col.mc-game    .mc-col-sub { color: #62b517; }
+.mc-col.mc-game    .mc-col-sub { color: var(--brand-green); }
 .method-compare-rows {
   display: flex;
   flex-direction: column;
@@ -469,7 +469,7 @@
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 2.5px;
-  color: #62b517;
+  color: var(--brand-green);
   margin-bottom: 18px;
 }
 .commit-lines {

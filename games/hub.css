@@ -41,7 +41,7 @@
   animation: fade-up 0.45s 0.1s ease both;
 }
 .hero h1 .game-name {
-  color: #62b517;
+  color: var(--brand-green);
   position: relative;
 }
 .hero h1 .game-name::after {
@@ -127,7 +127,7 @@
 }
 .btn-play-now {
   display: inline-block;
-  background: #62b517;
+  background: var(--brand-green);
   color: #fff;
   text-decoration: none;
   text-align: center;
@@ -141,7 +141,7 @@
 .btn-buy-physical {
   display: inline-block;
   background: transparent;
-  color: #4a8c11;
+  color: var(--brand-green-dark);
   text-decoration: none;
   text-align: center;
   padding: 12px 28px;
@@ -151,7 +151,7 @@
   border: 2px solid #d1db24;
   transition: all 0.15s;
 }
-.btn-buy-physical:hover { background: #f4fae8; border-color: #62b517; }
+.btn-buy-physical:hover { background: #f4fae8; border-color: var(--brand-green); }
 
 /* ===== GAME INFO BAR ===== */
 .game-info-bar {
@@ -192,7 +192,7 @@
   margin-bottom: 16px;
   line-height: 1.2;
 }
-.info-col h2 em { font-style: normal; color: #62b517; }
+.info-col h2 em { font-style: normal; color: var(--brand-green); }
 .info-col > p {
   font-size: 14px;
   color: #555;
@@ -204,7 +204,7 @@
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 2px;
-  color: #62b517;
+  color: var(--brand-green);
   border-left: 4px solid #d1db24;
   padding-left: 10px;
   margin-bottom: 14px;
@@ -238,7 +238,7 @@
 .learning-bg .info-col h2 { color: #fff; }
 .learning-bg .info-col h2 em { color: #a8c96a; }
 .learning-bg .info-col > p { color: rgba(255,255,255,0.72); }
-.learning-bg .learn-section-label { color: #a8c96a; border-left-color: #62b517; }
+.learning-bg .learn-section-label { color: #a8c96a; border-left-color: var(--brand-green); }
 .learning-bg .concept-card {
   background: rgba(255,255,255,0.05);
   border-color: rgba(168,201,106,0.28);
@@ -326,7 +326,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: #62b517;
+  background: var(--brand-green);
   color: #fff;
   font-weight: 800;
   font-size: 14px;
@@ -337,7 +337,7 @@
   box-shadow: 0 3px 12px rgba(98,181,23,0.28);
 }
 .workshop-cta-link:hover {
-  background: #4a8c11;
+  background: var(--brand-green-dark);
   transform: translateY(-1px);
   box-shadow: 0 5px 16px rgba(98,181,23,0.38);
 }
@@ -521,9 +521,9 @@ body.rejoin-pending .screen.active { visibility: hidden; }
   text-decoration: none;
   transition: border-color 0.15s;
 }
-.workshop-banner:hover { border-color: #62b517; }
-.workshop-banner-icon  { flex-shrink: 0; color: #62b517; }
+.workshop-banner:hover { border-color: var(--brand-green); }
+.workshop-banner-icon  { flex-shrink: 0; color: var(--brand-green); }
 .workshop-banner-text  { display: block; }
 .workshop-banner-title { font-size: 13px; font-weight: 800; color: #1a2a0a; margin-bottom: 3px; }
 .workshop-banner-sub   { font-size: 11px; color: #6b7280; }
-.workshop-banner-arrow { margin-left: auto; flex-shrink: 0; color: #62b517; }
+.workshop-banner-arrow { margin-left: auto; flex-shrink: 0; color: var(--brand-green); }

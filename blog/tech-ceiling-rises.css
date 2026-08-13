@@ -33,7 +33,7 @@
   font-size: 32px; font-weight: 900; margin-bottom: 6px; line-height: 1;
 }
 .ep-before .era-stat { color: #b38a00; }
-.ep-after  .era-stat { color: #62b517; }
+.ep-after  .era-stat { color: var(--brand-green); }
 .era-desc { font-size: 13px; color: #555; line-height: 1.6; }
 .era-center {
   display: flex; flex-direction: column;
@@ -51,7 +51,7 @@
   padding-left: 16px; position: relative;
 }
 .ep-before .era-item::before { content: '→'; position: absolute; left: 0; color: #b38a00; font-weight: 900; }
-.ep-after  .era-item::before { content: '→'; position: absolute; left: 0; color: #62b517; font-weight: 900; }
+.ep-after  .era-item::before { content: '→'; position: absolute; left: 0; color: var(--brand-green); font-weight: 900; }
 @media (max-width: 620px) {
   .era-split { grid-template-columns: 1fr; }
   .era-panel.ep-before { border-right: none; border-bottom: 1px solid #e8d8a0; }

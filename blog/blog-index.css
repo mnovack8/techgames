@@ -26,7 +26,7 @@
   outline: none;
   transition: border-color 0.18s;
 }
-.blog-search:focus { border-color: #62b517; }
+.blog-search:focus { border-color: var(--brand-green); }
 .blog-search::placeholder { color: #aaa; }
 .blog-post-count {
   font-size: 12px;
@@ -76,8 +76,8 @@
   white-space: nowrap;
   line-height: 1.4;
 }
-.blog-chip:hover { border-color: #62b517; color: #3a7a0a; }
-.blog-chip.active { background: #62b517; border-color: #62b517; color: #fff; }
+.blog-chip:hover { border-color: var(--brand-green); color: #3a7a0a; }
+.blog-chip.active { background: var(--brand-green); border-color: var(--brand-green); color: #fff; }
 .blog-chip.unavailable { opacity: 0.3; cursor: not-allowed; pointer-events: none; }
 
 /* Chip tooltips */
@@ -146,7 +146,7 @@
 .blog-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 10px 32px rgba(98,181,23,0.18);
-  border-color: #62b517;
+  border-color: var(--brand-green);
 }
 .blog-card-img {
   width: 100%;
@@ -177,7 +177,7 @@
 .blog-card-title { font-size: 18px; font-weight: 900; color: #1a1a1a; line-height: 1.3; }
 .blog-card-excerpt { font-size: 13px; color: #555; line-height: 1.65; flex: 1; }
 .blog-card-read {
-  font-size: 12px; font-weight: 800; color: #62b517;
+  font-size: 12px; font-weight: 800; color: var(--brand-green);
   letter-spacing: 0.04em; text-transform: uppercase;
   padding-top: 10px; border-top: 1px solid #e8f0d8;
 }
@@ -221,7 +221,7 @@
 .blog-section-label {
   font-size: 11px; font-weight: 900; text-transform: uppercase;
   letter-spacing: 2.5px; color: #fff;
-  background: #4a8c11;
+  background: var(--brand-green-dark);
   padding: 5px 14px; border-radius: 6px;
   white-space: nowrap;
 }

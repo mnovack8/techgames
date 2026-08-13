@@ -35,7 +35,7 @@
 /* Compound effect banner */
 .cc-compound {
   background: linear-gradient(135deg, #1a2a0a 0%, #2a3a10 100%);
-  border: 2px solid #4a8c11;
+  border: 2px solid var(--brand-green-dark);
   border-radius: 14px;
   padding: 22px 28px;
   margin: 0 0 8px;
@@ -147,7 +147,7 @@
   font-weight: 800;
   color: #2a5a10;
   background: #f0fae8;
-  border-left: 3px solid #62b517;
+  border-left: 3px solid var(--brand-green);
   padding: 8px 12px;
   border-radius: 0 6px 6px 0;
   line-height: 1.55;

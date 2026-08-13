@@ -49,7 +49,7 @@
 }
 .pillar.p-people  { background: #f4fae8; }
 .pillar.p-people  .pillar-title { color: #2a7a0a; }
-.pillar.p-people  .pillar-tag   { background: #62b517; }
+.pillar.p-people  .pillar-tag   { background: var(--brand-green); }
 .pillar.p-process { background: #fafaf0; }
 .pillar.p-process .pillar-title { color: #6a7a00; }
 .pillar.p-process .pillar-tag   { background: #aaaa20; }
@@ -129,7 +129,7 @@
   font-size: 13px; font-weight: 900; text-transform: uppercase;
   letter-spacing: 1.5px; margin-bottom: 6px;
 }
-.tier-people     .tier-verdict { color: #4a8c11; }
+.tier-people     .tier-verdict { color: var(--brand-green-dark); }
 .tier-process    .tier-verdict { color: #8a8a00; }
 .tier-tools      .tier-verdict { color: #4a4aaa; }
 .tier-none       .tier-verdict { color: #c04040; }

@@ -2,8 +2,8 @@
 :root {
   --yellow: #d1db24;
   --yellow-dark: #b8c11e;
-  --green: #62b517;
-  --dark-green: #4a8c11;
+  --green: var(--brand-green);
+  --dark-green: var(--brand-green-dark);
   --bg: #e8edd8;
   --surface: #f4fae8;
   --white: #ffffff;

@@ -22,7 +22,7 @@
   position: relative; z-index: 1;
   animation: fade-up 0.45s ease both;
 }
-.hero h1 em { font-style: normal; color: #62b517; position: relative; }
+.hero h1 em { font-style: normal; color: var(--brand-green); position: relative; }
 .hero h1 em::after {
   content: ''; position: absolute;
   left: 0; right: 0; bottom: -2px; height: 4px;
@@ -43,7 +43,7 @@
 .section-label {
   font-size: 10px; font-weight: 800;
   text-transform: uppercase; letter-spacing: 2.5px;
-  color: #62b517;
+  color: var(--brand-green);
   border-left: 4px solid #d1db24; padding-left: 10px;
   margin-bottom: 18px;
 }
@@ -52,7 +52,7 @@
   font-weight: 900; color: #1a1a1a;
   line-height: 1.2; margin-bottom: 28px;
 }
-.about-headline em { font-style: normal; color: #62b517; }
+.about-headline em { font-style: normal; color: var(--brand-green); }
 .about-body p {
   font-size: 16px; color: #444;
   line-height: 1.8; margin-bottom: 18px;
@@ -84,7 +84,7 @@
 .value-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 22px rgba(98,181,23,0.14);
-  border-color: #62b517;
+  border-color: var(--brand-green);
 }
 .value-icon {
   width: 56px; height: 56px;

@@ -27,7 +27,7 @@
   color: #7dd43f;
   font-size: 11px;
   font-weight: 800;
-  font-family: 'Courier New', monospace;
+  font-family: var(--font-mono);
   letter-spacing: 3px;
   text-transform: uppercase;
   padding: 5px 14px;
@@ -48,7 +48,7 @@
   animation: fade-up 0.45s 0.1s ease both;
 }
 .hero h1 .game-name {
-  color: #62b517;
+  color: var(--brand-green);
   text-shadow: 0 0 28px rgba(98,181,23,0.55), 0 0 8px rgba(98,181,23,0.3);
   position: relative;
 }
@@ -91,7 +91,7 @@
 
 /* Terminal cursor blink */
 .terminal-cursor {
-  color: #62b517;
+  color: var(--brand-green);
   text-shadow: 0 0 16px rgba(98,181,23,0.8);
   animation: blink 1s step-end infinite;
   margin-left: 1px;

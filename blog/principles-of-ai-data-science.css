@@ -184,7 +184,7 @@
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 1.5px;
-  color: #62b517;
+  color: var(--brand-green);
   margin-bottom: 6px;
 }
 .profession-card-question {
@@ -219,7 +219,7 @@
   font-size: 14px; font-weight: 900;
   padding: 8px 14px; border-radius: 8px;
 }
-.llm-formula-term.t1 { background: #1a3a1a; color: #62b517; border: 1.5px solid #62b517; }
+.llm-formula-term.t1 { background: #1a3a1a; color: var(--brand-green); border: 1.5px solid var(--brand-green); }
 .llm-formula-term.t2 { background: #1a2a3a; color: #6aaad0; border: 1.5px solid #3a7aaa; }
 .llm-formula-term.t3 { background: #2a2a1a; color: #d1db24; border: 1.5px solid #d1db24; }
 .llm-formula-plus { font-size: 18px; color: #4a6a8a; font-weight: 900; }
@@ -269,7 +269,7 @@
 .ai-timeline::before {
   content: '';
   position: absolute; left: 7px; top: 8px; bottom: 8px;
-  width: 2px; background: linear-gradient(to bottom, #62b517, #4a7aaa, #d1db24);
+  width: 2px; background: linear-gradient(to bottom, var(--brand-green), #4a7aaa, #d1db24);
   border-radius: 2px;
 }
 .timeline-item {
@@ -328,7 +328,7 @@
   font-size: 9px; font-weight: 900; text-transform: uppercase;
   letter-spacing: 2px; margin-bottom: 10px;
 }
-.classical .shift-col-label { color: #4a8c11; }
+.classical .shift-col-label { color: var(--brand-green-dark); }
 .ai-sys    .shift-col-label { color: #4a7aaa; }
 .shift-item {
   font-size: 12px; font-weight: 700; line-height: 1.5;

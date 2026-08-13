@@ -104,7 +104,7 @@
   width: 32px;
   font-size: 13px;
   font-weight: 900;
-  font-family: 'Courier New', monospace;
+  font-family: var(--font-mono);
   color: #6a7a3a;
   padding-top: 2px;
 }

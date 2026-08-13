@@ -22,7 +22,7 @@
 /* ===== CC COMPOUND (reused for the Principle of Charity callout) ===== */
 .cc-compound {
   background: #f0f5e8;
-  border-left: 4px solid #62b517;
+  border-left: 4px solid var(--brand-green);
   border-radius: 0 8px 8px 0;
   padding: 16px 20px;
   margin: 24px 0;
@@ -32,7 +32,7 @@
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: #62b517;
+  color: var(--brand-green);
   margin-bottom: 8px;
 }
 .cc-compound-body {
@@ -54,7 +54,7 @@
   font-weight: 800;
   color: #5a608a;
   margin-bottom: 12px;
-  font-family: 'Courier New', monospace;
+  font-family: var(--font-mono);
 }
 .claim-grid-row {
   display: grid;
@@ -71,13 +71,13 @@
   cursor: default;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
-.claim-card:hover { border-color: #62b517; box-shadow: 0 4px 14px rgba(98,181,23,0.14); }
+.claim-card:hover { border-color: var(--brand-green); box-shadow: 0 4px 14px rgba(98,181,23,0.14); }
 .claim-tag {
   font-size: 10px;
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: #62b517;
+  color: var(--brand-green);
   margin-bottom: 8px;
 }
 .claim-text { font-size: 14.5px; font-weight: 700; color: #1a2a10; line-height: 1.5; }
@@ -108,7 +108,7 @@
 .proof-premises {
   font-size: 14px;
   color: #8a90b8;
-  font-family: 'Courier New', monospace;
+  font-family: var(--font-mono);
 }
 .proof-premises div { margin: 3px 0; }
 .proof-bar {
@@ -125,10 +125,10 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: #5a608a;
-  font-family: 'Courier New', monospace;
+  font-family: var(--font-mono);
 }
 .proof-conclusion { font-size: 16px; font-weight: 800; color: #fff; }
-.proof-therefore { color: #d1db24; font-family: 'Courier New', monospace; margin-right: 8px; }
+.proof-therefore { color: #d1db24; font-family: var(--font-mono); margin-right: 8px; }
 
 /* ===== VENN (problem / person overlap) ===== */
 .venn-block {
@@ -184,8 +184,8 @@
 .tactic-num {
   font-size: 13px;
   font-weight: 900;
-  color: #62b517;
-  font-family: 'Courier New', monospace;
+  color: var(--brand-green);
+  font-family: var(--font-mono);
   flex-shrink: 0;
   width: 26px;
   padding-top: 2px;

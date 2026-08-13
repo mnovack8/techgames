@@ -1,5 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
 
+:root {
+  --brand-green: #62b517;
+  --brand-green-dark: #4a8c11;
+  --font-mono: 'Courier New', monospace;
+}
+
 /* ===== RESET & BASE ===== */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -36,7 +42,7 @@ header {
 .logo-text {
   font-size: 16px;
   font-weight: 800;
-  color: #4a8c11;
+  color: var(--brand-green-dark);
   letter-spacing: 0.5px;
   display: block;
 }

@@ -24,7 +24,7 @@
   left: calc(16.66% + 10px);
   right: calc(16.66% + 10px);
   height: 2px;
-  background: linear-gradient(90deg, #62b517, #d1db24, #62b517);
+  background: linear-gradient(90deg, var(--brand-green), #d1db24, var(--brand-green));
   z-index: 0;
 }
 .ws-step {
@@ -38,7 +38,7 @@
 }
 .ws-num {
   width: 52px; height: 52px;
-  background: #62b517; color: #fff;
+  background: var(--brand-green); color: #fff;
   font-size: 22px; font-weight: 900; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   margin: 0 auto 18px;
@@ -77,7 +77,7 @@
 .step-list-num {
   flex-shrink: 0;
   width: 32px; height: 32px;
-  background: #62b517; color: #fff;
+  background: var(--brand-green); color: #fff;
   font-size: 14px; font-weight: 900; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   margin-top: 1px;
@@ -99,10 +99,10 @@
   border-radius: 14px;
   padding: 22px 20px;
 }
-.option-card.primary { border-color: #62b517; background: #f4fae8; }
+.option-card.primary { border-color: var(--brand-green); background: #f4fae8; }
 .option-label {
   font-size: 9px; font-weight: 900; text-transform: uppercase;
-  letter-spacing: 2px; color: #62b517; margin-bottom: 8px;
+  letter-spacing: 2px; color: var(--brand-green); margin-bottom: 8px;
 }
 .option-card.secondary .option-label { color: #888; }
 .option-title { font-size: 15px; font-weight: 900; color: #1a2a0a; margin-bottom: 8px; }

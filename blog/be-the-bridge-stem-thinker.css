@@ -237,7 +237,7 @@
 .criteria-item::before {
   content: '→';
   position: absolute; left: 0; top: 1px;
-  color: #62b517; font-weight: 900; font-size: 12px;
+  color: var(--brand-green); font-weight: 900; font-size: 12px;
 }
 @media (max-width: 600px) {
   .criteria-row { grid-template-columns: 1fr; }
@@ -283,7 +283,7 @@
 }
 .pareto-bar-fill { height: 100%; border-radius: 5px; }
 .pb-explore .pareto-bar-fill { background: #5a8ace; }
-.pb-exploit .pareto-bar-fill { background: #62b517; }
+.pb-exploit .pareto-bar-fill { background: var(--brand-green); }
 .pb-expand  .pareto-bar-fill  { background: #c07a20; }
 .pareto-bar-pct {
   font-size: 11px; font-weight: 900; color: #888;

@@ -23,7 +23,7 @@
   display: block;
   width: 24px;
   height: 3px;
-  background: #62b517;
+  background: var(--brand-green);
   border-radius: 2px;
   margin-bottom: 10px;
 }
@@ -31,7 +31,7 @@
 /* ===== CC COMPOUND ===== */
 .cc-compound {
   background: #f0f5e8;
-  border-left: 4px solid #62b517;
+  border-left: 4px solid var(--brand-green);
   border-radius: 0 8px 8px 0;
   padding: 16px 20px;
   margin: 24px 0;
@@ -41,7 +41,7 @@
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: #62b517;
+  color: var(--brand-green);
   margin-bottom: 8px;
 }
 .cc-compound-body {
@@ -170,7 +170,7 @@
   background: #a080c8;
   transition: width 1.2s cubic-bezier(0.16,1,0.3,1);
 }
-.spectrum-bar-ic  { background: #62b517; }
+.spectrum-bar-ic  { background: var(--brand-green); }
 .spectrum-bar-mgr { background: #4a6aaa; }
 
 /* ===== SCOPE COMPARE ===== */
@@ -257,7 +257,7 @@
   font-size: 11px;
   font-weight: 900;
   color: #2a6010;
-  background: #62b517;
+  background: var(--brand-green);
   color: #fff;
   padding: 6px 10px;
   border-radius: 20px;
@@ -347,7 +347,7 @@
   font-family: monospace;
   font-size: 12px;
   font-weight: 900;
-  color: #62b517;
+  color: var(--brand-green);
   background: #f0f8e8;
   border-radius: 6px;
   width: 36px;
