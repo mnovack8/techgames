@@ -1,0 +1,39 @@
+/* Page-specific styles for Two Levels of the Same Question */
+
+/* ===== HERO THEME ===== */
+.article-hero { background: #f4fae8; }
+.article-tag-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px; }
+.article-hero-sub { color: #3a4a2a; }
+.article-meta-read { color: #4a6a2c; }
+.article-hero h1 { color: #1a1a1a; }
+.article-hero h1 em { color: var(--brand-green-dark); }
+.article-cta h3 { color: #1a1a1a; }
+
+/* ===== LEVEL GRID (Technical / Organizational) ===== */
+.level-grid {
+  margin: 28px 0;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+.level-grid.is-visible { opacity: 1; transform: translateY(0); }
+.level-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: #ffffff;
+  border: 1px solid #dde8c8;
+  border-radius: 10px;
+  padding: 18px 18px 20px;
+}
+.level-card-name { font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.06em; color: #2a7a0a; }
+.level-row { border-top: 1px dashed #e4e9d4; padding-top: 8px; }
+.level-row-label { font-size: 9.5px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.06em; color: #8a9a6a; margin-bottom: 3px; }
+.level-row-text { font-size: 13.5px; color: #2a301c; line-height: 1.5; font-weight: 700; }
+
+@media (max-width: 640px) {
+  .level-grid { grid-template-columns: 1fr; }
+}
