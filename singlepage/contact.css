@@ -91,13 +91,101 @@
   margin-bottom: 20px;
 }
 
-/* ===== GOOGLE FORM EMBED ===== */
-.google-form-frame {
-  width: 100%;
-  min-height: 850px;
-  border: none;
+/* ===== CONTACT FORM ===== */
+.contact-form[hidden] { display: none; }
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 520px;
+}
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.form-field label {
+  font-size: 13px;
+  font-weight: 800;
+  color: #1a1a1a;
+}
+.form-field input,
+.form-field textarea {
+  font-family: inherit;
+  font-size: 15px;
+  color: #1a1a1a;
+  background: #fff;
+  border: 2px solid #dde8c8;
   border-radius: 9px;
-  display: block;
+  padding: 11px 14px;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.form-field textarea { resize: vertical; min-height: 100px; }
+.form-field input:focus,
+.form-field textarea:focus {
+  outline: none;
+  border-color: var(--brand-green);
+  box-shadow: 0 0 0 3px rgba(98,181,23,0.15);
+}
+.form-field input:invalid:not(:placeholder-shown),
+.form-field textarea:invalid:not(:placeholder-shown) {
+  border-color: #d64545;
+}
+.btn-contact-submit {
+  align-self: flex-start;
+  font-family: inherit;
+  background: var(--brand-green);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 800;
+  padding: 14px 28px;
+  border: none;
+  border-radius: 10px;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease;
+  box-shadow: 0 4px 12px rgba(98,181,23,0.25);
+}
+.btn-contact-submit:hover:not(:disabled) { background: var(--brand-green-dark); transform: translateY(-1px); }
+.btn-contact-submit:disabled { opacity: 0.7; cursor: default; }
+.form-status {
+  font-size: 14px;
+  font-weight: 700;
+  min-height: 1em;
+}
+.form-status.error { color: #d64545; }
+
+/* ===== CONTACT THANK-YOU PANEL ===== */
+.contact-thanks[hidden] { display: none; }
+.contact-thanks {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  max-width: 480px;
+  animation: fade-up 0.4s ease both;
+}
+.contact-thanks-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--brand-green);
+  color: #fff;
+  border-radius: 50%;
+  margin-bottom: 4px;
+}
+.contact-thanks h3 {
+  font-size: 22px;
+  font-weight: 900;
+  color: #1a1a1a;
+}
+.contact-thanks p {
+  font-size: 15px;
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 6px;
 }
 
 /* ===== LINKEDIN CARD ===== */
