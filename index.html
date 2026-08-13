@@ -964,7 +964,7 @@ function trackClick(button) {
     // (see server.js's /api/posts), so there's no second image to keep in sync.
     var imgHtml = post.image
       ? '<div class="blog-card-img">' + post.image + '</div>'
-      : '<div class="blog-card-img blog-card-img-auto" style="background:#4a8c11"><span class="blog-card-img-wordmark">' + esc(tags[0].label).toUpperCase() + '</span></div>';
+      : '<div class="blog-card-img blog-card-img-auto"><span class="blog-card-img-wordmark">' + esc(tags[0].label).toUpperCase() + '</span></div>';
     var tagsHtml = tags.map(function(t) {
       return '<span class="blog-card-tag ' + esc(t.cls) + '">' + esc(t.label) + '</span>';
     }).join('');

@@ -1,13 +1,13 @@
 /* Page-specific styles for The Technology Changes. The Principles Rarely Do. */
 
 /* ===== HERO THEME ===== */
-.article-hero { background: linear-gradient(160deg, #14170d 0%, #1e2415 55%, #171a10 100%); }
+.article-hero { background: #fefce8; }
 .article-tag-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px; }
-.article-hero-sub { color: #a8ac8a; }
-.article-meta-read { color: #6a7050; }
-.article-cta { background: linear-gradient(135deg, #14170d 0%, #1e2415 100%); border: 2px solid #4a5a2a; }
-.article-cta p { color: #a8ac8a; }
-.article-cta a.secondary { color: #a8ac8a; border: 2px solid #4a5a2a; }
+.article-hero-sub { color: #444; }
+.article-meta-read { color: var(--brand-green-dark); }
+.article-cta { background: #fefce8; border: 2px solid #4a5a2a; }
+.article-cta p { color: #444; }
+.article-cta a.secondary { color: var(--brand-green-dark); border: 2px solid #4a5a2a; }
 
 /* ===== H3 OVERRIDE ===== */
 .article-body h3 {
@@ -21,7 +21,7 @@
 
 /* ===== CC COMPOUND ===== */
 .cc-compound {
-  background: #f2f4ea;
+  background: #eef5e8;
   border-left: 4px solid #6a7a3a;
   border-radius: 0 8px 8px 0;
   padding: 16px 20px;
@@ -56,7 +56,7 @@
   border: 1px solid #dde2c8;
   border-radius: 12px;
   padding: 20px 22px;
-  background: #fdfdf8;
+  background: #ffffff;
 }
 .principle-name { font-size: 16px; font-weight: 900; color: #1e2415; margin-bottom: 10px; }
 .principle-then {
@@ -69,7 +69,7 @@
   font-size: 13px;
   font-weight: 700;
   color: #4a5a2a;
-  background: #f2f4ea;
+  background: #eef5e8;
   padding: 10px 12px;
   border-radius: 0 6px 6px 0;
   border-left: 3px solid #6a7a3a;
@@ -97,7 +97,7 @@
   border-bottom: 1px solid #e4e8d4;
 }
 .test-step:last-child { border-bottom: none; }
-.test-step:nth-child(odd)  { background: #fdfdf8; }
+.test-step:nth-child(odd)  { background: #eef5e8; }
 .test-step:nth-child(even) { background: #fff; }
 .test-num {
   flex-shrink: 0;
@@ -110,3 +110,8 @@
 }
 .test-title { font-size: 15.5px; font-weight: 900; color: #1a1a1a; margin-bottom: 6px; }
 .test-desc { font-size: 13.5px; color: #555; line-height: 1.65; }
+
+/* Heading/CTA text darkened to read on the pale hero/CTA background (was inheriting white from blog.css) */
+.article-hero h1 { color: #1a1a1a; }
+.article-hero h1 em { color: var(--brand-green-dark); }
+.article-cta h3 { color: #1a1a1a; }

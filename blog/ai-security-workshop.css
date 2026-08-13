@@ -1,13 +1,13 @@
 /* Page-specific styles */
 
 /* ===== HERO THEME ===== */
-.article-hero { background: linear-gradient(160deg, #0a1a2a 0%, #1a2a40 55%, #1a3440 100%); }
+.article-hero { background: #fefce8; }
 .article-tag-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
-.article-hero-sub { color: #80b0c0; }
-.article-meta-read { color: #6a9aaa; }
-.article-cta { background: linear-gradient(135deg, #0a1a2a 0%, #1a2a40 100%); border: 2px solid #2a4a60; }
-.article-cta p { color: #80b0c0; }
-.article-cta a.secondary { color: #80b0c0; border: 2px solid #2a5a7a; }
+.article-hero-sub { color: #555; }
+.article-meta-read { color: #666; }
+.article-cta { background: #fefce8; border: 2px solid #e8dca0; }
+.article-cta p { color: #555; }
+.article-cta a.secondary { color: var(--brand-green-dark); border: 2px solid var(--brand-green); }
 
 /* ===== HOUR FLOW ===== */
 .ws-flow {
@@ -24,11 +24,11 @@
   left: calc(25% + 10px);
   right: calc(25% + 10px);
   height: 2px;
-  background: linear-gradient(90deg, var(--brand-green), #d1db24);
+  background: linear-gradient(90deg, #eef5e8, #fefce8);
   z-index: 0;
 }
 .ws-step {
-  background: #f8faf2;
+  background: #eef5e8;
   border: 2px solid #d4e8a8;
   border-radius: 16px;
   padding: 28px 20px 24px;
@@ -38,7 +38,7 @@
 }
 .ws-num {
   width: 52px; height: 52px;
-  background: var(--brand-green); color: #fff;
+  background: #eef5e8; color: var(--brand-green-dark);
   font-size: 22px; font-weight: 900; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   margin: 0 auto 18px;
@@ -82,34 +82,35 @@
 .ws-ref-timing-pill {
   font-size: 11px; font-weight: 900;
   padding: 4px 12px; border-radius: 20px;
-  background: #e6f7d8; color: #2a7a10;
+  background: #eef5e8; color: #2a7a10;
   letter-spacing: 0.3px;
 }
 .ws-ref-link {
   display: inline-flex; align-items: center; gap: 7px;
   font-size: 13px; font-weight: 900;
   text-decoration: none; padding: 10px 18px; border-radius: 8px;
-  transition: background 0.15s, transform 0.15s;
-  background: var(--brand-green); color: #fff;
+  transition: background 0.15s, transform 0.15s, border-color 0.15s, color 0.15s;
+  background: #eef5e8; color: var(--brand-green-dark);
+  border: 2px solid var(--brand-green);
   box-shadow: 0 2px 8px rgba(98,181,23,0.25);
 }
-.ws-ref-link:hover { background: var(--brand-green-dark); transform: translateY(-1px); }
-.ws-ref-link.red { background: #c04040; box-shadow: 0 2px 8px rgba(192,64,64,0.25); }
-.ws-ref-link.red:hover { background: #9a2a2a; }
+.ws-ref-link:hover { border-color: var(--brand-green-dark); color: var(--brand-green-dark); transform: translateY(-1px); }
+.ws-ref-link.red { background: #fefce8; color: #a04010; border: 2px solid #c04040; box-shadow: 0 2px 8px rgba(192,64,64,0.25); }
+.ws-ref-link.red:hover { border-color: #9a2a2a; color: #9a2a2a; }
 @media (max-width: 560px) {
   .ws-ref-card { flex-direction: column; }
 }
 
 /* ===== KILL CHAIN ===== */
 .killchain {
-  background: #1a2a0a;
+  background: #eef5e8;
   border-radius: 14px;
   padding: 28px 24px;
   margin: 28px 0;
 }
 .killchain-title {
   font-size: 10px; font-weight: 900; text-transform: uppercase;
-  letter-spacing: 2.5px; color: var(--brand-green); margin-bottom: 20px;
+  letter-spacing: 2.5px; color: var(--brand-green-dark); margin-bottom: 20px;
 }
 .killchain-stages {
   display: flex; gap: 0; overflow-x: auto;
@@ -124,22 +125,22 @@
 .kc-stage:first-child { border-radius: 8px 0 0 8px; }
 .kc-stage:last-child  { border-radius: 0 8px 8px 0; }
 .kc-stage + .kc-stage { border-left: none; }
-.kc-num  { font-size: 9px; font-weight: 900; color: var(--brand-green); opacity: 0.7; margin-bottom: 4px; }
-.kc-name { font-size: 10px; font-weight: 900; color: #d1db24; line-height: 1.3; }
+.kc-num  { font-size: 9px; font-weight: 900; color: var(--brand-green-dark); opacity: 0.7; margin-bottom: 4px; }
+.kc-name { font-size: 10px; font-weight: 900; color: #1a2a0a; line-height: 1.3; }
 .kc-example-label {
   font-size: 9px; font-weight: 900; text-transform: uppercase;
-  letter-spacing: 2px; color: #a8c96a; margin-bottom: 14px;
+  letter-spacing: 2px; color: var(--brand-green-dark); margin-bottom: 14px;
   display: flex; align-items: center; gap: 8px;
 }
 .kc-example-label span {
-  background: rgba(209,219,36,0.15); color: #d1db24;
+  background: rgba(209,219,36,0.15); color: #2a4010;
   padding: 2px 8px; border-radius: 4px; font-size: 9px;
 }
 .kc-rows { display: flex; flex-direction: column; gap: 10px; }
 .kc-row {
   display: flex; gap: 14px; align-items: flex-start;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.6);
+  border: 1px solid rgba(98,181,23,0.15);
   border-radius: 10px; padding: 12px 14px;
 }
 .kc-row-badge {
@@ -150,7 +151,7 @@
   margin-top: 1px;
 }
 .kc-row-text {
-  font-size: 13px; color: #d8e8c0; line-height: 1.7; font-weight: 600;
+  font-size: 13px; color: #444; line-height: 1.7; font-weight: 600;
 }
 
 /* ===== NIST TABLE ===== */
@@ -160,7 +161,7 @@
   border-radius: 12px; overflow: hidden;
 }
 .nist-table th {
-  background: #2a4010; color: #d1db24;
+  background: #eef5e8; color: #1a2a0a;
   font-size: 10px; font-weight: 900;
   text-transform: uppercase; letter-spacing: 2px;
   padding: 12px 16px; text-align: left;
@@ -179,10 +180,14 @@
   text-transform: uppercase; letter-spacing: 1.5px;
   margin-right: 6px; white-space: nowrap;
 }
-.nb-gv  { background: #e8eaf4; color: #2a3560; }
-.nb-id  { background: #dbeafe; color: #1e3a8a; }
-.nb-pr  { background: #e6f7d8; color: #2a7a10; }
-.nb-de  { background: #fef9c3; color: #7a6000; }
-.nb-rs  { background: #fde8d8; color: #a04010; }
-.nb-rc  { background: #f3e8ff; color: #5a1a9a; }
+.nb-gv  { background: #eef5e8; color: #2a3560; }
+.nb-id  { background: #fefce8; color: #1e3a8a; }
+.nb-pr  { background: #eef5e8; color: #2a7a10; }
+.nb-de  { background: #fefce8; color: #7a6000; }
+.nb-rs  { background: #eef5e8; color: #a04010; }
+.nb-rc  { background: #fefce8; color: #5a1a9a; }
 
+/* Heading/CTA text darkened to read on the pale hero/CTA background (was inheriting white from blog.css) */
+.article-hero h1 { color: #1a1a1a; }
+.article-hero h1 em { color: var(--brand-green-dark); }
+.article-cta h3 { color: #1a1a1a; }

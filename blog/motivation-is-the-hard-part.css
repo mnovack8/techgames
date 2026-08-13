@@ -1,13 +1,13 @@
 /* Page-specific styles for Motivation Is the Hard Part */
 
 /* ===== HERO THEME ===== */
-.article-hero { background: linear-gradient(160deg, #0d1a17 0%, #163530 55%, #101f1c 100%); }
+.article-hero { background: #fefce8; }
 .article-tag-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px; }
-.article-hero-sub { color: #8ab0a8; }
-.article-meta-read { color: #5a7a70; }
-.article-cta { background: linear-gradient(135deg, #0d1a17 0%, #163530 100%); border: 2px solid #2a5a4a; }
-.article-cta p { color: #8ab0a8; }
-.article-cta a.secondary { color: #8ab0a8; border: 2px solid #2a5a4a; }
+.article-hero-sub { color: #444; }
+.article-meta-read { color: #666; }
+.article-cta { background: #fefce8; border: 2px solid #2a5a4a; }
+.article-cta p { color: #444; }
+.article-cta a.secondary { color: var(--brand-green-dark); border: 2px solid var(--brand-green-dark); font-weight: 700; }
 
 /* ===== H3 OVERRIDE ===== */
 .article-body h3 {
@@ -21,7 +21,7 @@
 
 /* ===== CC COMPOUND ===== */
 .cc-compound {
-  background: #eef6f2;
+  background: #eef5e8;
   border-left: 4px solid #3a7a6a;
   border-radius: 0 8px 8px 0;
   padding: 16px 20px;
@@ -45,7 +45,7 @@
 .u-curve-chart {
   margin: 28px 0 16px;
   padding: 20px 20px 12px;
-  background: #fbfdfb;
+  background: #ffffff;
   border: 1px solid #dbe8e2;
   border-radius: 14px;
   opacity: 0;
@@ -74,8 +74,8 @@
   border-radius: 4px;
   display: inline-block;
 }
-.legend-motivation { background: #d1a44a; }
-.legend-content    { background: #3a7a6a; }
+.legend-motivation { background: #fefce8; border: 2px solid #d1a44a; }
+.legend-content    { background: #eef5e8; border: 2px solid #3a7a6a; }
 
 /* ===== U-CURVE STAGES (beginning / middle / end) ===== */
 .u-curve-stages {
@@ -126,7 +126,7 @@
   border-bottom: 1px solid #e0ebe4;
 }
 .build-stage:last-child { border-bottom: none; }
-.build-stage:nth-child(odd)  { background: #fbfdfb; }
+.build-stage:nth-child(odd)  { background: #eef5e8; }
 .build-stage:nth-child(even) { background: #fff; }
 .build-num {
   flex-shrink: 0;
@@ -151,3 +151,8 @@
 @media (max-width: 720px) {
   .u-curve-stages { grid-template-columns: 1fr; }
 }
+
+/* Heading/CTA text darkened to read on the pale hero/CTA background (was inheriting white from blog.css) */
+.article-hero h1 { color: #1a1a1a; }
+.article-hero h1 em { color: var(--brand-green-dark); }
+.article-cta h3 { color: #1a1a1a; }

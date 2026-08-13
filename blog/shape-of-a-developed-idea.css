@@ -1,13 +1,16 @@
 /* Page-specific styles for The Shape of a Developed Idea */
 
 /* ===== HERO THEME ===== */
-.article-hero { background: linear-gradient(160deg, #10131c 0%, #1a1f2e 55%, #131722 100%); }
+.article-hero { background: #fefce8; }
+.article-hero h1 { color: #1a1a1a; }
+.article-hero h1 em { color: var(--brand-green-dark); }
 .article-tag-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px; }
-.article-hero-sub { color: #8a92ac; }
-.article-meta-read { color: #5a6284; }
-.article-cta { background: linear-gradient(135deg, #10131c 0%, #1a1f2e 100%); border: 2px solid #2a3050; }
-.article-cta p { color: #8a92ac; }
-.article-cta a.secondary { color: #8a92ac; border: 2px solid #2a3050; }
+.article-hero-sub { color: #555; }
+.article-meta-read { color: #666; }
+.article-cta { background: #fefce8; border: 2px solid var(--brand-green); }
+.article-cta h3 { color: #1a1a1a; }
+.article-cta p { color: #555; }
+.article-cta a.secondary { color: var(--brand-green-dark); border: 2px solid var(--brand-green); }
 
 /* ===== H3 OVERRIDE ===== */
 .article-body h3 {
@@ -21,7 +24,7 @@
 
 /* ===== CC COMPOUND ===== */
 .cc-compound {
-  background: #f0f5e8;
+  background: #eef5e8;
   border-left: 4px solid var(--brand-green);
   border-radius: 0 8px 8px 0;
   padding: 16px 20px;
@@ -58,8 +61,8 @@
   padding: 20px 22px;
   border: 2px solid;
 }
-.direction-up   { background: #f0f7ec; border-color: #8fbf6a; }
-.direction-down { background: #eef1fa; border-color: #7a8fc0; }
+.direction-up   { background: #eef5e8; border-color: #8fbf6a; }
+.direction-down { background: #fefce8; border-color: #7a8fc0; }
 .direction-label {
   font-size: 11px;
   font-weight: 900;
@@ -128,7 +131,7 @@
 }
 .start-point-grid.is-visible { opacity: 1; transform: translateY(0); }
 .start-point-card {
-  background: #f7f8fb;
+  background: #ffffff;
   border: 1px solid #e2e5ef;
   border-radius: 10px;
   padding: 20px 22px;

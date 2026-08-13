@@ -1,13 +1,16 @@
 /* Page-specific styles for What Is Worth Sharing */
 
 /* ===== HERO THEME ===== */
-.article-hero { background: linear-gradient(160deg, #1f0f18 0%, #2e1524 55%, #200f19 100%); }
+.article-hero { background: #fefce8; }
 .article-tag-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px; }
-.article-hero-sub { color: #c090a8; }
-.article-meta-read { color: #8a5a70; }
-.article-cta { background: linear-gradient(135deg, #1f0f18 0%, #2e1524 100%); border: 2px solid #5a2a42; }
-.article-cta p { color: #c090a8; }
-.article-cta a.secondary { color: #c090a8; border: 2px solid #5a2a42; }
+.article-hero h1 { color: #1a1a1a; }
+.article-hero h1 em { color: var(--brand-green-dark); }
+.article-hero-sub { color: #555; }
+.article-meta-read { color: #666; }
+.article-cta { background: #eef5e8; border: 2px solid var(--brand-green-dark); }
+.article-cta h3 { color: #1a1a1a; }
+.article-cta p { color: #444; }
+.article-cta a.secondary { color: var(--brand-green-dark); border: 2px solid var(--brand-green-dark); }
 
 /* ===== SECTION SUBHEADER h3 OVERRIDE ===== */
 .article-body h3 {
@@ -23,7 +26,8 @@
   display: block;
   width: 24px;
   height: 3px;
-  background: #a03a5a;
+  background: transparent;
+  box-shadow: inset 0 0 0 20px #a03a5a;
   border-radius: 2px;
   margin-bottom: 10px;
 }
@@ -35,8 +39,9 @@
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 2px;
-  color: #fff;
-  background: #b83030;
+  color: #b83030;
+  background: #ffffff;
+  box-shadow: inset 0 0 0 1.5px #b83030;
   padding: 3px 9px;
   border-radius: 4px;
   margin-right: 9px;
@@ -47,7 +52,7 @@
 
 /* ===== CC COMPOUND ===== */
 .cc-compound {
-  background: #f7eef2;
+  background: #eef5e8;
   border-left: 4px solid #a03a5a;
   border-radius: 0 8px 8px 0;
   padding: 16px 20px;
@@ -79,7 +84,7 @@
 }
 .talk-types.is-visible { opacity: 1; transform: translateY(0); }
 .talk-type {
-  background: #fdf7fa;
+  background: #ffffff;
   border: 1px solid #e8d0dc;
   border-radius: 12px;
   padding: 20px 20px;
@@ -125,16 +130,15 @@
   letter-spacing: 0.05em;
   padding: 4px 10px;
   border-radius: 6px;
-  color: #fff;
 }
-.sme-tag-ds  { background: #5a3a9a; }
-.sme-tag-swe { background: #2a5a9a; }
-.sme-tag-sec { background: #9a3a2a; }
+.sme-tag-ds  { background: #ffffff; color: #5a3a9a; box-shadow: inset 0 0 0 1.5px #5a3a9a; }
+.sme-tag-swe { background: #eef5e8; color: #2a5a9a; box-shadow: inset 0 0 0 1.5px #2a5a9a; }
+.sme-tag-sec { background: #fefce8; color: #9a3a2a; box-shadow: inset 0 0 0 1.5px #9a3a2a; }
 .sme-type-badge {
   font-size: 11px;
   font-weight: 800;
   color: #a03a5a;
-  background: #f7eef2;
+  background: #fefce8;
   padding: 4px 10px;
   border-radius: 6px;
 }
@@ -165,7 +169,7 @@
 }
 .audience-grid.is-visible { opacity: 1; transform: translateY(0); }
 .audience-card {
-  background: #fdf7fa;
+  background: #fefce8;
   border: 1px solid #e8d0dc;
   border-radius: 12px;
   padding: 20px 18px;
@@ -177,7 +181,7 @@
   font-size: 12px;
   font-weight: 800;
   color: #a03a5a;
-  background: #f7eef2;
+  background: #ffffff;
   padding: 8px 10px;
   border-radius: 0 6px 6px 0;
   border-left: 3px solid #a03a5a;

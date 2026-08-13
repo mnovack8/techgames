@@ -1,13 +1,13 @@
 /* Page-specific styles for Heart of a Teacher */
 
 /* ===== HERO THEME ===== */
-.article-hero { background: linear-gradient(160deg, #0d1a0d 0%, #122a12 55%, #0f1f0f 100%); }
+.article-hero { background: #fefce8; }
 .article-tag-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px; }
-.article-hero-sub { color: #8ac870; }
-.article-meta-read { color: #5a8a50; }
-.article-cta { background: linear-gradient(135deg, #0d1a0d 0%, #122a12 100%); border: 2px solid #2a6a1a; }
-.article-cta p { color: #8ac870; }
-.article-cta a.secondary { color: #8ac870; border: 2px solid #2a5a1a; }
+.article-hero-sub { color: var(--brand-green-dark); }
+.article-meta-read { color: #3a6a10; }
+.article-cta { background: #fefce8; border: 2px solid #2a6a1a; }
+.article-cta p { color: #444444; }
+.article-cta a.secondary { color: var(--brand-green-dark); border: 2px solid var(--brand-green); font-weight: 700; }
 
 /* ===== H3 OVERRIDE ===== */
 .article-body h3 {
@@ -22,9 +22,8 @@
   content: '';
   display: block;
   width: 24px;
-  height: 3px;
-  background: var(--brand-green);
-  border-radius: 2px;
+  height: 0;
+  border-bottom: 3px solid var(--brand-green);
   margin-bottom: 10px;
 }
 
@@ -44,7 +43,7 @@
 .lev-row-header {
   display: grid;
   grid-template-columns: 2fr 2fr 1fr;
-  background: #f0f5e8;
+  background: #eef5e8;
   padding: 10px 16px;
   font-weight: 900;
   font-size: 11px;
@@ -62,7 +61,7 @@
   align-items: center;
 }
 .lev-row-highlight {
-  background: #f0f8e8;
+  background: #fefce8;
   border-top: 2px solid var(--brand-green);
 }
 .lev-activity { font-weight: 700; color: #1a3a0a; }
@@ -74,16 +73,16 @@
   border-radius: 4px;
   text-align: center;
 }
-.lev-low  { background: #f5e8e8; color: #7a3030; }
-.lev-mid  { background: #faeeda; color: #7a5010; }
-.lev-high { background: #e8f0d8; color: #3a6a10; }
-.lev-max  { background: var(--brand-green); color: #fff; }
+.lev-low  { background: #ffffff; color: #7a3030; border: 1px solid #d8a8a8; }
+.lev-mid  { background: #fefce8; color: #7a5010; border: 1px solid #ddc888; }
+.lev-high { background: #eef5e8; color: #3a6a10; border: 1px solid #b8d898; }
+.lev-max  { background: #eef5e8; color: #1a3a0a; border: 2px solid var(--brand-green); }
 
 /* ===== TREE CALLOUT ===== */
 .tree-callout {
   margin: 28px 0;
   padding: 24px;
-  background: #f5faf0;
+  background: #eef5e8;
   border: 1px solid #c8e898;
   border-radius: 10px;
   opacity: 0;
@@ -104,9 +103,9 @@
   flex-shrink: 0;
   margin-top: 3px;
 }
-.tree-dot-green { background: var(--brand-green); }
-.tree-dot-mid   { background: var(--brand-green-dark); }
-.tree-dot-gold  { background: #d1db24; border: 2px solid #8a9a10; }
+.tree-dot-green { background: #eef5e8; border: 2px solid var(--brand-green); }
+.tree-dot-mid   { background: #ffffff; border: 2px solid var(--brand-green-dark); }
+.tree-dot-gold  { background: #fefce8; border: 2px solid #8a9a10; }
 
 .tree-content {}
 .tree-label { font-weight: 700; font-size: 15px; color: #1a3a0a; }
@@ -115,7 +114,7 @@
 .tree-branch-line {
   width: 2px;
   height: 20px;
-  background: #c8e898;
+  background: #ffffff;
   margin: 8px 0 8px 6px;
 }
 .tree-level {
@@ -144,8 +143,8 @@
   padding: 16px 18px;
   font-size: 14px;
 }
-.contrast-weak   { background: #fdf2f2; border: 1px solid #f0c8c8; }
-.contrast-strong { background: #f2f8ea; border: 1px solid #c8e298; }
+.contrast-weak   { background: #fefce8; border: 1px solid #f0c8c8; }
+.contrast-strong { background: #eef5e8; border: 1px solid #c8e298; }
 
 .contrast-label {
   font-size: 10px;
@@ -182,7 +181,7 @@
 .teaching-forms.is-visible { opacity: 1; transform: none; }
 
 .form-card {
-  background: #f5faf0;
+  background: #eef5e8;
   border: 1px solid #c8e898;
   border-radius: 10px;
   padding: 18px 16px;
@@ -229,8 +228,9 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: var(--brand-green);
-  color: #fff;
+  background: #eef5e8;
+  color: var(--brand-green-dark);
+  border: 2px solid var(--brand-green);
   font-size: 13px;
   font-weight: 900;
   display: flex;
@@ -253,7 +253,7 @@
 
 /* ===== CC COMPOUND (matches blog.css class) ===== */
 .cc-compound {
-  background: #f0f8e8;
+  background: #eef5e8;
   border-left: 4px solid var(--brand-green);
   border-radius: 0 8px 8px 0;
   padding: 16px 20px;
@@ -272,3 +272,8 @@
   color: #1a3a0a;
   line-height: 1.7;
 }
+
+/* Heading/CTA text darkened to read on the pale hero/CTA background (was inheriting white from blog.css) */
+.article-hero h1 { color: #1a1a1a; }
+.article-hero h1 em { color: var(--brand-green-dark); }
+.article-cta h3 { color: #1a1a1a; }

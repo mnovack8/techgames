@@ -15,12 +15,12 @@
   padding: 20px 16px;
   text-align: center;
 }
-.logic-step.ls-assume { border-color: #2a5a9a; background: #f0f5ff; }
-.logic-step.ls-cond   { border-color: #888;    background: #fafafa; }
-.logic-step.ls-pred   { border-color: #c04040; background: #fff8f8; }
+.logic-step.ls-assume { border-color: #2a5a9a; background: #eef5e8; }
+.logic-step.ls-cond   { border-color: #888;    background: #ffffff; }
+.logic-step.ls-pred   { border-color: #c04040; background: #fefce8; }
 .logic-arrow {
   display: flex; align-items: center; justify-content: center;
-  font-size: 20px; color: #d1db24; font-weight: 900;
+  font-size: 20px; color: #8a8a10; font-weight: 900;
 }
 .logic-step-num {
   font-size: 9px; font-weight: 900; text-transform: uppercase;
@@ -42,10 +42,10 @@
   margin: 20px 0;
 }
 .intervention-wrong {
-  background: #fff8f8; border: 2px solid #e0a0a0; border-radius: 10px; padding: 16px;
+  background: #fefce8; border: 2px solid #e0a0a0; border-radius: 10px; padding: 16px;
 }
 .intervention-right {
-  background: #f8fff8; border: 2px solid #90c090; border-radius: 10px; padding: 16px;
+  background: #eef5e8; border: 2px solid #90c090; border-radius: 10px; padding: 16px;
 }
 .intervention-label {
   font-size: 10px; font-weight: 900; text-transform: uppercase;
@@ -57,7 +57,7 @@
 
 /* ===== PER-SECTION FRAMEWORK CALLOUT ===== */
 .framework-apply {
-  background: #f0f4ff;
+  background: #eef5e8;
   border-left: 4px solid #2a5a9a;
   border-radius: 0 8px 8px 0;
   padding: 14px 18px;
@@ -78,19 +78,19 @@
 }
 
 /* ===== HERO THEME ===== */
-.article-hero { background: linear-gradient(160deg, #060b18 0%, #0c1430 55%, #081020 100%); }
+.article-hero { background: #fefce8; }
 .article-tag-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px; }
-.article-hero-sub { color: #7aadca; }
-.article-meta-author { color: #d1db24; }
-.article-meta-date, .article-meta-read { color: #5a8aaa; }
+.article-hero-sub { color: #555; }
+.article-meta-author { color: #1a1a1a; }
+.article-meta-date, .article-meta-read { color: #666; }
 .article-meta-sep { color: #2a4a7a; }
-.article-cta { background: linear-gradient(135deg, #060b18 0%, #0c1430 100%); border: 2px solid #1a3a6a; }
-.article-cta p { color: #7aadca; }
-.article-cta a.secondary { color: #7aadca; border: 2px solid #2a4a7a; }
+.article-cta { background: #fefce8; border: 2px solid #1a3a6a; }
+.article-cta p { color: #555; }
+.article-cta a.secondary { color: var(--brand-green-dark); border: 2px solid var(--brand-green-dark); }
 
 /* ===== SPOCK PROFILE CARD ===== */
 .spock-profile {
-  background: #0a1020;
+  background: #ffffff;
   border: 2px solid #2a5a8a;
   border-radius: 14px;
   padding: 24px 28px;
@@ -102,7 +102,7 @@
 }
 .spock-emblem {
   width: 80px; height: 80px;
-  background: #0c1830;
+  background: #eef5e8;
   border: 2px solid #2a5a8a;
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
@@ -110,7 +110,7 @@
 }
 .spock-stats { display: flex; flex-direction: column; gap: 8px; }
 .spock-stats-title {
-  font-size: 14px; font-weight: 900; color: #d1db24;
+  font-size: 14px; font-weight: 900; color: #2a5a8a;
   text-transform: uppercase; letter-spacing: 2px; margin-bottom: 4px;
 }
 .spock-stat {
@@ -119,9 +119,9 @@
 }
 .stat-label {
   font-size: 10px; font-weight: 900; text-transform: uppercase;
-  letter-spacing: 1.5px; color: #4a9abb; white-space: nowrap; flex-shrink: 0;
+  letter-spacing: 1.5px; color: #2a5a8a; white-space: nowrap; flex-shrink: 0;
 }
-.stat-value { color: #c8dde8; font-weight: 600; }
+.stat-value { color: #333; font-weight: 600; }
 .stat-value.stat-error { color: #c06040; }
 @media (max-width: 560px) {
   .spock-profile { grid-template-columns: 1fr; }
@@ -150,7 +150,7 @@
 .episode-title { font-size: 14px; font-weight: 900; color: #1a1a1a; }
 .episode-season {
   font-size: 9px; font-weight: 900; text-transform: uppercase; letter-spacing: 1.5px;
-  color: #fff; padding: 3px 8px; border-radius: 4px; background: #1a5a8a;
+  color: #1a5a8a; padding: 3px 8px; border-radius: 4px; background: #eef5e8; border: 1px solid #1a5a8a;
 }
 .episode-emotion {
   font-size: 12px; font-weight: 700; color: #4a5a6a;
@@ -186,15 +186,15 @@
 .eq-cell:nth-child(1), .eq-cell:nth-child(3) { border-left: none; }
 .eq-cell:nth-child(2), .eq-cell:nth-child(4) { border-right: none; }
 .eq-cell:nth-child(3), .eq-cell:nth-child(4) { border-bottom: none; }
-.eq-cell.personal { background: #f0f5ff; }
-.eq-cell.social   { background: #fff8f0; }
+.eq-cell.personal { background: #eef5e8; }
+.eq-cell.social   { background: #fefce8; }
 .eq-cell-tag {
   font-size: 9px; font-weight: 900; text-transform: uppercase;
   letter-spacing: 1.5px; color: #fff; padding: 3px 8px;
   border-radius: 4px; margin-bottom: 10px; display: inline-block;
 }
-.personal .eq-cell-tag { background: #2a5a9a; }
-.social   .eq-cell-tag { background: #7a3a10; }
+.personal .eq-cell-tag { background: #ffffff; color: #2a5a9a; border: 1px solid #2a5a9a; }
+.social   .eq-cell-tag { background: #ffffff; color: #7a3a10; border: 1px solid #7a3a10; }
 .eq-cell-title { font-size: 16px; font-weight: 900; margin-bottom: 6px; }
 .personal .eq-cell-title { color: #1a3a7a; }
 .social   .eq-cell-title { color: #6a2a08; }
@@ -207,9 +207,9 @@
 .social   .eq-stat { color: #9a6030; }
 @media (max-width: 560px) { .eq-quad { grid-template-columns: 1fr; } }
 
-/* ===== SPOCK VERDICT (dark quote callout) ===== */
+/* ===== SPOCK VERDICT (quote callout) ===== */
 .spock-verdict {
-  background: #080e1c;
+  background: #fefce8;
   border: 2px solid #2a5a8a;
   border-radius: 12px;
   padding: 22px 26px 22px 24px;
@@ -221,10 +221,10 @@
 }
 .spock-verdict-label {
   font-size: 10px; font-weight: 900; text-transform: uppercase;
-  letter-spacing: 2px; color: #d1db24;
+  letter-spacing: 2px; color: #2a5a8a;
 }
 .spock-verdict-text {
-  font-size: 14px; color: #7aadca; line-height: 1.7; font-style: italic;
+  font-size: 14px; color: #555; line-height: 1.7; font-style: italic;
 }
 
 /* ===== SECTION TACTIC LIST ===== */
@@ -238,7 +238,7 @@
 }
 .tactic-icon {
   width: 32px; height: 32px; flex-shrink: 0;
-  background: #f0f5ff; border-radius: 50%;
+  background: #eef5e8; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   font-size: 14px;
 }
@@ -257,10 +257,10 @@
   border-radius: 50%; display: flex; align-items: center; justify-content: center;
   font-size: 12px; font-weight: 900; color: #fff;
 }
-.eq-section-label.s1 .eq-section-num { background: #2a5a9a; }
-.eq-section-label.s2 .eq-section-num { background: #2a7a0a; }
-.eq-section-label.s3 .eq-section-num { background: #7a4a0a; }
-.eq-section-label.s4 .eq-section-num { background: #7a1a1a; }
+.eq-section-label.s1 .eq-section-num { background: #eef5e8; color: #2a5a9a; border: 1.5px solid #2a5a9a; }
+.eq-section-label.s2 .eq-section-num { background: #fefce8; color: #2a7a0a; border: 1.5px solid #2a7a0a; }
+.eq-section-label.s3 .eq-section-num { background: #ffffff; color: #7a4a0a; border: 1.5px solid #7a4a0a; }
+.eq-section-label.s4 .eq-section-num { background: #eef5e8; color: #7a1a1a; border: 1.5px solid #7a1a1a; }
 .eq-section-label.s1 .eq-section-name { color: #2a5a9a; }
 .eq-section-label.s2 .eq-section-name { color: #2a7a0a; }
 .eq-section-label.s3 .eq-section-name { color: #7a4a0a; }
@@ -287,3 +287,8 @@
 .stat-big.s-good { color: #2a7a0a; }
 .stat-caption { font-size: 14px; color: #444; line-height: 1.6; align-self: center; }
 .stat-caption strong { color: #1a1a1a; }
+
+/* Heading/CTA text darkened to read on the pale hero/CTA background (was inheriting white from blog.css) */
+.article-hero h1 { color: #1a1a1a; }
+.article-hero h1 em { color: var(--brand-green-dark); }
+.article-cta h3 { color: #1a1a1a; }

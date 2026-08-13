@@ -1,14 +1,14 @@
 /* Page-specific styles for The Ceiling Keeps Rising article */
 
 /* ===== HERO THEME ===== */
-.article-hero { background: linear-gradient(160deg, #1a1200 0%, #2a1e00 55%, #301a00 100%); }
+.article-hero { background: #fefce8; }
 .article-tag-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px; }
-.article-hero-sub { color: #d4b870; }
-.article-meta-read { color: #9a7a30; }
-.article-cta { background: linear-gradient(135deg, #1a1200 0%, #2a1e00 100%); border: 2px solid #7a5a00; }
-.article-cta h3 { color: #ffffff; }
-.article-cta p { color: #d4b870; }
-.article-cta a.secondary { color: #d4b870; border: 2px solid #7a5a00; }
+.article-hero-sub { color: #4a3800; }
+.article-meta-read { color: #7a6030; }
+.article-cta { background: #ffffff; border: 2px solid #7a5a00; }
+.article-cta h3 { color: #1a1a1a; }
+.article-cta p { color: #555555; }
+.article-cta a.secondary { color: var(--brand-green-dark); border: 2px solid var(--brand-green-dark); font-weight: 700; }
 
 /* ===== ERA SPLIT (Before / After agriculture) ===== */
 .era-split {
@@ -21,8 +21,8 @@
   margin: 36px 0;
 }
 .era-panel { padding: 22px 22px; }
-.era-panel.ep-before { background: #fdf8e0; border-right: 1px solid #e8d8a0; }
-.era-panel.ep-after  { background: #f4fae8; border-left: 1px solid #e8d8a0; }
+.era-panel.ep-before { background: #fefce8; border-right: 1px solid #e8d8a0; }
+.era-panel.ep-after  { background: #eef5e8; border-left: 1px solid #e8d8a0; }
 .era-label {
   font-size: 10px; font-weight: 900; text-transform: uppercase;
   letter-spacing: 1.5px; margin-bottom: 12px; display: block;
@@ -40,10 +40,10 @@
   align-items: center; justify-content: center;
   background: #fff; padding: 12px 4px; gap: 5px;
 }
-.era-arrow { font-size: 18px; color: #f0c830; font-weight: 900; }
+.era-arrow { font-size: 18px; color: #8a6a10; font-weight: 900; }
 .era-arrow-label {
   font-size: 7px; font-weight: 900; text-transform: uppercase;
-  letter-spacing: 1.5px; color: #aaa; text-align: center;
+  letter-spacing: 1.5px; color: #666; text-align: center;
 }
 .era-items { margin-top: 14px; display: flex; flex-direction: column; gap: 5px; }
 .era-item {
@@ -70,14 +70,18 @@
   padding: 22px 22px;
   border: 2px solid;
 }
-.time-card.tc-short { background: #fff8f0; border-color: #e0a060; }
-.time-card.tc-long  { background: #f0f8e8; border-color: #90c060; }
+.time-card.tc-short { background: #fefce8; border-color: #e0a060; }
+.time-card.tc-long  { background: #eef5e8; border-color: #90c060; }
 .time-label {
   font-size: 10px; font-weight: 900; text-transform: uppercase;
-  letter-spacing: 2px; color: #aaa; margin-bottom: 6px; display: block;
+  letter-spacing: 2px; color: #666; margin-bottom: 6px; display: block;
 }
 .time-title { font-size: 16px; font-weight: 900; margin-bottom: 10px; }
 .tc-short .time-title { color: #8a4a00; }
 .tc-long  .time-title { color: #2a6a00; }
 .time-desc { font-size: 13px; color: #555; line-height: 1.7; }
 @media (max-width: 600px) { .time-split { grid-template-columns: 1fr; } }
+
+/* Heading text darkened to read on the pale hero background (was inheriting white from blog.css) */
+.article-hero h1 { color: #1a1a1a; }
+.article-hero h1 em { color: var(--brand-green-dark); }

@@ -1,14 +1,14 @@
 /* Page-specific styles for: An Engineering Approach to Human Systems */
 
 /* ===== HERO THEME ===== */
-.article-hero { background: linear-gradient(160deg, #0a1a0a 0%, #0e2010 55%, #081408 100%); }
+.article-hero { background: #fefce8; }
 .article-tag-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px; }
-.article-hero-sub { color: #7ac87a; }
-.article-meta-read { color: #5a9a5a; }
-.article-meta-sep { color: #2a5a2a; }
-.article-cta { background: linear-gradient(135deg, #0a1a0a 0%, #0e2010 100%); border: 2px solid #1a4a1a; }
-.article-cta p { color: #7ac87a; }
-.article-cta a.secondary { color: #7ac87a; border: 2px solid #2a5a2a; }
+.article-hero-sub { color: #1a1a1a; }
+.article-meta-read { color: #555; }
+.article-meta-sep { color: #999; }
+.article-cta { background: #eef5e8; border: 2px solid var(--brand-green); }
+.article-cta p { color: #444; }
+.article-cta a.secondary { color: var(--brand-green-dark); border: 2px solid var(--brand-green); font-weight: 700; }
 
 /* ===== SYSTEM DIAGRAM PARALLEL ===== */
 .system-parallel {
@@ -26,8 +26,8 @@
   font-size: 10px; font-weight: 900; text-transform: uppercase;
   letter-spacing: 1.8px;
 }
-.sp-tech .system-panel-header { background: #0e1f3a; color: #4a9abb; }
-.sp-human .system-panel-header { background: #1a2e0a; color: var(--brand-green); }
+.sp-tech .system-panel-header { background: #fefce8; color: #1a4a7a; }
+.sp-human .system-panel-header { background: #eef5e8; color: var(--brand-green-dark); }
 .system-panel-body {
   background: #fff;
   border: 2px solid;
@@ -49,8 +49,8 @@
   display: flex; align-items: center; justify-content: center;
   padding: 12px 8px;
 }
-.sp-tech .sys-label { background: #f0f5ff; color: #2a5a9a; border-right: 1px solid #e0ecf8; }
-.sp-human .sys-label { background: #f4fae8; color: #3a7a0a; border-right: 1px solid #e0f0c8; }
+.sp-tech .sys-label { background: #fefce8; color: #2a5a9a; border-right: 1px solid #e0ecf8; }
+.sp-human .sys-label { background: #eef5e8; color: #3a7a0a; border-right: 1px solid #e0f0c8; }
 .sys-value {
   flex: 1;
   font-size: 12px; color: #444; line-height: 1.55;
@@ -86,13 +86,14 @@
 }
 .bug-type-badge {
   font-size: 9px; font-weight: 900; text-transform: uppercase;
-  letter-spacing: 1.5px; color: #fff;
+  letter-spacing: 1.5px;
   padding: 3px 8px; border-radius: 4px;
+  border: 1.5px solid transparent;
 }
-.b-input    .bug-type-badge { background: #c04040; }
-.b-state    .bug-type-badge { background: #c07820; }
-.b-output   .bug-type-badge { background: #2a5a9a; }
-.b-feedback .bug-type-badge { background: #5a2a9a; }
+.b-input    .bug-type-badge { background: #fff;    color: #c04040; border-color: #c04040; }
+.b-state    .bug-type-badge { background: #fefce8; color: #c07820; border-color: #c07820; }
+.b-output   .bug-type-badge { background: #eef5e8; color: #2a5a9a; border-color: #2a5a9a; }
+.b-feedback .bug-type-badge { background: #fff;    color: #5a2a9a; border-color: #5a2a9a; }
 
 .bug-title { font-size: 14px; font-weight: 900; }
 .b-input    .bug-title { color: #8a1a1a; }
@@ -131,7 +132,7 @@
 .principle-item:last-child { border-bottom: none; }
 .principle-q {
   width: 200px; flex-shrink: 0;
-  background: #f4fae8;
+  background: #eef5e8;
   border-right: 1px solid #e0f0c8;
   padding: 16px 18px;
   font-size: 13px; font-weight: 700; color: #2a6a0a; line-height: 1.5;
@@ -155,15 +156,15 @@
 .flt-item {
   display: flex; gap: 14px; align-items: flex-start;
   padding: 14px 16px;
-  background: #f4fae8;
+  background: #eef5e8;
   border: 1.5px solid #c8ddb0;
   border-radius: 10px;
 }
 .flt-num {
   width: 28px; height: 28px; flex-shrink: 0;
-  background: var(--brand-green); border-radius: 50%;
+  background: #fff; border: 2px solid var(--brand-green); border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  font-size: 12px; font-weight: 900; color: #fff;
+  font-size: 12px; font-weight: 900; color: var(--brand-green-dark);
 }
 .flt-body { flex: 1; }
 .flt-title { font-size: 14px; font-weight: 900; color: #1a1a1a; margin-bottom: 4px; }
@@ -171,7 +172,7 @@
 
 /* ===== NAMING CALLOUT ===== */
 .naming-callout {
-  background: #0e2010;
+  background: #fefce8;
   border: 2px solid #2a6a1a;
   border-radius: 12px;
   padding: 22px 26px;
@@ -179,16 +180,16 @@
 }
 .naming-callout-label {
   font-size: 10px; font-weight: 900; text-transform: uppercase;
-  letter-spacing: 2px; color: var(--brand-green); margin-bottom: 10px;
+  letter-spacing: 2px; color: var(--brand-green-dark); margin-bottom: 10px;
 }
 .naming-callout-text {
-  font-size: 14px; color: #7ac87a; line-height: 1.7;
+  font-size: 14px; color: #3a5a1a; line-height: 1.7;
 }
-.naming-callout-text em { color: #d1db24; font-style: normal; font-weight: 900; }
+.naming-callout-text em { color: #9c6f00; font-style: normal; font-weight: 900; }
 
 /* ===== SYSTEM ARCHITECTURE DIAGRAM ===== */
 .system-arch {
-  background: #f8faf4;
+  background: #eef5e8;
   border: 2px solid #c8ddb0;
   border-radius: 14px;
   padding: 24px;
@@ -234,7 +235,7 @@
   margin-top: 10px; gap: 8px;
 }
 .sys-arch-feedback-line {
-  flex: 1; height: 2px; background: #c8ddb0; max-width: 420px;
+  flex: 1; height: 2px; background: #fefce8; max-width: 420px;
   position: relative;
 }
 .sys-arch-feedback-label {
@@ -247,3 +248,8 @@
   .sys-arch-arrow { transform: rotate(90deg); padding: 2px 0; }
   .sys-arch-feedback-row { flex-direction: column; }
 }
+
+/* Heading/CTA text darkened to read on the pale hero/CTA background (was inheriting white from blog.css) */
+.article-hero h1 { color: #1a1a1a; }
+.article-hero h1 em { color: var(--brand-green-dark); }
+.article-cta h3 { color: #1a1a1a; }

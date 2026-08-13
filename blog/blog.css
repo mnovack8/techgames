@@ -1,13 +1,17 @@
 /* ===== BLOG ARTICLE — shared layout ===== */
-/* Included by all blog article pages. Each article page overrides
-   .article-hero { background: ... } and accent colors for its topic. */
+/* Included by all blog article pages. Every post uses the same pale-yellow
+   hero and pale-green body consistently — no per-article theming. */
+
+/* Pale green body, edge-to-edge, behind the whole article (but not the
+   blog index page, which has no .article-wrap). */
+body:has(> .article-wrap) { background: #eef5e8; }
 
 /* ===== ARTICLE HERO ===== */
 .article-hero {
   padding: 56px 24px 52px;
   text-align: center;
   border-bottom: 3px solid #d1db24;
-  /* background set per-article */
+  background: #fefce8;
 }
 .article-tag {
   display: inline-block;
@@ -73,7 +77,8 @@
   display: block;
   width: 36px;
   height: 4px;
-  background: #d1db24;
+  background: #eef5e8;
+  border: 1px solid var(--brand-green);
   border-radius: 2px;
   margin-bottom: 12px;
 }
@@ -117,7 +122,7 @@
   border-radius: 8px;
   transition: background 0.15s;
 }
-.back-link:hover { background: #f4fae8; }
+.back-link:hover { background: #eef5e8; }
 
 /* ===== CALLOUT BOXES ===== */
 .callout {
@@ -132,8 +137,8 @@
 }
 .callout-icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
 .callout-text { font-size: 15px; color: #2a4a10; line-height: 1.7; font-weight: 700; }
-.callout.dark { background: #0c1829; border-color: #253347; }
-.callout.dark .callout-text { color: #8eadc8; }
+.callout.dark { background: #fefce8; border-color: #e8d888; }
+.callout.dark .callout-text { color: #6a5a10; }
 
 /* ===== SOURCES BLOCK ===== */
 .sources-block {
@@ -183,8 +188,8 @@
   border-radius: 9px;
   transition: background 0.15s, transform 0.15s;
 }
-.article-cta a.primary { background: #d1db24; color: #1a2a00; }
-.article-cta a.primary:hover { background: #c0ca10; transform: translateY(-2px); }
+.article-cta a.primary { background: #fff; color: var(--brand-green-dark); border: 2px solid var(--brand-green); }
+.article-cta a.primary:hover { background: #eef5e8; transform: translateY(-2px); }
 .article-cta a.secondary { background: transparent; }
 .article-cta a.secondary:hover { transform: translateY(-2px); }
 
@@ -243,7 +248,7 @@
 .blog-card-img {
   width: 100%;
   height: 170px;
-  background: #f0f5e8;
+  background: #eef5e8;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -264,27 +269,49 @@
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 1.8px;
-  color: #fff;
+  color: #5a4a10;
   padding: 3px 8px;
   border-radius: 5px;
+  border: 1.5px solid #e8d888;
 }
 /* Tag palette — shared by article hero tags (.article-tag) and index
    cards (.blog-card-tag). Every blog carries exactly one Type tag plus
-   zero or more Skill tags from these two categories, nothing else. */
-.tag-type-workshop-guide { background: #1a6a5a; }
-.tag-type-insight        { background: #5a3a10; }
-/* STEM skills (for Humanities Thinkers) */
-.tag-ai                  { background: #4a6a20; }
-.tag-cybersecurity       { background: #2a5c0a; }
-.tag-quantum-computing   { background: #5a20a0; }
+   zero or more Skill tags from these two categories, nothing else.
+   Backgrounds are restricted to pale green / pale yellow / white; category
+   distinction is carried by label text alone. Compounded with both host
+   classes so this wins regardless of stylesheet load order (blog-index.css
+   loads after this file on /blog and has its own .blog-card-tag default). */
+.article-tag.tag-type-workshop-guide, .blog-card-tag.tag-type-workshop-guide,
+.article-tag.tag-type-insight,        .blog-card-tag.tag-type-insight
+  { background: #eef5e8; color: #1a2a0a; border-color: var(--brand-green); }
+/* STEM skills (for Humanities Thinkers). White fill on individual posts,
+   since the hero behind .article-tag is always pale yellow now — a
+   pale-yellow badge fill there would blend into it. Cards (.blog-card-tag)
+   sit on white, so pale yellow reads fine there. */
+.blog-card-tag.tag-ai,
+.blog-card-tag.tag-cybersecurity,
+.blog-card-tag.tag-quantum-computing
+  { background: #fefce8; color: #5a4a10; }
+.article-tag.tag-ai,
+.article-tag.tag-cybersecurity,
+.article-tag.tag-quantum-computing
+  { background: #fff; color: #5a4a10; border-color: #e8d888; }
 /* Thinker role tags */
-.tag-humanities-thinker  { background: #3a2a00; color: #f0c830; border: 1.5px solid #7a5a00; }
-/* Humanities skills (for STEM Thinkers) */
-.tag-literature          { background: #7a2a4a; }
-.tag-philosophy          { background: #2a4a8a; }
-.tag-history             { background: #4a5a2a; }
-.tag-rhetoric            { background: #6a2a6a; }
-.tag-art                 { background: #a0451a; }
+.article-tag.tag-humanities-thinker,  .blog-card-tag.tag-humanities-thinker
+  { background: #fff; color: #1a1a1a; border-color: #d8d8c8; }
+/* Humanities skills (for STEM Thinkers) — same white-on-hero treatment */
+.blog-card-tag.tag-literature,
+.blog-card-tag.tag-philosophy,
+.blog-card-tag.tag-history,
+.blog-card-tag.tag-rhetoric,
+.blog-card-tag.tag-art
+  { background: #fefce8; color: #5a4a10; }
+.article-tag.tag-literature,
+.article-tag.tag-philosophy,
+.article-tag.tag-history,
+.article-tag.tag-rhetoric,
+.article-tag.tag-art
+  { background: #fff; color: #5a4a10; border-color: #e8d888; }
 .blog-card-date  { font-size: 11px; font-weight: 600; color: #888; }
 .blog-card-title { font-size: 18px; font-weight: 900; color: #1a1a1a; line-height: 1.3; }
 .blog-card-excerpt { font-size: 13px; color: #555; line-height: 1.65; flex: 1; }
@@ -338,8 +365,9 @@
   position: absolute;
   top: 11px;
   right: 11px;
-  background: #1a6a3a;
-  color: #d1db24;
+  background: #eef5e8;
+  color: var(--brand-green-dark);
+  border: 1.5px solid var(--brand-green);
   font-size: 9px;
   font-weight: 900;
   text-transform: uppercase;

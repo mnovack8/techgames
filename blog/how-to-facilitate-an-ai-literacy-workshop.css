@@ -1,13 +1,13 @@
 /* Page-specific styles */
 
 /* ===== HERO THEME ===== */
-.article-hero { background: linear-gradient(160deg, #1a2a0a 0%, #2a4010 55%, #344d14 100%); }
+.article-hero { background: #fefce8; }
 .article-tag-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
-.article-hero-sub { color: #a8c870; }
-.article-meta-read { color: #7a9a50; }
-.article-cta { background: linear-gradient(135deg, #1a2a0a 0%, #2a4010 100%); border: 2px solid #3a5a14; }
-.article-cta p { color: #a8c870; }
-.article-cta a.secondary { color: #a8c870; border: 2px solid #3a6a14; }
+.article-hero-sub { color: #444; }
+.article-meta-read { color: #666; }
+.article-cta { background: #fefce8; border: 2px solid var(--brand-green); }
+.article-cta p { color: #444; }
+.article-cta a.secondary { color: var(--brand-green-dark); border: 2px solid var(--brand-green); font-weight: 700; }
 
 /* ===== WORKSHOP FLOW (3-STEP) ===== */
 .ws-flow {
@@ -24,11 +24,11 @@
   left: calc(16.66% + 10px);
   right: calc(16.66% + 10px);
   height: 2px;
-  background: linear-gradient(90deg, var(--brand-green), #d1db24, var(--brand-green));
+  background: linear-gradient(90deg, #eef5e8, #fefce8, #eef5e8);
   z-index: 0;
 }
 .ws-step {
-  background: #f8faf2;
+  background: #eef5e8;
   border: 2px solid #d4e8a8;
   border-radius: 16px;
   padding: 28px 20px 24px;
@@ -38,7 +38,8 @@
 }
 .ws-num {
   width: 52px; height: 52px;
-  background: var(--brand-green); color: #fff;
+  background: #fefce8; color: var(--brand-green-dark);
+  border: 2px solid var(--brand-green);
   font-size: 22px; font-weight: 900; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   margin: 0 auto 18px;
@@ -77,7 +78,8 @@
 .step-list-num {
   flex-shrink: 0;
   width: 32px; height: 32px;
-  background: var(--brand-green); color: #fff;
+  background: #fefce8; color: var(--brand-green-dark);
+  border: 2px solid var(--brand-green);
   font-size: 14px; font-weight: 900; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   margin-top: 1px;
@@ -99,7 +101,7 @@
   border-radius: 14px;
   padding: 22px 20px;
 }
-.option-card.primary { border-color: var(--brand-green); background: #f4fae8; }
+.option-card.primary { border-color: var(--brand-green); background: #eef5e8; }
 .option-label {
   font-size: 9px; font-weight: 900; text-transform: uppercase;
   letter-spacing: 2px; color: var(--brand-green); margin-bottom: 8px;
@@ -125,7 +127,8 @@
   margin: 28px 0;
 }
 .rq-header {
-  background: #2a4010;
+  background: #fefce8;
+  border-bottom: 2px solid var(--brand-green);
   padding: 18px 24px;
   display: flex;
   gap: 14px;
@@ -134,12 +137,13 @@
 .rq-num {
   flex-shrink: 0;
   width: 30px; height: 30px;
-  background: #d1db24; color: #1a2a00;
+  background: #fff; color: var(--brand-green-dark);
+  border: 2px solid var(--brand-green);
   font-size: 14px; font-weight: 900; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   margin-top: 1px;
 }
-.rq-question { font-size: 16px; font-weight: 900; color: #fff; line-height: 1.4; }
+.rq-question { font-size: 16px; font-weight: 900; color: #1a1a1a; line-height: 1.4; }
 .rq-body { padding: 0; }
 .rq-answer {
   padding: 20px 24px;
@@ -158,13 +162,13 @@
   border-radius: 5px; font-size: 9px; font-weight: 900;
   text-transform: uppercase; letter-spacing: 1.5px;
 }
-.rq-badge.good { background: #e6f7d8; color: #2a7a10; border: 1px solid #a8d878; }
-.rq-badge.miss { background: #fde8d8; color: #a04010; border: 1px solid #f0b888; }
+.rq-badge.good { background: #eef5e8; color: #2a7a10; border: 1px solid #a8d878; }
+.rq-badge.miss { background: #fefce8; color: #a04010; border: 1px solid #f0b888; }
 .rq-answer-text { font-size: 14px; color: #333; line-height: 1.75; }
 .rq-correction {
   margin-top: 12px;
   padding: 12px 14px;
-  background: #f0f8ff;
+  background: #eef5e8;
   border-left: 3px solid #4a8aaa;
   border-radius: 0 8px 8px 0;
   font-size: 13px; font-weight: 700; color: #1a3a5a; line-height: 1.65;
@@ -173,3 +177,8 @@
   font-size: 9px; font-weight: 900; text-transform: uppercase;
   letter-spacing: 1.5px; color: #4a8aaa; margin-bottom: 6px;
 }
+
+/* Heading/CTA text darkened to read on the pale hero/CTA background (was inheriting white from blog.css) */
+.article-hero h1 { color: #1a1a1a; }
+.article-hero h1 em { color: var(--brand-green-dark); }
+.article-cta h3 { color: #1a1a1a; }

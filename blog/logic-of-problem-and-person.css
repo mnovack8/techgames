@@ -1,13 +1,16 @@
 /* Page-specific styles for The Logic of a Problem, the Logic of a Person */
 
 /* ===== HERO THEME ===== */
-.article-hero { background: linear-gradient(160deg, #0d0f1a 0%, #141828 55%, #0f1120 100%); }
+.article-hero { background: #fefce8; }
+.article-hero h1 { color: #1a1a1a; }
+.article-hero h1 em { color: var(--brand-green-dark); }
 .article-tag-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px; }
-.article-hero-sub { color: #8a90b8; }
-.article-meta-read { color: #5a608a; }
-.article-cta { background: linear-gradient(135deg, #0d0f1a 0%, #141828 100%); border: 2px solid #2a2a5a; }
-.article-cta p { color: #8a90b8; }
-.article-cta a.secondary { color: #8a90b8; border: 2px solid #2a2a5a; }
+.article-hero-sub { color: #555; }
+.article-meta-read { color: #666; }
+.article-cta { background: #fefce8; border: 2px solid #e8d888; }
+.article-cta h3 { color: #1a1a1a; }
+.article-cta p { color: #444; }
+.article-cta a.secondary { color: var(--brand-green-dark); border: 2px solid var(--brand-green); font-weight: 900; }
 
 /* ===== H3 OVERRIDE ===== */
 .article-body h3 {
@@ -21,7 +24,7 @@
 
 /* ===== CC COMPOUND (reused for the Principle of Charity callout) ===== */
 .cc-compound {
-  background: #f0f5e8;
+  background: #eef5e8;
   border-left: 4px solid var(--brand-green);
   border-radius: 0 8px 8px 0;
   padding: 16px 20px;
@@ -64,7 +67,7 @@
 .claim-card {
   display: flex;
   flex-direction: column;
-  background: #fafcf6;
+  background: #ffffff;
   border: 1px solid #dde6c8;
   border-radius: 10px;
   padding: 16px 18px;
@@ -96,8 +99,8 @@
 /* ===== PROOF BLOCK (natural-deduction style inference rule) ===== */
 .proof-block {
   margin: 26px 0;
-  background: #0d0f1a;
-  border: 1px solid #2a2a5a;
+  background: #fefce8;
+  border: 1px solid #e8d888;
   border-radius: 10px;
   padding: 22px 26px 20px;
   opacity: 0;
@@ -107,13 +110,13 @@
 .proof-block.is-visible { opacity: 1; transform: translateY(0); }
 .proof-premises {
   font-size: 14px;
-  color: #8a90b8;
+  color: #4a3d08;
   font-family: var(--font-mono);
 }
 .proof-premises div { margin: 3px 0; }
 .proof-bar {
   border: none;
-  border-top: 1.5px solid #4a4a8a;
+  border-top: 1.5px solid #c4a83a;
   margin: 14px 0 12px;
   position: relative;
 }
@@ -124,11 +127,11 @@
   font-size: 10px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #5a608a;
+  color: #7a6a20;
   font-family: var(--font-mono);
 }
-.proof-conclusion { font-size: 16px; font-weight: 800; color: #fff; }
-.proof-therefore { color: #d1db24; font-family: var(--font-mono); margin-right: 8px; }
+.proof-conclusion { font-size: 16px; font-weight: 800; color: #1a1a1a; }
+.proof-therefore { color: var(--brand-green-dark); font-family: var(--font-mono); margin-right: 8px; }
 
 /* ===== VENN (problem / person overlap) ===== */
 .venn-block {

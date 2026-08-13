@@ -1,13 +1,13 @@
 /* Page-specific styles for Confrontation to Cooperation */
 
 /* ===== HERO THEME ===== */
-.article-hero { background: linear-gradient(160deg, #1a1208 0%, #2a1e0a 55%, #1e1510 100%); }
+.article-hero { background: #fefce8; }
 .article-tag-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px; }
-.article-hero-sub { color: #c8a870; }
-.article-meta-read { color: #7a6040; }
-.article-cta { background: linear-gradient(135deg, #1a1208 0%, #2a1e0a 100%); border: 2px solid #5a3a0a; }
-.article-cta p { color: #c8a870; }
-.article-cta a.secondary { color: #c8a870; border: 2px solid #5a3a0a; }
+.article-hero-sub { color: #3a3a3a; }
+.article-meta-read { color: #666666; }
+.article-cta { background: #fefce8; border: 2px solid #5a3a0a; }
+.article-cta p { color: #444444; }
+.article-cta a.secondary { color: var(--brand-green-dark); border: 2px solid var(--brand-green); }
 
 /* ===== H3 OVERRIDE ===== */
 .article-body h3 {
@@ -23,7 +23,7 @@
   display: block;
   width: 24px;
   height: 3px;
-  background: #d4882a;
+  background: #eef5e8;
   border-radius: 2px;
   margin-bottom: 10px;
 }
@@ -57,22 +57,22 @@
 .game-rule-num {
   width: 56px;
   flex-shrink: 0;
-  background: #d4882a;
+  background: #eef5e8;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 22px;
   font-weight: 900;
-  color: #fff;
+  color: #1a1208;
   letter-spacing: -0.02em;
 }
 
 .game-rule-body {
   padding: 20px 22px;
   flex: 1;
-  background: #fffaf2;
+  background: #fefce8;
 }
-.game-rule:nth-child(even) .game-rule-body { background: #fff; }
+.game-rule:nth-child(even) .game-rule-body { background: #ffffff; }
 
 .game-rule-title {
   font-size: 15px;
@@ -114,11 +114,11 @@
   gap: 8px;
 }
 .dc-before {
-  background: #fdf0f0;
+  background: #fefce8;
   border: 1.5px solid #e8b0b0;
 }
 .dc-after {
-  background: #f0f8f0;
+  background: #eef5e8;
   border: 1.5px solid #a0d0a0;
 }
 
@@ -173,11 +173,11 @@
   text-align: center;
 }
 .rf-before {
-  background: #fdf0f0;
+  background: #fefce8;
   border: 2px solid #e8b0b0;
 }
 .rf-after {
-  background: #f0f8f0;
+  background: #eef5e8;
   border: 2px solid #a0d0a0;
 }
 .reframe-box-label {
@@ -226,7 +226,7 @@
   display: flex;
   gap: 16px;
   align-items: flex-start;
-  background: #fff;
+  background: #ffffff;
   border: 1.5px solid #e8d0a0;
   border-radius: 10px;
   padding: 16px 18px;
@@ -251,7 +251,7 @@
 
 /* ===== AMBER COMPOUND ===== */
 .amber-compound {
-  background: #fff8ec;
+  background: #fefce8;
   border-left: 4px solid #d4882a;
   border-radius: 0 8px 8px 0;
   padding: 16px 20px;
@@ -275,12 +275,12 @@
 .principle-cards { margin: 32px 0; display: flex; flex-direction: column; gap: 14px; }
 .principle-card {
   display: flex; gap: 20px; align-items: flex-start;
-  background: #fff; border: 2px solid #e8d0a0;
+  background: #ffffff; border: 2px solid #e8d0a0;
   border-radius: 12px; padding: 22px 24px;
 }
 .principle-num {
   width: 38px; height: 38px; flex-shrink: 0;
-  background: #d4882a; color: #fff;
+  background: #eef5e8; color: #1a1208;
   font-size: 16px; font-weight: 900; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
 }
@@ -294,3 +294,8 @@
   transition: opacity 0.5s ease, transform 0.5s ease;
 }
 [data-reveal].is-visible { opacity: 1; transform: none; }
+
+/* Heading/CTA text darkened to read on the pale hero/CTA background (was inheriting white from blog.css) */
+.article-hero h1 { color: #1a1a1a; }
+.article-hero h1 em { color: var(--brand-green-dark); }
+.article-cta h3 { color: #1a1a1a; }

@@ -1,16 +1,16 @@
 /* Page-specific styles for The Humanities Thinker article */
 
 /* ===== HERO THEME ===== */
-.article-hero { background: linear-gradient(160deg, #1a1200 0%, #2a1e00 55%, #301f00 100%); }
+.article-hero { background: #fefce8; }
 .article-tag-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px; }
-.article-hero-sub { color: #d4b870; }
-.article-meta-author { color: #f0c830; }
-.article-meta-date, .article-meta-read { color: #9a7a30; }
-.article-meta-sep { color: #5a4a10; }
-.article-cta { background: linear-gradient(135deg, #1a1200 0%, #2a1e00 100%); border: 2px solid #7a5a00; }
-.article-cta h2 { color: #ffffff; }
-.article-cta p { color: #d4b870; }
-.article-cta a.secondary { color: #d4b870; border: 2px solid #7a5a00; }
+.article-hero-sub { color: #6b5720; }
+.article-meta-author { color: #7a5c00; }
+.article-meta-date, .article-meta-read { color: #8a7540; }
+.article-meta-sep { color: #c9b988; }
+.article-cta { background: #ffffff; border: 2px solid #7a5a00; }
+.article-cta h2 { color: #1a1a1a; }
+.article-cta p { color: #555555; }
+.article-cta a.secondary { color: var(--brand-green-dark); border: 2px solid var(--brand-green); font-weight: 700; }
 
 /* ===== DOMAIN SPLIT PANELS ===== */
 .domain-diagram {
@@ -24,22 +24,24 @@
   overflow: hidden;
   border: 2px solid;
 }
-.domain-panel.dp-hum  { border-color: #d4a800; background: #fdf8e0; }
-.domain-panel.dp-stem { border-color: #90c060; background: #f0f8ea; }
+.domain-panel.dp-hum  { border-color: #d4a800; background: #fefce8; }
+.domain-panel.dp-stem { border-color: #90c060; background: #eef5e8; }
 .domain-panel-header {
   padding: 14px 20px 12px;
   display: flex;
   align-items: center;
   gap: 10px;
 }
-.dp-hum  .domain-panel-header { background: #7a5c00; }
-.dp-stem .domain-panel-header { background: #2a6a10; }
+.dp-hum  .domain-panel-header { background: #ffffff; border-bottom: 2px solid #d4a800; }
+.dp-stem .domain-panel-header { background: #ffffff; border-bottom: 2px solid #90c060; }
 .domain-panel-label {
   font-size: 11px; font-weight: 900; text-transform: uppercase;
-  letter-spacing: 2px; color: #fff;
+  letter-spacing: 2px; color: #1a1a1a;
 }
+.dp-hum  .domain-panel-label { color: #7a5c00; }
+.dp-stem .domain-panel-label { color: #2a6a10; }
 .domain-panel-focus {
-  font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.65);
+  font-size: 10px; font-weight: 700; color: rgba(0,0,0,0.45);
   margin-left: auto; letter-spacing: 0.5px;
 }
 .domain-panel-body { padding: 18px 20px; display: flex; flex-direction: column; gap: 10px; }
@@ -71,28 +73,28 @@
 .sweet-card:last-child { border-right: none; }
 .sweet-num {
   font-size: 10px; font-weight: 900; text-transform: uppercase;
-  letter-spacing: 2px; color: #aaa;
+  letter-spacing: 2px; color: #666;
 }
 .sweet-title { font-size: 16px; font-weight: 900; }
 .sweet-desc { font-size: 12px; font-weight: 600; color: #666; line-height: 1.5; }
 .sweet-examples { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
 .sweet-examples span {
   font-size: 10px; font-weight: 800; color: #555;
-  padding: 3px 8px; border-radius: 5px; background: rgba(0,0,0,0.06);
+  padding: 3px 8px; border-radius: 5px; background: #ffffff;
 }
-.sweet-card.sc-good  { background: #fdf8e0; }
+.sweet-card.sc-good  { background: #fefce8; }
 .sweet-card.sc-good  .sweet-title { color: #7a5c00; }
-.sweet-card.sc-enjoy { background: #f4fae8; }
+.sweet-card.sc-enjoy { background: #eef5e8; }
 .sweet-card.sc-enjoy .sweet-title { color: #2a7a0a; }
 .sweet-card.sc-pays  {
-  background: linear-gradient(160deg, #1a1200 0%, #2a1e00 100%);
+  background: #ffffff;
   border-right: none;
 }
-.sweet-card.sc-pays .sweet-num   { color: rgba(255,255,255,0.5); }
-.sweet-card.sc-pays .sweet-title { color: #f0c830; }
-.sweet-card.sc-pays .sweet-desc  { color: rgba(255,255,255,0.75); }
+.sweet-card.sc-pays .sweet-num   { color: rgba(0,0,0,0.35); }
+.sweet-card.sc-pays .sweet-title { color: #7a5c00; }
+.sweet-card.sc-pays .sweet-desc  { color: #555555; }
 .sweet-card.sc-pays .sweet-examples span {
-  background: rgba(255,255,255,0.12); color: rgba(255,255,255,0.85);
+  background: #fefce8; color: #7a5c00;
 }
 @media (max-width: 640px) {
   .sweet-spot-trio { grid-template-columns: 1fr; }
@@ -116,8 +118,8 @@
   align-items: stretch;
 }
 .bridge-side { padding: 18px 20px; }
-.bridge-side.b-left  { background: #fdf8e0; border-right: 1px solid #e8d8a0; }
-.bridge-side.b-right { background: #f0f8ea; border-left: 1px solid #e8d8a0; }
+.bridge-side.b-left  { background: #fefce8; border-right: 1px solid #e8d8a0; }
+.bridge-side.b-right { background: #eef5e8; border-left: 1px solid #e8d8a0; }
 .bridge-role {
   font-size: 10px; font-weight: 900; text-transform: uppercase;
   letter-spacing: 1.5px; margin-bottom: 8px;
@@ -130,10 +132,10 @@
   align-items: center; justify-content: center;
   background: #fff; padding: 12px 4px; gap: 5px;
 }
-.bridge-arrow { font-size: 16px; color: #f0c830; font-weight: 900; }
+.bridge-arrow { font-size: 16px; color: #8a6a10; font-weight: 900; }
 .bridge-label {
   font-size: 7px; font-weight: 900; text-transform: uppercase;
-  letter-spacing: 1.5px; color: #aaa; text-align: center;
+  letter-spacing: 1.5px; color: #666; text-align: center;
 }
 @media (max-width: 600px) {
   .bridge-pair { grid-template-columns: 1fr; }
@@ -161,17 +163,17 @@
 }
 .gap-left  {
   font-size: 11px; font-weight: 900; text-transform: uppercase;
-  letter-spacing: 1.2px; color: #fff;
+  letter-spacing: 1.2px; color: #7a5c00;
   padding: 4px 10px; border-radius: 5px;
-  background: #7a5c00;
+  background: #fefce8; border: 1px solid #d4a800;
 }
 .gap-right {
   font-size: 11px; font-weight: 900; text-transform: uppercase;
-  letter-spacing: 1.2px; color: #fff;
+  letter-spacing: 1.2px; color: #1a5c30;
   padding: 4px 10px; border-radius: 5px;
-  background: #2a7a4a;
+  background: #eef5e8; border: 1px solid #2a7a4a;
 }
-.gap-divider { font-size: 16px; color: #f0c830; font-weight: 900; }
+.gap-divider { font-size: 16px; color: #8a6a10; font-weight: 900; }
 .gap-problem {
   font-size: 13px; color: #c04040; line-height: 1.6;
   margin-bottom: 12px; padding-bottom: 12px;
@@ -187,12 +189,12 @@
   padding: 22px 24px;
   border: 2px solid;
 }
-.model-card.mc-explore { background: #fdf8e0; border-color: #d4a800; }
-.model-card.mc-exploit { background: #f4fae8; border-color: #90c060; }
-.model-card.mc-expand  { background: #fff8f0; border-color: #e0a060; }
+.model-card.mc-explore { background: #fefce8; border-color: #d4a800; }
+.model-card.mc-exploit { background: #eef5e8; border-color: #90c060; }
+.model-card.mc-expand  { background: #ffffff; border-color: #e0a060; }
 .model-num {
   font-size: 10px; font-weight: 900; text-transform: uppercase;
-  letter-spacing: 2px; color: #aaa; margin-bottom: 4px;
+  letter-spacing: 2px; color: #666; margin-bottom: 4px;
 }
 .model-title { font-size: 18px; font-weight: 900; margin-bottom: 10px; }
 .mc-explore .model-title { color: #7a5c00; }
@@ -204,9 +206,9 @@
   font-size: 11px; font-weight: 800;
   padding: 4px 10px; border-radius: 5px;
 }
-.mc-explore .model-actions span { background: rgba(122,92,0,0.1);  color: #7a5c00; }
+.mc-explore .model-actions span { background: rgba(212,168,0,0.14);  color: #7a5c00; }
 .mc-exploit .model-actions span { background: rgba(42,122,10,0.1);  color: #2a7a0a; }
-.mc-expand  .model-actions span { background: rgba(122,74,10,0.1);  color: #7a4a0a; }
+.mc-expand  .model-actions span { background: #fefce8;  color: #7a4a0a; }
 
 /* ===== ACTION STEPS ===== */
 .action-steps { margin: 32px 0; display: flex; flex-direction: column; gap: 14px; }
@@ -217,9 +219,14 @@
 }
 .action-num {
   width: 36px; height: 36px; flex-shrink: 0;
-  background: #7a5c00; color: #fff;
+  background: #fefce8; color: #7a5c00; border: 2px solid #7a5c00;
   font-size: 16px; font-weight: 900; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
 }
 .action-title { font-size: 15px; font-weight: 900; color: #1a1a1a; margin-bottom: 6px; }
 .action-desc  { font-size: 13px; color: #555; line-height: 1.65; }
+
+/* Heading/CTA text darkened to read on the pale hero/CTA background (was inheriting white from blog.css) */
+.article-hero h1 { color: #1a1a1a; }
+.article-hero h1 em { color: var(--brand-green-dark); }
+.article-cta h3 { color: #1a1a1a; }

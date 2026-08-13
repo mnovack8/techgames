@@ -1,13 +1,13 @@
 /* Page-specific styles for Conway's Law */
 
 /* ===== HERO THEME ===== */
-.article-hero { background: linear-gradient(160deg, #150a1a 0%, #241030 55%, #1a0c22 100%); }
+.article-hero { background: #fefce8; }
 .article-tag-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px; }
-.article-hero-sub { color: #b89ac8; }
-.article-meta-read { color: #6a5a7a; }
-.article-cta { background: linear-gradient(135deg, #150a1a 0%, #241030 100%); border: 2px solid #3a1a4a; }
-.article-cta p { color: #b89ac8; }
-.article-cta a.secondary { color: #b89ac8; border: 2px solid #3a1a4a; }
+.article-hero-sub { color: #4a4a4a; }
+.article-meta-read { color: #666666; }
+.article-cta { background: #fefce8; border: 2px solid #3a1a4a; }
+.article-cta p { color: #4a4a4a; }
+.article-cta a.secondary { color: var(--brand-green-dark); border: 2px solid var(--brand-green); font-weight: 700; }
 
 /* ===== MIRROR GRID (org chart vs. system diagram) ===== */
 .mirror-block {
@@ -18,16 +18,17 @@
 }
 .mirror-block.is-visible { opacity: 1; transform: translateY(0); }
 .mirror-header { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 10px; margin-bottom: 4px; }
-.mirror-col-label { font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.06em; padding: 8px 4px; text-align: center; border-radius: 8px 8px 0 0; background: #6a2a6a; color: #fff; }
+.mirror-col-label { font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.06em; padding: 8px 4px; text-align: center; border-radius: 8px 8px 0 0; background: #eef5e8; color: #1a2a10; }
+.mirror-col-label:last-of-type { background: #fefce8; color: #4a3a10; }
 .mirror-eq { font-size: 16px; font-weight: 900; color: #6a2a6a; }
 .mirror-rows { display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px; align-items: center; }
-.mirror-cell { background: #fafaf6; border: 1.5px solid #dcc8e0; border-radius: 0 0 8px 8px; padding: 12px 14px; font-size: 13.5px; color: #2a1a30; line-height: 1.55; }
+.mirror-cell { background: #ffffff; border: 1.5px solid #dcc8e0; border-radius: 0 0 8px 8px; padding: 12px 14px; font-size: 13.5px; color: #2a1a30; line-height: 1.55; }
 .mirror-arrow { font-size: 13px; color: #6a2a6a; text-align: center; }
 
 /* ===== SILENCE BLOCK (where the interface lands) ===== */
 .silence-block {
   margin: 26px 0;
-  background: #150a1a;
+  background: #ffffff;
   border: 1px solid #3a1a4a;
   border-radius: 10px;
   padding: 22px 26px;
@@ -37,10 +38,10 @@
 }
 .silence-block.is-visible { opacity: 1; transform: translateY(0); }
 .silence-row { display: flex; align-items: baseline; gap: 14px; padding: 8px 0; }
-.silence-tag { flex-shrink: 0; width: 100px; font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.06em; color: #a06ac0; font-family: var(--font-mono); }
-.silence-text { font-size: 14.5px; color: #d8c4e8; line-height: 1.55; }
+.silence-tag { flex-shrink: 0; width: 100px; font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.06em; color: #6a2a6a; font-family: var(--font-mono); }
+.silence-text { font-size: 14.5px; color: #3a2a40; line-height: 1.55; }
 .silence-divider { border: none; border-top: 1.5px solid #3a1a4a; margin: 6px 0; }
-.silence-final .silence-text { color: #fff; font-weight: 800; }
+.silence-final .silence-text { color: #1a1a1a; font-weight: 800; }
 
 /* ===== TACTICS LIST ===== */
 .conway-tactics { margin: 30px 0 10px; }
@@ -56,3 +57,8 @@
   .silence-row { flex-direction: column; gap: 4px; }
   .silence-tag { width: auto; }
 }
+
+/* Heading/CTA text darkened to read on the pale hero/CTA background (was inheriting white from blog.css) */
+.article-hero h1 { color: #1a1a1a; }
+.article-hero h1 em { color: var(--brand-green-dark); }
+.article-cta h3 { color: #1a1a1a; }

@@ -1,13 +1,13 @@
 /* Page-specific styles for Constraints Are the Medium */
 
 /* ===== HERO THEME ===== */
-.article-hero { background: linear-gradient(160deg, #1a0f08 0%, #2a1608 55%, #1f1206 100%); }
+.article-hero { background: #fefce8; }
 .article-tag-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px; }
-.article-hero-sub { color: #c8a888; }
-.article-meta-read { color: #8a6a4a; }
-.article-cta { background: linear-gradient(135deg, #1a0f08 0%, #2a1608 100%); border: 2px solid #4a2a10; }
-.article-cta p { color: #c8a888; }
-.article-cta a.secondary { color: #c8a888; border: 2px solid #4a2a10; }
+.article-hero-sub { color: #4a3d2a; }
+.article-meta-read { color: #7a5c3c; }
+.article-cta { background: #fefce8; border: 2px solid #4a2a10; }
+.article-cta p { color: #4a3d2a; }
+.article-cta a.secondary { color: var(--brand-green-dark); border: 2px solid var(--brand-green); }
 
 /* ===== CONSTRAINT GRID (Sonnet / Circuit / Sprint) ===== */
 .constraint-grid {
@@ -24,7 +24,7 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  background: #fafaf6;
+  background: #ffffff;
   border: 1px solid #e6d8c8;
   border-radius: 10px;
   padding: 18px 18px 20px;
@@ -37,7 +37,7 @@
 /* ===== PRESSURE LINE (before / after the cut) ===== */
 .pressure-block {
   margin: 26px 0;
-  background: #17110a;
+  background: #eef5e8;
   border: 1px solid #4a2a10;
   border-radius: 10px;
   padding: 22px 26px;
@@ -47,11 +47,11 @@
 }
 .pressure-block.is-visible { opacity: 1; transform: translateY(0); }
 .pressure-row { display: flex; align-items: baseline; gap: 14px; padding: 8px 0; }
-.pressure-tag { flex-shrink: 0; width: 78px; font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.07em; color: #b06a30; font-family: var(--font-mono); }
-.pressure-text { font-size: 14.5px; color: #d8c4a8; line-height: 1.55; }
-.pressure-text del { color: #7a6a58; }
+.pressure-tag { flex-shrink: 0; width: 78px; font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.07em; color: #8a4315; font-family: var(--font-mono); }
+.pressure-text { font-size: 14.5px; color: #4a3f2e; line-height: 1.55; }
+.pressure-text del { color: #6b5c48; }
 .pressure-divider { border: none; border-top: 1.5px solid #3a2410; margin: 6px 0; }
-.pressure-final .pressure-text { color: #fff; font-weight: 800; }
+.pressure-final .pressure-text { color: #1a1a1a; font-weight: 800; }
 
 /* ===== TACTICS LIST (shared pattern) ===== */
 .constraint-tactics { margin: 30px 0 10px; }
@@ -66,3 +66,8 @@
   .pressure-row { flex-direction: column; gap: 4px; }
   .pressure-tag { width: auto; }
 }
+
+/* Heading/CTA text darkened to read on the pale hero/CTA background (was inheriting white from blog.css) */
+.article-hero h1 { color: #1a1a1a; }
+.article-hero h1 em { color: var(--brand-green-dark); }
+.article-cta h3 { color: #1a1a1a; }

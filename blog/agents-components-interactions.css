@@ -1,18 +1,18 @@
 /* Page-specific styles: agents-components-interactions */
 
 /* ===== HERO THEME ===== */
-.article-hero { background: linear-gradient(160deg, #071a0e 0%, #0d2015 55%, #122818 100%); }
+.article-hero { background: #fefce8; }
 .article-tag-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px; }
-.tag-systems    { background: #1a4a20; }
-.article-hero-sub { color: #7ec89a; }
-.article-meta-date, .article-meta-read { color: #4a8a5a; }
+.tag-systems    { background: #ffffff; border: 1px solid var(--brand-green); color: var(--brand-green-dark); }
+.article-hero-sub { color: #444; }
+.article-meta-date, .article-meta-read { color: var(--brand-green-dark); }
 .article-meta-sep { color: #2a4a2a; }
-.article-cta { background: linear-gradient(135deg, #071a0e 0%, #0d2015 100%); border: 2px solid #1a4a20; }
-.article-cta p { color: #7ec89a; }
-.article-cta a.secondary { color: #7ec89a; border: 2px solid #2a5a30; }
+.article-cta { background: #fefce8; border: 2px solid #1a4a20; }
+.article-cta p { color: #444; }
+.article-cta a.secondary { color: var(--brand-green-dark); border: 2px solid #2a5a30; }
 
 /* ===== CALLOUT WARN ===== */
-.callout.warn { border-color: #e8a030; background: #fffbf0; }
+.callout.warn { border-color: #e8a030; background: #fefce8; }
 .callout.warn .callout-text { color: #6a3a00; }
 
 /* ===== THREE ELEMENT PANELS ===== */
@@ -37,7 +37,7 @@
 .element:last-child { border-right: none; }
 .element-num {
   font-size: 10px; font-weight: 900; text-transform: uppercase;
-  letter-spacing: 2px; color: #aaa;
+  letter-spacing: 2px; color: #666;
 }
 .element-icon { font-size: 32px; }
 .element-name { font-size: 18px; font-weight: 900; }
@@ -50,15 +50,15 @@
   letter-spacing: 1.5px; color: #fff;
   padding: 3px 10px; border-radius: 5px; margin-top: 4px;
 }
-.e-agents       { background: #f4fae8; }
+.e-agents       { background: #eef5e8; }
 .e-agents       .element-name { color: #2a7a0a; }
-.e-agents       .element-tag  { background: var(--brand-green); }
-.e-interactions { background: #fafaf0; }
+.e-agents       .element-tag  { background: #ffffff; border: 1px solid var(--brand-green); color: var(--brand-green-dark); }
+.e-interactions { background: #fefce8; }
 .e-interactions .element-name { color: #6a7a00; }
-.e-interactions .element-tag  { background: #aaaa20; }
-.e-components   { background: #f4f4ff; }
+.e-interactions .element-tag  { background: #ffffff; border: 1px solid #aaaa20; color: #6a5a00; }
+.e-components   { background: #ffffff; }
 .e-components   .element-name { color: #3a3a8c; }
-.e-components   .element-tag  { background: #5a5ab0; }
+.e-components   .element-tag  { background: #ffffff; border: 1px solid #5a5ab0; color: #3a3a8c; }
 @media (max-width: 600px) {
   .element-trio { grid-template-columns: 1fr; }
   .element { border-right: none; border-bottom: 2px solid #dde8c8; }
@@ -74,7 +74,7 @@
   min-width: 600px;
 }
 .systems-table thead tr {
-  background: #0d2015;
+  background: #fefce8;
 }
 .systems-table th {
   padding: 12px 16px;
@@ -85,10 +85,10 @@
   letter-spacing: 2px;
   white-space: nowrap;
 }
-.systems-table th.col-domain      { color: #d1db24; width: 18%; }
-.systems-table th.col-agents      { color: #a8d878; width: 27%; }
-.systems-table th.col-interactions{ color: #d1db24; width: 27%; }
-.systems-table th.col-components  { color: #a8a8e8; width: 28%; }
+.systems-table th.col-domain      { color: #1a2a0a; width: 18%; }
+.systems-table th.col-agents      { color: #2a5a0a; width: 27%; }
+.systems-table th.col-interactions{ color: #5a5a00; width: 27%; }
+.systems-table th.col-components  { color: #2a2a7a; width: 28%; }
 .systems-table td {
   padding: 13px 16px;
   border-bottom: 1px solid #e8f0d8;
@@ -98,7 +98,7 @@
   color: #333;
 }
 .systems-table tr:last-child td { border-bottom: none; }
-.systems-table tr:nth-child(even) td { background: #fcfdf8; }
+.systems-table tr:nth-child(even) td { background: #eef5e8; }
 .systems-table tr:nth-child(odd)  td { background: #fff; }
 .systems-table td.col-domain {
   font-weight: 900; font-size: 12px;
@@ -111,7 +111,7 @@
 .systems-table td.col-components  { color: #2a2a7a; }
 
 /* Highlight rows that link out to the people-process-tools deep dive */
-.systems-table tr.row-ppt td, .systems-table tr.row-game td { background: #f4fae8; }
+.systems-table tr.row-ppt td, .systems-table tr.row-game td { background: #eef5e8; }
 .systems-table tr.row-ppt td.col-domain, .systems-table tr.row-game td.col-domain {
   color: var(--brand-green-dark);
   display: flex;
@@ -125,14 +125,15 @@
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 1px;
-  background: var(--brand-green);
-  color: #fff;
+  background: #ffffff;
+  border: 1px solid var(--brand-green);
+  color: var(--brand-green-dark);
   padding: 2px 6px;
   border-radius: 4px;
   white-space: nowrap;
 }
 /* Economics row highlight */
-.systems-table tr.row-econ td { background: #fffbf0; }
+.systems-table tr.row-econ td { background: #fefce8; }
 .systems-table tr.row-econ td.col-domain { color: #7a4a00; }
 
 /* ===== DOMAIN EXAMPLE CARDS ===== */
@@ -150,9 +151,9 @@
   gap: 18px;
   border: 2px solid;
 }
-.domain-ex.ex-econ    { border-color: #d4a830; background: #fffbf0; }
-.domain-ex.ex-org     { border-color: #a8c96a; background: #f4fae8; }
-.domain-ex.ex-ecology { border-color: #6ab870; background: #f0faf0; }
+.domain-ex.ex-econ    { border-color: #d4a830; background: #fefce8; }
+.domain-ex.ex-org     { border-color: #a8c96a; background: #eef5e8; }
+.domain-ex.ex-ecology { border-color: #6ab870; background: #ffffff; }
 .domain-ex-icon { font-size: 26px; flex-shrink: 0; margin-top: 2px; }
 .domain-ex-label {
   font-size: 9px; font-weight: 900; text-transform: uppercase;
@@ -181,14 +182,14 @@
   padding: 22px 22px;
   border: 2px solid;
 }
-.fm-card.fm-structural { border-color: #a8c96a; background: #f4fae8; }
-.fm-card.fm-incentive  { border-color: #e8a030; background: #fffbf0; }
+.fm-card.fm-structural { border-color: #a8c96a; background: #eef5e8; }
+.fm-card.fm-incentive  { border-color: #e8a030; background: #fefce8; }
 .fm-num {
   font-size: 28px; font-weight: 900; line-height: 1;
   margin-bottom: 8px;
 }
-.fm-structural .fm-num { color: #c8e898; }
-.fm-incentive  .fm-num { color: #f0c860; }
+.fm-structural .fm-num { color: var(--brand-green-dark); }
+.fm-incentive  .fm-num { color: #8a6a10; }
 .fm-type {
   font-size: 9px; font-weight: 900; text-transform: uppercase;
   letter-spacing: 2px; margin-bottom: 6px;
@@ -213,7 +214,7 @@
   padding: 20px;
   border-radius: 12px;
   border: 2px solid #dde8c8;
-  background: #fbfdf6;
+  background: #ffffff;
 }
 .diagram-caption {
   font-size: 11px;
@@ -241,10 +242,10 @@
   padding: 22px 24px;
   text-align: center;
 }
-.align-state.aligned     { background: #f4fae8; }
-.align-state.misaligned  { background: #fff8f8; }
+.align-state.aligned     { background: #eef5e8; }
+.align-state.misaligned  { background: #fefce8; }
 .align-divider {
-  background: #eee;
+  background: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -253,7 +254,7 @@
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 1.5px;
-  color: #aaa;
+  color: #666;
   writing-mode: vertical-rl;
 }
 .align-label {
@@ -268,12 +269,17 @@
   display: inline-block;
   margin-top: 12px;
   font-size: 11px; font-weight: 900; text-transform: uppercase;
-  letter-spacing: 1px; color: #fff;
+  letter-spacing: 1px;
   padding: 4px 12px; border-radius: 5px;
 }
-.aligned    .align-result { background: var(--brand-green); }
-.misaligned .align-result { background: #c04040; }
+.aligned    .align-result { background: #ffffff; border: 1px solid var(--brand-green); color: var(--brand-green-dark); }
+.misaligned .align-result { background: #ffffff; border: 1px solid #c04040; color: #c04040; }
 @media (max-width: 600px) {
   .alignment-visual { grid-template-columns: 1fr; }
   .align-divider { writing-mode: horizontal-tb; padding: 10px; }
 }
+
+/* Heading/CTA text darkened to read on the pale hero/CTA background (was inheriting white from blog.css) */
+.article-hero h1 { color: #1a1a1a; }
+.article-hero h1 em { color: var(--brand-green-dark); }
+.article-cta h3 { color: #1a1a1a; }
