@@ -133,7 +133,13 @@
   <div class="game-layout">
 
     <!-- OPPONENTS -->
-    <div class="opponents-bar" id="opponents-bar"></div>
+    <!-- Mobile-only: collapses each panel down to just its name/turn row so
+         short screens have room for modals like the Recon "view hand" overlay.
+         Wrapped so the toggle survives opponents-bar's innerHTML rebuilds. -->
+    <div class="opponents-bar-wrap">
+      <button id="opp-bar-toggle" onclick="toggleOpponentsBar()" aria-label="Collapse player panels" title="Collapse player panels">▾</button>
+      <div class="opponents-bar" id="opponents-bar"></div>
+    </div>
 
     <!-- TABLE STATUS STRIP. Deck, special cards & objective status -->
     <div id="table-status-strip">
@@ -301,6 +307,16 @@
   <p>• Dotted outlines in your <em>Cards in Front of You</em> show which slots you still need to fill.</p>
   <p>• Watch the Activity feed for opponent actions and game events.</p>
   <p>• The status strip updates live. Keep an eye on the Data Flag location!</p>
+</div>
+
+<!-- Shown only while the tutorial is active, on narrow screens held in portrait -->
+<div id="bc-tut-rotate-notice">
+  <svg width="52" height="52" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="7" y="2" width="10" height="16" rx="2" stroke="currentColor" stroke-width="1.6"/>
+    <path d="M12 21a8 8 0 0 0 7.6-5.5M12 21a8 8 0 0 1-7.6-5.5M12 21v-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M19.5 15.5 22 16.5l-1.4 2.3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  <p>Rotate your device to landscape<br>for the best tutorial experience.</p>
 </div>
 
 <!-- BC TUTORIAL INTRO OVERLAY (steps 0–3: full-screen modal) -->
@@ -1860,6 +1876,14 @@ function renderGame(gs) {
 
 function renderTurnStrip(gs) { /* merged into opponent panels */ }
 
+
+function toggleOpponentsBar() {
+  const bar = document.getElementById('opponents-bar');
+  const btn = document.getElementById('opp-bar-toggle');
+  const collapsed = bar.classList.toggle('collapsed');
+  btn.textContent = collapsed ? '▸' : '▾';
+  btn.title = collapsed ? 'Expand player panels' : 'Collapse player panels';
+}
 
 function renderOpponents(gs) {
   const bar = document.getElementById('opponents-bar');
@@ -3778,6 +3802,7 @@ function startTutorial() {
   bcTutG    = null;
   selectedHandCard = null;
   myId = 0;
+  requestTutorialLandscape();
   // bc-tut-active / bc-tut-intro-active are managed by applyBcTutStep
   showScreen('game');
   // Override the /activegame URL set by showScreen — tutorial has its own path
@@ -4088,37 +4113,44 @@ LobbyUI.init({
 
 hub.connect();
 
-// Interactive tutorial isn't supported on small/mobile screens — mirror the
-// #play-now-mobile-notice treatment: hide the CTA, show an explainer instead.
+// Mobile is supported, but the tutorial's diagrams (Kill Chain row, NIST
+// circle) need landscape width to display without cropping — flag that on
+// the lobby CTA rather than hiding it.
 (function () {
   var cta = document.querySelector('.lobby-tutorial-cta');
-  if (cta) {
+  if (cta && window.matchMedia('(max-width: 780px)').matches) {
     var notice = document.createElement('p');
     notice.id = 'tutorial-mobile-notice';
-    notice.textContent = 'The interactive tutorial is only available on larger screens. Switch to a tablet, laptop, or desktop to try it.';
+    notice.textContent = 'Best experienced in landscape on a phone or tablet.';
     cta.insertAdjacentElement('beforebegin', notice);
   }
 })();
 
+// Best-effort: nudge mobile browsers toward landscape once the tutorial
+// mounts. Unsupported/blocked browsers just fall back to the CSS rotate
+// prompt (#bc-tut-rotate-notice), so this is a progressive enhancement only.
+function requestTutorialLandscape() {
+  try {
+    if (screen.orientation && screen.orientation.lock) {
+      screen.orientation.lock('landscape').catch(function () {});
+    }
+  } catch (_) {}
+}
+
 // Auto-start tutorial via ?tutorial=1 OR /tutorial path — start ASAP, hide page until ready
 if (urlParams.get('tutorial') === '1' || /\/tutorial\/?$/.test(location.pathname)) {
-  if (window.matchMedia('(max-width: 780px)').matches) {
-    // Mobile: bounce back to the lobby instead of mounting the tutorial overlay.
-    try { history.replaceState(null, '', BC_BASE_PATH); } catch (_) {}
-    document.documentElement.classList.remove('tutorial-loading');
+  var __startTut = function(){
+    try { startTutorial(); } catch (e) {}
+    requestTutorialLandscape();
+    // Reveal the page now that the tutorial overlay is mounted on top.
+    requestAnimationFrame(function(){
+      document.documentElement.classList.remove('tutorial-loading');
+    });
+  };
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', __startTut, { once: true });
   } else {
-    var __startTut = function(){
-      try { startTutorial(); } catch (e) {}
-      // Reveal the page now that the tutorial overlay is mounted on top.
-      requestAnimationFrame(function(){
-        document.documentElement.classList.remove('tutorial-loading');
-      });
-    };
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', __startTut, { once: true });
-    } else {
-      __startTut();
-    }
+    __startTut();
   }
 }
 </script>
