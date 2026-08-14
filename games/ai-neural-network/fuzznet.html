@@ -254,6 +254,16 @@
   <div id="status"><span class="msg" id="status-msg">Choose an action.</span></div>
 </div>
 
+<!-- Shown only while the tutorial is active, on narrow screens held in portrait -->
+<div id="fn-tut-rotate-notice">
+  <svg width="52" height="52" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="7" y="2" width="10" height="16" rx="2" stroke="currentColor" stroke-width="1.6"/>
+    <path d="M12 21a8 8 0 0 0 7.6-5.5M12 21a8 8 0 0 1-7.6-5.5M12 21v-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M19.5 15.5 22 16.5l-1.4 2.3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  <p>Rotate your device to landscape<br>for the best tutorial experience.</p>
+</div>
+
 <!-- ===== INFO OVERLAY ===== -->
 <div id="info-overlay" onclick="closeInfo(event)">
   <div id="info-card">
@@ -2461,7 +2471,10 @@ function startTutorial() {
   tutHighlightAction = '';
   tutHighlightStatus = '';
   myId = 0;
+  requestTutorialLandscape();
+  enterTutorialFullscreen();
   document.getElementById('game').classList.add('tut-active');
+  document.body.classList.add('fn-tut-active');
   viewingPlayer = -1;
   roomCode = 'DEMO';
   document.getElementById('tutorial-overlay').classList.add('active');
@@ -2593,8 +2606,10 @@ function endTutorial() {
   tutHighlightNodes = [];
   tutHighlightAnimal = -1;
   document.getElementById('game').classList.remove('tut-active');
+  document.body.classList.remove('fn-tut-active');
   G = null; myId = -1; viewingPlayer = -1; roomCode = '';
   document.getElementById('tutorial-overlay').classList.remove('active');
+  exitTutorialFullscreen();
   showScreen('lobby');
 }
 
@@ -2619,10 +2634,17 @@ function updateTutOverlay(idx) {
     hint.textContent = '';
   }
   exitBtn.style.display = idx < total - 1 ? 'inline-block' : 'none';
-  // On mobile (fixed overlay) sync bottom padding so status bar isn't hidden
+  // On narrow mobile (stacked board-above-panel, page scrolls) the fixed
+  // bottom-sheet overlay needs #game padded so the status bar doesn't end
+  // up hidden behind it. On short landscape phones #game keeps its normal
+  // fixed-height row layout instead — there the sheet is meant to overlay
+  // the bottom of the board/panel (Design/Train/Test sit at the TOP of the
+  // side panel, so they stay visible above it), and reserving that same
+  // padding there would crush the row layout into almost nothing.
   requestAnimationFrame(() => {
     const overlay = document.getElementById('tutorial-overlay');
-    if (overlay && getComputedStyle(overlay).position === 'fixed') {
+    const isStackedMobile = window.matchMedia('(max-width: 768px)').matches;
+    if (overlay && isStackedMobile && getComputedStyle(overlay).position === 'fixed') {
       const h = overlay.getBoundingClientRect().height;
       document.getElementById('game').style.paddingBottom = (h + 8) + 'px';
     } else {
@@ -2795,36 +2817,63 @@ function _hideAdminReconnect() {
   if (overlay) overlay.style.display = 'none';
 }
 
-// Interactive tutorial isn't supported on small/mobile screens — mirror the
-// #play-now-mobile-notice treatment: hide the CTA, show an explainer instead.
-(function () {
-  var cta = document.querySelector('.lobby-tutorial-cta');
-  if (cta) {
-    var notice = document.createElement('p');
-    notice.id = 'tutorial-mobile-notice';
-    notice.textContent = 'The interactive tutorial is only available on larger screens. Switch to a tablet, laptop, or desktop to try it.';
-    cta.insertAdjacentElement('beforebegin', notice);
-  }
-})();
+// Best-effort: nudge mobile browsers toward landscape once the tutorial
+// mounts. Unsupported/blocked browsers just fall back to the CSS rotate
+// prompt (#fn-tut-rotate-notice), so this is a progressive enhancement only.
+function requestTutorialLandscape() {
+  try {
+    if (screen.orientation && screen.orientation.lock) {
+      screen.orientation.lock('landscape').catch(function () {});
+    }
+  } catch (_) {}
+}
+
+function isMobileTutorialViewport() {
+  return window.matchMedia('(max-width: 900px), (max-height: 500px)').matches;
+}
+
+// Best-effort: go fullscreen on mobile-sized screens so the browser's own
+// address bar stops eating into the already-tight vertical space, then
+// drop back out when the tutorial ends. Desktop is untouched — going
+// fullscreen unprompted there would just be surprising, not helpful.
+// NOTE: iOS Safari does not support the Fullscreen API for ordinary page
+// content (only <video>), so this silently no-ops there; the CSS dvh sizing
+// is what actually keeps things reachable on those devices.
+function enterTutorialFullscreen() {
+  try {
+    if (!isMobileTutorialViewport()) return;
+    var el = document.documentElement;
+    var request = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen || el.msRequestFullscreen;
+    if (!request) return;
+    var p = request.call(el);
+    if (p && p.catch) p.catch(function () {});
+  } catch (_) {}
+}
+
+function exitTutorialFullscreen() {
+  try {
+    var isFs = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
+    if (!isFs) return;
+    var exit = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen;
+    if (!exit) return;
+    var p = exit.call(document);
+    if (p && p.catch) p.catch(function () {});
+  } catch (_) {}
+}
 
 // Auto-start tutorial via ?tutorial=1 OR /tutorial path — start ASAP, hide page until ready
 if (isTutorialAutoStart) {
-  if (window.matchMedia('(max-width: 780px)').matches) {
-    // Mobile: bounce back to the lobby instead of mounting the tutorial overlay.
-    try { history.replaceState(null, '', FN_BASE_PATH); } catch (_) {}
-    document.documentElement.classList.remove('tutorial-loading');
+  var __startTut = function(){
+    try { startTutorial(); } catch (e) { console.error('[tutorial auto-start]', e); }
+    requestTutorialLandscape();
+    requestAnimationFrame(function(){
+      document.documentElement.classList.remove('tutorial-loading');
+    });
+  };
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', __startTut, { once: true });
   } else {
-    var __startTut = function(){
-      try { startTutorial(); } catch (e) { console.error('[tutorial auto-start]', e); }
-      requestAnimationFrame(function(){
-        document.documentElement.classList.remove('tutorial-loading');
-      });
-    };
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', __startTut, { once: true });
-    } else {
-      __startTut();
-    }
+    __startTut();
   }
 }
 </script>

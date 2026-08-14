@@ -63,18 +63,15 @@ img.hero-poster { position: absolute; inset: 0; width: 100%; height: 100%; objec
   .hero-video-caption { position: absolute; left: 0; top: 100%; width: 100%; margin-top: 10px; }
 }
 #play-now-mobile-notice { display: none; }
-#tutorial-mobile-notice { display: none; }
 @media (max-width: 780px) {
   .lobby-hero { text-align: center; gap: 20px; }
   .lobby-hero img:not(.hero-poster) { width: 180px; margin: 0 auto; }
   .hero-video-wrap { max-width: 100%; margin: 0 auto; }
   #lobby h1 { font-size: clamp(28px, 7vw, 42px); }
-  .lobby-tutorial-cta { display: none !important; }
   .lobby-meta { justify-content: center; }
   .lobby-hero-ctas { justify-content: center; flex-wrap: wrap; }
   #play-now-section .invited-banner, #play-now-section .lobby-play-grid { display: none; }
   #play-now-mobile-notice { display: block; text-align: center; color: #4a7a1a; background: rgba(98,181,23,0.08); border: 1px solid rgba(98,181,23,0.25); border-radius: 10px; padding: 16px 20px; font-size: 14px; line-height: 1.5; max-width: 480px; margin: 0 auto; }
-  #tutorial-mobile-notice { display: block; text-align: center; color: #4a7a1a; background: rgba(98,181,23,0.08); border: 1px solid rgba(98,181,23,0.25); border-radius: 10px; padding: 12px 18px; font-size: 13px; line-height: 1.5; max-width: 420px; margin: 0 auto 6px; }
   #event-hub-section { display: none; }
 }
 #lobby h1 { font-size: 42px; color: var(--fn-green); letter-spacing: 2px; font-weight: 800; margin: 0; line-height: 1.1; width: fit-content; background-image: linear-gradient(var(--fn-pink), var(--fn-pink)); background-size: 0% 4px; background-position: 0 100%; background-repeat: no-repeat; animation: h1-underline-draw 0.8s 0.35s ease-out forwards; }
@@ -446,7 +443,8 @@ body:has(#game.active) { overflow: hidden; }
   #lobby h1 { font-size: 34px; }
 
   /* Game. Stack board above side panel, allow page scroll */
-  #game { height: auto; min-height: calc(100dvh - 44px); overflow: visible; }
+  #game { height: auto; min-height: calc(100vh - 68px); overflow: visible; }
+  #game { min-height: calc(100dvh - 68px); } /* progressive enhancement, see note below */
   #main-area { flex-direction: column; overflow: visible; height: auto; }
   #board-container { flex: none; height: 44vw; min-height: 220px; max-height: 46vh; overflow: hidden; padding: 6px; }
   #board-svg { width: 100%; height: 100%; }
@@ -523,8 +521,12 @@ body:has(#game.active) { overflow: hidden; }
   pointer-events: all;
 }
 
-/* Mobile: restore the bottom-sheet style */
-@media (max-width: 768px) {
+/* Mobile: restore the bottom-sheet style. Also applies on short landscape
+   phones (max-height:500px) — width alone doesn't catch those (e.g. 812×375
+   is wider than 768px), and without this their in-flow tutorial card was
+   squeezing #main-area (board + side-panel) down to a sliver, since the
+   card's own content height comes out of #game's fixed, corrected height. */
+@media (max-width: 768px), (max-height: 500px) {
   #tutorial-overlay {
     position: fixed; bottom: 0; left: 0; right: 0;
     z-index: 300;
@@ -540,6 +542,9 @@ body:has(#game.active) { overflow: hidden; }
     margin: 0 auto;
     box-shadow: 0 -4px 28px rgba(0,0,0,0.16);
     border-top: 3px solid var(--brand-green);
+    max-height: 70vh;
+    max-height: 70dvh; /* progressive enhancement, see note below */
+    overflow-y: auto;
   }
   /* Pad below status bar so it isn't hidden behind the fixed tutorial card */
   #game.tut-active { padding-bottom: 220px; }
@@ -595,7 +600,7 @@ body:has(#game.active) { overflow: hidden; }
 }
 #tutorial-overlay.fullscreen #tutorial-card h3 { font-size: 18px; margin-bottom: 10px; }
 #tutorial-overlay.fullscreen #tutorial-card p { font-size: 14px; line-height: 1.6; }
-@media (max-width: 768px) {
+@media (max-width: 768px), (max-height: 500px) {
   #tutorial-overlay.fullscreen {
     align-items: flex-end;
     padding: 0;
@@ -603,8 +608,79 @@ body:has(#game.active) { overflow: hidden; }
   #tutorial-overlay.fullscreen #tutorial-card {
     border-radius: 16px 16px 0 0;
     max-height: 88vh;
+    max-height: 88dvh; /* progressive enhancement, see note below */
     padding: 20px 18px 18px;
   }
+}
+
+/* Mobile-layout only, below: the tutorial at full desktop size is untouched.
+   `body:has(#game.active){overflow:hidden}` (above) locks page scroll on
+   every screen size, but the mobile game layout (#game{height:auto;
+   overflow:visible} at 768px) is built to rely on normal page scroll instead
+   — restore it here so content that runs long on a short screen (like the
+   side-panel's action buttons) stays reachable by scrolling. */
+@media (max-width: 900px), (max-height: 500px) {
+  body:has(#game.active) { overflow: visible; }
+}
+
+/* Short landscape phones (e.g. 812×375) sit above nav.css's 768px hamburger
+   breakpoint, so the full nav wraps to two rows and eats into the game
+   area's assumed 44px header height. Force the compact hamburger nav during
+   the tutorial specifically, where that space is scarce. Mobile-layout only
+   — full desktop size already fits fine and is left untouched. */
+@media (max-height: 500px) {
+  body.fn-tut-active .nav-hamburger { display: flex; margin-left: auto; order: 1; }
+  body.fn-tut-active header nav {
+    display: none; width: 100%; flex-direction: column; align-items: stretch;
+    gap: 2px; padding: 6px 0 10px; border-top: 1px solid #e8f0d8; order: 10;
+  }
+  body.fn-tut-active header nav.nav-open { display: flex; }
+
+  /* Landscape phones (e.g. 812×375) are wider than the 768px breakpoint that
+     switches #main-area to a stacked column, so they still get the desktop
+     row layout here — appropriate, there's enough width for board+panel
+     side by side. Keep the desktop's fixed-height model (switching to
+     height:auto here, like the sub-768px stacked layout does, leaves
+     #board-container's flex:1 height indefinite, which collapses it back to
+     the SVG's raw intrinsic size — hundreds of px taller than the viewport).
+     Just correct the header-height assumption, then let #side-panel scroll
+     internally so its Design/Train/Test buttons stay reachable regardless.
+     Even collapsed to hamburger, the header (logo + padding) actually
+     renders ~68px tall, not the 44px these height calcs assume — the
+     shortfall is invisible on tall desktop screens (masked by overflow:
+     hidden) but eats into the reachable area on short mobile screens. */
+  body.fn-tut-active #game { height: calc(100vh - 68px); }
+  body.fn-tut-active #game { height: calc(100dvh - 68px); } /* progressive enhancement */
+  body.fn-tut-active #side-panel { overflow-y: auto; }
+  /* #game keeps its normal fixed-height layout here (unlike the sub-768px
+     stacked/page-scrolling case), so reserving padding-bottom equal to the
+     bottom-sheet's height would just crush #main-area into almost nothing
+     rather than push content into new scrollable space. Let the sheet
+     overlay the bottom of the board/panel instead — Design/Train/Test sit
+     at the TOP of #side-panel, so they stay visible above it. */
+  body.fn-tut-active #game.tut-active { padding-bottom: 0; }
+}
+
+/* ===== ROTATE-DEVICE PROMPT ===== */
+/* Shown only while the tutorial is mounted, on phones/small tablets held in
+   portrait — the board is much more legible with landscape's extra width.
+   The tutorial itself keeps running behind it; rotating dismisses it
+   instantly. */
+#fn-tut-rotate-notice {
+  display: none;
+  position: fixed; inset: 0; z-index: 650;
+  flex-direction: column; align-items: center; justify-content: center;
+  gap: 16px; text-align: center; padding: 24px;
+  background: rgba(20, 26, 14, 0.96); color: var(--brand-green);
+}
+#fn-tut-rotate-notice svg { animation: fn-tut-rotate-hint 1.6s ease-in-out infinite; }
+#fn-tut-rotate-notice p { font-size: 15px; font-weight: 700; color: #2a2a2a; line-height: 1.5; margin: 0; background: #fff; padding: 10px 16px; border-radius: 10px; }
+@keyframes fn-tut-rotate-hint {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(-90deg); }
+}
+@media (max-width: 900px) and (orientation: portrait) {
+  body.fn-tut-active #fn-tut-rotate-notice { display: flex; }
 }
 
 /* Lobby tutorial button */
