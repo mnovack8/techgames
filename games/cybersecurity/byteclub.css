@@ -14,14 +14,14 @@ html.tutorial-loading { background: #060d03; }
 /* ===== GAME: lock to viewport on medium+ ===== */
 @media (min-width: 641px) {
   html:has(#game.active), body:has(#game.active) { overflow: hidden; height: 100%; }
-  #game.active { height: calc(100vh - 68px); overflow: hidden; flex-direction: column; }
+  #game.active { height: calc(100vh - 44px); overflow: hidden; flex-direction: column; }
   .opponents-bar { max-height: 30vh; overflow-y: auto; }
   .my-area { flex-shrink: 0; overflow: hidden; }
   .action-bar { flex-shrink: 0; }
 }
 
 /* ===== LOBBY COLORS ===== */
-#lobby { flex-direction: column; align-items: center; justify-content: flex-start; min-height: calc(100vh - 68px); overflow-y: auto; padding: 0 20px 40px; background: radial-gradient(ellipse 1100px 600px at 50% 0%, rgba(98,181,23,0.18) 0%, rgba(6,13,3,0) 70%), #060d03 url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg stroke='%2362b517' stroke-opacity='0.07' stroke-width='1.5' fill='none' stroke-linecap='round'%3E%3Cpolyline points='0,30 40,30 40,75'/%3E%3Ccircle cx='40' cy='30' r='3' fill='%2362b517' fill-opacity='0.07'/%3E%3Ccircle cx='40' cy='75' r='3' fill='%2362b517' fill-opacity='0.07'/%3E%3Cline x1='40' y1='75' x2='100' y2='75'/%3E%3Cline x1='70' y1='0' x2='70' y2='30'/%3E%3Ccircle cx='70' cy='30' r='2.5' fill='%2362b517' fill-opacity='0.07'/%3E%3Cline x1='70' y1='30' x2='100' y2='30'/%3E%3Cline x1='0' y1='55' x2='15' y2='55'/%3E%3Ccircle cx='15' cy='55' r='2.5' fill='%2362b517' fill-opacity='0.07'/%3E%3Cline x1='15' y1='55' x2='15' y2='100'/%3E%3C/g%3E%3C/svg%3E") repeat; background-size: auto, 100px 100px; }
+#lobby { flex-direction: column; align-items: center; justify-content: flex-start; min-height: calc(100vh - 44px); overflow-y: auto; padding: 0 20px 40px; background: radial-gradient(ellipse 1100px 600px at 50% 0%, rgba(98,181,23,0.18) 0%, rgba(6,13,3,0) 70%), #060d03 url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cg stroke='%2362b517' stroke-opacity='0.07' stroke-width='1.5' fill='none' stroke-linecap='round'%3E%3Cpolyline points='0,30 40,30 40,75'/%3E%3Ccircle cx='40' cy='30' r='3' fill='%2362b517' fill-opacity='0.07'/%3E%3Ccircle cx='40' cy='75' r='3' fill='%2362b517' fill-opacity='0.07'/%3E%3Cline x1='40' y1='75' x2='100' y2='75'/%3E%3Cline x1='70' y1='0' x2='70' y2='30'/%3E%3Ccircle cx='70' cy='30' r='2.5' fill='%2362b517' fill-opacity='0.07'/%3E%3Cline x1='70' y1='30' x2='100' y2='30'/%3E%3Cline x1='0' y1='55' x2='15' y2='55'/%3E%3Ccircle cx='15' cy='55' r='2.5' fill='%2362b517' fill-opacity='0.07'/%3E%3Cline x1='15' y1='55' x2='15' y2='100'/%3E%3C/g%3E%3C/svg%3E") repeat; background-size: auto, 100px 100px; }
 .lobby-hero img { width: 280px; max-width: 100%; height: auto; object-fit: contain; background: #fff; border-radius: 16px; box-shadow: 0 12px 40px rgba(0,0,0,0.55), 0 0 0 1px rgba(98,181,23,0.15); }
 .hero-video-wrap { width: 420px; max-width: 100%; position: relative; display: flex; flex-direction: column; gap: 10px; }
 .hero-video-frame { position: relative; width: 100%; height: 0; padding-top: 56.25%; overflow: hidden; border-radius: 16px; }
@@ -385,7 +385,7 @@ body.obs-actions-hidden .gm-actions-section{display:none !important;}
 /* ===== GAME SCREEN ===== */
 #game{flex-direction:column;min-height:100vh;background:#0d1117;}
 
-.game-layout{display:flex;flex-direction:column;height:calc(100vh - 68px);overflow:hidden;}
+.game-layout{display:flex;flex-direction:column;height:calc(100vh - 44px);overflow:hidden;}
 
 /* OPPONENTS BAR (merged with turn order) */
 .opponents-bar-wrap{position:relative;flex-shrink:0;}
@@ -475,14 +475,10 @@ body.obs-actions-hidden .gm-actions-section{display:none !important;}
 .gm-actions-body{flex:1;overflow-y:auto;display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;min-height:0;padding:6px 10px;gap:0;}
 /* Idle state. Vertically centered when there's nothing to show */
 .gm-actions-body .gm-idle-state{margin:auto;}
-/* Panels inside actions body. Sized to natural content height — .gm-actions-body
-   is the ONLY scroll container here. A second nested overflow:auto used to sit
-   on the panel itself too, and on touch devices the gesture would lock onto
-   that inner scroller (which had nowhere near enough to scroll) and never
-   bubble up to reveal the rest, leaving the closing button unreachable. */
+/* Panels inside actions body. Fill body height, scroll internally if content overflows */
 .gm-actions-body .effect-panel,.gm-actions-body .govern-panel{
   max-height:none;max-width:none;width:100%;box-sizing:border-box;padding:8px 12px;
-  overflow:visible;display:flex;flex-direction:column;flex:none;}
+  overflow-y:auto;display:flex;flex-direction:column;min-height:0;flex:1;}
 .gm-actions-body .effect-panel h3,.gm-actions-body .govern-panel h3{flex-shrink:0;font-size:13px;margin-bottom:4px;}
 .gm-actions-body .effect-panel p,.gm-actions-body .govern-panel p{flex-shrink:0;margin-bottom:4px;font-size:12px;}
 /* Compact cards inside actions panel. No desc, smaller footprint */
@@ -499,18 +495,15 @@ body.obs-actions-hidden .gm-actions-section{display:none !important;}
 .gm-actions-body .effect-choice-btn{padding:9px 12px;font-size:12px;margin-bottom:6px;}
 .gm-actions-body .effect-choice-btn .sub{font-size:10px;}
 .gm-actions-body .action-btn{padding:6px 12px;font-size:11px;}
-/* This context overrides the effect-panel's own padding/margins, so the
-   sticky closing button needs matching offsets rather than the -24px ones
-   meant for the panel's other (fixed-modal) context. */
-.gm-actions-body .effect-panel>button:last-child,
-.gm-actions-body .govern-panel>button:last-child{margin:8px -12px -8px;padding:8px 12px;bottom:-8px;}
 
-/* On narrow/short mobile there usually isn't enough leftover height for the
-   Active Actions column to render a full effect panel (Recon reveal, Govern,
-   etc.) without it silently overflowing past its own collapsed container —
-   the button ends up scrolled off with no way to reach it. When this column
-   actually has something to show, expand it to cover the board temporarily;
-   it reverts to its normal collapsed/idle state as soon as the action closes. */
+/* Mobile-layout only, below: full desktop size is untouched — the Active
+   Actions column already has plenty of room there. On narrow/short mobile
+   there usually isn't enough leftover height for it to render a full effect
+   panel (Recon reveal, Govern, etc.) without silently overflowing past its
+   own collapsed container, leaving the closing button unreachable. When this
+   column actually has something to show, expand it to cover the board
+   temporarily; it reverts to its normal collapsed/idle state once the action
+   closes. */
 @media (max-width:900px),(max-height:500px){
   .game-layout{position:relative;}
   .gm-actions-section:has(#govern-overlay-inner:not(:empty)){
@@ -525,6 +518,20 @@ body.obs-actions-hidden .gm-actions-section{display:none !important;}
   }
   .gm-actions-section:has(#govern-overlay-inner:not(:empty)) .gm-section-header{
     text-align:center;
+  }
+  /* .gm-actions-body becomes the ONLY scroll container in this expanded
+     state. The panel itself used to also be overflow:auto, and on touch
+     devices the scroll gesture would lock onto that inner scroller (which
+     had nowhere near enough to scroll) and never bubble up to reveal the
+     rest — leaving the closing button unreachable no matter how much you
+     tried to scroll. */
+  .gm-actions-section:has(#govern-overlay-inner:not(:empty)) .effect-panel,
+  .gm-actions-section:has(#govern-overlay-inner:not(:empty)) .govern-panel{
+    overflow:visible;flex:none;min-height:auto;
+  }
+  .gm-actions-section:has(#govern-overlay-inner:not(:empty)) .effect-panel>button:last-child,
+  .gm-actions-section:has(#govern-overlay-inner:not(:empty)) .govern-panel>button:last-child{
+    margin:8px -12px -8px;padding:8px 12px;bottom:-8px;
   }
 }
 /* Delivery panel. Fill without scroll */
@@ -831,18 +838,18 @@ body.obs-actions-hidden .gm-actions-section{display:none !important;}
 .effect-panel{background:#1a2235;border:2px solid var(--brand-green);border-radius:16px;padding:24px;max-width:560px;width:92%;max-height:80vh;overflow-y:auto;}
 .effect-panel h3{font-size:17px;font-weight:800;color:var(--brand-green);margin-bottom:16px;}
 .effect-panel p{font-size:13px;color:#9ca3af;margin-bottom:12px;line-height:1.5;}
-/* The closing/confirm action (Done, Go Back, etc.) is always the panel's
-   last direct-child button. Pin it to the bottom of the scroll area so it
-   never scrolls out of reach on short screens — e.g. Recon's "view hand". */
-.effect-panel > button:last-child{
-  position:sticky;bottom:-24px;
-  margin:12px -24px -24px;padding:12px 24px;
-  background:#1a2235;border-top:1px solid #2d3d1a;
-  border-radius:0 0 14px 14px;z-index:2;
-}
+/* Mobile-layout only, below: the tutorial/game at full desktop size is
+   untouched. On short mobile screens, pin the closing action (Done, Go Back,
+   etc. — always the panel's last direct-child button) to the bottom of the
+   scroll area so it never scrolls out of reach — e.g. Recon's "view hand". */
 @media (max-width:900px),(max-height:500px){
   .effect-panel{max-height:92vh;padding:16px;}
-  .effect-panel > button:last-child{margin:10px -16px -16px;padding:10px 16px;bottom:-16px;}
+  .effect-panel > button:last-child{
+    position:sticky;bottom:-16px;
+    margin:10px -16px -16px;padding:10px 16px;
+    background:#1a2235;border-top:1px solid #2d3d1a;
+    border-radius:0 0 14px 14px;z-index:2;
+  }
 }
 .effect-choice-btn{display:block;width:100%;text-align:left;padding:14px 16px;margin-bottom:8px;background:#111827;border:1px solid #374151;border-radius:10px;color:#e2e8f0;font-size:14px;font-weight:700;cursor:pointer;transition:all 0.15s;}
 .effect-choice-btn:hover{border-color:var(--brand-green);background:#0f1a10;}
@@ -1026,7 +1033,7 @@ body.obs-actions-hidden .gm-actions-section{display:none !important;}
 /* ===== BC TUTORIAL PANEL. Right sidebar ===== */
 #bc-tut-panel {
   display: none;
-  position: fixed; top: 68px; right: 0; bottom: 0;
+  position: fixed; top: 44px; right: 0; bottom: 0;
   width: 272px; z-index: 310;
   background: #111827; border-left: 2px solid #d1db24;
   padding: 14px 16px 16px; gap: 12px; flex-direction: column;
@@ -1035,7 +1042,7 @@ body.obs-actions-hidden .gm-actions-section{display:none !important;}
 }
 body.bc-tut-active #bc-tut-panel { display: flex; }
 /* Shrink game area to leave room for the sidebar */
-body.bc-tut-active .game-layout { height: calc(100vh - 68px); margin-right: 272px; }
+body.bc-tut-active .game-layout { height: calc(100vh - 44px); margin-right: 272px; }
 .tut-header { display: flex; flex-direction: column; gap: 6px; }
 #tut-step { font-size: 10px; font-weight: 700; color: #6b7280;
   text-transform: uppercase; letter-spacing: 1px; }
@@ -1119,6 +1126,7 @@ body.bc-tut-intro-active #bc-tut-intro{display:flex;}
   #bc-tut-panel {
     top: auto; bottom: 0; left: 0; right: 0;
     width: auto; height: auto; max-height: 48vh;
+    max-height: 48dvh; /* progressive enhancement, see note below */
     border-left: none; border-top: 2px solid #d1db24;
     box-shadow: 0 -4px 24px rgba(0,0,0,0.65);
     overflow-y: auto;
@@ -1126,6 +1134,7 @@ body.bc-tut-intro-active #bc-tut-intro{display:flex;}
   body.bc-tut-active .game-layout {
     margin-right: 0;
     height: calc(100vh - 68px - 200px);
+    height: calc(100dvh - 68px - 200px); /* progressive enhancement, see note below */
   }
   .tut-footer { flex-direction: row; }
   #tut-exit, #tut-next { width: auto; }
@@ -1155,7 +1164,8 @@ body.bc-tut-intro-active #bc-tut-intro{display:flex;}
 /* Short landscape phones (e.g. 812×375) sit above nav.css's 768px hamburger
    breakpoint, so the full nav wraps to two rows and eats into the game
    area's assumed 44px header height. Force the compact hamburger nav
-   during the tutorial specifically, where that space is scarce. */
+   during the tutorial specifically, where that space is scarce. Mobile-layout
+   only — full desktop size already fits fine and is left untouched. */
 @media (max-height: 500px) {
   body.bc-tut-active .nav-hamburger,
   body.bc-tut-intro-active .nav-hamburger { display: flex; margin-left: auto; order: 1; }
@@ -1166,6 +1176,25 @@ body.bc-tut-intro-active #bc-tut-intro{display:flex;}
   }
   body.bc-tut-active header nav.nav-open,
   body.bc-tut-intro-active header nav.nav-open { display: flex; }
+
+  /* Even collapsed to hamburger, the header (logo + padding) actually
+     renders ~68px tall, not the 44px these height calcs assume — the
+     shortfall is invisible on tall desktop screens (masked by overflow:
+     hidden) but eats into the reachable area on short mobile screens. */
+  body.bc-tut-active .game-layout { height: calc(100vh - 68px); }
+  #bc-tut-panel { top: 68px; }
+  #bc-tut-intro-card { max-height: calc(100vh - 108px); }
+
+  /* 100vh on a real phone is the LARGEST possible viewport (address bar
+     hidden) — with the address bar actually showing, the true visible
+     height is smaller, so content sized off 100vh silently runs past the
+     real fold (this is what desktop-emulated testing misses entirely: an
+     emulated viewport has no address bar to shrink things further). 100dvh
+     tracks the real, current visible viewport instead. Declared as a
+     progressive enhancement after the 100vh rules above — browsers without
+     dvh support ignore this block and keep the vh fallback. */
+  body.bc-tut-active .game-layout { height: calc(100dvh - 68px); }
+  #bc-tut-intro-card { max-height: calc(100dvh - 108px); }
 }
 
 /* ===== ROTATE-DEVICE PROMPT ===== */

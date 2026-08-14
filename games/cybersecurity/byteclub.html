@@ -3803,6 +3803,7 @@ function startTutorial() {
   selectedHandCard = null;
   myId = 0;
   requestTutorialLandscape();
+  enterTutorialFullscreen();
   // bc-tut-active / bc-tut-intro-active are managed by applyBcTutStep
   showScreen('game');
   // Override the /activegame URL set by showScreen — tutorial has its own path
@@ -3822,6 +3823,7 @@ function endTutorial() {
   document.body.classList.remove('bc-tut-intro-active');
   document.getElementById('win-screen').classList.remove('show');
   document.getElementById('htp-btn').style.display = 'none';
+  exitTutorialFullscreen();
   showScreen('lobby');
 }
 
@@ -4121,6 +4123,39 @@ function requestTutorialLandscape() {
     if (screen.orientation && screen.orientation.lock) {
       screen.orientation.lock('landscape').catch(function () {});
     }
+  } catch (_) {}
+}
+
+function isMobileTutorialViewport() {
+  return window.matchMedia('(max-width: 900px), (max-height: 500px)').matches;
+}
+
+// Best-effort: go fullscreen on mobile-sized screens so the browser's own
+// address bar stops eating into the already-tight vertical space, then
+// drop back out when the tutorial ends. Desktop is untouched — going
+// fullscreen unprompted there would just be surprising, not helpful.
+// NOTE: iOS Safari does not support the Fullscreen API for ordinary page
+// content (only <video>), so this silently no-ops there; the CSS dvh sizing
+// is what actually keeps things reachable on those devices.
+function enterTutorialFullscreen() {
+  try {
+    if (!isMobileTutorialViewport()) return;
+    var el = document.documentElement;
+    var request = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen || el.msRequestFullscreen;
+    if (!request) return;
+    var p = request.call(el);
+    if (p && p.catch) p.catch(function () {});
+  } catch (_) {}
+}
+
+function exitTutorialFullscreen() {
+  try {
+    var isFs = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
+    if (!isFs) return;
+    var exit = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen;
+    if (!exit) return;
+    var p = exit.call(document);
+    if (p && p.catch) p.catch(function () {});
   } catch (_) {}
 }
 
