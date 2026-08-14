@@ -553,7 +553,12 @@ body:has(#game.active) { overflow: hidden; }
    it. Use a collapsible right-hand sidebar instead, so the board and the
    instructions each get their own space and neither covers the other. */
 @media (min-width: 769px) and (max-height: 500px) {
-  #tutorial-overlay {
+  /* :not(.fullscreen) — the intro/context slides (steps 0-7) use a separate
+     full-viewport modal treatment below and must keep their own top/right/
+     bottom/left/width; without this exclusion, the sidebar's width:260px
+     was leaking into that state too, squashing the fullscreen modal down
+     into a small box pinned to the top-left corner. */
+  #tutorial-overlay:not(.fullscreen) {
     position: fixed; top: 68px; right: 0; bottom: 0;
     z-index: 300;
     width: 260px;
@@ -564,8 +569,8 @@ body:has(#game.active) { overflow: hidden; }
     overflow-y: auto;
     transition: transform 0.2s ease;
   }
-  #tutorial-overlay.collapsed { transform: translateX(100%); }
-  #tutorial-card {
+  #tutorial-overlay.collapsed:not(.fullscreen) { transform: translateX(100%); }
+  #tutorial-overlay:not(.fullscreen) #tutorial-card {
     max-width: none;
     padding: 12px 16px 14px;
   }
