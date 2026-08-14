@@ -3884,6 +3884,16 @@ function applyBcTutStep(idx) {
 function tutNext() {
   const s = BCTSTEPS[bcTutStep];
   if (s.nextAction) { s.nextAction(); return; } // mid-step override (e.g. after Recon)
+  if (s.forced && s.tutHL === 'end_turn') {
+    // The real End Turn button lives in the board's bottom action-bar, which
+    // short mobile screens don't always have room to show. The sidebar's
+    // Next button is mirrored to say "End Turn" for this step (see
+    // renderBcTutPanel) — clicking it proxies a real click on that button
+    // so ending the turn is always reachable, regardless of layout.
+    const realBtn = document.querySelector('.action-bar .btn-end-turn');
+    if (realBtn) realBtn.click();
+    return;
+  }
   if (s.forced) return;
   if (s.next === 'Back to Lobby') { endTutorial(); return; }
   const next = tutNextEnabled(bcTutStep);
@@ -3903,7 +3913,14 @@ function renderBcTutPanel(idx) {
   const nextBtn = document.getElementById('tut-next');
   const hint    = document.getElementById('tut-hint');
 
-  if (s.forced) {
+  if (s.forced && s.tutHL === 'end_turn') {
+    // Mirror the real End Turn button here too — see tutNext() — so the
+    // action is reachable even when the board's action-bar is scrolled
+    // out of view on short mobile screens.
+    nextBtn.style.display = 'inline-block';
+    nextBtn.textContent = 'End Turn →';
+    hint.innerHTML = '<span style="color:#d1db24;font-weight:700">👆 Perform the highlighted action to continue</span>';
+  } else if (s.forced) {
     nextBtn.style.display = 'none';
     hint.innerHTML = '<span style="color:#d1db24;font-weight:700">👆 Perform the highlighted action to continue</span>';
   } else {
