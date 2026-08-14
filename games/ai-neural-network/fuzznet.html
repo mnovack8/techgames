@@ -244,12 +244,16 @@
     </div>
   </div>
 
-  <!-- Tutorial card sits between the board area and status bar on desktop -->
+  <!-- Tutorial card sits between the board area and status bar on desktop.
+       On short landscape phones it becomes a collapsible right sidebar
+       instead (see fuzznet.css) — this toggle button expands/collapses it
+       so it never has to permanently cover part of the board. -->
   <div id="tutorial-overlay">
     <div id="tutorial-card">
       <!-- INTERACTIVE_TUTORIAL_HTML -->
     </div>
   </div>
+  <button id="fn-tut-sidebar-toggle" onclick="toggleTutSidebar()" aria-label="Toggle tutorial sidebar" title="Toggle tutorial sidebar">‹</button>
 
   <div id="status"><span class="msg" id="status-msg">Choose an action.</span></div>
 </div>
@@ -2606,11 +2610,25 @@ function endTutorial() {
   tutHighlightNodes = [];
   tutHighlightAnimal = -1;
   document.getElementById('game').classList.remove('tut-active');
-  document.body.classList.remove('fn-tut-active');
+  document.body.classList.remove('fn-tut-active', 'fn-tut-sidebar-collapsed');
   G = null; myId = -1; viewingPlayer = -1; roomCode = '';
   document.getElementById('tutorial-overlay').classList.remove('active');
   exitTutorialFullscreen();
   showScreen('lobby');
+}
+
+// Collapse/expand the tutorial sidebar (short-landscape-phone layout only —
+// see fuzznet.css). Collapsing hides the panel and gives the board the full
+// width; the toggle tab stays put at the screen edge either way.
+function toggleTutSidebar() {
+  const collapsed = document.body.classList.toggle('fn-tut-sidebar-collapsed');
+  const overlay = document.getElementById('tutorial-overlay');
+  const btn = document.getElementById('fn-tut-sidebar-toggle');
+  if (overlay) overlay.classList.toggle('collapsed', collapsed);
+  if (btn) {
+    btn.textContent = collapsed ? '›' : '‹';
+    btn.title = collapsed ? 'Show tutorial sidebar' : 'Hide tutorial sidebar';
+  }
 }
 
 function updateTutOverlay(idx) {

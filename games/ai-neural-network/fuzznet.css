@@ -521,12 +521,10 @@ body:has(#game.active) { overflow: hidden; }
   pointer-events: all;
 }
 
-/* Mobile: restore the bottom-sheet style. Also applies on short landscape
-   phones (max-height:500px) — width alone doesn't catch those (e.g. 812×375
-   is wider than 768px), and without this their in-flow tutorial card was
-   squeezing #main-area (board + side-panel) down to a sliver, since the
-   card's own content height comes out of #game's fixed, corrected height. */
-@media (max-width: 768px), (max-height: 500px) {
+/* Mobile: restore the bottom-sheet style (narrow/portrait — board and panel
+   are already stacked here, so a bottom sheet doesn't compete with them for
+   width). */
+@media (max-width: 768px) {
   #tutorial-overlay {
     position: fixed; bottom: 0; left: 0; right: 0;
     z-index: 300;
@@ -549,6 +547,45 @@ body:has(#game.active) { overflow: hidden; }
   /* Pad below status bar so it isn't hidden behind the fixed tutorial card */
   #game.tut-active { padding-bottom: 220px; }
 }
+
+/* Short landscape phones (e.g. 812×375, wider than the 768px breakpoint
+   above): a bottom sheet here would sit over the board rather than beside
+   it. Use a collapsible right-hand sidebar instead, so the board and the
+   instructions each get their own space and neither covers the other. */
+@media (min-width: 769px) and (max-height: 500px) {
+  #tutorial-overlay {
+    position: fixed; top: 68px; right: 0; bottom: 0;
+    z-index: 300;
+    width: 260px;
+    background: #fff;
+    border-top: none;
+    border-left: 2px solid var(--brand-green);
+    box-shadow: -4px 0 24px rgba(0,0,0,0.14);
+    overflow-y: auto;
+    transition: transform 0.2s ease;
+  }
+  #tutorial-overlay.collapsed { transform: translateX(100%); }
+  #tutorial-card {
+    max-width: none;
+    padding: 12px 16px 14px;
+  }
+  body.fn-tut-active #game { margin-right: 260px; padding-bottom: 0; }
+  body.fn-tut-active.fn-tut-sidebar-collapsed #game { margin-right: 0; }
+
+  /* Tab that stays put at the sidebar's edge to expand/collapse it */
+  body.fn-tut-active #fn-tut-sidebar-toggle {
+    display: flex; align-items: center; justify-content: center;
+    position: fixed; top: 50%; right: 260px; z-index: 301;
+    width: 22px; height: 44px; margin-top: -22px;
+    background: var(--brand-green); color: #fff;
+    border: none; border-radius: 6px 0 0 6px;
+    cursor: pointer; font-size: 12px; padding: 0;
+    box-shadow: -2px 0 8px rgba(0,0,0,0.2);
+    transition: right 0.2s ease;
+  }
+  body.fn-tut-active.fn-tut-sidebar-collapsed #fn-tut-sidebar-toggle { right: 0; }
+}
+#fn-tut-sidebar-toggle { display: none; }
 .tut-header { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
 #tut-step { font-size: 11px; font-weight: 700; color: #aaa; text-transform: uppercase; letter-spacing: 1px; white-space: nowrap; }
 .tut-progress { flex: 1; height: 4px; background: #e8e4dc; border-radius: 4px; overflow: hidden; }
@@ -652,13 +689,6 @@ body:has(#game.active) { overflow: hidden; }
   body.fn-tut-active #game { height: calc(100vh - 68px); }
   body.fn-tut-active #game { height: calc(100dvh - 68px); } /* progressive enhancement */
   body.fn-tut-active #side-panel { overflow-y: auto; }
-  /* #game keeps its normal fixed-height layout here (unlike the sub-768px
-     stacked/page-scrolling case), so reserving padding-bottom equal to the
-     bottom-sheet's height would just crush #main-area into almost nothing
-     rather than push content into new scrollable space. Let the sheet
-     overlay the bottom of the board/panel instead — Design/Train/Test sit
-     at the TOP of #side-panel, so they stay visible above it. */
-  body.fn-tut-active #game.tut-active { padding-bottom: 0; }
 }
 
 /* ===== ROTATE-DEVICE PROMPT ===== */
