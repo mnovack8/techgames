@@ -4113,19 +4113,6 @@ LobbyUI.init({
 
 hub.connect();
 
-// Mobile is supported, but the tutorial's diagrams (Kill Chain row, NIST
-// circle) need landscape width to display without cropping — flag that on
-// the lobby CTA rather than hiding it.
-(function () {
-  var cta = document.querySelector('.lobby-tutorial-cta');
-  if (cta && window.matchMedia('(max-width: 780px)').matches) {
-    var notice = document.createElement('p');
-    notice.id = 'tutorial-mobile-notice';
-    notice.textContent = 'Best experienced in landscape on a phone or tablet.';
-    cta.insertAdjacentElement('beforebegin', notice);
-  }
-})();
-
 // Best-effort: nudge mobile browsers toward landscape once the tutorial
 // mounts. Unsupported/blocked browsers just fall back to the CSS rotate
 // prompt (#bc-tut-rotate-notice), so this is a progressive enhancement only.
