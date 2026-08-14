@@ -55,7 +55,7 @@ header {
   line-height: 1;
   color: #b0b800;
 }
-@media (max-width: 768px) {
+@media (max-width: 768px), (orientation: landscape) and (max-height: 500px) {
   header { padding: 8px 16px; height: auto; flex-wrap: wrap; align-items: center; gap: 4px; }
   .logo-text { font-size: 14px; }
   .logo-sub { font-size: 8px; letter-spacing: 1px; }
