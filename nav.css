@@ -89,8 +89,8 @@ nav a.nav-cta-buy:hover { background: var(--brand-green-dark); color: #fff; }
 .nav-hamburger.open span:nth-child(2) { opacity: 0; width: 0; }
 .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-/* Mobile */
-@media (max-width: 768px) {
+/* Mobile (including landscape phones, which are wide but short) */
+@media (max-width: 768px), (orientation: landscape) and (max-height: 500px) {
   .nav-hamburger { display: flex; margin-left: auto; order: 1; }
 
   /* Nav hidden by default; expands below the logo row inside the sticky header */

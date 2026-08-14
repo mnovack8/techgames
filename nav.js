@@ -64,8 +64,13 @@
   });
 
   // ── Close hamburger menu on resize back to desktop ──────────
+  function isMobileLayout() {
+    var isLandscapeShort = window.matchMedia('(orientation: landscape) and (max-height: 500px)').matches;
+    return window.innerWidth <= 768 || isLandscapeShort;
+  }
+
   window.addEventListener('resize', function () {
-    if (window.innerWidth > 768 && nav && btn) {
+    if (!isMobileLayout() && nav && btn) {
       nav.classList.remove('nav-open');
       btn.classList.remove('open');
       btn.setAttribute('aria-expanded', 'false');
