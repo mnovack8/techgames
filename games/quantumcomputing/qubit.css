@@ -1374,6 +1374,14 @@ body.qbt-panel-active .qb-main { padding-left: 280px; }
 @media (max-width: 900px) {
   #qbt-panel { top: auto; bottom: 0; left: 0; right: 0; width: auto; height: auto; max-height: 46vh; border-right: none; border-top: 2px solid #2563eb; box-shadow: 0 -4px 24px rgba(0,0,0,0.65); }
   body.qbt-panel-active .qb-board-section { padding-bottom: 46vh; }
+
+  /* Hide the site header entirely during the tutorial on mobile — the
+     "Exit Tutorial" button already covers leaving, so the header's own nav
+     isn't needed here, and reclaiming its ~68px gives the board/panel real
+     breathing room on a screen that's already tight. */
+  body.qbt-tut-active header { display: none; }
+  body.qbt-tut-active #game.active { height: 100vh; }
+  body.qbt-tut-active #game.active { height: 100dvh; } /* progressive enhancement */
 }
 
 /* Short landscape phones (e.g. 812×375): the 900px-width bottom-sheet
@@ -1383,7 +1391,7 @@ body.qbt-panel-active .qb-main { padding-left: 280px; }
    so it can be tucked away entirely if the board still feels tight. */
 @media (max-width: 900px) and (max-height: 500px) {
   #qbt-panel {
-    top: 68px; left: 0; right: auto; bottom: 0;
+    top: 0; left: 0; right: auto; bottom: 0;
     width: 260px; height: auto; max-height: none;
     border-right: 2px solid #2563eb; border-top: none;
     box-shadow: 4px 0 28px rgba(0,0,0,0.7);
@@ -1409,24 +1417,18 @@ body.qbt-panel-active .qb-main { padding-left: 280px; }
 }
 #qbt-sidebar-toggle { display: none; }
 
-/* Short landscape phones sit above nav.css's 768px hamburger breakpoint, so
-   the full nav wraps to two rows and eats into the game area's assumed
-   header height. Force the compact hamburger nav during the tutorial
-   specifically, where that space is scarce. Mobile-layout only — full
-   desktop size already fits fine and is left untouched. */
+/* Short landscape phones sit above nav.css's 768px hamburger breakpoint (and
+   often above the 900px width check on the header-hiding rule above too —
+   915-932px-wide phones are common) so the header could still wrap to two
+   rows and eat into the game area's assumed header height. The header is
+   hidden outright during the tutorial on mobile (rule above, on `header`
+   directly — not width-gated the same way here since this query only checks
+   height), so #game.active reclaims the full viewport instead of the old
+   68px-header-height subtraction. */
 @media (max-height: 500px) {
-  body.qbt-tut-active .nav-hamburger { display: flex; margin-left: auto; order: 1; }
-  body.qbt-tut-active header nav {
-    display: none; width: 100%; flex-direction: column; align-items: stretch;
-    gap: 2px; padding: 6px 0 10px; border-top: 1px solid #1e3a5f; order: 10;
-  }
-  body.qbt-tut-active header nav.nav-open { display: flex; }
-
-  /* The header (logo + padding) actually renders ~68px tall, not the 44px
-     #game.active assumes — invisible on tall desktop screens (masked by
-     overflow:hidden) but eats into the reachable area on short screens. */
-  body.qbt-tut-active #game.active { height: calc(100vh - 68px); }
-  body.qbt-tut-active #game.active { height: calc(100dvh - 68px); } /* progressive enhancement */
+  body.qbt-tut-active header { display: none; }
+  body.qbt-tut-active #game.active { height: 100vh; }
+  body.qbt-tut-active #game.active { height: 100dvh; } /* progressive enhancement */
 
   /* .qb-main's own <=900px rule (above) stacks board-above-panel into one
      tall scrolling column — fine on a tall portrait phone, but on a short
