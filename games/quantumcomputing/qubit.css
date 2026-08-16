@@ -1440,6 +1440,33 @@ body.qbt-panel-active .qb-main { padding-left: 280px; }
   body.qbt-tut-active .qb-panel {
     width: auto; flex: 1 1 50%; min-width: 180px;
     border-left: 1px solid #e2e8f0; border-top: none;
+    /* .qb-panel's own single-column collapse is gated behind a SEPARATE
+       max-width:900px rule elsewhere, which doesn't fire on real landscape
+       phones wider than that (e.g. 915–932px is common) — this media query
+       only checks height, so those phones got the sidebar layout here while
+       keeping the desktop two-column grid ("htp/public/env" in a narrow
+       left column, "clue" in a phantom right column). With barely 180–300px
+       total to work with, that right column rendered mostly or entirely
+       off-screen — which is what looked like "everything overlapping and
+       unclickable". Force the single-column collapse here explicitly
+       instead of depending on that other rule's width threshold lining up
+       with this one's. */
+    grid-template-columns: 1fr;
+    grid-template-areas: "htp" "public" "clue" "env" "turn" "log";
+  }
+  /* #qb-clue-section/#qb-log-section's min-height:0 (base rule) exists so
+     they can shrink and scroll internally when spanning the desktop grid's
+     3-row-tall right column — in this single-column layout each now occupies
+     just one auto-sized grid row instead, and that same min-height:0 was
+     collapsing the row down toward the flex item's minimum content size
+     instead of its actual (taller) content, so the section's real content —
+     title, "All Possible Clues" button, clue list — overflowed visually
+     down into the next section's space instead of claiming its own room. */
+  body.qbt-tut-active #qb-clue-section,
+  body.qbt-tut-active #qb-log-section {
+    border-left: none;
+    min-height: auto;
+    overflow-y: visible;
   }
   /* .qb-board's own min-width/min-height:280px (base rule) is a comfortable
      floor on desktop/tablet, where there's always more than that to give —

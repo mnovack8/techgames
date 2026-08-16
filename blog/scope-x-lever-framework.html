@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="A 3x3 Scope x Lever framework for picking the right place to intervene (Org, Design, Execution) and the right kind of fix (People, Process, Tool) to get the most ROI, with three decision trees and an AI security worked example.">
+<meta name="description" content="A 3x3 Scope x Lever framework for picking the right place to intervene (Org, Design, Execution) and the right kind of fix (People, Process, Tool) to get the most ROI, with two decision trees and an AI security worked example.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Right Scope, Right Lever: A 3x3 ROI Framework | Tech CoLab">
-<meta property="og:description" content="A 3x3 Scope x Lever framework for picking the right place to intervene and the right kind of fix to get the most ROI, with three decision trees and an AI security worked example.">
+<meta property="og:description" content="A 3x3 Scope x Lever framework for picking the right place to intervene and the right kind of fix to get the most ROI, with two decision trees and an AI security worked example.">
 <meta property="og:image" content="https://cybersecgames.com/images/logo.png">
 <meta property="og:url" content="https://cybersecgames.com/blog/scope-x-lever-framework">
 <meta name="twitter:card" content="summary_large_image">
@@ -28,7 +28,7 @@
   "@context": "https://schema.org",
   "@type": "Article",
   "headline": "Right Scope, Right Lever: A 3x3 Framework for Getting the Most ROI Out of a Fix",
-  "description": "A 3x3 Scope x Lever framework for picking the right place to intervene (Org, Design, Execution) and the right kind of fix (People, Process, Tool) to get the most ROI, with three decision trees and an AI security worked example.",
+  "description": "A 3x3 Scope x Lever framework for picking the right place to intervene (Org, Design, Execution) and the right kind of fix (People, Process, Tool) to get the most ROI, with two decision trees and an AI security worked example.",
   "publisher": { "@type": "Organization", "name": "Tech CoLab", "logo": { "@type": "ImageObject", "url": "https://cybersecgames.com/images/logo.png" } },
   "datePublished": "2026-08-15",
   "dateModified": "2026-08-15",
@@ -115,7 +115,7 @@
 
     <p>Think about it the way you'd think about a physical toolbox. <strong>Lever</strong> is the difference between a hammer and a screwdriver: a different kind of tool for a different kind of fastener. No amount of hammer, swung harder or softer, drives a screw. <strong>Scope</strong> is the difference between a wrecking ball, a sledgehammer, and a claw hammer: all three are hammers, all three deliver the same kind of force, but they differ enormously in how much force and how broad a swing. Bring a wrecking ball to hang a picture hook and you take out the wall. Bring a claw hammer to a load-bearing demolition and you'll be there all year.</p>
 
-    <p>That's the whole framework in one image. <strong>Scope</strong> is where in the lifecycle a problem lives, which is really a statement about the size and reach of the intervention: Org-level change swings like a wrecking ball, broad and hard to aim precisely; Execution-level change swings like a claw hammer, small and local. <strong>Lever</strong> is what kind of fix actually addresses it, and that's a difference in kind, not degree: People, Process, and Tool aren't bigger or smaller versions of each other any more than a hammer is a bigger screwdriver. Getting the size right on the wrong tool still fails. Getting the right tool at the wrong size still causes damage. You need both answers, and they're answered separately.</p>
+    <p>That's the whole framework in one image. <strong>Scope</strong> is where in the lifecycle a problem lives, which is really a statement about the size and reach of the intervention: Org-level change swings like a wrecking ball, broad and hard to aim precisely; Design-level change swings like a sledgehammer across the whole system at once, how the components fit together; Execution-level change swings like a claw hammer, small and local, one component at a time. <strong>Lever</strong> is what kind of fix actually addresses it, and that's a difference in kind, not degree: People, Process, and Tool aren't bigger or smaller versions of each other any more than a hammer is a bigger screwdriver. Getting the size right on the wrong tool still fails. Getting the right tool at the wrong size still causes damage. You need both answers, and they're answered separately.</p>
 
     <div class="pillar-trio" data-reveal>
       <div class="pillar p-people">
@@ -129,14 +129,14 @@
         <div class="pillar-num">Scope</div>
         <div class="pillar-icon"><svg width="32" height="32" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11 2L2 7v8l9 5 9-5V7l-9-5z" stroke="#d1db24" stroke-width="1.6" fill="none"/><circle cx="11" cy="11" r="2.5" fill="#d1db24"/></svg></div>
         <div class="pillar-title">Design</div>
-        <div class="pillar-game-role">How a solution is planned and modeled before anything is built. Gaps here are architectural, not operational.</div>
+        <div class="pillar-game-role">System-level thinking: how the components work together, not any one of them alone. Any problem that can be talked through to a clear solution before a line of code ships.</div>
         <div class="pillar-tag">Where It Lives</div>
       </div>
       <div class="pillar p-tools">
         <div class="pillar-num">Scope</div>
         <div class="pillar-icon"><svg width="32" height="32" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 18l4-8 4 5 3-9 3 12" stroke="#1a3a6a" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <div class="pillar-title">Execution</div>
-        <div class="pillar-game-role">Day-to-day delivery and operations. Problems here show up in the daily grind of shipping and running things.</div>
+        <div class="pillar-game-role">Component-level work: creating, changing, or updating a single piece. Any problem that can only be understood in enough detail once it's being built.</div>
         <div class="pillar-tag">Where It Lives</div>
       </div>
     </div>
@@ -199,31 +199,16 @@
         <div class="tree-branch yes"><span class="tree-branch-label">Yes →</span> It's an <strong>Org</strong> problem, regardless of how it manifests day to day.</div>
       </div>
       <div class="tree-step">
-        <div class="tree-q">2. If not, does it originate in how the solution was planned or modeled before it was built?</div>
+        <div class="tree-q">2. If not, is it a system-level question, how the components need to work together, and can it be talked through to a clear, confident solution?</div>
         <div class="tree-branch yes"><span class="tree-branch-label">Yes →</span> It's a <strong>Design/Architecture</strong> problem.</div>
       </div>
       <div class="tree-step">
-        <div class="tree-q">3. If not, does it show up in day-to-day delivery, operations, or customer-facing work?</div>
+        <div class="tree-q">3. If not, is it a single-component question, creating, changing, or updating one piece, that can only be understood in enough detail once it's actually being built?</div>
         <div class="tree-branch yes"><span class="tree-branch-label">Yes →</span> It's an <strong>Execution/Implementation</strong> problem.</div>
       </div>
     </div>
 
-    <p>This tree is about origin, not symptom. A bug customers hit in production (Execution) might trace back to a design decision made months earlier (Design), which itself traces back to a resourcing call nobody made (Org). Run the tree on the root cause, not the place you first noticed the pain.</p>
-
-    <h2>Decision Tree 3: Bringing Them Together</h2>
-
-    <p>Run the Scope tree, then run the Lever tree within that scope. Before you commit, sanity-check the pairing, because some combinations are unstable on their own.</p>
-
-    <div class="callout warn">
-      <div class="callout-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11 2L1 20h20L11 2z" fill="#e8a030" opacity="0.15"/><path d="M11 2L1 20h20L11 2z" stroke="#e8a030" stroke-width="1.5" stroke-linejoin="round"/><line x1="11" y1="9" x2="11" y2="13.5" stroke="#e8a030" stroke-width="2" stroke-linecap="round"/><circle cx="11" cy="17" r="1.2" fill="#e8a030"/></svg></div>
-      <div class="callout-text">
-        <strong>Org + Tool, no Process:</strong> add Process first, or the tool becomes shelfware nobody uses.<br>
-        <strong>Execution + People, no Tool:</strong> add a Tool to scale whatever gains the new people or training produced.<br>
-        <strong>Design + Process, no People:</strong> assign an owner, because an unaccountable checklist gets skipped.
-      </div>
-    </div>
-
-    <p>If the pairing holds up after that check, you have your answer: a specific Scope x Lever cell, not just a vague sense that "we need better security" or "we need to move faster."</p>
+    <p>This tree is about origin, not symptom. Design and Execution split along two lines at once: altitude (system-level versus one component) and resolvability (can it be talked through, or does it only reveal itself once it's built). If two engineers at a whiteboard can reason about how the components should work together and land on a solution that won't change once someone starts typing, that's Design. If the question only lives inside one component, and the conversation keeps circling because nobody actually knows the answer until it's built, running, and under load, that's Execution: the doing is the only way to surface the detail the problem needs. A production bug can look like sloppy code when the code is actually a faithful implementation of an architecture that never accounted for the failure mode, in which case the bug is a Design problem, not an Execution one. And that gap in the architecture might trace back further still, to a resourcing call nobody made (Org). Run the tree on the root cause, not the place you first noticed the pain.</p>
 
     <h2>Worked Example: AI Security</h2>
 
@@ -264,9 +249,11 @@
 
     <p>None of these fixes is universally "the" answer. If engineers don't know secure prompt patterns, no CI/CD gate will help until that Execution x People gap is closed. If nobody owns AI risk at the leadership level, an eval harness won't fix a governance vacuum, that's an Org x People or Org x Process problem. The framework's value is forcing you to place the problem correctly on both axes before reaching for a fix.</p>
 
+    <p>Worth calling out for a technologist reading this: Org x Tool, "build a unified AI asset inventory platform," is a leadership decision, but it isn't something leadership hands you finished. Design and Execution are how that Org-level Tool decision actually gets answered. Design is the system-level question: how the inventory integrates with existing scanners, CI/CD, and data sources, agreed on before anything is built. Execution is the component-level question: the ingestion scripts, the dashboard, the API, actually written and shipped. And getting the platform to work isn't a Tool problem all the way down. At Design scope you still need an owner for the integration decisions (People) and a process for reviewing them (Process) alongside the diagramming (Tool). At Execution scope you still need engineers who know the domain (People) and a review or testing cadence (Process) alongside the code itself (Tool). One Org-level Tool decision pulls on all three levers again at every scope beneath it, or it doesn't actually ship.</p>
+
     <h2>The Takeaway</h2>
 
-    <p>Before you propose a fix, answer two separate questions: where does this problem live, and what kind of fix does it need. Run the Scope tree and the Lever tree independently, then check the pairing against the three common failure patterns above. The cell you land on is the intervention with the best odds of actually returning something for the effort you put in.</p>
+    <p>Before you propose a fix, answer two separate questions: where does this problem live, and what kind of fix does it need. Run the Scope tree and the Lever tree independently. The cell you land on is the intervention with the best odds of actually returning something for the effort you put in.</p>
 
     <p>Real problems often need more than one cell. The AI security example above touches all nine. But that doesn't mean you should change all nine at once. Every scope or lever you touch simultaneously adds a variable, and every variable makes it harder to tell what actually worked, what didn't, and what broke something else on its way through. Change the Org lever and the Execution lever in the same quarter and a result six months out could be explained by either one, or by their interaction, or by neither.</p>
 
