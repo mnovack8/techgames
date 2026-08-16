@@ -228,12 +228,9 @@ img.hero-poster { position: absolute; inset: 0; width: 100%; height: 100%; objec
 .qb-htp-close { margin-top: 18px; width: 100%; }
 
 #play-now-mobile-notice { display: none; }
-#tutorial-mobile-notice { display: none; }
 @media (max-width: 640px) {
   #play-now-section .invited-banner, #play-now-section .lobby-play-grid { display: none; }
   #play-now-mobile-notice { display: block; text-align: center; color: #1d4ed8; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 16px 20px; font-size: 14px; line-height: 1.5; max-width: 480px; margin: 0 auto; }
-  .lobby-tutorial-cta { display: none !important; }
-  #tutorial-mobile-notice { display: block; text-align: center; color: #1d4ed8; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 12px 18px; font-size: 13px; line-height: 1.5; max-width: 420px; margin: 0 auto 6px; }
   #event-hub-section { display: none; }
 }
 
@@ -1196,6 +1193,15 @@ body.qti-intro-active #qti-intro { display: flex; }
   display: flex; flex-direction: column; gap: 18px;
   box-shadow: 0 24px 64px rgba(0,0,0,0.92);
 }
+@media (max-width: 900px), (max-height: 500px) {
+  /* 100vh on a real phone is the largest possible viewport (address bar
+     hidden) — with the address bar showing, the true visible height is
+     smaller, so content sized off 100vh can run past the real fold on
+     short screens. 100dvh tracks the actual visible viewport instead.
+     Declared after the 100vh rule above as a progressive enhancement —
+     browsers without dvh support ignore this and keep the vh fallback. */
+  #qti-intro-card { max-height: calc(100dvh - 48px); padding: 24px 22px 20px; }
+}
 .qti-header { display: flex; flex-direction: column; gap: 8px; }
 .qti-label { font-size: 10px; font-weight: 700; color: #60a5fa; text-transform: uppercase; letter-spacing: 1.2px; }
 .qti-progress { width: 100%; height: 4px; background: rgba(37,99,235,0.2); border-radius: 4px; overflow: hidden; }
@@ -1368,4 +1374,108 @@ body.qbt-panel-active .qb-main { padding-left: 280px; }
 @media (max-width: 900px) {
   #qbt-panel { top: auto; bottom: 0; left: 0; right: 0; width: auto; height: auto; max-height: 46vh; border-right: none; border-top: 2px solid #2563eb; box-shadow: 0 -4px 24px rgba(0,0,0,0.65); }
   body.qbt-panel-active .qb-board-section { padding-bottom: 46vh; }
+}
+
+/* Short landscape phones (e.g. 812×375): the 900px-width bottom-sheet
+   breakpoint above catches these too (812 < 900), but a bottom sheet there
+   sits over the board rather than beside it. Prefer the normal fixed LEFT
+   sidebar instead — same fix already applied to FuzzNet Labs — collapsible
+   so it can be tucked away entirely if the board still feels tight. */
+@media (max-width: 900px) and (max-height: 500px) {
+  #qbt-panel {
+    top: 68px; left: 0; right: auto; bottom: 0;
+    width: 260px; height: auto; max-height: none;
+    border-right: 2px solid #2563eb; border-top: none;
+    box-shadow: 4px 0 28px rgba(0,0,0,0.7);
+    transition: transform 0.2s ease;
+  }
+  #qbt-panel.collapsed { transform: translateX(-100%); }
+  body.qbt-panel-active .qb-main { padding-left: 260px; }
+  body.qbt-panel-active .qb-board-section { padding-bottom: 0; }
+
+  /* Tab that stays put at the sidebar's edge to expand/collapse it */
+  body.qbt-tut-active #qbt-sidebar-toggle {
+    display: flex; align-items: center; justify-content: center;
+    position: fixed; top: 50%; left: 260px; z-index: 311;
+    width: 22px; height: 44px; margin-top: -22px;
+    background: #2563eb; color: #fff;
+    border: none; border-radius: 0 6px 6px 0;
+    cursor: pointer; font-size: 12px; padding: 0;
+    box-shadow: 2px 0 8px rgba(0,0,0,0.25);
+    transition: left 0.2s ease;
+  }
+  body.qbt-tut-active.qbt-sidebar-collapsed #qbt-sidebar-toggle { left: 0; }
+  body.qbt-sidebar-collapsed .qb-main { padding-left: 0; }
+}
+#qbt-sidebar-toggle { display: none; }
+
+/* Short landscape phones sit above nav.css's 768px hamburger breakpoint, so
+   the full nav wraps to two rows and eats into the game area's assumed
+   header height. Force the compact hamburger nav during the tutorial
+   specifically, where that space is scarce. Mobile-layout only — full
+   desktop size already fits fine and is left untouched. */
+@media (max-height: 500px) {
+  body.qbt-tut-active .nav-hamburger { display: flex; margin-left: auto; order: 1; }
+  body.qbt-tut-active header nav {
+    display: none; width: 100%; flex-direction: column; align-items: stretch;
+    gap: 2px; padding: 6px 0 10px; border-top: 1px solid #1e3a5f; order: 10;
+  }
+  body.qbt-tut-active header nav.nav-open { display: flex; }
+
+  /* The header (logo + padding) actually renders ~68px tall, not the 44px
+     #game.active assumes — invisible on tall desktop screens (masked by
+     overflow:hidden) but eats into the reachable area on short screens. */
+  body.qbt-tut-active #game.active { height: calc(100vh - 68px); }
+  body.qbt-tut-active #game.active { height: calc(100dvh - 68px); } /* progressive enhancement */
+
+  /* .qb-main's own <=900px rule (above) stacks board-above-panel into one
+     tall scrolling column — fine on a tall portrait phone, but on a short
+     landscape screen the panel's own content alone exceeds the available
+     height, so the board (its flex:1 sibling) gets squeezed to nothing
+     before ever getting a share of the space. Restore the desktop row
+     layout instead, so board and panel each get independent width and
+     independent scroll rather than competing in one column. */
+  body.qbt-tut-active .qb-main { flex-direction: row; overflow: hidden; }
+  body.qbt-tut-active .qb-board-section { flex: 1 1 46%; min-width: 0; }
+  body.qbt-tut-active .qb-panel {
+    width: auto; flex: 1 1 50%; min-width: 180px;
+    border-left: 1px solid #e2e8f0; border-top: none;
+  }
+  /* .qb-board's own min-width/min-height:280px (base rule) is a comfortable
+     floor on desktop/tablet, where there's always more than that to give —
+     but it silently overrides sizeBoard()'s own (correctly smaller) inline
+     px size here, forcing the board to overflow its actual available space
+     in every direction instead of fitting it. sizeBoard() already floors
+     itself at 140px, so this can safely drop all the way down. */
+  body.qbt-tut-active .qb-board { min-width: 0; min-height: 0; }
+}
+
+/* `body:has(#game.active){overflow:hidden}` (above, min-width:641px) locks
+   page scroll — fine on tall screens where #game's own fixed height already
+   fits, but on short landscape screens content can still run past the fold
+   with nothing left to scroll it into view. Unlock page scroll there. */
+@media (max-height: 500px) {
+  body:has(#game.active) { overflow: visible; height: auto; }
+}
+
+/* ===== ROTATE-DEVICE PROMPT ===== */
+/* Shown only while the tutorial is mounted, on phones/small tablets held in
+   portrait — the board is much more legible with landscape's extra width.
+   The tutorial itself keeps running behind it; rotating dismisses it
+   instantly. */
+#qbt-tut-rotate-notice {
+  display: none;
+  position: fixed; inset: 0; z-index: 650;
+  flex-direction: column; align-items: center; justify-content: center;
+  gap: 16px; text-align: center; padding: 24px;
+  background: rgba(5,10,25,0.97); color: #facc15;
+}
+#qbt-tut-rotate-notice svg { animation: qbt-tut-rotate-hint 1.6s ease-in-out infinite; }
+#qbt-tut-rotate-notice p { font-size: 15px; font-weight: 700; color: #f1f5f9; line-height: 1.5; margin: 0; }
+@keyframes qbt-tut-rotate-hint {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(-90deg); }
+}
+@media (max-width: 900px) and (orientation: portrait) {
+  body.qbt-tut-active #qbt-tut-rotate-notice { display: flex; }
 }

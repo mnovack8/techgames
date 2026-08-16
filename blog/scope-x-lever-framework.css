@@ -1,0 +1,146 @@
+/* Page-specific styles */
+
+/* ===== HERO THEME ===== */
+.article-hero { background: #fefce8; }
+.article-tag-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px; }
+.article-hero-sub { color: #555; }
+.article-meta-date, .article-meta-read { color: #666; }
+.article-cta { background: #fefce8; border: 2px solid var(--brand-green-dark); }
+.article-cta p { color: #444; }
+.article-cta a.secondary { color: var(--brand-green-dark); border: 2px solid var(--brand-green); font-weight: 800; }
+
+/* Heading/CTA text darkened to read on the pale hero/CTA background */
+.article-hero h1 { color: #1a1a1a; }
+.article-hero h1 em { color: var(--brand-green-dark); }
+.article-cta h3 { color: #1a1a1a; }
+
+/* ===== SCOPE / LEVER PILLARS ===== */
+.pillar-trio {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 2px solid #dde8c8;
+  margin: 24px 0;
+}
+.pillar {
+  padding: 26px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+  border-right: 2px solid #dde8c8;
+}
+.pillar:last-child { border-right: none; }
+.pillar-num {
+  font-size: 10px; font-weight: 900; text-transform: uppercase;
+  letter-spacing: 2px; color: #666;
+}
+.pillar-icon { font-size: 32px; }
+.pillar-title { font-size: 18px; font-weight: 900; }
+.pillar-game-role {
+  font-size: 12px; font-weight: 700; color: #666;
+  line-height: 1.45; padding-top: 4px;
+}
+.pillar-tag {
+  font-size: 10px; font-weight: 900; text-transform: uppercase;
+  letter-spacing: 1.5px;
+  padding: 3px 10px; border-radius: 5px; margin-top: 4px;
+}
+.pillar.p-people  { background: #eef5e8; }
+.pillar.p-people  .pillar-title { color: #2a7a0a; }
+.pillar.p-people  .pillar-tag   { background: #ffffff; color: var(--brand-green-dark); border: 1px solid var(--brand-green); }
+.pillar.p-process { background: #fefce8; }
+.pillar.p-process .pillar-title { color: #6a7a00; }
+.pillar.p-process .pillar-tag   { background: #ffffff; color: #6a7a00; border: 1px solid #8a8a00; }
+.pillar.p-tools   { background: #ffffff; }
+.pillar.p-tools   .pillar-title { color: #3a3a8c; }
+.pillar.p-tools   .pillar-tag   { background: #fefce8; color: #3a3a8c; border: 1px solid #5a5ab0; }
+@media (max-width: 600px) {
+  .pillar-trio { grid-template-columns: 1fr; }
+  .pillar { border-right: none; border-bottom: 2px solid #dde8c8; }
+  .pillar:last-child { border-bottom: none; }
+}
+
+/* ===== DECISION TREES ===== */
+.tree-block {
+  margin: 28px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.tree-step {
+  background: #fff;
+  border: 2px solid #dde8c8;
+  border-radius: 12px;
+  padding: 18px 22px;
+}
+.tree-q {
+  font-size: 15px;
+  font-weight: 900;
+  color: #1a2a0a;
+  margin-bottom: 10px;
+  line-height: 1.45;
+}
+.tree-branch {
+  font-size: 13px;
+  color: #444;
+  line-height: 1.6;
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin-top: 6px;
+}
+.tree-branch.yes { background: #eef5e8; }
+.tree-branch.no  { background: #fefce8; }
+.tree-branch-label {
+  font-weight: 900;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 1px;
+  margin-right: 6px;
+}
+.tree-branch.yes .tree-branch-label { color: var(--brand-green-dark); }
+.tree-branch.no  .tree-branch-label { color: #8a7a00; }
+
+/* ===== 3x3 GRID TABLE ===== */
+.grid-table-wrap {
+  margin: 28px 0;
+  overflow-x: auto;
+}
+.grid-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 2px solid #dde8c8;
+}
+.grid-table th {
+  background: #eef5e8;
+  color: var(--brand-green-dark);
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  padding: 12px 14px;
+  text-align: left;
+}
+.grid-table td {
+  padding: 14px 16px;
+  border-top: 1px solid #e8f0d8;
+  color: #333;
+  line-height: 1.55;
+  vertical-align: top;
+}
+.grid-table td.row-label {
+  font-weight: 900;
+  color: #1a2a0a;
+  background: #fefce8;
+  white-space: nowrap;
+}
+
+/* Callout with multi-line list content */
+.callout.warn .callout-text strong { color: #6a5a10; }

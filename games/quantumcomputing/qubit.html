@@ -369,12 +369,25 @@
 <div id="qbt-panel">
   <!-- INTERACTIVE_TUTORIAL_HTML -->
 </div>
+<!-- Short-landscape-phone layout only (see qubit.css): expand/collapse tab
+     for the sidebar, so it never has to permanently cover part of the board. -->
+<button id="qbt-sidebar-toggle" onclick="toggleQbtSidebar()" aria-label="Toggle tutorial sidebar" title="Toggle tutorial sidebar">›</button>
 
 <!-- ===== TUTORIAL LOADING OVERLAY ===== -->
 <div id="qbt-loading">
   <div class="qbt-loading-spinner"></div>
   <div class="qbt-loading-text">Setting up tutorial game&hellip;</div>
   <div class="qbt-loading-sub">Starting a practice match vs 2 bots</div>
+</div>
+
+<!-- Shown only while the tutorial is active, on narrow screens held in portrait -->
+<div id="qbt-tut-rotate-notice">
+  <svg width="52" height="52" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="7" y="2" width="10" height="16" rx="2" stroke="currentColor" stroke-width="1.6"/>
+    <path d="M12 21a8 8 0 0 0 7.6-5.5M12 21a8 8 0 0 1-7.6-5.5M12 21v-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M19.5 15.5 22 16.5l-1.4 2.3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  <p>Rotate your device to landscape<br>for the best tutorial experience.</p>
 </div>
 
 <script>
@@ -944,6 +957,23 @@ function initCellZoom() {
     renderCellZoom(Number(cellEl.dataset.decimal), e.clientX, e.clientY);
   });
   wrap.addEventListener('mouseleave', function(){ zoom.style.display = 'none'; });
+
+  // Touch: there's no hover state to fall back on, so tapping a cell reveals
+  // the same zoomed preview pinned near the tap. Deliberately not
+  // preventDefault()'d — the tap's normal click still goes through right
+  // after, so on an actionable cell (e.g. the "Apply a Gate" tutorial step)
+  // the player both sees the value AND places their gate in one tap.
+  wrap.addEventListener('touchstart', function(e){
+    var t = e.touches[0];
+    if (!t) return;
+    var el = document.elementFromPoint(t.clientX, t.clientY);
+    var cellEl = el && el.closest ? el.closest('.qb-cell') : null;
+    if (cellEl) renderCellZoom(Number(cellEl.dataset.decimal), t.clientX, t.clientY);
+  }, { passive: true });
+  // Tapping anywhere outside the board dismisses a still-open preview.
+  document.addEventListener('touchstart', function(e){
+    if (!wrap.contains(e.target)) zoom.style.display = 'none';
+  }, { passive: true });
 }
 
 function renderCellZoom(d, clientX, clientY) {
@@ -1009,7 +1039,13 @@ function sizeBoard() {
   // leaves deliberate headroom so the board + headers reliably fit within
   // the viewport with no vertical scroll, instead of sizing right up to the
   // edge and tipping over into a scrollbar on the next line of text.
-  var side = Math.max(220, Math.min(availW, availH) * 0.94);
+  // The 220px floor is a comfortable minimum on desktop/tablet, where the
+  // wrap always has more than that to give — but on a short landscape
+  // phone's tutorial sidebar layout the wrap can genuinely be smaller than
+  // 220px on a side, and flooring to 220 there forced the board to overflow
+  // its own container in every direction instead of actually fitting it.
+  var fitSide = Math.min(availW, availH) * 0.94;
+  var side = fitSide < 220 ? Math.max(140, fitSide) : fitSide;
   board.style.width  = side + 'px';
   board.style.height = side + 'px';
   if (colHeads) colHeads.style.width  = side + 'px';
@@ -2000,8 +2036,35 @@ function startTutorial() {
   qtiPhase = 'select';
   qtiSelectError = false;
   document.body.classList.add('qti-intro-active');
+  // Single stable hook spanning every tutorial sub-phase (intro/loading/panel
+  // all toggle their own classes independently) — mobile-only CSS and the
+  // landscape/fullscreen JS below key off this one instead of all three.
+  document.body.classList.add('qbt-tut-active');
+  requestTutorialLandscape();
+  enterTutorialFullscreen();
   qtiRenderSelect();
   try { history.replaceState(null, '', QBT_BASE_PATH + '/tutorial'); } catch(_) {}
+}
+
+// Collapse/expand the tutorial sidebar (short-landscape-phone layout only —
+// see qubit.css). Collapsing hides the panel and gives the board the full
+// width; the toggle tab stays put at the screen edge either way.
+function toggleQbtSidebar() {
+  var collapsed = document.body.classList.toggle('qbt-sidebar-collapsed');
+  var panel = document.getElementById('qbt-panel');
+  var btn = document.getElementById('qbt-sidebar-toggle');
+  if (panel) panel.classList.toggle('collapsed', collapsed);
+  if (btn) {
+    btn.textContent = collapsed ? '‹' : '›';
+    btn.title = collapsed ? 'Show tutorial sidebar' : 'Hide tutorial sidebar';
+  }
+  // Collapsing/expanding changes how much width .qb-board-wrap actually has
+  // (the transition itself is animated, but the board's own inline pixel
+  // size is static until recomputed) — wait for the 0.2s CSS transition to
+  // finish, then let sizeBoard() catch up to the new available space.
+  if (typeof boardReady !== 'undefined' && boardReady) {
+    setTimeout(function () { sizeBoard(); }, 220);
+  }
 }
 
 function qtiRenderIntro() {
@@ -2270,6 +2333,8 @@ function qbtTutCheckAdvance(prev, next) {
 function endTutorial() {
   qbtGameExit();
   qtiExit();
+  document.body.classList.remove('qbt-tut-active', 'qbt-sidebar-collapsed');
+  exitTutorialFullscreen();
   try { history.replaceState(null, '', QBT_BASE_PATH); } catch (_) {}
 }
 
@@ -2370,6 +2435,11 @@ function handleMsg(msg) {
         document.body.classList.remove('qbt-loading-active');
         document.body.classList.add('qbt-panel-active');
         qbtRenderGame();
+        // The sidebar becoming active reflows .qb-board-wrap's available
+        // space (row/width proportions change on short landscape phones —
+        // see qubit.css); sizeBoard() only otherwise runs on window resize,
+        // so without this it keeps sizing against the pre-sidebar layout.
+        if (boardReady) requestAnimationFrame(sizeBoard);
       } else {
         document.getElementById('qb-comms-modal').style.display = 'flex';
       }
@@ -2479,25 +2549,52 @@ LobbyUI.init({
 
 hub.connect();
 
-// Interactive tutorial isn't supported on small/mobile screens — mirror the
-// #play-now-mobile-notice treatment: hide the CTA, show an explainer instead.
-(function () {
-  var cta = document.querySelector('.lobby-tutorial-cta');
-  if (cta) {
-    var notice = document.createElement('p');
-    notice.id = 'tutorial-mobile-notice';
-    notice.textContent = 'The interactive tutorial is only available on larger screens. Switch to a tablet, laptop, or desktop to try it.';
-    cta.insertAdjacentElement('beforebegin', notice);
-  }
-})();
+// Best-effort: nudge mobile browsers toward landscape once the tutorial
+// mounts. Unsupported/blocked browsers just fall back to the CSS rotate
+// prompt (#qbt-tut-rotate-notice), so this is a progressive enhancement only.
+function requestTutorialLandscape() {
+  try {
+    if (screen.orientation && screen.orientation.lock) {
+      screen.orientation.lock('landscape').catch(function () {});
+    }
+  } catch (_) {}
+}
+
+function isMobileTutorialViewport() {
+  return window.matchMedia('(max-width: 900px), (max-height: 500px)').matches;
+}
+
+// Best-effort: go fullscreen on mobile-sized screens so the browser's own
+// address bar stops eating into the already-tight vertical space, then
+// drop back out when the tutorial ends. Desktop is untouched — going
+// fullscreen unprompted there would just be surprising, not helpful.
+// NOTE: iOS Safari does not support the Fullscreen API for ordinary page
+// content (only <video>), so this silently no-ops there; the CSS dvh sizing
+// is what actually keeps things reachable on those devices.
+function enterTutorialFullscreen() {
+  try {
+    if (!isMobileTutorialViewport()) return;
+    var el = document.documentElement;
+    var request = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen || el.msRequestFullscreen;
+    if (!request) return;
+    var p = request.call(el);
+    if (p && p.catch) p.catch(function () {});
+  } catch (_) {}
+}
+
+function exitTutorialFullscreen() {
+  try {
+    var isFs = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
+    if (!isFs) return;
+    var exit = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen;
+    if (!exit) return;
+    var p = exit.call(document);
+    if (p && p.catch) p.catch(function () {});
+  } catch (_) {}
+}
 
 // Auto-start tutorial via ?tutorial=1 OR /tutorial path — start ASAP, hide page until ready
 if (urlParams.get('tutorial') === '1' || /\/tutorial\/?$/.test(location.pathname)) {
-  if (window.matchMedia('(max-width: 640px)').matches) {
-    // Mobile: bounce back to the lobby instead of mounting the tutorial overlay.
-    try { history.replaceState(null, '', QB_BASE_PATH); } catch (_) {}
-    document.documentElement.classList.remove('tutorial-loading');
-  } else {
   var __startTut = function(){
     try { startTutorial(); } catch (e) {}
     // Reveal the page now that the tutorial overlay is mounted on top.
@@ -2509,7 +2606,6 @@ if (urlParams.get('tutorial') === '1' || /\/tutorial\/?$/.test(location.pathname
     document.addEventListener('DOMContentLoaded', __startTut, { once: true });
   } else {
     __startTut();
-  }
   }
 }
 </script>
