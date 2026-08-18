@@ -494,6 +494,23 @@ body.cft-loading-active #cft-loading{display:flex;}
   }
   body.cft-tut-active #side-panel .sp-title { font-size: 11px; }
   body.cft-tut-active #side-panel .action-btns { gap: 4px; }
+  /* #sp-scores-section and .cf-log (base rules, above) are each their own
+     nested overflow:auto region sized by leftover flex space — on a short
+     screen that leftover space collapses to almost nothing, so the score
+     rows and log entries were stuck behind their own tiny internal
+     scrollbar, on top of #side-panel's own outer scrollbar. Let every
+     section size to its natural content instead, so #side-panel's single
+     outer scroll reveals all of it — same effect as scrolling one long
+     page instead of hunting for which inner box scrolls. */
+  body.cft-tut-active #sp-scores-section {
+    flex: none;
+    overflow-y: visible;
+    min-height: auto;
+  }
+  body.cft-tut-active .cf-log {
+    max-height: none;
+    overflow-y: visible;
+  }
 
   /* #cft-panel (tutorial instructions) shrinks to leave more room for the
      canvas + #side-panel — still enough to read, and collapsible (see
