@@ -162,6 +162,17 @@
 <div id="cft-panel">
   <!-- INTERACTIVE_TUTORIAL_HTML -->
 </div>
+<button id="cft-tut-sidebar-toggle" onclick="toggleTutSidebar()" aria-label="Toggle tutorial sidebar" title="Toggle tutorial sidebar">›</button>
+
+<!-- Shown only while the tutorial is active, on narrow screens held in portrait -->
+<div id="cft-tut-rotate-notice">
+  <svg width="52" height="52" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="7" y="2" width="10" height="16" rx="2" stroke="currentColor" stroke-width="1.6"/>
+    <path d="M12 21a8 8 0 0 0 7.6-5.5M12 21a8 8 0 0 1-7.6-5.5M12 21v-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M19.5 15.5 22 16.5l-1.4 2.3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  <p>Rotate your device to landscape<br>for the best tutorial experience.</p>
+</div>
 
 <!-- ===== INFO OVERLAY ===== -->
 <div id="info-overlay" onclick="closeInfo(event)">
@@ -1657,6 +1668,12 @@ function startTutorial(){
   cftSectionError = false;
   cftActive = true;
   document.body.classList.add('cft-intro-active');
+  // Single stable hook spanning every tutorial sub-phase (intro/loading/panel
+  // all toggle their own classes independently) — mobile-only CSS and the
+  // landscape/fullscreen JS below key off this one instead of all three.
+  document.body.classList.add('cft-tut-active');
+  requestTutorialLandscape();
+  enterTutorialFullscreen();
   cftRenderIntro();
   try { history.replaceState(null, '', CF_BASE_PATH + '/tutorial'); } catch(_){}
 }
@@ -1758,6 +1775,8 @@ function cftIntroNext(){
 function cftIntroExit(){
   document.body.classList.remove('cft-intro-active');
   document.body.classList.remove('cft-loading-active');
+  document.body.classList.remove('cft-tut-active', 'cft-sidebar-collapsed');
+  exitTutorialFullscreen();
   cftTutMode = false;
   cftTutPendingStart = false;
   cftActive = false;
@@ -1812,6 +1831,8 @@ function cftGameExit(){
   document.querySelectorAll('.cft-glow').forEach(el=>el.classList.remove('cft-glow'));
   document.body.classList.remove('cft-panel-active');
   document.body.classList.remove('cft-loading-active');
+  document.body.classList.remove('cft-tut-active', 'cft-sidebar-collapsed');
+  exitTutorialFullscreen();
   cftTutMode = false;
   cftTutPendingStart = false;
   cftActive = false;
@@ -1854,6 +1875,20 @@ function cftTutCheckAdvance(state){
 
 function endTutorial(){ cftGameExit(); cftIntroExit(); try { history.replaceState(null, '', CF_BASE_PATH); } catch(_){} }
 
+// Collapse/expand the tutorial sidebar (short-landscape-phone layout only —
+// see clusterflick.css). Collapsing hides the panel and gives the board the
+// full width; the toggle tab stays put at the screen edge either way.
+function toggleTutSidebar() {
+  const collapsed = document.body.classList.toggle('cft-sidebar-collapsed');
+  const panel = document.getElementById('cft-panel');
+  const btn = document.getElementById('cft-tut-sidebar-toggle');
+  if (panel) panel.classList.toggle('collapsed', collapsed);
+  if (btn) {
+    btn.textContent = collapsed ? '‹' : '›';
+    btn.title = collapsed ? 'Show tutorial sidebar' : 'Hide tutorial sidebar';
+  }
+}
+
 // ==================== INFO OVERLAY ====================
 function showInfo(key){
   const infos={
@@ -1868,17 +1903,49 @@ function showInfo(key){
 }
 function closeInfo(e){if(!e||e.target===document.getElementById('info-overlay'))document.getElementById('info-overlay').classList.remove('show');}
 
-// Interactive tutorial isn't supported on small/mobile screens — mirror the
-// #play-now-mobile-notice treatment: hide the CTA, show an explainer instead.
-(function () {
-  var cta = document.querySelector('.lobby-tutorial-cta');
-  if (cta) {
-    var notice = document.createElement('p');
-    notice.id = 'tutorial-mobile-notice';
-    notice.textContent = 'The interactive tutorial is only available on larger screens. Switch to a tablet, laptop, or desktop to try it.';
-    cta.insertAdjacentElement('beforebegin', notice);
-  }
-})();
+// Best-effort: nudge mobile browsers toward landscape once the tutorial
+// mounts. Unsupported/blocked browsers just fall back to the CSS rotate
+// prompt (#cft-tut-rotate-notice), so this is a progressive enhancement only.
+function requestTutorialLandscape() {
+  try {
+    if (screen.orientation && screen.orientation.lock) {
+      screen.orientation.lock('landscape').catch(function () {});
+    }
+  } catch (_) {}
+}
+
+function isMobileTutorialViewport() {
+  return window.matchMedia('(max-width: 900px), (max-height: 500px)').matches;
+}
+
+// Best-effort: go fullscreen on mobile-sized screens so the browser's own
+// address bar stops eating into the already-tight vertical space, then
+// drop back out when the tutorial ends. Desktop is untouched — going
+// fullscreen unprompted there would just be surprising, not helpful.
+// NOTE: iOS Safari does not support the Fullscreen API for ordinary page
+// content (only <video>), so this silently no-ops there; the CSS dvh sizing
+// is what actually keeps things reachable on those devices.
+function enterTutorialFullscreen() {
+  try {
+    if (!isMobileTutorialViewport()) return;
+    var el = document.documentElement;
+    var request = el.requestFullscreen || el.webkitRequestFullscreen || el.mozRequestFullScreen || el.msRequestFullscreen;
+    if (!request) return;
+    var p = request.call(el);
+    if (p && p.catch) p.catch(function () {});
+  } catch (_) {}
+}
+
+function exitTutorialFullscreen() {
+  try {
+    var isFs = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
+    if (!isFs) return;
+    var exit = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen;
+    if (!exit) return;
+    var p = exit.call(document);
+    if (p && p.catch) p.catch(function () {});
+  } catch (_) {}
+}
 
 // ==================== SCREEN MANAGEMENT ====================
 const CF_BASE_PATH = '/ai/knn/clusterflick';
@@ -1939,12 +2006,7 @@ window.addEventListener('DOMContentLoaded',()=>{
           checkRoom();
         }
         if (params.get('tutorial') === '1' || /\/tutorial\/?$/.test(location.pathname)) {
-          if (window.matchMedia('(max-width: 780px)').matches) {
-            // Mobile: bounce back to the lobby instead of mounting the tutorial overlay.
-            try { history.replaceState(null, '', CF_BASE_PATH); } catch (_) {}
-          } else {
-            startTutorial();
-          }
+          startTutorial();
         }
         // Event Hub: restore prior organizer name + tables from localStorage
         const savedName = localStorage.getItem('clusterflick_event_name');
