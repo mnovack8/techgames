@@ -341,7 +341,14 @@ function canvasScale() {
 function toCanvasXY(e) {
   const rect = canvas.getBoundingClientRect();
   const s = canvasScale();
-  if(e.touches) return {x:(e.touches[0].clientX-rect.left)*s,y:(e.touches[0].clientY-rect.top)*s};
+  // On touchend/touchcancel, e.touches is already empty (finger lifted) —
+  // the release point only exists in e.changedTouches. Reading e.touches[0]
+  // there was throwing (Cannot read properties of undefined), silently
+  // aborting onPointerUp before it ever sent the flick action: the drag
+  // preview (touchmove, where e.touches[0] is valid) worked fine, but
+  // releasing did nothing.
+  const touch = (e.touches && e.touches[0]) || (e.changedTouches && e.changedTouches[0]);
+  if (touch) return {x:(touch.clientX-rect.left)*s,y:(touch.clientY-rect.top)*s};
   return {x:(e.clientX-rect.left)*s,y:(e.clientY-rect.top)*s};
 }
 
