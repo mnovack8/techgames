@@ -210,6 +210,10 @@ img.hero-poster { position: absolute; inset: 0; width: 100%; height: 100%; objec
 .cancel-btns button{padding:10px 22px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;border:none;}
 #btn-confirm-cancel{background:#f87171;color:#fff;}
 #btn-dismiss-cancel{background:rgba(255,255,255,0.08);color:#9aad7a;}
+#drop-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:200;align-items:center;justify-content:center;}
+#drop-modal.show{display:flex;}
+#drop-modal .cancel-btns button:first-child{background:#f87171;color:#fff;}
+#drop-modal .cancel-btns button:last-child{background:rgba(255,255,255,0.08);color:#9aad7a;}
 .game-body{display:flex;flex:1;overflow:hidden;}
 #canvas-wrap{flex:1;display:flex;align-items:center;justify-content:center;padding:4px;min-width:0;position:relative;}
 #game-canvas{max-width:100%;max-height:100%;cursor:crosshair;touch-action:none;display:block;}
@@ -230,6 +234,8 @@ img.hero-poster { position: absolute; inset: 0; width: 100%; height: 100%; objec
 .psr-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
 .psr-name{font-size:12px;font-weight:800;color:#a8c96a;flex:1;}
 .psr-badge{font-size:10px;color:#d1db24;font-weight:700;}
+.drop-player-btn{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;background:rgba(255,255,255,0.08);color:#9aad7a;font-size:9px;font-weight:700;line-height:1;cursor:pointer;flex-shrink:0;}
+.drop-player-btn:hover{background:#f87171;color:#fff;}
 .animal-bars{display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;}
 .animal-bar-wrap{display:flex;flex-direction:column;align-items:center;gap:2px;}
 .animal-label{font-size:9px;color:#3a6a0a;font-weight:700;letter-spacing:0.3px;line-height:1;}

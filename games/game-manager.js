@@ -303,7 +303,20 @@ const GAME_REGISTRY = {
     },
     broadcastState(room)           { qbBroadcastState(room); },
     onRejoin(room)                 { qbBroadcastState(room); },
-    onDisconnect(room)             { qbBroadcastState(room); },
+    onDisconnect(room, playerIdx) {
+      const gs = room.qbState;
+      // If this seat just became a bot while a question was awaiting their
+      // answer, auto-answer immediately — a bot never sends qb_answer on its
+      // own, so without this the game would stall forever.
+      if (gs && !gs.gameOver && gs.phase === 'awaiting_answer'
+          && gs.pendingQuestion && gs.pendingQuestion.targetIdx === playerIdx
+          && room.players[playerIdx]?.isBot) {
+        qbHandleAction(room, playerIdx, { action: 'qb_answer', answer: Math.random() < 0.5 });
+        return;
+      }
+      qbBroadcastState(room);
+      qbMaybeScheduleBotTurn(room);
+    },
     isGameOver(room) { return !!(room.qbState && room.qbState.gameOver); },
   },
 };

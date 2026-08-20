@@ -254,6 +254,18 @@
   </div>
 </div>
 
+<!-- Drop player confirmation modal -->
+<div class="cancel-modal-overlay" id="drop-modal-overlay">
+  <div class="cancel-modal">
+    <h3 id="drop-modal-title">Remove Player?</h3>
+    <p id="drop-modal-text">This player will be removed from the game and replaced with a bot for the rest of the session. Are you sure?</p>
+    <div class="cancel-modal-actions">
+      <button class="btn-yes" id="drop-modal-yes" onclick="confirmDropPlayer()">Yes, Remove</button>
+      <button class="btn-no" onclick="hideDropModal()">No, Keep Playing</button>
+    </div>
+  </div>
+</div>
+
 <!-- Warning / confirmation modal (overhand, no targets) -->
 <div class="cancel-modal-overlay" id="warn-modal-overlay">
   <div class="cancel-modal">
@@ -1175,6 +1187,29 @@ function confirmCancelGame() {
   showScreen('lobby');
 }
 
+let pendingDropIdx = -1;
+function showDropModal(idx) {
+  if (!gameState || !gameState.players[idx]) return;
+  pendingDropIdx = idx;
+  const isSelf = !isObserver && idx === myId;
+  const name = gameState.players[idx].name;
+  document.getElementById('drop-modal-title').textContent = isSelf ? 'Leave the Game?' : 'Remove Player?';
+  document.getElementById('drop-modal-text').textContent = isSelf
+    ? 'You will be removed from the game and replaced with a bot for the rest of the session. Are you sure?'
+    : name + ' will be removed from the game and replaced with a bot for the rest of the session. Are you sure?';
+  document.getElementById('drop-modal-yes').textContent = isSelf ? 'Yes, Leave' : 'Yes, Remove';
+  document.getElementById('drop-modal-overlay').classList.add('open');
+}
+function hideDropModal() {
+  pendingDropIdx = -1;
+  document.getElementById('drop-modal-overlay').classList.remove('open');
+}
+function confirmDropPlayer() {
+  if (pendingDropIdx === -1) return;
+  send({ type: 'drop_player', playerIdx: pendingDropIdx });
+  hideDropModal();
+}
+
 let _warnModalOnConfirm = null;
 function showWarnModal(iconHtml, title, body, confirmLabel, onConfirm) {
   document.getElementById('warn-modal-icon').innerHTML = iconHtml;
@@ -1365,6 +1400,28 @@ function handleMsg(msg) {
       }
       break;
     }
+    case 'player_dropped': {
+      if (typeof msg.newHostIdx === 'number' && !isObserver && myId === msg.newHostIdx) isHost = true;
+      const verb = msg.self ? 'left the game and was replaced with a bot' : 'was removed by the host and replaced with a bot';
+      showImpactAlert(`<strong>${msg.name}</strong> ${verb}.`, 6000);
+      break;
+    }
+    case 'dropped_from_game':
+      sessionStorage.removeItem(SESSION_KEY);
+      sessionStorage.removeItem(OBS_SESSION_KEY);
+      pendingObsName = '';
+      roomCode = null; myId = null; myObserverIdx = -1; gameState = null; isHost = false; isObserver = false;
+      document.getElementById('htp-btn').style.display = 'none';
+      document.getElementById('btn-cancel-game').style.display = 'none';
+      document.getElementById('observer-banner').style.display = 'none';
+      document.body.classList.remove('observer-active');
+      hideDropModal();
+      history.replaceState({}, '', '/cybersecurity/byteclub');
+      showScreen('lobby');
+      document.getElementById('join-error').textContent = msg.self
+        ? 'You left the game — a bot took over your seat.'
+        : 'The host removed you from the game.';
+      break;
     case 'left_room':
       sessionStorage.removeItem(SESSION_KEY);
       sessionStorage.removeItem(OBS_SESSION_KEY);
@@ -1688,6 +1745,7 @@ function renderObserverGame(gs) {
         <div class="opp-color-dot" style="background:${COLOR_INFO[pl.color]?.hex||'#888'}"></div>
         <span class="opp-name">${pl.name}</span>
         <span class="opp-hand-count"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="18" height="18" rx="3"/><line x1="3" y1="9" x2="21" y2="9"/></svg> ${pl.handCount}</span>
+        ${isHost && !pl.isBot ? `<span class="drop-player-btn" title="Remove ${pl.name} (replace with bot)" onclick="event.stopPropagation();showDropModal(${i})">✕</span>` : ''}
         ${isProtected ? '<span class="opp-protected-badge"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L4 6v6c0 5.5 3.5 10.7 8 12 4.5-1.3 8-6.5 8-12V6L12 2z"/></svg> Protected</span>' : ''}
         ${isInstallBlocked ? '<span class="opp-blocked-badge"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9"/><line x1="6" y1="6" x2="18" y2="18"/></svg> No Defend</span>' : ''}
       </div>
@@ -1912,6 +1970,7 @@ function renderOpponents(gs) {
           <div class="opp-color-dot" style="background:${COLOR_INFO[pl.color]?.hex||'#888'}"></div>
           <span class="opp-name">${pl.name}</span>
           <span class="self-you-label">YOU</span>
+          ${!isObserver && !pl.isBot ? `<span class="drop-player-btn" title="Leave game (replace with bot)" onclick="event.stopPropagation();showDropModal(${i})">✕</span>` : ''}
           ${isProtected ? '<span class="opp-protected-badge"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L4 6v6c0 5.5 3.5 10.7 8 12 4.5-1.3 8-6.5 8-12V6L12 2z"/></svg> Protected</span>' : ''}
           ${isInstallBlocked ? '<span class="opp-blocked-badge"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9"/><line x1="6" y1="6" x2="18" y2="18"/></svg> No Defend</span>' : ''}
         </div>
@@ -1955,6 +2014,7 @@ function renderOpponents(gs) {
           <div class="opp-color-dot" style="background:${COLOR_INFO[pl.color]?.hex||'#888'}"></div>
           <span class="opp-name">${pl.name}</span>
           <span class="opp-hand-count"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><rect x="3" y="3" width="18" height="18" rx="3"/><line x1="3" y1="9" x2="21" y2="9"/></svg> ${pl.handCount}</span>
+          ${isHost && !pl.isBot ? `<span class="drop-player-btn" title="Remove ${pl.name} (replace with bot)" onclick="event.stopPropagation();showDropModal(${i})">✕</span>` : ''}
           ${isProtected ? '<span class="opp-protected-badge"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L4 6v6c0 5.5 3.5 10.7 8 12 4.5-1.3 8-6.5 8-12V6L12 2z"/></svg> Protected</span>' : ''}
           ${isInstallBlocked ? '<span class="opp-blocked-badge"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9"/><line x1="6" y1="6" x2="18" y2="18"/></svg> No Defend</span>' : ''}
         </div>

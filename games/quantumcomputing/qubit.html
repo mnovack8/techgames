@@ -107,6 +107,18 @@
     </div>
   </div>
 
+  <!-- DROP PLAYER MODAL -->
+  <div id="qb-drop-modal" class="qb-modal-overlay" style="display:none">
+    <div class="qb-modal">
+      <h3 id="qb-drop-modal-title">Remove Player?</h3>
+      <p id="qb-drop-modal-text">This player will be removed from the game and replaced with a bot for the rest of the session.</p>
+      <div class="qb-modal-btns">
+        <button class="qb-btn qb-btn-danger" id="qb-drop-modal-yes" onclick="confirmDropPlayer()">Yes, Remove</button>
+        <button class="qb-btn" onclick="hideDropModal()">No, Keep Playing</button>
+      </div>
+    </div>
+  </div>
+
   <!-- COMMUNICATION RULES (shown once, to everyone, right as the game begins —
        no backdrop-dismiss, must be explicitly closed to proceed) -->
   <div id="qb-comms-modal" class="qb-modal-overlay" style="display:none">
@@ -879,6 +891,30 @@ function confirmCancel() {
   hideCancelModal();
 }
 
+// ==================== DROP PLAYER ====================
+var pendingDropIdx = -1;
+function showDropModal(idx) {
+  if (!gs || !gs.players[idx]) return;
+  pendingDropIdx = idx;
+  var isSelf = !isObserver && idx === myIdx;
+  var name = gs.players[idx].name;
+  document.getElementById('qb-drop-modal-title').textContent = isSelf ? 'Leave the Game?' : 'Remove Player?';
+  document.getElementById('qb-drop-modal-text').textContent = isSelf
+    ? 'You will be removed from the game and replaced with a bot for the rest of the session. Are you sure?'
+    : name + ' will be removed from the game and replaced with a bot for the rest of the session. Are you sure?';
+  document.getElementById('qb-drop-modal-yes').textContent = isSelf ? 'Yes, Leave' : 'Yes, Remove';
+  document.getElementById('qb-drop-modal').style.display = 'flex';
+}
+function hideDropModal() {
+  pendingDropIdx = -1;
+  document.getElementById('qb-drop-modal').style.display = 'none';
+}
+function confirmDropPlayer() {
+  if (pendingDropIdx === -1) return;
+  send({ type: 'drop_player', playerIdx: pendingDropIdx });
+  hideDropModal();
+}
+
 // ==================== BOARD INIT ====================
 function initBoard() {
   var board = document.getElementById('qb-board');
@@ -1379,10 +1415,13 @@ function renderPlayers(state) {
     var hex = GAME_COLOR_HEX[gc] || '#888';
     var isCur = i === state.currentPlayerIdx;
     var isMe  = i === state.myPlayerIdx;
+    var canDrop = !p.isBot && (isMe || isHost);
+    var dropTitle = isMe ? 'Leave game (replace with bot)' : ('Remove ' + esc(p.name) + ' (replace with bot)');
     html += '<div class="qb-player-chip' + (isCur ? ' qb-player-active' : '') + (isMe ? ' qb-player-me' : '') + '">'
       + '<span class="qb-player-swatch" style="background:' + hex + '"></span>'
       + '<span class="qb-player-name">' + esc(p.name) + (isMe ? ' (me)' : '') + '</span>'
       + (p.connected ? '' : '<span class="qb-player-dc">●</span>')
+      + (canDrop ? ('<span class="drop-player-btn" title="' + dropTitle + '" onclick="event.stopPropagation();showDropModal(' + i + ')">✕</span>') : '')
       + '</div>';
   }
   bar.innerHTML = html;
@@ -2464,6 +2503,21 @@ function handleMsg(msg) {
 
     case 'player_disconnected':
       showToast((msg.name || 'A player') + (msg.explicit ? ' left the game' : ' disconnected'));
+      break;
+
+    case 'player_dropped':
+      if (typeof msg.newHostIdx === 'number' && !isObserver && myIdx === msg.newHostIdx) isHost = true;
+      showToast('🤖 ' + msg.name + ' ' + (msg.self ? 'left the game and was replaced with a bot' : 'was removed by the host and replaced with a bot'));
+      break;
+
+    case 'dropped_from_game':
+      sessionStorage.removeItem(SESSION_KEY);
+      sessionStorage.removeItem(OBS_SESSION_KEY);
+      roomCode = null; myIdx = -1; gs = null; isHost = false; isObserver = false;
+      document.getElementById('btn-cancel-game').style.display = 'none';
+      hideDropModal();
+      showScreen('lobby');
+      showToast(msg.self ? 'You left the game — a bot took over your seat.' : 'The host removed you from the game.');
       break;
 
     case 'game_cancelled':

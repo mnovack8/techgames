@@ -202,6 +202,18 @@
   </div>
 </div>
 
+<!-- ===== DROP PLAYER MODAL ===== -->
+<div id="drop-modal">
+  <div class="cancel-card">
+    <h3 id="drop-modal-title">Remove Player?</h3>
+    <p id="drop-modal-text">This player will be removed from the game and replaced with a bot for the rest of the session. Are you sure?</p>
+    <div class="cancel-btns">
+      <button id="drop-modal-yes" onclick="confirmDropPlayer()">Yes, Remove</button>
+      <button onclick="hideDropModal()">Keep Playing</button>
+    </div>
+  </div>
+</div>
+
 <!-- ===== GAME OVER ===== -->
 <div id="gameover" class="screen">
   <h2>Game Over!</h2>
@@ -1061,6 +1073,7 @@ function renderSidePanel(){
     html+=`<div class="psr-name">${escHtml(pl.name)}${isMe?' (You)':''}</div>`;
     if(active)html+=`<span class="turn-badge">${isMe?'Your Turn':'Turn'}</span>`;
     if(pl.isBot)html+=`<span class="psr-badge">Bot</span>`;
+    else if(isMe||isHost)html+=`<span class="drop-player-btn" title="${isMe?'Leave game (replace with bot)':'Remove '+escHtml(pl.name)+' (replace with bot)'}" onclick="event.stopPropagation();showDropModal(${i})">✕</span>`;
     html+=`</div>`;
     html+=`<div class="animal-bars">`;
     for(let a=0;a<6;a++){
@@ -1397,6 +1410,15 @@ function handleMsg(msg){
       sessionStorage.removeItem(SESSION_KEY);if(roomCode)localStorage.removeItem(LS_SESSION_PREFIX+roomCode);roomCode='';myId=-1;G=null;isHost=false;isObserver=false;
       document.body.classList.remove('observer-active');hideCancelModal();showScreen('lobby');
       document.getElementById('create-error').textContent='The host ended the game.';break;
+    case 'player_dropped':
+      if(typeof msg.newHostIdx==='number'&&!isObserver&&myId===msg.newHostIdx)isHost=true;
+      showToast('🤖 '+msg.name+' '+(msg.self?'left the game and was replaced with a bot':'was removed by the host and replaced with a bot'),6000);
+      break;
+    case 'dropped_from_game':
+      sessionStorage.removeItem(SESSION_KEY);if(roomCode)localStorage.removeItem(LS_SESSION_PREFIX+roomCode);roomCode='';myId=-1;G=null;isHost=false;isObserver=false;
+      document.body.classList.remove('observer-active');hideDropModal();showScreen('lobby');
+      document.getElementById('create-error').textContent=msg.self?'You left the game — a bot took over your seat.':'The host removed you from the game.';
+      break;
     case 'room_info':
       LobbyUI.handleRoomInfo(msg);break;
     case 'error':
@@ -1487,6 +1509,21 @@ function copyLink(){navigator.clipboard?.writeText(`${location.origin}/ai/knn/cl
 function showCancelModal(){document.getElementById('cancel-modal').classList.add('show');}
 function hideCancelModal(){document.getElementById('cancel-modal').classList.remove('show');}
 function confirmCancel(){send({type:'cancel_game'});hideCancelModal();}
+let pendingDropIdx=-1;
+function showDropModal(idx){
+  if(!G||!G.players[idx])return;
+  pendingDropIdx=idx;
+  const isSelf=!isObserver&&idx===myId;
+  const name=G.players[idx].name;
+  document.getElementById('drop-modal-title').textContent=isSelf?'Leave the Game?':'Remove Player?';
+  document.getElementById('drop-modal-text').textContent=isSelf
+    ?'You will be removed from the game and replaced with a bot for the rest of the session. Are you sure?'
+    :name+' will be removed from the game and replaced with a bot for the rest of the session. Are you sure?';
+  document.getElementById('drop-modal-yes').textContent=isSelf?'Yes, Leave':'Yes, Remove';
+  document.getElementById('drop-modal').classList.add('show');
+}
+function hideDropModal(){pendingDropIdx=-1;document.getElementById('drop-modal').classList.remove('show');}
+function confirmDropPlayer(){if(pendingDropIdx===-1)return;send({type:'drop_player',playerIdx:pendingDropIdx});hideDropModal();}
 
 // ==================== GAME ACTIONS ====================
 

@@ -508,6 +508,7 @@ function bcBroadcastState(room) {
         played: gpl.played,
         isBlocked: gs.actionObjActive && gs.actionObjBlockedPlayer === pi,
         isProtected: bcIsProtected(gs, pi),
+        isBot: !!room.players[pi].isBot,
       })),
     });
   }
@@ -581,6 +582,7 @@ function bcBroadcastState(room) {
         played: gpl.played,
         isBlocked: gs.actionObjActive && gs.actionObjBlockedPlayer === pi,
         isProtected: bcIsProtected(gs, pi),
+        isBot: !!room.players[pi].isBot,
       })),
     });
   }
