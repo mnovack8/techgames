@@ -273,6 +273,8 @@ body:has(#game.active) { overflow: hidden; }
 .first-badge { font-size: 10px; background: #f5a623; color: #fff; font-weight: 700; padding: 1px 5px; border-radius: 4px; margin-left: 4px; vertical-align: middle; letter-spacing: 0.3px; }
 .tie-mark { font-size: 9px; background: #f5a623; color: #fff; font-weight: 700; padding: 0 3px; border-radius: 3px; margin-left: 2px; vertical-align: middle; }
 .view-btn.is-turn::after { content: '◀'; font-size: 8px; margin-left: 4px; vertical-align: middle; }
+.drop-player-btn { display: inline-flex; align-items: center; justify-content: center; width: 14px; height: 14px; margin-left: 5px; border-radius: 50%; background: #eee; color: #999; font-size: 9px; font-weight: 700; line-height: 1; vertical-align: middle; cursor: pointer; }
+.drop-player-btn:hover { background: #e57373; color: #fff; }
 .actions-info { font-size: 14px; color: #777; }
 .actions-count { color: var(--brand-green); font-weight: 800; font-size: 16px; }
 

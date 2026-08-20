@@ -727,6 +727,53 @@ function handleMessage(ws, raw) {
       break;
     }
 
+    case 'drop_player': {
+      const info = wsData.get(ws);
+      if (!info) return send(ws, {type:'error',msg:'Not in a room'});
+      const room = rooms.get(info.roomCode);
+      if (!room || !room.started) return send(ws, {type:'error',msg:'Game not in progress'});
+      const targetIdx = msg.playerIdx;
+      const isSelfDrop = !info.isObserver && info.playerIdx === targetIdx;
+      const isPlayerHost = !info.isObserver && info.playerIdx === room.hostIdx;
+      const isObsHost = info.isObserver && info.observerIdx === 0;
+      // Any player may drop themselves (leave and let a bot take over); only
+      // the host may drop someone else.
+      if (!isSelfDrop && !isPlayerHost && !isObsHost) return send(ws, {type:'error',msg:'Only the host can remove another player'});
+      if (getGame(room).isGameOver(room)) return;
+
+      const target = room.players[targetIdx];
+      if (!target || target.isBot) return send(ws, {type:'error',msg:'Invalid player'});
+
+      const oldWs  = target.ws;
+      const _name  = target.name;
+      const _color = target.color;
+
+      // Clear any session tied to this seat so the dropped human can't rejoin it later
+      for (const [t, s] of sessions.entries()) {
+        if (s.roomCode === room.code && s.playerIdx === targetIdx) sessions.delete(t);
+      }
+      if (oldWs) wsData.delete(oldWs);
+
+      target.isBot     = true;
+      target.connected = true;
+      target.ws        = null;
+
+      // If the dropped player was host, hand the role to the next human seat (if any)
+      if (room.hostIdx === targetIdx) {
+        const nextHost = room.players.findIndex(p => !p.isBot);
+        if (nextHost !== -1) room.hostIdx = nextHost;
+      }
+
+      if (oldWs) send(oldWs, { type: 'dropped_from_game', name: _name, color: _color, self: isSelfDrop });
+      broadcastToRoom(room, { type: 'player_dropped', playerIdx: targetIdx, name: _name, color: _color, newHostIdx: room.hostIdx, self: isSelfDrop });
+
+      // Reuse each game's disconnect-turn-advance logic so a bot immediately
+      // takes over if it happens to be this seat's turn right now.
+      getGame(room).onDisconnect(room, targetIdx);
+      scheduleSave();
+      break;
+    }
+
     case 'leave_room': {
       leaveRoom(ws, true);
       send(ws, { type: 'left_room' });
