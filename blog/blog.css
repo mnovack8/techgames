@@ -284,7 +284,7 @@ body:has(> .article-wrap) { background: #eef5e8; }
 .article-tag.tag-type-workshop-guide, .blog-card-tag.tag-type-workshop-guide,
 .article-tag.tag-type-insight,        .blog-card-tag.tag-type-insight
   { background: #eef5e8; color: #1a2a0a; border-color: var(--brand-green); }
-/* STEM skills (for Humanities Thinkers). White fill on individual posts,
+/* Technology subjects. White fill on individual posts,
    since the hero behind .article-tag is always pale yellow now — a
    pale-yellow badge fill there would blend into it. Cards (.blog-card-tag)
    sit on white, so pale yellow reads fine there. */
@@ -296,21 +296,16 @@ body:has(> .article-wrap) { background: #eef5e8; }
 .article-tag.tag-cybersecurity,
 .article-tag.tag-quantum-computing
   { background: #fff; color: #5a4a10; border-color: #e8d888; }
-/* Thinker role tags */
-.article-tag.tag-humanities-thinker,  .blog-card-tag.tag-humanities-thinker
-  { background: #fff; color: #1a1a1a; border-color: #d8d8c8; }
-/* Humanities skills (for STEM Thinkers) — same white-on-hero treatment */
-.blog-card-tag.tag-literature,
-.blog-card-tag.tag-philosophy,
-.blog-card-tag.tag-history,
-.blog-card-tag.tag-rhetoric,
-.blog-card-tag.tag-art
+/* Practical categories — same white-on-hero treatment */
+.blog-card-tag.tag-category-general,
+.blog-card-tag.tag-category-people,
+.blog-card-tag.tag-category-process,
+.blog-card-tag.tag-category-tools
   { background: #fefce8; color: #5a4a10; }
-.article-tag.tag-literature,
-.article-tag.tag-philosophy,
-.article-tag.tag-history,
-.article-tag.tag-rhetoric,
-.article-tag.tag-art
+.article-tag.tag-category-general,
+.article-tag.tag-category-people,
+.article-tag.tag-category-process,
+.article-tag.tag-category-tools
   { background: #fff; color: #5a4a10; border-color: #e8d888; }
 .blog-card-date  { font-size: 11px; font-weight: 600; color: #888; }
 .blog-card-title { font-size: 18px; font-weight: 900; color: #1a1a1a; line-height: 1.3; }

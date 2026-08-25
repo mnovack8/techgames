@@ -36,7 +36,7 @@
               ]
             },
             {
-              folder: true, slug: '__folder-literature', title: 'Literature',
+              folder: true, slug: '__folder-people-writing', title: 'People',
               children: [
                 { slug: 'what-is-worth-sharing', title: 'What Is Worth Sharing?', children: [] },
                 { slug: 'shape-of-a-developed-idea', title: 'The Shape of a Developed Idea', children: [] },
@@ -45,30 +45,28 @@
               ]
             },
             {
-              folder: true, slug: '__folder-philosophy', title: 'Philosophy',
+              folder: true, slug: '__folder-tools', title: 'Tools',
               children: [
                 { slug: 'improving-spocks-eq', title: "Improving Spock's EQ", children: [] },
                 { slug: 'logic-of-problem-and-person', title: 'The Logic of a Problem, the Logic of a Person', children: [] },
                 { slug: 'people-process-tools-board-game-example', title: 'People, Process & Tools', children: [] },
                 { slug: 'scope-x-lever-framework', title: 'The Scope x Lever Framework', children: [] },
                 { slug: 'two-levels-of-leadership', title: 'Two Levels of Leadership', children: [] },
-                { slug: 'how-to-run-a-culture-audit-workshop', title: 'Culture Audit Workshop', children: [] },
                 { slug: 'agents-components-interactions', title: 'Every System Has the Same Shape', children: [] },
                 { slug: 'deciding-under-uncertainty', title: 'Deciding Under Uncertainty', children: [] }
               ]
             },
             {
-              folder: true, slug: '__folder-history', title: 'History',
+              folder: true, slug: '__folder-general-context', title: 'General',
               children: [
                 { slug: 'understand-the-past', title: 'Start With the History', children: [] },
                 { slug: 'principles-over-headlines', title: 'The Principles Rarely Do', children: [] }
               ]
             },
             {
-              folder: true, slug: '__folder-rhetoric', title: 'Rhetoric',
+              folder: true, slug: '__folder-people-communication', title: 'People',
               children: [
                 { slug: 'your-first-industry-conference-talk', title: 'Your First Conference Talk', children: [] },
-                { slug: 'communication-skills-workshop-for-technical-teams', title: 'Communication Skills Workshop', children: [] },
                 { slug: 'influence-and-authority', title: 'Authority vs. Influence', children: [] },
                 { slug: 'confrontation-to-cooperation', title: 'Confrontation Is a Game. Change the Rules.', children: [] },
                 { slug: 'conways-law', title: "Conway's Law", children: [] },
@@ -76,11 +74,10 @@
               ]
             },
             {
-              folder: true, slug: '__folder-art', title: 'Art',
+              folder: true, slug: '__folder-process', title: 'Process',
               children: [
                 { slug: 'constraints-are-the-medium', title: 'Constraints Are the Medium', children: [] },
                 { slug: 'taste-is-a-hypothesis', title: 'Taste Is a Hypothesis', children: [] },
-                { slug: 'how-to-run-a-creative-constraints-workshop', title: 'Creative Constraints Workshop', children: [] }
               ]
             }
           ]

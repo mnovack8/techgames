@@ -142,6 +142,7 @@
   color: inherit;
   transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
 }
+.removed-post { display: none !important; }
 .blog-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 10px 32px rgba(98,181,23,0.18);
