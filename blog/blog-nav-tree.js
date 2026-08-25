@@ -13,75 +13,75 @@
   // when more than one post links to the same node, the Start Here
   // hub (or the earliest-linking post) wins so the tree stays a
   // clean single hierarchy instead of duplicating nodes.
-  // Every post on the site is a descendant of the single root below.
+  // The map has two top-level sections: organizational categories and
+  // technology explainers.
   // noToggle: true means the node has no collapse control of its own —
   // its children always render, so descendants can never be hidden.
   var TREE = [
     {
       slug: 'people-process-tools-board-game-example',
-      title: 'People, Process & Tools',
+      title: 'People, Process, Tool',
       noToggle: true,
       defaultOpen: true,
       children: [
         {
-          slug: 'be-the-bridge',
-          title: 'Be the Bridge',
-          defaultOpen: true,
+          folder: true, slug: '__folder-general', title: 'General',
           children: [
-            {
-              folder: true, slug: '__folder-general', title: 'General',
-              children: [
-                { slug: 'engineering-approach-to-human-systems', title: 'An Engineering Approach to Human Systems', children: [] },
-                { slug: 'compounding-return-on-human-skills', title: 'The Compounding Return on Human Skills', children: [] }
-              ]
-            },
-            {
-              folder: true, slug: '__folder-people-writing', title: 'People',
-              children: [
-                { slug: 'what-is-worth-sharing', title: 'What Is Worth Sharing?', children: [] },
-                { slug: 'shape-of-a-developed-idea', title: 'The Shape of a Developed Idea', children: [] },
-                { slug: 'heart-of-a-teacher', title: 'The Heart of a Teacher', children: [] },
-                { slug: 'motivation-is-the-hard-part', title: 'Motivation Is the Hard Part', children: [] }
-              ]
-            },
-            {
-              folder: true, slug: '__folder-tools', title: 'Tools',
-              children: [
-                { slug: 'improving-spocks-eq', title: "Improving Spock's EQ", children: [] },
-                { slug: 'logic-of-problem-and-person', title: 'The Logic of a Problem, the Logic of a Person', children: [] },
-                { slug: 'people-process-tools-board-game-example', title: 'People, Process & Tools', children: [] },
-                { slug: 'scope-x-lever-framework', title: 'The Scope x Lever Framework', children: [] },
-                { slug: 'two-levels-of-leadership', title: 'Two Levels of Leadership', children: [] },
-                { slug: 'agents-components-interactions', title: 'Every System Has the Same Shape', children: [] },
-                { slug: 'deciding-under-uncertainty', title: 'Deciding Under Uncertainty', children: [] }
-              ]
-            },
-            {
-              folder: true, slug: '__folder-general-context', title: 'General',
-              children: [
-                { slug: 'understand-the-past', title: 'Start With the History', children: [] },
-                { slug: 'principles-over-headlines', title: 'The Principles Rarely Do', children: [] }
-              ]
-            },
-            {
-              folder: true, slug: '__folder-people-communication', title: 'People',
-              children: [
-                { slug: 'your-first-industry-conference-talk', title: 'Your First Conference Talk', children: [] },
-                { slug: 'influence-and-authority', title: 'Authority vs. Influence', children: [] },
-                { slug: 'confrontation-to-cooperation', title: 'Confrontation Is a Game. Change the Rules.', children: [] },
-                { slug: 'conways-law', title: "Conway's Law", children: [] },
-                { slug: 'trust-as-a-compounding-asset', title: 'Trust as a Compounding Asset', children: [] }
-              ]
-            },
-            {
-              folder: true, slug: '__folder-process', title: 'Process',
-              children: [
-                { slug: 'constraints-are-the-medium', title: 'Constraints Are the Medium', children: [] },
-                { slug: 'taste-is-a-hypothesis', title: 'Taste Is a Hypothesis', children: [] },
-              ]
-            }
+            { slug: 'be-the-bridge', title: 'Be the Bridge', children: [] },
+            { slug: 'engineering-approach-to-human-systems', title: 'An Engineering Approach to Human Systems', children: [] },
+            { slug: 'two-levels-of-leadership', title: 'Two Levels of Leadership', children: [] },
+            { slug: 'understand-the-past', title: 'Start With the History', children: [] },
+            { slug: 'principles-over-headlines', title: 'The Principles Rarely Do', children: [] },
+            { slug: 'compounding-return-on-human-skills', title: 'The Compounding Return on Human Skills', children: [] },
+            { slug: 'taste-is-a-hypothesis', title: 'Taste Is a Hypothesis', children: [] }
           ]
         },
+        {
+          folder: true, slug: '__folder-people', title: 'People',
+          children: [
+            { slug: 'what-is-worth-sharing', title: 'What Is Worth Sharing?', children: [] },
+            { slug: 'shape-of-a-developed-idea', title: 'The Shape of a Developed Idea', children: [] },
+            { slug: 'your-first-industry-conference-talk', title: 'Your First Conference Talk', children: [] },
+            { slug: 'improving-spocks-eq', title: "Improving Spock's EQ", children: [] },
+            { slug: 'logic-of-problem-and-person', title: 'The Logic of a Problem, the Logic of a Person', children: [] },
+            { slug: 'heart-of-a-teacher', title: 'The Heart of a Teacher', children: [] },
+            { slug: 'motivation-is-the-hard-part', title: 'Motivation Is the Hard Part', children: [] },
+            { slug: 'influence-and-authority', title: 'Authority vs. Influence', children: [] },
+            { slug: 'confrontation-to-cooperation', title: 'Confrontation Is a Game. Change the Rules.', children: [] },
+            { slug: 'trust-as-a-compounding-asset', title: 'Trust as a Compounding Asset', children: [] }
+          ]
+        },
+        {
+          folder: true, slug: '__folder-process', title: 'Process',
+          children: [
+            { slug: 'agents-components-interactions', title: 'Every System Has the Same Shape', children: [] },
+            { slug: 'constraints-are-the-medium', title: 'Constraints Are the Medium', children: [] },
+            { slug: 'conways-law', title: "Conway's Law", children: [] }
+          ]
+        },
+        {
+          folder: true, slug: '__folder-tools', title: 'Tools',
+          children: [
+            { slug: 'people-process-tools-board-game-example', title: 'People, Process & Tools', children: [] },
+            { slug: 'deciding-under-uncertainty', title: 'Deciding Under Uncertainty', children: [] },
+            { slug: 'scope-x-lever-framework', title: 'The Scope x Lever Framework', children: [] }
+          ]
+        }
+      ]
+    },
+    {
+      folder: true,
+      slug: '__technology-explainers',
+      title: 'Technology Explainers',
+      defaultOpen: true,
+      children: [
+        { slug: 'tech-ceiling-rises', title: 'The Ceiling Keeps Rising', children: [] },
+        { slug: 'principles-of-ai-data-science', title: 'The Principles of AI: It Is Not Magic, It Is (Data) Science', children: [] },
+        { slug: 'ai-security-workshop', title: 'How to Facilitate an AI Security Workshop', children: [] },
+        { slug: 'how-to-facilitate-an-ai-literacy-workshop', title: 'How to Facilitate an AI Literacy Workshop', children: [] },
+        { slug: 'cybersecurity-awareness-workshop', title: 'How to Facilitate a Cybersecurity Awareness Workshop', children: [] },
+        { slug: 'cybersecurity-mindset-critical-thinking', title: 'A Cybersecurity Mindset', children: [] },
+        { slug: 'quantum-computing-basics', title: 'Quantum Computing Basics', children: [] }
       ]
     }
   ];
