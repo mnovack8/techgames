@@ -385,14 +385,6 @@ body:has(> .article-wrap) { background: #eef5e8; }
   margin: 8px 0;
 }
 
-/* Thinkers row: The STEM Thinker + The Humanities Thinker as two wide columns */
-.thinkers-row {
-  grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 28px;
-}
-
 /* Explore header row, above the randomized rest-of-posts grid */
 .explore-header {
   grid-column: 1 / -1;
@@ -443,7 +435,6 @@ body:has(> .article-wrap) { background: #eef5e8; }
 }
 @media (max-width: 600px) {
   .blog-grid { grid-template-columns: 1fr; }
-  .thinkers-row { grid-template-columns: 1fr; }
 }
 
 /* ===== SIMPLE FOOTER (overrides main.css full footer for blog pages) ===== */

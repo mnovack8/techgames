@@ -18,14 +18,14 @@
   // its children always render, so descendants can never be hidden.
   var TREE = [
     {
-      slug: 'stem-humanities-bridge',
-      title: 'The Missing Language',
+      slug: 'people-process-tools-board-game-example',
+      title: 'People, Process & Tools',
       noToggle: true,
       defaultOpen: true,
       children: [
         {
-          slug: 'be-the-bridge-stem-thinker',
-          title: 'The STEM Thinker',
+          slug: 'be-the-bridge',
+          title: 'Be the Bridge',
           defaultOpen: true,
           children: [
             {
@@ -85,40 +85,6 @@
             }
           ]
         },
-        {
-          slug: 'be-the-bridge-humanities-thinker',
-          title: 'The Humanities Thinker',
-          defaultOpen: true,
-          children: [
-            {
-              folder: true, slug: '__folder-ht-general', title: 'General',
-              children: [
-                { slug: 'tech-ceiling-rises', title: 'The Ceiling Keeps Rising', children: [] }
-              ]
-            },
-            {
-              folder: true, slug: '__folder-ai', title: 'AI',
-              children: [
-                { slug: 'ai-security-workshop', title: 'AI Security Workshop Guide', children: [] },
-                { slug: 'how-to-facilitate-an-ai-literacy-workshop', title: 'AI Literacy Workshop Guide', children: [] },
-                { slug: 'principles-of-ai-data-science', title: 'Principles of AI & Data Science', children: [] }
-              ]
-            },
-            {
-              folder: true, slug: '__folder-cybersecurity', title: 'Cybersecurity',
-              children: [
-                { slug: 'cybersecurity-awareness-workshop', title: 'Cybersecurity Awareness Workshop', children: [] },
-                { slug: 'cybersecurity-mindset-critical-thinking', title: 'Cybersecurity Mindset', children: [] }
-              ]
-            },
-            {
-              folder: true, slug: '__folder-quantum-computing', title: 'Quantum Computing',
-              children: [
-                { slug: 'quantum-computing-basics', title: 'Quantum Computing Basics', children: [] }
-              ]
-            }
-          ]
-        }
       ]
     }
   ];

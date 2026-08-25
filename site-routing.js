@@ -59,6 +59,7 @@ const PATH_ALIASES = {
   '/admin.html':     '/singlepage/admin.html',
   '/blog':           '/blog/index.html',
   '/blog.html':      '/blog/index.html',
+  '/blog/be-the-bridge': '/blog/be-the-bridge-stem-thinker.html',
 
   '/cybersecurity-literacy-use-case':      '/cybersecurity-literacy-use-case.html',
   '/cybersecurity-literacy-use-case.html': '/cybersecurity-literacy-use-case.html',
@@ -73,6 +74,11 @@ const PATH_ALIASES = {
 
 // ── Legacy-URL redirects (301) ───────────────────────────────────────────────
 const REDIRECTS = {
+  '/blog/be-the-bridge-stem-thinker': '/blog/be-the-bridge',
+  '/blog/be-the-bridge-stem-thinker.html': '/blog/be-the-bridge',
+  '/blog/stem-humanities-bridge': '/blog/people-process-tools-board-game-example',
+  '/blog/stem-humanities-bridge.html': '/blog/people-process-tools-board-game-example',
+
   // Legacy AI paths → new nested structure under /ai
   '/ai/neural-network':           '/ai/neural-network/fuzznet',
   '/ai/neural-network.html':      '/ai/neural-network/fuzznet',
