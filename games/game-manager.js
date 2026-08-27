@@ -214,7 +214,7 @@ const { initBCGame, bcHandleAction, bcBroadcastState, bcEndTurn } = byteclub;
 const { initQBGame, qbHandleAction, qbBroadcastState, maybeScheduleBotTurn: qbMaybeScheduleBotTurn } = qubit;
 const grovers = require('./grovers-quantum-search/grovers-logic');
 grovers.init({ rooms, broadcastToRoom, trackEvent });
-const { initGSGame, gsHandleAction, gsBroadcastState } = grovers;
+const { initGSGame, gsHandleAction, gsBroadcastState, gsMaybeScheduleBotTurn } = grovers;
 
 // ==================== GAME REGISTRY ====================
 // Single source of truth for per-game behaviour.
@@ -326,16 +326,17 @@ const GAME_REGISTRY = {
   },
 
   grovers: {
-    minPlayers: 3, maxPlayers: 5,
+    minPlayers: 3, maxPlayers: 5, maxBots: 4,
     colors: ['blue', 'red', 'green', 'purple', 'yellow'],
     startGame(room) {
       initGSGame(room);
       broadcastToRoom(room, { type: 'gs_game_started' });
       gsBroadcastState(room);
+      gsMaybeScheduleBotTurn(room);
     },
     broadcastState(room)      { gsBroadcastState(room); },
-    onRejoin(room)            { gsBroadcastState(room); },
-    onDisconnect(room)        { gsBroadcastState(room); },
+    onRejoin(room)            { gsBroadcastState(room); gsMaybeScheduleBotTurn(room); },
+    onDisconnect(room)        { gsBroadcastState(room); gsMaybeScheduleBotTurn(room); },
     isGameOver(room)          { return !!(room.gsState && room.gsState.gameOver); },
   },
 };
