@@ -353,6 +353,70 @@ function gsBroadcastState(room) {
   }
 }
 
+// ==================== BOT LOGIC ====================
+
+function gsMaybeScheduleBotTurn(room) {
+  const gs = room.gsState;
+  if (!gs || gs.gameOver) return;
+
+  if (gs.phase === 'playing') {
+    if (gs.pendingCard) {
+      // Any bot that still needs to vote
+      const botsNeeded = gs.pendingCard.tokensNeeded.filter(pi => room.players[pi] && room.players[pi].isBot);
+      for (const pi of botsNeeded) {
+        (function(botIdx) {
+          const t = setTimeout(() => {
+            const gs2 = room.gsState;
+            if (!gs2 || gs2.gameOver || !gs2.pendingCard) return;
+            if (!gs2.pendingCard.tokensNeeded.includes(botIdx)) return;
+            const clue = gs2.playerClues[botIdx];
+            const vote = clue.matchingNumbers.includes(gs2.pendingCard.number) ? 'yes' : 'no';
+            gsHandleAction(room, botIdx, { action: 'gs_vote_card', vote });
+          }, 600 + Math.random() * 400);
+          if (t.unref) t.unref();
+        })(pi);
+      }
+    } else {
+      // Current player's turn — if bot, play a random card
+      const curIdx = gs.currentPlayerIdx;
+      if (room.players[curIdx] && room.players[curIdx].isBot) {
+        const t = setTimeout(() => {
+          const gs2 = room.gsState;
+          if (!gs2 || gs2.gameOver || gs2.pendingCard) return;
+          if (gs2.currentPlayerIdx !== curIdx) return;
+          const hand = gs2.hands[curIdx];
+          if (!hand || hand.length === 0) return;
+          const cardNumber = hand[Math.floor(Math.random() * hand.length)];
+          gsHandleAction(room, curIdx, { action: 'gs_play_card', cardNumber });
+        }, 800 + Math.random() * 600);
+        if (t.unref) t.unref();
+      }
+    }
+  }
+
+  if (gs.phase === 'voting') {
+    for (let pi = 0; pi < room.players.length; pi++) {
+      if (!room.players[pi].isBot) continue;
+      if (gs.finalVotes[pi] !== undefined) continue;
+      (function(botIdx) {
+        const t = setTimeout(() => {
+          const gs2 = room.gsState;
+          if (!gs2 || gs2.gameOver || gs2.phase !== 'voting') return;
+          if (gs2.finalVotes[botIdx] !== undefined) return;
+          // Bot votes its best guess: intersection of all clues it "knows"
+          // Simple heuristic: pick the number that matches most clues across all players
+          const allMatches = gs2.playerClues.map(c => new Set(c.matchingNumbers));
+          const scores = new Array(256).fill(0);
+          for (const s of allMatches) for (const n of s) scores[n]++;
+          const best = scores.indexOf(Math.max(...scores));
+          gsHandleAction(room, botIdx, { action: 'gs_final_vote', number: best });
+        }, 700 + Math.random() * 500);
+        if (t.unref) t.unref();
+      })(pi);
+    }
+  }
+}
+
 function buildStateMsg(gs, playerIdx, players) {
   const pendingCard = gs.pendingCard ? {
     number:           gs.pendingCard.number,
@@ -454,6 +518,7 @@ function gsHandleAction(room, playerIdx, msg) {
       const playerName = room.players[playerIdx].name;
       gsLog(gs, `Round ${gs.round}: ${playerName} played card ${cardNumber} (${binaryStr}).`);
       gsBroadcastState(room);
+      gsMaybeScheduleBotTurn(room);
       return;
     }
 
@@ -478,6 +543,7 @@ function gsHandleAction(room, playerIdx, msg) {
         _resolveCard(room);
       } else {
         gsBroadcastState(room);
+        gsMaybeScheduleBotTurn(room);
       }
       return;
     }
@@ -503,6 +569,7 @@ function gsHandleAction(room, playerIdx, msg) {
         _resolveVoting(room);
       } else {
         gsBroadcastState(room);
+        gsMaybeScheduleBotTurn(room);
       }
       return;
     }
@@ -534,6 +601,7 @@ function _resolveCard(room) {
     gs.phase = 'voting';
     gsLog(gs, 'All 12 rounds complete! Now each player votes for the number they think is the answer.');
     gsBroadcastState(room);
+    gsMaybeScheduleBotTurn(room);
     return;
   }
 
@@ -541,6 +609,7 @@ function _resolveCard(room) {
   gs.currentPlayerIdx = (gs.currentPlayerIdx + 1) % room.players.length;
   gsLog(gs, `Round ${gs.round} begins. ${room.players[gs.currentPlayerIdx].name}'s turn.`);
   gsBroadcastState(room);
+  gsMaybeScheduleBotTurn(room);
 }
 
 function _resolveVoting(room) {
@@ -584,4 +653,4 @@ function _resolveVoting(room) {
   gsBroadcastState(room);
 }
 
-module.exports = { init, initGSGame, gsHandleAction, gsBroadcastState };
+module.exports = { init, initGSGame, gsHandleAction, gsBroadcastState, gsMaybeScheduleBotTurn };

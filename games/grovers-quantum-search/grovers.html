@@ -324,10 +324,11 @@ var PLAYER_COLOR_HEX = {
 var SESSION_KEY  = 'techgames_grovers_session';
 var GS_BASE_PATH = '/grovers-quantum-search';
 var QB_MIN_PLAYERS = 3;
+var GS_MAX_BOTS = 4;
 
 // ==================== STATE ====================
 var hub, gs = null;
-var myIdx = -1, roomCode = null, isHost = false;
+var myIdx = -1, roomCode = null, isHost = false, isObserver = false;
 
 function send(msg) { hub.send(msg); }
 
@@ -381,6 +382,26 @@ function renderLobbyPlayers(players, observers) {
     section.appendChild(row);
   });
   el.appendChild(section);
+
+  var botCount = players.filter(function(p){ return p.isBot; }).length;
+  var botBtn = document.getElementById('btn-bot-toggle');
+  if (botBtn) {
+    if (isHost && !isObserver && players.length < 5) {
+      botBtn.style.display = 'block';
+      if (botCount === 0) {
+        botBtn.textContent = 'Add Bot (fills a seat)';
+        botBtn.classList.remove('active');
+      } else if (botCount < GS_MAX_BOTS) {
+        botBtn.textContent = 'Add Another Bot (' + botCount + '/' + GS_MAX_BOTS + ')';
+        botBtn.classList.add('active');
+      } else {
+        botBtn.textContent = 'Remove Bots (' + botCount + '/' + GS_MAX_BOTS + ')';
+        botBtn.classList.add('active');
+      }
+    } else {
+      botBtn.style.display = 'none';
+    }
+  }
 
   var startBtn = document.getElementById('btn-start-game');
   if (startBtn) {
