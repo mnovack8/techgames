@@ -47,6 +47,11 @@ const PATH_ALIASES = {
   '/quantumcomputing/qubit/activegame': '/games/quantumcomputing/qubit.html',
   '/quantumcomputing/qubit/tutorial':   '/games/quantumcomputing/qubit.html',
 
+  '/grovers-quantum-search':            '/games/grovers-quantum-search/grovers.html',
+  '/grovers-quantum-search.html':       '/games/grovers-quantum-search/grovers.html',
+  '/grovers-quantum-search/lobby':      '/games/grovers-quantum-search/grovers.html',
+  '/grovers-quantum-search/activegame': '/games/grovers-quantum-search/grovers.html',
+
   '/services':      '/singlepage/services.html',
   '/services.html': '/singlepage/services.html',
   '/contact':        '/singlepage/contact.html',

@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Grover's Quantum Search: a silent cooperative deduction game. Use gate cards and a shared board to identify the hidden quantum number.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Grover's Quantum Search | Tech CoLab">
+<meta property="og:description" content="A silent cooperative deduction game where your team identifies a hidden number using gate cards and a shared quantum board.">
+<meta property="og:image" content="https://cybersecgames.com/images/logo.png">
+<meta property="og:url" content="https://cybersecgames.com/grovers-quantum-search">
+<meta name="robots" content="noindex, nofollow">
+<meta name="author" content="Tech CoLab">
+<meta name="theme-color" content="#8b5cf6">
+<link rel="icon" type="image/png" href="/images/logo.png">
+<link rel="apple-touch-icon" href="/images/logo.png">
+<title>Grover's Quantum Search | Tech CoLab</title>
+<link rel="stylesheet" href="/nav.css">
+<script src="/games/lobby.js"></script>
+<script src="/games/socket.js"></script>
+<link rel="stylesheet" href="/main.css">
+<link rel="stylesheet" href="/games/hub.css">
+<link rel="stylesheet" href="/games/grovers-quantum-search/grovers.css">
+</head>
+<body>
+
+<header>
+  <a class="header-logo" href="/">
+    <img src="/images/logo-light.png" alt="Tech CoLab logo" width="56" height="56" fetchpriority="high" decoding="async">
+    <div>
+      <span class="logo-text">Tech Co<span class="logo-text-accent">Lab</span></span>
+      <span class="logo-sub">Bridge the Gap.<br>Empower their Decisions.</span>
+    </div>
+  </a>
+  <nav>
+    <a href="/">Home</a>
+    <div class="nav-dropdown">
+      <button class="nav-dropdown-trigger">Products ▾</button>
+      <div class="nav-dropdown-menu">
+        <a href="/cybersecurity">Cybersecurity</a>
+        <a href="/ai?v=1">Artificial Intelligence</a>
+        <a href="/quantumcomputing" class="active">Quantum Computing</a>
+      </div>
+    </div>
+    <a href="/blog">Blog</a>
+    <a href="/contact">Contact</a>
+    <a href="/services" class="nav-cta-buy">Work With Us</a>
+  </nav>
+  <div id="nav-game-btns">
+    <button id="btn-cancel-game" onclick="showCancelModal()" style="display:none">✕ Cancel Game</button>
+  </div>
+</header>
+
+<!-- SCREEN: LOBBY -->
+<!-- CREATEGAME_HTML -->
+
+<!-- SCREEN: WAITING ROOM -->
+<!-- LOBBY_HTML -->
+
+<!-- SCREEN: GAME -->
+<div class="screen gs-screen" id="game">
+
+  <!-- CANCEL MODAL -->
+  <div id="gs-cancel-modal" class="gs-modal-overlay" style="display:none">
+    <div class="gs-modal">
+      <h3>Cancel Game?</h3>
+      <p>This will end the game for all players.</p>
+      <div class="gs-modal-btns">
+        <button class="gs-btn gs-btn-no" onclick="confirmCancel()">Yes, Cancel</button>
+        <button class="gs-btn" onclick="hideCancelModal()">No, Keep Playing</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOW TO PLAY MODAL -->
+  <div class="gs-modal-overlay" id="gs-htp-overlay" style="display:none" onclick="if(event.target===this)this.style.display='none'">
+    <div class="gs-modal" style="max-width:560px">
+
+  <!-- ALL POSSIBLE CLUES REFERENCE MODAL -->
+  <div class="gs-modal-overlay" id="gs-allclues-overlay" style="display:none" onclick="if(event.target===this)this.style.display='none'">
+    <div class="gs-modal gs-allclues-modal">
+      <h3>Every Possible Clue</h3>
+      <p style="color:#64748b;font-size:12px;margin-bottom:10px">Your secret clue is always one of the entries below. Each mini grid highlights which numbers (0–255) match that clue. Use this to reason about what your teammates' YES/NO votes reveal.</p>
+      <div class="gs-htp-body" id="gs-allclues-body" style="flex:1;overflow-y:auto"></div>
+      <button class="gs-btn" style="margin-top:12px;width:100%;flex-shrink:0" onclick="document.getElementById('gs-allclues-overlay').style.display='none'">Close</button>
+    </div>
+  </div>
+      <h3>How to Play — Grover's Quantum Search</h3>
+      <div class="gs-htp-body">
+        <h4>The Goal</h4>
+        <p>Working as a team, identify the hidden quantum number (0–255). Each player holds one secret clue. If you could see all clues at once, they would point to exactly one number. You cannot speak — only act.</p>
+
+        <h4>Before You Start</h4>
+        <p>Hand the <strong>Quantum Token</strong> to any player your team chooses. That player goes first and breaks ties at the end.</p>
+
+        <h4>Your Clue</h4>
+        <p>Your private clue is a property of numbers 0–255. It is true for the target number, but also true for many others. You can see the mini grid that highlights which numbers match your clue — use this to reason about other players' YES/NO votes.</p>
+
+        <h4>Gate Cards</h4>
+        <p>You start with 3 gate cards in your hand. Each card shows a number (0–255) and its 8-bit binary form. <strong>No talking</strong>.</p>
+
+        <h4>On Your Turn</h4>
+        <ol>
+          <li><strong>Choose a gate card</strong> from your hand and play it face-up.</li>
+          <li>Place your token in <strong>YES</strong> if that number matches your clue, or <strong>NO</strong> if it doesn't. (This happens automatically in the digital version.)</li>
+          <li>Every other player then places their token in <strong>YES</strong> or <strong>NO</strong> based on whether <em>their own</em> clue matches that number.</li>
+          <li>Draw a new card from the deck to refill your hand to 3.</li>
+        </ol>
+
+        <h4>The Central Board</h4>
+        <p>At <em>any</em> time during the game you may move your two tokens on the shared central board:</p>
+        <ul>
+          <li><strong>Confidence:</strong> ?, Low, Medium, High — signal how sure you are that your team knows the answer.</li>
+          <li><strong>Number Estimate:</strong> Narrow your guess from a quarter (0–63 etc.), to a tenth, to an exact number. Moving your token here tells teammates what number you think is the target.</li>
+        </ul>
+
+        <h4>After 12 Rounds</h4>
+        <p>The game enters the Measurement Phase. Each player votes for the exact number they believe is the target. The most-voted number is the team's answer. <strong>If there is a tie, the player holding the Quantum Token decides.</strong></p>
+
+        <div class="gs-htp-highlight">Correct: team wins. Wrong: team loses. Choose wisely.</div>
+
+        <h4>Quantum Concept</h4>
+        <p>This game models Grover's search algorithm — YES votes constructively interfere (reinforce the correct answer), NO votes destructively interfere (eliminate wrong ones), and the final measurement collapses all probability into a single guess, just as in a real quantum circuit.</p>
+      </div>
+      <button class="gs-btn" style="margin-top:14px;width:100%" onclick="document.getElementById('gs-htp-overlay').style.display='none'">Got it, close</button>
+    </div>
+  </div>
+
+  <!-- GAME OVER -->
+  <div id="gs-gameover" class="gs-gameover-overlay" style="display:none">
+    <div class="gs-gameover-card">
+      <div class="gs-gameover-icon" id="gs-gameover-icon">⚛</div>
+      <div class="gs-gameover-title" id="gs-gameover-title">Mission Complete</div>
+      <div class="gs-gameover-sub" id="gs-gameover-sub"></div>
+      <div class="gs-answer-block" id="gs-answer-block" style="display:none">
+        <div class="gs-answer-label">The Quantum Number was:</div>
+        <div class="gs-answer-number" id="gs-answer-number">42</div>
+        <div class="gs-answer-binary" id="gs-answer-binary">00101010</div>
+      </div>
+      <button class="gs-btn gs-btn-accent" id="gs-gameover-btn" onclick="backToLobby()">Back to Lobby</button>
+    </div>
+  </div>
+
+  <!-- LAYOUT -->
+  <div class="gs-game-layout">
+
+    <!-- PLAYERS BAR (top, full width) -->
+    <div class="gs-players-bar" id="gs-players-bar"></div>
+
+    <!-- MAIN CONTENT AREA -->
+    <div class="gs-main" id="gs-main">
+
+      <!-- Round + voting status -->
+      <div id="gs-status-bar" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <span class="gs-round-badge" id="gs-round-badge">Round 1 / 12</span>
+        <span id="gs-phase-label" style="font-size:12px;color:#64748b"></span>
+      </div>
+
+      <!-- PENDING CARD — shown while waiting for all votes on active card -->
+      <div id="gs-pending-area" class="gs-pending-area" style="display:none">
+        <div class="gs-pending-header">⚡ Gate Card In Play — Place Your Token</div>
+        <div class="gs-pending-card-row">
+          <div class="gs-pending-card-info">
+            <div class="gs-pending-number" id="gs-pending-number">42</div>
+            <div class="gs-pending-binary" id="gs-pending-binary">00101010</div>
+          </div>
+          <div>
+            <div style="font-size:12px;color:#64748b;margin-bottom:8px">Played by <span id="gs-pending-player" style="font-weight:700"></span></div>
+            <div id="gs-vote-btns" class="gs-vote-btns"></div>
+            <div id="gs-pending-tokens" style="margin-top:10px;display:flex;flex-wrap:wrap;gap:6px"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- HAND — only shown when it's your turn and no pending card -->
+      <div id="gs-hand-area" class="gs-hand-area" style="display:none">
+        <div class="gs-hand-label" id="gs-hand-label">Your Hand — Click a Card to Play It</div>
+        <div class="gs-hand-cards" id="gs-hand-cards"></div>
+        <div class="gs-hand-note" id="gs-hand-note" style="display:none;margin-top:8px"></div>
+      </div>
+
+      <!-- VOTING PHASE -->
+      <div id="gs-voting-area" class="gs-voting-area" style="display:none">
+        <div class="gs-voting-header">⚡ Measurement Phase — Vote for the Number</div>
+        <div class="gs-voting-note">12 rounds complete. Place your vote on the exact number you believe is the target. Most votes wins; ties go to the Quantum Token holder.</div>
+        <div id="gs-voting-status" style="font-size:13px;color:#94a3b8;margin-bottom:10px"></div>
+        <div id="gs-my-vote-display" style="display:none;margin-bottom:10px;font-size:13px;color:#22c55e;font-weight:700"></div>
+        <div style="font-size:12px;color:#64748b;margin-bottom:6px">Use the <strong>Number Estimate</strong> board below to cast your vote (click an exact number in the bottom row).</div>
+      </div>
+
+      <!-- CENTRAL BOARD -->
+      <div class="gs-central-board">
+        <div class="gs-board-title">⚛ Shared Quantum Board</div>
+
+        <!-- Confidence row -->
+        <div class="gs-conf-row">
+          <div class="gs-conf-label">Confidence</div>
+          <div class="gs-conf-sections">
+            <div class="gs-conf-section" id="gs-conf-?" onclick="setConfidence('?')">
+              <div class="gs-conf-section-label">?</div>
+              <div class="gs-conf-tokens" id="gs-conf-tokens-?"></div>
+            </div>
+            <div class="gs-conf-section" id="gs-conf-low" onclick="setConfidence('low')">
+              <div class="gs-conf-section-label">Low</div>
+              <div class="gs-conf-tokens" id="gs-conf-tokens-low"></div>
+            </div>
+            <div class="gs-conf-section" id="gs-conf-medium" onclick="setConfidence('medium')">
+              <div class="gs-conf-section-label">Med</div>
+              <div class="gs-conf-tokens" id="gs-conf-tokens-medium"></div>
+            </div>
+            <div class="gs-conf-section" id="gs-conf-high" onclick="setConfidence('high')">
+              <div class="gs-conf-section-label">High</div>
+              <div class="gs-conf-tokens" id="gs-conf-tokens-high"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Estimate board -->
+        <div>
+          <div class="gs-estimate-label">Number Estimate</div>
+
+          <!-- Unknown (?) row -->
+          <div style="margin-bottom:6px">
+            <div class="gs-est-unknown" id="gs-est-unknown" onclick="setEstimate(null)">
+              <span>?</span>
+              <span id="gs-est-tokens-unknown" style="display:flex;gap:3px"></span>
+            </div>
+          </div>
+
+          <!-- Row 1: Quarters -->
+          <div class="gs-estimate-row">
+            <div class="gs-estimate-row-label">Quarters</div>
+            <div class="gs-est-quarters" id="gs-est-quarters"></div>
+          </div>
+
+          <!-- Row 2: Tenths -->
+          <div class="gs-estimate-row">
+            <div class="gs-estimate-row-label">Tenths</div>
+            <div class="gs-est-tenths" id="gs-est-tenths"></div>
+          </div>
+
+          <!-- Row 3: All numbers 0–255 (16×16 grid) -->
+          <div class="gs-estimate-row">
+            <div class="gs-estimate-row-label">Exact Number (0–255)</div>
+            <div class="gs-est-numbers" id="gs-est-numbers"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PLAYED CARDS -->
+      <div id="gs-played-area">
+        <div class="gs-cards-header">
+          <h3>Played Gate Cards</h3>
+          <span id="gs-cards-count" style="font-size:12px;color:#64748b"></span>
+        </div>
+        <div class="gs-cards-grid" id="gs-cards-grid"></div>
+        <div id="gs-no-cards" style="font-size:13px;color:#475569;font-style:italic;padding:12px 0">No cards played yet.</div>
+      </div>
+
+    </div>
+
+    <!-- SIDE PANEL -->
+    <div class="gs-panel">
+
+      <!-- HTP Button -->
+      <div class="gs-panel-section">
+        <button class="gs-btn" style="width:100%;border-color:#93c5fd;background:#eff6ff;color:#1d4ed8"
+          onclick="document.getElementById('gs-htp-overlay').style.display='flex'">
+          ❓ How to Play
+        </button>
+      </div>
+
+      <!-- My Clue -->
+      <div class="gs-panel-section" id="gs-clue-section">
+        <div class="gs-section-title">My Secret Clue</div>
+        <div id="gs-clue-content">
+          <div class="gs-clue-box" id="gs-entanglement-box" style="display:none;margin-bottom:8px;border-color:#facc15;background:rgba(250,204,21,0.07)">
+            <div class="gs-clue-label" style="color:#facc15">⚛ Public Entanglement Clue</div>
+            <div class="gs-clue-text" id="gs-entanglement-text" style="color:#fde68a"></div>
+            <div id="gs-entanglement-grid-wrap" style="margin-top:8px;display:none">
+              <div style="font-size:10px;color:#64748b;margin-bottom:4px">Numbers matching entanglement clue:</div>
+              <div id="gs-entanglement-miniboard"></div>
+            </div>
+          </div>
+          <div class="gs-clue-box">
+            <div class="gs-clue-label">Your private clue</div>
+            <div class="gs-clue-text" id="gs-clue-text">Waiting for game to start…</div>
+          </div>
+          <div id="gs-clue-grid-wrap" style="margin-top:10px;display:none">
+            <div style="font-size:10px;color:#64748b;margin-bottom:4px">Numbers matching your clue (highlighted):</div>
+            <div id="gs-clue-miniboard"></div>
+          </div>
+        </div>
+        <button class="gs-btn" style="width:100%;margin-top:10px;font-size:12px"
+          onclick="renderAllCluesReference();document.getElementById('gs-allclues-overlay').style.display='flex'">
+          📖 All Possible Clues
+        </button>
+      </div>
+
+      <!-- Turn -->
+      <div class="gs-panel-section" id="gs-turn-section">
+        <div class="gs-section-title">Turn</div>
+        <div class="gs-turn-status" id="gs-turn-status"></div>
+        <div id="gs-turn-actions"></div>
+      </div>
+
+      <!-- Log -->
+      <div class="gs-panel-section" style="flex:1">
+        <div class="gs-section-title">Activity Log</div>
+        <div class="gs-log-body" id="gs-log-body"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+// ==================== CONSTANTS ====================
+var PLAYER_COLOR_HEX = {
+  blue:'#4a9eff', red:'#ff4a4a', green:'#22c55e',
+  yellow:'#eab308', purple:'#a855f7', orange:'#f97316'
+};
+
+var SESSION_KEY  = 'techgames_grovers_session';
+var GS_BASE_PATH = '/grovers-quantum-search';
+var QB_MIN_PLAYERS = 3;
+
+// ==================== STATE ====================
+var hub, gs = null;
+var myIdx = -1, roomCode = null, isHost = false;
+
+function send(msg) { hub.send(msg); }
+
+function esc(s) {
+  return String(s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ==================== LOBBY (shared lobby.js hooks) ====================
+
+function copyCode() {
+  var btn = event && event.target;
+  navigator.clipboard.writeText(roomCode).then(function(){
+    if (!btn) return;
+    btn.textContent = 'Copied!'; btn.classList.add('copied');
+    setTimeout(function(){ btn.textContent = 'Copy Code'; btn.classList.remove('copied'); }, 1500);
+  });
+}
+
+function copyLink() {
+  var btn = event && event.target;
+  navigator.clipboard.writeText(location.origin + GS_BASE_PATH + '?room=' + roomCode).then(function(){
+    if (!btn) return;
+    btn.textContent = 'Copied!'; btn.classList.add('copied');
+    setTimeout(function(){ btn.textContent = 'Copy Link'; btn.classList.remove('copied'); }, 1500);
+  });
+}
+
+function startGame() { send({ type: 'start_game' }); }
+function toggleBot()  { send({ type: 'toggle_bot' }); }
+
+function renderLobbyPlayers(players, observers) {
+  players   = players   || [];
+  var el = document.getElementById('player-list');
+  if (!el) return;
+  el.innerHTML = '';
+
+  var section = document.createElement('div');
+  section.style.cssText = 'width:100%;max-width:320px;margin-bottom:4px;';
+
+  players.forEach(function(p, pi) {
+    var isMe = pi === myIdx;
+    var row = document.createElement('div');
+    row.className = 'waiting-player' + (isMe ? ' waiting-player-me' : '');
+    var colorHex = PLAYER_COLOR_HEX[p.color] || '#888';
+    row.innerHTML = '<div class="waiting-player-dot" style="background:' + colorHex + '"></div>'
+      + '<span class="waiting-player-name">' + esc(p.name) + (isMe ? ' <span class="you-tag">You</span>' : '') + '</span>'
+      + (p.isHost ? '<span class="host-badge">HOST</span>' : '')
+      + (p.isBot  ? '<span class="host-badge" style="background:#374151;color:#9ca3af">BOT</span>' : '');
+    section.appendChild(row);
+  });
+  el.appendChild(section);
+
+  var startBtn = document.getElementById('btn-start-game');
+  if (startBtn) {
+    startBtn.style.display = isHost ? 'inline-block' : 'none';
+    startBtn.disabled = players.length < QB_MIN_PLAYERS;
+  }
+  var short = QB_MIN_PLAYERS - players.length;
+  var errEl = document.getElementById('waiting-error');
+  if (errEl) {
+    errEl.textContent = players.length < QB_MIN_PLAYERS
+      ? 'Need ' + short + ' more player' + (short === 1 ? '' : 's') + ' (min ' + QB_MIN_PLAYERS + ').'
+      : (isHost ? '' : 'Waiting for host to start…');
+  }
+}
+
+function enterWaiting() {
+  var disp = document.getElementById('room-code-display');
+  if (disp) disp.textContent = roomCode || '----';
+  showScreen('waiting');
+}
+
+// ==================== SCREEN MGMT ====================
+function showScreen(id) {
+  document.querySelectorAll('.screen, .gs-screen').forEach(function(s){ s.classList.remove('active'); });
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.classList.add('active');
+  el.scrollTop = 0;
+  var suffix = id === 'waiting' ? '/lobby' : (id === 'game' ? '/activegame' : '');
+  var qs = roomCode ? ('?room=' + encodeURIComponent(roomCode)) : '';
+  try { history.replaceState(null, '', GS_BASE_PATH + suffix + qs); } catch(_) {}
+}
+
+function backToLobby() {
+  sessionStorage.removeItem(SESSION_KEY);
+  send({ type: 'leave_room' });
+  roomCode = null; myIdx = -1; gs = null; isHost = false;
+  try { history.replaceState(null, '', GS_BASE_PATH); } catch(_) {}
+  showScreen('lobby');
+}
+
+// ==================== CANCEL ====================
+function showCancelModal() { document.getElementById('gs-cancel-modal').style.display = 'flex'; }
+function hideCancelModal()  { document.getElementById('gs-cancel-modal').style.display = 'none'; }
+function confirmCancel()    { send({ type: 'cancel_game' }); hideCancelModal(); }
+
+// ==================== CENTRAL BOARD ACTIONS ====================
+function setConfidence(level) {
+  if (!gs || gs.gameOver) return;
+  send({ type: 'game_action', action: 'gs_set_confidence', level: level });
+}
+
+function setEstimate(est) {
+  if (!gs) return;
+  if (gs.phase === 'voting' && est && est.type === 'number') {
+    // In voting phase, clicking a number IS the final vote
+    send({ type: 'game_action', action: 'gs_final_vote', number: est.value });
+    return;
+  }
+  send({ type: 'game_action', action: 'gs_set_estimate', estimate: est });
+}
+
+// ==================== GAME ACTIONS ====================
+function playCard(cardNumber) {
+  if (!gs || gs.gameOver || gs.phase !== 'playing') return;
+  if (gs.myPlayerIdx !== gs.currentPlayerIdx) return;
+  if (gs.pendingCard) return;
+  send({ type: 'game_action', action: 'gs_play_card', cardNumber: cardNumber });
+}
+
+function voteCard(vote) {
+  if (!gs || !gs.pendingCard) return;
+  if (!gs.pendingCard.needsVote) return;
+  send({ type: 'game_action', action: 'gs_vote_card', cardNumber: gs.pendingCard.number, vote: vote });
+}
+
+// ==================== MINI BOARD SVG ====================
+function miniBoardSvg(matchingNumbers) {
+  var cell = 3, size = cell * 16;
+  var set = {};
+  for (var i = 0; i < matchingNumbers.length; i++) set[matchingNumbers[i]] = true;
+  var rects = '';
+  for (var d = 0; d < 256; d++) {
+    if (!set[d]) continue;
+    var row = Math.floor(d / 16), col = d % 16;
+    rects += '<rect x="' + (col * cell) + '" y="' + (row * cell) + '" width="' + cell + '" height="' + cell + '" fill="#8b5cf6"/>';
+  }
+  return '<svg width="' + size + '" height="' + size + '" viewBox="0 0 ' + size + ' ' + size + '" xmlns="http://www.w3.org/2000/svg" style="background:#1a1a2e;display:block;border:1px solid #2d2d4e;border-radius:4px">' + rects + '</svg>';
+}
+
+// ==================== ALL POSSIBLE CLUES REFERENCE ====================
+// Mirrors grovers-logic.js clue math client-side (read-only display, no server call).
+
+var GS_REF_NUMS = null;
+function gsGetRefNums() {
+  if (GS_REF_NUMS) return GS_REF_NUMS;
+  GS_REF_NUMS = [];
+  for (var i = 0; i < 256; i++) {
+    var bin = i.toString(2); while (bin.length < 8) bin = '0' + bin;
+    var bits = bin.split('').map(Number);
+    var ds = String(i).split('').reduce(function(s,d){return s+parseInt(d,10);},0);
+    var bc = bits.reduce(function(s,b){return s+b;},0);
+    var un = Math.floor(i/16), ln = i%16;
+    var ubc = bits[0]+bits[1]+bits[2]+bits[3];
+    var lbc = bits[4]+bits[5]+bits[6]+bits[7];
+    function maxRun(val) { var m=0,c=0; for(var j=0;j<8;j++){if(bits[j]===val){c++;if(c>m)m=c;}else c=0;} return m; }
+    function cntBlk(val) { var b=0,in_=false; for(var j=0;j<8;j++){if(bits[j]===val){if(!in_){b++;in_=true;}}else in_=false;} return b; }
+    GS_REF_NUMS.push({ n:i, bits:bits, digitSum:ds, bitCount:bc, upperNibble:un, lowerNibble:ln, upperBitCount:ubc, lowerBitCount:lbc, maxRun1:maxRun(1), maxRun0:maxRun(0), blocks1:cntBlk(1), blocks0:cntBlk(0) });
+  }
+  return GS_REF_NUMS;
+}
+
+function gsMatchNums(fn) {
+  var out = []; var nums = gsGetRefNums();
+  for (var i = 0; i < 256; i++) { if (fn(nums[i])) out.push(i); }
+  return out;
+}
+
+function gsBuildClueRefGroups() {
+  var g = [];
+
+  // Decimal Range
+  var qp = [[0,63,64,127],[0,63,128,191],[0,63,192,255],[64,127,128,191],[64,127,192,255],[128,191,192,255]];
+  g.push({ category: 'Decimal Range', items: qp.map(function(p){
+    return { text: p[0]+'–'+p[1]+' or '+p[2]+'–'+p[3],
+             matching: gsMatchNums(function(x){return(x.n>=p[0]&&x.n<=p[1])||(x.n>=p[2]&&x.n<=p[3]);}) };
+  })});
+
+  // Even / Odd + Divisibility
+  g.push({ category: 'Even / Odd + Divisibility', items: [
+    { text:'Even',            matching: gsMatchNums(function(x){return x.n%2===0;}) },
+    { text:'Odd',             matching: gsMatchNums(function(x){return x.n%2!==0;}) },
+    { text:'Divisible by 3',  matching: gsMatchNums(function(x){return x.n%3===0;}) },
+    { text:'Divisible by 4',  matching: gsMatchNums(function(x){return x.n%4===0;}) },
+    { text:'Divisible by 5',  matching: gsMatchNums(function(x){return x.n%5===0;}) },
+  ]});
+
+  // Digit Sum
+  g.push({ category: 'Digit Sum', items: [
+    { text:'Digit sum 0–9',  matching: gsMatchNums(function(x){return x.digitSum<=9;}) },
+    { text:'Digit sum 10–18',matching: gsMatchNums(function(x){return x.digitSum>=10&&x.digitSum<=18;}) },
+    { text:'Digit sum 19+',       matching: gsMatchNums(function(x){return x.digitSum>=19;}) },
+  ]});
+
+  // Bit Count
+  var bcItems = [];
+  for (var k = 2; k <= 6; k++) {
+    (function(kk){ bcItems.push({ text:'Exactly '+kk+' ones', matching: gsMatchNums(function(x){return x.bitCount===kk;}) }); })(k);
+  }
+  g.push({ category: 'Bit Count (ones)', items: bcItems });
+
+  // Bit Position
+  var bpItems = [];
+  for (var b = 1; b <= 7; b++) {
+    (function(bn){
+      bpItems.push({ text:'Bit '+bn+' (left) = 1', matching: gsMatchNums(function(x){return x.bits[bn-1]===1;}) });
+      bpItems.push({ text:'Bit '+bn+' (left) = 0', matching: gsMatchNums(function(x){return x.bits[bn-1]===0;}) });
+    })(b);
+  }
+  g.push({ category: 'Bit Position (bits 1–7)', items: bpItems });
+
+  // Nibble
+  g.push({ category: 'Nibble', items: [
+    { text:'Upper nibble > lower nibble', matching: gsMatchNums(function(x){return x.upperNibble>x.lowerNibble;}) },
+    { text:'Upper nibble < lower nibble', matching: gsMatchNums(function(x){return x.upperNibble<x.lowerNibble;}) },
+    { text:'Upper nibble = lower nibble', matching: gsMatchNums(function(x){return x.upperNibble===x.lowerNibble;}) },
+    { text:'Upper nibble value is even',  matching: gsMatchNums(function(x){return x.upperNibble%2===0;}) },
+    { text:'Upper nibble value is odd',   matching: gsMatchNums(function(x){return x.upperNibble%2!==0;}) },
+    { text:'Lower nibble value is even',  matching: gsMatchNums(function(x){return x.lowerNibble%2===0;}) },
+    { text:'Lower nibble value is odd',   matching: gsMatchNums(function(x){return x.lowerNibble%2!==0;}) },
+  ]});
+
+  // Dominant Half
+  g.push({ category: 'Dominant Half', items: [
+    { text:'Upper half has more 1s',          matching: gsMatchNums(function(x){return x.upperBitCount>x.lowerBitCount;}) },
+    { text:'Lower half has more 1s',          matching: gsMatchNums(function(x){return x.lowerBitCount>x.upperBitCount;}) },
+    { text:'Both halves have equal 1s',       matching: gsMatchNums(function(x){return x.upperBitCount===x.lowerBitCount;}) },
+    { text:'1s in upper half — count is even',matching: gsMatchNums(function(x){return x.upperBitCount%2===0;}) },
+    { text:'1s in upper half — count is odd', matching: gsMatchNums(function(x){return x.upperBitCount%2!==0;}) },
+    { text:'1s in lower half — count is even',matching: gsMatchNums(function(x){return x.lowerBitCount%2===0;}) },
+    { text:'1s in lower half — count is odd', matching: gsMatchNums(function(x){return x.lowerBitCount%2!==0;}) },
+  ]});
+
+  // Consecutive Runs
+  var runItems = [];
+  for (var r = 1; r <= 6; r++) {
+    (function(rr){ runItems.push({ text:'Longest run of 1s = '+rr, matching: gsMatchNums(function(x){return x.maxRun1===rr;}) }); })(r);
+  }
+  for (var r = 1; r <= 6; r++) {
+    (function(rr){ runItems.push({ text:'Longest run of 0s = '+rr, matching: gsMatchNums(function(x){return x.maxRun0===rr;}) }); })(r);
+  }
+  g.push({ category: 'Consecutive Runs', items: runItems });
+
+  // Blocks of 1s
+  var bl1 = [];
+  for (var n = 1; n <= 4; n++) {
+    (function(nn){ bl1.push({ text:'Exactly '+nn+' block'+(nn>1?'s':'')+' of 1s', matching: gsMatchNums(function(x){return x.blocks1===nn;}) }); })(n);
+  }
+  g.push({ category: 'Blocks of 1s', items: bl1 });
+
+  // Blocks of 0s
+  var bl0 = [];
+  for (var n = 1; n <= 4; n++) {
+    (function(nn){ bl0.push({ text:'Exactly '+nn+' block'+(nn>1?'s':'')+' of 0s', matching: gsMatchNums(function(x){return x.blocks0===nn;}) }); })(n);
+  }
+  g.push({ category: 'Blocks of 0s', items: bl0 });
+
+  // Longest Run Type
+  g.push({ category: 'Longest Run Type', items: [
+    { text:'Longest run is 1s',              matching: gsMatchNums(function(x){return x.maxRun1>x.maxRun0;}) },
+    { text:'Longest run is 0s',              matching: gsMatchNums(function(x){return x.maxRun0>x.maxRun1;}) },
+    { text:'Longest run of 1s = run of 0s',  matching: gsMatchNums(function(x){return x.maxRun1===x.maxRun0;}) },
+  ]});
+
+  return g;
+}
+
+function renderAllCluesReference() {
+  var body = document.getElementById('gs-allclues-body');
+  if (!body || body.dataset.built) return;
+  var groups = gsBuildClueRefGroups();
+  var html = '';
+  for (var i = 0; i < groups.length; i++) {
+    var gr = groups[i];
+    html += '<h4 style="margin:12px 0 6px;font-size:13px;font-weight:800;color:#c4b5fd">'
+          + esc(gr.category) + ' <span style="font-size:11px;color:#64748b;font-weight:400">(' + gr.items.length + ')</span></h4>'
+          + '<div class="gs-clueref-grid">';
+    for (var j = 0; j < gr.items.length; j++) {
+      var it = gr.items[j];
+      html += '<div class="gs-clueref-tile" title="' + esc(it.text) + '">'
+            + miniBoardSvg(it.matching)
+            + '<span class="gs-clueref-tile-text">' + esc(it.text) + '</span>'
+            + '</div>';
+    }
+    html += '</div>';
+  }
+  body.innerHTML = html;
+  body.dataset.built = '1';
+}
+
+// ==================== RENDER STATE ====================
+function renderGame(state) {
+  gs = state;
+  renderPlayersBar(state);
+  renderTurnSection(state);
+  renderClueSection(state);
+  renderPendingCard(state);
+  renderHand(state);
+  renderCentralBoard(state);
+  renderPlayedCards(state);
+  renderVotingArea(state);
+  renderLogSection(state);
+
+  if (state.gameOver) {
+    setTimeout(function(){ showGameOver(state); }, state.won ? 800 : 400);
+  }
+
+  var cancelBtn = document.getElementById('btn-cancel-game');
+  if (cancelBtn) cancelBtn.style.display = (isHost && !state.gameOver) ? '' : 'none';
+}
+
+function renderPlayersBar(state) {
+  var bar = document.getElementById('gs-players-bar');
+  if (!bar) return;
+  var html = '';
+  for (var i = 0; i < state.players.length; i++) {
+    var p = state.players[i];
+    var hex = PLAYER_COLOR_HEX[p.color] || '#888';
+    var isCur = i === state.currentPlayerIdx;
+    var isMe  = i === state.myPlayerIdx;
+    var hasQt = i === state.quantumTokenPlayerIdx;
+    html += '<div class="gs-player-chip' + (isCur ? ' gs-player-active' : '') + (isMe ? ' gs-player-me' : '') + '">'
+      + '<span class="gs-player-swatch" style="background:' + hex + '"></span>'
+      + '<span>' + esc(p.name) + (isMe ? ' (me)' : '') + '</span>'
+      + (hasQt ? '<span class="gs-quantum-badge">⚛</span>' : '')
+      + (p.connected ? '' : '<span class="gs-player-dc">●</span>')
+      + '</div>';
+  }
+  bar.innerHTML = html;
+
+  // Round badge
+  var badge = document.getElementById('gs-round-badge');
+  if (badge) {
+    if (state.phase === 'playing') badge.textContent = 'Round ' + state.round + ' / ' + state.totalRounds;
+    else if (state.phase === 'voting') badge.textContent = 'Measurement Phase';
+    else badge.textContent = 'Game Over';
+  }
+  var phaseEl = document.getElementById('gs-phase-label');
+  if (phaseEl) {
+    if (state.phase === 'playing' && !state.gameOver) {
+      var cur = state.players[state.currentPlayerIdx];
+      phaseEl.textContent = state.myPlayerIdx === state.currentPlayerIdx ? "It's your turn!" : (cur ? cur.name + "'s turn" : '');
+    } else if (state.phase === 'voting') {
+      var votesIn = Object.keys(state.finalVotes || {}).length;
+      phaseEl.textContent = votesIn + ' / ' + state.players.length + ' votes cast';
+    } else {
+      phaseEl.textContent = '';
+    }
+  }
+}
+
+function renderTurnSection(state) {
+  var statusEl  = document.getElementById('gs-turn-status');
+  var actionsEl = document.getElementById('gs-turn-actions');
+  if (!statusEl || !actionsEl) return;
+
+  if (state.gameOver) {
+    statusEl.innerHTML = state.won ? '<span style="color:#22c55e">✓ Mission accomplished!</span>' : '<span style="color:#ef4444">✗ Mission failed.</span>';
+    actionsEl.innerHTML = '';
+    return;
+  }
+
+  var curPlayer = state.players[state.currentPlayerIdx];
+  var curHex    = PLAYER_COLOR_HEX[curPlayer ? curPlayer.color : ''] || '#888';
+  var isMe      = state.myPlayerIdx === state.currentPlayerIdx;
+
+  if (state.phase === 'playing') {
+    statusEl.innerHTML = '<span class="gs-turn-swatch" style="background:' + curHex + '"></span>'
+      + '<span>' + esc(curPlayer ? curPlayer.name : '?') + (isMe ? ", it's your turn!" : "'s turn") + '</span>';
+
+    if (isMe && !state.pendingCard) {
+      actionsEl.innerHTML = '<div class="gs-turn-tip">Choose a gate card from your hand to play. Your token is placed automatically based on your clue.</div>';
+    } else if (state.pendingCard && state.pendingCard.needsVote) {
+      actionsEl.innerHTML = '<div class="gs-turn-tip">A gate card has been played. Use the YES / NO buttons to place your token.</div>';
+    } else if (state.pendingCard) {
+      var left = 0;
+      for (var pi = 0; pi < state.players.length; pi++) {
+        if (state.pendingCard.tokens && state.pendingCard.tokens[pi] === undefined) left++;
+      }
+      actionsEl.innerHTML = '<div class="gs-turn-tip">Waiting for ' + left + ' more player' + (left === 1 ? '' : 's') + ' to vote on the gate card.</div>';
+    } else {
+      actionsEl.innerHTML = '<div class="gs-turn-tip">Waiting for ' + esc(curPlayer ? curPlayer.name : '?') + ' to play a gate card.</div>';
+    }
+  } else if (state.phase === 'voting') {
+    statusEl.innerHTML = '<span style="color:#facc15;font-weight:800">⚡ Measurement Phase</span>';
+    var myVote = state.finalVotes[state.myPlayerIdx];
+    if (myVote !== undefined) {
+      actionsEl.innerHTML = '<div class="gs-turn-tip">You voted for <strong>' + myVote + '</strong>. Waiting for other players to vote.</div>';
+    } else {
+      actionsEl.innerHTML = '<div class="gs-turn-tip">Click a number in the bottom row of the Number Estimate board to cast your final vote.</div>';
+    }
+  }
+}
+
+function renderClueSection(state) {
+  var textEl    = document.getElementById('gs-clue-text');
+  var gridWrap  = document.getElementById('gs-clue-grid-wrap');
+  var miniEl    = document.getElementById('gs-clue-miniboard');
+  var entBox    = document.getElementById('gs-entanglement-box');
+  var entText   = document.getElementById('gs-entanglement-text');
+  var entGrid   = document.getElementById('gs-entanglement-grid-wrap');
+  var entMini   = document.getElementById('gs-entanglement-miniboard');
+  if (!textEl) return;
+
+  // Entanglement clue (public)
+  if (state.entanglementClue) {
+    if (entBox)  entBox.style.display  = '';
+    if (entText) entText.textContent   = state.entanglementClue.text.replace(/^ENTANGLEMENT — /, '');
+    if (entGrid) entGrid.style.display = '';
+    if (entMini) entMini.innerHTML     = miniBoardSvg(state.entanglementClue.matchingNumbers || []);
+  } else {
+    if (entBox) entBox.style.display = 'none';
+  }
+
+  // Private clue
+  if (state.myClue) {
+    textEl.textContent = state.myClue.text;
+    if (gridWrap) gridWrap.style.display = '';
+    if (miniEl)   miniEl.innerHTML = miniBoardSvg(state.myClue.matchingNumbers || []);
+  } else {
+    textEl.textContent = 'Waiting for game to start…';
+    if (gridWrap) gridWrap.style.display = 'none';
+  }
+}
+
+function renderPendingCard(state) {
+  var area = document.getElementById('gs-pending-area');
+  if (!area) return;
+
+  if (!state.pendingCard || state.phase !== 'playing') {
+    area.style.display = 'none';
+    return;
+  }
+
+  area.style.display = '';
+  var pc = state.pendingCard;
+
+  document.getElementById('gs-pending-number').textContent = pc.number;
+  document.getElementById('gs-pending-binary').textContent = pc.binaryStr;
+  var pName = state.players[pc.playedByPlayerIdx];
+  document.getElementById('gs-pending-player').textContent = pName ? pName.name : '?';
+
+  // Vote buttons — only if this player needs to vote
+  var voteBtnsEl = document.getElementById('gs-vote-btns');
+  if (voteBtnsEl) {
+    if (pc.needsVote) {
+      voteBtnsEl.innerHTML =
+        '<button class="gs-btn gs-btn-yes" onclick="voteCard(\'yes\')">YES — matches my clue</button>'
+        + '<button class="gs-btn gs-btn-no" onclick="voteCard(\'no\')">NO — doesn\'t match</button>';
+    } else if (pc.tokens && pc.tokens[state.myPlayerIdx] !== undefined) {
+      var myVote = pc.tokens[state.myPlayerIdx];
+      voteBtnsEl.innerHTML = '<span style="font-size:13px;font-weight:700;color:' + (myVote === 'yes' ? '#22c55e' : '#ef4444') + '">You voted ' + myVote.toUpperCase() + '</span>';
+    } else {
+      voteBtnsEl.innerHTML = '<span style="font-size:12px;color:#64748b">Waiting to vote…</span>';
+    }
+  }
+
+  // Show current tokens
+  var tokensEl = document.getElementById('gs-pending-tokens');
+  if (tokensEl) {
+    var html = '';
+    for (var pi = 0; pi < state.players.length; pi++) {
+      var vote = pc.tokens && pc.tokens[pi];
+      var ph = PLAYER_COLOR_HEX[state.players[pi].color] || '#888';
+      if (vote) {
+        html += '<span style="display:inline-flex;align-items:center;gap:4px;font-size:12px">'
+          + '<span style="width:12px;height:12px;border-radius:50%;background:' + ph + ';border:1.5px solid rgba(255,255,255,.3);display:inline-block"></span>'
+          + '<span style="color:' + (vote === 'yes' ? '#22c55e' : '#ef4444') + ';font-weight:700">' + vote.toUpperCase() + '</span>'
+          + '</span>';
+      }
+    }
+    tokensEl.innerHTML = html || '<span style="font-size:12px;color:#475569">Waiting for tokens…</span>';
+  }
+}
+
+function renderHand(state) {
+  var area = document.getElementById('gs-hand-area');
+  if (!area) return;
+
+  // Show hand only if it's my turn, no pending card, and game is playing
+  var showHand = state.phase === 'playing'
+    && state.myPlayerIdx === state.currentPlayerIdx
+    && !state.pendingCard
+    && !state.gameOver;
+
+  area.style.display = showHand ? '' : 'none';
+  if (!showHand) return;
+
+  var label = document.getElementById('gs-hand-label');
+  if (label) label.textContent = "Your Hand — Click a Card to Play It";
+
+  var cardsEl = document.getElementById('gs-hand-cards');
+  if (!cardsEl) return;
+
+  var hand = state.myHand || [];
+  var clueMatches = state.myClue ? state.myClue.matchingNumbers : [];
+  var html = '';
+  for (var i = 0; i < hand.length; i++) {
+    var n = hand[i];
+    var bin = n.toString(2).padStart(8, '0');
+    var matches = clueMatches.indexOf(n) !== -1;
+    html += '<div class="gs-hand-card' + (matches ? ' gs-hand-card-match' : ' gs-hand-card-nomatch') + '" onclick="playCard(' + n + ')">'
+      + '<div class="gs-hand-card-num">' + n + '</div>'
+      + '<div class="gs-hand-card-bin">' + bin + '</div>'
+      + (matches ? '<div style="font-size:9px;color:#22c55e;font-weight:700;margin-top:2px">MATCH</div>' : '')
+      + '</div>';
+  }
+  cardsEl.innerHTML = html || '<span style="font-size:12px;color:#64748b">No cards in hand.</span>';
+}
+
+function renderCentralBoard(state) {
+  if (!state) return;
+  var myEst = state.estimate ? state.estimate[state.myPlayerIdx] : null;
+  var myConf = state.confidence ? state.confidence[state.myPlayerIdx] : '?';
+
+  // Confidence sections
+  ['?', 'low', 'medium', 'high'].forEach(function(level) {
+    var el = document.getElementById('gs-conf-' + level);
+    if (el) el.classList.toggle('gs-section-mine', myConf === level);
+    var tokensEl = document.getElementById('gs-conf-tokens-' + level);
+    if (!tokensEl) return;
+    var html = '';
+    for (var pi = 0; pi < state.players.length; pi++) {
+      if (state.confidence[pi] === level) {
+        var hex = PLAYER_COLOR_HEX[state.players[pi].color] || '#888';
+        html += '<span class="gs-conf-token" style="background:' + hex + '"></span>';
+      }
+    }
+    tokensEl.innerHTML = html;
+  });
+
+  // Estimate unknown (?)
+  var estUnknown = document.getElementById('gs-est-unknown');
+  var unknownTokensEl = document.getElementById('gs-est-tokens-unknown');
+  var myEstIsNull = myEst === null || myEst === undefined;
+  if (estUnknown) estUnknown.classList.toggle('gs-est-mine', myEstIsNull);
+  if (unknownTokensEl) {
+    var uHtml = '';
+    for (var pi2 = 0; pi2 < state.players.length; pi2++) {
+      var est2 = state.estimate[pi2];
+      if (est2 === null || est2 === undefined) {
+        var hex2 = PLAYER_COLOR_HEX[state.players[pi2].color] || '#888';
+        uHtml += '<span class="gs-est-token" style="background:' + hex2 + '"></span>';
+      }
+    }
+    unknownTokensEl.innerHTML = uHtml;
+  }
+
+  // Quarters (Row 1)
+  var quartersEl = document.getElementById('gs-est-quarters');
+  if (quartersEl) {
+    var qLabels = ['0–63', '64–127', '128–191', '192–255'];
+    var html = '';
+    for (var q = 0; q < 4; q++) {
+      var isMyQ = myEst && myEst.type === 'quarter' && myEst.value === q;
+      var toks = '';
+      for (var pi3 = 0; pi3 < state.players.length; pi3++) {
+        var e3 = state.estimate[pi3];
+        if (e3 && e3.type === 'quarter' && e3.value === q) {
+          var hex3 = PLAYER_COLOR_HEX[state.players[pi3].color] || '#888';
+          toks += '<span class="gs-est-token" style="background:' + hex3 + '"></span>';
+        }
+      }
+      html += '<div class="gs-est-cell' + (isMyQ ? ' gs-est-mine' : '') + '" onclick="setEstimate({type:\'quarter\',value:' + q + '})">'
+        + '<span class="gs-est-q-label">' + qLabels[q] + '</span>'
+        + '<span class="gs-est-tokens">' + toks + '</span>'
+        + '</div>';
+    }
+    quartersEl.innerHTML = html;
+  }
+
+  // Tenths (Row 2)
+  var tenthsEl = document.getElementById('gs-est-tenths');
+  if (tenthsEl) {
+    var html2 = '';
+    for (var t = 0; t < 10; t++) {
+      var lo = Math.round(t * 25.5);
+      var hi = Math.round((t + 1) * 25.5) - 1;
+      if (t === 9) hi = 255;
+      var isMyT = myEst && myEst.type === 'tenth' && myEst.value === t;
+      var toks2 = '';
+      for (var pi4 = 0; pi4 < state.players.length; pi4++) {
+        var e4 = state.estimate[pi4];
+        if (e4 && e4.type === 'tenth' && e4.value === t) {
+          var hex4 = PLAYER_COLOR_HEX[state.players[pi4].color] || '#888';
+          toks2 += '<span class="gs-est-token" style="background:' + hex4 + '"></span>';
+        }
+      }
+      html2 += '<div class="gs-est-cell' + (isMyT ? ' gs-est-mine' : '') + '" onclick="setEstimate({type:\'tenth\',value:' + t + '})">'
+        + '<span class="gs-est-q-label">' + lo + '–' + hi + '</span>'
+        + '<span class="gs-est-tokens">' + toks2 + '</span>'
+        + '</div>';
+    }
+    tenthsEl.innerHTML = html2;
+  }
+
+  // Numbers (Row 3) — 16×16 grid
+  var numbersEl = document.getElementById('gs-est-numbers');
+  if (numbersEl) {
+    var html3 = '';
+    for (var n3 = 0; n3 < 256; n3++) {
+      var isMyN = myEst && myEst.type === 'number' && myEst.value === n3;
+      var toks3 = '';
+      for (var pi5 = 0; pi5 < state.players.length; pi5++) {
+        var e5 = state.estimate[pi5];
+        if (e5 && e5.type === 'number' && e5.value === n3) {
+          var hex5 = PLAYER_COLOR_HEX[state.players[pi5].color] || '#888';
+          toks3 += '<span class="gs-est-token" style="background:' + hex5 + '"></span>';
+        }
+      }
+      // In voting phase, also show final votes
+      if (state.phase === 'voting' || state.gameOver) {
+        for (var pi6 = 0; pi6 < state.players.length; pi6++) {
+          if (state.finalVotes[pi6] === n3) {
+            var hex6 = PLAYER_COLOR_HEX[state.players[pi6].color] || '#888';
+            toks3 += '<span class="gs-est-token" style="background:' + hex6 + ';border-color:gold"></span>';
+          }
+        }
+      }
+      html3 += '<div class="gs-est-cell' + (isMyN ? ' gs-est-mine' : '') + '" title="' + n3 + '" onclick="setEstimate({type:\'number\',value:' + n3 + '})">'
+        + '<span class="gs-est-q-label">' + n3 + '</span>'
+        + '<span class="gs-est-tokens">' + toks3 + '</span>'
+        + '</div>';
+    }
+    numbersEl.innerHTML = html3;
+  }
+}
+
+function renderPlayedCards(state) {
+  var grid = document.getElementById('gs-cards-grid');
+  var noCards = document.getElementById('gs-no-cards');
+  var countEl = document.getElementById('gs-cards-count');
+  if (!grid) return;
+
+  var cards = state.playedCards || [];
+  if (countEl) countEl.textContent = cards.length + ' card' + (cards.length === 1 ? '' : 's') + ' played';
+  if (!cards.length) {
+    grid.innerHTML = '';
+    if (noCards) noCards.style.display = '';
+    return;
+  }
+  if (noCards) noCards.style.display = 'none';
+
+  var html = '';
+  for (var i = cards.length - 1; i >= 0; i--) {
+    var card = cards[i];
+    var yesToks = '';
+    var noToks  = '';
+    for (var pi = 0; pi < state.players.length; pi++) {
+      var vote = card.tokens && card.tokens[pi];
+      if (!vote) continue;
+      var hex = PLAYER_COLOR_HEX[state.players[pi].color] || '#888';
+      var tok = '<span class="gs-card-token" style="background:' + hex + '"></span>';
+      if (vote === 'yes') yesToks += tok;
+      else                noToks  += tok;
+    }
+    html += '<div class="gs-gate-card">'
+      + '<div class="gs-card-yes">'
+      + '  <div class="gs-card-yes-label">YES</div>'
+      + '  <div class="gs-card-tokens">' + yesToks + '</div>'
+      + '</div>'
+      + '<div class="gs-card-round-badge">Rnd ' + card.round + '</div>'
+      + '<div class="gs-card-center">'
+      + '  <div class="gs-card-number">' + card.number + '</div>'
+      + '  <div class="gs-card-binary">' + card.binaryStr + '</div>'
+      + '</div>'
+      + '<div class="gs-card-no">'
+      + '  <div class="gs-card-tokens">' + noToks + '</div>'
+      + '  <div class="gs-card-no-label">NO</div>'
+      + '</div>'
+      + '</div>';
+  }
+  grid.innerHTML = html;
+}
+
+function renderVotingArea(state) {
+  var area = document.getElementById('gs-voting-area');
+  if (!area) return;
+  area.style.display = (state.phase === 'voting' && !state.gameOver) ? '' : 'none';
+
+  if (state.phase === 'voting') {
+    var votesIn = Object.keys(state.finalVotes || {}).length;
+    var statusEl = document.getElementById('gs-voting-status');
+    if (statusEl) statusEl.textContent = votesIn + ' of ' + state.players.length + ' players have voted.';
+    var myVoteEl = document.getElementById('gs-my-vote-display');
+    if (myVoteEl) {
+      var myVote = state.finalVotes[state.myPlayerIdx];
+      if (myVote !== undefined) {
+        myVoteEl.style.display = '';
+        myVoteEl.textContent = 'Your vote: ' + myVote;
+      } else {
+        myVoteEl.style.display = 'none';
+      }
+    }
+  }
+}
+
+function renderLogSection(state) {
+  var body = document.getElementById('gs-log-body');
+  if (!body) return;
+  var log = state.log || [];
+  if (!log.length) {
+    body.innerHTML = '<div class="gs-log-entry" style="font-style:italic">Nothing yet.</div>';
+    return;
+  }
+  body.innerHTML = log.map(function(e){ return '<div class="gs-log-entry">' + esc(e) + '</div>'; }).join('');
+}
+
+// ==================== GAME OVER ====================
+function showGameOver(state) {
+  var overlay = document.getElementById('gs-gameover');
+  if (!overlay) return;
+  overlay.style.display = 'flex';
+  document.getElementById('gs-gameover-icon').textContent  = state.won ? '✓' : '✗';
+  document.getElementById('gs-gameover-title').textContent = state.won ? 'Mission Accomplished!' : 'Mission Failed';
+  document.getElementById('gs-gameover-sub').textContent   = state.won
+    ? 'Your team correctly identified the quantum number.'
+    : 'Your team chose the wrong number.';
+  var block = document.getElementById('gs-answer-block');
+  if (block && state.answer !== null) {
+    block.style.display = '';
+    document.getElementById('gs-answer-number').textContent = state.answer;
+    document.getElementById('gs-answer-binary').textContent = state.answer.toString(2).padStart(8, '0');
+  }
+}
+
+// ==================== HUB WIRING ====================
+(function init() {
+  hub = SocketHub.create({
+    onConnect: function() {
+      var saved = sessionStorage.getItem(SESSION_KEY);
+      if (saved) {
+        send({ type: 'rejoin_room', token: saved, gameType: 'grovers' });
+      }
+    },
+    onDisconnect: function() {}
+  });
+
+  hub.on('room_created',   onRoomCreated);
+  hub.on('room_joined',    onRoomJoined);
+  hub.on('room_rejoined',  onRoomRejoined);
+  hub.on('rejoin_ok',      onRoomRejoined);
+  hub.on('lobby_update',   onLobbyUpdate);
+  hub.on('gs_game_started', function() { showScreen('game'); });
+  hub.on('game_started',   function() { showScreen('game'); });
+  hub.on('gs_state',       function(msg) { renderGame(msg); });
+  hub.on('cancel_game',    function() { backToLobby(); });
+  hub.on('error',          function(msg) { console.error('WS error:', msg.msg); });
+  hub.on('room_info',      function(msg) { LobbyUI.handleRoomInfo(msg); });
+
+  hub.connect();
+})();
+
+function onRoomCreated(msg) {
+  roomCode = msg.code;
+  myIdx    = msg.yourId;
+  isHost   = true;
+  sessionStorage.setItem(SESSION_KEY, msg.token);
+  enterWaiting();
+}
+
+function onRoomJoined(msg) {
+  roomCode = msg.code;
+  myIdx    = msg.yourId;
+  isHost   = msg.isHost || false;
+  sessionStorage.setItem(SESSION_KEY, msg.token);
+  enterWaiting();
+}
+
+function onRoomRejoined(msg) {
+  roomCode = msg.code;
+  myIdx    = msg.yourId;
+  isHost   = !!msg.isHost;
+  if (msg.token) sessionStorage.setItem(SESSION_KEY, msg.token);
+  if (!msg.started) enterWaiting();
+  // game state arrives via gs_state broadcast after this
+}
+
+function onLobbyUpdate(msg) {
+  renderLobbyPlayers(msg.players || [], msg.observers || []);
+}
+
+LobbyUI.init({
+  gameType: 'grovers',
+  sendFn: send,
+  checkFn: send,
+  onCreateAsObserver: function() {},
+  onJoinAsObserver: function() {},
+});
+</script>
+<script src="/nav.js"></script>
+</body>
+</html>

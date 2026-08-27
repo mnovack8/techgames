@@ -1,0 +1,750 @@
+/* ===== GROVERS QUANTUM SEARCH — Game Styles ===== */
+
+/* Color palette */
+:root {
+  --gs-bg:         #0f0f1a;
+  --gs-surface:    #1a1a2e;
+  --gs-surface2:   #16213e;
+  --gs-border:     #2d2d4e;
+  --gs-accent:     #8b5cf6;
+  --gs-accent2:    #c4b5fd;
+  --gs-yes:        #22c55e;
+  --gs-no:         #ef4444;
+  --gs-text:       #e2e8f0;
+  --gs-muted:      #64748b;
+  --gs-quantum:    #facc15;
+}
+
+body {
+  background: var(--gs-bg);
+  color: var(--gs-text);
+  font-family: 'Inter', system-ui, sans-serif;
+  margin: 0;
+  overflow-x: hidden;
+}
+
+/* ===== GAME LAYOUT ===== */
+.gs-screen { display: none; }
+.gs-screen.active { display: block; }
+
+.gs-game-layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  grid-template-rows: auto 1fr;
+  height: 100vh;
+  gap: 0;
+}
+
+/* ===== PLAYERS BAR ===== */
+.gs-players-bar {
+  grid-column: 1 / -1;
+  background: var(--gs-surface2);
+  border-bottom: 1px solid var(--gs-border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  flex-wrap: wrap;
+  min-height: 48px;
+}
+
+.gs-player-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: var(--gs-surface);
+  border: 1.5px solid var(--gs-border);
+  font-size: 13px;
+  font-weight: 500;
+  position: relative;
+}
+.gs-player-chip.gs-player-active {
+  border-color: var(--gs-accent);
+  background: rgba(139, 92, 246, 0.15);
+}
+.gs-player-chip.gs-player-me { font-weight: 700; }
+
+.gs-player-swatch {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.gs-quantum-badge {
+  font-size: 11px;
+  background: var(--gs-quantum);
+  color: #000;
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-weight: 700;
+}
+
+.gs-player-dc {
+  color: var(--gs-no);
+  font-size: 8px;
+}
+
+/* ===== MAIN AREA ===== */
+.gs-main {
+  grid-column: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ===== PANEL ===== */
+.gs-panel {
+  grid-column: 2;
+  background: var(--gs-surface);
+  border-left: 1px solid var(--gs-border);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.gs-panel-section {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--gs-border);
+}
+
+.gs-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--gs-muted);
+  margin-bottom: 10px;
+}
+
+/* ===== TURN STATUS ===== */
+.gs-turn-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.gs-turn-swatch {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.gs-round-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(139,92,246,.2);
+  border: 1px solid var(--gs-accent);
+  border-radius: 20px;
+  padding: 3px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--gs-accent2);
+  margin-bottom: 8px;
+}
+
+/* ===== BUTTONS ===== */
+.gs-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1.5px solid var(--gs-border);
+  background: var(--gs-surface2);
+  color: var(--gs-text);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .12s, border-color .12s;
+  white-space: nowrap;
+}
+.gs-btn:hover { background: rgba(255,255,255,.05); border-color: var(--gs-accent); }
+.gs-btn:disabled { opacity: .45; cursor: default; }
+.gs-btn-yes  { background: rgba(34,197,94,.15); border-color: var(--gs-yes); color: var(--gs-yes); }
+.gs-btn-yes:hover  { background: rgba(34,197,94,.25); }
+.gs-btn-no   { background: rgba(239,68,68,.15);  border-color: var(--gs-no);  color: var(--gs-no);  }
+.gs-btn-no:hover   { background: rgba(239,68,68,.25); }
+.gs-btn-accent { background: rgba(139,92,246,.2); border-color: var(--gs-accent); color: var(--gs-accent2); }
+.gs-btn-accent:hover { background: rgba(139,92,246,.3); }
+.gs-btn-measure { background: rgba(250,204,21,.15); border-color: var(--gs-quantum); color: var(--gs-quantum); }
+.gs-btn-measure:hover { background: rgba(250,204,21,.25); }
+
+/* ===== CLUE SECTION ===== */
+.gs-clue-box {
+  background: rgba(139,92,246,.1);
+  border: 1.5px solid var(--gs-accent);
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+.gs-clue-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  color: var(--gs-accent2);
+  margin-bottom: 6px;
+}
+.gs-clue-text {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--gs-text);
+}
+
+/* ===== GATE CARD PLAYED AREA ===== */
+.gs-cards-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.gs-cards-header h3 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--gs-accent2);
+}
+
+.gs-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+}
+
+/* Individual gate card (portrait layout) */
+.gs-gate-card {
+  background: var(--gs-surface);
+  border: 2px solid var(--gs-border);
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 220px;
+}
+.gs-gate-card.gs-card-pending {
+  border-color: var(--gs-accent);
+  box-shadow: 0 0 0 3px rgba(139,92,246,.25);
+}
+
+/* YES section (top half of card) */
+.gs-card-yes {
+  flex: 1;
+  background: rgba(34,197,94,.08);
+  border-bottom: 1px solid rgba(34,197,94,.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 8px 6px 6px;
+  min-height: 80px;
+}
+.gs-card-yes-label {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .1em;
+  color: var(--gs-yes);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+/* Card center info */
+.gs-card-center {
+  padding: 6px;
+  text-align: center;
+  background: var(--gs-surface2);
+  border-top: 1px solid var(--gs-border);
+  border-bottom: 1px solid var(--gs-border);
+}
+.gs-card-number {
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--gs-text);
+  line-height: 1;
+}
+.gs-card-binary {
+  font-size: 10px;
+  font-family: 'Courier New', monospace;
+  color: var(--gs-muted);
+  letter-spacing: .05em;
+  margin-top: 2px;
+}
+
+/* NO section (bottom half of card) */
+.gs-card-no {
+  flex: 1;
+  background: rgba(239,68,68,.07);
+  border-top: 1px solid rgba(239,68,68,.25);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 6px 6px 8px;
+  min-height: 80px;
+}
+.gs-card-no-label {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .1em;
+  color: var(--gs-no);
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+/* Token dots on cards */
+.gs-card-tokens {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px;
+  min-height: 20px;
+}
+.gs-card-token {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,.3);
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+/* Round label on card */
+.gs-card-round-badge {
+  font-size: 9px;
+  color: var(--gs-muted);
+  text-align: center;
+  padding: 2px 0;
+  background: var(--gs-surface);
+}
+
+/* ===== PENDING CARD (active voting area) ===== */
+.gs-pending-area {
+  background: rgba(139,92,246,.08);
+  border: 2px solid var(--gs-accent);
+  border-radius: 14px;
+  padding: 16px;
+}
+.gs-pending-header {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--gs-accent2);
+  margin-bottom: 12px;
+}
+.gs-pending-card-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.gs-pending-card-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.gs-pending-number {
+  font-size: 40px;
+  font-weight: 900;
+  color: var(--gs-text);
+  line-height: 1;
+}
+.gs-pending-binary {
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  color: var(--gs-accent2);
+  letter-spacing: .08em;
+}
+.gs-vote-btns {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* ===== HAND ===== */
+.gs-hand-area {
+  background: var(--gs-surface);
+  border: 1px solid var(--gs-border);
+  border-radius: 12px;
+  padding: 14px;
+}
+.gs-hand-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--gs-muted);
+  margin-bottom: 10px;
+}
+.gs-hand-cards {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.gs-hand-card {
+  background: var(--gs-surface2);
+  border: 2px solid var(--gs-border);
+  border-radius: 10px;
+  padding: 10px 14px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color .12s, transform .1s;
+  min-width: 70px;
+}
+.gs-hand-card:hover {
+  border-color: var(--gs-accent);
+  transform: translateY(-2px);
+}
+.gs-hand-card.gs-card-selected {
+  border-color: var(--gs-accent);
+  background: rgba(139,92,246,.15);
+  transform: translateY(-3px);
+}
+.gs-hand-card-num {
+  font-size: 24px;
+  font-weight: 900;
+  color: var(--gs-text);
+  line-height: 1;
+}
+.gs-hand-card-bin {
+  font-family: 'Courier New', monospace;
+  font-size: 9px;
+  color: var(--gs-muted);
+  letter-spacing: .04em;
+  margin-top: 3px;
+}
+.gs-hand-note {
+  font-size: 12px;
+  color: var(--gs-muted);
+  font-style: italic;
+}
+
+/* Clue match indicator on hand card */
+.gs-hand-card-match { border-color: var(--gs-yes) !important; }
+.gs-hand-card-nomatch { opacity: .6; }
+.gs-hand-card-match .gs-hand-card-num { color: var(--gs-yes); }
+
+/* ===== CENTRAL BOARD ===== */
+.gs-central-board {
+  background: var(--gs-surface);
+  border: 1px solid var(--gs-border);
+  border-radius: 14px;
+  padding: 16px;
+}
+.gs-board-title {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--gs-accent2);
+  margin-bottom: 14px;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+}
+
+/* Confidence row */
+.gs-conf-row {
+  margin-bottom: 14px;
+}
+.gs-conf-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--gs-muted);
+  margin-bottom: 8px;
+}
+.gs-conf-sections {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+.gs-conf-section {
+  background: var(--gs-surface2);
+  border: 1.5px solid var(--gs-border);
+  border-radius: 8px;
+  padding: 6px 4px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color .12s;
+  min-height: 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 4px;
+}
+.gs-conf-section:hover { border-color: var(--gs-accent); }
+.gs-conf-section.gs-section-mine { border-color: var(--gs-accent); background: rgba(139,92,246,.12); }
+.gs-conf-section-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--gs-muted);
+}
+.gs-conf-tokens {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 3px;
+  min-height: 16px;
+}
+.gs-conf-token {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,.25);
+}
+
+/* Estimate board */
+.gs-estimate-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--gs-muted);
+  margin-bottom: 8px;
+}
+.gs-estimate-row {
+  margin-bottom: 10px;
+}
+.gs-estimate-row-label {
+  font-size: 10px;
+  color: var(--gs-muted);
+  margin-bottom: 4px;
+}
+
+/* Quarter row */
+.gs-est-quarters {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+  margin-bottom: 6px;
+}
+/* Tenth row */
+.gs-est-tenths {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 2px;
+  margin-bottom: 6px;
+}
+/* Number row */
+.gs-est-numbers {
+  display: grid;
+  grid-template-columns: repeat(16, 1fr);
+  gap: 1px;
+  margin-bottom: 4px;
+}
+
+.gs-est-cell {
+  background: var(--gs-surface2);
+  border: 1px solid var(--gs-border);
+  border-radius: 4px;
+  padding: 3px 2px;
+  text-align: center;
+  cursor: pointer;
+  font-size: 9px;
+  color: var(--gs-muted);
+  font-weight: 600;
+  min-height: 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 2px;
+  transition: border-color .1s;
+}
+.gs-est-cell:hover { border-color: var(--gs-accent); }
+.gs-est-cell.gs-est-mine { border-color: var(--gs-accent); background: rgba(139,92,246,.12); }
+.gs-est-tokens {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2px;
+}
+.gs-est-token {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.2);
+}
+.gs-est-q-label { font-size: 9px; color: var(--gs-muted); }
+
+/* "?" start position */
+.gs-est-unknown {
+  background: var(--gs-surface2);
+  border: 1px solid var(--gs-border);
+  border-radius: 4px;
+  padding: 4px 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--gs-muted);
+  margin-bottom: 6px;
+}
+.gs-est-unknown:hover { border-color: var(--gs-accent); }
+.gs-est-unknown.gs-est-mine { border-color: var(--gs-accent); background: rgba(139,92,246,.12); color: var(--gs-accent2); }
+
+/* ===== LOG ===== */
+.gs-log-body {
+  max-height: 200px;
+  overflow-y: auto;
+  font-size: 12px;
+  color: var(--gs-muted);
+}
+.gs-log-entry {
+  padding: 3px 0;
+  border-bottom: 1px solid rgba(255,255,255,.04);
+  line-height: 1.4;
+}
+
+/* ===== MODALS ===== */
+.gs-modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.gs-modal {
+  background: var(--gs-surface);
+  border: 1.5px solid var(--gs-border);
+  border-radius: 16px;
+  padding: 28px 32px;
+  max-width: 460px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(0,0,0,.5);
+}
+.gs-modal h3 {
+  margin: 0 0 12px;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--gs-text);
+}
+.gs-modal p {
+  margin: 0 0 16px;
+  font-size: 14px;
+  color: var(--gs-muted);
+  line-height: 1.5;
+}
+.gs-modal-btns {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+.gs-modal-icon {
+  font-size: 36px;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+/* ===== GAME OVER ===== */
+.gs-gameover-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+.gs-gameover-card {
+  background: var(--gs-surface);
+  border: 2px solid var(--gs-accent);
+  border-radius: 20px;
+  padding: 40px;
+  text-align: center;
+  max-width: 440px;
+  width: 90%;
+}
+.gs-gameover-icon  { font-size: 52px; margin-bottom: 12px; }
+.gs-gameover-title { font-size: 28px; font-weight: 900; color: var(--gs-text); margin-bottom: 8px; }
+.gs-gameover-sub   { font-size: 14px; color: var(--gs-muted); margin-bottom: 20px; line-height: 1.5; }
+.gs-answer-block   { margin-bottom: 24px; }
+.gs-answer-label   { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--gs-muted); margin-bottom: 6px; }
+.gs-answer-number  { font-size: 52px; font-weight: 900; color: var(--gs-accent2); line-height: 1; }
+.gs-answer-binary  { font-family: 'Courier New', monospace; font-size: 14px; color: var(--gs-muted); letter-spacing: .08em; margin-top: 4px; }
+
+/* ===== HTP (HOW TO PLAY) ===== */
+.gs-htp-body { font-size: 13px; line-height: 1.6; max-height: 60vh; overflow-y: auto; }
+.gs-htp-body h4 { margin: 14px 0 4px; font-size: 14px; font-weight: 800; color: var(--gs-accent2); }
+.gs-htp-body p  { margin: 0 0 10px; color: var(--gs-muted); }
+.gs-htp-body ul, .gs-htp-body ol { padding-left: 20px; margin: 0 0 10px; color: var(--gs-muted); }
+.gs-htp-body li { margin-bottom: 4px; }
+.gs-htp-highlight {
+  background: rgba(139,92,246,.15);
+  border-left: 3px solid var(--gs-accent);
+  padding: 8px 12px;
+  border-radius: 0 8px 8px 0;
+  margin: 10px 0;
+  font-weight: 600;
+  color: var(--gs-text);
+}
+
+/* ===== VOTING PHASE ===== */
+.gs-voting-area {
+  background: rgba(250,204,21,.08);
+  border: 2px solid var(--gs-quantum);
+  border-radius: 14px;
+  padding: 16px;
+}
+.gs-voting-header {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--gs-quantum);
+  margin-bottom: 10px;
+}
+.gs-voting-note {
+  font-size: 12px;
+  color: var(--gs-muted);
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 700px) {
+  .gs-game-layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr auto;
+  }
+  .gs-panel {
+    grid-column: 1;
+    border-left: none;
+    border-top: 1px solid var(--gs-border);
+    max-height: 50vh;
+  }
+  .gs-main { min-height: 0; }
+}
+
+/* ===== TURN TIP ===== */
+.gs-turn-tip {
+  font-size: 12px;
+  color: var(--gs-muted);
+  background: rgba(255,255,255,.03);
+  border-radius: 6px;
+  padding: 8px 10px;
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+
+/* ===== CANCEL BUTTON (header) ===== */
+#nav-game-btns {
+  display: flex;
+  gap: 8px;
+}
+#btn-cancel-game {
+  background: rgba(239,68,68,.15);
+  border: 1px solid var(--gs-no);
+  color: var(--gs-no);
+  border-radius: 8px;
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+#btn-cancel-game:hover { background: rgba(239,68,68,.25); }
