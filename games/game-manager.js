@@ -41,7 +41,8 @@ function _serializeRooms() {
     const isOver = (room.state && room.state.gameOver)
       || (room.cfState && room.cfState.gameOver)
       || (room.bcState && room.bcState.phase === 'game_over')
-      || (room.qbState && room.qbState.gameOver);
+      || (room.qbState && room.qbState.gameOver)
+      || (room.gsState && room.gsState.gameOver);
     if (!room.started || isOver) continue;
     const saved = {
       ...room,
@@ -182,7 +183,8 @@ function sendEventStatus(room) {
     const isOver = (room.bcState && room.bcState.phase === 'game_over')
       || (room.cfState && room.cfState.gameOver)
       || (room.state && room.state.gameOver)
-      || (room.qbState && room.qbState.gameOver);
+      || (room.qbState && room.qbState.gameOver)
+      || (room.gsState && room.gsState.gameOver);
     status = isOver ? 'completed' : 'in_progress';
   }
   const playerCount = room.players.filter(p => !p.isBot).length;
@@ -210,6 +212,9 @@ const { createGameState, processAction, broadcastState: fnBroadcastState, execut
 const { createCFGameState, processCFAction, cfBroadcastState, cfAdvanceTurn, executeCFBotTurn } = clusterflick;
 const { initBCGame, bcHandleAction, bcBroadcastState, bcEndTurn } = byteclub;
 const { initQBGame, qbHandleAction, qbBroadcastState, maybeScheduleBotTurn: qbMaybeScheduleBotTurn } = qubit;
+const grovers = require('./grovers-quantum-search/grovers-logic');
+grovers.init({ rooms, broadcastToRoom, trackEvent });
+const { initGSGame, gsHandleAction, gsBroadcastState } = grovers;
 
 // ==================== GAME REGISTRY ====================
 // Single source of truth for per-game behaviour.
@@ -318,6 +323,20 @@ const GAME_REGISTRY = {
       qbMaybeScheduleBotTurn(room);
     },
     isGameOver(room) { return !!(room.qbState && room.qbState.gameOver); },
+  },
+
+  grovers: {
+    minPlayers: 3, maxPlayers: 5,
+    colors: ['blue', 'red', 'green', 'purple', 'yellow'],
+    startGame(room) {
+      initGSGame(room);
+      broadcastToRoom(room, { type: 'gs_game_started' });
+      gsBroadcastState(room);
+    },
+    broadcastState(room)      { gsBroadcastState(room); },
+    onRejoin(room)            { gsBroadcastState(room); },
+    onDisconnect(room)        { gsBroadcastState(room); },
+    isGameOver(room)          { return !!(room.gsState && room.gsState.gameOver); },
   },
 };
 
@@ -681,6 +700,8 @@ function handleMessage(ws, raw) {
           bcHandleAction(room, info.playerIdx, msg);
         } else if (room.gameType === 'qubit') {
           qbHandleAction(room, info.playerIdx, msg);
+        } else if (room.gameType === 'grovers') {
+          gsHandleAction(room, info.playerIdx, msg);
         } else if (room.gameType === 'clusterflick') {
           const err = processCFAction(room, info.playerIdx, msg);
           if (err) return send(ws, {type:'error',msg:err});
@@ -731,6 +752,7 @@ function handleMessage(ws, raw) {
       if (room.bcState) room.bcState.phase     = 'game_over';
       if (room.cfState) room.cfState.gameOver  = true;
       if (room.qbState) room.qbState.gameOver  = true;
+      if (room.gsState) room.gsState.gameOver  = true;
       // Notify event organizers before the room is deleted
       if (room.isEventRoom && room.eventOrganizers?.length > 0) {
         const update = { type: 'event_status_update', code: room.code, playerCount: 0, status: 'cancelled' };

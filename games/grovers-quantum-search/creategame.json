@@ -1,0 +1,35 @@
+{
+  "mount": "/games/grovers-quantum-search/grovers.html",
+  "show_hero_ctas": false,
+  "show_event_hub": false,
+  "show_workshop": false,
+  "game_display_name": "GROVER'S QUANTUM SEARCH",
+  "hero_subtitle": "A silent cooperative deduction game. Use gate cards and a shared board to identify the hidden quantum number — no talking allowed.",
+  "how_to_play_html": "",
+  "time_text": "30 Min",
+  "players_text": "3–5 Players",
+  "colors": [
+    { "key": "blue",   "label": "Blue",   "swatch_css": "background:#4a9eff" },
+    { "key": "red",    "label": "Red",    "swatch_css": "background:#ff4a4a" },
+    { "key": "green",  "label": "Green",  "swatch_css": "background:#3fbf5f" },
+    { "key": "purple", "label": "Purple", "swatch_css": "background:#a060dd" },
+    { "key": "yellow", "label": "Yellow", "swatch_css": "background:#facc15;color:#1a1a1a" }
+  ],
+  "learning_objectives": [
+    {
+      "icon_svg": "<svg viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"12\" cy=\"12\" r=\"9\" stroke=\"#8b5cf6\" stroke-width=\"1.8\"/><path d=\"M4.5 9c3-2.4 12-2.4 15 0M4.5 15c3 2.4 12 2.4 15 0\" stroke=\"#c4b5fd\" stroke-width=\"1.5\"/><circle cx=\"12\" cy=\"12\" r=\"2\" fill=\"#8b5cf6\"/></svg>",
+      "title": "Grover's Algorithm",
+      "description": "Experience the core intuition behind Grover's search algorithm — using interference to amplify the probability of the correct answer rising to the top."
+    },
+    {
+      "icon_svg": "<svg viewBox=\"0 0 24 24\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M2 8c2 0 2 4 4 4s2-4 4-4 2 4 4 4 2-4 4-4 2 4 4 4\" stroke=\"#8b5cf6\" stroke-width=\"1.8\" stroke-linecap=\"round\"/><path d=\"M2 16c2 0 2-4 4-4s2 4 4 4 2-4 4-4 2 4 4 4 2-4 4-4\" stroke=\"#c4b5fd\" stroke-width=\"1.8\" stroke-linecap=\"round\"/></svg>",
+      "title": "Constructive Interference",
+      "description": "When players vote YES or NO on a gate card, conflicting signals cancel out while agreeing signals amplify — mirroring how quantum interference works."
+    },
+    {
+      "icon_svg": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#8b5cf6\" stroke-width=\"1.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M22 11.08V12a10 10 0 1 1-5.93-9.14\" stroke=\"#c4b5fd\"/><polyline points=\"22 4 12 14.01 9 11.01\" stroke=\"#8b5cf6\"/></svg>",
+      "title": "Measurement & Collapse",
+      "description": "The final vote collapses all probability into a single answer — just as measuring a quantum state forces it to one outcome."
+    }
+  ]
+}
