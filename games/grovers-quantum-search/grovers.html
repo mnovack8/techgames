@@ -77,15 +77,6 @@
   <div class="gs-modal-overlay" id="gs-htp-overlay" style="display:none" onclick="if(event.target===this)this.style.display='none'">
     <div class="gs-modal" style="max-width:560px">
 
-  <!-- ALL POSSIBLE CLUES REFERENCE MODAL -->
-  <div class="gs-modal-overlay" id="gs-allclues-overlay" style="display:none" onclick="if(event.target===this)this.style.display='none'">
-    <div class="gs-modal gs-allclues-modal">
-      <h3>Every Possible Clue</h3>
-      <p style="color:#64748b;font-size:12px;margin-bottom:10px">Your secret clue is always one of the entries below. Each mini grid highlights which numbers (0–255) match that clue. Use this to reason about what your teammates' YES/NO votes reveal.</p>
-      <div class="gs-htp-body" id="gs-allclues-body" style="flex:1;overflow-y:auto"></div>
-      <button class="gs-btn" style="margin-top:12px;width:100%;flex-shrink:0" onclick="document.getElementById('gs-allclues-overlay').style.display='none'">Close</button>
-    </div>
-  </div>
       <h3>How to Play — Grover's Quantum Search</h3>
       <div class="gs-htp-body">
         <h4>The Goal</h4>
@@ -127,6 +118,16 @@
     </div>
   </div>
 
+  <!-- ALL POSSIBLE CLUES REFERENCE MODAL -->
+  <div class="gs-modal-overlay" id="gs-allclues-overlay" style="display:none" onclick="if(event.target===this)this.style.display='none'">
+    <div class="gs-modal gs-allclues-modal">
+      <h3>Every Possible Clue</h3>
+      <p style="color:#64748b;font-size:12px;margin-bottom:10px">Your secret clue is always one of the entries below. Click "More" on any clue to see one example gate card that matches it and one that doesn't, with an explanation why.</p>
+      <div class="gs-htp-body" id="gs-allclues-body" style="flex:1;overflow-y:auto"></div>
+      <button class="gs-btn" style="margin-top:12px;width:100%;flex-shrink:0" onclick="document.getElementById('gs-allclues-overlay').style.display='none'">Close</button>
+    </div>
+  </div>
+
   <!-- GAME OVER -->
   <div id="gs-gameover" class="gs-gameover-overlay" style="display:none">
     <div class="gs-gameover-card">
@@ -151,7 +152,7 @@
     <!-- MAIN CONTENT AREA -->
     <div class="gs-main" id="gs-main">
 
-      <!-- HERO: Turn status + You + your clue + notes (large, top of page) -->
+      <!-- HERO: Turn status + You + your clue + known info + notes (large, top of page) -->
       <div class="gs-hero" id="gs-hero">
         <div class="gs-hero-top">
           <span class="gs-round-badge" id="gs-round-badge">Round 1 / 12</span>
@@ -171,10 +172,22 @@
               <div style="font-size:10px;color:#64748b;margin-bottom:4px">Numbers matching your clue (highlighted):</div>
               <div id="gs-clue-miniboard"></div>
             </div>
+
+            <div class="gs-hero-known-divider" id="gs-entanglement-box" style="display:none">
+              <div class="gs-hero-you-badge" style="margin-top:12px">
+                <span class="gs-hero-known-icon">⚛</span>
+                <span class="gs-hero-you-label" style="color:#8a6100">What We Know</span>
+              </div>
+              <div class="gs-hero-you-clue" id="gs-entanglement-text" style="color:#5c4200;font-size:14px"></div>
+              <div id="gs-entanglement-grid-wrap" style="margin-top:8px;display:none">
+                <div style="font-size:10px;color:#64748b;margin-bottom:4px">Numbers matching entanglement clue:</div>
+                <div id="gs-entanglement-miniboard"></div>
+              </div>
+            </div>
           </div>
           <div class="gs-hero-notes">
             <div class="gs-clue-label">Notes on other players' clues</div>
-            <textarea id="gs-clue-notes" class="gs-clue-notes" maxlength="500" placeholder="Write down what each other player might be cluing: Blue, Red, Yellow, Green, Purple..." oninput="saveClueNotes()"></textarea>
+            <div id="gs-player-notes-list" class="gs-player-notes-list"></div>
           </div>
         </div>
       </div>
@@ -298,20 +311,9 @@
         </button>
       </div>
 
-      <!-- Public Entanglement Clue -->
+      <!-- All Possible Clues reference -->
       <div class="gs-panel-section" id="gs-clue-section">
-        <div class="gs-section-title">Public Clue</div>
-        <div id="gs-clue-content">
-          <div class="gs-clue-box" id="gs-entanglement-box" style="display:none;border-color:#f5b301;background:rgba(245,179,1,0.12)">
-            <div class="gs-clue-label" style="color:#8a6100">⚛ Public Entanglement Clue</div>
-            <div class="gs-clue-text" id="gs-entanglement-text" style="color:#5c4200"></div>
-            <div id="gs-entanglement-grid-wrap" style="margin-top:8px;display:none">
-              <div style="font-size:10px;color:#64748b;margin-bottom:4px">Numbers matching entanglement clue:</div>
-              <div id="gs-entanglement-miniboard"></div>
-            </div>
-          </div>
-        </div>
-        <button class="gs-btn" style="width:100%;margin-top:10px;font-size:12px"
+        <button class="gs-btn" style="width:100%;font-size:12px"
           onclick="renderAllCluesReference();document.getElementById('gs-allclues-overlay').style.display='flex'">
           📖 All Possible Clues
         </button>
@@ -453,6 +455,10 @@ function showScreen(id) {
   var suffix = id === 'waiting' ? '/lobby' : (id === 'game' ? '/activegame' : '');
   var qs = roomCode ? ('?room=' + encodeURIComponent(roomCode)) : '';
   try { history.replaceState(null, '', GS_BASE_PATH + suffix + qs); } catch(_) {}
+  // Cancel Game only ever applies to an active game as host; hide it outside
+  // that screen (renderGame() re-shows it for hosts once game state arrives).
+  var cancelBtn = document.getElementById('btn-cancel-game');
+  if (cancelBtn && id !== 'game') cancelBtn.style.display = 'none';
 }
 
 function backToLobby() {
@@ -466,7 +472,18 @@ function backToLobby() {
 // ==================== CANCEL ====================
 function showCancelModal() { document.getElementById('gs-cancel-modal').style.display = 'flex'; }
 function hideCancelModal()  { document.getElementById('gs-cancel-modal').style.display = 'none'; }
-function confirmCancel()    { send({ type: 'cancel_game' }); hideCancelModal(); }
+function confirmCancel() {
+  hideCancelModal();
+  sessionStorage.removeItem(SESSION_KEY);
+  send({ type: 'cancel_game' });
+  // Navigate immediately rather than waiting for the server echo (avoids a
+  // stuck/flashing game screen if game_cancelled is delayed or never arrives).
+  roomCode = null; myIdx = -1; gs = null; isHost = false; isObserver = false;
+  var cancelBtn = document.getElementById('btn-cancel-game');
+  if (cancelBtn) cancelBtn.style.display = 'none';
+  try { history.replaceState(null, '', GS_BASE_PATH); } catch(_) {}
+  showScreen('lobby');
+}
 
 // ==================== CENTRAL BOARD ACTIONS ====================
 function setConfidence(level) {
@@ -548,36 +565,67 @@ function gsMatchNums(fn) {
   return out;
 }
 
+// Picks one matching and one non-matching example number for a clue predicate,
+// plus a plain-language explanation of why each does/doesn't satisfy it.
+function gsPickExamples(fn, explainFn) {
+  var nums = gsGetRefNums();
+  var yes = null, no = null;
+  for (var i = 0; i < 256; i++) {
+    var x = nums[i];
+    if (fn(x)) { if (yes === null) yes = x; }
+    else       { if (no === null)  no = x; }
+    if (yes !== null && no !== null) break;
+  }
+  return {
+    yes: yes ? { n: yes.n, bin: yes.n.toString(2).padStart(8,'0'), why: explainFn(yes, true) }  : null,
+    no:  no  ? { n: no.n,  bin: no.n.toString(2).padStart(8,'0'),  why: explainFn(no, false) } : null
+  };
+}
+
 function gsBuildClueRefGroups() {
   var g = [];
 
   // Decimal Range
   var qp = [[0,63,64,127],[0,63,128,191],[0,63,192,255],[64,127,128,191],[64,127,192,255],[128,191,192,255]];
   g.push({ category: 'Decimal Range', items: qp.map(function(p){
-    return { text: p[0]+'–'+p[1]+' or '+p[2]+'–'+p[3],
-             matching: gsMatchNums(function(x){return(x.n>=p[0]&&x.n<=p[1])||(x.n>=p[2]&&x.n<=p[3]);}) };
+    var fn = function(x){return(x.n>=p[0]&&x.n<=p[1])||(x.n>=p[2]&&x.n<=p[3]);};
+    return { text: p[0]+'–'+p[1]+' or '+p[2]+'–'+p[3], fn: fn,
+      explain: function(x, isYes) {
+        return isYes
+          ? x.n + ' falls in the range ' + p[0] + '–' + p[1] + ' or ' + p[2] + '–' + p[3] + '.'
+          : x.n + ' falls outside both ranges (' + p[0] + '–' + p[1] + ' and ' + p[2] + '–' + p[3] + ').';
+      } };
   })});
 
   // Even / Odd + Divisibility
   g.push({ category: 'Even / Odd + Divisibility', items: [
-    { text:'Even',            matching: gsMatchNums(function(x){return x.n%2===0;}) },
-    { text:'Odd',             matching: gsMatchNums(function(x){return x.n%2!==0;}) },
-    { text:'Divisible by 3',  matching: gsMatchNums(function(x){return x.n%3===0;}) },
-    { text:'Divisible by 4',  matching: gsMatchNums(function(x){return x.n%4===0;}) },
-    { text:'Divisible by 5',  matching: gsMatchNums(function(x){return x.n%5===0;}) },
+    { text:'Even', fn:function(x){return x.n%2===0;},
+      explain:function(x,y){ return y ? x.n+' is even (divisible by 2).' : x.n+' is odd, not divisible by 2.'; } },
+    { text:'Odd', fn:function(x){return x.n%2!==0;},
+      explain:function(x,y){ return y ? x.n+' is odd (not divisible by 2).' : x.n+' is even, so it fails the "odd" test.'; } },
+    { text:'Divisible by 3', fn:function(x){return x.n%3===0;},
+      explain:function(x,y){ return y ? x.n+' ÷ 3 = '+(x.n/3)+' with no remainder.' : x.n+' ÷ 3 leaves a remainder of '+(x.n%3)+'.'; } },
+    { text:'Divisible by 4', fn:function(x){return x.n%4===0;},
+      explain:function(x,y){ return y ? x.n+' ÷ 4 = '+(x.n/4)+' with no remainder.' : x.n+' ÷ 4 leaves a remainder of '+(x.n%4)+'.'; } },
+    { text:'Divisible by 5', fn:function(x){return x.n%5===0;},
+      explain:function(x,y){ return y ? x.n+' ÷ 5 = '+(x.n/5)+' with no remainder.' : x.n+' ÷ 5 leaves a remainder of '+(x.n%5)+'.'; } },
   ]});
 
   // Digit Sum
   g.push({ category: 'Digit Sum', items: [
-    { text:'Digit sum 0–9',  matching: gsMatchNums(function(x){return x.digitSum<=9;}) },
-    { text:'Digit sum 10–18',matching: gsMatchNums(function(x){return x.digitSum>=10&&x.digitSum<=18;}) },
-    { text:'Digit sum 19+',       matching: gsMatchNums(function(x){return x.digitSum>=19;}) },
+    { text:'Digit sum 0–9', fn:function(x){return x.digitSum<=9;},
+      explain:function(x,y){ return y ? 'The decimal digits of '+x.n+' add up to '+x.digitSum+', which is 9 or less.' : 'The decimal digits of '+x.n+' add up to '+x.digitSum+', which is 10 or more.'; } },
+    { text:'Digit sum 10–18', fn:function(x){return x.digitSum>=10&&x.digitSum<=18;},
+      explain:function(x,y){ return y ? 'The decimal digits of '+x.n+' add up to '+x.digitSum+', which is between 10 and 18.' : 'The decimal digits of '+x.n+' add up to '+x.digitSum+', which is outside 10–18.'; } },
+    { text:'Digit sum 19+', fn:function(x){return x.digitSum>=19;},
+      explain:function(x,y){ return y ? 'The decimal digits of '+x.n+' add up to '+x.digitSum+', which is 19 or more.' : 'The decimal digits of '+x.n+' add up to only '+x.digitSum+', which is under 19.'; } },
   ]});
 
   // Bit Count
   var bcItems = [];
   for (var k = 2; k <= 6; k++) {
-    (function(kk){ bcItems.push({ text:'Exactly '+kk+' ones', matching: gsMatchNums(function(x){return x.bitCount===kk;}) }); })(k);
+    (function(kk){ bcItems.push({ text:'Exactly '+kk+' ones', fn:function(x){return x.bitCount===kk;},
+      explain:function(x,y){ return y ? x.n+' ('+x.bits.join('')+') has exactly '+kk+' ones in its binary form.' : x.n+' ('+x.bits.join('')+') has '+x.bitCount+' ones, not '+kk+'.'; } }); })(k);
   }
   g.push({ category: 'Bit Count (ones)', items: bcItems });
 
@@ -585,83 +633,135 @@ function gsBuildClueRefGroups() {
   var bpItems = [];
   for (var b = 1; b <= 7; b++) {
     (function(bn){
-      bpItems.push({ text:'Bit '+bn+' (left) = 1', matching: gsMatchNums(function(x){return x.bits[bn-1]===1;}) });
-      bpItems.push({ text:'Bit '+bn+' (left) = 0', matching: gsMatchNums(function(x){return x.bits[bn-1]===0;}) });
+      bpItems.push({ text:'Bit '+bn+' (left) = 1', fn:function(x){return x.bits[bn-1]===1;},
+        explain:function(x,y){ return y ? x.n+' ('+x.bits.join('')+') has a 1 at bit position '+bn+' counting from the left.' : x.n+' ('+x.bits.join('')+') has a 0 at bit position '+bn+' counting from the left.'; } });
+      bpItems.push({ text:'Bit '+bn+' (left) = 0', fn:function(x){return x.bits[bn-1]===0;},
+        explain:function(x,y){ return y ? x.n+' ('+x.bits.join('')+') has a 0 at bit position '+bn+' counting from the left.' : x.n+' ('+x.bits.join('')+') has a 1 at bit position '+bn+' counting from the left.'; } });
     })(b);
   }
   g.push({ category: 'Bit Position (bits 1–7)', items: bpItems });
 
   // Nibble
   g.push({ category: 'Nibble', items: [
-    { text:'Upper nibble > lower nibble', matching: gsMatchNums(function(x){return x.upperNibble>x.lowerNibble;}) },
-    { text:'Upper nibble < lower nibble', matching: gsMatchNums(function(x){return x.upperNibble<x.lowerNibble;}) },
-    { text:'Upper nibble = lower nibble', matching: gsMatchNums(function(x){return x.upperNibble===x.lowerNibble;}) },
-    { text:'Upper nibble value is even',  matching: gsMatchNums(function(x){return x.upperNibble%2===0;}) },
-    { text:'Upper nibble value is odd',   matching: gsMatchNums(function(x){return x.upperNibble%2!==0;}) },
-    { text:'Lower nibble value is even',  matching: gsMatchNums(function(x){return x.lowerNibble%2===0;}) },
-    { text:'Lower nibble value is odd',   matching: gsMatchNums(function(x){return x.lowerNibble%2!==0;}) },
+    { text:'Upper nibble > lower nibble', fn:function(x){return x.upperNibble>x.lowerNibble;},
+      explain:function(x,y){ return y ? 'Upper nibble '+x.upperNibble+' is greater than lower nibble '+x.lowerNibble+'.' : 'Upper nibble '+x.upperNibble+' is not greater than lower nibble '+x.lowerNibble+'.'; } },
+    { text:'Upper nibble < lower nibble', fn:function(x){return x.upperNibble<x.lowerNibble;},
+      explain:function(x,y){ return y ? 'Upper nibble '+x.upperNibble+' is less than lower nibble '+x.lowerNibble+'.' : 'Upper nibble '+x.upperNibble+' is not less than lower nibble '+x.lowerNibble+'.'; } },
+    { text:'Upper nibble = lower nibble', fn:function(x){return x.upperNibble===x.lowerNibble;},
+      explain:function(x,y){ return y ? 'Upper nibble and lower nibble are both '+x.upperNibble+'.' : 'Upper nibble ('+x.upperNibble+') and lower nibble ('+x.lowerNibble+') differ.'; } },
+    { text:'Upper nibble value is even', fn:function(x){return x.upperNibble%2===0;},
+      explain:function(x,y){ return y ? 'Upper nibble value '+x.upperNibble+' is even.' : 'Upper nibble value '+x.upperNibble+' is odd.'; } },
+    { text:'Upper nibble value is odd', fn:function(x){return x.upperNibble%2!==0;},
+      explain:function(x,y){ return y ? 'Upper nibble value '+x.upperNibble+' is odd.' : 'Upper nibble value '+x.upperNibble+' is even.'; } },
+    { text:'Lower nibble value is even', fn:function(x){return x.lowerNibble%2===0;},
+      explain:function(x,y){ return y ? 'Lower nibble value '+x.lowerNibble+' is even.' : 'Lower nibble value '+x.lowerNibble+' is odd.'; } },
+    { text:'Lower nibble value is odd', fn:function(x){return x.lowerNibble%2!==0;},
+      explain:function(x,y){ return y ? 'Lower nibble value '+x.lowerNibble+' is odd.' : 'Lower nibble value '+x.lowerNibble+' is even.'; } },
   ]});
 
   // Dominant Half
   g.push({ category: 'Dominant Half', items: [
-    { text:'Upper half has more 1s',          matching: gsMatchNums(function(x){return x.upperBitCount>x.lowerBitCount;}) },
-    { text:'Lower half has more 1s',          matching: gsMatchNums(function(x){return x.lowerBitCount>x.upperBitCount;}) },
-    { text:'Both halves have equal 1s',       matching: gsMatchNums(function(x){return x.upperBitCount===x.lowerBitCount;}) },
-    { text:'1s in upper half — count is even',matching: gsMatchNums(function(x){return x.upperBitCount%2===0;}) },
-    { text:'1s in upper half — count is odd', matching: gsMatchNums(function(x){return x.upperBitCount%2!==0;}) },
-    { text:'1s in lower half — count is even',matching: gsMatchNums(function(x){return x.lowerBitCount%2===0;}) },
-    { text:'1s in lower half — count is odd', matching: gsMatchNums(function(x){return x.lowerBitCount%2!==0;}) },
+    { text:'Upper half has more 1s', fn:function(x){return x.upperBitCount>x.lowerBitCount;},
+      explain:function(x,y){ return y ? 'Upper half has '+x.upperBitCount+' ones vs lower half\'s '+x.lowerBitCount+'.' : 'Upper half ('+x.upperBitCount+' ones) does not exceed lower half ('+x.lowerBitCount+' ones).'; } },
+    { text:'Lower half has more 1s', fn:function(x){return x.lowerBitCount>x.upperBitCount;},
+      explain:function(x,y){ return y ? 'Lower half has '+x.lowerBitCount+' ones vs upper half\'s '+x.upperBitCount+'.' : 'Lower half ('+x.lowerBitCount+' ones) does not exceed upper half ('+x.upperBitCount+' ones).'; } },
+    { text:'Both halves have equal 1s', fn:function(x){return x.upperBitCount===x.lowerBitCount;},
+      explain:function(x,y){ return y ? 'Both halves have '+x.upperBitCount+' ones each.' : 'Upper half has '+x.upperBitCount+' ones while lower half has '+x.lowerBitCount+' — not equal.'; } },
+    { text:'1s in upper half — count is even', fn:function(x){return x.upperBitCount%2===0;},
+      explain:function(x,y){ return y ? 'Upper half has '+x.upperBitCount+' ones, an even count.' : 'Upper half has '+x.upperBitCount+' ones, an odd count.'; } },
+    { text:'1s in upper half — count is odd', fn:function(x){return x.upperBitCount%2!==0;},
+      explain:function(x,y){ return y ? 'Upper half has '+x.upperBitCount+' ones, an odd count.' : 'Upper half has '+x.upperBitCount+' ones, an even count.'; } },
+    { text:'1s in lower half — count is even', fn:function(x){return x.lowerBitCount%2===0;},
+      explain:function(x,y){ return y ? 'Lower half has '+x.lowerBitCount+' ones, an even count.' : 'Lower half has '+x.lowerBitCount+' ones, an odd count.'; } },
+    { text:'1s in lower half — count is odd', fn:function(x){return x.lowerBitCount%2!==0;},
+      explain:function(x,y){ return y ? 'Lower half has '+x.lowerBitCount+' ones, an odd count.' : 'Lower half has '+x.lowerBitCount+' ones, an even count.'; } },
   ]});
 
   // Consecutive Runs
   var runItems = [];
   for (var r = 1; r <= 6; r++) {
-    (function(rr){ runItems.push({ text:'Longest run of 1s = '+rr, matching: gsMatchNums(function(x){return x.maxRun1===rr;}) }); })(r);
+    (function(rr){ runItems.push({ text:'Longest run of 1s = '+rr, fn:function(x){return x.maxRun1===rr;},
+      explain:function(x,y){ return y ? x.n+' ('+x.bits.join('')+') has a longest run of consecutive 1s of exactly '+rr+'.' : x.n+' ('+x.bits.join('')+') has a longest run of consecutive 1s of '+x.maxRun1+', not '+rr+'.'; } }); })(r);
   }
   for (var r = 1; r <= 6; r++) {
-    (function(rr){ runItems.push({ text:'Longest run of 0s = '+rr, matching: gsMatchNums(function(x){return x.maxRun0===rr;}) }); })(r);
+    (function(rr){ runItems.push({ text:'Longest run of 0s = '+rr, fn:function(x){return x.maxRun0===rr;},
+      explain:function(x,y){ return y ? x.n+' ('+x.bits.join('')+') has a longest run of consecutive 0s of exactly '+rr+'.' : x.n+' ('+x.bits.join('')+') has a longest run of consecutive 0s of '+x.maxRun0+', not '+rr+'.'; } }); })(r);
   }
   g.push({ category: 'Consecutive Runs', items: runItems });
 
   // Blocks of 1s
   var bl1 = [];
   for (var n = 1; n <= 4; n++) {
-    (function(nn){ bl1.push({ text:'Exactly '+nn+' block'+(nn>1?'s':'')+' of 1s', matching: gsMatchNums(function(x){return x.blocks1===nn;}) }); })(n);
+    (function(nn){ bl1.push({ text:'Exactly '+nn+' block'+(nn>1?'s':'')+' of 1s', fn:function(x){return x.blocks1===nn;},
+      explain:function(x,y){ return y ? x.n+' ('+x.bits.join('')+') has exactly '+nn+' separate block'+(nn>1?'s':'')+' of consecutive 1s.' : x.n+' ('+x.bits.join('')+') has '+x.blocks1+' block'+(x.blocks1===1?'':'s')+' of 1s, not '+nn+'.'; } }); })(n);
   }
   g.push({ category: 'Blocks of 1s', items: bl1 });
 
   // Blocks of 0s
   var bl0 = [];
   for (var n = 1; n <= 4; n++) {
-    (function(nn){ bl0.push({ text:'Exactly '+nn+' block'+(nn>1?'s':'')+' of 0s', matching: gsMatchNums(function(x){return x.blocks0===nn;}) }); })(n);
+    (function(nn){ bl0.push({ text:'Exactly '+nn+' block'+(nn>1?'s':'')+' of 0s', fn:function(x){return x.blocks0===nn;},
+      explain:function(x,y){ return y ? x.n+' ('+x.bits.join('')+') has exactly '+nn+' separate block'+(nn>1?'s':'')+' of consecutive 0s.' : x.n+' ('+x.bits.join('')+') has '+x.blocks0+' block'+(x.blocks0===1?'':'s')+' of 0s, not '+nn+'.'; } }); })(n);
   }
   g.push({ category: 'Blocks of 0s', items: bl0 });
 
   // Longest Run Type
   g.push({ category: 'Longest Run Type', items: [
-    { text:'Longest run is 1s',              matching: gsMatchNums(function(x){return x.maxRun1>x.maxRun0;}) },
-    { text:'Longest run is 0s',              matching: gsMatchNums(function(x){return x.maxRun0>x.maxRun1;}) },
-    { text:'Longest run of 1s = run of 0s',  matching: gsMatchNums(function(x){return x.maxRun1===x.maxRun0;}) },
+    { text:'Longest run is 1s', fn:function(x){return x.maxRun1>x.maxRun0;},
+      explain:function(x,y){ return y ? 'Longest run of 1s ('+x.maxRun1+') beats longest run of 0s ('+x.maxRun0+').' : 'Longest run of 1s ('+x.maxRun1+') does not beat longest run of 0s ('+x.maxRun0+').'; } },
+    { text:'Longest run is 0s', fn:function(x){return x.maxRun0>x.maxRun1;},
+      explain:function(x,y){ return y ? 'Longest run of 0s ('+x.maxRun0+') beats longest run of 1s ('+x.maxRun1+').' : 'Longest run of 0s ('+x.maxRun0+') does not beat longest run of 1s ('+x.maxRun1+').'; } },
+    { text:'Longest run of 1s = run of 0s', fn:function(x){return x.maxRun1===x.maxRun0;},
+      explain:function(x,y){ return y ? 'Longest run of 1s and longest run of 0s are both '+x.maxRun1+'.' : 'Longest run of 1s is '+x.maxRun1+' while longest run of 0s is '+x.maxRun0+' — not equal.'; } },
   ]});
 
   return g;
 }
 
+function gsClueExampleHtml(ex) {
+  if (!ex.yes && !ex.no) return '<div style="font-size:11px;color:#94a3b8">No example cards available.</div>';
+  var html = '<div class="gs-clueref-examples">';
+  if (ex.yes) {
+    html += '<div class="gs-clueref-example gs-clueref-example-yes">'
+      + '<div class="gs-clueref-example-head"><span class="gs-clueref-example-badge yes">YES — matches</span>'
+      + '<span class="gs-clueref-example-card">' + ex.yes.n + '<span class="gs-clueref-example-bin">' + ex.yes.bin + '</span></span></div>'
+      + '<div class="gs-clueref-example-why">' + esc(ex.yes.why) + '</div>'
+      + '</div>';
+  }
+  if (ex.no) {
+    html += '<div class="gs-clueref-example gs-clueref-example-no">'
+      + '<div class="gs-clueref-example-head"><span class="gs-clueref-example-badge no">NO — doesn\'t match</span>'
+      + '<span class="gs-clueref-example-card">' + ex.no.n + '<span class="gs-clueref-example-bin">' + ex.no.bin + '</span></span></div>'
+      + '<div class="gs-clueref-example-why">' + esc(ex.no.why) + '</div>'
+      + '</div>';
+  }
+  html += '</div>';
+  return html;
+}
+
+var GS_CLUE_REF_ITEMS = []; // flat list of {fn, explain} indexed by data-clue-idx, for on-demand example lookup
+
 function renderAllCluesReference() {
   var body = document.getElementById('gs-allclues-body');
   if (!body || body.dataset.built) return;
   var groups = gsBuildClueRefGroups();
+  GS_CLUE_REF_ITEMS = [];
   var html = '';
   for (var i = 0; i < groups.length; i++) {
     var gr = groups[i];
     html += '<h4 style="margin:12px 0 6px;font-size:13px;font-weight:800;color:#14508f">'
           + esc(gr.category) + ' <span style="font-size:11px;color:#64748b;font-weight:400">(' + gr.items.length + ')</span></h4>'
-          + '<div class="gs-clueref-grid">';
+          + '<div class="gs-clueref-list">';
     for (var j = 0; j < gr.items.length; j++) {
       var it = gr.items[j];
-      html += '<div class="gs-clueref-tile" title="' + esc(it.text) + '">'
-            + miniBoardSvg(it.matching)
-            + '<span class="gs-clueref-tile-text">' + esc(it.text) + '</span>'
+      var idx = GS_CLUE_REF_ITEMS.length;
+      GS_CLUE_REF_ITEMS.push(it);
+      html += '<div class="gs-clueref-item" id="gs-clueref-item-' + idx + '">'
+            + '<div class="gs-clueref-item-row">'
+            + '  <span class="gs-clueref-item-text">' + esc(it.text) + '</span>'
+            + '  <button class="gs-btn gs-clueref-more-btn" onclick="gsToggleClueExample(' + idx + ')">More ▾</button>'
+            + '</div>'
+            + '<div class="gs-clueref-item-detail" id="gs-clueref-detail-' + idx + '" style="display:none"></div>'
             + '</div>';
     }
     html += '</div>';
@@ -670,9 +770,31 @@ function renderAllCluesReference() {
   body.dataset.built = '1';
 }
 
+function gsToggleClueExample(idx) {
+  var detail = document.getElementById('gs-clueref-detail-' + idx);
+  var item   = document.getElementById('gs-clueref-item-' + idx);
+  if (!detail) return;
+  var btn = item ? item.querySelector('.gs-clueref-more-btn') : null;
+  var showing = detail.style.display !== 'none';
+  if (showing) {
+    detail.style.display = 'none';
+    if (btn) btn.textContent = 'More ▾';
+    return;
+  }
+  if (!detail.dataset.built) {
+    var it = GS_CLUE_REF_ITEMS[idx];
+    var ex = gsPickExamples(it.fn, it.explain);
+    detail.innerHTML = gsClueExampleHtml(ex);
+    detail.dataset.built = '1';
+  }
+  detail.style.display = '';
+  if (btn) btn.textContent = 'Less ▴';
+}
+
 // ==================== RENDER STATE ====================
 function renderGame(state) {
   gs = state;
+  showScreen('game');
   renderPlayersBar(state);
   renderTurnSection(state);
   renderClueSection(state);
@@ -781,11 +903,53 @@ function renderTurnSection(state) {
   }
 }
 
-function saveClueNotes() {
-  var notesEl = document.getElementById('gs-clue-notes');
+function saveClueNotes(playerIdx) {
+  var notesEl = document.getElementById('gs-player-note-' + playerIdx);
   if (!notesEl) return;
-  var key = 'techgames_grovers_clue_notes_' + (roomCode || 'lobby');
+  var key = 'techgames_grovers_notes_' + (roomCode || 'lobby') + '_' + playerIdx;
   try { sessionStorage.setItem(key, notesEl.value); } catch (_) {}
+}
+
+var gsNotesCollapsed = {}; // playerIdx -> bool, default true (collapsed)
+function toggleNoteCollapse(playerIdx) {
+  gsNotesCollapsed[playerIdx] = !gsNotesCollapsed[playerIdx];
+  var row = document.getElementById('gs-player-note-row-' + playerIdx);
+  if (row) row.classList.toggle('gs-note-collapsed', gsNotesCollapsed[playerIdx]);
+  var caret = document.getElementById('gs-player-note-caret-' + playerIdx);
+  if (caret) caret.textContent = gsNotesCollapsed[playerIdx] ? '▸' : '▾';
+}
+
+function renderPlayerNotesList(state) {
+  var list = document.getElementById('gs-player-notes-list');
+  if (!list) return;
+
+  // Only (re)build the DOM once per player roster so in-progress typing/collapse
+  // state isn't clobbered by every state broadcast.
+  var rosterKey = (state.players || []).map(function(p){ return p.name + '|' + p.color; }).join(',');
+  if (list.dataset.roster === rosterKey) return;
+  list.dataset.roster = rosterKey;
+
+  var html = '';
+  for (var i = 0; i < state.players.length; i++) {
+    if (i === state.myPlayerIdx) continue; // no need to note your own clue
+    var p = state.players[i];
+    var hex = PLAYER_COLOR_HEX[p.color] || '#888';
+    var collapsed = gsNotesCollapsed[i] !== false; // default collapsed (true)
+    gsNotesCollapsed[i] = collapsed;
+    var savedKey = 'techgames_grovers_notes_' + (roomCode || 'lobby') + '_' + i;
+    var savedVal = '';
+    try { savedVal = sessionStorage.getItem(savedKey) || ''; } catch (_) {}
+
+    html += '<div class="gs-player-note-row' + (collapsed ? ' gs-note-collapsed' : '') + '" id="gs-player-note-row-' + i + '">'
+      + '<div class="gs-player-note-header" onclick="toggleNoteCollapse(' + i + ')">'
+      + '  <span class="gs-player-note-caret" id="gs-player-note-caret-' + i + '">' + (collapsed ? '▸' : '▾') + '</span>'
+      + '  <span class="gs-player-note-swatch" style="background:' + hex + '"></span>'
+      + '  <span class="gs-player-note-name">' + esc(p.name) + '</span>'
+      + '</div>'
+      + '<textarea id="gs-player-note-' + i + '" class="gs-clue-notes" maxlength="300" placeholder="What might ' + esc(p.name) + '\'s clue be?" oninput="saveClueNotes(' + i + ')">' + esc(savedVal) + '</textarea>'
+      + '</div>';
+  }
+  list.innerHTML = html || '<div style="font-size:12px;color:#64748b">No other players yet.</div>';
 }
 
 function renderClueSection(state) {
@@ -796,15 +960,11 @@ function renderClueSection(state) {
   var entText   = document.getElementById('gs-entanglement-text');
   var entGrid   = document.getElementById('gs-entanglement-grid-wrap');
   var entMini   = document.getElementById('gs-entanglement-miniboard');
-  var notesEl   = document.getElementById('gs-clue-notes');
   if (!textEl) return;
 
-  if (notesEl) {
-    var notesKey = 'techgames_grovers_clue_notes_' + (roomCode || 'lobby');
-    try { notesEl.value = sessionStorage.getItem(notesKey) || ''; } catch (_) { notesEl.value = ''; }
-  }
+  renderPlayerNotesList(state);
 
-  // Entanglement clue (public)
+  // Entanglement clue (public) — shown in the hero's "What We Know" area
   if (state.entanglementClue) {
     if (entBox)  entBox.style.display  = '';
     if (entText) entText.textContent   = state.entanglementClue.text.replace(/^ENTANGLEMENT — /, '');
@@ -1181,11 +1341,21 @@ function showGameOver(state) {
   hub.on('gs_game_started', function() { showScreen('game'); });
   hub.on('game_started',   function() { showScreen('game'); });
   hub.on('gs_state',       function(msg) { renderGame(msg); });
-  hub.on('cancel_game',    function() { backToLobby(); });
+  hub.on('game_cancelled', onGameCancelled);
   hub.on('error',          function(msg) { console.error('WS error:', msg.msg); });
   hub.on('room_info',      function(msg) { LobbyUI.handleRoomInfo(msg); });
 
   hub.connect();
+
+  // Handle back/forward navigation restoring a stale bfcache snapshot of this
+  // page (e.g. browser Back button out of an active game) — resync the
+  // Cancel Game button so it doesn't linger from the previous DOM state.
+  window.addEventListener('pageshow', function(e) {
+    if (e.persisted) {
+      var cancelBtn = document.getElementById('btn-cancel-game');
+      if (cancelBtn) cancelBtn.style.display = (isHost && gs && !gs.gameOver) ? '' : 'none';
+    }
+  });
 })();
 
 function onRoomCreated(msg) {
@@ -1215,6 +1385,16 @@ function onRoomRejoined(msg) {
 
 function onLobbyUpdate(msg) {
   renderLobbyPlayers(msg.players || [], msg.observers || []);
+}
+
+function onGameCancelled() {
+  sessionStorage.removeItem(SESSION_KEY);
+  roomCode = null; myIdx = -1; gs = null; isHost = false; isObserver = false;
+  var cancelBtn = document.getElementById('btn-cancel-game');
+  if (cancelBtn) cancelBtn.style.display = 'none';
+  hideCancelModal();
+  try { history.replaceState(null, '', GS_BASE_PATH); } catch(_) {}
+  showScreen('lobby');
 }
 
 LobbyUI.init({

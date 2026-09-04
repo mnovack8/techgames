@@ -649,6 +649,66 @@ body {
   }
 }
 
+/* "What We Know" â€” public entanglement clue, folded into the You box */
+.gs-hero-known-divider {
+  margin-top: 4px;
+  padding-top: 10px;
+  border-top: 1px dashed rgba(245, 179, 1, .5);
+}
+.gs-hero-known-icon {
+  font-size: 15px;
+}
+
+/* Per-player collapsible notes */
+.gs-player-notes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.gs-player-note-row {
+  border: 1px solid var(--gs-border);
+  border-radius: 8px;
+  background: rgba(255,255,255,.6);
+  overflow: hidden;
+}
+.gs-player-note-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  cursor: pointer;
+  user-select: none;
+}
+.gs-player-note-header:hover {
+  background: rgba(31, 111, 208,.06);
+}
+.gs-player-note-caret {
+  font-size: 11px;
+  color: var(--gs-muted);
+  width: 10px;
+  flex-shrink: 0;
+}
+.gs-player-note-swatch {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: 1.5px solid rgba(255,255,255,.6);
+}
+.gs-player-note-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--gs-text);
+}
+.gs-player-note-row .gs-clue-notes {
+  display: block;
+  min-height: 70px;
+  margin: 0 10px 10px;
+  width: calc(100% - 20px);
+}
+.gs-player-note-row.gs-note-collapsed .gs-clue-notes {
+  display: none;
+}
+
 /* ===== GATE CARD PLAYED AREA ===== */
 .gs-cards-header {
   display: flex;
@@ -1288,3 +1348,91 @@ body {
   cursor: pointer;
 }
 #btn-cancel-game:hover { background: rgba(198, 40, 40,.25); }
+
+/* All Possible Clues reference modal — list + expandable examples */
+.gs-clueref-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.gs-clueref-item {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #f8fafc;
+  padding: 8px 10px;
+}
+.gs-clueref-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.gs-clueref-item-text {
+  font-size: 12.5px;
+  color: #1e293b;
+  font-weight: 600;
+}
+.gs-clueref-more-btn {
+  flex-shrink: 0;
+  background: #eef4fc;
+  border: 1px solid #bcd6f2;
+  color: #14508f;
+  border-radius: 6px;
+  padding: 3px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.gs-clueref-more-btn:hover { background: #dcebfb; }
+.gs-clueref-item-detail {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed #cbd5e1;
+}
+.gs-clueref-examples {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.gs-clueref-example {
+  border-radius: 6px;
+  padding: 6px 8px;
+  font-size: 11.5px;
+}
+.gs-clueref-example-yes { background: rgba(43,138,62,.08); border: 1px solid rgba(43,138,62,.3); }
+.gs-clueref-example-no  { background: rgba(198,40,40,.08); border: 1px solid rgba(198,40,40,.3); }
+.gs-clueref-example-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 3px;
+}
+.gs-clueref-example-badge {
+  font-weight: 800;
+  font-size: 11px;
+  letter-spacing: .02em;
+}
+.gs-clueref-example-badge.yes { color: #2b8a3e; }
+.gs-clueref-example-badge.no  { color: #c62828; }
+.gs-clueref-example-card {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #fff;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 2px 8px;
+  font-weight: 800;
+  font-family: 'Courier New', monospace;
+  color: #14508f;
+}
+.gs-clueref-example-bin {
+  font-weight: 600;
+  color: #64748b;
+  font-size: 10.5px;
+}
+.gs-clueref-example-why {
+  color: #475569;
+}
