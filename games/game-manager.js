@@ -305,7 +305,7 @@ const GAME_REGISTRY = {
   },
 
   grovers: {
-    minPlayers: 3, maxPlayers: 5, maxBots: 4,
+    minPlayers: 3, maxPlayers: 5, maxBots: 2,
     colors: ['blue', 'red', 'green', 'purple', 'yellow'],
     startGame(room) {
       initGSGame(room);

@@ -325,6 +325,7 @@ function initGSGame(room) {
     deck,
     hands,
     playedCards: [],
+    focusVotes: {},
     pendingCard: null,
     confidence,
     estimate,
@@ -424,6 +425,8 @@ function buildStateMsg(gs, playerIdx, players) {
     playedByPlayerIdx: gs.pendingCard.playedByPlayerIdx,
     tokens:           gs.pendingCard.tokens,
     needsVote:        gs.pendingCard.tokensNeeded.includes(playerIdx),
+    // The token placement is dictated by the player's own clue, not their choice.
+    myVote:           gs.playerClues[playerIdx].matchingNumbers.includes(gs.pendingCard.number) ? 'yes' : 'no',
   } : null;
 
   return {
@@ -439,6 +442,7 @@ function buildStateMsg(gs, playerIdx, players) {
     myClue:             gs.playerClues[playerIdx],
     myHand:             gs.hands[playerIdx],
     playedCards:        gs.playedCards,
+    focusVotes:         gs.focusVotes,
     pendingCard,
     confidence:         gs.confidence,
     estimate:           gs.estimate,
@@ -483,6 +487,32 @@ function gsHandleAction(room, playerIdx, msg) {
 
   // ── Playing phase ─────────────────────────────────────────────────────────
   if (gs.phase === 'playing') {
+    if (action === 'gs_toggle_focus_card') {
+      const idx = Number(msg.cardIndex);
+      if (!Number.isInteger(idx) || idx < 0 || idx >= gs.playedCards.length) return;
+
+      const byCard = gs.focusVotes[idx] || [];
+      const existing = byCard.indexOf(playerIdx);
+      if (existing !== -1) {
+        byCard.splice(existing, 1);
+        if (byCard.length === 0) delete gs.focusVotes[idx];
+        else gs.focusVotes[idx] = byCard;
+      } else {
+        // One focus token per player; switching removes the previous choice.
+        for (const [cardKey, players] of Object.entries(gs.focusVotes)) {
+          const pIdx = players.indexOf(playerIdx);
+          if (pIdx !== -1) {
+            players.splice(pIdx, 1);
+            if (players.length === 0) delete gs.focusVotes[cardKey];
+            else gs.focusVotes[cardKey] = players;
+          }
+        }
+        gs.focusVotes[idx] = byCard.concat(playerIdx);
+      }
+      gsBroadcastState(room);
+      return;
+    }
+
     if (action === 'gs_play_card') {
       if (gs.pendingCard) return; // already a card pending
       if (playerIdx !== gs.currentPlayerIdx) return;
@@ -528,8 +558,9 @@ function gsHandleAction(room, playerIdx, msg) {
       if (playerIdx === gs.pendingCard.playedByPlayerIdx) return;
       if (!gs.pendingCard.tokensNeeded.includes(playerIdx)) return;
 
-      const vote = msg.vote;
-      if (vote !== 'yes' && vote !== 'no') return;
+      // The vote is determined by the player's clue, not by their input — the
+      // client only acknowledges it.
+      const vote = gs.playerClues[playerIdx].matchingNumbers.includes(gs.pendingCard.number) ? 'yes' : 'no';
 
       // Record vote
       gs.pendingCard.tokens[playerIdx] = vote;

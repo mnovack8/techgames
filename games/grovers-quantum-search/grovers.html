@@ -11,7 +11,7 @@
 <meta property="og:url" content="https://cybersecgames.com/quantumcomputing/grovers">
 <meta name="robots" content="noindex, nofollow">
 <meta name="author" content="Tech CoLab">
-<meta name="theme-color" content="#8b5cf6">
+<meta name="theme-color" content="#1f6fd0">
 <link rel="icon" type="image/png" href="/images/logo.png">
 <link rel="apple-touch-icon" href="/images/logo.png">
 <link rel="canonical" href="https://cybersecgames.com/quantumcomputing/grovers">
@@ -104,7 +104,7 @@
         <ol>
           <li><strong>Choose a gate card</strong> from your hand and play it face-up.</li>
           <li>Place your token in <strong>YES</strong> if that number matches your clue, or <strong>NO</strong> if it doesn't. (This happens automatically in the digital version.)</li>
-          <li>Every other player then places their token in <strong>YES</strong> or <strong>NO</strong> based on whether <em>their own</em> clue matches that number.</li>
+          <li>Every other player's token goes in <strong>YES</strong> or <strong>NO</strong> based on whether <em>their own</em> clue matches that number. The digital version works this out for you — you just confirm it.</li>
           <li>Draw a new card from the deck to refill your hand to 3.</li>
         </ol>
 
@@ -184,8 +184,8 @@
       <div id="gs-voting-area" class="gs-voting-area" style="display:none">
         <div class="gs-voting-header">⚡ Measurement Phase — Vote for the Number</div>
         <div class="gs-voting-note">12 rounds complete. Place your vote on the exact number you believe is the target. Most votes wins; ties go to the Quantum Token holder.</div>
-        <div id="gs-voting-status" style="font-size:13px;color:#94a3b8;margin-bottom:10px"></div>
-        <div id="gs-my-vote-display" style="display:none;margin-bottom:10px;font-size:13px;color:#22c55e;font-weight:700"></div>
+        <div id="gs-voting-status" style="font-size:13px;color:#5d6d88;margin-bottom:10px"></div>
+        <div id="gs-my-vote-display" style="display:none;margin-bottom:10px;font-size:13px;color:#15803d;font-weight:700"></div>
         <div style="font-size:12px;color:#64748b;margin-bottom:6px">Use the <strong>Number Estimate</strong> board below to cast your vote (click an exact number in the bottom row).</div>
       </div>
 
@@ -275,17 +275,23 @@
       <div class="gs-panel-section" id="gs-clue-section">
         <div class="gs-section-title">My Secret Clue</div>
         <div id="gs-clue-content">
-          <div class="gs-clue-box" id="gs-entanglement-box" style="display:none;margin-bottom:8px;border-color:#facc15;background:rgba(250,204,21,0.07)">
-            <div class="gs-clue-label" style="color:#facc15">⚛ Public Entanglement Clue</div>
-            <div class="gs-clue-text" id="gs-entanglement-text" style="color:#fde68a"></div>
-            <div id="gs-entanglement-grid-wrap" style="margin-top:8px;display:none">
-              <div style="font-size:10px;color:#64748b;margin-bottom:4px">Numbers matching entanglement clue:</div>
-              <div id="gs-entanglement-miniboard"></div>
+          <div class="gs-clue-layout">
+            <div class="gs-clue-box" id="gs-entanglement-box" style="display:none;margin-bottom:8px;border-color:#f5b301;background:rgba(245,179,1,0.12)">
+              <div class="gs-clue-label" style="color:#8a6100">⚛ Public Entanglement Clue</div>
+              <div class="gs-clue-text" id="gs-entanglement-text" style="color:#5c4200"></div>
+              <div id="gs-entanglement-grid-wrap" style="margin-top:8px;display:none">
+                <div style="font-size:10px;color:#64748b;margin-bottom:4px">Numbers matching entanglement clue:</div>
+                <div id="gs-entanglement-miniboard"></div>
+              </div>
             </div>
-          </div>
-          <div class="gs-clue-box">
-            <div class="gs-clue-label">Your private clue</div>
-            <div class="gs-clue-text" id="gs-clue-text">Waiting for game to start…</div>
+            <div class="gs-clue-box gs-clue-main-box">
+              <div class="gs-clue-label">Your private clue</div>
+              <div class="gs-clue-text" id="gs-clue-text">Waiting for game to start…</div>
+            </div>
+            <div class="gs-clue-notes-box">
+              <div class="gs-clue-label">Notes on other players' clues</div>
+              <textarea id="gs-clue-notes" class="gs-clue-notes" maxlength="500" placeholder="Write down what each other player might be cluing: Blue, Red, Yellow, Green, Purple..." oninput="saveClueNotes()"></textarea>
+            </div>
           </div>
           <div id="gs-clue-grid-wrap" style="margin-top:10px;display:none">
             <div style="font-size:10px;color:#64748b;margin-bottom:4px">Numbers matching your clue (highlighted):</div>
@@ -325,7 +331,7 @@ var PLAYER_COLOR_HEX = {
 var SESSION_KEY  = 'techgames_grovers_session';
 var GS_BASE_PATH = '/quantumcomputing/grovers';
 var QB_MIN_PLAYERS = 3;
-var GS_MAX_BOTS = 4;
+var GS_MAX_BOTS = 2;
 
 // ==================== STATE ====================
 var hub, gs = null;
@@ -361,6 +367,13 @@ function copyLink() {
 
 function startGame() { send({ type: 'start_game' }); }
 function toggleBot()  { send({ type: 'toggle_bot' }); }
+function leaveRoom() {
+  sessionStorage.removeItem(SESSION_KEY);
+  send({ type: 'leave_room' });
+  roomCode = null; myIdx = -1; gs = null; isHost = false; isObserver = false;
+  try { history.replaceState(null, '', GS_BASE_PATH); } catch(_) {}
+  showScreen('lobby');
+}
 
 function renderLobbyPlayers(players, observers) {
   players   = players   || [];
@@ -473,10 +486,15 @@ function playCard(cardNumber) {
   send({ type: 'game_action', action: 'gs_play_card', cardNumber: cardNumber });
 }
 
-function voteCard(vote) {
+function voteCard() {
   if (!gs || !gs.pendingCard) return;
   if (!gs.pendingCard.needsVote) return;
-  send({ type: 'game_action', action: 'gs_vote_card', cardNumber: gs.pendingCard.number, vote: vote });
+  send({ type: 'game_action', action: 'gs_vote_card', cardNumber: gs.pendingCard.number });
+}
+
+function toggleFocusCard(cardIndex) {
+  if (!gs || !Array.isArray(gs.playedCards) || cardIndex < 0 || cardIndex >= gs.playedCards.length) return;
+  send({ type: 'game_action', action: 'gs_toggle_focus_card', cardIndex: cardIndex });
 }
 
 // ==================== MINI BOARD SVG ====================
@@ -488,9 +506,9 @@ function miniBoardSvg(matchingNumbers) {
   for (var d = 0; d < 256; d++) {
     if (!set[d]) continue;
     var row = Math.floor(d / 16), col = d % 16;
-    rects += '<rect x="' + (col * cell) + '" y="' + (row * cell) + '" width="' + cell + '" height="' + cell + '" fill="#8b5cf6"/>';
+    rects += '<rect x="' + (col * cell) + '" y="' + (row * cell) + '" width="' + cell + '" height="' + cell + '" fill="#1f6fd0"/>';
   }
-  return '<svg width="' + size + '" height="' + size + '" viewBox="0 0 ' + size + ' ' + size + '" xmlns="http://www.w3.org/2000/svg" style="background:#1a1a2e;display:block;border:1px solid #2d2d4e;border-radius:4px">' + rects + '</svg>';
+  return '<svg width="' + size + '" height="' + size + '" viewBox="0 0 ' + size + ' ' + size + '" xmlns="http://www.w3.org/2000/svg" style="background:#f6f9fd;display:block;border:1px solid #cddcef;border-radius:4px">' + rects + '</svg>';
 }
 
 // ==================== ALL POSSIBLE CLUES REFERENCE ====================
@@ -627,7 +645,7 @@ function renderAllCluesReference() {
   var html = '';
   for (var i = 0; i < groups.length; i++) {
     var gr = groups[i];
-    html += '<h4 style="margin:12px 0 6px;font-size:13px;font-weight:800;color:#c4b5fd">'
+    html += '<h4 style="margin:12px 0 6px;font-size:13px;font-weight:800;color:#14508f">'
           + esc(gr.category) + ' <span style="font-size:11px;color:#64748b;font-weight:400">(' + gr.items.length + ')</span></h4>'
           + '<div class="gs-clueref-grid">';
     for (var j = 0; j < gr.items.length; j++) {
@@ -726,7 +744,8 @@ function renderTurnSection(state) {
     if (isMe && !state.pendingCard) {
       actionsEl.innerHTML = '<div class="gs-turn-tip">Choose a gate card from your hand to play. Your token is placed automatically based on your clue.</div>';
     } else if (state.pendingCard && state.pendingCard.needsVote) {
-      actionsEl.innerHTML = '<div class="gs-turn-tip">A gate card has been played. Use the YES / NO buttons to place your token.</div>';
+      var myV = state.pendingCard.myVote === 'yes' ? 'YES' : 'NO';
+      actionsEl.innerHTML = '<div class="gs-turn-tip">A gate card has been played. Your clue says <strong>' + myV + '</strong> — click OK to place your token.</div>';
     } else if (state.pendingCard) {
       var left = 0;
       for (var pi = 0; pi < state.players.length; pi++) {
@@ -737,7 +756,7 @@ function renderTurnSection(state) {
       actionsEl.innerHTML = '<div class="gs-turn-tip">Waiting for ' + esc(curPlayer ? curPlayer.name : '?') + ' to play a gate card.</div>';
     }
   } else if (state.phase === 'voting') {
-    statusEl.innerHTML = '<span style="color:#facc15;font-weight:800">⚡ Measurement Phase</span>';
+    statusEl.innerHTML = '<span style="color:#8a6100;font-weight:800">⚡ Measurement Phase</span>';
     var myVote = state.finalVotes[state.myPlayerIdx];
     if (myVote !== undefined) {
       actionsEl.innerHTML = '<div class="gs-turn-tip">You voted for <strong>' + myVote + '</strong>. Waiting for other players to vote.</div>';
@@ -745,6 +764,13 @@ function renderTurnSection(state) {
       actionsEl.innerHTML = '<div class="gs-turn-tip">Click a number in the bottom row of the Number Estimate board to cast your final vote.</div>';
     }
   }
+}
+
+function saveClueNotes() {
+  var notesEl = document.getElementById('gs-clue-notes');
+  if (!notesEl) return;
+  var key = 'techgames_grovers_clue_notes_' + (roomCode || 'lobby');
+  try { sessionStorage.setItem(key, notesEl.value); } catch (_) {}
 }
 
 function renderClueSection(state) {
@@ -755,7 +781,13 @@ function renderClueSection(state) {
   var entText   = document.getElementById('gs-entanglement-text');
   var entGrid   = document.getElementById('gs-entanglement-grid-wrap');
   var entMini   = document.getElementById('gs-entanglement-miniboard');
+  var notesEl   = document.getElementById('gs-clue-notes');
   if (!textEl) return;
+
+  if (notesEl) {
+    var notesKey = 'techgames_grovers_clue_notes_' + (roomCode || 'lobby');
+    try { notesEl.value = sessionStorage.getItem(notesKey) || ''; } catch (_) { notesEl.value = ''; }
+  }
 
   // Entanglement clue (public)
   if (state.entanglementClue) {
@@ -799,9 +831,13 @@ function renderPendingCard(state) {
   var voteBtnsEl = document.getElementById('gs-vote-btns');
   if (voteBtnsEl) {
     if (pc.needsVote) {
+      var auto = pc.myVote === 'yes';
       voteBtnsEl.innerHTML =
-        '<button class="gs-btn gs-btn-yes" onclick="voteCard(\'yes\')">YES — matches my clue</button>'
-        + '<button class="gs-btn gs-btn-no" onclick="voteCard(\'no\')">NO — doesn\'t match</button>';
+        '<div class="gs-auto-vote ' + (auto ? 'is-yes' : 'is-no') + '">'
+        + '<div class="gs-auto-vote-verdict">' + (auto ? 'YES — this card matches your clue' : "NO — this card doesn't match your clue") + '</div>'
+        + '<div class="gs-auto-vote-note">Your token is placed for you based on your secret clue.</div>'
+        + '</div>'
+        + '<button class="gs-btn ' + (auto ? 'gs-btn-yes' : 'gs-btn-no') + '" onclick="voteCard()">OK — place my token</button>';
     } else if (pc.tokens && pc.tokens[state.myPlayerIdx] !== undefined) {
       var myVote = pc.tokens[state.myPlayerIdx];
       voteBtnsEl.innerHTML = '<span style="font-size:13px;font-weight:700;color:' + (myVote === 'yes' ? '#22c55e' : '#ef4444') + '">You voted ' + myVote.toUpperCase() + '</span>';
@@ -988,6 +1024,7 @@ function renderPlayedCards(state) {
   if (!grid) return;
 
   var cards = state.playedCards || [];
+  var focusVotes = state.focusVotes || {};
   if (countEl) countEl.textContent = cards.length + ' card' + (cards.length === 1 ? '' : 's') + ' played';
   if (!cards.length) {
     grid.innerHTML = '';
@@ -1001,6 +1038,8 @@ function renderPlayedCards(state) {
     var card = cards[i];
     var yesToks = '';
     var noToks  = '';
+    var focusPlayers = focusVotes[i] || [];
+    var myFocus = focusPlayers.indexOf(state.myPlayerIdx) !== -1;
     for (var pi = 0; pi < state.players.length; pi++) {
       var vote = card.tokens && card.tokens[pi];
       if (!vote) continue;
@@ -1009,7 +1048,7 @@ function renderPlayedCards(state) {
       if (vote === 'yes') yesToks += tok;
       else                noToks  += tok;
     }
-    html += '<div class="gs-gate-card">'
+    html += '<div class="gs-gate-card' + (myFocus ? ' gs-card-focused' : '') + '">'
       + '<div class="gs-card-yes">'
       + '  <div class="gs-card-yes-label">YES</div>'
       + '  <div class="gs-card-tokens">' + yesToks + '</div>'
@@ -1022,6 +1061,10 @@ function renderPlayedCards(state) {
       + '<div class="gs-card-no">'
       + '  <div class="gs-card-tokens">' + noToks + '</div>'
       + '  <div class="gs-card-no-label">NO</div>'
+      + '</div>'
+      + '<div class="gs-card-focus-row">'
+      + '  <button class="gs-card-focus-btn ' + (myFocus ? 'active' : '') + '" onclick="toggleFocusCard(' + i + ')">★ ' + (myFocus ? 'Focused' : 'Focus') + '</button>'
+      + '  <span class="gs-card-focus-count">' + focusPlayers.length + '</span>'
       + '</div>'
       + '</div>';
   }
