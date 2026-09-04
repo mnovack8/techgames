@@ -27,7 +27,7 @@
 
 <header>
   <a class="header-logo" href="/">
-    <img src="/images/logo-light.png" alt="Tech CoLab logo" width="56" height="56" fetchpriority="high" decoding="async">
+    <img src="/images/logo.png" alt="Tech CoLab logo" width="56" height="56" fetchpriority="high" decoding="async">
     <div>
       <span class="logo-text">Tech Co<span class="logo-text-accent">Lab</span></span>
       <span class="logo-sub">Bridge the Gap.<br>Empower their Decisions.</span>
@@ -151,10 +151,32 @@
     <!-- MAIN CONTENT AREA -->
     <div class="gs-main" id="gs-main">
 
-      <!-- Round + voting status -->
-      <div id="gs-status-bar" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-        <span class="gs-round-badge" id="gs-round-badge">Round 1 / 12</span>
-        <span id="gs-phase-label" style="font-size:12px;color:#64748b"></span>
+      <!-- HERO: Turn status + You + your clue + notes (large, top of page) -->
+      <div class="gs-hero" id="gs-hero">
+        <div class="gs-hero-top">
+          <span class="gs-round-badge" id="gs-round-badge">Round 1 / 12</span>
+          <span id="gs-phase-label" class="gs-hero-phase"></span>
+        </div>
+        <div class="gs-hero-turn-status" id="gs-turn-status"></div>
+        <div class="gs-hero-turn-actions" id="gs-turn-actions"></div>
+
+        <div class="gs-hero-body">
+          <div class="gs-hero-you" id="gs-hero-you">
+            <div class="gs-hero-you-badge">
+              <span class="gs-hero-you-swatch" id="gs-hero-you-swatch"></span>
+              <span class="gs-hero-you-label">You</span>
+            </div>
+            <div class="gs-hero-you-clue" id="gs-clue-text">Waiting for game to start…</div>
+            <div id="gs-clue-grid-wrap" style="margin-top:8px;display:none">
+              <div style="font-size:10px;color:#64748b;margin-bottom:4px">Numbers matching your clue (highlighted):</div>
+              <div id="gs-clue-miniboard"></div>
+            </div>
+          </div>
+          <div class="gs-hero-notes">
+            <div class="gs-clue-label">Notes on other players' clues</div>
+            <textarea id="gs-clue-notes" class="gs-clue-notes" maxlength="500" placeholder="Write down what each other player might be cluing: Blue, Red, Yellow, Green, Purple..." oninput="saveClueNotes()"></textarea>
+          </div>
+        </div>
       </div>
 
       <!-- PENDING CARD — shown while waiting for all votes on active card -->
@@ -254,6 +276,11 @@
           <h3>Played Gate Cards</h3>
           <span id="gs-cards-count" style="font-size:12px;color:#64748b"></span>
         </div>
+        <div class="gs-focus-hint">Move your <strong>focus token</strong> onto the gate card you want the team to pay attention to. It starts on <strong>?</strong> and can be moved at any time.</div>
+        <div class="gs-focus-unknown" id="gs-focus-unknown" onclick="setFocusCard(null)">
+          <span>? — No focus set</span>
+          <span id="gs-focus-tokens-unknown" style="display:flex;gap:3px"></span>
+        </div>
         <div class="gs-cards-grid" id="gs-cards-grid"></div>
         <div id="gs-no-cards" style="font-size:13px;color:#475569;font-style:italic;padding:12px 0">No cards played yet.</div>
       </div>
@@ -271,44 +298,23 @@
         </button>
       </div>
 
-      <!-- My Clue -->
+      <!-- Public Entanglement Clue -->
       <div class="gs-panel-section" id="gs-clue-section">
-        <div class="gs-section-title">My Secret Clue</div>
+        <div class="gs-section-title">Public Clue</div>
         <div id="gs-clue-content">
-          <div class="gs-clue-layout">
-            <div class="gs-clue-box" id="gs-entanglement-box" style="display:none;margin-bottom:8px;border-color:#f5b301;background:rgba(245,179,1,0.12)">
-              <div class="gs-clue-label" style="color:#8a6100">⚛ Public Entanglement Clue</div>
-              <div class="gs-clue-text" id="gs-entanglement-text" style="color:#5c4200"></div>
-              <div id="gs-entanglement-grid-wrap" style="margin-top:8px;display:none">
-                <div style="font-size:10px;color:#64748b;margin-bottom:4px">Numbers matching entanglement clue:</div>
-                <div id="gs-entanglement-miniboard"></div>
-              </div>
+          <div class="gs-clue-box" id="gs-entanglement-box" style="display:none;border-color:#f5b301;background:rgba(245,179,1,0.12)">
+            <div class="gs-clue-label" style="color:#8a6100">⚛ Public Entanglement Clue</div>
+            <div class="gs-clue-text" id="gs-entanglement-text" style="color:#5c4200"></div>
+            <div id="gs-entanglement-grid-wrap" style="margin-top:8px;display:none">
+              <div style="font-size:10px;color:#64748b;margin-bottom:4px">Numbers matching entanglement clue:</div>
+              <div id="gs-entanglement-miniboard"></div>
             </div>
-            <div class="gs-clue-box gs-clue-main-box">
-              <div class="gs-clue-label">Your private clue</div>
-              <div class="gs-clue-text" id="gs-clue-text">Waiting for game to start…</div>
-            </div>
-            <div class="gs-clue-notes-box">
-              <div class="gs-clue-label">Notes on other players' clues</div>
-              <textarea id="gs-clue-notes" class="gs-clue-notes" maxlength="500" placeholder="Write down what each other player might be cluing: Blue, Red, Yellow, Green, Purple..." oninput="saveClueNotes()"></textarea>
-            </div>
-          </div>
-          <div id="gs-clue-grid-wrap" style="margin-top:10px;display:none">
-            <div style="font-size:10px;color:#64748b;margin-bottom:4px">Numbers matching your clue (highlighted):</div>
-            <div id="gs-clue-miniboard"></div>
           </div>
         </div>
         <button class="gs-btn" style="width:100%;margin-top:10px;font-size:12px"
           onclick="renderAllCluesReference();document.getElementById('gs-allclues-overlay').style.display='flex'">
           📖 All Possible Clues
         </button>
-      </div>
-
-      <!-- Turn -->
-      <div class="gs-panel-section" id="gs-turn-section">
-        <div class="gs-section-title">Turn</div>
-        <div class="gs-turn-status" id="gs-turn-status"></div>
-        <div id="gs-turn-actions"></div>
       </div>
 
       <!-- Log -->
@@ -492,9 +498,12 @@ function voteCard() {
   send({ type: 'game_action', action: 'gs_vote_card', cardNumber: gs.pendingCard.number });
 }
 
-function toggleFocusCard(cardIndex) {
-  if (!gs || !Array.isArray(gs.playedCards) || cardIndex < 0 || cardIndex >= gs.playedCards.length) return;
-  send({ type: 'game_action', action: 'gs_toggle_focus_card', cardIndex: cardIndex });
+function setFocusCard(cardIndex) {
+  if (!gs) return;
+  if (cardIndex !== null) {
+    if (!Array.isArray(gs.playedCards) || cardIndex < 0 || cardIndex >= gs.playedCards.length) return;
+  }
+  send({ type: 'game_action', action: 'gs_set_focus', cardIndex: cardIndex });
 }
 
 // ==================== MINI BOARD SVG ====================
@@ -700,6 +709,12 @@ function renderPlayersBar(state) {
       + '</div>';
   }
   bar.innerHTML = html;
+
+  // "You" swatch in hero
+  var youSwatch = document.getElementById('gs-hero-you-swatch');
+  if (youSwatch && state.players[state.myPlayerIdx]) {
+    youSwatch.style.background = PLAYER_COLOR_HEX[state.players[state.myPlayerIdx].color] || '#888';
+  }
 
   // Round badge
   var badge = document.getElementById('gs-round-badge');
@@ -1024,7 +1039,26 @@ function renderPlayedCards(state) {
   if (!grid) return;
 
   var cards = state.playedCards || [];
-  var focusVotes = state.focusVotes || {};
+  var focus = state.focus || {};
+  var myFocus = focus[state.myPlayerIdx];
+  if (myFocus === undefined) myFocus = null;
+
+  // "?" unfocused area
+  var unknownEl = document.getElementById('gs-focus-unknown');
+  var unknownTokensEl = document.getElementById('gs-focus-tokens-unknown');
+  if (unknownEl) unknownEl.classList.toggle('gs-focus-mine', myFocus === null);
+  if (unknownTokensEl) {
+    var uHtml = '';
+    for (var upi = 0; upi < state.players.length; upi++) {
+      var f = focus[upi];
+      if (f === null || f === undefined) {
+        var uhex = PLAYER_COLOR_HEX[state.players[upi].color] || '#888';
+        uHtml += '<span class="gs-focus-token" style="background:' + uhex + '"></span>';
+      }
+    }
+    unknownTokensEl.innerHTML = uHtml;
+  }
+
   if (countEl) countEl.textContent = cards.length + ' card' + (cards.length === 1 ? '' : 's') + ' played';
   if (!cards.length) {
     grid.innerHTML = '';
@@ -1038,17 +1072,22 @@ function renderPlayedCards(state) {
     var card = cards[i];
     var yesToks = '';
     var noToks  = '';
-    var focusPlayers = focusVotes[i] || [];
-    var myFocus = focusPlayers.indexOf(state.myPlayerIdx) !== -1;
+    var isFocused = myFocus === i;
+    var focusToks = '';
     for (var pi = 0; pi < state.players.length; pi++) {
       var vote = card.tokens && card.tokens[pi];
-      if (!vote) continue;
-      var hex = PLAYER_COLOR_HEX[state.players[pi].color] || '#888';
-      var tok = '<span class="gs-card-token" style="background:' + hex + '"></span>';
-      if (vote === 'yes') yesToks += tok;
-      else                noToks  += tok;
+      if (vote) {
+        var hex = PLAYER_COLOR_HEX[state.players[pi].color] || '#888';
+        var tok = '<span class="gs-card-token" style="background:' + hex + '"></span>';
+        if (vote === 'yes') yesToks += tok;
+        else                noToks  += tok;
+      }
+      if (focus[pi] === i) {
+        var fhex = PLAYER_COLOR_HEX[state.players[pi].color] || '#888';
+        focusToks += '<span class="gs-focus-token" style="background:' + fhex + '"></span>';
+      }
     }
-    html += '<div class="gs-gate-card' + (myFocus ? ' gs-card-focused' : '') + '">'
+    html += '<div class="gs-gate-card' + (isFocused ? ' gs-card-focused' : '') + '">'
       + '<div class="gs-card-yes">'
       + '  <div class="gs-card-yes-label">YES</div>'
       + '  <div class="gs-card-tokens">' + yesToks + '</div>'
@@ -1062,9 +1101,9 @@ function renderPlayedCards(state) {
       + '  <div class="gs-card-tokens">' + noToks + '</div>'
       + '  <div class="gs-card-no-label">NO</div>'
       + '</div>'
-      + '<div class="gs-card-focus-row">'
-      + '  <button class="gs-card-focus-btn ' + (myFocus ? 'active' : '') + '" onclick="toggleFocusCard(' + i + ')">★ ' + (myFocus ? 'Focused' : 'Focus') + '</button>'
-      + '  <span class="gs-card-focus-count">' + focusPlayers.length + '</span>'
+      + '<div class="gs-card-focus-row' + (isFocused ? ' gs-focus-mine' : '') + '" onclick="setFocusCard(' + i + ')">'
+      + '  <span class="gs-card-focus-label">★ Focus</span>'
+      + '  <span class="gs-focus-tokens">' + focusToks + '</span>'
       + '</div>'
       + '</div>';
   }

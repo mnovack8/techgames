@@ -302,9 +302,11 @@ function initGSGame(room) {
 
   const confidence = {};
   const estimate   = {};
+  const focus      = {};
   for (let p = 0; p < playerCount; p++) {
     confidence[p] = '?';
     estimate[p]   = null;
+    focus[p]      = null;
   }
 
   room.gsState = {
@@ -325,7 +327,7 @@ function initGSGame(room) {
     deck,
     hands,
     playedCards: [],
-    focusVotes: {},
+    focus,
     pendingCard: null,
     confidence,
     estimate,
@@ -442,7 +444,7 @@ function buildStateMsg(gs, playerIdx, players) {
     myClue:             gs.playerClues[playerIdx],
     myHand:             gs.hands[playerIdx],
     playedCards:        gs.playedCards,
-    focusVotes:         gs.focusVotes,
+    focus:              gs.focus,
     pendingCard,
     confidence:         gs.confidence,
     estimate:           gs.estimate,
@@ -485,34 +487,18 @@ function gsHandleAction(room, playerIdx, msg) {
     return;
   }
 
+  if (action === 'gs_set_focus') {
+    const idx = msg.cardIndex;
+    if (idx !== null) {
+      if (!Number.isInteger(idx) || idx < 0 || idx >= gs.playedCards.length) return;
+    }
+    gs.focus[playerIdx] = idx;
+    gsBroadcastState(room);
+    return;
+  }
+
   // ── Playing phase ─────────────────────────────────────────────────────────
   if (gs.phase === 'playing') {
-    if (action === 'gs_toggle_focus_card') {
-      const idx = Number(msg.cardIndex);
-      if (!Number.isInteger(idx) || idx < 0 || idx >= gs.playedCards.length) return;
-
-      const byCard = gs.focusVotes[idx] || [];
-      const existing = byCard.indexOf(playerIdx);
-      if (existing !== -1) {
-        byCard.splice(existing, 1);
-        if (byCard.length === 0) delete gs.focusVotes[idx];
-        else gs.focusVotes[idx] = byCard;
-      } else {
-        // One focus token per player; switching removes the previous choice.
-        for (const [cardKey, players] of Object.entries(gs.focusVotes)) {
-          const pIdx = players.indexOf(playerIdx);
-          if (pIdx !== -1) {
-            players.splice(pIdx, 1);
-            if (players.length === 0) delete gs.focusVotes[cardKey];
-            else gs.focusVotes[cardKey] = players;
-          }
-        }
-        gs.focusVotes[idx] = byCard.concat(playerIdx);
-      }
-      gsBroadcastState(room);
-      return;
-    }
-
     if (action === 'gs_play_card') {
       if (gs.pendingCard) return; // already a card pending
       if (playerIdx !== gs.currentPlayerIdx) return;
@@ -627,6 +613,12 @@ function _resolveCard(room) {
     gs.hands[activeIdx].push(gs.deck.pop());
   }
 
+  // Bots re-evaluate their confidence, estimate, and focus token now that a
+  // full round of play (a new gate card + all its votes) is public information.
+  for (let pi = 0; pi < room.players.length; pi++) {
+    if (room.players[pi].isBot) gsBotReasonAndUpdate(room, pi);
+  }
+
   // Advance round / advance player
   if (gs.round >= gs.totalRounds) {
     gs.phase = 'voting';
@@ -641,6 +633,79 @@ function _resolveCard(room) {
   gsLog(gs, `Round ${gs.round} begins. ${room.players[gs.currentPlayerIdx].name}'s turn.`);
   gsBroadcastState(room);
   gsMaybeScheduleBotTurn(room);
+}
+
+// ==================== BOT REASONING ====================
+// Bots reason about their own private clue plus all public information (the
+// entanglement clue and every YES/NO token placed on played gate cards) to
+// decide where to place their Confidence and Number Estimate tokens, and
+// which played card is most worth the team's attention (Focus token).
+// This is intentionally a simple heuristic, not a full deduction solver:
+//   - A bot's "candidate set" is every number consistent with its own clue
+//     AND the public entanglement clue.
+//   - A played card that got a unanimous YES from every player is a strong
+//     public signal that its number is very close to (or is) the target,
+//     since every player's private clue matched it.
+//   - Confidence tracks how narrow the candidate set is (and whether a
+//     strong unanimous card was found); Estimate/Focus point at the best
+//     supporting evidence found so far.
+function gsBotReasonAndUpdate(room, botIdx) {
+  const gs = room.gsState;
+  if (!gs || gs.gameOver) return;
+  if (!room.players[botIdx] || !room.players[botIdx].isBot) return;
+
+  const clue = gs.playerClues[botIdx];
+  const entanglement = gs.entanglementClue;
+  const entSet = new Set(entanglement.matchingNumbers);
+  const candidates = clue.matchingNumbers.filter(n => entSet.has(n));
+
+  // Score each played card as evidence, favoring unanimous YES votes and
+  // numbers that also fall inside this bot's own candidate set.
+  let focusIdx = null;
+  let bestNumber = null;
+  let bestScore = -1;
+  gs.playedCards.forEach((card, idx) => {
+    const tokens = card.tokens || {};
+    const voteVals = Object.values(tokens);
+    if (voteVals.length === 0) return;
+    const yesCount = voteVals.filter(v => v === 'yes').length;
+    const unanimous = yesCount === voteVals.length && voteVals.length === room.players.length;
+    const inOwnCandidates = candidates.includes(card.number);
+    let score = yesCount + (unanimous ? 6 : 0) + (inOwnCandidates ? 4 : 0);
+    if (score > bestScore) {
+      bestScore   = score;
+      bestNumber  = card.number;
+      focusIdx    = idx;
+    }
+  });
+
+  // Confidence tracks how narrow our candidate set is, boosted if we found
+  // strong corroborating public evidence (a near-unanimous played card).
+  let confidenceLevel;
+  const narrowness = candidates.length;
+  if (bestScore >= 10 || narrowness <= 8)       confidenceLevel = 'high';
+  else if (narrowness <= 32)                    confidenceLevel = 'medium';
+  else if (narrowness <= 96)                    confidenceLevel = 'low';
+  else                                          confidenceLevel = '?';
+  gs.confidence[botIdx] = confidenceLevel;
+
+  // Estimate: prefer the strongest supporting played-card number when it is
+  // consistent with our own candidate set; otherwise fall back to a
+  // representative candidate at a granularity matching our confidence.
+  let estimate = null;
+  if (bestNumber !== null && candidates.includes(bestNumber)) {
+    estimate = { type: 'number', value: bestNumber };
+  } else if (candidates.length > 0) {
+    const sorted = [...candidates].sort((a, b) => a - b);
+    const mid = sorted[Math.floor(sorted.length / 2)];
+    if (confidenceLevel === 'high')        estimate = { type: 'number', value: mid };
+    else if (confidenceLevel === 'medium') estimate = { type: 'tenth',  value: Math.min(9, Math.floor(mid / 25.5)) };
+    else if (confidenceLevel === 'low')    estimate = { type: 'quarter', value: Math.min(3, Math.floor(mid / 64)) };
+  }
+  gs.estimate[botIdx] = estimate;
+
+  // Focus: point teammates at whichever played card is the best evidence.
+  gs.focus[botIdx] = focusIdx;
 }
 
 function _resolveVoting(room) {

@@ -562,6 +562,93 @@ body {
   }
 }
 
+/* ===== HERO (turn status + You + clue + notes) ===== */
+.gs-hero {
+  background: var(--gs-surface);
+  border: 2px solid var(--gs-accent);
+  border-radius: 16px;
+  padding: 20px 22px;
+}
+.gs-hero-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.gs-hero-phase {
+  font-size: 13px;
+  color: var(--gs-muted);
+  font-weight: 600;
+}
+.gs-hero-turn-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--gs-text);
+  margin-bottom: 6px;
+}
+.gs-hero-turn-status .gs-turn-swatch {
+  width: 18px; height: 18px;
+}
+.gs-hero-turn-actions {
+  margin-bottom: 16px;
+}
+.gs-hero-turn-actions .gs-turn-tip {
+  font-size: 14px;
+}
+.gs-hero-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(240px, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+.gs-hero-you {
+  background: rgba(31, 111, 208,.1);
+  border: 1.5px solid var(--gs-accent);
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+.gs-hero-you-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.gs-hero-you-swatch {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: #888;
+  border: 2px solid rgba(255,255,255,.6);
+  box-shadow: 0 0 0 1.5px var(--gs-accent);
+}
+.gs-hero-you-label {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--gs-accent2);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+.gs-hero-you-clue {
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--gs-text);
+  font-weight: 600;
+}
+.gs-hero-notes {
+  background: rgba(245, 179, 1, .08);
+  border: 1.5px solid var(--gs-quantum);
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+@media (max-width: 780px) {
+  .gs-hero-body {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ===== GATE CARD PLAYED AREA ===== */
 .gs-cards-header {
   display: flex;
@@ -609,25 +696,60 @@ body {
   padding: 8px 8px 10px;
   border-top: 1px solid var(--gs-border);
   background: rgba(245, 179, 1, .06);
-}
-.gs-card-focus-btn {
-  border: 1px solid var(--gs-quantum);
-  background: rgba(245, 179, 1, .1);
-  color: var(--gs-quantum-ink);
-  border-radius: 999px;
-  padding: 4px 8px;
-  font-size: 11px;
-  font-weight: 700;
   cursor: pointer;
+  transition: background-color .12s;
 }
-.gs-card-focus-btn.active {
+.gs-card-focus-row:hover { background: rgba(245, 179, 1, .14); }
+.gs-card-focus-row.gs-focus-mine {
   background: rgba(245, 179, 1, .25);
 }
-.gs-card-focus-count {
-  min-width: 20px;
-  text-align: center;
+.gs-card-focus-label {
   font-size: 11px;
-  font-weight: 800;
+  font-weight: 700;
+  color: var(--gs-quantum-ink);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+.gs-focus-tokens {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 4px;
+  min-height: 18px;
+}
+.gs-focus-token {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(20,33,58,.22);
+  flex-shrink: 0;
+}
+
+/* "?" no-focus-set area, mirrors the estimate board's unknown row */
+.gs-focus-hint {
+  font-size: 12px;
+  color: var(--gs-muted);
+  margin-bottom: 8px;
+}
+.gs-focus-unknown {
+  background: var(--gs-surface2);
+  border: 1px solid var(--gs-border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--gs-muted);
+  margin-bottom: 12px;
+  transition: border-color .12s;
+}
+.gs-focus-unknown:hover { border-color: var(--gs-quantum); }
+.gs-focus-unknown.gs-focus-mine {
+  border-color: var(--gs-quantum);
+  background: rgba(245, 179, 1, .18);
   color: var(--gs-quantum-ink);
 }
 
