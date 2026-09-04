@@ -98,8 +98,7 @@ function getMetrics(days, page = 'homepage') {
     const hpSeries      = new Array(n).fill(0);
     const fnPhysSeries  = new Array(n).fill(0);
     const bcPhysSeries  = new Array(n).fill(0);
-    const qubitSeries   = new Array(n).fill(0);
-    let hp = 0, fnPhys = 0, bcPhys = 0, qubit = 0;
+    let hp = 0, fnPhys = 0, bcPhys = 0;
     let returnVisitors = 0, wsDCTotal = 0;
     const referrers = { direct: 0, search: 0, linkedin: 0, other: 0 };
     const hourly    = new Array(24).fill(0);
@@ -123,7 +122,6 @@ function getMetrics(days, page = 'homepage') {
       if (e.type === 'button_click') {
         if (e.button === 'fuzznet_physical')  { fnPhys++;  fnPhysSeries[i]++; }
         if (e.button === 'byteclub_physical') { bcPhys++;  bcPhysSeries[i]++; }
-        if (e.button === 'qubit_waitlist')    { qubit++;   qubitSeries[i]++;  } // button id unchanged for historical data
       }
       if (e.type === 'ws_disconnect') wsDCTotal++;
     }
@@ -137,14 +135,14 @@ function getMetrics(days, page = 'homepage') {
     const buyKeys       = new Set(ev.filter(e => e.type === 'button_click' && ['fuzznet_physical','byteclub_physical'].includes(e.button) && e.uvKey).map(e => e.uvKey));
     const playToBuy     = [...completedKeys].filter(k => buyKeys.has(k)).length;
 
-    return { page: 'homepage', hp, fnPhys, bcPhys, qubit,
+    return { page: 'homepage', hp, fnPhys, bcPhys,
       returnVisitors, returnRate, bounceRate, wsDCTotal, wsDCRate, referrers, hourly, playToBuy,
-      chart: { labels, hp: hpSeries, fnPhys: fnPhysSeries, bcPhys: bcPhysSeries, qubit: qubitSeries } };
+      chart: { labels, hp: hpSeries, fnPhys: fnPhysSeries, bcPhys: bcPhysSeries } };
   }
 
   if (page === 'funnel') {
     function funnelStats(events) {
-      let visits = 0, fnStarted = 0, bcStarted = 0, cfStarted = 0, fnCompleted = 0, bcCompleted = 0, cfCompleted = 0, fnBuys = 0, bcBuys = 0, quantumWL = 0;
+      let visits = 0, fnStarted = 0, bcStarted = 0, cfStarted = 0, fnCompleted = 0, bcCompleted = 0, cfCompleted = 0, fnBuys = 0, bcBuys = 0;
       for (const e of events) {
         if (e.type === 'homepage_visit') visits++;
         if (e.type === 'session_started') {
@@ -160,10 +158,9 @@ function getMetrics(days, page = 'homepage') {
         if (e.type === 'button_click') {
           if (e.button === 'fuzznet_physical')  fnBuys++;
           if (e.button === 'byteclub_physical') bcBuys++;
-          if (e.button === 'qubit_waitlist')    quantumWL++;
         }
       }
-      return { visits, fnStarted, bcStarted, cfStarted, fnCompleted, bcCompleted, cfCompleted, fnBuys, bcBuys, quantumWL };
+      return { visits, fnStarted, bcStarted, cfStarted, fnCompleted, bcCompleted, cfCompleted, fnBuys, bcBuys };
     }
     const curr = funnelStats(ev);
     // Previous equivalent period for comparison
@@ -223,7 +220,7 @@ function handleTrack(req, res) {
     try {
       const e = JSON.parse(body);
       const ALLOWED = ['button_click', 'session_started', 'tutorial_started'];
-      const ALLOWED_BUTTONS = ['fuzznet_physical', 'byteclub_physical', 'qubit_waitlist'];
+      const ALLOWED_BUTTONS = ['fuzznet_physical', 'byteclub_physical'];
       if (!ALLOWED.includes(e.type)) { res.writeHead(400); res.end(); return; }
       if (e.type === 'button_click' && !ALLOWED_BUTTONS.includes(e.button)) { res.writeHead(400); res.end(); return; }
       // Sanitise — only keep known fields; attach visitor key for funnel correlation

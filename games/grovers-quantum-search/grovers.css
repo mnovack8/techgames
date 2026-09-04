@@ -23,6 +23,150 @@ body {
   overflow-x: hidden;
 }
 
+/* ===== WAITING ROOM (shared lobby.template.html fragment) =====
+   The shared template is injected into every game page, but its styling is
+   per-game. Without these rules #waiting inherits only `display:flex` from
+   hub.css and collapses every child into a single squished row. */
+#waiting {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  gap: 20px;
+  background: var(--gs-bg);
+  padding: 40px 20px;
+  box-sizing: border-box;
+}
+#waiting h2 { font-size: 24px; font-weight: 800; color: var(--gs-accent2); }
+
+.room-code-label {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--gs-muted);
+}
+.room-code-display {
+  font-size: 48px;
+  font-weight: 800;
+  letter-spacing: 12px;
+  color: var(--gs-quantum);
+  background: var(--gs-surface);
+  padding: 14px 32px;
+  border-radius: 14px;
+  border: 2px solid var(--gs-border);
+  user-select: all;
+  font-family: 'Share Tech Mono', ui-monospace, monospace;
+}
+.room-share { display: flex; gap: 8px; align-items: center; margin-top: 4px; }
+.copy-btn {
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 700;
+  border: 1px solid var(--gs-border);
+  border-radius: 8px;
+  background: var(--gs-surface);
+  color: var(--gs-accent2);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.copy-btn:hover { background: var(--gs-surface2); }
+.copy-btn.copied { background: var(--gs-accent); color: #fff; border-color: var(--gs-accent); }
+.room-hint { font-size: 13px; color: var(--gs-muted); margin-bottom: 8px; }
+
+.player-list { display: flex; flex-direction: column; gap: 8px; min-width: 280px; }
+.waiting-player {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  background: var(--gs-surface);
+  border-radius: 10px;
+  border: 1px solid var(--gs-border);
+}
+.waiting-player-me { border-color: var(--gs-accent) !important; background: #1e1b3a !important; }
+.waiting-player-dot { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; }
+.waiting-player-name { font-weight: 700; font-size: 15px; }
+.you-tag {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--gs-accent2);
+  background: rgba(139, 92, 246, 0.15);
+  border: 1px solid rgba(139, 92, 246, 0.35);
+  border-radius: 4px;
+  padding: 1px 5px;
+  margin-left: 4px;
+  vertical-align: middle;
+}
+.host-badge {
+  font-size: 11px;
+  background: var(--gs-quantum);
+  color: #1a1a2e;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-weight: 700;
+  margin-left: auto;
+}
+
+.waiting-observer-section { width: 100%; max-width: 320px; margin-top: 4px; }
+.waiting-observer-label {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--gs-accent2);
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.waiting-observer-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 14px;
+  background: var(--gs-surface2);
+  border-radius: 8px;
+  border: 1px solid rgba(139, 92, 246, 0.25);
+  margin-bottom: 5px;
+}
+.waiting-observer-row .obs-name { font-size: 13px; color: var(--gs-accent2); flex: 1; }
+
+.bot-toggle {
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  border: 2px dashed var(--gs-border);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--gs-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  min-width: 240px;
+}
+.bot-toggle:hover { border-color: var(--gs-accent); color: var(--gs-accent2); background: rgba(139, 92, 246, 0.08); }
+.bot-toggle.active { border-color: var(--gs-accent); border-style: solid; color: var(--gs-accent2); background: rgba(139, 92, 246, 0.12); }
+
+.waiting-actions { display: flex; gap: 10px; }
+.waiting-actions button {
+  padding: 14px 40px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 800;
+  transition: all 0.15s;
+}
+#btn-start-game { background: var(--gs-accent); color: #fff; }
+#btn-start-game:hover:not(:disabled) { filter: brightness(1.12); transform: scale(1.02); }
+#btn-start-game:disabled { opacity: 0.4; cursor: not-allowed; }
+#btn-leave { background: var(--gs-surface); color: var(--gs-muted); border: 1px solid var(--gs-border); }
+#btn-leave:hover { background: var(--gs-surface2); color: var(--gs-text); }
+
+.error-msg { color: #f87171; font-size: 14px; min-height: 18px; text-align: center; }
+
 /* ===== GAME LAYOUT ===== */
 .gs-screen { display: none; }
 .gs-screen.active { display: block; }

@@ -41,11 +41,12 @@ const PATH_ALIASES = {
   '/cybersecurity/byteclub/activegame': '/games/cybersecurity/byteclub.html',
   '/cybersecurity/byteclub/tutorial':   '/games/cybersecurity/byteclub.html',
 
-  '/quantumcomputing/qubit':            '/games/quantumcomputing/qubit.html',
-  '/quantumcomputing/qubit.html':       '/games/quantumcomputing/qubit.html',
-  '/quantumcomputing/qubit/lobby':      '/games/quantumcomputing/qubit.html',
-  '/quantumcomputing/qubit/activegame': '/games/quantumcomputing/qubit.html',
-  '/quantumcomputing/qubit/tutorial':   '/games/quantumcomputing/qubit.html',
+  '/quantumcomputing':      '/games/quantumcomputing.html',
+  '/quantumcomputing.html': '/games/quantumcomputing.html',
+  '/quantumcomputing/grovers':            '/games/grovers-quantum-search/grovers.html',
+  '/quantumcomputing/grovers.html':       '/games/grovers-quantum-search/grovers.html',
+  '/quantumcomputing/grovers/lobby':      '/games/grovers-quantum-search/grovers.html',
+  '/quantumcomputing/grovers/activegame': '/games/grovers-quantum-search/grovers.html',
 
   '/grovers-quantum-search':            '/games/grovers-quantum-search/grovers.html',
   '/grovers-quantum-search.html':       '/games/grovers-quantum-search/grovers.html',
@@ -99,8 +100,12 @@ const REDIRECTS = {
   '/ai-knn/clusterflick.html':    '/ai/knn/clusterflick',
   '/knn':       '/ai/knn/clusterflick',
   '/knn.html':  '/ai/knn/clusterflick',
-  '/qubit-waitlist': '/quantumcomputing/qubit', '/qubit-waitlist.html': '/quantumcomputing/qubit',
-  '/quantumcomputing': '/quantumcomputing/qubit', '/quantumcomputing.html': '/quantumcomputing/qubit',
+  // Legacy Qubit paths → Grover's Quantum Search (Qubit game retired)
+  '/qubit-waitlist': '/quantumcomputing', '/qubit-waitlist.html': '/quantumcomputing',
+  '/quantumcomputing/qubit': '/quantumcomputing/grovers', '/quantumcomputing/qubit.html': '/quantumcomputing/grovers',
+  '/quantumcomputing/qubit/lobby': '/quantumcomputing/grovers/lobby',
+  '/quantumcomputing/qubit/activegame': '/quantumcomputing/grovers/activegame',
+  '/quantumcomputing/qubit/tutorial': '/quantumcomputing/grovers',
   '/cybersecurity': '/cybersecurity/byteclub', '/cybersecurity.html': '/cybersecurity/byteclub',
 };
 

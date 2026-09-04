@@ -92,6 +92,10 @@ describe('Route Coverage', () => {
       ['/ai/knn/clusterflick/lobby',                'ClusterFlick lobby (state)'],
       ['/ai/knn/clusterflick/activegame',           'ClusterFlick active game (state)'],
       ['/ai/knn/clusterflick/tutorial',             'ClusterFlick tutorial (state)'],
+      ['/quantumcomputing/grovers',                 "Grover's game"],
+      ['/quantumcomputing/grovers/lobby',           "Grover's lobby (state)"],
+      ['/quantumcomputing/grovers/activegame',      "Grover's active game (state)"],
+      ['/grovers-quantum-search',                   "Grover's game (legacy alias)"],
     ];
 
     for (const [path, label] of games) {
@@ -169,6 +173,12 @@ describe('Route Coverage', () => {
       ['/knn.html',                       '/ai/knn/clusterflick'],
       ['/qubit-waitlist',                 '/quantumcomputing'],
       ['/qubit-waitlist.html',            '/quantumcomputing'],
+      // Retired Qubit game → Grover's Quantum Search
+      ['/quantumcomputing/qubit',            '/quantumcomputing/grovers'],
+      ['/quantumcomputing/qubit.html',       '/quantumcomputing/grovers'],
+      ['/quantumcomputing/qubit/lobby',      '/quantumcomputing/grovers/lobby'],
+      ['/quantumcomputing/qubit/activegame', '/quantumcomputing/grovers/activegame'],
+      ['/quantumcomputing/qubit/tutorial',   '/quantumcomputing/grovers'],
     ];
 
     for (const [from, to] of redirects) {

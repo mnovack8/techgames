@@ -82,6 +82,40 @@
   animation: fade-up 0.45s 0.22s ease both;
 }
 
+/* Play CTA — Grover's Quantum Search */
+.hero-play-cta {
+  position: relative;
+  z-index: 1;
+  margin: 0 auto 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  animation: fade-up 0.45s 0.3s ease both;
+}
+.hero-play-btn {
+  display: inline-block;
+  padding: 14px 30px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #62b517, #4a8c11);
+  color: #fff;
+  font-weight: 800;
+  font-size: 16px;
+  letter-spacing: 0.3px;
+  text-decoration: none;
+  box-shadow: 0 6px 18px rgba(98, 181, 23, 0.32);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.hero-play-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(98, 181, 23, 0.42);
+}
+.hero-play-note {
+  font-size: 13px;
+  font-weight: 600;
+  color: #6b7280;
+}
+
 /* Quantum SVG visual */
 .hero-visual {
   margin: 0 auto 40px;
@@ -448,6 +482,67 @@
   height: 900px;
   border: none;
   display: block;
+}
+
+/* ===== PLAY CTA CARD (replaces the retired waitlist form) ===== */
+.play-card-body {
+  padding: 22px 24px 26px;
+  background: #fff;
+}
+
+.play-card-body p {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #4a4a4a;
+  margin: 0 0 18px;
+}
+
+.play-card-facts {
+  display: flex;
+  gap: 10px;
+  list-style: none;
+  margin: 0 0 22px;
+  padding: 0;
+}
+
+.play-card-facts li {
+  flex: 1;
+  text-align: center;
+  padding: 10px 6px;
+  border: 1px solid #dde8c8;
+  border-radius: 10px;
+  background: #f7faee;
+  font-size: 12px;
+  color: #5a6a3a;
+}
+
+.play-card-facts strong {
+  display: block;
+  font-size: 17px;
+  font-weight: 900;
+  color: #2a3a00;
+}
+
+.play-card-btn {
+  display: block;
+  text-align: center;
+  padding: 14px 20px;
+  border-radius: 10px;
+  background: #62b517;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 900;
+  text-decoration: none;
+  transition: filter 0.15s, transform 0.15s;
+}
+
+.play-card-btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
+
+.play-card-note {
+  margin-top: 12px;
+  text-align: center;
+  font-size: 12px;
+  color: #7a8a5a;
 }
 
 /* ===== WHY IT MATTERS SECTION ===== */

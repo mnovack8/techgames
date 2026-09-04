@@ -974,22 +974,6 @@
   white-space: nowrap;
 }
 .btn-buy:hover { border-color: var(--brand-green); background: #f4fae8; }
-.btn-waitlist {
-  flex: 1;
-  padding: 10px 16px;
-  background: #d1db24;
-  color: #2a3a00;
-  font-size: 14px;
-  font-weight: 700;
-  border-radius: 8px;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.15s, transform 0.15s;
-}
-.btn-waitlist:hover { background: #b8c11e; transform: scale(1.02); }
-.game-card.coming-soon .btn-waitlist { pointer-events: auto; }
 
 /* ===== SCENARIO CARDS ===== */
 .scenario-grid {

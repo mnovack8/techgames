@@ -237,7 +237,6 @@ const HP_SERIES = [
   { key:'visits',   label:'Homepage Visits',       data: d => d.chart.hp,     borderColor:'#d1db24', backgroundColor:'rgba(209,219,36,.15)' },
   { key:'fuzznet',  label:'FuzzNet Buy',            data: d => d.chart.fnPhys, borderColor:'#3b82f6', backgroundColor:'rgba(59,130,246,.12)'  },
   { key:'byteclub', label:'Byte Club Buy',          data: d => d.chart.bcPhys, borderColor:'#62b517', backgroundColor:'rgba(98,181,23,.12)'   },
-  { key:'qubit',    label:'Quantum Computing WL',   data: d => d.chart.qubit,  borderColor:'#8b5cf6', backgroundColor:'rgba(139,92,246,.12)'  },
 ];
 const ALL_HP_KEYS = HP_SERIES.map(s => s.key);
 let activeHpFilters = new Set(ALL_HP_KEYS);
@@ -337,11 +336,6 @@ function renderHomepage(d) {
       <div class="val">${d.bcPhys.toLocaleString()}</div>
       <div class="sub">button clicks</div>
     </div>
-    <div class="stat-card">
-      <div class="lbl">Quantum Computing WL</div>
-      <div class="val">${d.qubit.toLocaleString()}</div>
-      <div class="sub">waitlist clicks</div>
-    </div>
     <div class="stat-card green">
       <div class="lbl">Play-to-buy</div>
       <div class="val">${d.playToBuy ?? 0}</div>
@@ -405,7 +399,6 @@ function renderFunnel(d) {
   const fnBuys         = d.fnBuys || 0;
   const bcBuys         = d.bcBuys || 0;
   const totalBuys      = fnBuys + bcBuys;
-  const quantumWL      = d.quantumWL || 0;
 
   const r_vToS = visits > 0         ? Math.round(totalStarted   / visits        * 100) : 0;
   const r_sToC = totalStarted > 0   ? Math.round(totalCompleted / totalStarted  * 100) : 0;
@@ -447,10 +440,6 @@ function renderFunnel(d) {
       <div class="chart-full-wrap"><canvas id="chart-funnel"></canvas></div>
     </div>
     <div class="chart-grid">
-      <div class="chart-card">
-        <h3>Quantum Computing — Visits → Waitlist</h3>
-        <div class="chart-wrap"><canvas id="chart-quantum-funnel"></canvas></div>
-      </div>
       <div style="background:var(--white);border:2px solid var(--border);border-radius:14px;padding:20px 22px;box-shadow:0 4px 16px var(--shadow);">
         <h3 style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:14px">Period comparison — previous ${currentDays} days</h3>
         <div class="compare-grid" id="funnel-compare"></div>
@@ -521,22 +510,6 @@ function renderFunnel(d) {
     options: { ...CHART_OPT },
   });
 
-  if (charts.quantumFunnel) { charts.quantumFunnel.destroy(); delete charts.quantumFunnel; }
-  const quantumRate = visits > 0 ? Math.round(quantumWL / visits * 100) : 0;
-  charts.quantumFunnel = new Chart(document.getElementById('chart-quantum-funnel'), {
-    type: 'bar',
-    data: {
-      labels: [`Site Visits (${visits.toLocaleString()})`, `Waitlist Clicks (${quantumWL.toLocaleString()})`],
-      datasets: [{ label:'Count', data:[visits, quantumWL],
-        backgroundColor:['rgba(209,219,36,.7)','rgba(139,92,246,.7)'],
-        borderColor:['#d1db24','#8b5cf6'], borderWidth:2, borderRadius:6 }],
-    },
-    options: { ...CHART_OPT, plugins:{ ...CHART_OPT.plugins,
-      legend:{ display:false },
-      subtitle:{ display: quantumRate > 0, text:`${quantumRate}% of visitors joined the waitlist`, color:'#6b7a4a', font:{family:'Nunito',size:11} }
-    }},
-  });
-
   document.getElementById('funnel-compare').innerHTML = [
     { lbl:'Site Visits',     curr:visits,        prev:pVisits    },
     { lbl:'Games Started',   curr:totalStarted,  prev:pStarted   },
@@ -596,7 +569,7 @@ function updateGamePills() {
   });
 }
 
-const GAME_NAMES = { fuzznet: 'FuzzNet Labs', byteclub: 'Byte Club', clusterflick: 'ClusterFlick' };
+const GAME_NAMES = { fuzznet: 'FuzzNet Labs', byteclub: 'Byte Club', clusterflick: 'ClusterFlick', grovers: "Grover's Quantum Search" };
 
 function renderGame(d) {
   _gameData = d;
@@ -681,7 +654,8 @@ function renderSitePages() {
         { name: 'Byte Club',                  desc: 'Multiplayer cybersecurity card game',url: '/cybersecurity/byteclub',     file: 'games/cybersecurity/byteclub.html' },
         { name: 'FuzzNet Labs',               desc: 'Multiplayer AI/ML board game',      url: '/ai/neural-network/fuzznet',  file: 'games/ai/neural-network/fuzznet.html' },
         { name: 'ClusterFlick',               desc: 'Multiplayer KNN physics game',      url: '/ai/knn/clusterflick',        file: 'games/ai/knn/clusterflick.html' },
-        { name: 'Quantum Computing',          desc: 'Qubit game waitlist page',          url: '/quantumcomputing',           file: 'games/quantumcomputing.html' },
+        { name: 'Quantum Computing',          desc: 'Quantum hub + Grover\'s game',      url: '/quantumcomputing',           file: 'games/quantumcomputing.html' },
+        { name: "Grover's Quantum Search",    desc: 'Multiplayer quantum search game',   url: '/quantumcomputing/grovers',   file: 'games/grovers-quantum-search/grovers.html' },
       ]
     },
     {

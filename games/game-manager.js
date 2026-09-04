@@ -7,7 +7,6 @@ const { trackEvent, isRematch } = require('../analytics');
 const fuzznet      = require('./ai-neural-network/fuzznet-logic');
 const clusterflick = require('./ai-knn/clusterflick-logic');
 const byteclub     = require('./cybersecurity/byteclub-logic');
-const qubit        = require('./quantumcomputing/qubit-logic');
 
 // ==================== CONSTANTS (shared) ====================
 const COLOR_INFO = {
@@ -41,7 +40,6 @@ function _serializeRooms() {
     const isOver = (room.state && room.state.gameOver)
       || (room.cfState && room.cfState.gameOver)
       || (room.bcState && room.bcState.phase === 'game_over')
-      || (room.qbState && room.qbState.gameOver)
       || (room.gsState && room.gsState.gameOver);
     if (!room.started || isOver) continue;
     const saved = {
@@ -79,19 +77,31 @@ function scheduleSave() {
   if (_saveTimer.unref) _saveTimer.unref();
 }
 
-// Restore rooms and sessions from disk on startup
-(function loadState() {
+// Restore rooms and sessions from disk on startup.
+// Invoked after GAME_REGISTRY is defined so retired game types can be filtered.
+function loadState() {
   try {
     if (!fs.existsSync(STATE_FILE)) return;
     const raw = JSON.parse(fs.readFileSync(STATE_FILE, 'utf8'));
-    for (const [code, room] of (raw.rooms || [])) rooms.set(code, room);
+    let restored = 0;
+    for (const [code, room] of (raw.rooms || [])) {
+      // Skip rooms whose game type no longer exists (e.g. retired games).
+      // Without this they would silently fall back to fuzznet and load a
+      // board that doesn't match the game the players were in.
+      if (room && room.gameType && !GAME_REGISTRY[room.gameType]) {
+        console.warn('[loadState] dropping room', code, '— unknown gameType:', room.gameType);
+        continue;
+      }
+      rooms.set(code, room);
+      restored++;
+    }
     for (const [token, sess] of (raw.sessions || [])) sessions.set(token, sess);
-    if (raw.rooms && raw.rooms.length)
-      console.log('[loadState] restored', raw.rooms.length, 'room(s),', (raw.sessions || []).length, 'session(s)');
+    if (restored)
+      console.log('[loadState] restored', restored, 'room(s),', (raw.sessions || []).length, 'session(s)');
   } catch (e) {
     console.error('[loadState]', e.message);
   }
-})();
+}
 
 function generateToken() {
   const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
@@ -183,7 +193,6 @@ function sendEventStatus(room) {
     const isOver = (room.bcState && room.bcState.phase === 'game_over')
       || (room.cfState && room.cfState.gameOver)
       || (room.state && room.state.gameOver)
-      || (room.qbState && room.qbState.gameOver)
       || (room.gsState && room.gsState.gameOver);
     status = isOver ? 'completed' : 'in_progress';
   }
@@ -205,13 +214,11 @@ fuzznet.init({ rooms, broadcastToRoom, trackEvent });
 clusterflick.init({ rooms, broadcastToRoom, trackEvent });
 byteclub.init({ rooms, broadcastToRoom, trackEvent });
 byteclub.setSendEventStatus(sendEventStatus);
-qubit.init({ rooms, broadcastToRoom, trackEvent });
 
 // ── Destructure helpers from game-logic modules ───────────────────────────────
 const { createGameState, processAction, broadcastState: fnBroadcastState, executeBotTurn, nextTurn: fnNextTurn } = fuzznet;
 const { createCFGameState, processCFAction, cfBroadcastState, cfAdvanceTurn, executeCFBotTurn } = clusterflick;
 const { initBCGame, bcHandleAction, bcBroadcastState, bcEndTurn } = byteclub;
-const { initQBGame, qbHandleAction, qbBroadcastState, maybeScheduleBotTurn: qbMaybeScheduleBotTurn } = qubit;
 const grovers = require('./grovers-quantum-search/grovers-logic');
 grovers.init({ rooms, broadcastToRoom, trackEvent });
 const { initGSGame, gsHandleAction, gsBroadcastState, gsMaybeScheduleBotTurn } = grovers;
@@ -297,34 +304,6 @@ const GAME_REGISTRY = {
     isGameOver(room) { return !!(room.state && room.state.gameOver); },
   },
 
-  qubit: {
-    minPlayers: 3, maxPlayers: 6, maxBots: 2,
-    colors: ['blue', 'red', 'green', 'purple', 'yellow', 'orange'],
-    startGame(room) {
-      initQBGame(room);
-      broadcastToRoom(room, { type: 'qb_game_started' });
-      qbBroadcastState(room);
-      qbMaybeScheduleBotTurn(room);
-    },
-    broadcastState(room)           { qbBroadcastState(room); },
-    onRejoin(room)                 { qbBroadcastState(room); },
-    onDisconnect(room, playerIdx) {
-      const gs = room.qbState;
-      // If this seat just became a bot while a question was awaiting their
-      // answer, auto-answer immediately — a bot never sends qb_answer on its
-      // own, so without this the game would stall forever.
-      if (gs && !gs.gameOver && gs.phase === 'awaiting_answer'
-          && gs.pendingQuestion && gs.pendingQuestion.targetIdx === playerIdx
-          && room.players[playerIdx]?.isBot) {
-        qbHandleAction(room, playerIdx, { action: 'qb_answer', answer: Math.random() < 0.5 });
-        return;
-      }
-      qbBroadcastState(room);
-      qbMaybeScheduleBotTurn(room);
-    },
-    isGameOver(room) { return !!(room.qbState && room.qbState.gameOver); },
-  },
-
   grovers: {
     minPlayers: 3, maxPlayers: 5, maxBots: 4,
     colors: ['blue', 'red', 'green', 'purple', 'yellow'],
@@ -367,6 +346,9 @@ function gameMinPlayers(gameType) {
 function gameMaxBots(gameType) {
   return (GAME_REGISTRY[gameType] && GAME_REGISTRY[gameType].maxBots) || 1;
 }
+
+// Now that GAME_REGISTRY exists, restore any saved rooms from disk.
+loadState();
 
 // ==================== WEBSOCKET HANDLING ====================
 function handleMessage(ws, raw) {
@@ -653,20 +635,6 @@ function handleMessage(ws, raw) {
       break;
     }
 
-    case 'set_qb_mode': {
-      const info = wsData.get(ws);
-      if (!info) return send(ws, {type:'error',msg:'Not in a room'});
-      const room = rooms.get(info.roomCode);
-      if (!room || room.started) return;
-      const isPlayerHost = !info.isObserver && info.playerIdx === room.hostIdx;
-      const isObsHost = info.isObserver && info.observerIdx === 0;
-      if (!isPlayerHost && !isObsHost) return send(ws, {type:'error',msg:'Only host can change game mode'});
-      if (msg.mode !== 'beginner' && msg.mode !== 'advanced') return;
-      room.mode = msg.mode;
-      broadcastLobby(room);
-      break;
-    }
-
     case 'start_game': {
       const info = wsData.get(ws);
       if (!info) return send(ws, {type:'error',msg:'Not in a room'});
@@ -699,8 +667,6 @@ function handleMessage(ws, raw) {
       try {
         if (room.gameType === 'byteclub') {
           bcHandleAction(room, info.playerIdx, msg);
-        } else if (room.gameType === 'qubit') {
-          qbHandleAction(room, info.playerIdx, msg);
         } else if (room.gameType === 'grovers') {
           gsHandleAction(room, info.playerIdx, msg);
         } else if (room.gameType === 'clusterflick') {
@@ -752,7 +718,6 @@ function handleMessage(ws, raw) {
       if (room.state)   room.state.gameOver   = true;
       if (room.bcState) room.bcState.phase     = 'game_over';
       if (room.cfState) room.cfState.gameOver  = true;
-      if (room.qbState) room.qbState.gameOver  = true;
       if (room.gsState) room.gsState.gameOver  = true;
       // Notify event organizers before the room is deleted
       if (room.isEventRoom && room.eventOrganizers?.length > 0) {
