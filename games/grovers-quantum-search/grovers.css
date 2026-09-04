@@ -354,23 +354,44 @@ body {
 
 .gs-game-layout {
   display: grid;
-  grid-template-columns: 1fr 320px;
+  grid-template-columns: 1fr;
   grid-template-rows: auto 1fr;
   height: 100vh;
   gap: 0;
 }
 
 /* ===== PLAYERS BAR ===== */
-.gs-players-bar {
+.gs-players-bar-row {
   grid-column: 1 / -1;
   background: var(--gs-surface2);
   border-bottom: 1px solid var(--gs-border);
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: space-between;
+  gap: 12px;
   padding: 8px 16px;
   flex-wrap: wrap;
-  min-height: 48px;
+}
+
+.gs-players-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  min-height: 32px;
+}
+
+.gs-players-bar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.gs-players-bar-btn {
+  white-space: nowrap;
+  font-size: 12px;
+  padding: 6px 12px;
 }
 
 .gs-player-chip {
@@ -420,21 +441,6 @@ body {
   display: flex;
   flex-direction: column;
   gap: 16px;
-}
-
-/* ===== PANEL ===== */
-.gs-panel {
-  grid-column: 2;
-  background: var(--gs-surface);
-  border-left: 1px solid var(--gs-border);
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-}
-
-.gs-panel-section {
-  padding: 14px 16px;
-  border-bottom: 1px solid var(--gs-border);
 }
 
 .gs-section-title {
@@ -1308,16 +1314,14 @@ body {
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 700px) {
-  .gs-game-layout {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr auto;
+  .gs-players-bar-row {
+    flex-direction: column;
+    align-items: stretch;
   }
-  .gs-panel {
-    grid-column: 1;
-    border-left: none;
-    border-top: 1px solid var(--gs-border);
-    max-height: 50vh;
+  .gs-players-bar-actions {
+    justify-content: stretch;
   }
+  .gs-players-bar-btn { flex: 1; }
   .gs-main { min-height: 0; }
 }
 
@@ -1349,7 +1353,7 @@ body {
 }
 #btn-cancel-game:hover { background: rgba(198, 40, 40,.25); }
 
-/* All Possible Clues reference modal — list + expandable examples */
+/* All Possible Clues reference modal ï¿½ list + expandable examples */
 .gs-clueref-list {
   display: flex;
   flex-direction: column;

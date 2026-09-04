@@ -86,7 +86,7 @@
         <p>Hand the <strong>Quantum Token</strong> to any player your team chooses. That player goes first and breaks ties at the end.</p>
 
         <h4>Your Clue</h4>
-        <p>Your private clue is a property of numbers 0–255. It is true for the target number, but also true for many others. You can see the mini grid that highlights which numbers match your clue — use this to reason about other players' YES/NO votes.</p>
+        <p>Your private clue is a property of numbers 0–255. It is true for the target number, but also true for many others. Use the "All Possible Clues" reference to see example gate cards that match or don't match a clue, and reason about other players' YES/NO votes.</p>
 
         <h4>Gate Cards</h4>
         <p>You start with 3 gate cards in your hand. Each card shows a number (0–255) and its 8-bit binary form. <strong>No talking</strong>.</p>
@@ -147,7 +147,19 @@
   <div class="gs-game-layout">
 
     <!-- PLAYERS BAR (top, full width) -->
-    <div class="gs-players-bar" id="gs-players-bar"></div>
+    <div class="gs-players-bar-row">
+      <div class="gs-players-bar" id="gs-players-bar"></div>
+      <div class="gs-players-bar-actions">
+        <button class="gs-btn gs-players-bar-btn" style="border-color:#93c5fd;background:#eff6ff;color:#1d4ed8"
+          onclick="document.getElementById('gs-htp-overlay').style.display='flex'">
+          ❓ How to Play
+        </button>
+        <button class="gs-btn gs-players-bar-btn" id="gs-clue-section"
+          onclick="renderAllCluesReference();document.getElementById('gs-allclues-overlay').style.display='flex'">
+          📖 All Possible Clues
+        </button>
+      </div>
+    </div>
 
     <!-- MAIN CONTENT AREA -->
     <div class="gs-main" id="gs-main">
@@ -165,28 +177,20 @@
           <div class="gs-hero-you" id="gs-hero-you">
             <div class="gs-hero-you-badge">
               <span class="gs-hero-you-swatch" id="gs-hero-you-swatch"></span>
-              <span class="gs-hero-you-label">You</span>
+              <span class="gs-hero-you-label">You — Secret Private Clue</span>
             </div>
             <div class="gs-hero-you-clue" id="gs-clue-text">Waiting for game to start…</div>
-            <div id="gs-clue-grid-wrap" style="margin-top:8px;display:none">
-              <div style="font-size:10px;color:#64748b;margin-bottom:4px">Numbers matching your clue (highlighted):</div>
-              <div id="gs-clue-miniboard"></div>
-            </div>
 
             <div class="gs-hero-known-divider" id="gs-entanglement-box" style="display:none">
               <div class="gs-hero-you-badge" style="margin-top:12px">
                 <span class="gs-hero-known-icon">⚛</span>
-                <span class="gs-hero-you-label" style="color:#8a6100">What We Know</span>
+                <span class="gs-hero-you-label" style="color:#8a6100">Entanglement Clue (Public — known to all)</span>
               </div>
               <div class="gs-hero-you-clue" id="gs-entanglement-text" style="color:#5c4200;font-size:14px"></div>
-              <div id="gs-entanglement-grid-wrap" style="margin-top:8px;display:none">
-                <div style="font-size:10px;color:#64748b;margin-bottom:4px">Numbers matching entanglement clue:</div>
-                <div id="gs-entanglement-miniboard"></div>
-              </div>
             </div>
           </div>
           <div class="gs-hero-notes">
-            <div class="gs-clue-label">Notes on other players' clues</div>
+            <div class="gs-clue-label">Notes on other players' private clues</div>
             <div id="gs-player-notes-list" class="gs-player-notes-list"></div>
           </div>
         </div>
@@ -206,6 +210,21 @@
             <div id="gs-pending-tokens" style="margin-top:10px;display:flex;flex-wrap:wrap;gap:6px"></div>
           </div>
         </div>
+      </div>
+
+      <!-- PLAYED CARDS -->
+      <div id="gs-played-area">
+        <div class="gs-cards-header">
+          <h3>Played Gate Cards</h3>
+          <span id="gs-cards-count" style="font-size:12px;color:#64748b"></span>
+        </div>
+        <div class="gs-focus-hint">Move your <strong>focus token</strong> onto the gate card you want the team to pay attention to. It starts on <strong>?</strong> and can be moved at any time.</div>
+        <div class="gs-focus-unknown" id="gs-focus-unknown" onclick="setFocusCard(null)">
+          <span>? — No focus set</span>
+          <span id="gs-focus-tokens-unknown" style="display:flex;gap:3px"></span>
+        </div>
+        <div class="gs-cards-grid" id="gs-cards-grid"></div>
+        <div id="gs-no-cards" style="font-size:13px;color:#475569;font-style:italic;padding:12px 0">No cards played yet.</div>
       </div>
 
       <!-- HAND — only shown when it's your turn and no pending card -->
@@ -281,48 +300,6 @@
             <div class="gs-est-numbers" id="gs-est-numbers"></div>
           </div>
         </div>
-      </div>
-
-      <!-- PLAYED CARDS -->
-      <div id="gs-played-area">
-        <div class="gs-cards-header">
-          <h3>Played Gate Cards</h3>
-          <span id="gs-cards-count" style="font-size:12px;color:#64748b"></span>
-        </div>
-        <div class="gs-focus-hint">Move your <strong>focus token</strong> onto the gate card you want the team to pay attention to. It starts on <strong>?</strong> and can be moved at any time.</div>
-        <div class="gs-focus-unknown" id="gs-focus-unknown" onclick="setFocusCard(null)">
-          <span>? — No focus set</span>
-          <span id="gs-focus-tokens-unknown" style="display:flex;gap:3px"></span>
-        </div>
-        <div class="gs-cards-grid" id="gs-cards-grid"></div>
-        <div id="gs-no-cards" style="font-size:13px;color:#475569;font-style:italic;padding:12px 0">No cards played yet.</div>
-      </div>
-
-    </div>
-
-    <!-- SIDE PANEL -->
-    <div class="gs-panel">
-
-      <!-- HTP Button -->
-      <div class="gs-panel-section">
-        <button class="gs-btn" style="width:100%;border-color:#93c5fd;background:#eff6ff;color:#1d4ed8"
-          onclick="document.getElementById('gs-htp-overlay').style.display='flex'">
-          ❓ How to Play
-        </button>
-      </div>
-
-      <!-- All Possible Clues reference -->
-      <div class="gs-panel-section" id="gs-clue-section">
-        <button class="gs-btn" style="width:100%;font-size:12px"
-          onclick="renderAllCluesReference();document.getElementById('gs-allclues-overlay').style.display='flex'">
-          📖 All Possible Clues
-        </button>
-      </div>
-
-      <!-- Log -->
-      <div class="gs-panel-section" style="flex:1">
-        <div class="gs-section-title">Activity Log</div>
-        <div class="gs-log-body" id="gs-log-body"></div>
       </div>
 
     </div>
@@ -521,20 +498,6 @@ function setFocusCard(cardIndex) {
     if (!Array.isArray(gs.playedCards) || cardIndex < 0 || cardIndex >= gs.playedCards.length) return;
   }
   send({ type: 'game_action', action: 'gs_set_focus', cardIndex: cardIndex });
-}
-
-// ==================== MINI BOARD SVG ====================
-function miniBoardSvg(matchingNumbers) {
-  var cell = 3, size = cell * 16;
-  var set = {};
-  for (var i = 0; i < matchingNumbers.length; i++) set[matchingNumbers[i]] = true;
-  var rects = '';
-  for (var d = 0; d < 256; d++) {
-    if (!set[d]) continue;
-    var row = Math.floor(d / 16), col = d % 16;
-    rects += '<rect x="' + (col * cell) + '" y="' + (row * cell) + '" width="' + cell + '" height="' + cell + '" fill="#1f6fd0"/>';
-  }
-  return '<svg width="' + size + '" height="' + size + '" viewBox="0 0 ' + size + ' ' + size + '" xmlns="http://www.w3.org/2000/svg" style="background:#f6f9fd;display:block;border:1px solid #cddcef;border-radius:4px">' + rects + '</svg>';
 }
 
 // ==================== ALL POSSIBLE CLUES REFERENCE ====================
@@ -954,22 +917,16 @@ function renderPlayerNotesList(state) {
 
 function renderClueSection(state) {
   var textEl    = document.getElementById('gs-clue-text');
-  var gridWrap  = document.getElementById('gs-clue-grid-wrap');
-  var miniEl    = document.getElementById('gs-clue-miniboard');
   var entBox    = document.getElementById('gs-entanglement-box');
   var entText   = document.getElementById('gs-entanglement-text');
-  var entGrid   = document.getElementById('gs-entanglement-grid-wrap');
-  var entMini   = document.getElementById('gs-entanglement-miniboard');
   if (!textEl) return;
 
   renderPlayerNotesList(state);
 
-  // Entanglement clue (public) — shown in the hero's "What We Know" area
+  // Entanglement clue (public) — shown in the hero's public "Entanglement Clue" area
   if (state.entanglementClue) {
     if (entBox)  entBox.style.display  = '';
     if (entText) entText.textContent   = state.entanglementClue.text.replace(/^ENTANGLEMENT — /, '');
-    if (entGrid) entGrid.style.display = '';
-    if (entMini) entMini.innerHTML     = miniBoardSvg(state.entanglementClue.matchingNumbers || []);
   } else {
     if (entBox) entBox.style.display = 'none';
   }
@@ -977,11 +934,8 @@ function renderClueSection(state) {
   // Private clue
   if (state.myClue) {
     textEl.textContent = state.myClue.text;
-    if (gridWrap) gridWrap.style.display = '';
-    if (miniEl)   miniEl.innerHTML = miniBoardSvg(state.myClue.matchingNumbers || []);
   } else {
     textEl.textContent = 'Waiting for game to start…';
-    if (gridWrap) gridWrap.style.display = 'none';
   }
 }
 
