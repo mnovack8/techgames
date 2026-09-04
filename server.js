@@ -137,7 +137,8 @@ const server = http.createServer((req, res) => {
 
   // If the resolved file is a registered game page, inject any template
   // fragments (create-game + lobby/waiting + interactive tutorial) into markers.
-  const relPath = '/' + path.relative(__dirname, resolved.filePath);
+  // Normalize to POSIX separators so mount lookups work on Windows too.
+  const relPath = '/' + path.relative(__dirname, resolved.filePath).split(path.sep).join('/');
   const needsCreategame = creategameRenderer.getMounts().has(relPath);
   const needsLobby      = lobbyRenderer.getMounts().has(relPath);
   const needsTutorial   = interactiveTutorialRenderer.getMounts().has(relPath);
