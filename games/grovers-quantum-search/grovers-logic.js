@@ -281,7 +281,17 @@ const PRESET_SETUPS = {
 // ==================== GAME INIT ====================
 
 const HAND_SIZE   = 3;
-const TOTAL_ROUNDS = 12;
+const TOTAL_ROUNDS = 10;
+
+// Shared Quantum Board tokens unlock progressively as gate cards are
+// revealed, so the team has some public evidence before they start
+// committing to a signal:
+//   - Number Estimate unlocks after the 1st gate card is resolved.
+//   - Confidence unlocks after the 3rd gate card is resolved.
+//   - Focus (on played cards) unlocks after the 5th gate card is resolved.
+const UNLOCK_ESTIMATE_AT_CARDS   = 1;
+const UNLOCK_CONFIDENCE_AT_CARDS = 3;
+const UNLOCK_FOCUS_AT_CARDS      = 5;
 
 function initGSGame(room) {
   const playerCount = room.players.length;
@@ -358,6 +368,41 @@ function gsBroadcastState(room) {
 
 // ==================== BOT LOGIC ====================
 
+// When a bot must choose which gate card to play from its hand, prefer a
+// card whose YES/NO result under the bot's OWN clue would NOT already be
+// predictable from another player's private clue (i.e. avoid cards that are
+// "redundant" because every other player's clue agrees with the bot's on
+// that number). This keeps each bot's played cards genuinely informative
+// instead of just re-confirming information teammates' clues already imply,
+// while the card the bot plays always remains true to its own clue's
+// YES/NO verdict (the vote is still derived from the bot's real clue).
+function gsPickBotCard(room, botIdx, hand) {
+  const gs = room.gsState;
+  const myClue = gs.playerClues[botIdx];
+  const otherClues = gs.playerClues.filter((_, pi) => pi !== botIdx);
+
+  let bestCard = hand[0];
+  let bestScore = -Infinity;
+  for (const cardNumber of hand) {
+    const myVote = myClue.matchingNumbers.includes(cardNumber);
+    // Count how many other players' clues would give the SAME yes/no verdict
+    // on this number — a high count means this card reveals little that
+    // isn't already implied by clues everyone else holds.
+    let agreeCount = 0;
+    for (const oc of otherClues) {
+      const otherVote = oc.matchingNumbers.includes(cardNumber);
+      if (otherVote === myVote) agreeCount++;
+    }
+    // Lower agreement = more distinguishing information for the team.
+    const score = -agreeCount + Math.random() * 0.01; // tiny jitter to break ties
+    if (score > bestScore) {
+      bestScore = score;
+      bestCard = cardNumber;
+    }
+  }
+  return bestCard;
+}
+
 function gsMaybeScheduleBotTurn(room) {
   const gs = room.gsState;
   if (!gs || gs.gameOver) return;
@@ -380,7 +425,7 @@ function gsMaybeScheduleBotTurn(room) {
         })(pi);
       }
     } else {
-      // Current player's turn — if bot, play a random card
+      // Current player's turn — if bot, choose a card from hand.
       const curIdx = gs.currentPlayerIdx;
       if (room.players[curIdx] && room.players[curIdx].isBot) {
         const t = setTimeout(() => {
@@ -389,7 +434,7 @@ function gsMaybeScheduleBotTurn(room) {
           if (gs2.currentPlayerIdx !== curIdx) return;
           const hand = gs2.hands[curIdx];
           if (!hand || hand.length === 0) return;
-          const cardNumber = hand[Math.floor(Math.random() * hand.length)];
+          const cardNumber = gsPickBotCard(room, curIdx, hand);
           gsHandleAction(room, curIdx, { action: 'gs_play_card', cardNumber });
         }, 800 + Math.random() * 600);
         if (t.unref) t.unref();
@@ -453,6 +498,12 @@ function buildStateMsg(gs, playerIdx, players) {
     won:                gs.won,
     answer:             gs.answer,
     log:                gs.log,
+    unlocks: {
+      estimateAt:   UNLOCK_ESTIMATE_AT_CARDS,
+      confidenceAt: UNLOCK_CONFIDENCE_AT_CARDS,
+      focusAt:      UNLOCK_FOCUS_AT_CARDS,
+      cardsPlayed:  gs.playedCards.length,
+    },
   };
 }
 
@@ -464,8 +515,9 @@ function gsHandleAction(room, playerIdx, msg) {
 
   const action = msg.action;
 
-  // ── Central board updates (any time, any player) ──────────────────────────
+  // ── Central board updates (any time once unlocked, any player) ─────────────
   if (action === 'gs_set_confidence') {
+    if (gs.playedCards.length < UNLOCK_CONFIDENCE_AT_CARDS) return; // still locked
     const level = msg.level;
     if (!['?', 'low', 'medium', 'high'].includes(level)) return;
     gs.confidence[playerIdx] = level;
@@ -474,6 +526,7 @@ function gsHandleAction(room, playerIdx, msg) {
   }
 
   if (action === 'gs_set_estimate') {
+    if (gs.playedCards.length < UNLOCK_ESTIMATE_AT_CARDS && gs.phase !== 'voting') return; // still locked
     const est = msg.estimate; // null | { type: 'quarter'|'tenth'|'number', value: N }
     if (est !== null) {
       if (!['quarter', 'tenth', 'number'].includes(est.type)) return;
@@ -488,6 +541,7 @@ function gsHandleAction(room, playerIdx, msg) {
   }
 
   if (action === 'gs_set_focus') {
+    if (gs.playedCards.length < UNLOCK_FOCUS_AT_CARDS) return; // still locked
     const idx = msg.cardIndex;
     if (idx !== null) {
       if (!Number.isInteger(idx) || idx < 0 || idx >= gs.playedCards.length) return;
@@ -607,9 +661,11 @@ function _resolveCard(room) {
   });
   gs.pendingCard = null;
 
-  // Deal new card to active player
+  // The active player discards whatever is left in their hand and draws a
+  // fresh hand of HAND_SIZE cards for their next turn.
   const activeIdx = gs.currentPlayerIdx;
-  if (gs.deck.length > 0) {
+  gs.hands[activeIdx] = [];
+  for (let i = 0; i < HAND_SIZE && gs.deck.length > 0; i++) {
     gs.hands[activeIdx].push(gs.deck.pop());
   }
 
@@ -687,7 +743,6 @@ function gsBotReasonAndUpdate(room, botIdx) {
   else if (narrowness <= 32)                    confidenceLevel = 'medium';
   else if (narrowness <= 96)                    confidenceLevel = 'low';
   else                                          confidenceLevel = '?';
-  gs.confidence[botIdx] = confidenceLevel;
 
   // Estimate: prefer the strongest supporting played-card number when it is
   // consistent with our own candidate set; otherwise fall back to a
@@ -702,10 +757,12 @@ function gsBotReasonAndUpdate(room, botIdx) {
     else if (confidenceLevel === 'medium') estimate = { type: 'tenth',  value: Math.min(9, Math.floor(mid / 25.5)) };
     else if (confidenceLevel === 'low')    estimate = { type: 'quarter', value: Math.min(3, Math.floor(mid / 64)) };
   }
-  gs.estimate[botIdx] = estimate;
-
-  // Focus: point teammates at whichever played card is the best evidence.
-  gs.focus[botIdx] = focusIdx;
+  // Respect the same progressive token unlocks as human players — bots only
+  // set a token once enough gate cards have been publicly revealed.
+  const cardsPlayed = gs.playedCards.length;
+  if (cardsPlayed >= UNLOCK_ESTIMATE_AT_CARDS)   gs.estimate[botIdx]   = estimate;
+  if (cardsPlayed >= UNLOCK_CONFIDENCE_AT_CARDS) gs.confidence[botIdx] = confidenceLevel;
+  if (cardsPlayed >= UNLOCK_FOCUS_AT_CARDS)      gs.focus[botIdx]      = focusIdx;
 }
 
 function _resolveVoting(room) {

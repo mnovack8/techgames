@@ -73,6 +73,15 @@
     </div>
   </div>
 
+  <!-- TOKEN UNLOCKED INFO MODAL -->
+  <div class="gs-modal-overlay" id="gs-token-info-overlay" style="display:none" onclick="if(event.target===this)hideTokenInfo()">
+    <div class="gs-modal" style="max-width:440px">
+      <h3 id="gs-token-info-title">Token Unlocked</h3>
+      <p id="gs-token-info-body" style="color:#334155;font-size:14px;line-height:1.5"></p>
+      <button class="gs-btn" style="margin-top:14px;width:100%" onclick="hideTokenInfo()">Got it</button>
+    </div>
+  </div>
+
   <!-- HOW TO PLAY MODAL -->
   <div class="gs-modal-overlay" id="gs-htp-overlay" style="display:none" onclick="if(event.target===this)this.style.display='none'">
     <div class="gs-modal" style="max-width:560px">
@@ -96,17 +105,19 @@
           <li><strong>Choose a gate card</strong> from your hand and play it face-up.</li>
           <li>Place your token in <strong>YES</strong> if that number matches your clue, or <strong>NO</strong> if it doesn't. (This happens automatically in the digital version.)</li>
           <li>Every other player's token goes in <strong>YES</strong> or <strong>NO</strong> based on whether <em>their own</em> clue matches that number. The digital version works this out for you — you just confirm it.</li>
-          <li>Draw a new card from the deck to refill your hand to 3.</li>
+          <li>Your hand is discarded and refilled with 3 new cards from the deck.</li>
         </ol>
 
         <h4>The Central Board</h4>
-        <p>At <em>any</em> time during the game you may move your two tokens on the shared central board:</p>
+        <p>The shared board's tokens start "locked" in their <strong>?</strong> zone and unlock one at a time as gate cards are revealed, so your team builds up public evidence before committing to a signal:</p>
         <ul>
-          <li><strong>Confidence:</strong> ?, Low, Medium, High — signal how sure you are that your team knows the answer.</li>
-          <li><strong>Number Estimate:</strong> Narrow your guess from a quarter (0–63 etc.), to a tenth, to an exact number. Moving your token here tells teammates what number you think is the target.</li>
+          <li><strong>Number Estimate</strong> — unlocks after gate card #1. Narrow your guess from a quarter (0–63 etc.), to a tenth, to an exact number. Moving your token here tells teammates what number you think is the target.</li>
+          <li><strong>Confidence</strong> — unlocks after gate card #3. ?, Low, Medium, High — signal how sure you are that your team knows the answer.</li>
+          <li><strong>Focus</strong> (on the Played Gate Cards) — unlocks after gate card #5. Point teammates at the played card you think is most worth their attention.</li>
         </ul>
+        <p>Once unlocked, you may move a token at <em>any</em> time for the rest of the game.</p>
 
-        <h4>After 12 Rounds</h4>
+        <h4>After 10 Rounds</h4>
         <p>The game enters the Measurement Phase. Each player votes for the exact number they believe is the target. The most-voted number is the team's answer. <strong>If there is a tie, the player holding the Quantum Token decides.</strong></p>
 
         <div class="gs-htp-highlight">Correct: team wins. Wrong: team loses. Choose wisely.</div>
@@ -164,10 +175,13 @@
     <!-- MAIN CONTENT AREA -->
     <div class="gs-main" id="gs-main">
 
+      <!-- LEFT COLUMN (1/3): Turn status, clue tracking, gate card in play -->
+      <div class="gs-main-left">
+
       <!-- HERO: Turn status + You + your clue + known info + notes (large, top of page) -->
       <div class="gs-hero" id="gs-hero">
         <div class="gs-hero-top">
-          <span class="gs-round-badge" id="gs-round-badge">Round 1 / 12</span>
+          <span class="gs-round-badge" id="gs-round-badge">Round 1 / 10</span>
           <span id="gs-phase-label" class="gs-hero-phase"></span>
         </div>
         <div class="gs-hero-turn-status" id="gs-turn-status"></div>
@@ -198,7 +212,6 @@
 
       <!-- PENDING CARD — shown while waiting for all votes on active card -->
       <div id="gs-pending-area" class="gs-pending-area" style="display:none">
-        <div class="gs-pending-header">⚡ Gate Card In Play — Place Your Token</div>
         <div class="gs-pending-card-row">
           <div class="gs-pending-card-info">
             <div class="gs-pending-number" id="gs-pending-number">42</div>
@@ -212,21 +225,6 @@
         </div>
       </div>
 
-      <!-- PLAYED CARDS -->
-      <div id="gs-played-area">
-        <div class="gs-cards-header">
-          <h3>Played Gate Cards</h3>
-          <span id="gs-cards-count" style="font-size:12px;color:#64748b"></span>
-        </div>
-        <div class="gs-focus-hint">Move your <strong>focus token</strong> onto the gate card you want the team to pay attention to. It starts on <strong>?</strong> and can be moved at any time.</div>
-        <div class="gs-focus-unknown" id="gs-focus-unknown" onclick="setFocusCard(null)">
-          <span>? — No focus set</span>
-          <span id="gs-focus-tokens-unknown" style="display:flex;gap:3px"></span>
-        </div>
-        <div class="gs-cards-grid" id="gs-cards-grid"></div>
-        <div id="gs-no-cards" style="font-size:13px;color:#475569;font-style:italic;padding:12px 0">No cards played yet.</div>
-      </div>
-
       <!-- HAND — only shown when it's your turn and no pending card -->
       <div id="gs-hand-area" class="gs-hand-area" style="display:none">
         <div class="gs-hand-label" id="gs-hand-label">Your Hand — Click a Card to Play It</div>
@@ -237,10 +235,31 @@
       <!-- VOTING PHASE -->
       <div id="gs-voting-area" class="gs-voting-area" style="display:none">
         <div class="gs-voting-header">⚡ Measurement Phase — Vote for the Number</div>
-        <div class="gs-voting-note">12 rounds complete. Place your vote on the exact number you believe is the target. Most votes wins; ties go to the Quantum Token holder.</div>
+        <div class="gs-voting-note">10 rounds complete. Place your vote on the exact number you believe is the target. Most votes wins; ties go to the Quantum Token holder.</div>
         <div id="gs-voting-status" style="font-size:13px;color:#5d6d88;margin-bottom:10px"></div>
         <div id="gs-my-vote-display" style="display:none;margin-bottom:10px;font-size:13px;color:#15803d;font-weight:700"></div>
         <div style="font-size:12px;color:#64748b;margin-bottom:6px">Use the <strong>Number Estimate</strong> board below to cast your vote (click an exact number in the bottom row).</div>
+      </div>
+
+      </div>
+
+      <!-- RIGHT COLUMN (2/3): Played gate cards + shared quantum board -->
+      <div class="gs-main-right">
+
+      <!-- PLAYED CARDS -->
+      <div id="gs-played-area">
+        <div class="gs-cards-header">
+          <h3>Played Gate Cards</h3>
+          <span id="gs-cards-count" style="font-size:12px;color:#64748b"></span>
+        </div>
+        <div class="gs-focus-hint" id="gs-focus-hint">Move your <strong>focus token</strong> onto the gate card you want the team to pay attention to. It starts on <strong>?</strong> and can be moved at any time.</div>
+        <div class="gs-focus-locked-note" id="gs-focus-locked-note" style="display:none">🔒 Focus token unlocks after gate card #5 is revealed.</div>
+        <div class="gs-focus-unknown" id="gs-focus-unknown" onclick="setFocusCard(null)">
+          <span>? — No focus set</span>
+          <span id="gs-focus-tokens-unknown" style="display:flex;gap:3px"></span>
+        </div>
+        <div class="gs-cards-grid" id="gs-cards-grid"></div>
+        <div id="gs-no-cards" style="font-size:13px;color:#475569;font-style:italic;padding:12px 0">No cards played yet.</div>
       </div>
 
       <!-- CENTRAL BOARD -->
@@ -250,7 +269,8 @@
         <!-- Confidence row -->
         <div class="gs-conf-row">
           <div class="gs-conf-label">Confidence</div>
-          <div class="gs-conf-sections">
+          <div class="gs-conf-locked-note" id="gs-conf-locked-note" style="display:none">🔒 Unlocks after gate card #3</div>
+          <div class="gs-conf-sections" id="gs-conf-sections">
             <div class="gs-conf-section" id="gs-conf-?" onclick="setConfidence('?')">
               <div class="gs-conf-section-label">?</div>
               <div class="gs-conf-tokens" id="gs-conf-tokens-?"></div>
@@ -273,6 +293,7 @@
         <!-- Estimate board -->
         <div>
           <div class="gs-estimate-label">Number Estimate</div>
+          <div class="gs-conf-locked-note" id="gs-est-locked-note" style="display:none">🔒 Unlocks after gate card #1</div>
 
           <!-- Unknown (?) row -->
           <div style="margin-bottom:6px">
@@ -283,23 +304,25 @@
           </div>
 
           <!-- Row 1: Quarters -->
-          <div class="gs-estimate-row">
+          <div class="gs-estimate-row" id="gs-est-row-quarters">
             <div class="gs-estimate-row-label">Quarters</div>
             <div class="gs-est-quarters" id="gs-est-quarters"></div>
           </div>
 
           <!-- Row 2: Tenths -->
-          <div class="gs-estimate-row">
+          <div class="gs-estimate-row" id="gs-est-row-tenths">
             <div class="gs-estimate-row-label">Tenths</div>
             <div class="gs-est-tenths" id="gs-est-tenths"></div>
           </div>
 
           <!-- Row 3: All numbers 0–255 (16×16 grid) -->
-          <div class="gs-estimate-row">
+          <div class="gs-estimate-row" id="gs-est-row-numbers">
             <div class="gs-estimate-row-label">Exact Number (0–255)</div>
             <div class="gs-est-numbers" id="gs-est-numbers"></div>
           </div>
         </div>
+      </div>
+
       </div>
 
     </div>
@@ -317,6 +340,33 @@ var SESSION_KEY  = 'techgames_grovers_session';
 var GS_BASE_PATH = '/quantumcomputing/grovers';
 var QB_MIN_PLAYERS = 3;
 var GS_MAX_BOTS = 2;
+
+var GS_TOKEN_INFO = {
+  estimate: {
+    title: '🎯 Number Estimate Unlocked!',
+    body: 'You can now move your Number Estimate token on the Shared Quantum Board. Narrow your guess from a quarter of the range (0–63, etc.), to a tenth, to an exact number — this tells your teammates what number you currently think is the target. You can move it again at any time as you learn more.'
+  },
+  confidence: {
+    title: '📈 Confidence Unlocked!',
+    body: 'You can now move your Confidence token on the Shared Quantum Board. Set it to ?, Low, Medium, or High to signal how sure you are that your team already knows the answer. You can move it again at any time as you learn more.'
+  },
+  focus: {
+    title: '★ Focus Token Unlocked!',
+    body: 'You can now move your Focus token onto any played gate card. Use it to point your teammates at the card you think is the most important piece of evidence so far. You can move it again at any time as new cards are played.'
+  }
+};
+// Tracks which unlock popups have already been shown this session, so we
+// only pop up once per token, right when it becomes available.
+var gsShownUnlocks = { estimate: false, confidence: false, focus: false };
+
+function showTokenInfo(key) {
+  var info = GS_TOKEN_INFO[key];
+  if (!info) return;
+  document.getElementById('gs-token-info-title').textContent = info.title;
+  document.getElementById('gs-token-info-body').textContent = info.body;
+  document.getElementById('gs-token-info-overlay').style.display = 'flex';
+}
+function hideTokenInfo() { document.getElementById('gs-token-info-overlay').style.display = 'none'; }
 
 // ==================== STATE ====================
 var hub, gs = null;
@@ -463,8 +513,25 @@ function confirmCancel() {
 }
 
 // ==================== CENTRAL BOARD ACTIONS ====================
+function gsCardsPlayed() {
+  return gs && Array.isArray(gs.playedCards) ? gs.playedCards.length : 0;
+}
+function gsUnlockAt(key) {
+  var u = gs && gs.unlocks;
+  if (!u) return Infinity;
+  if (key === 'estimate')   return u.estimateAt;
+  if (key === 'confidence') return u.confidenceAt;
+  if (key === 'focus')      return u.focusAt;
+  return Infinity;
+}
+function gsIsUnlocked(key) {
+  if (gs && gs.phase === 'voting') return true; // voting always allows number picks
+  return gsCardsPlayed() >= gsUnlockAt(key);
+}
+
 function setConfidence(level) {
   if (!gs || gs.gameOver) return;
+  if (!gsIsUnlocked('confidence')) return;
   send({ type: 'game_action', action: 'gs_set_confidence', level: level });
 }
 
@@ -475,7 +542,17 @@ function setEstimate(est) {
     send({ type: 'game_action', action: 'gs_final_vote', number: est.value });
     return;
   }
+  if (!gsIsUnlocked('estimate')) return;
   send({ type: 'game_action', action: 'gs_set_estimate', estimate: est });
+}
+
+function setFocusCard(cardIndex) {
+  if (!gs) return;
+  if (!gsIsUnlocked('focus')) return;
+  if (cardIndex !== null) {
+    if (!Array.isArray(gs.playedCards) || cardIndex < 0 || cardIndex >= gs.playedCards.length) return;
+  }
+  send({ type: 'game_action', action: 'gs_set_focus', cardIndex: cardIndex });
 }
 
 // ==================== GAME ACTIONS ====================
@@ -490,14 +567,6 @@ function voteCard() {
   if (!gs || !gs.pendingCard) return;
   if (!gs.pendingCard.needsVote) return;
   send({ type: 'game_action', action: 'gs_vote_card', cardNumber: gs.pendingCard.number });
-}
-
-function setFocusCard(cardIndex) {
-  if (!gs) return;
-  if (cardIndex !== null) {
-    if (!Array.isArray(gs.playedCards) || cardIndex < 0 || cardIndex >= gs.playedCards.length) return;
-  }
-  send({ type: 'game_action', action: 'gs_set_focus', cardIndex: cardIndex });
 }
 
 // ==================== ALL POSSIBLE CLUES REFERENCE ====================
@@ -757,6 +826,7 @@ function gsToggleClueExample(idx) {
 // ==================== RENDER STATE ====================
 function renderGame(state) {
   gs = state;
+  checkTokenUnlocks(state);
   showScreen('game');
   renderPlayersBar(state);
   renderTurnSection(state);
@@ -774,6 +844,25 @@ function renderGame(state) {
 
   var cancelBtn = document.getElementById('btn-cancel-game');
   if (cancelBtn) cancelBtn.style.display = (isHost && !state.gameOver) ? '' : 'none';
+}
+
+// Pop up a one-time explanation the moment each Shared Quantum Board token
+// becomes available to move (based on how many gate cards have been played).
+function checkTokenUnlocks(state) {
+  if (!state || !state.unlocks) return;
+  var cardsPlayed = state.unlocks.cardsPlayed || 0;
+  var toShow = null;
+  if (!gsShownUnlocks.estimate && cardsPlayed >= state.unlocks.estimateAt) {
+    gsShownUnlocks.estimate = true;
+    toShow = 'estimate';
+  } else if (!gsShownUnlocks.confidence && cardsPlayed >= state.unlocks.confidenceAt) {
+    gsShownUnlocks.confidence = true;
+    toShow = 'confidence';
+  } else if (!gsShownUnlocks.focus && cardsPlayed >= state.unlocks.focusAt) {
+    gsShownUnlocks.focus = true;
+    toShow = 'focus';
+  }
+  if (toShow) showTokenInfo(toShow);
 }
 
 function renderPlayersBar(state) {
@@ -962,11 +1051,7 @@ function renderPendingCard(state) {
     if (pc.needsVote) {
       var auto = pc.myVote === 'yes';
       voteBtnsEl.innerHTML =
-        '<div class="gs-auto-vote ' + (auto ? 'is-yes' : 'is-no') + '">'
-        + '<div class="gs-auto-vote-verdict">' + (auto ? 'YES — this card matches your clue' : "NO — this card doesn't match your clue") + '</div>'
-        + '<div class="gs-auto-vote-note">Your token is placed for you based on your secret clue.</div>'
-        + '</div>'
-        + '<button class="gs-btn ' + (auto ? 'gs-btn-yes' : 'gs-btn-no') + '" onclick="voteCard()">OK — place my token</button>';
+        '<button class="gs-btn ' + (auto ? 'gs-btn-yes' : 'gs-btn-no') + '" onclick="voteCard()">' + (auto ? 'YES — Matches your clue. Place token' : "NO — Doesn't match. Place token") + '</button>';
     } else if (pc.tokens && pc.tokens[state.myPlayerIdx] !== undefined) {
       var myVote = pc.tokens[state.myPlayerIdx];
       voteBtnsEl.innerHTML = '<span style="font-size:13px;font-weight:700;color:' + (myVote === 'yes' ? '#22c55e' : '#ef4444') + '">You voted ' + myVote.toUpperCase() + '</span>';
@@ -1032,6 +1117,28 @@ function renderCentralBoard(state) {
   if (!state) return;
   var myEst = state.estimate ? state.estimate[state.myPlayerIdx] : null;
   var myConf = state.confidence ? state.confidence[state.myPlayerIdx] : '?';
+  var unlocks = state.unlocks || { estimateAt: 1, confidenceAt: 3, focusAt: 5, cardsPlayed: 0 };
+  var cardsPlayed = unlocks.cardsPlayed || 0;
+  var confUnlocked = state.phase === 'voting' || cardsPlayed >= unlocks.confidenceAt;
+  var estUnlocked  = state.phase === 'voting' || cardsPlayed >= unlocks.estimateAt;
+
+  var confSectionsEl = document.getElementById('gs-conf-sections');
+  var confLockNoteEl = document.getElementById('gs-conf-locked-note');
+  if (confSectionsEl) confSectionsEl.classList.toggle('gs-locked', !confUnlocked);
+  if (confLockNoteEl) {
+    confLockNoteEl.style.display = confUnlocked ? 'none' : '';
+    confLockNoteEl.textContent = '🔒 Unlocks after gate card #' + unlocks.confidenceAt + ' (' + cardsPlayed + '/' + unlocks.confidenceAt + ' revealed)';
+  }
+
+  var estLockNoteEl = document.getElementById('gs-est-locked-note');
+  if (estLockNoteEl) {
+    estLockNoteEl.style.display = estUnlocked ? 'none' : '';
+    estLockNoteEl.textContent = '🔒 Unlocks after gate card #' + unlocks.estimateAt + ' (' + cardsPlayed + '/' + unlocks.estimateAt + ' revealed)';
+  }
+  ['gs-est-unknown', 'gs-est-row-quarters', 'gs-est-row-tenths', 'gs-est-row-numbers'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.classList.toggle('gs-locked', !estUnlocked);
+  });
 
   // Confidence sections
   ['?', 'low', 'medium', 'high'].forEach(function(level) {
@@ -1157,6 +1264,20 @@ function renderPlayedCards(state) {
   var myFocus = focus[state.myPlayerIdx];
   if (myFocus === undefined) myFocus = null;
 
+  var unlocks = state.unlocks || { focusAt: 5, cardsPlayed: cards.length };
+  var focusUnlocked = cards.length >= unlocks.focusAt;
+  var hintEl = document.getElementById('gs-focus-hint');
+  var lockNoteEl = document.getElementById('gs-focus-locked-note');
+  if (hintEl) hintEl.style.display = focusUnlocked ? '' : 'none';
+  if (lockNoteEl) {
+    lockNoteEl.style.display = focusUnlocked ? 'none' : '';
+    lockNoteEl.textContent = '🔒 Focus token unlocks after gate card #' + unlocks.focusAt + ' (' + cards.length + '/' + unlocks.focusAt + ' revealed)';
+  }
+  var unknownElLock = document.getElementById('gs-focus-unknown');
+  if (unknownElLock) unknownElLock.classList.toggle('gs-locked', !focusUnlocked);
+  var gridElForLock = document.getElementById('gs-cards-grid');
+  if (gridElForLock) gridElForLock.classList.toggle('gs-focus-rows-locked', !focusUnlocked);
+
   // "?" unfocused area
   var unknownEl = document.getElementById('gs-focus-unknown');
   var unknownTokensEl = document.getElementById('gs-focus-tokens-unknown');
@@ -1173,7 +1294,7 @@ function renderPlayedCards(state) {
     unknownTokensEl.innerHTML = uHtml;
   }
 
-  if (countEl) countEl.textContent = cards.length + ' card' + (cards.length === 1 ? '' : 's') + ' played';
+  if (countEl) countEl.textContent = cards.length + ' / ' + (state.totalRounds || 10) + ' slots played';
   if (!cards.length) {
     grid.innerHTML = '';
     if (noCards) noCards.style.display = '';
