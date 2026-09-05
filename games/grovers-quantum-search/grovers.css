@@ -739,8 +739,31 @@ body {
 
 .gs-cards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-  gap: 8px;
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+  gap: 4px;
+}
+.gs-gate-slot {
+  min-width: 0;
+  min-height: 150px;
+  border: 2px dotted #b9c4d4;
+  border-radius: 8px;
+  background: rgba(148,163,184,.05);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  color: #94a3b8;
+}
+.gs-gate-slot-number {
+  font-size: 10px;
+  font-weight: 700;
+}
+.gs-gate-slot-dots {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #cbd5e1;
 }
 
 /* Individual gate card (portrait layout) */
@@ -752,6 +775,7 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 150px;
+  min-width: 0;
 }
 .gs-gate-card.gs-card-focused {
   border-color: var(--gs-quantum);
@@ -857,11 +881,11 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding: 5px 6px 4px;
-  min-height: 52px;
+  padding: 4px 2px 3px;
+  min-height: 42px;
 }
 .gs-card-yes-label {
-  font-size: 10px;
+  font-size: 8px;
   font-weight: 800;
   letter-spacing: .1em;
   color: var(--gs-yes);
@@ -878,13 +902,13 @@ body {
   border-bottom: 1px solid var(--gs-border);
 }
 .gs-card-number {
-  font-size: 18px;
+  font-size: 15px;
   font-weight: 900;
   color: var(--gs-text);
   line-height: 1;
 }
 .gs-card-binary {
-  font-size: 9px;
+  font-size: 7px;
   font-family: 'Courier New', monospace;
   color: var(--gs-muted);
   letter-spacing: .05em;
@@ -900,11 +924,11 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
-  padding: 4px 6px 5px;
-  min-height: 52px;
+  padding: 3px 2px 4px;
+  min-height: 42px;
 }
 .gs-card-no-label {
-  font-size: 10px;
+  font-size: 8px;
   font-weight: 800;
   letter-spacing: .1em;
   color: var(--gs-no);
@@ -921,9 +945,9 @@ body {
   min-height: 16px;
 }
 .gs-card-token {
-  width: 15px; height: 15px;
+  width: 10px; height: 10px;
   border-radius: 50%;
-  border: 2px solid rgba(20,33,58,.28);
+  border: 1px solid rgba(20,33,58,.28);
   display: inline-block;
   flex-shrink: 0;
 }
@@ -1151,13 +1175,6 @@ body {
   margin-bottom: 2px;
 }
 
-/* Quarter row */
-.gs-est-quarters {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 3px;
-  margin-bottom: 4px;
-}
 /* Tenth row */
 .gs-est-tenths {
   display: grid;
@@ -1352,6 +1369,7 @@ body {
   .gs-main-left, .gs-main-right {
     overflow-y: visible;
   }
+  .gs-cards-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
 }
 
 @media (max-width: 700px) {
@@ -1364,6 +1382,7 @@ body {
   }
   .gs-players-bar-btn { flex: 1; }
   .gs-main { min-height: 0; }
+  .gs-cards-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 /* ===== TURN TIP ===== */

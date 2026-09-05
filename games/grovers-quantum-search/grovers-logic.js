@@ -324,6 +324,7 @@ function initGSGame(room) {
     round: 1,
     totalRounds: TOTAL_ROUNDS,
     currentPlayerIdx: 0,
+    // The host is the team's Quantum Lead: first player and tie-breaker.
     quantumTokenPlayerIdx: 0,
 
     targetNumber,
@@ -342,13 +343,16 @@ function initGSGame(room) {
     confidence,
     estimate,
     finalVotes: {},
+    tieBreakPending: false,
+    tieBreakOptions: [],
     gameOver: false,
     won:      false,
     answer:   null,
+    correctAnswer:      null,
     log: [],
   };
 
-  gsLog(room.gsState, 'Game started. Round 1 of 12. ' + room.players[0].name + ' has the quantum token and goes first.');
+  gsLog(room.gsState, `Game started. Round 1 of ${TOTAL_ROUNDS}. ${room.players[0].name} is the Quantum Lead and goes first.`);
 }
 
 // ==================== BROADCAST ====================
@@ -443,6 +447,21 @@ function gsMaybeScheduleBotTurn(room) {
   }
 
   if (gs.phase === 'voting') {
+    if (gs.tieBreakPending) {
+      const tieIdx = gs.quantumTokenPlayerIdx;
+      if (room.players[tieIdx] && room.players[tieIdx].isBot) {
+        const t = setTimeout(() => {
+          const gs2 = room.gsState;
+          if (!gs2 || gs2.gameOver || !gs2.tieBreakPending) return;
+          const options = gs2.tieBreakOptions || [];
+          const preferred = gs2.finalVotes[tieIdx];
+          const chosen = options.includes(preferred) ? preferred : options[0];
+          gsHandleAction(room, tieIdx, { action: 'gs_tie_break', number: chosen });
+        }, 700 + Math.random() * 500);
+        if (t.unref) t.unref();
+      }
+      return;
+    }
     for (let pi = 0; pi < room.players.length; pi++) {
       if (!room.players[pi].isBot) continue;
       if (gs.finalVotes[pi] !== undefined) continue;
@@ -494,9 +513,13 @@ function buildStateMsg(gs, playerIdx, players) {
     confidence:         gs.confidence,
     estimate:           gs.estimate,
     finalVotes:         gs.finalVotes,
+    tieBreakPending:    !!gs.tieBreakPending,
+    tieBreakOptions:    gs.tieBreakOptions || [],
+    tieBreakPlayerIdx:  gs.quantumTokenPlayerIdx,
     gameOver:           gs.gameOver,
     won:                gs.won,
     answer:             gs.answer,
+    correctAnswer:      gs.correctAnswer,
     log:                gs.log,
     unlocks: {
       estimateAt:   UNLOCK_ESTIMATE_AT_CARDS,
@@ -527,11 +550,10 @@ function gsHandleAction(room, playerIdx, msg) {
 
   if (action === 'gs_set_estimate') {
     if (gs.playedCards.length < UNLOCK_ESTIMATE_AT_CARDS && gs.phase !== 'voting') return; // still locked
-    const est = msg.estimate; // null | { type: 'quarter'|'tenth'|'number', value: N }
+    const est = msg.estimate; // null | { type: 'tenth'|'number', value: N }
     if (est !== null) {
-      if (!['quarter', 'tenth', 'number'].includes(est.type)) return;
+      if (!['tenth', 'number'].includes(est.type)) return;
       if (typeof est.value !== 'number') return;
-      if (est.type === 'quarter' && (est.value < 0 || est.value > 3)) return;
       if (est.type === 'tenth'   && (est.value < 0 || est.value > 9)) return;
       if (est.type === 'number'  && (est.value < 0 || est.value > 255)) return;
     }
@@ -622,7 +644,19 @@ function gsHandleAction(room, playerIdx, msg) {
 
   // ── Voting phase ─────────────────────────────────────────────────────────
   if (gs.phase === 'voting') {
+    if (action === 'gs_tie_break') {
+      if (!gs.tieBreakPending || playerIdx !== gs.quantumTokenPlayerIdx) return;
+      const num = msg.number;
+      if (!Number.isInteger(num) || !gs.tieBreakOptions.includes(num)) return;
+      gs.tieBreakPending = false;
+      gs.tieBreakOptions = [];
+      gsLog(gs, `${room.players[playerIdx].name}, the Quantum Lead, broke the tie in favor of ${num}.`);
+      _finishVoting(room, num);
+      return;
+    }
+
     if (action === 'gs_final_vote') {
+      if (gs.tieBreakPending) return;
       const num = msg.number;
       if (typeof num !== 'number' || num < 0 || num > 255) return;
 
@@ -678,7 +712,7 @@ function _resolveCard(room) {
   // Advance round / advance player
   if (gs.round >= gs.totalRounds) {
     gs.phase = 'voting';
-    gsLog(gs, 'All 12 rounds complete! Now each player votes for the number they think is the answer.');
+    gsLog(gs, `All ${gs.totalRounds} rounds complete! Now each player votes for the number they think is the answer.`);
     gsBroadcastState(room);
     gsMaybeScheduleBotTurn(room);
     return;
@@ -755,7 +789,7 @@ function gsBotReasonAndUpdate(room, botIdx) {
     const mid = sorted[Math.floor(sorted.length / 2)];
     if (confidenceLevel === 'high')        estimate = { type: 'number', value: mid };
     else if (confidenceLevel === 'medium') estimate = { type: 'tenth',  value: Math.min(9, Math.floor(mid / 25.5)) };
-    else if (confidenceLevel === 'low')    estimate = { type: 'quarter', value: Math.min(3, Math.floor(mid / 64)) };
+    else if (confidenceLevel === 'low')    estimate = { type: 'tenth', value: Math.min(9, Math.floor(mid / 25.5)) };
   }
   // Respect the same progressive token unlocks as human players — bots only
   // set a token once enough gate cards have been publicly revealed.
@@ -780,22 +814,24 @@ function _resolveVoting(room) {
 
   let answer;
   if (topNumbers.length === 1) {
-    answer = topNumbers[0];
+    _finishVoting(room, topNumbers[0]);
+    return;
   } else {
-    // Tie — quantum token holder decides
-    const qtVote = gs.finalVotes[gs.quantumTokenPlayerIdx];
-    if (topNumbers.includes(qtVote)) {
-      answer = qtVote;
-    } else {
-      // Quantum token holder not in the tie — pick smallest of tied values as fallback
-      answer = topNumbers[0];
-    }
-    gsLog(gs, `Tie between ${topNumbers.join(' and ')}! Quantum token holder ${room.players[gs.quantumTokenPlayerIdx].name}'s vote (${qtVote}) decides.`);
+    gs.tieBreakPending = true;
+    gs.tieBreakOptions = topNumbers;
+    gsLog(gs, `Tie between ${topNumbers.join(' and ')}! ${room.players[gs.quantumTokenPlayerIdx].name}, the Quantum Lead, must choose one of the tied values.`);
+    gsBroadcastState(room);
+    gsMaybeScheduleBotTurn(room);
+    return;
   }
+}
 
-  gs.answer    = gs.targetNumber;
+function _finishVoting(room, answer) {
+  const gs = room.gsState;
+  gs.answer    = answer;
+  gs.correctAnswer = gs.targetNumber;
   gs.gameOver  = true;
-  gs.won       = answer === gs.targetNumber;
+  gs.won       = gs.answer === gs.correctAnswer;
 
   if (gs.won) {
     gsLog(gs, `Correct! The number was ${gs.targetNumber}. Mission accomplished!`);
